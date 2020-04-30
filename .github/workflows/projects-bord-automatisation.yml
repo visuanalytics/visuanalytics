@@ -1,0 +1,79 @@
+name: Projects Bord Automatisation
+
+on:
+  project_card:
+    types: [moved]
+    
+jobs:
+  create-branch:
+   # Check if TODO colum and Card with issue
+     if: github.event.project_card.column_id == 8924318 && github.event.project_card.content_url != null
+     runs-on: ubuntu-latest
+     env: 
+       issueUrl: ${{ github.event.project_card.content_url }}
+     steps:
+      - name: "create Branch"
+        uses: actions/github-script@0.9.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            // Get sha from Master
+            const mSha = await github.git.getRef({owner: context.repo.owner, repo: context.repo.repo, ref: "heads/master"})
+            
+            // Get Issue number form card
+            const issueURL = process.env.issueUrl
+            const slashNum = issueURL.lastIndexOf("/")
+            const issueNum = issueURL.substr(slashNum + 1)
+            
+            // Get Issue infos
+            const issue = (await github.issues.get({owner: context.repo.owner, repo: context.repo.repo, issue_number: issueNum})).data
+            // build branch name
+            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().split(" ").join("-")}`
+            const branchUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branchName}`
+            
+            // Create branch
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/heads/${branchName}`,
+              sha: mSha.data.object.sha
+            }).then(res => {
+              // On Success Write Comment
+              github.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNum,
+                body: `Branch [${branchName}](${branchUrl}) created!`,
+              });
+            })
+  create-pull-request:
+   # Check if TODO colum and Card with issue
+    if: github.event.project_card.column_id == 8924332 && github.event.project_card.content_url != null
+    runs-on: ubuntu-latest
+    env:
+       issueUrl: ${{ github.event.project_card.content_url }}
+    steps:
+      - name: "create Pull request"
+        uses: actions/github-script@0.9.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            // Get Issue number form card
+            const issueURL = process.env.issueUrl
+            const slashNum = issueURL.lastIndexOf("/")
+            const issueNum = issueURL.substr(slashNum + 1)
+            
+            // Get Issue infos
+            const issue = (await github.issues.get({owner: context.repo.owner, repo: context.repo.repo, issue_number: issueNum})).data
+            // build branch name
+            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().split(" ").join("-")}`
+            
+            // Create PullRequest
+            github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `${issue.title}`,
+              body: `resolves #${issueNum}`,
+              head: branchName,
+              base: "master",
+            })
