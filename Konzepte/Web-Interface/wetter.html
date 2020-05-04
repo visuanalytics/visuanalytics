@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="favicon.ico" type="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>VisuAnalytics</title>
+</head>
+<body>
+<header>
+    <img src="bilder/logo.png" class="mx-auto d-block" alt="logo">
+</header>
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <!-- Bei dem Klick auf ÜBERSICHT soll man zur index.html geleitet werden -->
+            <a class="nav-link" href="#">ÜBERSICHT</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#"><i>&#8594</i></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="#">WETTER</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- Popup schreiben (Bootstrap "Modal") siehe Bild 3 von Konzept/Mock-up-->
+
+<div class="row my-5">
+    <div class="col-1"></div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center font-weight-bold">AKTUELLES WETTER</h2>
+                <hr>
+                <p class="card-text">Some example text.</p>
+                <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center font-weight-bold">WETTERVORHERSAGE</h2>
+                <hr>
+                <p class="card-text">Some example text.</p>
+                <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-1"></div>
+</div>
+<div class="row my-5">
+    <div class="col-1"></div>
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center font-weight-bold">AKTUELLE LUFTQUALITÄT</h2>
+                <hr>
+                <p class="card-text">Some example text.</p>
+                <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+            </div>
+        </div>
+    </div>
+        <div class="col-6"></div>
+</div>
+</body>
+</html>
