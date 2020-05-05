@@ -18,7 +18,7 @@ Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
     import unittest
     import sum_fun
 
-    class Test_Sum_Methods(unittest.TestCase):
+    class Test_Sum_Fun(unittest.TestCase):
 
         def test_sum_even(self):
             expected = 6
