@@ -28,7 +28,7 @@ jobs:
             // Get Issue infos
             const issue = (await github.issues.get({owner: context.repo.owner, repo: context.repo.repo, issue_number: issueNum})).data
             // build branch name
-            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().split(" ").join("-")}`
+            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().replace(RegExp("\\[.*\\] "), "").split(" ").join("-")}`
             const branchUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branchName}`
             
             // Create branch
@@ -66,7 +66,7 @@ jobs:
             // Get Issue infos
             const issue = (await github.issues.get({owner: context.repo.owner, repo: context.repo.repo, issue_number: issueNum})).data
             // build branch name
-            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().split(" ").join("-")}`
+            const branchName = `i${issue.number}-${issue.title.toLocaleLowerCase().replace(RegExp("\\[.*\\] "), "").split(" ").join("-")}`
             
             // Create PullRequest
             github.pulls.create({
