@@ -2,7 +2,7 @@
 name: Organisation
 about: Vorlage für eine organisatorische Aufgabe
 title: "[Organisation]"
-labels: ''
+labels: Organisation
 assignees: ''
 
 ---
