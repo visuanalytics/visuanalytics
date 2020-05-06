@@ -51,3 +51,6 @@ Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
     ```
 
 4. Um die Tests in PyCharm auszuführen: Rechtsklick auf das Testmodul im Projektverzeichnis und dann "Run unit tests in ..." auswählen.
+
+
+Quelle: https://docs.python.org/3/library/unittest.html
