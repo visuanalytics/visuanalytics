@@ -2,14 +2,14 @@
 name: Implementierung
 about: Vorlage für eine Funktions Aufgabe
 title: "[Implementierung]"
-labels: ''
+labels: Implementierung
 assignees: ''
 
 ---
 
-# Funktion
+# Implementierung
 
-geschätzte Bearbeitungszeit: <!-- (hh.mm.ss) -->
+## Bearbeitungszeit
 tatsächliche Bearbeitungszeit: <!-- (hh.mm.ss) -->
 
 ## Kurzbeschreibung
