@@ -10,6 +10,7 @@ assignees: ''
 # Organisation
 
 ## Bearbeitungszeit
+tatsächliche Bearbeitungszeit: <!-- (hh.mm.ss) -->
 
-
-## Ergebnis
+## Kurzbeschreibung
+<!-- kurze Erläuterung der zu implementierenden Funktion -->

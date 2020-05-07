@@ -13,7 +13,7 @@ assignees: ''
 <!-- Recherche Thmea einfügen -->
 
 ## Bearbeitungszeit
-<!-- Bearbeitungszeit einfügen (hh:mm:ss) -->
+tatsächliche Bearbeitungszeit: <!-- (hh.mm.ss) -->
 
-## Ergebnis
-<!-- Ergebnisse der Recherche eintragen und evtl. Dateien verlinken -->
+## Kurzbeschreibung
+<!-- kurze Erläuterung der zu implementierenden Funktion -->

@@ -7,9 +7,9 @@ assignees: ''
 
 ---
 
-# Funktion
+# Implementierung
 
-geschätzte Bearbeitungszeit: <!-- (hh.mm.ss) -->
+## Bearbeitungszeit
 tatsächliche Bearbeitungszeit: <!-- (hh.mm.ss) -->
 
 ## Kurzbeschreibung
