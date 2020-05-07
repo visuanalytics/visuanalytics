@@ -15,6 +15,7 @@
             - apis
             - visualization
             - speech
+            - data
             - util
         - resources
         - tests
