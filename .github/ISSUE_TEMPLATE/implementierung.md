@@ -2,7 +2,7 @@
 name: Implementierung
 about: Vorlage für eine Funktions Aufgabe
 title: "[Implementierung]"
-labels: ''
+labels: Implementierung
 assignees: ''
 
 ---
