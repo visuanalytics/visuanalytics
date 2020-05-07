@@ -12,7 +12,7 @@ z.B. `load_settings.py`
 
 ## Package
 
-Wenn dieser Ordner von Python als Package erkant werden soll musser eine datei namens `__init__.py` enthalten, der **Packge name** entspricht dann dem **Ordner namen**. Diese Datei ist normalerweiße **leer** (weitere deteils [hier](https://docs.python.org/3/tutorial/modules.html#packages)).
+Wenn dieser Ordner von Python als Package erkant werden soll musser eine datei namens `__init__.py` enthalten, der **Packge name** entspricht dann dem **Ordner namen**. Diese Datei ist normalerweiße **leer** (weitere Details [hier](https://docs.python.org/3/tutorial/modules.html#packages)).
 
 Normalerweiße sollte **jeder** Ordner mit Python source code eine Package sein
 
