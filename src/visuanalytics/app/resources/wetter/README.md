@@ -1,3 +1,9 @@
+Das Wetter soll an Folgenden Orten abgefragt werden können:   
+["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Erfurt" "Stuttgart",
+             "München",
+             "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
+             
+Es gibt folgende Icons:   
 WEATHERICONS = {200: "t01d.png",
                 201: "t02d.png",
                 202: "t03d.png",
@@ -37,7 +43,4 @@ WEATHERICONS = {200: "t01d.png",
                 804: "c04d.png",
                 900: "u00d.png",
                 }
-
-LOCATIONS = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Erfurt" "Stuttgart",
-             "München",
-             "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
+        
