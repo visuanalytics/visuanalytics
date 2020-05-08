@@ -4,7 +4,7 @@
 
 Hintergrund: Welche Bilder können wir benutzen, ohne rechtliche Schwierigkeiten zu bekommen?
 
-#### Gemeinfrei / "Public domain"
+#### Gemeinfrei / "Public domain"Gemeinfrei / "Public domain"
 
 Gemeinfrei oder "public domain" werden Werke genannt, an denen keine Urheberrechte bestehen. Das gilt in Deutschland entweder 70 Jahre nach dem Tod des Urhebers (bei einfachen Schnappschüssen 50 Jahre). Ein solches Bild kennzeichnet man mit dem Link <a href="https://www.gesetze-im-internet.de/urhg/__64.html">>> gemeinfrei nach UrhG §64</a>. 
 
@@ -24,14 +24,16 @@ Auf dieser Graphik sind die wichtigsten Attribute zusammengefasst:
 ![](creative-commons-infografik.jpg)  
 <a href=https://www.bildersuche.org/creative-commons-infografik.php>Creative Commons – Was ist und bedeutet das?</a> von Martin Mißfeldt auf <a href=https://www.bildersuche.org>Bildersuche.org</a> lizenziert unter <a href="https://creativecommons.org/licenses/by-sa/3.0/de/">CC BY-SA 3.0 DE</a>
 
-Wie man bei dieser Abbildung schon sehen kann, sollten folgende vier Angaben gemacht werden:
+Wie man bei dieser Abbildung schon sehen kann, sollten vier Angaben gemacht werden:
 
 * den Titel des Bildes, welcher als Link zum Bild fungiert (wenn kein Titel angegeben, nur Quelle mit Link)
 * den Autor bzw. Urheber des Bildes
 * die Quelle des Bildes, welche als Link zur Webseite fungiert, auf der man das Bild gefunden hat
+* Bearbeitungshinweise (z.B. Zuschneiden des Bildes), falls Bild verändert wurde
 * die Lizenz unter der das Bild veröffentlicht wurde, welcher als Link zur Lizenzinformation fungiert
 
 Außerdem kann es sinnvoll sein, das Zugriffsdatum mit anzugeben.
+
 
 ### Eigene Fotografien
 
@@ -69,6 +71,6 @@ https://irights.info/artikel/nicht-nur-kostenlos-sondern-frei-zehn-anlaufstellen
 https://www.mebis.bayern.de/infoportal/tutorials/weitere/teachshare/quellenangaben-best-practice/
 https://www.bildersuche.org/creative-commons-infografik.php
 https://lehrerfortbildung-bw.de/st_digital/medienwerkstatt/internet/freemedia/definition/lizenzen/
-
+https://www.lecturio.de/magazin/creative-commons-blogger/
 
     
