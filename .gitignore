@@ -13,6 +13,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+
 # Generated files
 .idea/**/contentModel.xml
 
@@ -147,3 +148,9 @@ fabric.properties
 # Markdown Navigator plugin
 
 # End of https://www.gitignore.io/api/pycharm,webstorm
+/.idea/Data-Analytics.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/saveactions_settings.xml
+/.idea/vcs.xml
