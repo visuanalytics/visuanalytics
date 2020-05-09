@@ -1,10 +1,14 @@
 def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
     """Wandelt alle Winddaten so um, dass sie flüssig vorgelesen werden können.
 
+    Diese Eingabeparameter sind Werte aus der Weatherbit-API.
+    Im Dictionary directions_dictionary sind die englischen Wörter für die Himmelsrichtungen auf zwei verschiedene
+    Weisen auf Deutsch übersetzt. Die Übersetzungen dienen später der flüssigeren Wiedergabe des Textes als Audiodatei.
+
     :param wind_cdir_full: Angabe der Windrichtung Beispiel: west-southwest
     :param wind_dir: Angabe der Windrichtung in Grad
     :param wind_spd: Angabe der Windgeschwindigkeit in m/s
-    :return wind_info: wind_direction, wind_dir_degree, wind_spd_text
+    :return: wind_direction, wind_dir_degree, wind_spd_text
 
     Example:
         wind_cdir_full = "west-southwest"

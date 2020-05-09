@@ -1,6 +1,9 @@
 def air_data_to_text(rh, pres):
     """Wandelt die von der Weatherbit-API gegebenen Werte rh und pres in Text um.
 
+    Diese Eingabeparameter sind Werte aus der Weatherbit-API.
+    Die Ausgabeparameter dienen später der flüssigeren Wiedergabe des Textes als Audiodatei.
+
     :param rh: relative Luftfeuchtigkeit in % (Prozent)
     :param pres: Luftdruck in mbar (Millibar)
     :return: rh_text, pres_text
