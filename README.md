@@ -6,6 +6,11 @@
 
 Flask bringt einen Development Server mit der bei Datei Änderungen Automatisch neu startet.
 
+### Mit Docker
+
+1. `docker build -t visuanalytics src/visuanalytics`
+2. `docker run -p 5000:5000 -t visuanalytics`
+
 ### In der Console
 
 1. in den src ordner wechseln: `cd src`
