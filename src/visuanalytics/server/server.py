@@ -6,6 +6,7 @@ Holds the start Configuration for the Flask server.
 from flask import Flask
 
 from visuanalytics.server.api import api
+from visuanalytics.server.home import home_views
 
 
 def create_app():
@@ -29,9 +30,6 @@ def create_app():
 
     # Register the Blueprints
     api.register_all(app)
-
-    @app.route("/")
-    def test():
-        return "<h1>VisuAnalytics</h1>"
+    app.register_blueprint(home_views.home_bp, url_prefix="/")
 
     return app

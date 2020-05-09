@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/pictures/favicon.ico" type="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/static/home/css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>VisuAnalytics</title>
+</head>
+<body>
+    <header>
+        <!-- Klasse "mx-auto d-block" setzt das Bild mittig -->
+        <img src="/static/pictures/logo.png" class="mx-auto d-block" alt="logo">
+    </header>
+    <!-- Navigation aktuelle Seite soll "active sein (siehe wetter.html) -->
+    <nav class="navbar navbar-expand-sm bg-light navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Übersicht</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="card mb-4 border-0">
+        <div class="card-body">
+            <h4 class="card-text text-center">Hier bekommst Du eine Übersicht über bestimmte Themengebiete in Form eines eigens für dich angefertigten Videos. Bleib informiert! </h4>
+        </div>
+    </div>
+
+    <!-- "Karten" bitte mit sinvoller Beschreibung füllen -->
+    <div class="row my-5">
+        <div class="col-1"></div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center font-weight-bold">CORONA</h2>
+                    <hr>
+                    <p class="card-text text-center" style="font-size: larger">Klick hier, um dir ein Bild<br> über die weltweiten Infektionsverläufe zu machen! </p>
+                    <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center font-weight-bold">WETTER</h2>
+                    <hr>
+                    <p class="card-text text-center" style="font-size: larger">Klick hier, um eine Übersicht<br>über Wetterdaten zu bekommen!</p>
+                    <!-- Button soll auf die wetter.html verweisen -->
+                    <a href="wetter"><button type="button" class="btn btn-info mx-auto d-block">WEITER</button></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <div class="row my-5">
+        <div class="col-1"></div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center font-weight-bold">HISTORISCHE EREIGNISSE</h2>
+                    <hr>
+                    <p class="card-text text-center" style="font-size: larger">Klick hier, um dir einen Überblick<br> über historische Ereignisse zu verschaffen!</p>
+                    <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center font-weight-bold">ISS-DATEN</h2>
+                    <hr>
+                    <p class="card-text text-center" style="font-size: larger">Klick hier, um zu erfahren,<br> wo sich die ISS gerade befindet!</p>
+                    <button type="button" class="btn btn-info mx-auto d-block">WEITER</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+
+</body>
+</html>
