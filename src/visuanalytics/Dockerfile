@@ -18,4 +18,4 @@ ENV FLASK_APP=visuanalytics.server.server:create_app
 # Expose Server Post
 EXPOSE 5000
 
-CMD [ "flask", "run" ]
+CMD ["flask", "run", "--host=0.0.0.0"]
