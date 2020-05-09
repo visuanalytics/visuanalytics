@@ -1,0 +1,4 @@
+sut:
+    build: .
+    working_dir: /home/appuser
+    command: python3 -m unittest discover visuanalytics
