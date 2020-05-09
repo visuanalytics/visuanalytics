@@ -1,0 +1,19 @@
+name: Automated Testing
+
+on:
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  # Run tests.
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+            docker-compose --file src/visuanalytics/docker-compose.test.yml build
+            docker-compose --file src/visuanalytics/docker-compose.test.yml run sut
