@@ -3,7 +3,7 @@
 Api Test endpoint, will be Removed later.
 
 """
-from flask import (Blueprint, Request)
+from flask import (Blueprint, jsonify)
 
 bp = Blueprint('api', __name__)
 
@@ -15,4 +15,4 @@ def test(id):
     Args:
         id(string):  url parameter <id>
     """
-    return {"Test": id}
+    return jsonify(test=id)
