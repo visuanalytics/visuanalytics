@@ -5,7 +5,7 @@ import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from visuanalytics.app.data import Pocessing_Weather as Pw
+from visuanalytics.app.data import processing_weather as Pw
 
 LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hamburg", (255, 300), (875, 300), (1492, 300)),
                       ("Dresden", (360, 447), (980, 447), (1604, 447)),

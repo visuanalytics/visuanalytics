@@ -1,5 +1,5 @@
 from visuanalytics.app.apis import weather
-from visuanalytics.app.visualization import WeatherVisualization as Ws
+from visuanalytics.app.visualization import weather_visualization as Ws
 
 json_data = weather.get_forecasts()
 data = weather.preprocess_weather_data(json_data)
