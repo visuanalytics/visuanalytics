@@ -1,6 +1,6 @@
 """Grundfunktionen für alle API Requests.
 
-Enthält Funktionen, um alle API Endpunkte mit gleichen Einstellungen bei Server zu registrieren.
+Enthält Funktionen, um alle API Endpunkte mit gleichen Einstellungen beim Server zu registrieren.
 
 """
 from flask import Flask
@@ -8,6 +8,7 @@ from flask import Flask
 from visuanalytics.server.api import api_test
 
 API_BASE_URL = "/api/v1"
+"""Base URL der API"""
 
 
 def register_all(app:Flask):

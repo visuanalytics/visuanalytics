@@ -13,7 +13,7 @@ def create_app():
     """Erstellt die Flask server instance.
 
     Initialisiert die Server Konfiguration und registriert alle Endpunkte.
-    Wenn eine 'config.py' Datei im 'instaances' Ordner existiert, wird diese Konfiguration benutzt.
+    Wenn eine `config.py` Datei im `instaances` Ordner existiert, wird diese Konfiguration benutzt.
 
      Returns:
          Flask: Eine Instanz des Servers.

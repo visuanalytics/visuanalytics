@@ -1,6 +1,6 @@
 """unittest Module für den Server Endpunkt `/api/v1/test/`.
 
-Ist nur zu Testen gedacht, wird später entfernt..
+Ist nur zu Testen gedacht, wird später entfernt.
 """
 import unittest
 

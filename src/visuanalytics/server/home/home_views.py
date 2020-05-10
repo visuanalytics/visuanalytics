@@ -1,4 +1,4 @@
-"""Nimmt alle Requests zum Endpunt ´/<page>` entgegen.
+"""Nimmt alle Requests zum Endpunt `/<page>` entgegen.
 
 Behandelt alle normalen HTML Seiten Anfragen.
 """
@@ -15,7 +15,7 @@ home_bp = Blueprint('home', __name__,
 @home_bp.route('/', defaults={'page': 'index'})
 @home_bp.route('/<page>')
 def show(page):
-    """Falls vorhanden, wird 'page.html' aus dem 'templates' Ordner zurückgegeben.
+    """Falls vorhanden, wird `page.html` aus dem `templates` Ordner zurückgegeben.
 
     Mit dem Pfad `/` wird `index.html` zurückgegeben.
     Wenn `page.html` nicht gefunden wird, wird eine 404-Seite zurückgegeben.
@@ -23,7 +23,7 @@ def show(page):
     Args:
         page(String): Name der Html-Seite.
     Return:
-        html_template: Html-Seite aus dem 'templates' Ordner mit 'page.html' oder einer 404-Seite.
+        html_template: Html-Seite aus dem `templates` Ordner mit `page.html` oder einer 404-Seite.
     """
     try:
         return render_template('%s.html' % page)
