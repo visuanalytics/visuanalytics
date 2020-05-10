@@ -25,7 +25,7 @@ list: Städte, für die wir die Wettervorhersage von der Weatherbit-API beziehen
 
 WEATHERBIT_URL = "https://api.weatherbit.io/v2.0/forecast/daily?"
 
-WEATHERBIT_API_KEY = "1edf5fd25fc1475a994775e3f2e6fcb7"
+WEATHERBIT_API_KEY = ""
 """
 TODO: Private config-Datei für unsere API-keys anlegen. Zum Testen der Funktionen dieses Moduls: Bitte den API-Key aus
 Postman entnehmen bzw. die Daten aus der forecast.json-Datei einlesen und verwenden.
@@ -136,7 +136,7 @@ def _preprocess_single(data):
 def _summaries(data):
     days = range(4)
     avg_temp = [statistics.mean(_get_for_day(i, "temp", data)) for i in days]
-    min_temp = ([min(_get_for_day(i, "min_temp", data)) for i in days])
+    min_temp = [min(_get_for_day(i, "min_temp", data)) for i in days]
     max_temp = [max(_get_for_day(i, "max_temp", data)) for i in days]
     icons = [util.mode(_get_for_day(i, "icon", data)) for i in days]
     codes = [util.mode(_get_for_day(i, "code", data)) for i in days]
@@ -150,3 +150,6 @@ def _summaries(data):
 def _get_for_day(day, attribute, data):
     days = [data[c][day] for c in data]
     return [d[attribute] for d in days]
+
+
+print(util.mode([]))
