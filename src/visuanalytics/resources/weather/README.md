@@ -1,5 +1,5 @@
 Das Wetter soll an Folgenden Orten abgefragt werden können:   
-["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Erfurt" "Stuttgart",
+["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg" "Stuttgart",
              "München",
              "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
              

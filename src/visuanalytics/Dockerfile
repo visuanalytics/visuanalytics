@@ -1,0 +1,18 @@
+FROM python:3.7.7-stretch
+
+# install Requirements
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Change User
+RUN useradd --create-home appuser
+WORKDIR /home/appuser
+USER appuser
+
+# Copy src
+COPY . ./visuanalytics
+
+# Set Env for flask
+ENV FLASK_APP=visuanalytics.server.server:create_app
+
+CMD [ "flask", "run" ]

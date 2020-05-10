@@ -13,7 +13,7 @@ Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
         return sum(filter(uneven, l))
     ```
 
-2. Wir erstellen das Modul ("sum_test.py"), das die Tests enthalten soll. Je Testfall wird eine Klasse erstellt, welche von unittest.TestCase erbt. In diesem Beispiel haben wir nur einen Testfall (Klasse Test_Sum_Fun). Innerhalb der Klasse definieren wir nun die einzelnen Test-Methoden; damit diese auch automatisch beim Starten des Tests ausgeführt werden, müssen ihre Namen mit "test" beginnen. Zentrale Komponente der Test-Funktionen sind die `asserts`: Diese bestimmen, ob der Test durchläuft oder fehlschlägt.  
+2. Wir erstellen das Modul ("test_sum.py"), das die Tests enthalten soll. Je Testfall wird eine Klasse erstellt, welche von unittest.TestCase erbt. In diesem Beispiel haben wir nur einen Testfall (Klasse Test_Sum_Fun). Innerhalb der Klasse definieren wir nun die einzelnen Test-Methoden; damit diese auch automatisch beim Starten des Tests ausgeführt werden, müssen ihre Namen mit "test" beginnen. Zentrale Komponente der Test-Funktionen sind die `asserts`: Diese bestimmen, ob der Test durchläuft oder fehlschlägt.  
     ```python
     import unittest
     import sum_fun
