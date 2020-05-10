@@ -15,4 +15,7 @@ COPY . ./visuanalytics
 # Set Env for flask
 ENV FLASK_APP=visuanalytics.server.server:create_app
 
-CMD [ "flask", "run" ]
+# Expose Server Post
+EXPOSE 5000
+
+CMD ["flask", "run", "--host=0.0.0.0"]
