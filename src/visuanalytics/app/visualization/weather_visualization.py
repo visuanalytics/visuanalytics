@@ -1,11 +1,14 @@
-"""Klasse dient dazu um aus gegebenen Daten von der Weather API Bilder oder Videos zu generieren.
+"""Module dient dazu um aus gegebenen Daten von der Weather API Bilder oder Videos zu generieren.
 """
 import os
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+
 from visuanalytics.app.data import processing_weather as Pw
+
+# todo fix path problem
 
 LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hamburg", (255, 300), (875, 300), (1492, 300)),
                       ("Dresden", (360, 447), (980, 447), (1604, 447)),
@@ -45,25 +48,22 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
               String : Den Dateinamen des erstellten Bildes
        """
 
-    file = open("input.txt", "w")
-    file.write("file '" + audio_heute_art + "'\n")
-    file.write("file '" + audio_heute_temp + "'\n")
-    file.write("file '" + audio_dreitage + "'\n")
-    file.close()
+    with open("input.txt", "w") as file:
+        file.write("file '" + audio_heute_art + "'\n")
+        file.write("file '" + audio_heute_temp + "'\n")
+        file.write("file '" + audio_dreitage + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
     os.chdir("/home/jannik/Data-Analytics/src/visuanalytics/app")
     os.system(shell_cmd)
 
-    file = open("input.txt", "w")
-    file.write("file '" + bild_heute_art + "'\n")
-    file.write("duration " + audiol_heute_art + "\n")
-    file.write("file '" + bild_heute_temp + "'\n")
-    file.write("duration " + audiol_heute_temp + "\n")
-    file.write("file '" + bild_dreitage + "'\n")
-    file.write("duration " + audio3_dreitage + "\n")
-    file.close()
-
+    with open("input.txt", "w") as file:
+        file.write("file '" + bild_heute_art + "'\n")
+        file.write("duration " + audiol_heute_art + "\n")
+        file.write("file '" + bild_heute_temp + "'\n")
+        file.write("duration " + audiol_heute_temp + "\n")
+        file.write("file '" + bild_dreitage + "'\n")
+        file.write("duration " + audio3_dreitage + "\n")
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
     os.chdir("/home/jannik/Data-Analytics/src/visuanalytics/app")
     os.system(shell_cmd)
