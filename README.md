@@ -1,4 +1,4 @@
-# VisuAnalytics
+# VisuAnalytics ![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)
 
 ## Server Starten
 
