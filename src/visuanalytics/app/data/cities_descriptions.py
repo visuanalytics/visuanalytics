@@ -2,7 +2,7 @@
 
 from numpy import random
 
-def random_cities(city_name, city_descriptions):
+def random_city_descriptions(city_name, city_descriptions):
     """Gibt eine Beschreibung der Stadt aus.
 
     Um die Texte des Wetterberichts automatisch zu generieren und sie trotzdem nicht immer gleich aussehen, wird
@@ -17,7 +17,7 @@ def random_cities(city_name, city_descriptions):
 
     Example:
         city_name = "schwerin"
-        x = random_cities(city_name, city_descriptions)
+        x = random_city_descriptions(city_name, city_descriptions)
         print(x + " scheint am Donnerstag die Sonne.")
     """
     x = random.choice(["0", "1", "2"])
