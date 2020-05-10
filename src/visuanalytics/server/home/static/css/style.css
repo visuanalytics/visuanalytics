@@ -1,0 +1,20 @@
+body {margin: 0;}
+
+header {
+    z-index: 2;
+    width: 100%;
+}
+
+header img {
+    height: 80px;
+    padding: 10px;
+}
+
+nav {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    height: 40px;
+}
+
+.text {
+    font-size: larger;
+}
