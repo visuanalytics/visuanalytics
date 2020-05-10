@@ -1,6 +1,6 @@
-"""unittest Module for the server endpoint `/api/v1/test/`.
+"""unittest Module für den Server Endpunkt `/api/v1/test/`.
 
-May be Removed later.
+Ist nur zu Testen gedacht, wird später entfernt..
 """
 import unittest
 
@@ -11,13 +11,13 @@ from visuanalytics.tests.server import test_init
 
 class TestApiTest(unittest.TestCase):
     def setUp(self):
-        """Setup Flask Server Client"""
+        """Flask Server Client initialisieren."""
         self.client = test_init.setup_client()
 
     def test_id(self):
-        """Test endpoint ../test/<id>.
+        """Testen Endpunkt `../test/<id>`.
 
-        Test if response is {"test": "<id>"}.
+        Testet ob Server mit `{"test": "<id>"}` antwortet.
         """
         rv = self.client.get("/api/v1/test/1")
         data = json.loads(rv.data)

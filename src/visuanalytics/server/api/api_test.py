@@ -1,6 +1,6 @@
-"""Handel the APi Route `/test`.
+"""Nimmt alle API Requests zum Endpunt `/api/v1/test` entgegen.
 
-Api Test endpoint, will be Removed later.
+Ist nur zu Testen gedacht, wird später entfernt.
 
 """
 from flask import (Blueprint, jsonify)
@@ -10,7 +10,7 @@ bp = Blueprint('api', __name__)
 
 @bp.route("/<id>")
 def test(id):
-    """Handle `/test/<id>`.
+    """Endpunkt `/test/<id>`.
 
     Args:
         id(string):  url parameter <id>

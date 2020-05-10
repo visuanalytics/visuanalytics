@@ -1,6 +1,6 @@
-"""Handle requests for ´/<page>`.
+"""Nimmt alle Requests zum Endpunt ´/<page>` entgegen.
 
-Handle all Normal Html Page Requests.
+Behandelt alle normalen HTML Seiten Anfragen.
 """
 from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
@@ -15,15 +15,15 @@ home_bp = Blueprint('home', __name__,
 @home_bp.route('/', defaults={'page': 'index'})
 @home_bp.route('/<page>')
 def show(page):
-    """If present, 'page.html' is returned from the templates folder.
+    """Falls vorhanden, wird 'page.html' aus dem 'templates' Ordner zurückgegeben.
 
-    With the path `/`, `index.html` is returned.
-    If `page.html` is not found a 404 page is returned
+    Mit dem Pfad `/` wird `index.html` zurückgegeben.
+    Wenn `page.html` nicht gefunden wird, wird eine 404-Seite zurückgegeben.
 
     Args:
-        page(String): Html page name.
+        page(String): Name der Html-Seite.
     Return:
-        html_template: Html page from the templates folder with 'page.html' or a 404 page.
+        html_template: Html-Seite aus dem 'templates' Ordner mit 'page.html' oder einer 404-Seite.
     """
     try:
         return render_template('%s.html' % page)

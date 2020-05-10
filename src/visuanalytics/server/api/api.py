@@ -1,6 +1,6 @@
-"""Api base file.
+"""Grundfunktionen für alle API Requests.
 
-Contains Functions to Register all Api sub Routes the same.
+Enthält Funktionen, um alle API Endpunkte mit gleichen Einstellungen bei Server zu registrieren.
 
 """
 from flask import Flask
@@ -11,9 +11,9 @@ API_BASE_URL = "/api/v1"
 
 
 def register_all(app:Flask):
-    """Register all Api Blueprints with the `API_BASE_URL`.
+    """Registriert alle Api Blueprints bei der `API_BASE_URL`.
 
     Args:
-        app(Flask): the Flask app instance.
+        app(Flask): Eine Flask Server Instanz.
     """
     app.register_blueprint(api_test.bp, url_prefix=f"{API_BASE_URL}/test")

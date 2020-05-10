@@ -1,6 +1,6 @@
-""" Flask Main Server File.
+""" Flask Server Module.
 
-Holds the start Configuration for the Flask server.
+Enthält die Startkonfiguration für den Flask-Server.
 
 """
 from flask import Flask
@@ -10,13 +10,13 @@ from visuanalytics.server.home import home_views
 
 
 def create_app():
-    """Create the Flask server instance.
+    """Erstellt die Flask server instance.
 
-     Initialise the Flask server Config and Register all Blueprints.
-     If a config.py file exists in the `instances` folder, its configuration is used.
+    Initialisiert die Server Konfiguration und registriert alle Endpunkte.
+    Wenn eine 'config.py' Datei im 'instaances' Ordner existiert, wird diese Konfiguration benutzt.
 
      Returns:
-         Flask: the Flask server instance.
+         Flask: Eine Instanz des Servers.
     """
 
     # create and configure the app
