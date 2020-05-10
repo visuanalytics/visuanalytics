@@ -1,5 +1,4 @@
-"""Module zum verarbeiten der Daten von der Wetter Api
-           """
+"""Module zum verarbeiten der Daten von der Wetter Api"""
 
 
 def get_weather_icon(data, location, date_in_future):
@@ -11,8 +10,7 @@ def get_weather_icon(data, location, date_in_future):
                Returns:
                   String : Den passenden Iconnamen zu den gegebenen Parametern
            """
-    return "".join([data['cities'][location][date_in_future]['icon']])
-    # wandelt Liste mit einem Element in String um
+    return data['cities'][location][date_in_future]['icon']
 
 
 def get_weather_temp(data, location, date_in_future):
@@ -24,10 +22,9 @@ def get_weather_temp(data, location, date_in_future):
                Returns:
                   String : Die passende Temperatur zu den gegebenen Parametern
            """
-    return str(int(float("".join(map(str, [data['cities'][location][date_in_future]['temp']]))))) + "°"
-    # Umformung muss leider so sein da wir zuerst eine Liste bestehend aus einem Element haben ->
-    # diese wird in String umgewandelt,  um dann aber die Nachkommastellen zu elimineren
-    # wird nochmal in float und dannach in int umgewandelt
+    temp = round(data['cities'][location][date_in_future]['temp'])
+    return f"{temp}\u00B0"
+
 
 
 def get_max_temp(data, date_in_future):
@@ -39,7 +36,8 @@ def get_max_temp(data, date_in_future):
                   String : Die maximal Temperatur zu den gegebenen Parametern
            """
 
-    return str(int(float("".join(map(str, [data['summaries'][date_in_future]['temp_max']]))))) + "°"
+    max_temp = round(data['summaries'][date_in_future]['temp_max'])
+    return f"{max_temp}\u00B0"
 
 
 def get_min_temp(data, date_in_future):
@@ -51,4 +49,5 @@ def get_min_temp(data, date_in_future):
                   String : Die manimal Temperatur zu den gegebenen Parametern
            """
 
-    return str(int(float("".join(map(str, [data['summaries'][date_in_future]['temp_min']]))))) + "°"
+    min_temp = round(data['summaries'][date_in_future]['temp_min'])
+    return f"{min_temp}\u00B0"
