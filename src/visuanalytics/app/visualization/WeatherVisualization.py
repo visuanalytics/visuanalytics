@@ -5,6 +5,7 @@ import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from visuanalytics.app.data import Pocessing_Weather as Pw
 
 LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hamburg", (255, 300), (875, 300), (1492, 300)),
                       ("Dresden", (360, 447), (980, 447), (1604, 447)),
@@ -12,7 +13,7 @@ LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hambur
 """Liste aus String, Tupel(int, int)x3: X und Y Koordinaten der Positionen der Icons in der 3 Tages Vorhersage sortiert nach den verschiedenen Orten/Regionen.
 """
 LOCATIONS_MORGEN = [("Garmisch-Partenkirchen", (898, 900)), ("München", (1080, 822)),
-                    ("Nürnberg", (930, 720)), ("Mainz", (675, 610)),
+                    ("Nürnberg", (930, 720)), ("Frankfurt", (675, 610)),
                     ("Gießen", (843, 540)), ("Dresden", (1106, 482)),
                     ("Hannover", (1006, 370)), ("Bremen", (755, 333)),
                     ("Kiel", (986, 218)), ("Berlin", (1147, 270)), ]
@@ -70,102 +71,73 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
     return "output.mp4"
 
 
-def temp_method_toget_image(location, date_in_future):
-    """Lediglich zu Testzwecken hier solange die Api schnittstelle noch nicht funktioniert.
-      """
-    if date_in_future == 1:
-        return "c04"
-    if date_in_future == 2:
-        return "s02"
-    if date_in_future == 3:
-        return "d02"
-    return "d03"
-
-
-def temp_max(date_in_future):
-    """Lediglich zu Testzwecken hier solange die Api schnittstelle noch nicht funktioniert.
-    """
-    return "15°"
-
-
-def temp_min(date_in_future):
-    """Lediglich zu Testzwecken hier solange die Api schnittstelle noch nicht funktioniert
-      """
-    return "10°"
-
-
-def get_temp(location, date_in_future):
-    """Lediglich zu Testzwecken hier solange die Api schnittstelle noch nicht funktioniert
-      """
-    return "10°"
-
-
-def generate_drei_tages_vorhersage():
+def generate_drei_tages_vorhersage(data):
     """Methode wird genutzt um das Bild für die 3 Tages Vorherschau zu generieren.
-
+        Args:
+            data(Liste): Preprocessed Data von der Api
         Returns:
-           String : Den Dateinamen des erstellten Bildes
+            String : Den Dateinamen des erstellten Bildes
     """
-    source_img = Image.open("../../resources/weather/3-Tage-Vorhersage.png")
+    source_img = Image.open("../resources/weather/3-Tage-Vorhersage.png")
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in LOCATIONS_DREITAGE:
-        for i in range(2, 5):
-            icon = Image.open("../../resources/weather/icons/" + temp_method_toget_image(item[1], i) + "d.png").convert(
+        for i in range(1, 4):
+            icon = Image.open(
+                "../resources/weather/icons/" + Pw.get_weather_icon(data, item[0], i) + ".png").convert(
                 "RGBA")
             icon = icon.resize([160, 160], Image.LANCZOS)
             source_img.paste(icon, item[i], icon)
 
     draw = ImageDraw.Draw(source_img)
 
+    i = 1
     for item in LOCATIONS_TEMP_MAX_DREITAGE:
-        i = 1
-        draw.text(item, temp_max(++i),
-                  font=ImageFont.truetype("./../resources/weather/FreeSansBold.ttf", 60))
-
+        draw.text(item, Pw.get_max_temp(data, i),
+                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 60))
+        i += 1
+    i = 1
     for item in LOCATIONS_TEMP_MIN_DREITAGE:
-        i = 1
-        draw.text(item, temp_min(++i),
-                  font=ImageFont.truetype("./../resources/weather/FreeSansBold.ttf", 60))
-
-    Image.composite(img1, source_img, img1).save("../../../../bin/weather/main.png")
+        draw.text(item, Pw.get_min_temp(data, ++i),
+                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 60))
+        i += 1
+    Image.composite(img1, source_img, img1).save("../../../bin/weather/main.png")
     return "main.png"
 
 
-def generate_vorhersage_morgen_icons():
+def generate_vorhersage_morgen_icons(data):
     """Methode wird genutzt um das Bild für die Vorhersage für morgen zu generieren(Iconbild).
-
+            Args:
+               data(Liste): Preprocessed Data von der Api
             Returns:
                String : Den Dateinamen des erstellten Bildes
         """
-    source_img = Image.open("../../resources/weather/Wetter-morgen.png")
+    source_img = Image.open("../resources/weather/Wetter-morgen.png")
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in LOCATIONS_MORGEN:
-        icon = Image.open("../../resources/weather/icons/" + temp_method_toget_image(item[0], 1) + "d.png").convert(
+        icon = Image.open("../resources/weather/icons/" + Pw.get_weather_icon(data, item[0], 0) + ".png").convert(
             "RGBA")
         icon = icon.resize([150, 150], Image.LANCZOS)
         source_img.paste(icon, (item[1][0] - 40, item[1][1] - 35), icon)
-    Image.composite(img1, source_img, img1).save("../../../../bin/weather/main2.png")
+    Image.composite(img1, source_img, img1).save("../../../bin/weather/main2.png")
     return "main2.png"
 
 
-def generate_vorhersage_morgen_temperatur():
+def generate_vorhersage_morgen_temperatur(data):
     """methode wird genutzt um das Bild für die Vorhersage für morgen zu generieren(Temperaturbild).
-
+            Args:
+               data(Liste): Preprocessed Data von der Api
             Returns:
                String : Den Dateinamen des erstellten Bildes
         """
 
-    source_img = Image.open("../../resources/weather/Wetter-morgen.png")
+    source_img = Image.open("../resources/weather/Wetter-morgen.png")
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for item in LOCATIONS_MORGEN:
-        kachel = Image.open("../../resources/weather/kachel.png")
+        kachel = Image.open("../resources/weather/kachel.png")
         source_img.paste(kachel, item[1], kachel)
+        draw.text((item[1][0] + 10, item[1][1]), Pw.get_weather_temp(data, item[0], 0),
+                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 53))
 
-        # todo(Jannik) fix alpha problem
-
-        draw.text((item[1][0] + 10, item[1][1]), get_temp(item[0], 1),
-                  font=ImageFont.truetype("../../resources/weather/FreeSansBold.ttf", 53))
-
-    Image.composite(img1, source_img, img1).save("../../../../bin/weather/main3.png")
+    Image.composite(img1, source_img, img1).save("../../../bin/weather/main3.png")
     return "main3.png"
