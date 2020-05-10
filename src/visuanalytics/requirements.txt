@@ -1,2 +1,5 @@
-# Server requirments
+# App requirements
+Pillow==7.1.2
+
+# Server requirements
 flask==1.1.2

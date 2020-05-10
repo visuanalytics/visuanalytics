@@ -150,6 +150,3 @@ def _summaries(data):
 def _get_for_day(day, attribute, data):
     days = [data[c][day] for c in data]
     return [d[attribute] for d in days]
-
-
-print(util.mode([]))
