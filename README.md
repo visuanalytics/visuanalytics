@@ -50,8 +50,8 @@ Für die Dokumentation wird das Python Package [Sphinx](https://www.sphinx-doc.o
 
 ### Installation
 
-1. in den Doku Ordner wechseln `cd src/visuanalytics/docs`
-2. sphinx Pakete installieren: `pip install -r requirements.txt`
+
+2. Dev Dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
 ### HTML Generieren
 
