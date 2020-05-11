@@ -47,16 +47,16 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
               String : Den Dateinamen des erstellten Bildes
        """
 
-    with open(os.path.join(os.path.dirname(__file__), "../../../../bin/weather", "input.txt", "w")) as file:
+    with open(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", "input.txt", "w")) as file:
         file.write("file '" + audio_heute_art + "'\n")
         file.write("file '" + audio_heute_temp + "'\n")
         file.write("file '" + audio_dreitage + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
-    os.chdir(os.path.join(os.path.dirname(__file__), "../../../../bin/weather"))
+    os.chdir(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather"))
     os.system(shell_cmd)
 
-    with open(os.path.join(os.path.dirname(__file__), "../../../../bin/weather", "input.txt", "w")) as file:
+    with open(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", "input.txt", "w")) as file:
         file.write("file '" + bild_heute_art + "'\n")
         file.write("duration " + audiol_heute_art + "\n")
         file.write("file '" + bild_heute_temp + "'\n")
@@ -64,7 +64,7 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
         file.write("file '" + bild_dreitage + "'\n")
         file.write("duration " + audio3_dreitage + "\n")
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
-    os.chdir(os.path.join(os.path.dirname(__file__), "../../../../bin/weather"))
+    os.chdir(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather"))
     os.system(shell_cmd)
 
     return "output.mp4"
@@ -107,7 +107,7 @@ def generate_drei_tages_vorhersage(data):
 
     dateiname = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+        os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", dateiname + ".png"))
 
     return dateiname
 
@@ -130,7 +130,7 @@ def generate_vorhersage_morgen_icons(data):
 
     dateiname = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+        os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", dateiname + ".png"))
     return dateiname
 
 
@@ -154,5 +154,5 @@ def generate_vorhersage_morgen_temperatur(data):
 
     dateiname = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+        os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", dateiname + ".png"))
     return dateiname
