@@ -5,10 +5,9 @@ import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+import uuid
 
 from visuanalytics.app.data import processing_weather as Pw
-
-# todo fix path problem
 
 LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hamburg", (255, 300), (875, 300), (1492, 300)),
                       ("Dresden", (360, 447), (980, 447), (1604, 447)),
@@ -48,16 +47,16 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
               String : Den Dateinamen des erstellten Bildes
        """
 
-    with open("input.txt", "w") as file:
+    with open(os.path.join(os.path.dirname(__file__), "../../../../bin/weather", "input.txt", "w")) as file:
         file.write("file '" + audio_heute_art + "'\n")
         file.write("file '" + audio_heute_temp + "'\n")
         file.write("file '" + audio_dreitage + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
-    os.chdir("/home/jannik/Data-Analytics/src/visuanalytics/app")
+    os.chdir(os.path.join(os.path.dirname(__file__), "../../../../bin/weather"))
     os.system(shell_cmd)
 
-    with open("input.txt", "w") as file:
+    with open(os.path.join(os.path.dirname(__file__), "../../../../bin/weather", "input.txt", "w")) as file:
         file.write("file '" + bild_heute_art + "'\n")
         file.write("duration " + audiol_heute_art + "\n")
         file.write("file '" + bild_heute_temp + "'\n")
@@ -65,7 +64,7 @@ def generate_eins_drei_video(bild_heute_art, bild_heute_temp, bild_dreitage, aud
         file.write("file '" + bild_dreitage + "'\n")
         file.write("duration " + audio3_dreitage + "\n")
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
-    os.chdir("/home/jannik/Data-Analytics/src/visuanalytics/app")
+    os.chdir(os.path.join(os.path.dirname(__file__), "../../../../bin/weather"))
     os.system(shell_cmd)
 
     return "output.mp4"
@@ -78,12 +77,15 @@ def generate_drei_tages_vorhersage(data):
         Returns:
             String : Den Dateinamen des erstellten Bildes
     """
-    source_img = Image.open("../resources/weather/3-Tage-Vorhersage.png")
+    os.path.dirname(__file__)
+    source_img = Image.open(
+        os.path.join(os.path.dirname(__file__), "../../resources/weather", "3-Tage-Vorhersage.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in LOCATIONS_DREITAGE:
         for i in range(1, 4):
-            icon = Image.open(
-                "../resources/weather/icons/" + Pw.get_weather_icon(data, item[0], i) + ".png").convert(
+            icon = Image.open(os.path.join(os.path.dirname(__file__),
+                                           "../../resources/weather/icons/",
+                                           Pw.get_weather_icon(data, item[0], i) + ".png")).convert(
                 "RGBA")
             icon = icon.resize([160, 160], Image.LANCZOS)
             source_img.paste(icon, item[i], icon)
@@ -93,15 +95,21 @@ def generate_drei_tages_vorhersage(data):
     i = 1
     for item in LOCATIONS_TEMP_MAX_DREITAGE:
         draw.text(item, Pw.get_max_temp(data, i),
-                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 60))
+                  font=ImageFont.truetype(
+                      os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 60))
         i += 1
     i = 1
     for item in LOCATIONS_TEMP_MIN_DREITAGE:
-        draw.text(item, Pw.get_min_temp(data, ++i),
-                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 60))
+        draw.text(item, Pw.get_min_temp(data, i),
+                  font=ImageFont.truetype(
+                      os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 60))
         i += 1
-    Image.composite(img1, source_img, img1).save("../../../bin/weather/main.png")
-    return "main.png"
+
+    dateiname = str(uuid.uuid4())
+    Image.composite(img1, source_img, img1).save(
+        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+
+    return dateiname
 
 
 def generate_vorhersage_morgen_icons(data):
@@ -111,15 +119,19 @@ def generate_vorhersage_morgen_icons(data):
             Returns:
                String : Den Dateinamen des erstellten Bildes
         """
-    source_img = Image.open("../resources/weather/Wetter-morgen.png")
+    source_img = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather", "Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in LOCATIONS_MORGEN:
-        icon = Image.open("../resources/weather/icons/" + Pw.get_weather_icon(data, item[0], 0) + ".png").convert(
+        icon = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather/icons",
+                                       Pw.get_weather_icon(data, item[0], 0) + ".png")).convert(
             "RGBA")
         icon = icon.resize([150, 150], Image.LANCZOS)
         source_img.paste(icon, (item[1][0] - 40, item[1][1] - 35), icon)
-    Image.composite(img1, source_img, img1).save("../../../bin/weather/main2.png")
-    return "main2.png"
+
+    dateiname = str(uuid.uuid4())
+    Image.composite(img1, source_img, img1).save(
+        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+    return dateiname
 
 
 def generate_vorhersage_morgen_temperatur(data):
@@ -130,14 +142,17 @@ def generate_vorhersage_morgen_temperatur(data):
                String : Den Dateinamen des erstellten Bildes
         """
 
-    source_img = Image.open("../resources/weather/Wetter-morgen.png")
+    source_img = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather", "Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for item in LOCATIONS_MORGEN:
-        kachel = Image.open("../resources/weather/kachel.png")
+        kachel = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather", "kachel.png"))
         source_img.paste(kachel, item[1], kachel)
         draw.text((item[1][0] + 10, item[1][1]), Pw.get_weather_temp(data, item[0], 0),
-                  font=ImageFont.truetype("../resources/weather/FreeSansBold.ttf", 53))
+                  font=ImageFont.truetype(
+                      os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 53))
 
-    Image.composite(img1, source_img, img1).save("../../../bin/weather/main3.png")
-    return "main3.png"
+    dateiname = str(uuid.uuid4())
+    Image.composite(img1, source_img, img1).save(
+        os.path.join(os.path.dirname(__file__), "../../../../bin/weather", dateiname + ".png"))
+    return dateiname
