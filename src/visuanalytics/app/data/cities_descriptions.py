@@ -1,4 +1,3 @@
-# Autor: Tanja
 """
 Globale Variable: CITY_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen einer Stadt.
 Funktion: random_city_descriptions(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
@@ -6,7 +5,7 @@ gibt diesen zurück.
 """
 from numpy import random
 
-# global variable
+
 CITY_DESCRIPTIONS = {
                    "berlin": {"0": "im Nordosten Deutschlands",
                               "1": "in der Hauptstadt",
@@ -55,7 +54,7 @@ CITY_DESCRIPTIONS = {
                                  "2": "in Stuttgart"}
                     }
 
-# function
+
 def random_city_descriptions(city_name):
     """Gibt eine Beschreibung der Stadt aus.
 

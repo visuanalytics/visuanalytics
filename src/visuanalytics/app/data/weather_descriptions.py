@@ -1,4 +1,3 @@
-# Autor: Tanja
 """
 Globale Variable: WEATHER_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen des Wetters anhand eines Codes.
 Funktion: random_weather_descriptions(code): Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
@@ -6,7 +5,7 @@ gibt diesen zurück.
 """
 from numpy import random
 
-# global variable
+
 WEATHER_DESCRIPTIONS = {
         "200": {"0": "kommt es zu Gewittern mit leichtem Regen",
                 "1": "ist mit Gewitter und leichtem Regen zu rechnen"},
@@ -85,7 +84,8 @@ WEATHER_DESCRIPTIONS = {
         "900": {"0": "kommt es zu unbekanntem Niederschlag",
                 "1": "ist mit unbekanntem Niederschlag zu rechnen"}
     }
-# function
+
+
 def random_weather_descriptions(code):
     """Nimmt den Code vom Wetter-Icon aus der Weatherbit-API und generiert einen Satzteil als String.
 
