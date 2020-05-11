@@ -1,9 +1,9 @@
 # Autor: Tanja
 #
-# ACHTUNG: NOCH NICHT VOLLSTÄNDIG! NUR DEMO-VERSION
+# TODO: NOCH NICHT VOLLSTÄNDIG! NUR DEMO-VERSION
 # Zur Vervollständigung werden weitere Module und das Dictionary mit den Daten der API und verarbeiteten Daten benötigt.
 """
-Text- und Audiogenerierung des Wetterberichts mit vorverarbeiteten Daten aus der Weatherbit-API.
+Generierung einer Audiodatei des Wetterberichts mit vorverarbeiteten Daten aus der Weatherbit-API.
 In DATA sind aktuell nur Beispielwerte abgespeichert.
 """
 
@@ -46,7 +46,7 @@ DATA = {
   "sunset_ts": 1588823718}
 
 def first_weatherforecast_text_to_speech(days):
-    """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Text- und Audio-Datei.
+    """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Audio-Datei.
 
     Es wird jeweils ein Text für die Wettervorhersage für heute und die drei darauffolgenden Tage erstellt.
     Die Sätze werden aus Satzteilen zusammengesetzt, die von den Modulen cities_descriptions,
@@ -62,36 +62,43 @@ def first_weatherforecast_text_to_speech(days):
         text = first_weatherforecast_text_to_speech(days)
         print(text)
     """
-    today = "Am heutigen " + days[0] + " " + random_weather_descriptions(DATA["code_1"]) + " " + random_city_descriptions(DATA["city_name_1"]) + " und " + random_city_descriptions(DATA["city_name_2"]) + " " + random_weather_descriptions(DATA["code_2"]) + ". Die Temperaturen liegen zwischen " + str(DATA["min_temp_3"]) + " Grad " + random_city_descriptions(DATA["city_name_3"]) + " und " + str(DATA["max_temp_4"]) + " Grad " + random_city_descriptions(DATA["city_name_4"]) + """. """ + random_city_descriptions(DATA["city_name_5"]) + " " + random_weather_descriptions(DATA["code_5"]) + ". Der Wind kommt aus Richtung " + wind_data_to_text(DATA["wind_cdir_full"], DATA["wind_dir"], DATA["wind_spd"])[0] + " mit einer Geschwindigkeit von " + wind_data_to_text(DATA["wind_cdir_full"], DATA["wind_dir"], DATA["wind_spd"])[2] + ". Die Durchschnittstemperatur liegt heute bei " + str(DATA["temp"]) + " Grad. Die Sonne geht gegen " + time_change_format(DATA["sunset_ts"])[2] + " unter und geht am " + days[1] + " um " + time_change_format(DATA["sunrise_ts"])[2] + " wieder auf. "
-    next_1 = "Am " + days[1] + " " + random_weather_descriptions(DATA["code_1"]) + " " + random_city_descriptions(DATA["city_name_1"]) + " und " + random_city_descriptions(DATA["city_name_2"]) + " " + random_weather_descriptions(DATA["code_2"]) + ". Die Temperaturen liegen zwischen " + str(DATA["min_temp_3"]) + " Grad " + random_city_descriptions(DATA["city_name_3"]) + " und " + str(DATA["max_temp_4"]) + " Grad " + random_city_descriptions(DATA["city_name_4"]) + ". "
-    next_2 = "Am " + days[2] + " werden " + random_city_descriptions(DATA["city_name_1"]) + " Temperaturen von " + str(DATA["max_temp_1"]) + " Grad erreicht. " + random_city_descriptions(DATA["city_name_1"]) + " " + random_weather_descriptions(DATA["code_1"]) + ". " + random_city_descriptions(DATA["city_name_2"]) + " " + random_weather_descriptions(DATA["code_2"]) + ". " " Die Temperaturen erreichen dort bis zu " + str(DATA["max_temp_2"]) + " Grad. "
-    next_3 = "Am " + days[3] + " " + random_weather_descriptions(DATA["code_1"]) + " " + random_city_descriptions(DATA["city_name_1"]) + " und " + random_city_descriptions(DATA["city_name_2"]) + " " + random_weather_descriptions(DATA["code_2"]) + ". Die Temperaturen liegen zwischen " + str(DATA["min_temp_3"]) + " Grad " + random_city_descriptions(DATA["city_name_3"]) + " und " + str(DATA["max_temp_4"]) + " Grad " + random_city_descriptions(DATA["city_name_4"]) + ". "
-    text_full = today + next_1 + next_2 + next_3
+    today = (f"Am heutigen {days[0]} {random_weather_descriptions(DATA['code_1'])} {random_city_descriptions(DATA['city_name_1'])} "
+             f"und {random_city_descriptions(DATA['city_name_2'])} {random_weather_descriptions(DATA['code_2'])}. "
+             f"Die Temperaturen liegen zwischen {str(DATA['min_temp_3'])} Grad {random_city_descriptions(DATA['city_name_3'])} " 
+             f"und {str(DATA['max_temp_4'])} Grad {random_city_descriptions(DATA['city_name_4'])}. "
+             f"{random_city_descriptions(DATA['city_name_5'])} {random_weather_descriptions(DATA['code_5'])}. "
+             f"Der Wind kommt aus Richtung {wind_data_to_text(DATA['wind_cdir_full'], DATA['wind_dir'], DATA['wind_spd'])[0]} "
+             f"mit einer Geschwindigkeit von {wind_data_to_text(DATA['wind_cdir_full'], DATA['wind_dir'], DATA['wind_spd'])[2]}. " 
+             f"Die Durchschnittstemperatur liegt heute bei {str(DATA['temp'])} Grad. Die Sonne geht gegen "
+             f"{time_change_format(DATA['sunset_ts'])[2]} unter und geht am {days[1]} um {time_change_format(DATA['sunrise_ts'])[2]} "
+             f"wieder auf. ")
+    next_1 = (f"Am {days[1]} {random_weather_descriptions(DATA['code_1'])} {random_city_descriptions(DATA['city_name_1'])} "
+              f"und {random_city_descriptions(DATA['city_name_2'])} {random_weather_descriptions(DATA['code_2'])}. "
+              f"Die Temperaturen liegen zwischen {str(DATA['min_temp_3'])} Grad {random_city_descriptions(DATA['city_name_3'])} "
+              f"und {str(DATA['max_temp_4'])} Grad {random_city_descriptions(DATA['city_name_4'])}. ")
+    next_2 = (f"Am {days[2]} werden {random_city_descriptions(DATA['city_name_1'])} Temperaturen von {str(DATA['max_temp_1'])} "
+            f"Grad erreicht. {random_city_descriptions(DATA['city_name_1'])} {random_weather_descriptions(DATA['code_1'])}. "
+            f"{random_city_descriptions(DATA['city_name_2'])} {random_weather_descriptions(DATA['code_2'])}. Die Temperaturen erreichen dort bis zu "
+            f"{str(DATA['max_temp_2'])} Grad. ")
+    next_3 = (f"Am {days[3]} {random_weather_descriptions(DATA['code_1'])} {random_city_descriptions(DATA['city_name_1'])} "
+              f"und {random_city_descriptions(DATA['city_name_2'])} {random_weather_descriptions(DATA['code_2'])}. "
+              f"Die Temperaturen liegen zwischen {str(DATA['min_temp_3'])} Grad {random_city_descriptions(DATA['city_name_3'])} "
+              f"und {str(DATA['max_temp_4'])} Grad {random_city_descriptions(DATA['city_name_4'])}. ")
+    text_full = f"{today} {next_1} {next_2} {next_3}"
 
     # Quelle: https://stackoverflow.com/questions/13890935/does-pythons-time-time-return-the-local-or-utc-timestamp
-
-    ts = time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y_%H%M%S')
-    file_name_txt = "full_weatherforecast_" + timestamp + ".txt"
-    file_name_mp3 = "full_weatherforecast_" + timestamp + ".mp3"
-
     # Quelle: https://www.geeksforgeeks.org/reading-writing-text-files-python/
 
 # Die Zeilen, in denen eine Datei generiert wird, sind auskommentiert. Es muss erst geklärt werden wie genau diese zwischengespeichert werden sollen.
 
     ts = time.time()
     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y_%H%M%S')
-    file_name_txt = "full_weatherforecast_" + timestamp + ".txt"
     file_name_mp3 = "full_weatherforecast_" + timestamp + ".mp3"
 
-    # Quelle: https://www.geeksforgeeks.org/reading-writing-text-files-python/
+# TODO Path-Module einfügen bzw. zur Hilfe nehmen, um die .mp3-Dateien temporär zu speichern
 
-    #File_object = open(file_name_txt, "w")
-    #File_object.write(text_full)
-    #File_object.close()
     #tts = gTTS(text_full, lang='de')
     #tts.save(file_name_mp3)
     return text_full
-
 
 
