@@ -1,5 +1,4 @@
-from visuanalytics.app.visualization import weather_visualization as Ws
-from visuanalytics.app.apis import weather
+from visuanalytics.analytics.processing.weather import weather_visualization as ws
 
 """
 json_data = weather.get_forecasts()
@@ -207,7 +206,7 @@ data = {'cities': {'Kiel': [
                   {'temp_avg': 6.9799999999999995, 'temp_min': -0.1, 'temp_max': 14.1, 'common_icon': 'c04d',
                    'common_code': 804}]}
 
-LISTE = [Ws.generate_vorhersage_morgen_icons(data), Ws.generate_vorhersage_morgen_temperatur(data),
-         Ws.generate_drei_tages_vorhersage(data)]
+LISTE = [ws.generate_vorhersage_morgen_icons(data), ws.generate_vorhersage_morgen_temperatur(data),
+         ws.generate_drei_tages_vorhersage(data)]
 
 # todo needs to be finished when speech ready (to generate video)

@@ -1,5 +1,8 @@
-"""Module dient dazu um aus gegebenen Daten von der Weather API Bilder oder Videos zu generieren.
+"""Modul dient dazu um aus gegebenen Daten von der Weather API Bilder oder Videos zu generieren.
 """
+# TODO (Jannik): Englische Namen für Variablen und Funktionsnamen verwenden, Funtionen an die neue Struktur anpassen,
+# TODO (Jannik): Teil der Funktionen ins "linking"-package auslagern.
+
 import os
 
 from PIL import Image
@@ -7,7 +10,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 import uuid
 
-from visuanalytics.app.data import processing_weather as Pw
+from visuanalytics.analytics.processing.weather import processing_weather as pw
 
 LOCATIONS_DREITAGE = [("Gießen", (160, 534), (785, 534), (1410, 534)), ("Hamburg", (255, 300), (875, 300), (1492, 300)),
                       ("Dresden", (360, 447), (980, 447), (1604, 447)),
@@ -85,7 +88,7 @@ def generate_drei_tages_vorhersage(data):
         for i in range(1, 4):
             icon = Image.open(os.path.join(os.path.dirname(__file__),
                                            "../../resources/weather/icons/",
-                                           Pw.get_weather_icon(data, item[0], i) + ".png")).convert(
+                                           pw.get_weather_icon(data, item[0], i) + ".png")).convert(
                 "RGBA")
             icon = icon.resize([160, 160], Image.LANCZOS)
             source_img.paste(icon, item[i], icon)
@@ -94,13 +97,13 @@ def generate_drei_tages_vorhersage(data):
 
     i = 1
     for item in LOCATIONS_TEMP_MAX_DREITAGE:
-        draw.text(item, Pw.get_max_temp(data, i),
+        draw.text(item, pw.get_max_temp(data, i),
                   font=ImageFont.truetype(
                       os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 60))
         i += 1
     i = 1
     for item in LOCATIONS_TEMP_MIN_DREITAGE:
-        draw.text(item, Pw.get_min_temp(data, i),
+        draw.text(item, pw.get_min_temp(data, i),
                   font=ImageFont.truetype(
                       os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 60))
         i += 1
@@ -123,7 +126,7 @@ def generate_vorhersage_morgen_icons(data):
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in LOCATIONS_MORGEN:
         icon = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather/icons",
-                                       Pw.get_weather_icon(data, item[0], 0) + ".png")).convert(
+                                       pw.get_weather_icon(data, item[0], 0) + ".png")).convert(
             "RGBA")
         icon = icon.resize([150, 150], Image.LANCZOS)
         source_img.paste(icon, (item[1][0] - 40, item[1][1] - 35), icon)
@@ -148,7 +151,7 @@ def generate_vorhersage_morgen_temperatur(data):
     for item in LOCATIONS_MORGEN:
         kachel = Image.open(os.path.join(os.path.dirname(__file__), "../../resources/weather", "kachel.png"))
         source_img.paste(kachel, item[1], kachel)
-        draw.text((item[1][0] + 10, item[1][1]), Pw.get_weather_temp(data, item[0], 0),
+        draw.text((item[1][0] + 10, item[1][1]), pw.get_weather_temp(data, item[0], 0),
                   font=ImageFont.truetype(
                       os.path.join(os.path.dirname(__file__), "../../resources/weather", "FreeSansBold.ttf"), 53))
 

@@ -1,6 +1,7 @@
 # App requirements
 Pillow==7.1.2
 numpy==1.18.4
+requests==2.23.0
 
 # Server requirements
 flask==1.1.2

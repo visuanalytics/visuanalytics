@@ -1,4 +1,7 @@
-"""Module zum verarbeiten der Daten von der Wetter Api"""
+"""Modul zum verarbeiten der Daten von der Wetter Api"""
+
+
+# TODO: Vielleicht das Modul in "util" umbenennen
 
 
 def get_weather_icon(data, location, date_in_future):
@@ -24,7 +27,6 @@ def get_weather_temp(data, location, date_in_future):
            """
     temp = round(data['cities'][location][date_in_future]['temp'])
     return f"{temp}\u00B0"
-
 
 
 def get_max_temp(data, date_in_future):

@@ -35,6 +35,5 @@ def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
     wind_direction_2 = directions_dictionary[wind_cdir[1]]["noun"]
     wind_direction_text = wind_direction_1 + " " + wind_direction_2
     wind_dir_degree_text = str(wind_dir) + " Grad"
-    wind_spd_text = str(round(wind_spd, 2)).replace(".",",") + " Metern pro Sekunde"
+    wind_spd_text = str(round(wind_spd, 2)).replace(".", ",") + " Metern pro Sekunde"
     return wind_direction_text, wind_dir_degree_text, wind_spd_text
-
