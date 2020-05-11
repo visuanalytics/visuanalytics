@@ -1,30 +1,13 @@
 # Autor: Tanja
-
+"""
+Globale Variable: CITY_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen einer Stadt.
+Funktion: random_city_descriptions(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
+gibt diesen zurück.
+"""
 from numpy import random
 
-def random_city_descriptions(city_name, city_descriptions):
-    """Gibt eine Beschreibung der Stadt aus.
-
-    Um die Texte des Wetterberichts automatisch zu generieren und sie trotzdem nicht immer gleich aussehen, wird
-    hier ein Dictionary verwendet mit verschiedenen Beschreibungen zu einer Stadt. Dies kann ganz normal der Name
-    der Stadt sein oder zum Beispiel die Lage der Stadt in Deutschland. Mithilfe der Random-Funktion wird eine
-    dieser Beschreibungen ausgewählt und später im Text des Wetterberichts eingefügt.
-
-    :param city_name: Die von der Weatherbit-API ausgegebene Stadt.
-    :param city_descriptions: Dictionary mit verschiedenen Beschreibungen einer Stadt.
-    :return text_city: Gibt eine Stadt oder eine Eigenschaft (wie z.B. Himmelsrichtung) der eingegebenen Stadt als
-    Text aus.
-
-    Example:
-        city_name = "schwerin"
-        x = random_city_descriptions(city_name, city_descriptions)
-        print(x + " scheint am Donnerstag die Sonne.")
-    """
-    x = random.choice(["0", "1", "2"])
-    text_city = str(city_descriptions[city_name][x])
-    return text_city
-
-city_descriptions = {
+# global variable
+CITY_DESCRIPTIONS = {
                    "berlin": {"0": "im Nordosten Deutschlands",
                               "1": "in der Hauptstadt",
                               "2": "in Berlin"},
@@ -72,3 +55,24 @@ city_descriptions = {
                                  "2": "in Stuttgart"}
                     }
 
+# function
+def random_city_descriptions(city_name):
+    """Gibt eine Beschreibung der Stadt aus.
+
+    Um die Texte des Wetterberichts automatisch zu generieren und sie trotzdem nicht immer gleich aussehen, wird
+    hier das Dictionary CITY_DESCRIPTIONS verwendet mit verschiedenen Beschreibungen zu einer Stadt. Dies kann ganz normal der Name
+    der Stadt sein oder zum Beispiel die Lage der Stadt in Deutschland. Mithilfe der Random-Funktion wird eine
+    dieser Beschreibungen ausgewählt und später im Text des Wetterberichts eingefügt.
+
+    :param city_name: Die von der Weatherbit-API ausgegebene Stadt.
+    :return text_city: Gibt eine Stadt oder eine Eigenschaft (wie z.B. Himmelsrichtung) der eingegebenen Stadt als
+    Text aus.
+
+    Example:
+        city_name = "schwerin"
+        x = random_city_descriptions(city_name)
+        print(x + " scheint am Donnerstag die Sonne.")
+    """
+    x = random.choice(["0", "1", "2"])
+    text_city = str(CITY_DESCRIPTIONS[city_name][x])
+    return text_city
