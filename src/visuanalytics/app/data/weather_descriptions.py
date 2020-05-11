@@ -1,26 +1,13 @@
 # Autor: Tanja
-
+"""
+Globale Variable: WEATHER_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen des Wetters anhand eines Codes.
+Funktion: random_weather_descriptions(code): Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
+gibt diesen zurück.
+"""
 from numpy import random
 
-def random_weather_descriptions(code):
-    """Nimmt den Code vom Wetter-Icon aus der Weatherbit-API und generiert einen Satzteil als String.
-
-    Innerhalb des Moduls wird der Code vom Wetter-Icon in einen String umgewandelt und im Dictionary
-    weather_descriptions nachgeschaut, welcher Satzteil dazugehört. Es sind mehrere Satzteile pro
-    Code möglich, daher wird mit der random-Funktion einer der möglichen Satzteile ausgesucht und als
-    String ausgegeben. Dieser Satzteil wird ein Teil des späteren Wetterberichts (.txt-Datei), welcher
-    dann in eine Audio-Datei umgewandelt wird.
-
-    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer.
-    :param weather_descriptions: Dictionary mit verschiedenen Satzteilen zu einer Wetterbeschreibung.
-    :return text_weather: String. Wird am Ende als Beschreibung zum Wetter als Satzteil in den Wetterbericht eingebaut.
-
-    Example:
-        code = 601
-        text = random_weather_description(code)
-        print("In Berlin " + text + ".")
-    """
-    weather_descriptions = {
+# global variable
+WEATHER_DESCRIPTIONS = {
         "200": {"0": "kommt es zu Gewittern mit leichtem Regen",
                 "1": "ist mit Gewitter und leichtem Regen zu rechnen"},
         "201": {"0": "kommt es zu Gewittern mit Regen",
@@ -98,7 +85,27 @@ def random_weather_descriptions(code):
         "900": {"0": "kommt es zu unbekanntem Niederschlag",
                 "1": "ist mit unbekanntem Niederschlag zu rechnen"}
     }
+# function
+def random_weather_descriptions(code):
+    """Nimmt den Code vom Wetter-Icon aus der Weatherbit-API und generiert einen Satzteil als String.
+
+    Innerhalb des Moduls wird der Code vom Wetter-Icon in einen String umgewandelt und im Dictionary
+    weather_descriptions nachgeschaut, welcher Satzteil dazugehört. Es sind mehrere Satzteile pro
+    Code möglich, daher wird mit der random-Funktion einer der möglichen Satzteile ausgesucht und als
+    String ausgegeben. Dieser Satzteil wird ein Teil des späteren Wetterberichts (.txt-Datei), welcher
+    dann in eine Audio-Datei umgewandelt wird.
+
+    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer.
+    :param weather_descriptions: Dictionary mit verschiedenen Satzteilen zu einer Wetterbeschreibung.
+    :return text_weather: String. Wird am Ende als Beschreibung zum Wetter als Satzteil in den Wetterbericht eingebaut.
+
+    Example:
+        code = 601
+        text = random_weather_descriptions(code)
+        print("In Berlin " + text + ".")
+    """
+
     icon_code = str(code)
     x = random.choice(["0", "1"])
-    text_weather = str(weather_descriptions[icon_code][x])
+    text_weather = str(WEATHER_DESCRIPTIONS[icon_code][x])
     return text_weather
