@@ -9,8 +9,35 @@ from visuanalytics.analytics.util import statistical
 
 RELEVANT_DATA = ["date_time", "temp", "low_temp", "min_temp", "high_temp", "max_temp", "app_min_temp", "app_max_temp",
                  "wind_cdir", "wind_dir", "icon", "code", "sunrise_ts", "sunset_ts"]
+
 """
 list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Daten rausgefiltert werden sollen.
+"""
+
+LOCATIONS_TOMOROW = [("Garmisch-Partenkirchen", (898, 900)), ("München", (1080, 822)),
+                     ("Nürnberg", (930, 720)), ("Frankfurt", (675, 610)),
+                     ("Gießen", (843, 540)), ("Dresden", (1106, 482)),
+                     ("Hannover", (1006, 370)), ("Bremen", (755, 333)),
+                     ("Kiel", (986, 218)), ("Berlin", (1147, 270)), ]
+"""
+list: Liste aus String, Tupel(int, int): X und Y Koordinaten der Positionen der Icons in der Vorhersage für morgen sortiert nach den verschiedenen Orten/Regionen.
+"""
+
+LOCATIONS_ICONS_THREEDAYS = [("Gießen", (160, 534), (785, 534), (1410, 534)),
+                             ("Hamburg", (255, 300), (875, 300), (1492, 300)),
+                             ("Dresden", (360, 447), (980, 447), (1604, 447)),
+                             ("München", (272, 670), (890, 670), (1510, 670))]
+"""
+list: Liste aus String, Tupel(int, int)x3: X und Y Koordinaten der Positionen der Icons in der 3 Tages Vorhersage sortiert nach den verschiedenen Orten/Regionen.
+"""
+
+LOCATIONS_TEMP_MIN_THREEDAYS = [(160, 950), (790, 950), (1400, 950)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
+"""
+LOCATIONS_TEMP_MAX_THREEDAYS = [(450, 950), (1070, 950), (1700, 950)]
+"""
+list:Liste aus Tupeln: X und Y Koordinaten der Max Temperaturen in der 3 Tages Vorhersage.
 """
 
 
@@ -101,3 +128,90 @@ def _summaries(data):
 def _get_for_day(day, attribute, data):
     days = [data[c][day] for c in data]
     return [d[attribute] for d in days]
+
+
+def get_ico_tomorow(data):
+    out = []
+    for entry in LOCATIONS_TOMOROW:
+        out.append((entry[1], _get_weather_icon(data, entry[0], 0)))
+    return out
+
+
+def get_temp_tomorow(data):
+    out = []
+    for entry in LOCATIONS_TOMOROW:
+        out.append((entry[1], _get_weather_temp(data, entry[0], 0)))
+    return out
+
+
+def get_temp_mm_three(data):
+    out = []
+    i = 0
+    for entry in LOCATIONS_TEMP_MIN_THREEDAYS:
+        out.append((entry, _get_min_temp(data, i)))
+        i += 1
+    i = 0
+    for entry in LOCATIONS_TEMP_MAX_THREEDAYS:
+        out.append((entry, _get_max_temp(data, i)))
+        i += 1
+    return out
+
+
+def get_ico_three(data):
+    out = []
+    for entry in LOCATIONS_ICONS_THREEDAYS:
+        out.append(
+            (entry[1], entry[2], entry[3], _get_weather_icon(data, entry[0], 1), _get_weather_icon(data, entry[0], 2),
+             _get_weather_icon(data, entry[0], 3)))
+    return out
+
+
+def _get_weather_icon(data, location, date_in_future):
+    """Simple Methode um aus dem Data von der Api, einem Ort und einer Zeitangabe das dazugehöroge Icon zu bekommen
+               Args:
+                  data(Liste) : Preprocessed Data von der Api
+                  location (String) : Den Ort der abgefragt werden soll(muss in data vorhanden sein)
+                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
+               Returns:
+                  String : Den passenden Iconnamen zu den gegebenen Parametern
+           """
+    return data['cities'][location][date_in_future]['icon']
+
+
+def _get_weather_temp(data, location, date_in_future):
+    """Simple Methode um aus dem Data von der Api, einem Ort und einer Zeitangabe die dazugehörige Temperatur zu bekommen
+               Args:
+                  data(Liste): Preprocessed Data von der Api
+                  location (String) : Den Ort der abgefragt werden soll(muss in data vorhanden sein)
+                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
+               Returns:
+                  String : Die passende Temperatur zu den gegebenen Parametern
+           """
+    temp = round(data['cities'][location][date_in_future]['temp'])
+    return f"{temp}\u00B0"
+
+
+def _get_max_temp(data, date_in_future):
+    """Simple Methode um aus dem Data von der Api und einer Zeitangabe die maximal Temperatur für Deutschland zu bekommen
+               Args:
+                  data(Liste): Preprocessed Data von der Api
+                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
+               Returns:
+                  String : Die maximal Temperatur zu den gegebenen Parametern
+           """
+
+    max_temp = round(data['summaries'][date_in_future]['temp_max'])
+    return f"{max_temp}\u00B0"
+
+
+def _get_min_temp(data, date_in_future):
+    """Simple Methode um aus dem Data von der Api und einer Zeitangabe die manimal Temperatur für Deutschland zu bekommen
+               Args:
+                  data(Liste): Preprocessed Data von der Api
+                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
+               Returns:
+                  String : Die manimal Temperatur zu den gegebenen Parametern
+           """
+
+    min_temp = round(data['summaries'][date_in_future]['temp_min'])
+    return f"{min_temp}\u00B0"
