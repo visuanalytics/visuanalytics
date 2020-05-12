@@ -2,8 +2,6 @@
 
 Grundlegender Style Guide für Python source code Dateien.
 
-<!--TODO vtl ordnerstrucktur-->
-
 ## Module
 
 Jede `.py` datei ist ein Module
@@ -91,9 +89,10 @@ unter File > Settings > Save Actions
 
 ## Doc Kommentare
 
-In Python kann man mit `""" Docstring """` Kommentare zur Code Dokumentation hinzufügen. Um im Nachhinein eine Documentation daraus zu generieren. Die nachfolgenden definitionen basieren Teilweiße auf dem Vorgaben aus dem [Google Styleguid für Python](http://google.github.io/styleguide/pyguide.html)
+In Python kann man mit `""" Docstring """` Kommentare zur Code Dokumentation hinzufügen. Um im Nachhinein eine Documentation daraus zu generieren.
+Die nachfolgenden Vorgaben bassieren größtenteils auf den Regeln dem die IDE Pycharm folgt.
 
-<!--todo Doku Tool hinschreiben und auf anleitung/autmatisation verweißen -->
+> Informationen um die Dokumentation daraus zu generieren Befinden sich in der README des Reoposetories.
 
 ### Modul (Datei)
 
@@ -112,8 +111,6 @@ Example:
 
 Die **Beispiel** Sektion ist **Optional**.
 
-Weitere Infomationen sind bei dem [Google Styleguid](http://google.github.io/styleguide/pyguide.html#382-modules) zufinden.
-
 ### Funktionen
 
 Eine Funktion muss immer einen Dockstring enthalten mit der **Ausnahmen** von Funktionen die auf die Folgenden Kriterien passen:
@@ -123,28 +120,25 @@ Eine Funktion muss immer einen Dockstring enthalten mit der **Ausnahmen** von Fu
 - Bei Offensichtlich Funktionen
 
 ```Python
-def fetch_bigtable_rows(big_table, keys, other_silly_variable=None):
+def test(param1, param2):
     """Eine einzeilige Zusammenfassung der Funktion, abgeschlossen durch einen Punkt.
 
     Lassen Sie eine Leerzeile stehen.  Der Rest dieser Dokumentzeile sollte eine
     allgemeine Beschreibung der Funktion sein.
 
-    Args:
-        param1 (varType): Beschribung.
-        param2 (varType): Beschribung.
-            Beschreibungen Über mehrere Zeilen sollten eingerückt werden.
+    :param param1: Beschreibung
+    :type param1: string (optional)
+    :param param2: Beschreibung
+        Beschreibungen Über mehrere Zeilen sollten eingerückt werden.
 
-    Returns:
-        varType: Beschribung
+    :return: Beschreibung
+    :rtype: string
 
-    Raises:
-        ErrorName: Beschribung.
+    :raises ErrorName: Beschribung.
     """
 ```
 
 Sektionen die **Nicht benötig** werden Können einfach **weggelassen** werden. wie Z.B `Raises` wenn die Funktion Keinen Fehler Produziert, auch die **Argumenten Typen** können **weggelassen** werden wenn diese **schon** im **Code** angegeben werden. Sind **Funktionen** teil von **Klassen** sollte der **self** Parameter **nicht** mit angegeben werden.
-
-> Weitere Infomationen sind bei dem [Google Styleguid](http://google.github.io/styleguide/pyguide.html#383-functions-and-methods) zufinden.
 
 ### Klasse
 
@@ -157,15 +151,13 @@ class SampleClass(object):
     Lassen Sie eine Leerzeile stehen.  Der Rest dieser Dokumentzeile sollte eine
     allgemeine Beschreibung der Klasse sein.
 
-    Attributes:
-        attribute1 (type): Beschreibung.
-        attribute2 (type): Beschreibung.
+    :param attribute1: Beschreibung
+    :type attribute1: string (Optional)
+    :param attribute2: Beschreibung
     """
 ```
 
 Werden **Attribute** mit `@property` definiert sollten diese in dessen **getter Methode** Dokumentiert werden.
-
-> Weitere Infomationen sind bei dem [Google Styleguid](http://google.github.io/styleguide/pyguide.html#384-classess) zufinden.
 
 ### Globale Variablen
 
@@ -181,6 +173,12 @@ Die Beschreibung kann mehrere Zeilen Lang sein
 
 `@Property` Getter methoden sollten auch so Dokumentiert werden.
 
+### Algemein
+
+In den oberen Beispielen werden nicht alle Formatierungen gezeigt, die möglich sind, 
+in Pycharm kann man, wenn man sich in einem Docstring befindet
+durch das Drücken der Tastenkombination `str` + `enter` Vorschläge anzeigen lassen.
+
 ## Kommentare
 
 Kommentare sollten niemals den Code selbst Beschreiben sondern nur seine Funktion.
@@ -188,13 +186,13 @@ Kommentare sollten niemals den Code selbst Beschreiben sondern nur seine Funktio
 Kompliziertere Code Abschnitte sollten einen Längeren Kommentar über dem Code z.B.:
 
 ```python
-code
+<code>
 
 
 # Description l1
 # Description l2
 
-code
+<code>
 ```
 
 > Zur Übersichtlichkeit sollten zwei Zeilen vor und eine Zeile nach dem Kommentar freibleiben
