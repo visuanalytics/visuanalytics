@@ -4,7 +4,7 @@ import os
 
 RESOURCES_LOCATION = "../../resources"
 """
-Relativer pfad zu dem resources Ordner.
+Relativer Pfad zu dem resources Ordner.
 """
 
 
@@ -46,7 +46,7 @@ def delete_resource(path: str):
 
     Verwendet :func:`get_resource_path` um den Pfad der Ressource zu bekommen.
     Ist die Ressource nicht vorhanden wird das ignoriert.
-    Ist der angegebene pfad allerdings ein Ordner wird ein Fehler geworfen.
+    Ist der angegebene Pfad allerdings ein Ordner wird ein Fehler geworfen.
 
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
 
