@@ -105,7 +105,7 @@ Lassen Sie eine Leerzeile stehen.  Der Rest dieser Dokumentzeile sollte eine
 allgemeine Beschreibung des Moduls oder Programms.
 
 Example:
-    Ein block für code Beispiele (optional)
+    Ein block für code Beispiele (optional).
 """
 ```
 
@@ -126,13 +126,13 @@ def test(param1, param2):
     Lassen Sie eine Leerzeile stehen.  Der Rest dieser Dokumentzeile sollte eine
     allgemeine Beschreibung der Funktion sein.
 
-    :param param1: Beschreibung
-    :type param1: string (optional)
-    :param param2: Beschreibung
+    :param param1: Beschreibung.
+    :type param1: str (optional)
+    :param param2: Beschreibung.
         Beschreibungen Über mehrere Zeilen sollten eingerückt werden.
 
-    :return: Beschreibung
-    :rtype: string
+    :return: Beschreibung.
+    :rtype: str
 
     :raises ErrorName: Beschribung.
     """
@@ -151,9 +151,9 @@ class SampleClass(object):
     Lassen Sie eine Leerzeile stehen.  Der Rest dieser Dokumentzeile sollte eine
     allgemeine Beschreibung der Klasse sein.
 
-    :param attribute1: Beschreibung
-    :type attribute1: string (Optional)
-    :param attribute2: Beschreibung
+    :param attribute1: Beschreibung.
+    :type attribute1: str (Optional)
+    :param attribute2: Beschreibung.
     """
 ```
 
@@ -167,7 +167,7 @@ Globale Variablen können mit einem Dockstring versehen werden:
 module_level_variable2 = 98765
 """type: Beschreibung.
 
-Die Beschreibung kann mehrere Zeilen Lang sein
+Die Beschreibung kann mehrere Zeilen Lang sein.
 """
 ```
 
