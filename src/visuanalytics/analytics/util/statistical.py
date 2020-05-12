@@ -1,5 +1,5 @@
 """
-Dieses Modul enthält Allgemeine Hilfsfunktionen.
+Dieses Modul enthält Hilfsfunktionen für statistische Berechnungen.
 """
 
 import collections

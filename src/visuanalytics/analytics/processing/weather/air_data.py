@@ -16,6 +16,5 @@ def air_data_to_text(rh, pres):
         print(p)
     """
     rh_text = str(rh) + " Prozent"
-    pres_text = str(pres).replace(".",",") + " Millibar"
+    pres_text = str(pres).replace(".", ",") + " Millibar"
     return rh_text, pres_text
-
