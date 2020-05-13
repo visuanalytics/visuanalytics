@@ -131,6 +131,20 @@ def _get_for_day(day, attribute, data):
 
 
 def get_ico_tomorow(data):
+    """
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Icons an verschieden Orten für morgen
+
+
+
+    :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
+    :type data:list
+    :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Icons und Name des Icons
+    :rtype: list
+
+    Beispiel Rückgabeliste:
+    [((898, 900), 'r04d'), ((1080, 822), 'c04d'), ((930, 720), 'c04d'), ((675, 610), 'c04d'), ((843, 540), 't02d'),
+    ((1106, 482), 'c04d'), ((1006, 370), 'c04d'), ((755, 333), 'c04d'), ((986, 218), 'c04d'), ((1147, 270), 'c03d')]
+    """
     out = []
     for entry in LOCATIONS_TOMOROW:
         out.append((entry[1], _get_weather_icon(data, entry[0], 0)))
@@ -138,6 +152,19 @@ def get_ico_tomorow(data):
 
 
 def get_temp_tomorow(data):
+    """
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
+
+    :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
+    :type data:list
+    :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Temperatur und der Temperatur
+    :rtype: list
+
+    Beispiel Rückgabeliste:
+    [((898, 900), '14°'), ((1080, 822), '17°'), ((930, 720), '19°'), ((675, 610), '17°'), ((843, 540), '16°'),
+    ((1106, 482), '18°'), ((1006, 370), '17°'), ((755, 333), '15°'), ((986, 218), '5°'), ((1147, 270), '-3°')]
+
+    """
     out = []
     for entry in LOCATIONS_TOMOROW:
         out.append((entry[1], _get_weather_temp(data, entry[0], 0)))
@@ -145,12 +172,26 @@ def get_temp_tomorow(data):
 
 
 def get_temp_mm_three(data):
+    """
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit min und max Temperaturen für die 2-4 Tages Vorhersage
+
+    :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
+    :type data:list
+    :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Temperatur und der min/max Temperatur
+    :rtype: list
+
+    Beispiel Rückgabeliste:
+    [((160, 950), '1°'), ((790, 950), '-1°'), ((1400, 950), '0°'), ((450, 950), '19°'), ((1070, 950), '14°'),
+    ((1700, 950), '14°')]
+
+    """
+
     out = []
-    i = 0
+    i = 1
     for entry in LOCATIONS_TEMP_MIN_THREEDAYS:
         out.append((entry, _get_min_temp(data, i)))
         i += 1
-    i = 0
+    i = 1
     for entry in LOCATIONS_TEMP_MAX_THREEDAYS:
         out.append((entry, _get_max_temp(data, i)))
         i += 1
@@ -158,6 +199,23 @@ def get_temp_mm_three(data):
 
 
 def get_ico_three(data):
+    """
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Icons an verschieden Orten für die 2-4 Tages Vorhersage
+
+
+
+    :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
+    :type data:list
+    :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Icons und Name des Icons für die 2-4 Tages Vorhersage
+    :rtype: list
+
+    Beispiel Rückgabeliste:
+    [((160, 534), (785, 534), (1410, 534), 'c04d', 'c03d', 'c02d'),
+    ((255, 300), (875, 300), (1492, 300), 'c03d', 'c03d', 'r01d'),
+    ((360, 447), (980, 447), (1604, 447), 'r01d', 'c03d', 'c03d'),
+    ((272, 670), (890, 670), (1510, 670), 'r01d', 'r04d', 'r01d')]
+
+    """
     out = []
     for entry in LOCATIONS_ICONS_THREEDAYS:
         out.append(
@@ -167,51 +225,19 @@ def get_ico_three(data):
 
 
 def _get_weather_icon(data, location, date_in_future):
-    """Simple Methode um aus dem Data von der Api, einem Ort und einer Zeitangabe das dazugehöroge Icon zu bekommen
-               Args:
-                  data(Liste) : Preprocessed Data von der Api
-                  location (String) : Den Ort der abgefragt werden soll(muss in data vorhanden sein)
-                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
-               Returns:
-                  String : Den passenden Iconnamen zu den gegebenen Parametern
-           """
     return data['cities'][location][date_in_future]['icon']
 
 
 def _get_weather_temp(data, location, date_in_future):
-    """Simple Methode um aus dem Data von der Api, einem Ort und einer Zeitangabe die dazugehörige Temperatur zu bekommen
-               Args:
-                  data(Liste): Preprocessed Data von der Api
-                  location (String) : Den Ort der abgefragt werden soll(muss in data vorhanden sein)
-                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
-               Returns:
-                  String : Die passende Temperatur zu den gegebenen Parametern
-           """
     temp = round(data['cities'][location][date_in_future]['temp'])
     return f"{temp}\u00B0"
 
 
 def _get_max_temp(data, date_in_future):
-    """Simple Methode um aus dem Data von der Api und einer Zeitangabe die maximal Temperatur für Deutschland zu bekommen
-               Args:
-                  data(Liste): Preprocessed Data von der Api
-                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
-               Returns:
-                  String : Die maximal Temperatur zu den gegebenen Parametern
-           """
-
     max_temp = round(data['summaries'][date_in_future]['temp_max'])
     return f"{max_temp}\u00B0"
 
 
 def _get_min_temp(data, date_in_future):
-    """Simple Methode um aus dem Data von der Api und einer Zeitangabe die manimal Temperatur für Deutschland zu bekommen
-               Args:
-                  data(Liste): Preprocessed Data von der Api
-                  date_in_future (int) : Tag an dem abgefragt werden soll 0 = morgen, 1 = übermorgen
-               Returns:
-                  String : Die manimal Temperatur zu den gegebenen Parametern
-           """
-
     min_temp = round(data['summaries'][date_in_future]['temp_min'])
     return f"{min_temp}\u00B0"

@@ -1,48 +1,45 @@
+"""
+Modul welches Bilder und Audios kombiniert zu einem fertigem Video
+"""
+
 import os
 
-"""
-So könnte die methode aussehen, die den endgültigen Wetterbericht generiert:
-def to_forecast(images, audios): ...
-
-"""
+from visuanalytics.analytics.util import resources
 
 
-def to_forecast(bild_heute_art, bild_heute_temp, bild_dreitage, audio_heute_art,
-                audio_heute_temp, audio_dreitage, audiol_heute_art, audiol_heute_temp,
-                audio3_dreitage):
-    """Methode wird genutzt um das gesamte Video (1+3) zu erstellen
-            Args:
-                bild_heute_art (String): Dateinamen des Bildes für die Vorhersage für morgen (Icons)
-                bild_heute_temp (String): Dateinamen des Bildes für die Vorhersage für morgen (Temperatur)
-                bild_dreitage (String): Dateinamen des Bildes für die Vorhersage für die nächsten 3 Tage
-                audio_heute_art (String): Dateinamen des Audios für die Vorhersage für morgen (Icons)
-                audio_heute_temp (String): Dateinamen des Audios für die Vorhersage für morgen (Temperatur)
-                audio_dreitage (String): Dateinamen des Audios für die Vorhersage für die nächsten 3 Tage
-                audiol_heute_art (Int): Audiolänge des Audios für die Vorhersage für morgen (Icons)
-                audiol_heute_temp (Int): Audiolänge des Audios für die Vorhersage für morgen (Temperatur)
-                audio3_dreitage (Int): Audiolänge des Audios für die Vorhersage für die nächsten 3 Tage
-           Returns:
-              String : Den Dateinamen des erstellten Bildes
-       """
+def to_forecast_germany(images, audios, audiol):
+    """
+    Methode zum erstellen des Deutschland 1-4 Tages Video aus den Bildern+Audios
 
-    with open(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", "input.txt", "w")) as file:
-        file.write("file '" + audio_heute_art + "'\n")
-        file.write("file '" + audio_heute_temp + "'\n")
-        file.write("file '" + audio_dreitage + "'\n")
+    :param images: Eine Liste aus 3 Elementen mit den Dateinamen zu den Bildern (1 -> Iconbild | 2 -> Temperaturbild | 3-> Dreitagesbild)
+    :type: list
+    :param audios: Eine Liste aus 3 Elementen mit den Dateinamen zu den Audios  (1 -> Iconaudio | 2 -> Temperataudio | 3-> Dreitagesaudio)
+    :type: list
+    :param audiol: Eine Liste aus 3 Elementen mit den Audiolängen der Audios (1 -> Iconaudiolänge | 2 -> Temperataudiolänge | 3-> Dreitagesaudiolänge)
+    :type: list
+    :return:
+    :rtype: str
+
+    """
+
+    with resources.open_resource("../../resources/temp/weather/input.txt", "w") as file:
+        file.write("file '" + audios[0] + "'\n")
+        file.write("file '" + audios[1] + "'\n")
+        file.write("file '" + audios[2] + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
-    os.chdir(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather"))
+    os.chdir(resources.get_resource_path("../../resources/temp/weather"))
     os.system(shell_cmd)
 
-    with open(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather", "input.txt", "w")) as file:
-        file.write("file '" + bild_heute_art + "'\n")
-        file.write("duration " + audiol_heute_art + "\n")
-        file.write("file '" + bild_heute_temp + "'\n")
-        file.write("duration " + audiol_heute_temp + "\n")
-        file.write("file '" + bild_dreitage + "'\n")
-        file.write("duration " + audio3_dreitage + "\n")
+    with resources.open_resource("../../resources/temp/weather/input.txt", "w") as file:
+        file.write("file '" + images[0] + "'\n")
+        file.write("duration " + audiol[0] + "\n")
+        file.write("file '" + images[1] + "'\n")
+        file.write("duration " + audiol[1] + "\n")
+        file.write("file '" + images[2] + "'\n")
+        file.write("duration " + audiol[2] + "\n")
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
-    os.chdir(os.path.join(os.path.dirname(__file__), "../../resources/temp/weather"))
+    os.chdir(resources.get_resource_path("../../resources/temp/weather"))
     os.system(shell_cmd)
 
     return "output.mp4"

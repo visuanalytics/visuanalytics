@@ -1,6 +1,8 @@
 from visuanalytics.analytics.processing.weather import weather_visualization as ws
 from visuanalytics.analytics.preprocessing import weather
 
+# todo needs to be finished when speech ready (to generate video)
+
 """
 json_data = weather.get_forecasts()
 data = weather.preprocess_weather_data(json_data)
@@ -10,7 +12,7 @@ data = weather.preprocess_weather_data(json_data)
 
 data = {'cities': {'Kiel': [
     {'wind_cdir': 'S', 'high_temp': 26.5, 'sunset_ts': 1589136887, 'sunrise_ts': 1589083131, 'app_min_temp': 13.1,
-     'app_max_temp': 26.1, 'wind_dir': 188, 'low_temp': 15.6, 'max_temp': 26.5, 'temp': 21.1, 'min_temp': 13.1,
+     'app_max_temp': 26.1, 'wind_dir': 188, 'low_temp': 15.6, 'max_temp': 26.5, 'temp': 5, 'min_temp': 13.1,
      'icon': 'c04d', 'code': 804},
     {'wind_cdir': 'ENE', 'high_temp': 12.7, 'sunset_ts': 1589223365, 'sunrise_ts': 1589169449, 'app_min_temp': 0.4,
      'app_max_temp': 17.9, 'wind_dir': 73, 'low_temp': 3.1, 'max_temp': 17.9, 'temp': 9.1, 'min_temp': 4.2,
@@ -23,7 +25,7 @@ data = {'cities': {'Kiel': [
      'icon': 'c04d', 'code': 804}],
     'Berlin': [
         {'wind_cdir': 'SSE', 'high_temp': 24.5, 'sunset_ts': 1589136759, 'sunrise_ts': 1589080874, 'app_min_temp': 11.7,
-         'app_max_temp': 23.8, 'wind_dir': 153, 'low_temp': 7, 'max_temp': 24.5, 'temp': 19.4, 'min_temp': 11.7,
+         'app_max_temp': 23.8, 'wind_dir': 153, 'low_temp': 7, 'max_temp': 24.5, 'temp': -3, 'min_temp': 11.7,
          'icon': 'c03d', 'code': 803},
         {'wind_cdir': 'NNW', 'high_temp': 8.6, 'sunset_ts': 1589223256, 'sunrise_ts': 1589167172, 'app_min_temp': 0.5,
          'app_max_temp': 16.5, 'wind_dir': 338, 'low_temp': 1.4, 'max_temp': 16.5, 'temp': 8.4, 'min_temp': 4.3,
@@ -207,11 +209,7 @@ data = {'cities': {'Kiel': [
                   {'temp_avg': 6.9799999999999995, 'temp_min': -0.1, 'temp_max': 14.1, 'common_icon': 'c04d',
                    'common_code': 804}]}
 
-# ws.generate_vorhersage_morgen_icons(data)
-# ws.generate_vorhersage_morgen_temperatur(data)
-ws.generate_drei_tages_vorhersage(weather.get_ico_three(data),
-                                  weather.get_temp_mm_three(data))
-ws.generate_vorhersage_morgen_icons(weather.get_ico_tomorow(data))
-ws.generate_vorhersage_morgen_temperatur(weather.get_temp_tomorow(data))
-
-# todo needs to be finished when speech ready (to generate video)
+ws.get_three_pic(weather.get_ico_three(data),
+                 weather.get_temp_mm_three(data))
+ws.get_tomo_icons(weather.get_ico_tomorow(data))
+ws.get_tomo_temperatur(weather.get_temp_tomorow(data))

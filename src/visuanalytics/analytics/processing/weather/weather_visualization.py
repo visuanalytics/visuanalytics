@@ -1,32 +1,33 @@
-"""Modul dient dazu um aus gegebenen Daten von der Weather API Bilder oder Videos zu generieren.
 """
-# TODO (Jannik): Englische Namen für Variablen und Funktionsnamen verwenden, Funtionen an die neue Struktur anpassen,
-# TODO (Jannik): Teil der Funktionen ins "linking"-package auslagern.
-
-import os
+Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder zu generieren.
+"""
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from visuanalytics.analytics.util import resources
 import uuid
 
 
-def generate_drei_tages_vorhersage(data, data2):
-    """Methode wird genutzt um das Bild für die 3 Tages Vorherschau zu generieren.
-        Args:
-            data(Liste): Preprocessed Data von der Api
-        Returns:
-            String : Den Dateinamen des erstellten Bildes
+def get_three_pic(data, data2):
     """
-    source_img = Image.open(
-        os.path.join(os.path.dirname(__file__), "../../../resources/weather", "3-Tage-Vorhersage.png"))
+    Methode zum generieren des Bildes für die Vorhersage für die nächsten 2-4 Tage.
+
+    :param data: Das Ergebnis der Methode :func:`get_ico_three()`.
+    :type data: list
+    :param dat2: Das Ergebnis der Methode :func:`get_temp_mm_three()`.
+    :type data2: list
+
+    :return: Den Dateinamen des erstellten Bildes.
+    :rtype: str
+
+    """
+    source_img = Image.open(resources.get_resource_path("../../resources/weather/3-Tage-Vorhersage.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in data:
         for i in range(0, 3):
-            icon = Image.open(os.path.join(os.path.dirname(__file__),
-                                           "../../../resources/weather/icons/",
-                                           item[i + 3] + ".png")).convert(
-                "RGBA")
+            icon = Image.open(
+                resources.get_resource_path("../../resources/weather/icons/" + item[i + 3] + ".png")).convert("RGBA")
             icon = icon.resize([160, 160], Image.LANCZOS)
             source_img.paste(icon, item[i + 0], icon)
 
@@ -34,57 +35,66 @@ def generate_drei_tages_vorhersage(data, data2):
 
     for item in data2:
         draw.text(item[0], item[1],
-                  font=ImageFont.truetype(
-                      os.path.join(os.path.dirname(__file__), "../../../resources/weather", "FreeSansBold.ttf"), 60))
+                  font=ImageFont.truetype(resources.get_resource_path("../../resources/weather/FreeSansBold.ttf"), 60))
 
-    dateiname = str(uuid.uuid4())
+    file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../resources/temp/weather", dateiname + ".png"))
+        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
 
-    return dateiname
+    return file
 
 
-def generate_vorhersage_morgen_icons(data):
-    """Methode wird genutzt um das Bild für die Vorhersage für morgen zu generieren(Iconbild).
-            Args:
-               data(Liste): Preprocessed Data von der Api
-            Returns:
-               String : Den Dateinamen des erstellten Bildes
-        """
-    source_img = Image.open(os.path.join(os.path.dirname(__file__), "../../../resources/weather", "Wetter-morgen.png"))
+def get_tomo_icons(data):
+    """
+    Methode zum generieren des Bildes für die Vorhersage für morgen (Iconbild).
+
+    :param data: Das Ergebnis der Methode :func:`get_ico_tomorow()`.
+    :type data: list
+
+    :return: Den Dateinamen des erstellten Bildes.
+    :rtype: str
+
+    """
+    source_img = Image.open(resources.get_resource_path("../../resources/weather/Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in data:
-        icon = Image.open(os.path.join(os.path.dirname(__file__), "../../../resources/weather/icons",
-                                       item[1] + ".png")).convert(
+        icon = Image.open(resources.get_resource_path("../../resources/weather/icons/" + item[1] + ".png")).convert(
             "RGBA")
         icon = icon.resize([150, 150], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
 
-    dateiname = str(uuid.uuid4())
+    file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../resources/temp/weather", dateiname + ".png"))
-    return dateiname
+        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
+    return file
 
 
-def generate_vorhersage_morgen_temperatur(data):
-    """methode wird genutzt um das Bild für die Vorhersage für morgen zu generieren(Temperaturbild).
-            Args:
-               data(Liste): Preprocessed Data von der Api
-            Returns:
-               String : Den Dateinamen des erstellten Bildes
-        """
+def get_tomo_temperatur(data):
+    """
+    Methode zum generieren des Bildes für die Vorhersage für morgen (Temperaturbild).
 
-    source_img = Image.open(os.path.join(os.path.dirname(__file__), "../../../resources/weather", "Wetter-morgen.png"))
+    :param data: Das Ergebnis der Methode :func:`get_temp_tomorow()`
+    :type data: list
+
+    :return: Den Dateinamen des erstellten Bildes.
+    :rtype: str
+
+    """
+    source_img = Image.open(resources.get_resource_path("../../resources/weather/Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for item in data:
-        kachel = Image.open(os.path.join(os.path.dirname(__file__), "../../../resources/weather", "kachel.png"))
-        source_img.paste(kachel, item[0], kachel)
-        draw.text((item[0][0] + 10, item[0][1]), item[1],
-                  font=ImageFont.truetype(
-                      os.path.join(os.path.dirname(__file__), "../../../resources/weather", "FreeSansBold.ttf"), 53))
+        x = 0
+        if len(item[1]) == 2:
+            x = 17
+        if str(item[1])[0] == '-' and len(item[1]) == 3:
+            x = 7
+        tile = Image.open(resources.get_resource_path("../../resources/weather/kachel.png"))
+        source_img.paste(tile, item[0], tile)
+        draw.text((item[0][0] + 10 + x, item[0][1] - 3), item[1],
+                  font=ImageFont.truetype(resources.get_resource_path("../../resources/weather/FreeSansBold.ttf"), 55))
 
-    dateiname = str(uuid.uuid4())
+    file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        os.path.join(os.path.dirname(__file__), "../../../resources/temp/weather", dateiname + ".png"))
-    return dateiname
+        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
+    return file
