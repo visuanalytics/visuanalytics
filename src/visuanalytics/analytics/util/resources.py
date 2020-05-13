@@ -19,7 +19,7 @@ def get_resource_path(path: str):
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
     :return: Absoluter Pfad zur übergebener Ressource.
     """
-    return os.path.abspath(os.path.join(RESOURCES_LOCATION, path))
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
 
 
 def open_resource(path: str, mode: str = "rt"):
