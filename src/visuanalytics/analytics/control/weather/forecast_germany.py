@@ -4,9 +4,9 @@ from visuanalytics.analytics.apis import weather as api
 
 # todo needs to be finished when speech ready (to generate video)
 
-TESTING_MODUS = 1
+TESTING_MODE = 1
 
-if TESTING_MODUS:
+if TESTING_MODE:
     json_data = api.get_example()
 else:
     json_data = api.get_forecasts()
