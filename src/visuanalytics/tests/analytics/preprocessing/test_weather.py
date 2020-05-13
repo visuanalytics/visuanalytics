@@ -50,7 +50,7 @@ class PreProcessSingleTest(unittest.TestCase):
         expected = 4
         self.assertEqual(actual, expected)
 
-    def test_maximum_four(self):
+    def test_maximum_four_days_taken(self):
         input_single_three_days = {
             "city_name": "Gießen",
             "data": input_single["data"][:3]
