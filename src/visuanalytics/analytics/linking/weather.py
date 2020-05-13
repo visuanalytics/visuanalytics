@@ -12,11 +12,11 @@ def to_forecast_germany(images, audios, audiol):
     Methode zum erstellen des Deutschland 1-4 Tages Video aus den Bildern+Audios
 
     :param images: Eine Liste aus 3 Elementen mit den Dateinamen zu den Bildern (1 -> Iconbild | 2 -> Temperaturbild | 3-> Dreitagesbild)
-    :type: list
+    :type images: list
     :param audios: Eine Liste aus 3 Elementen mit den Dateinamen zu den Audios  (1 -> Iconaudio | 2 -> Temperataudio | 3-> Dreitagesaudio)
-    :type: list
+    :type audios: list
     :param audiol: Eine Liste aus 3 Elementen mit den Audiolängen der Audios (1 -> Iconaudiolänge | 2 -> Temperataudiolänge | 3-> Dreitagesaudiolänge)
-    :type: list
+    :type audiol: list
     :return:
     :rtype: str
 
