@@ -1,7 +1,6 @@
 """ Flask Server Module.
 
 Enthält die Startkonfiguration für den Flask-Server.
-
 """
 from flask import Flask
 
@@ -15,8 +14,8 @@ def create_app():
     Initialisiert die Server Konfiguration und registriert alle Endpunkte.
     Wenn eine `config.py` Datei im `instaances` Ordner existiert, wird diese Konfiguration benutzt.
 
-     Returns:
-         Flask: Eine Instanz des Servers.
+    :return: Eine Instanz des Servers.
+    :rtype: Flask
     """
 
     # create and configure the app

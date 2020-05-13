@@ -20,10 +20,11 @@ def show(page):
     Mit dem Pfad `/` wird `index.html` zurückgegeben.
     Wenn `page.html` nicht gefunden wird, wird eine 404-Seite zurückgegeben.
 
-    Args:
-        page(String): Name der Html-Seite.
-    Return:
-        html_template: Html-Seite aus dem `templates` Ordner mit `page.html` oder einer 404-Seite.
+    :param page: Name der Html-Seite.
+    :type page: str
+
+    :return: Html-Seite aus dem `templates` Ordner mit `page.html` oder einer 404-Seite.
+    :rtype: html_template.
     """
     try:
         return render_template('%s.html' % page)
