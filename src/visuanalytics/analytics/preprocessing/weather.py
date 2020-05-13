@@ -187,14 +187,10 @@ def get_temp_mm_three(data):
     """
 
     out = []
-    i = 1
-    for entry in LOCATIONS_TEMP_MIN_THREEDAYS:
-        out.append((entry, _get_min_temp(data, i)))
-        i += 1
-    i = 1
+    for idx, entry in enumerate(LOCATIONS_TEMP_MIN_THREEDAYS):
+        out.append((entry, _get_min_temp(data, idx + 1)))
     for entry in LOCATIONS_TEMP_MAX_THREEDAYS:
-        out.append((entry, _get_max_temp(data, i)))
-        i += 1
+        out.append((entry, _get_max_temp(data, idx + 1)))
     return out
 
 
