@@ -43,7 +43,7 @@ weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", 
                        "app_max_temp", "wind_cdir", "wind_dir", "icon", "code", "sunrise_ts", "sunset_ts"]
 
 
-class PreProcessSingleTest(unittest.TestCase):
+class PreprocessSingleTest(unittest.TestCase):
 
     def test_only_four_days_taken(self):
         actual = len(weather._preprocess_single(input_single)["Gießen"])
@@ -60,7 +60,7 @@ class PreProcessSingleTest(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
-class PreProcessTest(unittest.TestCase):
+class PreprocessTest(unittest.TestCase):
     file_handle = resources.open_resource("../../resources/weather/forecast.json")
     input = json.loads(file_handle.read())
     file_handle.close()
