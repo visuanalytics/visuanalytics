@@ -16,6 +16,7 @@ def select_pairs(keys, dict):
         => Ausgabe:  { "Vorname" : "Max", "Alter" : 25 }
         Wird einer der übergebenen Keys nicht im Dictionary gefunden, fehlt dieser auch im Ausgabe-Dictionary (es wird
         also keine Exception geworfen!).
+        Zu beachten ist, dass das übergebene Dictionary innerhalb der Methode verändert werden kann.
 
     Args:
         keys (list): Liste von Attributen, die ausgewählt werden sollen.
@@ -98,15 +99,14 @@ def combine(list):
         print(combine([a, b, c])
 
         => Ausgabe: { "A" : 1, "B" : 2, "C" : 3 }
+        Wenn unter den Dictionaries ein Key mehrmals vorkommt, wird nur das Key-Value-Pair in das Ergebnis aufgenommen,
+        dessen Key als letztes in der Liste vorkommt.
 
     Args:
         list (list): Liste von Dictionaries, die kombiniert werden sollen.
 
     Returns:
         dict: Ein Dictionary, das alle Key-Value-Paare aus den in der Liste übergebenen Dictionaries enthält.
-
-    Raises:
-        IndexError: Bei leerer Liste.
     """
     dict = {}
     for i in list:
