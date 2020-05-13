@@ -22,12 +22,12 @@ def get_three_pic(data, data2):
     :rtype: str
 
     """
-    source_img = Image.open(resources.get_resource_path("../../resources/weather/3-Tage-Vorhersage.png"))
+    source_img = Image.open(resources.get_resource_path("weather/3-Tage-Vorhersage.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in data:
         for i in range(0, 3):
             icon = Image.open(
-                resources.get_resource_path("../../resources/weather/icons/" + item[i + 3] + ".png")).convert("RGBA")
+                resources.get_resource_path("weather/icons/" + item[i + 3] + ".png")).convert("RGBA")
             icon = icon.resize([160, 160], Image.LANCZOS)
             source_img.paste(icon, item[i + 0], icon)
 
@@ -35,11 +35,11 @@ def get_three_pic(data, data2):
 
     for item in data2:
         draw.text(item[0], item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("../../resources/weather/FreeSansBold.ttf"), 60))
+                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 60))
 
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
+        resources.get_resource_path("temp/weather/" + file + ".png"))
 
     return file
 
@@ -55,17 +55,17 @@ def get_tomo_icons(data):
     :rtype: str
 
     """
-    source_img = Image.open(resources.get_resource_path("../../resources/weather/Wetter-morgen.png"))
+    source_img = Image.open(resources.get_resource_path("weather/Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size, (0, 0, 0, 0))
     for item in data:
-        icon = Image.open(resources.get_resource_path("../../resources/weather/icons/" + item[1] + ".png")).convert(
+        icon = Image.open(resources.get_resource_path("weather/icons/" + item[1] + ".png")).convert(
             "RGBA")
         icon = icon.resize([150, 150], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
 
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
+        resources.get_resource_path("temp/weather/" + file + ".png"))
     return file
 
 
@@ -80,7 +80,7 @@ def get_tomo_temperatur(data):
     :rtype: str
 
     """
-    source_img = Image.open(resources.get_resource_path("../../resources/weather/Wetter-morgen.png"))
+    source_img = Image.open(resources.get_resource_path("weather/Wetter-morgen.png"))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for item in data:
@@ -89,12 +89,12 @@ def get_tomo_temperatur(data):
             x = 17
         if str(item[1])[0] == '-' and len(item[1]) == 3:
             x = 7
-        tile = Image.open(resources.get_resource_path("../../resources/weather/kachel.png"))
+        tile = Image.open(resources.get_resource_path("weather/kachel.png"))
         source_img.paste(tile, item[0], tile)
         draw.text((item[0][0] + 10 + x, item[0][1] - 3), item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("../../resources/weather/FreeSansBold.ttf"), 55))
+                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 55))
 
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("../../resources/temp/weather/" + file + ".png"))
+        resources.get_resource_path("temp/weather/" + file + ".png"))
     return file

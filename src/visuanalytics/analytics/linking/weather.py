@@ -22,16 +22,16 @@ def to_forecast_germany(images, audios, audiol):
 
     """
 
-    with resources.open_resource("../../resources/temp/weather/input.txt", "w") as file:
+    with resources.open_resource("weather/input.txt", "w") as file:
         file.write("file '" + audios[0] + "'\n")
         file.write("file '" + audios[1] + "'\n")
         file.write("file '" + audios[2] + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
-    os.chdir(resources.get_resource_path("../../resources/temp/weather"))
+    os.chdir(resources.get_resource_path("temp/weather"))
     os.system(shell_cmd)
 
-    with resources.open_resource("../../resources/temp/weather/input.txt", "w") as file:
+    with resources.open_resource("weather/input.txt", "w") as file:
         file.write("file '" + images[0] + "'\n")
         file.write("duration " + audiol[0] + "\n")
         file.write("file '" + images[1] + "'\n")
@@ -39,7 +39,7 @@ def to_forecast_germany(images, audios, audiol):
         file.write("file '" + images[2] + "'\n")
         file.write("duration " + audiol[2] + "\n")
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
-    os.chdir(resources.get_resource_path("../../resources/temp/weather"))
+    os.chdir(resources.get_resource_path("temp/weather"))
     os.system(shell_cmd)
 
     return "output.mp4"
