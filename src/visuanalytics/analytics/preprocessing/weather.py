@@ -31,11 +31,11 @@ LOCATIONS_ICONS_THREEDAYS = [("Gießen", (160, 534), (785, 534), (1410, 534)),
 list: Liste aus String, Tupel(int, int)x3: X und Y Koordinaten der Positionen der Icons in der 3 Tages Vorhersage sortiert nach den verschiedenen Orten/Regionen.
 """
 
-LOCATIONS_TEMP_MIN_THREEDAYS = [(160, 950), (790, 950), (1400, 950)]
+LOCATIONS_TEMP_MIN_THREEDAYS = [(160, 946), (783, 946), (1400, 946)]
 """
 list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
 """
-LOCATIONS_TEMP_MAX_THREEDAYS = [(450, 950), (1070, 950), (1700, 950)]
+LOCATIONS_TEMP_MAX_THREEDAYS = [(433, 946), (1052, 946), (1680, 946)]
 """
 list:Liste aus Tupeln: X und Y Koordinaten der Max Temperaturen in der 3 Tages Vorhersage.
 """
