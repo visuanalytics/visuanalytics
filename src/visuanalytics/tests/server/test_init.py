@@ -5,7 +5,8 @@ from visuanalytics.server import server
 def setup_client():
     """Flask Server Testclient einrichten.
 
-    Erstellte eine neue Flask Server Instanz konfiguriert diese zum Testen und erstellten einen Test Client.
+    erstellt, eine neue Flask Server Instanz,
+    konfiguriert diese zum Testen und erstellten einen Test Client.
 
     :return: einen Server Test Client.
     :rtype: FlaskClient
