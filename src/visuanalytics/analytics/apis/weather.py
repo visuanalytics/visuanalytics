@@ -5,6 +5,8 @@ Dieses Modul enthält die Funktionalität zum Beziehen der Wettervorhersage-Date
 import json
 import requests
 
+from visuanalytics.analytics.util import resources
+
 CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
           "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
 """
@@ -18,7 +20,7 @@ WEATHERBIT_API_KEY = ""
 
 # TODO: Private config-Datei für unsere API-keys anlegen.
 # Zum Testen der Funktionen dieses Moduls: Bitte den API-Key aus Postman entnehmen bzw. die Daten aus der
-# forecast.json-Datei einlesen und verwenden.
+# example_weather.json-Datei einlesen und verwenden.
 
 
 def get_forecasts():
@@ -47,3 +49,8 @@ def get_forecasts():
 
 def _forecast_request(location):
     return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
+
+
+def get_example():
+    with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
+        return json.load(json_file)
