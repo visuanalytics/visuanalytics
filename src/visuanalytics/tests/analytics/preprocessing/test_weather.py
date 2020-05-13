@@ -61,10 +61,9 @@ class PreprocessSingleTest(unittest.TestCase):
 
 
 class PreprocessTest(unittest.TestCase):
-    file_handle = resources.open_resource("../../resources/weather/forecast.json")
-    input = json.loads(file_handle.read())
-    file_handle.close()
-    output = weather.preprocess_weather_data(input)
+    with resources.open_resource("../../resources/exampledata/example_weather.json") as file_handle:
+        input = json.loads(file_handle.read())
+        output = weather.preprocess_weather_data(input)
 
     def test_contains_all_cities(self):
         actual = set((dict.keys(self.output["cities"])))
