@@ -45,5 +45,6 @@ def get_forecasts():
     return json_data
 
 
+# TODO (David): API-key als Parameter übergeben statt Konstante zu verwenden
 def _forecast_request(location):
     return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
