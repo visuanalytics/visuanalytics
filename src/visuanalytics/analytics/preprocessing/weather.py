@@ -224,7 +224,7 @@ def get_ico_three(data):
     return out
 
 
-def get_day(data):
+def get_first_day(data):
     return data['cities']['Kiel'][0]['datetime']
 
 
