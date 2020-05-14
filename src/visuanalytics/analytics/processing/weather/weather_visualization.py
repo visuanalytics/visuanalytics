@@ -75,7 +75,7 @@ def get_tomo_icons(data, weekdate):
         icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
     draw = ImageDraw.Draw(source_img)
-    _draw_weekday(draw, weekdate)
+    _draw_weekdays(draw, weekdate)
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
@@ -103,7 +103,7 @@ def get_tomo_temperatur(data, weekdate):
         source_img.paste(tile, item[0], tile)
         _draw_text(draw, (item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 11), item[1], fontsize=50)
 
-    _draw_weekday(draw, weekdate)
+    _draw_weekdays(draw, weekdate)
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
