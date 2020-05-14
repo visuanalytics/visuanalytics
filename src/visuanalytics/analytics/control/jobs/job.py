@@ -6,7 +6,7 @@ from visuanalytics.analytics.control.steps.steps import Steps
 class Job(object):
     def __init__(self, id: str, steps: Steps):
         self.__steps = steps
-        self.__start_time = time.time()
+        self.__start_time = ""
         self.__id = id
         self.__current_state = -1
 
@@ -25,6 +25,7 @@ class Job(object):
         return "not started" if self.__current_state < 0 else self.__steps.get_state_name(self.__current_state)
 
     def __setup(self):
+        self.__start_time = time.time()
         # TODO(Max)
         pass
 
