@@ -28,7 +28,7 @@ def get_three_pic(data, data2):
         for i in range(0, 3):
             icon = Image.open(
                 resources.get_resource_path("weather/icons/" + item[i + 3] + ".png")).convert("RGBA")
-            icon = icon.resize([160, 160], Image.LANCZOS)
+            icon = icon.resize([200, 200], Image.LANCZOS)
             source_img.paste(icon, item[i + 0], icon)
 
     draw = ImageDraw.Draw(source_img)
@@ -60,7 +60,7 @@ def get_tomo_icons(data):
     for item in data:
         icon = Image.open(resources.get_resource_path("weather/icons/" + item[1] + ".png")).convert(
             "RGBA")
-        icon = icon.resize([150, 150], Image.LANCZOS)
+        icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
 
     file = str(uuid.uuid4())
