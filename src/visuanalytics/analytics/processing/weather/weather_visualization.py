@@ -34,7 +34,7 @@ def get_three_pic(data, data2):
     draw = ImageDraw.Draw(source_img)
 
     for item in data2:
-        draw.text(item[0], item[1],
+        draw.text((item[0][0] + _get_shifting(item[1]), item[0][1]), item[1],
                   font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 60))
 
     file = str(uuid.uuid4())
@@ -84,17 +84,18 @@ def get_tomo_temperatur(data):
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for item in data:
-        x = 0
-        if len(item[1]) == 2:
-            x = 17
-        if str(item[1])[0] == '-' and len(item[1]) == 3:
-            x = 7
         tile = Image.open(resources.get_resource_path("weather/kachel.png"))
         source_img.paste(tile, item[0], tile)
-        draw.text((item[0][0] + 10 + x, item[0][1] - 3), item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 55))
+        draw.text((item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 1), item[1],
+                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 50))
 
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
     return file
+
+
+def _get_shifting(item):
+    # verschiebt die Temperatur wenn einstellig, - einstellig, und - zweistellig
+    return 17 if len(item) == 2 else 7 if item[0] == '-' and len(item) == 3 else -6 if item[0] == '-' and len(
+        item) == 4 else 0
