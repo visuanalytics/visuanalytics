@@ -226,7 +226,6 @@ def get_ico_three(data):
 
 def get_day(data):
     return data['cities']['Kiel'][0]['datetime']
-    pass
 
 
 def _get_weather_icon(data, location, date_in_future):
