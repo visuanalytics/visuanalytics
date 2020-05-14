@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime
 
 import datetime as dt
@@ -33,7 +34,10 @@ def date_to_weekday(valid_date):
         print("Übermorgen ist", days[2]) # dayofweek_2
         print("Überübermorgen ist", days[3]) # dayofweek_3
     """
-    locale.setlocale(locale.LC_ALL, 'deu_deu')  # am Ende werden die Wochentage auf Deutsch ausgegeben
+    if sys.platform == 'win32':
+        locale.setlocale(locale.LC_ALL, 'deu_deu')
+    else:
+        locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()

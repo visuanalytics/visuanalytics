@@ -192,7 +192,7 @@ def get_temp_mm_three(data):
     out = []
     for idx, entry in enumerate(LOCATIONS_TEMP_MIN_THREEDAYS):
         out.append((entry, _get_min_temp(data, idx + 1)))
-    for entry in LOCATIONS_TEMP_MAX_THREEDAYS:
+    for idx, entry in enumerate(LOCATIONS_TEMP_MAX_THREEDAYS):
         out.append((entry, _get_max_temp(data, idx + 1)))
     return out
 
@@ -222,6 +222,10 @@ def get_ico_three(data):
             (entry[1], entry[2], entry[3], _get_weather_icon(data, entry[0], 1), _get_weather_icon(data, entry[0], 2),
              _get_weather_icon(data, entry[0], 3)))
     return out
+
+
+def get_first_day(data):
+    return data['cities']['Kiel'][0]['datetime']
 
 
 def _get_weather_icon(data, location, date_in_future):
