@@ -6,13 +6,21 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.processing.util import date_time
 import uuid
 
+LOCATIONS_WEEKDAYS = [(205, 103), (828, 103), (1435, 103)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
+"""
 
-def get_three_pic(data, data2):
+
+def get_three_pic(data, data2, date):
     """
     Methode zum generieren des Bildes für die Vorhersage für die nächsten 2-4 Tage.
 
+    :param datum: Datum des Tages zuvor
+    :type datum : str
     :param data: Das Ergebnis der Methode :func:`get_ico_three()`.
     :type data: list
     :param dat2: Das Ergebnis der Methode :func:`get_temp_mm_three()`.
@@ -32,11 +40,17 @@ def get_three_pic(data, data2):
             source_img.paste(icon, item[i + 0], icon)
 
     draw = ImageDraw.Draw(source_img)
-
     for item in data2:
         draw.text((item[0][0] + _get_shifting(item[1]), item[0][1]), item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 60))
+                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 60), )
 
+    weekdates = date_time.date_to_weekday(date)
+    for idx, item in enumerate(LOCATIONS_WEEKDAYS):
+        draw.text((item[0] + 4, item[1] + 4), str(weekdates[idx + 1]),
+                  font=ImageFont.truetype(resources.get_resource_path("weather/weather/FreeSansBold.ttf"), 60),
+                  fill="black")
+        draw.text((item[0], item[1]), str(weekdates[idx + 1]),
+                  font=ImageFont.truetype(resources.get_resource_path("weather/weather/FreeSansBold.ttf"), 60))
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))

@@ -14,6 +14,6 @@ else:
 data = weather.preprocess_weather_data(json_data)
 
 ws.get_three_pic(weather.get_ico_three(data),
-                 weather.get_temp_mm_three(data))
+                 weather.get_temp_mm_three(data), weather.get_day(data))
 ws.get_tomo_icons(weather.get_ico_tomorow(data))
 ws.get_tomo_temperatur(weather.get_temp_tomorow(data))
