@@ -23,9 +23,9 @@ LOCATIONS_TOMOROW = [("Garmisch-Partenkirchen", (898, 900)), ("München", (1080,
 list: Liste aus String, Tupel(int, int): X und Y Koordinaten der Positionen der Icons in der Vorhersage für morgen sortiert nach den verschiedenen Orten/Regionen.
 """
 
-LOCATIONS_ICONS_THREEDAYS = [("Gießen", (160, 534), (785, 534), (1410, 534)),
-                             ("Hamburg", (255, 300), (875, 300), (1492, 300)),
-                             ("Dresden", (360, 447), (980, 447), (1604, 447)),
+LOCATIONS_ICONS_THREEDAYS = [("Gießen", (110, 504), (735, 504), (1360, 504)),
+                             ("Hamburg", (235, 270), (855, 270), (1472, 270)),
+                             ("Dresden", (310, 427), (930, 427), (1554, 427)),
                              ("München", (272, 670), (890, 670), (1510, 670))]
 """
 list: Liste aus String, Tupel(int, int)x3: X und Y Koordinaten der Positionen der Icons in der 3 Tages Vorhersage sortiert nach den verschiedenen Orten/Regionen.
