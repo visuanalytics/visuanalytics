@@ -155,3 +155,4 @@ fabric.properties
 /.idea/saveactions_settings.xml
 /.idea/vcs.xml
 /bin/
+/src/visuanalytics/instance
