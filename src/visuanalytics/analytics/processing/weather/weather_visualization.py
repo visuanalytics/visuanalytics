@@ -11,7 +11,7 @@ import uuid
 
 LOCATIONS_WEEKDAYS = [(205, 103), (828, 103), (1435, 103)]
 """
-list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
+list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 """
 
 
