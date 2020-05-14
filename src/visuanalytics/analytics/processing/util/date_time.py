@@ -33,7 +33,7 @@ def date_to_weekday(valid_date):
         print("Übermorgen ist", days[2]) # dayofweek_2
         print("Überübermorgen ist", days[3]) # dayofweek_3
     """
-    locale.setlocale(locale.LC_ALL, 'deu_deu')  # am Ende werden die Wochentage auf Deutsch ausgegeben
+    locale.setlocale(locale.LC_ALL, "")  # am Ende werden die Wochentage auf Deutsch ausgegeben
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
