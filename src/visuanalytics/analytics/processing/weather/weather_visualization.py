@@ -6,7 +6,6 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.processing.util import date_time
 import uuid
 
 LOCATIONS_WEEKDAYS = [(205, 103), (828, 103), (1435, 103)]
@@ -15,12 +14,12 @@ list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 """
 
 
-def get_three_pic(data, data2, date):
+def get_three_pic(data, data2, weekdates):
     """
     Methode zum generieren des Bildes für die Vorhersage für die nächsten 2-4 Tage.
 
-    :param datum: Datum des Tages zuvor
-    :type datum : str
+    :param weekdates: Wochentage für die nächsten 2-4 Tage
+    :type weekdates : list
     :param data: Das Ergebnis der Methode :func:`get_ico_three()`.
     :type data: list
     :param dat2: Das Ergebnis der Methode :func:`get_temp_mm_three()`.
@@ -40,17 +39,14 @@ def get_three_pic(data, data2, date):
             source_img.paste(icon, item[i + 0], icon)
 
     draw = ImageDraw.Draw(source_img)
-    for item in data2:
-        draw.text((item[0][0] + _get_shifting(item[1]), item[0][1]), item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 60), )
 
-    weekdates = date_time.date_to_weekday(date)
+    for item in data2:
+        _draw_text(draw, ((item[0][0] + _get_shifting(item[1])), (item[0][1]) + 2), item[1])
+
     for idx, item in enumerate(LOCATIONS_WEEKDAYS):
-        draw.text((item[0] + 4, item[1] + 4), str(weekdates[idx + 1]),
-                  font=ImageFont.truetype(resources.get_resource_path("weather/weather/FreeSansBold.ttf"), 60),
-                  fill="black")
-        draw.text((item[0], item[1]), str(weekdates[idx + 1]),
-                  font=ImageFont.truetype(resources.get_resource_path("weather/weather/FreeSansBold.ttf"), 60))
+        _draw_text(draw, (item[0] + 4, item[1] + 4), weekdates[idx], fontcolour="black")
+        _draw_text(draw, item, weekdates[idx])
+
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
@@ -58,10 +54,12 @@ def get_three_pic(data, data2, date):
     return file
 
 
-def get_tomo_icons(data):
+def get_tomo_icons(data, weekdate):
     """
     Methode zum generieren des Bildes für die Vorhersage für morgen (Iconbild).
 
+    :param weekdate: Wochentag des Datums für morgen
+    :type weekdate : str
     :param data: Das Ergebnis der Methode :func:`get_ico_tomorow()`.
     :type data: list
 
@@ -76,17 +74,20 @@ def get_tomo_icons(data):
             "RGBA")
         icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
-
+    draw = ImageDraw.Draw(source_img)
+    _draw_weekdays(draw, weekdate)
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
     return file
 
 
-def get_tomo_temperatur(data):
+def get_tomo_temperatur(data, weekdate):
     """
     Methode zum generieren des Bildes für die Vorhersage für morgen (Temperaturbild).
 
+    :param weekdate: Wochentag des Datums für morgen
+    :type weekdate : str
     :param data: Das Ergebnis der Methode :func:`get_temp_tomorow()`
     :type data: list
 
@@ -100,13 +101,25 @@ def get_tomo_temperatur(data):
     for item in data:
         tile = Image.open(resources.get_resource_path("weather/kachel.png"))
         source_img.paste(tile, item[0], tile)
-        draw.text((item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 1), item[1],
-                  font=ImageFont.truetype(resources.get_resource_path("weather/FreeSansBold.ttf"), 50))
+        _draw_text(draw, (item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 1), item[1], fontsize=50)
 
+    _draw_weekdays(draw, weekdate)
     file = str(uuid.uuid4())
     Image.composite(img1, source_img, img1).save(
         resources.get_resource_path("temp/weather/" + file + ".png"))
+
     return file
+
+
+def _draw_weekdays(draw, weekdate):
+    _draw_text(draw, (304, 114), weekdate, fontcolour="black")
+    _draw_text(draw, (300, 110), weekdate)
+
+
+def _draw_text(draw, position, content, fontsize=60, fontcolour="white", path="weather/FreeSansBold.ttf"):
+    draw.text(position, content,
+              font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
+              fill=fontcolour)
 
 
 def _get_shifting(item):
