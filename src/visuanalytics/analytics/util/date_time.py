@@ -23,16 +23,18 @@ def date_to_weekday(valid_date):
         List: days
             mit vier Einträgen:
             days[0] -> dayofweek_today (heute)
-            days[1] -> dayofweek_1 (morgen)
-            days[2] -> dayofweek_2 (übermorgen)
-            days[3] -> dayofweek_3 (überübermorgen)
+            days[1] -> dayofweek_tomorrow (morgen)
+            days[2] -> dayofweek_1 (übermorgen)
+            days[3] -> dayofweek_2 (überübermorgen)
+            days[4] -> dayofweek_3 (überüberübermorgen)
     Example:
         valid_date = "2020-05-09"
         days = date_to_weekday(valid_date)
         print("Heute ist", days[0]) # dayofweek_today
-        print("Morgen ist", days[1]) # dayofweek_1
-        print("Übermorgen ist", days[2]) # dayofweek_2
-        print("Überübermorgen ist", days[3]) # dayofweek_3
+        print("Morgen ist", days[1]) # dayofweek_tomorrow
+        print("Übermorgen ist", days[2]) # dayofweek_1
+        print("Überübermorgen ist", days[3]) # dayofweek_2
+        print("Überüberübermorgen ist", days[4]) # dayofweek_3
     """
     if sys.platform == 'win32':
         locale.setlocale(locale.LC_ALL, 'deu_deu')
@@ -41,7 +43,7 @@ def date_to_weekday(valid_date):
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
-        for i in range(0, 4):
+        for i in range(0, 5):
             days.append(calendar.day_name[(date + dt.timedelta(days=i)).weekday()])
     except:
         print("Fehlermeldung: Kein Datum hinterlegt.")
