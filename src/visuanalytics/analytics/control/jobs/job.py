@@ -1,14 +1,16 @@
+import os
 import time
 
 from visuanalytics.analytics.control.steps.steps import Steps
+from visuanalytics.analytics.util import resources
 
 
 class Job(object):
-    def __init__(self, id: str, steps: Steps):
+    def __init__(self, job_id: str, steps: Steps):
         self.__steps = steps
-        self.__start_time = ""
-        self.__id = id
-        self.__current_state = -1
+        self.__start_time = 0
+        self.__id = job_id
+        self.__current_state = None
 
     @property
     def start_time(self):
@@ -22,16 +24,19 @@ class Job(object):
         return self.__current_state + 1, len(self.__steps.sequence)
 
     def current_state_name(self):
-        return "not started" if self.__current_state < 0 else self.__steps.get_state_name(self.__current_state)
+        return "not started" if self.__current_state is None else \
+            "Error" if self.__current_state < 0 else self.__steps.get_state_name(self.__current_state)
 
     def __setup(self):
+        print(f"Job {self.id} Started")
+
         self.__start_time = time.time()
-        # TODO(Max)
-        pass
+        os.mkdir(resources.get_resource_path(f"temp/{self.id}"))
 
     def __cleanup(self):
-        # TODO(Max)
-        pass
+        os.rmdir(resources.get_resource_path(f"temp/{self.id}"))
+
+        print(f"Job {self.id} Stoped")
 
     def start(self):
         self.__setup()
@@ -45,6 +50,7 @@ class Job(object):
 
         except StepError as er:
             print("Error")
+            self.__current_state = -1
             self.__cleanup()
             return False
 
