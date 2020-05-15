@@ -38,8 +38,49 @@
   * aktueller Standort der ISS
   * Zeitpunkte, wann die ISS einen gegebenen Standort überquert 
   * Namen der Astronauten, die sich momentan im Weltraum befinde
+  
+* https://rapidapi.com/apidojo/api/yahoo-finance1
+  * Finanzübersicht
+  * Zusammenfassung zum angefragten Zeitpunkt
+  * Gewinner / Verlierer in einer bestimmten Region
+   z.B. Day Gainers - US, Day Losers - US, Most Actives - US
+  * Daten um Diagramme zu bestimmten Akteuren zu erstellen
+  * Gewinne in einer bestimmte Region in einem eingegrenzten Zeitraum
+  
+* https://datahelpdesk.worldbank.org/knowledgebase/articles/902061-climate-data-api
+  * Daten des World Bank’s Climate Change Knowledge Portal
+  * basieren auf 15 global circulation models (GCMs), welche die Reaktion des globalen Klimasystems auf steigende Treibhauskonzentrationen simulieren
+  * Niederschlag und Temperatur
+  * Tages-, Monats- und Jahresdurchschnitt, Veränderungsrate
+  * Zeitspannen in der Vergangenheit
+  * Zeitspannen in der Zukunft (Prognose)
+  
+* https://earthquake.usgs.gov/fdsnws/event/1/
+  * Übersicht über Erdbeben
+  * Erdbeben in einem bestimmten Zeitraum
+  * Erdbeben in bestimmten Höhen und Breitengraden
+  * Intervall von Erdbebenstärken
+  * Filter für bestimmte Alarmlevel: grün, gelb, orange, rot
+  * in Kombination anwendbar
+  * keine Vorhersage
+  
+* https://rapidapi.com/sportsop/api/soccer-sports-open-data
+  * Fußballergebnisse
+  * alle Leagues und Informationen über diese
+  * alle Saisons und deren Runden sowie Spielstände
+  * bestimmte Spiele anschauen: Ergebnis, Tore, Teams, Fouls
+  * Top-Scorer einer bestimmten League in einer bestimmten Saison
+  
+* https://developer.twitter.com/en/docs
+  * verschiedene Twitter APIS
+  * historische Tweets
+  * realtime Tweets
+  * API für Websites
+  * API für angezeigte Werbung
+
 
 Aktuell sieht es danach aus, dass wir für das Thema Corona die covid19-API, für das Thema Wetter die weatherbit-API und für das Thema News / Ereignisse die zeit-API verwenden.
-Ob wir noch weitere Themen (z.B. ISS-Daten) einbauen wollen und falls ja, welche, sollte noch ein mal im Team besprochen werden.
+
+Nach Rücksprache mit Prof.Dr.Kammer kam die Idee auf, ob man nicht die Twitter-API mit einer Sport- oder Corona-API verbinden könnte. Zum Beispiel könnte man die Stimmung zu einem Fußballspiel anhand von Tweets analysieren. Dazu könnte man Hashtags auswerten und diese in einer Wordcloud visualisieren.
 
 Wir verfügen nun über ein "Team" auf der API-Test-Plattform Postman, dort sind bereits ein paar Requests gespeichert und können getestet werden.
