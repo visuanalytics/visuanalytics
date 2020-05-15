@@ -2,7 +2,7 @@
 Dieses Modul enthält Hilfsfunktionen zum Bearbeiten von Dictionaries.
 """
 
-import collections
+from collections import abc
 
 
 def select_pairs(keys, dict):
@@ -77,7 +77,7 @@ def _flatten(dict, recursive):
     dicts = []
     key_values = {}
     for k in dict:
-        if isinstance(dict[k], collections.Mapping):
+        if isinstance(dict[k], abc.Mapping):
             dicts.append(k)
             if recursive:
                 dict[k] = _flatten(dict[k], True)
