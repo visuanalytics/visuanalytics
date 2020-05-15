@@ -45,12 +45,12 @@ weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", 
 
 class PreprocessSingleTest(unittest.TestCase):
 
-    def test_only_four_days_taken(self):
+    def test_num_days_taken(self):
         actual = len(weather._preprocess_single(input_single)["Gießen"])
-        expected = 4
+        expected = weather.NUM_DAYS
         self.assertEqual(actual, expected)
 
-    def test_maximum_four_days_taken(self):
+    def test_less_days_taken(self):
         input_single_three_days = {
             "city_name": "Gießen",
             "data": input_single["data"][:3]
