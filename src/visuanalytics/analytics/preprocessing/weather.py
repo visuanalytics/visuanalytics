@@ -158,7 +158,7 @@ def get_icon_tomorow(data):
 
 
 def get_temp_tomorow(data):
- 
+    """
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. -
     in diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
 
@@ -180,7 +180,6 @@ def get_temp_tomorow(data):
 
 def get_temp_mm_three(data):
     """
-    
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste -
     in diesem Fall eine Liste mit min und max Temperaturen für die 2-4 Tages Vorhersage
 
@@ -194,6 +193,7 @@ def get_temp_mm_three(data):
     [((160, 950), '1°'), ((790, 950), '-1°'), ((1400, 950), '0°'), ((450, 950), '19°'), ((1070, 950), '14°'),
     ((1700, 950), '14°')]
     """
+    
     out = []
     for idx, entry in enumerate(LOCATIONS_TEMP_MIN_THREEDAYS):
         out.append((entry, _get_min_temp(data, idx + 1)))
