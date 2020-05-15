@@ -41,7 +41,7 @@ def get_three_pic(data, data2, weekdates):
     draw = ImageDraw.Draw(source_img)
 
     for item in data2:
-        _draw_text(draw, ((item[0][0] + _get_shifting(item[1])), (item[0][1]) + 12), item[1])
+        _draw_text(draw, ((item[0][0] + _get_shifting(item[1])), (item[0][1]) + 2), item[1])
 
     for idx, item in enumerate(LOCATIONS_WEEKDAYS):
         _draw_text(draw, (item[0] + 4, item[1] + 4), weekdates[idx], fontcolour="black")
@@ -101,7 +101,7 @@ def get_tomo_temperatur(data, weekdate):
     for item in data:
         tile = Image.open(resources.get_resource_path("weather/kachel.png"))
         source_img.paste(tile, item[0], tile)
-        _draw_text(draw, (item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 11), item[1], fontsize=50)
+        _draw_text(draw, (item[0][0] + 14 + _get_shifting(item[1]), item[0][1] + 1), item[1], fontsize=50)
 
     _draw_weekdays(draw, weekdate)
     file = str(uuid.uuid4())
@@ -116,7 +116,7 @@ def _draw_weekdays(draw, weekdate):
     _draw_text(draw, (300, 110), weekdate)
 
 
-def _draw_text(draw, position, content, fontsize=60, fontcolour="white", path="weather/weather/FreeSansBold.ttf"):
+def _draw_text(draw, position, content, fontsize=60, fontcolour="white", path="weather/FreeSansBold.ttf"):
     draw.text(position, content,
               font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
               fill=fontcolour)
