@@ -18,8 +18,8 @@ def select_pairs(keys, dict):
     :param dict: Das Dictionary, aus dem die gewüschten Key-Value-Paare ausgewählt werden sollen.
     :type dict: dict
 
-    :returns:
-        dict: Das Dictionary, das nur die gewünschten Key-Value-Paare enthält.
+    :returns: Das Dictionary, das nur die gewünschten Key-Value-Paare enthält.
+    :rtype: dict
 
     Example:
         person =  { "Name" : "Mustermann", "Vorname" : "Max", "Alter" : 25 }
@@ -60,11 +60,11 @@ def flatten_rec(dict):
     """
     Durchsucht ein Dictionary rekursiv nach Unter-Dictionaries und fügt diesem alle gefundenen Key-Value-Paare hinzu.
 
-    :param dict: Das Eingabe-Dictionary.
-    :type dict: dict
+    :param: dict: Das Eingabe-Dictionary.
+    :type: dict: dict
 
-    :returns:
-        dict: Das Ausgabe-Dictionary.
+    :returns: Das Ausgabe-Dictionary.
+    :rtype: dict
 
     Example:
         foo =  { "A" : 1, "Y" : {"B" : 2, "Z" : { "C : 3 } }
@@ -100,7 +100,7 @@ def combine(list):
     :param list: Liste von Dictionaries, die kombiniert werden sollen.
     :type list: list
 
-    :returns: dict: Ein Dictionary, das alle Key-Value-Paare aus den in der Liste übergebenen Dictionaries enthält.
+    :returns: Ein Dictionary, das alle Key-Value-Paare aus den in der Liste übergebenen Dictionaries enthält.
     :rtype: dict
 
     Example:

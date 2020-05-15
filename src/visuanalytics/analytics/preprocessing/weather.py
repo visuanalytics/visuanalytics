@@ -51,8 +51,8 @@ def preprocess_weather_data(api_data):
     :param api_data: Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
     :type api_data: list
 
-    :returns: Ein Dictionary folgender Struktur:
-
+    :returns:
+        Ein Dictionary folgender Struktur:
         {
           "cities" : {
               "muenchen" : [
@@ -88,7 +88,6 @@ def preprocess_weather_data(api_data):
             ...
           ]
         }
-
         "cities" enthält zu jeder Stadt vier "Unter-Dictionaries", welche wiederum die Wetterdaten für je einen Tag
         enthalten (insgesamt vier Tage).
         "summaries" enthält für jeden der vier Tage ein Unter-Dictionary, welche die zusammenfassenden Daten für je einen
@@ -136,7 +135,7 @@ def get_ico_tomorow(data):
     in diesem Fall eine Liste mit Icons an verschieden Orten für morgen
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type data:list
+    :type: data:list
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Icons und Name des Icons
     :rtype: list
 
@@ -157,7 +156,7 @@ def get_temp_tomorow(data):
     in diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type data:list
+    :type data: list
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Temperatur und der Temperatur
     :rtype: list
 

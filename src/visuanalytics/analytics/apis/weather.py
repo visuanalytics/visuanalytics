@@ -30,10 +30,10 @@ def get_forecasts():
 
     Jede JSON-Antwort wird mittels json.loads() in ein dictionary konvertiert und in einer Liste gespeichert.
 
-    :returns Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren.
-    :rtype list
+    :returns: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren.
+    :rtype: list
 
-    :raises
+    :raises:
         ValueError: Wenn der Response-Code eine andere Nummer als 200 enthält. Dies kann vor allem bei einem fehlenden
         oder ungültigen API-Key vorkommen.
         socket.gaierror: Wenn keine Verbindung zum Internet besteht.
