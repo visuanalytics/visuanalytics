@@ -48,11 +48,10 @@ def preprocess_weather_data(api_data):
     Um die weitere Verarbeitung zu vereinfachen, werden die Wettervorhersage-Daten in dieser Funktionen in eine leichter
     handzuhabende Struktur gebracht. Dazu werden irrelevante Parameter weggelassen und die allgemeine Struktur angepasst.
 
-    Args:
-        api_data (list): Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
+    :param api_data: Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
+    :type api_data: list
 
-    Returns:
-        dict: Ein Dictionary folgender Struktur:
+    :returns: Ein Dictionary folgender Struktur:
 
         {
           "cities" : {
@@ -94,8 +93,9 @@ def preprocess_weather_data(api_data):
         enthalten (insgesamt vier Tage).
         "summaries" enthält für jeden der vier Tage ein Unter-Dictionary, welche die zusammenfassenden Daten für je einen
         Tag enthalten.
+    :rtype: dict
 
-    Raises:
+    :raises:
         KeyError: Wenn ein Schlüssel nicht im Dictionary enthalten ist. Dies sollte unter normalen Umständen nur
         vorkommen, wenn die Weatherbit-API geändert wird.
     """
@@ -132,9 +132,8 @@ def _get_for_day(day, attribute, data):
 
 def get_ico_tomorow(data):
     """
-    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Icons an verschieden Orten für morgen
-
-
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste -
+    in diesem Fall eine Liste mit Icons an verschieden Orten für morgen
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
     :type data:list
@@ -154,7 +153,8 @@ def get_ico_tomorow(data):
 
 def get_temp_tomorow(data):
     """
-    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste -
+    in diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
     :type data:list
@@ -165,7 +165,6 @@ def get_temp_tomorow(data):
     (Rückgabewert)
     [((898, 900), '14°'), ((1080, 822), '17°'), ((930, 720), '19°'), ((675, 610), '17°'), ((843, 540), '16°'),
     ((1106, 482), '18°'), ((1006, 370), '17°'), ((755, 333), '15°'), ((986, 218), '5°'), ((1147, 270), '-3°')]
-
     """
     out = []
     for entry in LOCATIONS_TOMOROW:
@@ -175,7 +174,8 @@ def get_temp_tomorow(data):
 
 def get_temp_mm_three(data):
     """
-    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit min und max Temperaturen für die 2-4 Tages Vorhersage
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste-
+    in diesem Fall eine Liste mit min und max Temperaturen für die 2-4 Tages Vorhersage
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
     :type data:list
@@ -186,9 +186,7 @@ def get_temp_mm_three(data):
     (Rückgabewert)
     [((160, 950), '1°'), ((790, 950), '-1°'), ((1400, 950), '0°'), ((450, 950), '19°'), ((1070, 950), '14°'),
     ((1700, 950), '14°')]
-
     """
-
     out = []
     for idx, entry in enumerate(LOCATIONS_TEMP_MIN_THREEDAYS):
         out.append((entry, _get_min_temp(data, idx + 1)))
@@ -199,9 +197,8 @@ def get_temp_mm_three(data):
 
 def get_ico_three(data):
     """
-    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. In diesem Fall eine Liste mit Icons an verschieden Orten für die 2-4 Tages Vorhersage
-
-
+    Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste-
+    in diesem Fall eine Liste mit Icons an verschieden Orten für die 2-4 Tages Vorhersage
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
     :type data:list
@@ -214,7 +211,6 @@ def get_ico_three(data):
     ((255, 300), (875, 300), (1492, 300), 'c03d', 'c03d', 'r01d'),
     ((360, 447), (980, 447), (1604, 447), 'r01d', 'c03d', 'c03d'),
     ((272, 670), (890, 670), (1510, 670), 'r01d', 'r04d', 'r01d')]
-
     """
     out = []
     for entry in LOCATIONS_ICONS_THREEDAYS:
