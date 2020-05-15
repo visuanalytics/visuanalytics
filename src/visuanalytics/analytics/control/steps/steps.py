@@ -5,7 +5,7 @@ class Steps(object):
                            {"name": "Preprocessing", "call": self.prepocessing},
                            {"name": "Processing", "call": self.processing},
                            {"name": "Linking", "call": self.linking},
-                           {"name": "Ready", "call": lambda: None}]
+                           {"name": "Ready", "call": lambda _: None}]
 
     @property
     def sequence(self):
@@ -18,14 +18,14 @@ class Steps(object):
     def get_state_name(self, idx: int):
         return self.__sequence[idx]["name"]
 
-    def apis(self):
+    def apis(self, job_id: str):
         assert False, "Not Implemented"
 
-    def prepocessing(self):
+    def prepocessing(self, job_id: str):
         assert False, "Not Implemented"
 
-    def processing(self):
+    def processing(self, job_id: str):
         assert False, "Not Implemented"
 
-    def linking(self):
+    def linking(self, job_id: str):
         assert False, "Not Implemented"

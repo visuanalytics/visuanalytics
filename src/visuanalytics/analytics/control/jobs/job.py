@@ -38,13 +38,13 @@ class Job(object):
         try:
             for idx, step in enumerate(self.__steps.sequence):
                 self.__current_state = idx
-                step["call"]()
+                step["call"](self.id)
 
             self.__cleanup()
             return True
 
         except StepError as er:
-            print("Error", er.__cause__)
+            print("Error")
             self.__cleanup()
             return False
 
