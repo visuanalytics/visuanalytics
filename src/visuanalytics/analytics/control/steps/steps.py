@@ -15,7 +15,7 @@ class Steps(object):
     def config(self):
         return self._config
 
-    def get_state_name(self, idx: int):
+    def get_step_name(self, idx: int):
         return self.__sequence[idx]["name"]
 
     def apis(self, job_id: str):
