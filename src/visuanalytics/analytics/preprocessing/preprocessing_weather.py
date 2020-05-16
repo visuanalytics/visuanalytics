@@ -4,6 +4,7 @@ Dieses Modul enthält die Funktionalität zum Vorverarbeiten der Wettervorhersag
 
 import statistics
 
+from numpy import random
 from visuanalytics.analytics.util import dictionary
 from visuanalytics.analytics.util import statistical
 
@@ -247,3 +248,49 @@ def _get_max_temp(data, date_in_future):
 def _get_min_temp(data, date_in_future):
     min_temp = round(data['summaries'][date_in_future]['temp_min'])
     return f"{min_temp}\u00B0"
+
+
+def get_city_with_max_temp(data, date_in_future):
+    """
+    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der höchsten Temperatur herauszufinden
+
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
+    :return: eine Stadt, die an diesem Tag die Höchsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Höchsttemperatur und das zugehörige Icon
+
+    Example:
+    city_with_max_temp = get_city_with_max_temp(data, 0)
+    print(city_with_max_temp) -> "muenchen", 23, c02d
+    """
+
+    max_temp = _get_max_temp(data, date_in_future)
+    cities_with_max_temp = []
+    for city in data['cities']:
+        if data['cities'][city][date_in_future]['temp_max'] == max_temp:
+            cities_with_max_temp.append(city)
+
+    return_city = random.choice(cities_with_max_temp)
+    return return_city, max_temp, data['cities'][return_city][date_in_future]['icon']
+
+
+def get_city_with_min_temp(data, date_in_future):
+    """
+    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
+
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
+    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
+
+    Example:
+    city_with_max_temp = get_city_with_min_temp(data, 0)
+    print(city_with_min_temp) -> "berlin", 19, c02d
+    """
+
+    min_temp = _get_min_temp(data, date_in_future)
+    cities_with_min_temp = []
+    for city in data['cities']:
+        if data['cities'][city][date_in_future]['temp_min'] == min_temp:
+            cities_with_min_temp.append(city)
+
+    return_city = random.choice(cities_with_min_temp)
+    return return_city, min_temp, data['cities'][return_city][date_in_future]['icon']
