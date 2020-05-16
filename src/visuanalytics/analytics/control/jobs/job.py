@@ -64,8 +64,8 @@ class Job(object):
         Initalisiertt zuerst einen Job Ordner mit der Job id, dieser kann dann im gesamten Job zur
         zwichenspeicherung von dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehler fall wieder gelöscht.
 
-        Iteriert durch :class:`Steps`.:func:`sequence` und führt jede Function die in "call" definiert wurde aus,
-        und zählt dabei den aktuelle Step mit.
+        Führt alle Schritte aus der übergebenen Steps instans, die in der Funktion :func:`sequence` difiniert sind,
+        der reihnfolge nach aus. Mit der ausnahme von allen Steps mit der id < 0 und >= `step_max`.
 
         :return: Wenn ohne fehler ausgeführt `True`, sonst `False`
         :rtype: bool

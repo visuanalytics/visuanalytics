@@ -11,7 +11,7 @@ class Steps(object):
     solten die hinweise in der Dokumentation für :func:`step_max` und :func:`sequence` bearchtet werden.
 
     Beinhaltet die Grundlegenden Funktionen um alle Steps der reihe nach ausführen zu Können.
-    Definiert die variable :var:`sequence`, diese beinhaltet all Steps mit ihren auszuführenden funktionen.
+    Definiert die variable `sequence`, diese beinhaltet all Steps mit ihren auszuführenden funktionen.
     """
 
     def __init__(self, config):
