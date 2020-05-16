@@ -17,7 +17,7 @@ class Job(object):
         self.__start_time = 0.0
         self.__end_time = 0.0
         self.__id = job_id
-        self.__current_step = None
+        self.__current_step = -2
 
     @property
     def start_time(self):
@@ -26,7 +26,7 @@ class Job(object):
 
     @property
     def end_time(self):
-        """float: endzeit des Jobs. Wird erst nach deendigung des Jobs inizalisiert."""
+        """float: endzeit des Jobs. Wird erst nach beendigung des Jobs inizalisiert."""
         return self.__end_time
 
     @property
@@ -40,12 +40,11 @@ class Job(object):
         :return: Nummer des Aktullen Schritts, Anzahl aller Schritte
         :rtype: int, int
         """
-        return self.__current_step + 1, len(self.__steps.sequence)
+        return self.__current_step + 1, self.__steps.step_max + 1
 
     def current_step_name(self):
         """Gibt den Namen des Aktuellen Schritts zurück"""
-        return "not started" if self.__current_step is None else \
-            "Error" if self.__current_step < 0 else self.__steps.get_step_name(self.__current_step)
+        return self.__steps.sequence[self.__current_step]["name"]
 
     def __setup(self):
         print(f"Job {self.id} Started")
@@ -73,15 +72,18 @@ class Job(object):
         """
         self.__setup()
         try:
-            for idx, step in enumerate(self.__steps.sequence):
+            for idx in range(0, self.__steps.step_max):
                 self.__current_step = idx
-                step["call"](self.id)
+                self.__steps.sequence[idx]["call"](self.id)
 
+            # Set state to ready
+            self.__current_step = self.__steps.step_max
             self.__cleanup()
             return True
 
         except Exception as er:
-            print("Error")
+            # TODO(max)
+            print("Error", er.__cause__)
             self.__current_step = -1
             self.__cleanup()
             return False
