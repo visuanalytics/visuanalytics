@@ -58,27 +58,22 @@ def first_weatherforecast_text_to_speech(data_for_text):
         f"{data['today']['city_name_min']} {data['today']['code_min']}. ")
     today_temp = (
         f"Die Temperaturen liegen zwischen {data['today']['temp_min']} {data['today']['city_name_min']} "
-        f"und {data['today']['temp_max']} {data['today']['city_name_max']}. "
-        f"Die Durchschnittstemperatur liegt heute bei {data['today']['temp_avg']}. ")
+        f"und {data['today']['temp_max']} {data['today']['city_name_max']}. ")
     tomorrow_weather = (
-        f"Am heutigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min']} {data['tomorrow']['city_name_min']}. "
+        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min']} {data['tomorrow']['city_name_min']}. "
         f"{data['tomorrow']['city_name_max']} {data['tomorrow']['code_max']}. ")
     tomorrow_temp = (
         f"Die Temperaturen liegen zwischen {data['tomorrow']['temp_min']} {data['tomorrow']['city_name_min']} "
-        f"und {data['tomorrow']['temp_max']} {data['tomorrow']['city_name_max']}. "
-        f"Die Durchschnittstemperatur liegt heute bei {data['tomorrow']['temp_avg']}. ")
+        f"und {data['tomorrow']['temp_max']} {data['tomorrow']['city_name_max']}. ")
     next_1 = (
         f"Am {data['next_1']['weekday']} {data['next_1']['code_min']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_1']['temp_min']} und {data['next_1']['temp_max']}. "
-        f"Die Durchschnittstemperatur liegt bei {data['next_1']['temp_avg']}. ")
+        f"Die Temperaturen liegen zwischen {data['next_1']['temp_min']} und {data['next_1']['temp_max']}. ")
     next_2 = (
         f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_2']['temp_min']} und {data['next_2']['temp_max']}. "
-        f"Die Durchschnittstemperatur liegt bei {data['next_2']['temp_avg']}. ")
+        f"Die Temperaturen liegen zwischen {data['next_2']['temp_min']} und {data['next_2']['temp_max']}. ")
     next_3 = (
         f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_3']['temp_min']} und {data['next_3']['temp_max']}. "
-        f"Die Durchschnittstemperatur liegt bei {data['next_3']['temp_avg']}. ")
+        f"Die Temperaturen liegen zwischen {data['next_3']['temp_min']} und {data['next_3']['temp_max']}. ")
     three_days = f"{next_1} {next_2} {next_3}"
 
     # Create timestamp for the filenames
