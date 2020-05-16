@@ -9,9 +9,6 @@ class Steps(object):
     Eine unterklasse **muss** die Functionen :func:`apis`, :func:`preprocessing`, :func:`processing` und :func:`linking`
     überschreiben. Falls die reihnfolge auch überschrieben werden soll,
     solten die hinweise in der Dokumentation für :func:`step_max` und :func:`sequence` bearchtet werden.
-
-    Beinhaltet die Grundlegenden Funktionen um alle Steps der reihe nach ausführen zu Können.
-    Definiert die variable `sequence`, diese beinhaltet all Steps mit ihren auszuführenden funktionen.
     """
 
     def __init__(self, config):
