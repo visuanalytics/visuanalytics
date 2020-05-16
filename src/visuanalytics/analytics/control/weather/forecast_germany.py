@@ -14,6 +14,11 @@ else:
 
 data = weather.preprocess_weather_data(json_data)
 date = date_time.date_to_weekday(weather.get_first_day(data))
-ws.get_three_pic(weather.get_ico_three(data), weather.get_temp_mm_three(data), date[1:4])
-ws.get_tomo_icons(weather.get_ico_tomorow(data), date[0])
-ws.get_tomo_temperatur(weather.get_temp_tomorow(data), date[0])
+
+ws.get_oneday_icons_image(weather.data_icon_oneday(data, 0), date[0])
+ws.get_oneday_temp_image(weather.data_temp_oneday(data, 0), date[0])
+
+ws.get_oneday_icons_image(weather.data_icon_oneday(data, 1), date[1])
+ws.get_oneday_temp_image(weather.data_temp_oneday(data, 1), date[1])
+
+ws.get_threeday_image(weather.data_icon_threeday(data), weather.data_mm_temp_threeday(data), date[2:5])

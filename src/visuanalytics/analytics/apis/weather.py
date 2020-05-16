@@ -31,7 +31,7 @@ def get_forecasts():
     Jede JSON-Antwort wird mittels json.loads() in ein dictionary konvertiert und in einer Liste gespeichert.
 
     :returns: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren.
-    :rtype: list
+    :rtype: dict
 
     :raises:
         ValueError: Wenn der Response-Code eine andere Nummer als 200 enthält. Dies kann vor allem bei einem fehlenden
@@ -57,7 +57,7 @@ def get_example():
     Bezieht die 16-Tage-Wettervorhersage für 15 Städte Deutschlands (aus der examples/weather.json)  und bündelt sie in einer Liste.
 
     :return: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren ( aus der json datein gelesen)
-    :rtype: list
+    :rtype: dict
 
     """
     with resources.open_resource("exampledata/example_weather.json", "r") as json_file:

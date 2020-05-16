@@ -6,6 +6,8 @@ import re
 import calendar
 import locale
 
+from visuanalytics.analytics.preprocessing import weather
+
 
 def date_to_weekday(valid_date):
     """Wandelt das Datum von der API in den Wochentag um.
@@ -21,11 +23,12 @@ def date_to_weekday(valid_date):
 
     Returns:
         List: days
-            mit vier Einträgen:
+            mit so vielen Einträgen wie von der Wetter Api generiert Einträgen:
             days[0] -> dayofweek_today (heute)
             days[1] -> dayofweek_1 (morgen)
             days[2] -> dayofweek_2 (übermorgen)
             days[3] -> dayofweek_3 (überübermorgen)
+            etc.
     Example:
         valid_date = "2020-05-09"
         days = date_to_weekday(valid_date)
@@ -41,7 +44,7 @@ def date_to_weekday(valid_date):
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
-        for i in range(0, 4):
+        for i in range(0, weather.NUM_DAYS):
             days.append(calendar.day_name[(date + dt.timedelta(days=i)).weekday()])
     except:
         print("Fehlermeldung: Kein Datum hinterlegt.")
