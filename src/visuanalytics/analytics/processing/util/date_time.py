@@ -3,8 +3,6 @@ from datetime import datetime
 
 import datetime as dt
 import re
-import calendar
-import locale
 
 from visuanalytics.analytics.preprocessing import weather
 
@@ -37,15 +35,20 @@ def date_to_weekday(valid_date):
         print("Übermorgen ist", days[2]) # dayofweek_2
         print("Überübermorgen ist", days[3]) # dayofweek_3
     """
-    if sys.platform == 'win32':
-        locale.setlocale(locale.LC_ALL, 'deu_deu')
-    else:
-        locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+    day_weekday = {
+        0: "Montag",
+        1: "Dienstag",
+        2: "Mittwoch",
+        3: "Donnerstag",
+        4: "Freitag",
+        5: "Samstag",
+        6: "Sonntag",
+    }
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
         for i in range(0, weather.NUM_DAYS):
-            days.append(calendar.day_name[(date + dt.timedelta(days=i)).weekday()])
+            days.append(day_weekday[(date + dt.timedelta(days=i)).weekday()])
     except:
         print("Fehlermeldung: Kein Datum hinterlegt.")
     return days
