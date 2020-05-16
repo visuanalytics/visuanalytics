@@ -50,6 +50,7 @@ def date_to_weekday(valid_date):
         for i in range(0, weather.NUM_DAYS):
             days.append(day_weekday[(date + dt.timedelta(days=i)).weekday()])
     except:
+       # TODO: Fehlerbehandlung nochmal überarbeiten
         print("Fehlermeldung: Kein Datum hinterlegt.")
     return days
 
