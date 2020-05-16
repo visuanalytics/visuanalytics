@@ -12,9 +12,7 @@ if TESTING_MODE:
 else:
     json_data = api.get_forecasts()
 
-print(json_data)
 data = weather.preprocess_weather_data(json_data)
-print(data)
 date = date_time.date_to_weekday(weather.get_first_day(data))
 
 ws.get_oneday_icons_image(weather.data_icon_oneday(data, 0), date[0])
