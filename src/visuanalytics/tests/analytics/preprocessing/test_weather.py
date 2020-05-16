@@ -1,7 +1,8 @@
-from visuanalytics.analytics.preprocessing import weather
-from visuanalytics.analytics.util import resources
-import unittest
 import json
+import unittest
+
+from visuanalytics.analytics.preprocessing import preprocessing_weather
+from visuanalytics.analytics.util import resources
 
 input_single = {
     "city_name": "Gießen",
@@ -46,7 +47,7 @@ weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", 
 class PreprocessSingleTest(unittest.TestCase):
 
     def test_only_four_days_taken(self):
-        actual = len(weather._preprocess_single(input_single)["Gießen"])
+        actual = len(preprocessing_weather._preprocess_single(input_single)["Gießen"])
         expected = 4
         self.assertEqual(actual, expected)
 
@@ -55,7 +56,7 @@ class PreprocessSingleTest(unittest.TestCase):
             "city_name": "Gießen",
             "data": input_single["data"][:3]
         }
-        actual = len(weather._preprocess_single(input_single_three_days)["Gießen"])
+        actual = len(preprocessing_weather._preprocess_single(input_single_three_days)["Gießen"])
         expected = 3
         self.assertEqual(actual, expected)
 
@@ -63,7 +64,7 @@ class PreprocessSingleTest(unittest.TestCase):
 class PreprocessTest(unittest.TestCase):
     with resources.open_resource("exampledata/example_weather.json") as file_handle:
         input = json.loads(file_handle.read())
-        output = weather.preprocess_weather_data(input)
+        output = preprocessing_weather.preprocess_weather_data(input)
 
     def test_contains_all_cities(self):
         actual = set((dict.keys(self.output["cities"])))

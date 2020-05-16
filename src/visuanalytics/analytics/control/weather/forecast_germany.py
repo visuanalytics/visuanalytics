@@ -1,7 +1,7 @@
-from visuanalytics.analytics.processing.weather import weather_visualization as ws
-from visuanalytics.analytics.processing.weather import weather_text_speech as speech
-from visuanalytics.analytics.preprocessing import weather
 from visuanalytics.analytics.apis import weather as api
+from visuanalytics.analytics.processing.weather import weather_text_speech as speech
+from visuanalytics.analytics.preprocessing import preprocessing_weather as weather
+from visuanalytics.analytics.processing.weather import weather_visualization as ws
 
 # todo needs to be finished when speech ready (to generate video)
 
