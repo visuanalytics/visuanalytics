@@ -8,7 +8,7 @@ class Steps(object):
     Sollte **nicht** selbst in einem Job verwendet werden.
     Eine unterklasse **muss** die Functionen :func:`apis`, :func:`preprocessing`, :func:`processing` und :func:`linking`
     überschreiben. Falls die reihnfolge auch überschrieben werden soll,
-    solten die hinweise in der Dokumentation für :func:`step_max` und :func:`sequence` bearchtet werden.
+    solten die hinweise in der Dokumentation für die variablen `step_max` und `sequence` beachtet werden.
     """
 
     def __init__(self, config):
@@ -27,8 +27,8 @@ class Steps(object):
     def step_max(self):
         """int: höchste step id.
 
-        Falls sequence überschrieben wird **muss** dieser auch überschrieben werden,
-        dieser wert **muss** immer gleich dem höchsten wert in sequence sein.
+        Falls sequence überschrieben wird **muss** diese variable auch überschrieben werden,
+        dieser wert **sollte** immer gleich dem höchsten wert in sequence sein.
         """
         return self.__step_max
 
@@ -37,7 +37,7 @@ class Steps(object):
         """list: Enthält alle Schritte mit den dazugehörigen functionen (fals vorhanden).
 
         Die Schritte -2, -1, und 4 haben keine funktionen da dies Fehler oder start und Endpunkt definieren.
-        Fall die sequence überschrieben wird **muss** diese -2 und -1 enthalten,
+        Falls die variable `sequence` überschrieben wird **muss** diese -2 und -1 enthalten,
         desweiteren sollte der letzte Schritt `Ready` sein da dessen function nie aufgerufen wird.
         """
         return self.__sequence
