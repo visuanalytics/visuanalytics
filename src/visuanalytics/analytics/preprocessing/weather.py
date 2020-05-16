@@ -56,7 +56,7 @@ def preprocess_weather_data(api_data):
     handzuhabende Struktur gebracht. Dazu werden irrelevante Parameter weggelassen und die allgemeine Struktur angepasst.
 
     :param api_data: Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
-    :type api_data: list
+    :type api_data: dict
 
     :returns:
         Ein Dictionary folgender Struktur:
@@ -118,7 +118,7 @@ def _preprocess_single(data):
 
 
 def _summaries(data):
-    days = range(4)
+    days = range(NUM_DAYS)
     avg_temp = [statistics.mean(_get_for_day(i, "temp", data)) for i in days]
     min_temp = [min(_get_for_day(i, "min_temp", data)) for i in days]
     max_temp = [max(_get_for_day(i, "max_temp", data)) for i in days]
@@ -136,13 +136,15 @@ def _get_for_day(day, attribute, data):
     return [d[attribute] for d in days]
 
 
-def get_icon_tomorow(data):
+def data_icon_oneday(data, date):
     """
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste -
-    in diesem Fall eine Liste mit Icons an verschieden Orten für morgen
+    in diesem Fall eine Liste mit Icons an verschieden Orten für heute/morgen.
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type: data:list
+    :type: data: dict
+    :param date : Der Tag für welchen die Icons erstellt werden soll, 0 = heute, 1 = morgen
+    :type date: int
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Icons und Name des Icons
     :rtype: list
 
@@ -153,17 +155,19 @@ def get_icon_tomorow(data):
     """
     out = []
     for entry in LOCATIONS_TOMOROW:
-        out.append((entry[1], _get_weather_icon(data, entry[0], 0)))
+        out.append((entry[1], _get_weather_icon(data, entry[0], date)))
     return out
 
 
-def get_temp_tomorow(data):
+def data_temp_oneday(data, date):
     """
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste. -
-    in diesem Fall eine Liste mit Temperaturen an verschieden Orten für morgen
+    in diesem Fall eine Liste mit Temperaturen an verschieden Orten für heute/morgen.
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type data: list
+    :type data: dict
+    :param date : Der Tag für welchen die Icons erstellt werden soll, 0 = heute, 1 = morgen
+    :type date: int
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Temperatur und der Temperatur
     :rtype: list
 
@@ -174,17 +178,17 @@ def get_temp_tomorow(data):
     """
     out = []
     for entry in LOCATIONS_TOMOROW:
-        out.append((entry[1], _get_weather_temp(data, entry[0], 0)))
+        out.append((entry[1], _get_weather_temp(data, entry[0], date)))
     return out
 
 
-def get_temp_mm_three(data):
+def data_mm_temp_threeday(data):
     """
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste -
-    in diesem Fall eine Liste mit min und max Temperaturen für die 2-4 Tages Vorhersage
+    in diesem Fall eine Liste mit min und max Temperaturen für die 3-5 Tages Vorhersage.
 
     :param data: die verabeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type data:list
+    :type data: dict
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Temperatur und der min/max Temperatur
     :rtype: list
 
@@ -193,22 +197,22 @@ def get_temp_mm_three(data):
     [((160, 950), '1°'), ((790, 950), '-1°'), ((1400, 950), '0°'), ((450, 950), '19°'), ((1070, 950), '14°'),
     ((1700, 950), '14°')]
     """
-    
+
     out = []
     for idx, entry in enumerate(LOCATIONS_TEMP_MIN_THREEDAYS):
-        out.append((entry, _get_min_temp(data, idx + 1)))
+        out.append((entry, _get_min_temp(data, idx + 2)))
     for idx, entry in enumerate(LOCATIONS_TEMP_MAX_THREEDAYS):
-        out.append((entry, _get_max_temp(data, idx + 1)))
+        out.append((entry, _get_max_temp(data, idx + 2)))
     return out
 
 
-def get_icon_three(data):
+def data_icon_threeday(data):
     """
     Simple Methode zum weiterverarbeiten der Daten in eine kleinere Liste-
-    in diesem Fall eine Liste mit Icons an verschieden Orten für die 2-4 Tages Vorhersage
+    in diesem Fall eine Liste mit Icons an verschieden Orten für die 3-5 Tages Vorhersage.
 
     :param data: die verarbeiteten Daten der Wetter API aus der Methode preprocess_weather_data()
-    :type data:list
+    :type data: dict
     :return: Eine Liste aus Tupeln bestehend aus den Koordinaten der Icons und Name des Icons für die 2-4 Tages Vorhersage
     :rtype: list
 
@@ -222,8 +226,8 @@ def get_icon_three(data):
     out = []
     for entry in LOCATIONS_ICONS_THREEDAYS:
         out.append(
-            (entry[1], entry[2], entry[3], _get_weather_icon(data, entry[0], 1), _get_weather_icon(data, entry[0], 2),
-             _get_weather_icon(data, entry[0], 3)))
+            (entry[1], entry[2], entry[3], _get_weather_icon(data, entry[0], 2), _get_weather_icon(data, entry[0], 3),
+             _get_weather_icon(data, entry[0], 4)))
     return out
 
 

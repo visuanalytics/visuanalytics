@@ -14,15 +14,15 @@ list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 """
 
 
-def get_three_pic(data, data2, weekdates):
+def get_threeday_image(data, data2, weekdates):
     """
-    Methode zum generieren des Bildes für die Vorhersage für die nächsten 2-4 Tage.
+    Methode zum generieren des Bildes für die Vorhersage für die nächsten 3-5 Tage.
 
     :param weekdates: Wochentage für die nächsten 2-4 Tage
     :type weekdates : list
-    :param data: Das Ergebnis der Methode :func:`get_ico_three()`.
+    :param data: Das Ergebnis der Methode :func:`data_icon_threeday()`.
     :type data: list
-    :param dat2: Das Ergebnis der Methode :func:`get_temp_mm_three()`.
+    :param dat2: Das Ergebnis der Methode :func:`data_mm_temp_threeday()`.
     :type data2: list
 
     :return: Den Dateinamen des erstellten Bildes.
@@ -54,13 +54,13 @@ def get_three_pic(data, data2, weekdates):
     return file
 
 
-def get_tomo_icons(data, weekdate):
+def get_oneday_icons_image(data, weekdate):
     """
-    Methode zum generieren des Bildes für die Vorhersage für morgen (Iconbild).
+    Methode zum generieren des Bildes für die Vorhersage für heute/morgen (Iconbild).
 
     :param weekdate: Wochentag des Datums für morgen
     :type weekdate : str
-    :param data: Das Ergebnis der Methode :func:`get_ico_tomorow()`.
+    :param data: Das Ergebnis der Methode :func:`data_icon_oneday()`.
     :type data: list
 
     :return: Den Dateinamen des erstellten Bildes.
@@ -82,13 +82,13 @@ def get_tomo_icons(data, weekdate):
     return file
 
 
-def get_tomo_temperatur(data, weekdate):
+def get_oneday_temp_image(data, weekdate):
     """
-    Methode zum generieren des Bildes für die Vorhersage für morgen (Temperaturbild).
+    Methode zum generieren des Bildes für die Vorhersage für heute/morgen (Temperaturbild).
 
     :param weekdate: Wochentag des Datums für morgen
     :type weekdate : str
-    :param data: Das Ergebnis der Methode :func:`get_temp_tomorow()`
+    :param data: Das Ergebnis der Methode :func:`data_temp_oneday()`
     :type data: list
 
     :return: Den Dateinamen des erstellten Bildes.
