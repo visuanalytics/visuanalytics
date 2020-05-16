@@ -260,17 +260,16 @@ def get_city_with_max_temp(data, date_in_future):
 
     Example:
     city_with_max_temp = get_city_with_max_temp(data, 0)
-    print(city_with_max_temp) -> "muenchen", 23, c02d
+    print(city_with_max_temp) -> "muenchen", 23, 801
     """
 
-    max_temp = _get_max_temp(data, date_in_future)
+    max_temp = round(data['summaries'][date_in_future]['temp_max'])
     cities_with_max_temp = []
     for city in data['cities']:
-        if data['cities'][city][date_in_future]['temp_max'] == max_temp:
+        if round(data['cities'][city][date_in_future]['max_temp']) == max_temp:
             cities_with_max_temp.append(city)
-
     return_city = random.choice(cities_with_max_temp)
-    return return_city, max_temp, data['cities'][return_city][date_in_future]['icon']
+    return return_city, max_temp, data['cities'][return_city][date_in_future]['code']
 
 
 def get_city_with_min_temp(data, date_in_future):
@@ -286,11 +285,11 @@ def get_city_with_min_temp(data, date_in_future):
     print(city_with_min_temp) -> "berlin", 19, c02d
     """
 
-    min_temp = _get_min_temp(data, date_in_future)
+    min_temp = round(data['summaries'][date_in_future]['temp_min'])
     cities_with_min_temp = []
     for city in data['cities']:
-        if data['cities'][city][date_in_future]['temp_min'] == min_temp:
+        if round(data['cities'][city][date_in_future]['min_temp']) == min_temp:
             cities_with_min_temp.append(city)
 
     return_city = random.choice(cities_with_min_temp)
-    return return_city, min_temp, data['cities'][return_city][date_in_future]['icon']
+    return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
