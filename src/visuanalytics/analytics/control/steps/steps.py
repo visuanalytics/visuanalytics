@@ -46,7 +46,8 @@ class Steps(object):
         """Function für den Step APIS, **Muss** überschrieben werden"""
         assert False, "Not Implemented"
 
-    def prepocessing(self, job_id: str):
+    def preprocessing(self, job_id: str):
+        """Function für den Step Preprocessing, **Muss** überschrieben werden"""
         assert False, "Not Implemented"
 
     def processing(self, job_id: str):

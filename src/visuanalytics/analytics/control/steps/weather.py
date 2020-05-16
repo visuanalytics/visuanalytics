@@ -21,7 +21,7 @@ class WeatherSteps(Steps):
         else:
             self.__json_data = api.get_forecasts()
 
-    def prepocessing(self, job_id: str):
+    def preprocessing(self, job_id: str):
         data = pre.preprocess_weather_data(self.__json_data)
         self.__json_data = []
 
