@@ -6,7 +6,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.processing.util import date_time
+from visuanalytics.analytics.util import date_time
 import uuid
 
 LOCATIONS_WEEKDAYS = [(205, 103), (828, 103), (1435, 103)]
