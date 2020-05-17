@@ -9,13 +9,15 @@ from visuanalytics.analytics.util import resources
 
 def to_forecast_germany(images, audios, audiol):
     """
-    Methode zum erstellen des Deutschland 1-4 Tages Video aus den Bildern+Audios
+    Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
+    Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
+    müssen die selbe Anzahl an Elementen beeihalten.
 
-    :param images: Eine Liste aus 3 Elementen mit den Dateinamen zu den Bildern (1 -> Iconbild | 2 -> Temperaturbild | 3-> Dreitagesbild)
+    :param images: Eine Liste aus Strings Elementen mit den Dateinamen zu den Bildern
     :type images: list
-    :param audios: Eine Liste aus 3 Elementen mit den Dateinamen zu den Audios  (1 -> Iconaudio | 2 -> Temperataudio | 3-> Dreitagesaudio)
+    :param audios: Eine Liste aus String Elementen mit den Dateinamen zu den Audios
     :type audios: list
-    :param audiol: Eine Liste aus 3 Elementen mit den Audiolängen der Audios (1 -> Iconaudiolänge | 2 -> Temperataudiolänge | 3-> Dreitagesaudiolänge)
+    :param audiol: Eine Liste aus Strings Elementen mit den Audiolängen der Audios
     :type audiol: list
     :return:
     :rtype: str
@@ -23,21 +25,18 @@ def to_forecast_germany(images, audios, audiol):
     """
 
     with resources.open_resource("weather/input.txt", "w") as file:
-        file.write("file '" + audios[0] + "'\n")
-        file.write("file '" + audios[1] + "'\n")
-        file.write("file '" + audios[2] + "'\n")
+        for i in range(0, len(audios)):
+            file.write("file '" + audios[i] + "'\n")
 
     shell_cmd = "ffmpeg -f concat -i input.txt -c copy output.wav"
     os.chdir(resources.get_resource_path("temp/weather"))
     os.system(shell_cmd)
 
     with resources.open_resource("weather/input.txt", "w") as file:
-        file.write("file '" + images[0] + "'\n")
-        file.write("duration " + audiol[0] + "\n")
-        file.write("file '" + images[1] + "'\n")
-        file.write("duration " + audiol[1] + "\n")
-        file.write("file '" + images[2] + "'\n")
-        file.write("duration " + audiol[2] + "\n")
+        for i in range(0, len(images)):
+            file.write("file '" + images[i] + "'\n")
+            file.write("duration '" + audiol[i] + "'\n")
+
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
     os.chdir(resources.get_resource_path("temp/weather"))
     os.system(shell_cmd)
