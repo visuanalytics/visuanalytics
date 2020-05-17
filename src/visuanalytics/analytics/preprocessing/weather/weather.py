@@ -7,6 +7,7 @@ import statistics
 from numpy import random
 from visuanalytics.analytics.util import dictionary
 from visuanalytics.analytics.util import statistical
+from visuanalytics.analytics.preprocessing.weather import speech
 
 # TODO(Max) move to weather sub Package and split in visualsation and generall
 
@@ -300,3 +301,50 @@ def get_city_with_min_temp(data, date_in_future):
 
     return_city = random.choice(cities_with_min_temp)
     return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
+
+def get_city_with_max_min_avg_temp(data, date_in_future):
+    """
+    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der höchsten Durchschnittstemperatur herauszufinden
+
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
+    :return: eine Stadt, die an diesem Tag die höchste Durchschnittstemperatur hat (wenn mehrere Städte gefunden werden,
+            wird eine zurfällig ausgesucht), die höchste Durchschnittstemperatur und das zugehörige Icon.
+            Und eine Stadt, die an diesem Tag die niedrigste Durchschnittstemperatur hat (wenn mehrere Städte gefunden werden,
+            wird eine zurfällig ausgesucht), die niedrigste Durchschnittstemperatur und das zugehörige Icon.
+
+    Example:
+    [city_name_max_avg, max_avg_temp, code_max_avg, city_name_min_avg, min_avg_temp, code_min_avg] = get_city_with_max_min_avg_temp(data, 0)
+    print(city_with_max_temp) -> "muenchen", 23, 801
+    """
+
+    cities_with_avg_temp = []
+    cities_with_max_avg_temp = []
+    cities_with_min_avg_temp = []
+    for city in data['cities']:
+        cities_with_avg_temp.append(round(data['cities'][city][date_in_future]['temp']))
+    maxtemp_temp = max(cities_with_avg_temp)
+    mintemp_temp = min(cities_with_avg_temp)
+    for city in data['cities']:
+        if round(data['cities'][city][date_in_future]['temp']) == maxtemp_temp:
+            cities_with_max_avg_temp.append(city)
+        if round(data['cities'][city][date_in_future]['temp']) == mintemp_temp:
+            cities_with_min_avg_temp.append(city)
+    return_city_max = random.choice(cities_with_max_avg_temp)
+    return_city_min = random.choice(cities_with_min_avg_temp)
+
+    return [return_city_max, round(data['cities'][return_city_max][date_in_future]['temp']),
+            data['cities'][return_city_max][date_in_future]['code'],
+            return_city_min, round(data['cities'][return_city_min][date_in_future]['temp']),
+            data['cities'][return_city_min][date_in_future]['code']]
+
+def get_average_per_day(data):
+    avg_temp = []
+    common_code = []
+    for summary in range(5):
+        avg_temp_data = round(data['summaries'][summary]['temp_avg'])
+        avg_temp.append(str(avg_temp_data))
+        common_code_data = data['summaries'][summary]['common_code']
+        common_code.append(speech.random_weather_descriptions(common_code_data))
+
+    return avg_temp, common_code
