@@ -1,7 +1,7 @@
 from visuanalytics.analytics.apis import weather as api
-from visuanalytics.analytics.control.steps.steps import Steps
+from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.preprocessing import weather as pre
-from visuanalytics.analytics.processing.weather import weather_visualization
+from visuanalytics.analytics.processing.weather import weather_visualization as wv
 
 # TODO(Max) not ready yet
 
@@ -23,7 +23,8 @@ class WeatherSteps(Steps):
 
     def preprocessing(self, job_id: str):
         data = pre.preprocess_weather_data(self.__json_data)
-        self.__json_data = []
+        # clear JSON data (vtl. remove)
+        self.__json_data = None
 
         self.__processed_data = {"ico_three": pre.get_ico_three(data),
                                  "temp_mm_three": pre.get_temp_mm_three(data),
@@ -31,9 +32,9 @@ class WeatherSteps(Steps):
                                  "temp_tomorow": pre.get_temp_tomorow(data)}
 
     def processing(self, job_id: str):
-        weather_visualization.get_three_pic(self.__processed_data["ico_three"], self.__processed_data["temp_mm_three"])
-        weather_visualization.get_tomo_icons(self.__processed_data["ico_tomorow"])
-        weather_visualization.get_tomo_temperatur(self.__processed_data["temp_tomorow"])
+        wv.get_three_pic(self.__processed_data["ico_three"], self.__processed_data["temp_mm_three"])
+        wv.get_tomo_icons(self.__processed_data["ico_tomorow"])
+        wv.get_tomo_temperatur(self.__processed_data["temp_tomorow"])
 
     def linking(self, job_id: str):
         pass

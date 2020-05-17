@@ -1,7 +1,7 @@
 import os
 import time
 
-from visuanalytics.analytics.control.steps.steps import Steps
+from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.util import resources
 
 
