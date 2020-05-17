@@ -38,7 +38,7 @@ def open_resource(path: str, mode: str = "rt"):
     res_path = get_resource_path(path)
     os.makedirs(os.path.dirname(res_path), exist_ok=True)
 
-    return open(res_path, mode)
+    return open(res_path, mode, encoding='utf-8')
 
 
 def delete_resource(path: str):
