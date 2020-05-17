@@ -1,8 +1,14 @@
 import uuid
 
-from visuanalytics.analytics.control.jobs.job import Job
-from visuanalytics.analytics.control.steps.weather import WeatherSteps
+from visuanalytics.analytics.control.job import Job
+from visuanalytics.analytics.control.procedures.weather import WeatherSteps
+
 
 # TODO(Max) Implement (current just for testing)
 
-Job(uuid.uuid4().hex, WeatherSteps({})).start()
+def main():
+    Job(uuid.uuid4().hex, WeatherSteps({})).start()
+
+
+if __name__ == "__main__":
+    main()
