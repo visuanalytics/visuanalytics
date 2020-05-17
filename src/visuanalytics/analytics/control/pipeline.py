@@ -5,37 +5,37 @@ from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.util import resources
 
 
-class Job(object):
-    """Enthält alle informationen zu einem Job, und führt alle Steps aus.
+class Pipeline(object):
+    """Enthält alle informationen zu einer Pipeline, und führt alle Steps aus.
 
     Benötigt beim ersttellen eine id, und Eine instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
     Bei dem aufruf von Start werden alle Steps der reihe nach ausgeführt.
     """
 
-    def __init__(self, job_id: str, steps: Steps):
+    def __init__(self, pipeline_id: str, steps: Steps):
         self.__steps = steps
         self.__start_time = 0.0
         self.__end_time = 0.0
-        self.__id = job_id
+        self.__id = pipeline_id
         self.__current_step = -1
 
     @property
     def start_time(self):
-        """float: startzeit des Jobs. Wird erst bei dem Aufruf von :func:`start` inizalisiert."""
+        """float: startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` inizalisiert."""
         return self.__start_time
 
     @property
     def end_time(self):
-        """float: endzeit des Jobs. Wird erst nach beendigung des Jobs inizalisiert."""
+        """float: endzeit der Pipeline. Wird erst nach beendigung der Pipeline inizalisiert."""
         return self.__end_time
 
     @property
     def id(self):
-        """str: id des Jobs"""
+        """str: id des Pipelines"""
         return self.__id
 
     def progress(self):
-        """Fortschritt des Jobs.
+        """Fortschritt der Pipeline.
 
         :return: Nummer des Aktullen Schritts, Anzahl aller Schritte
         :rtype: int, int
@@ -47,7 +47,7 @@ class Job(object):
         return self.__steps.sequence[self.__current_step]["name"]
 
     def __setup(self):
-        print(f"Job {self.id} Started")
+        print(f"Pipeline {self.id} Started")
 
         self.__start_time = time.time()
         os.mkdir(resources.get_resource_path(f"temp/{self.id}"))
@@ -56,12 +56,12 @@ class Job(object):
         os.rmdir(resources.get_resource_path(f"temp/{self.id}"))
 
         self.__end_time = time.time()
-        print(f"Job {self.id} Stoped")
+        print(f"Pipeline {self.id} Stoped")
 
     def start(self):
         """Führt alle Schritte die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind aus.
 
-        Initalisiertt zuerst einen Job Ordner mit der Job id, dieser kann dann im gesamten Job zur
+        Initalisiertt zuerst einen Pipeline Ordner mit der Pipeline id, dieser kann dann im gesamten Pipeline zur
         zwichenspeicherung von dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehler fall wieder gelöscht.
 
         Führt alle Schritte aus der übergebenen Steps instans, die in der Funktion :func:`sequence` difiniert sind,
@@ -87,9 +87,3 @@ class Job(object):
             self.__current_step = -2
             self.__cleanup()
             return False
-
-
-# TODO(Max) verschieben
-
-class StepError(ValueError):
-    pass

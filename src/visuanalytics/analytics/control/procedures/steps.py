@@ -2,7 +2,7 @@ class Steps(object):
     """Beinhaltet eine Grundlegende Definition für alle Steps.
 
     Ist die GrundKlasse von der alle Step Klassen erben sollen.
-    Sollte **nicht** selbst in einem Job verwendet werden.
+    Sollte **nicht** selbst in einer :class:´Pipeline` verwendet werden.
     Eine unterklasse **muss** die Functionen :func:`apis`, :func:`preprocessing`, :func:`processing` und :func:`linking`
     überschreiben. Falls die reihnfolge auch überschrieben werden soll,
     solten die hinweise in der Dokumentation für die variablen `step_max` und `sequence` beachtet werden.
@@ -44,18 +44,18 @@ class Steps(object):
         """dict: Einstellungen für die Steps."""
         return self._config
 
-    def apis(self, job_id: str):
+    def apis(self, pipeline_id: str):
         """Function für den Step `APIS`, **Muss** überschrieben werden."""
         assert False, "Not Implemented"
 
-    def preprocessing(self, job_id: str):
+    def preprocessing(self, pipeline_id: str):
         """Function für den Step `Preprocessing`, **Muss** überschrieben werden."""
         assert False, "Not Implemented"
 
-    def processing(self, job_id: str):
+    def processing(self, pipeline_id: str):
         """Function für den Step `Processing`, **Muss** überschrieben werden."""
         assert False, "Not Implemented"
 
-    def linking(self, job_id: str):
+    def linking(self, pipeline_id: str):
         """Function für den Step `Linking`, **Muss** überschrieben werden."""
         assert False, "Not Implemented"

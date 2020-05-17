@@ -15,13 +15,13 @@ class WeatherSteps(Steps):
         self.__json_data = []
         self.__processed_data = {}
 
-    def apis(self, job_id: str):
+    def apis(self, pipeline_id: str):
         if TESTING_MODE:
             self.__json_data = api.get_example()
         else:
             self.__json_data = api.get_forecasts()
 
-    def preprocessing(self, job_id: str):
+    def preprocessing(self, pipeline_id: str):
         data = pre.preprocess_weather_data(self.__json_data)
         # clear JSON data (vtl. remove)
         self.__json_data = None
@@ -31,10 +31,10 @@ class WeatherSteps(Steps):
                                  "ico_tomorow": pre.get_ico_tomorow(data),
                                  "temp_tomorow": pre.get_temp_tomorow(data)}
 
-    def processing(self, job_id: str):
+    def processing(self, pipeline_id: str):
         wv.get_three_pic(self.__processed_data["ico_three"], self.__processed_data["temp_mm_three"])
         wv.get_tomo_icons(self.__processed_data["ico_tomorow"])
         wv.get_tomo_temperatur(self.__processed_data["temp_tomorow"])
 
-    def linking(self, job_id: str):
+    def linking(self, pipeline_id: str):
         pass
