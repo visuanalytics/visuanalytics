@@ -11,11 +11,10 @@ In DATA sind aktuell nur Beispielwerte abgespeichert.
 import datetime
 import time
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.preprocessing.weather import get_data
 from gtts import gTTS
 
 
-def first_weatherforecast_text_to_speech(data_for_text):
+def first_weatherforecast_text_to_speech(data):
     """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Audio-Datei.
 
     Es wird jeweils ein Text für die Wettervorhersage für heute und die drei darauffolgenden Tage erstellt.
@@ -50,31 +49,30 @@ def first_weatherforecast_text_to_speech(data_for_text):
 
     data_for_text = {"weekday": {}, "today_icons": {}, "today_temperature": {}, "tomorrow_icons" {}, "tomorrow_temperature": {}, "three_days": {}}
     """
-    data = get_data.add_data_together(data_for_text)
     # Erstellen der Texte für die Audiodateien mithilfe der Daten aus data_for_text
     # TODO data_for_text generieren
     today_weather = (
         f"Am heutigen {data['today']['weekday']} {data['today']['code_max']} {data['today']['city_name_max']}. "
         f"{data['today']['city_name_min']} {data['today']['code_min']}. ")
     today_temp = (
-        f"Die Temperaturen liegen zwischen {data['today']['temp_min']} {data['today']['city_name_min']} "
-        f"und {data['today']['temp_max']} {data['today']['city_name_max']}. ")
+        f"Die Temperaturen liegen zwischen {data['today']['min_temp']} {data['today']['city_name_min']} "
+        f"und {data['today']['max_temp']} {data['today']['city_name_max']}. ")
     tomorrow_weather = (
         f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min']} {data['tomorrow']['city_name_min']}. "
         f"{data['tomorrow']['city_name_max']} {data['tomorrow']['code_max']}. ")
     tomorrow_temp = (
-        f"Die Temperaturen liegen zwischen {data['tomorrow']['temp_min']} {data['tomorrow']['city_name_min']} "
-        f"und {data['tomorrow']['temp_max']} {data['tomorrow']['city_name_max']}. ")
+        f"Die Temperaturen liegen zwischen {data['tomorrow']['min_temp']} {data['tomorrow']['city_name_min']} "
+        f"und {data['tomorrow']['max_temp']} {data['tomorrow']['city_name_max']}. ")
     next_1 = (
         f"Am {data['next_1']['weekday']} {data['next_1']['code_min']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_1']['temp_min']} und {data['next_1']['temp_max']}. ")
+        f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} und {data['next_1']['max_temp']}. ")
     next_2 = (
-        f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_2']['temp_min']} und {data['next_2']['temp_max']}. ")
-    next_3 = (
-        f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_3']['temp_min']} und {data['next_3']['temp_max']}. ")
-    three_days = f"{next_1} {next_2} {next_3}"
+        f"Am {data['next_2']['weekday']} .  "
+        f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} und {data['next_2']['max_temp']}. ")
+    #next_3 = (
+     #   f"Am {data['next_3']['weekday']} .  "
+      #  f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} und {data['next_3']['max_temp']}. ")
+    three_days = f"{next_1} {next_2} "
 
     # Create timestamp for the filenames
     ts = time.time()
