@@ -3,8 +3,8 @@ from datetime import datetime
 
 import datetime as dt
 import re
-import calendar
-import locale
+
+from visuanalytics.analytics.preprocessing import weather
 
 
 def date_to_weekday(valid_date):
@@ -21,31 +21,36 @@ def date_to_weekday(valid_date):
 
     Returns:
         List: days
-            mit vier Einträgen:
+            mit so vielen Einträgen wie von der Wetter Api generiert Einträgen:
             days[0] -> dayofweek_today (heute)
-            days[1] -> dayofweek_tomorrow (morgen)
-            days[2] -> dayofweek_1 (übermorgen)
-            days[3] -> dayofweek_2 (überübermorgen)
-            days[4] -> dayofweek_3 (überüberübermorgen)
+            days[1] -> dayofweek_1 (morgen)
+            days[2] -> dayofweek_2 (übermorgen)
+            days[3] -> dayofweek_3 (überübermorgen)
+            etc.
     Example:
         valid_date = "2020-05-09"
         days = date_to_weekday(valid_date)
         print("Heute ist", days[0]) # dayofweek_today
-        print("Morgen ist", days[1]) # dayofweek_tomorrow
-        print("Übermorgen ist", days[2]) # dayofweek_1
-        print("Überübermorgen ist", days[3]) # dayofweek_2
-        print("Überüberübermorgen ist", days[4]) # dayofweek_3
+        print("Morgen ist", days[1]) # dayofweek_1
+        print("Übermorgen ist", days[2]) # dayofweek_2
+        print("Überübermorgen ist", days[3]) # dayofweek_3
     """
-    if sys.platform == 'win32':
-        locale.setlocale(locale.LC_ALL, 'deu_deu')
-    else:
-        locale.setlocale(locale.LC_ALL, 'de_DE.UTF-8')
+    day_weekday = {
+        0: "Montag",
+        1: "Dienstag",
+        2: "Mittwoch",
+        3: "Donnerstag",
+        4: "Freitag",
+        5: "Samstag",
+        6: "Sonntag",
+    }
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
-        for i in range(0, 5):
-            days.append(calendar.day_name[(date + dt.timedelta(days=i)).weekday()])
+        for i in range(0, weather.NUM_DAYS):
+            days.append(day_weekday[(date + dt.timedelta(days=i)).weekday()])
     except:
+       # TODO: Fehlerbehandlung nochmal überarbeiten
         print("Fehlermeldung: Kein Datum hinterlegt.")
     return days
 

@@ -9,14 +9,14 @@ def mode(list):
     """
     Bestimmt den Modus (das am häufigsten auftretende Element) einer Liste.
 
-    Args:
-        list (list): Die Eingabeliste, für die der Modus bestimmt werden soll.
+    :param list: Die Eingabeliste, für die der Modus bestimmt werden soll.
+    :type list: list
 
-    Returns:
-        elem: Das am häufigsten auftretende Element der Liste. Treten mehrere Elemente gleich häufig auf, wird von
+    :returns:
+        Das am häufigsten auftretende Element der Liste. Treten mehrere Elemente gleich häufig auf, wird von
         diesen das erste gefundene Element ausgewählt.
 
-    Raises:
+    :raise:
         IndexError: Bei einer leeren Liste.
     """
     return collections.Counter(list).most_common()[0][0]

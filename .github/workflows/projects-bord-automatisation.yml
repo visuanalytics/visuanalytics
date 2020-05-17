@@ -92,4 +92,13 @@ jobs:
               body: `resolves #${issueNum}`,
               head: branchName,
               base: "master",
+            }).then(res => {
+              // Add issue labels and Milstone to pull request
+              github.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: res.data.number,
+                labels: issue.labels,
+                ...(issue.milestone && {milestone: issue.milestone.number})
+              })            
             })
