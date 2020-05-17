@@ -1,9 +1,8 @@
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.processing.weather import weather_text_speech as speech
-from visuanalytics.analytics.preprocessing.weather import get_data
-from visuanalytics.analytics.preprocessing import preprocessing_weather as weather
+from visuanalytics.analytics.preprocessing.weather import get_data, weather as weather
 from visuanalytics.analytics.processing.weather import weather_visualization as ws
-from visuanalytics.analytics.processing.util import date_time
+from visuanalytics.analytics.util import date_time
 from visuanalytics.analytics.util import resources
 import os
 
