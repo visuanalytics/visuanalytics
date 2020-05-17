@@ -79,3 +79,47 @@ class PreprocessTest(unittest.TestCase):
         actual = set(dict.keys(self.output["cities"]["Gießen"][0]))
         expected = set(weather_param_names)
         self.assertEqual(actual, expected)
+
+    def test_data_icon_oneday_contains_allentrys(self):
+        actual = len(weather.data_icon_oneday(self.output, 0))
+        expected = 10
+        self.assertEqual(actual, expected)
+
+    def test_data_temp_oneday_contains_allentrys(self):
+        actual = len(weather.data_temp_oneday(self.output, 0))
+        expected = 10
+        self.assertEqual(actual, expected)
+
+    def test_data_mm_temp_threeday_contains_allentrys(self):
+        actual = len(weather.data_mm_temp_threeday(self.output))
+        expected = 6
+        self.assertEqual(actual, expected)
+
+    def test_data_icon_threeday_contains_allentrys(self):
+        actual = len(weather.data_icon_threeday(self.output))
+        expected = 4
+        self.assertEqual(actual, expected)
+
+    def test_data_icon_oneday_check_if_tuple(self):
+        self.assertIsInstance(weather.data_icon_oneday(self.output, 0)[0][0], tuple)
+
+    def test_data_temp_oneday_check_if_tuple(self):
+        self.assertIsInstance(weather.data_temp_oneday(self.output, 0)[0][0], tuple)
+
+    def test_data_mm_temp_threeday_check_if_tuple(self):
+        self.assertIsInstance(weather.data_mm_temp_threeday(self.output)[0][0], tuple)
+
+    def test_data_icon_threeday_check_if_tuple(self):
+        self.assertIsInstance(weather.data_icon_threeday(self.output)[0][0], tuple)
+
+    def test_data_icon_oneday_check_if_string(self):
+        self.assertIsInstance(weather.data_icon_oneday(self.output, 0)[0][1], str)
+
+    def test_data_temp_oneday_check_if_string(self):
+        self.assertIsInstance(weather.data_temp_oneday(self.output, 0)[0][1], str)
+
+    def test_data_mm_temp_threeday_check_if_string(self):
+        self.assertIsInstance(weather.data_mm_temp_threeday(self.output)[0][1], str)
+
+    def test_data_icon_threeday_check_if_string(self):
+        self.assertIsInstance(weather.data_icon_threeday(self.output)[0][3], str)

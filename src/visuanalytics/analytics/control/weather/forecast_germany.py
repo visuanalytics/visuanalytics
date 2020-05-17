@@ -2,6 +2,8 @@ from visuanalytics.analytics.processing.weather import weather_visualization as 
 from visuanalytics.analytics.preprocessing import weather
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.processing.util import date_time
+from visuanalytics.analytics.util import resources
+import os
 
 # todo needs to be finished when speech ready (to generate video)
 
@@ -11,6 +13,9 @@ if TESTING_MODE:
     json_data = api.get_example()
 else:
     json_data = api.get_forecasts()
+path = resources.get_resource_path("temp/weather")
+if not os.path.exists(path):
+    os.mkdir(path)
 
 data = weather.preprocess_weather_data(json_data)
 date = date_time.date_to_weekday(weather.get_first_day(data))
