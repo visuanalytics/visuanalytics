@@ -10,7 +10,7 @@ WORKDIR /home/appuser
 USER appuser
 
 # Copy src
-COPY . ./visuanalytics
+COPY --chown=appuser . ./visuanalytics
 
 # Set Env for flask
 ENV FLASK_APP=visuanalytics.server.server:create_app
