@@ -45,9 +45,9 @@ def get_threeday_image(data, data2, weekdates):
         _draw_text(draw, (item[0] + 4 + shifting, item[1] + 4), weekdates[idx], fontcolour="black")
         _draw_text(draw, (item[0] + shifting, item[1]), weekdates[idx])
 
-    file = str(uuid.uuid4())
+    file = "temp/weather/" + str(uuid.uuid4()) + ".png"
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("temp/weather/" + file + ".png"))
+        resources.get_resource_path(file))
 
     return file
 
@@ -71,9 +71,9 @@ def get_oneday_icons_image(data, weekdate):
         source_img.paste(icon, (item[0][0] - 40, item[0][1] - 35), icon)
     draw = ImageDraw.Draw(source_img)
     _draw_weekdays(draw, weekdate)
-    file = str(uuid.uuid4())
+    file = "temp/weather/" + str(uuid.uuid4()) + ".png"
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("temp/weather/" + file + ".png"))
+        resources.get_resource_path(file))
     return file
 
 
@@ -96,9 +96,9 @@ def get_oneday_temp_image(data, weekdate):
         _draw_text(draw, (item[0][0] + 14 + _get_shifting_temp(item[1]), item[0][1] + 1), item[1], fontsize=50)
 
     _draw_weekdays(draw, weekdate)
-    file = str(uuid.uuid4())
+    file = "temp/weather/" + str(uuid.uuid4()) + ".png"
     Image.composite(img1, source_img, img1).save(
-        resources.get_resource_path("temp/weather/" + file + ".png"))
+        resources.get_resource_path(file))
 
     return file
 

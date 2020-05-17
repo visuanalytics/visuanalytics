@@ -69,9 +69,9 @@ def first_weatherforecast_text_to_speech(data):
     next_2 = (
         f"Am {data['next_2']['weekday']} .  "
         f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} und {data['next_2']['max_temp']}. ")
-    #next_3 = (
-     #   f"Am {data['next_3']['weekday']} .  "
-      #  f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} und {data['next_3']['max_temp']}. ")
+    # next_3 = (
+    #   f"Am {data['next_3']['weekday']} .  "
+    #  f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} und {data['next_3']['max_temp']}. ")
     three_days = f"{next_1} {next_2} "
 
     # Create timestamp for the filenames
@@ -81,7 +81,8 @@ def first_weatherforecast_text_to_speech(data):
     # create the .mp3 filenames
     file_name_today_weather_mp3 = resources.get_resource_path("temp/weather/" + "today_weather_" + timestamp + ".mp3")
     file_name_today_temp_mp3 = resources.get_resource_path("temp/weather/" + "today_temp_" + timestamp + ".mp3")
-    file_name_tomorrow_weather_mp3 = resources.get_resource_path("temp/weather/" + "tomorrow_weather_" + timestamp + ".mp3")
+    file_name_tomorrow_weather_mp3 = resources.get_resource_path(
+        "temp/weather/" + "tomorrow_weather_" + timestamp + ".mp3")
     file_name_tomorrow_temp_mp3 = resources.get_resource_path("temp/weather/" + "tomorow_temp_" + timestamp + ".mp3")
     file_name_three_days_mp3 = resources.get_resource_path("temp/weather/" + "three_days_" + timestamp + ".mp3")
 
@@ -104,5 +105,5 @@ def first_weatherforecast_text_to_speech(data):
     tts_5 = gTTS(three_days, lang='de')
     tts_5.save(file_name_three_days_mp3)
 
-    return
-
+    return [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
+            file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
