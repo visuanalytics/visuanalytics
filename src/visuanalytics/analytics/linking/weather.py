@@ -35,7 +35,7 @@ def to_forecast_germany(images, audios, audiol):
     with resources.open_resource("weather/input.txt", "w") as file:
         for i in range(0, len(images)):
             file.write("file '" + images[i] + "'\n")
-            file.write("duration '" + audiol[i] + "'\n")
+            file.write("duration '" + str(audiol[i]) + "'\n")
 
     shell_cmd = "ffmpeg -y -f concat -i input.txt -i output.wav -s 1920x1080 output.mp4"
     os.chdir(resources.get_resource_path("temp/weather"))
