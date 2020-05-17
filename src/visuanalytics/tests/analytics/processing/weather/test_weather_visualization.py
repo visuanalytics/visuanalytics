@@ -13,6 +13,9 @@ class PreprocessTest(unittest.TestCase):
         input = json.loads(file_handle.read())
         output = weather.preprocess_weather_data(input)
         date = date_time.date_to_weekday(weather.get_first_day(output))
+        path = resources.get_resource_path("temp/weather")
+        if not os.path.exists(path):
+            os.mkdir(path)
         cleanup = []
 
     def test_if_get_threeday_image_generates_image(self):
