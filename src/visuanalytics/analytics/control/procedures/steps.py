@@ -1,6 +1,3 @@
-import concurrent.futures
-
-
 class Steps(object):
     """Beinhaltet eine Grundlegende Definition für alle Steps.
 
@@ -15,8 +12,8 @@ class Steps(object):
         self._config = config
         # Step_max muss mit der höchsten zahl in sequence übereinstimmen
         self.__step_max = 4
-        self.__sequence = {-2: {"name": "Not Started"},
-                           -1: {"name": "Error"},
+        self.__sequence = {-2: {"name": "Error"},
+                           -1: {"name": "Not Started"},
                            0: {"name": "Apis", "call": self.apis},
                            1: {"name": "Preprocessing", "call": self.preprocessing},
                            2: {"name": "Processing", "call": self.processing},

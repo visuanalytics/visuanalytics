@@ -17,7 +17,7 @@ class Job(object):
         self.__start_time = 0.0
         self.__end_time = 0.0
         self.__id = job_id
-        self.__current_step = -2
+        self.__current_step = -1
 
     @property
     def start_time(self):
@@ -84,7 +84,7 @@ class Job(object):
         except Exception as er:
             # TODO(max)
             print("Error", er.__cause__)
-            self.__current_step = -1
+            self.__current_step = -2
             self.__cleanup()
             return False
 
