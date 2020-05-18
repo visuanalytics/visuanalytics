@@ -24,7 +24,6 @@ def get_audio_length(path_of_audio_file):
     """
     out = []
     for audio in path_of_audio_file:
-        print(audio)
         process = subprocess.Popen(['ffmpeg', '-i', audio], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         stdout, stderr = process.communicate()
         matches = re.search(r"Duration:\s{1}(?P<hours>\d+?):(?P<minutes>\d+?):(?P<seconds>\d+\.\d+?),", stdout.decode(),

@@ -7,6 +7,9 @@ import os
 from visuanalytics.analytics.util import resources
 
 
+# TODO(max) vtl subprocess mit subprocess.Popen, Processoutput umleiten, auf Fehler prügen
+# TODO(max) change output dir
+
 def to_forecast_germany(pipeline_id, images, audios, audiol):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
@@ -30,8 +33,8 @@ def to_forecast_germany(pipeline_id, images, audios, audiol):
         for i in audios:
             file.write("file 'file:" + i + "'\n")
 
-    output = resources.new_temp_resource_path(pipeline_id, "wav")
-    shell_cmd = "ffmpeg -f concat -safe 0 -i input.txt -c copy " + output
+    output = resources.new_temp_resource_path(pipeline_id, "mp3")
+    shell_cmd = "ffmpeg -f concat -safe 0 -i input.txt -c copy " + f"\"{output}\""
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     os.system(shell_cmd)
 
@@ -40,8 +43,8 @@ def to_forecast_germany(pipeline_id, images, audios, audiol):
             file.write("file 'file:" + images[i] + "'\n")
             file.write("duration " + (str(int(audiol[i]))) + "\n")
 
-    output2 = resources.new_temp_resource_path("weather/output/", ".mp4")
-    shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + output + " -s 1920x1080 " + output2
+    output2 = resources.get_resource_path("weather/output/viedeo.mp4")
+    shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + f"\"{output}\"" + " -s 1920x1080 " + f"\"{output2}\""
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     os.system(shell_cmd)
 
