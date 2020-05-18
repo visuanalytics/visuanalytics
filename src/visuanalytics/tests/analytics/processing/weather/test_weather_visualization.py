@@ -1,7 +1,7 @@
 import os
 
-from visuanalytics.analytics.preprocessing import weather
-from visuanalytics.analytics.processing.util import date_time
+from visuanalytics.analytics.preprocessing.weather import weather
+from visuanalytics.analytics.util import date_time
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.processing.weather import weather_visualization
 import unittest
@@ -22,21 +22,18 @@ class PreprocessTest(unittest.TestCase):
         expected = weather_visualization.get_threeday_image(weather.data_icon_threeday(self.output),
                                                             weather.data_mm_temp_threeday(self.output),
                                                             self.date[2:5])
-        expected = "temp/weather/" + expected + ".png"
         self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_icons_image_generates_image(self):
         expected = weather_visualization.get_oneday_icons_image(weather.data_icon_oneday(self.output, 0),
                                                                 self.date[0])
-        expected = "temp/weather/" + expected + ".png"
         self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_temp_image_generates_image(self):
         expected = weather_visualization.get_oneday_temp_image(weather.data_temp_oneday(self.output, 0),
                                                                self.date[0])
-        expected = "temp/weather/" + expected + ".png"
         self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 

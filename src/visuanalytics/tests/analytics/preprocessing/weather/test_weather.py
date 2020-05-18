@@ -48,7 +48,7 @@ class PreprocessSingleTest(unittest.TestCase):
 
     def test_only_four_days_taken(self):
         actual = len(weather._preprocess_single(input_single)["Gießen"])
-        expected = 4
+        expected = 5
         self.assertEqual(actual, expected)
 
     def test_maximum_four_days_taken(self):
