@@ -9,8 +9,6 @@ from visuanalytics.analytics.util import dictionary
 from visuanalytics.analytics.util import statistical
 from visuanalytics.analytics.preprocessing.weather import speech
 
-# TODO(Max) move to weather sub Package and split in visualsation and generall
-
 RELEVANT_DATA = ["datetime", "temp", "low_temp", "min_temp", "high_temp", "max_temp", "app_min_temp", "app_max_temp",
                  "wind_cdir", "wind_dir", "icon", "code", "sunrise_ts", "sunset_ts"]
 

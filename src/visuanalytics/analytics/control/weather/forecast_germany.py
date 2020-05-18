@@ -1,7 +1,7 @@
 from visuanalytics.analytics.apis import weather as api
-from visuanalytics.analytics.processing.weather import weather_text_speech as speech
-from visuanalytics.analytics.preprocessing.weather import get_data, weather as weather
-from visuanalytics.analytics.processing.weather import weather_visualization as ws
+from visuanalytics.analytics.processing.weather import speech as speech
+from visuanalytics.analytics.preprocessing.weather import transform, visualisation as weather
+from visuanalytics.analytics.processing.weather import visualisation as ws
 from visuanalytics.analytics.util import date_time
 from visuanalytics.analytics.util import audio
 from visuanalytics.analytics.util import resources
@@ -37,7 +37,7 @@ images.append(ws.get_oneday_temp_image(weather.data_temp_oneday(data, 1), date[1
 
 images.append(ws.get_threeday_image(weather.data_icon_threeday(data), weather.data_mm_temp_threeday(data), date[2:5]))
 
-audios = speech.first_weatherforecast_text_to_speech(get_data.add_data_together(data))
+audios = speech.first_weatherforecast_text_to_speech(transform.merge_data(data))
 audiol = audio.get_audio_length(audios)
 videolinker.to_forecast_germany(images, audios, audiol)
 

@@ -3,7 +3,7 @@ from datetime import datetime
 import datetime as dt
 import re
 
-from visuanalytics.analytics.preprocessing.weather import weather as weather
+from visuanalytics.analytics.preprocessing.weather import visualisation as weather
 
 
 def date_to_weekday(valid_date):

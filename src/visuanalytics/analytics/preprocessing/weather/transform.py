@@ -1,4 +1,4 @@
-from visuanalytics.analytics.preprocessing.weather import speech, weather
+from visuanalytics.analytics.preprocessing.weather import speech, visualisation
 from visuanalytics.analytics.util import date_time
 
 
@@ -13,9 +13,9 @@ def get_weekday(data):
 def get_data_today_tomorrow_three(data):
     data_min_max = {}
     for i in range(5):
-        city_name_maximum, maximum_temp, code_maximum = weather.get_city_with_max_temp(data, i)
-        city_name_minimum, minimum_temp, code_minimum = weather.get_city_with_min_temp(data, i)
-        avg_temperatur = weather.get_city_with_max_min_avg_temp(data, i)
+        city_name_maximum, maximum_temp, code_maximum = visualisation.get_city_with_max_temp(data, i)
+        city_name_minimum, minimum_temp, code_minimum = visualisation.get_city_with_min_temp(data, i)
+        avg_temperatur = visualisation.get_city_with_max_min_avg_temp(data, i)
         city_name_max = speech.random_city_descriptions(city_name_maximum)
         city_name_min = speech.random_city_descriptions(city_name_minimum)
         avg_temperatur[0] = speech.random_city_descriptions(avg_temperatur[0])
@@ -35,10 +35,10 @@ def get_data_today_tomorrow_three(data):
     return data_min_max
 
 
-def add_data_together(data):
+def merge_data(data):
     data_for_text = {}
     weekdays_for_dict = get_weekday(data)
-    average_temp, common_code = weather.get_average_per_day(data)
+    average_temp, common_code = visualisation.get_average_per_day(data)
     data_min_max = get_data_today_tomorrow_three(data)
     data_for_text.update({"today": {"weekday": weekdays_for_dict["today"],
                                     "average_temp": average_temp[0],
