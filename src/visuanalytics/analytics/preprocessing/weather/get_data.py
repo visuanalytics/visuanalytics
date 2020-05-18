@@ -34,6 +34,7 @@ def get_data_today_tomorrow_three(data):
                                  "min_avg_temp": avg_temperatur[4], "code_min_avg": avg_temperatur[5]}})
     return data_min_max
 
+
 def add_data_together(data):
     data_for_text = {}
     weekdays_for_dict = get_weekday(data)
@@ -102,12 +103,12 @@ def add_data_together(data):
     data_for_text.update({"next_3": {"weekday": weekdays_for_dict["next_3"],
                                      "average_temp": average_temp[4],
                                      "common_code": common_code[4],
-                                    "city_name_max": data_min_max[4]["city_name_max"],
-                                    "max_temp": data_min_max[4]["max_temp"],
-                                    "code_max": data_min_max[4]["code_max"],
-                                    "city_name_min": data_min_max[4]["city_name_min"],
-                                    "min_temp": data_min_max[4]["min_temp"],
-                                    "code_min": data_min_max[4]["code_min"],
+                                     "city_name_max": data_min_max[4]["city_name_max"],
+                                     "max_temp": data_min_max[4]["max_temp"],
+                                     "code_max": data_min_max[4]["code_max"],
+                                     "city_name_min": data_min_max[4]["city_name_min"],
+                                     "min_temp": data_min_max[4]["min_temp"],
+                                     "code_min": data_min_max[4]["code_min"],
                                      "city_name_max_avg": data_min_max[4]["city_name_max_avg"],
                                      "max_avg_temp": data_min_max[4]["max_avg_temp"],
                                      "code_max_avg": data_min_max[4]["code_max_avg"],

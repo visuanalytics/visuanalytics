@@ -11,6 +11,7 @@ gibt diesen zurück.
 """
 from numpy import random
 
+
 def air_data_to_text(rh, pres):
     """Wandelt die von der Weatherbit-API gegebenen Werte rh und pres in Text um.
 
@@ -31,6 +32,7 @@ def air_data_to_text(rh, pres):
     rh_text = str(rh) + " Prozent"
     pres_text = str(pres).replace(".", ",") + " Millibar"
     return rh_text, pres_text
+
 
 def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
     """Wandelt alle Winddaten so um, dass sie flüssig vorgelesen werden können.
@@ -71,6 +73,7 @@ def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
     wind_dir_degree_text = str(wind_dir) + " Grad"
     wind_spd_text = str(round(wind_spd, 2)).replace(".", ",") + " Metern pro Sekunde"
     return wind_direction_text, wind_dir_degree_text, wind_spd_text
+
 
 WEATHER_DESCRIPTIONS = {
     "200": {0: "kommt es zu Gewittern mit leichtem Regen",
@@ -151,6 +154,7 @@ WEATHER_DESCRIPTIONS = {
             1: "ist mit unbekanntem Niederschlag zu rechnen"}
 }
 
+
 def random_weather_descriptions(code):
     """Nimmt den Code vom Wetter-Icon aus der Weatherbit-API und generiert einen Satzteil als String.
 
@@ -173,6 +177,7 @@ def random_weather_descriptions(code):
     x = random.choice([0, 1])
     text_weather = str(WEATHER_DESCRIPTIONS[icon_code][x])
     return text_weather
+
 
 CITY_DESCRIPTIONS = {
     "Berlin": {0: "im Nordosten Deutschlands",
@@ -221,6 +226,7 @@ CITY_DESCRIPTIONS = {
                   1: "im Südwesten",
                   2: "in Stuttgart"}
 }
+
 
 def random_city_descriptions(city_name):
     """Gibt eine Beschreibung der Stadt aus.

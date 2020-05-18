@@ -56,58 +56,51 @@ def first_weatherforecast_text_to_speech(data):
     text = first_weatherforecast_text_to_speech(data_for_text)
     print(text)
     """
+    text = []
+
     # Erstellen der Texte für die Audiodateien mithilfe der Daten aus data
-    today_weather = (f"Am heutigen {data['today']['weekday']} {data['today']['code_max_avg']} {data['today']['city_name_max_avg']}. "
-                    f"{data['today']['city_name_min_avg']} {data['today']['code_min_avg']}. ")
-    today_temp = (f"Die Temperaturen liegen zwischen {data['today']['min_avg_temp']} Grad {data['today']['city_name_min_avg']} "
-                    f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max']}. "
-                    f"Die Durchschnittstemperatur liegt heute bei {data['today']['average_temp']} Grad. ")
-    tomorrow_weather = (f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min_avg']} {data['tomorrow']['city_name_min_avg']}. "
-                    f"{data['tomorrow']['city_name_max_avg']} {data['tomorrow']['code_max_avg']}. ")
-    tomorrow_temp = (f"Die Temperaturen liegen zwischen {data['tomorrow']['min_avg_temp']} Grad {data['tomorrow']['city_name_min_avg']} "
-                    f"und {data['tomorrow']['max_avg_temp']} Grad {data['tomorrow']['city_name_max_avg']}. "
-                    f"Die Durchschnittstemperatur liegt morgen bei {data['tomorrow']['average_temp']} Grad. ")
+
+    # today_weather
+    text.append(
+        f"Am heutigen {data['today']['weekday']} {data['today']['code_max_avg']} {data['today']['city_name_max_avg']}. "
+        f"{data['today']['city_name_min_avg']} {data['today']['code_min_avg']}. ")
+
+    # today_temp
+    text.append(
+        f"Die Temperaturen liegen zwischen {data['today']['min_avg_temp']} Grad {data['today']['city_name_min_avg']} "
+        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max']}. "
+        f"Die Durchschnittstemperatur liegt heute bei {data['today']['average_temp']} Grad. ")
+
+    # tomorrow_weather
+    text.append(
+        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min_avg']} {data['tomorrow']['city_name_min_avg']}. "
+        f"{data['tomorrow']['city_name_max_avg']} {data['tomorrow']['code_max_avg']}. ")
+
+    # tomorrow_temp
+    text.append(
+        f"Die Temperaturen liegen zwischen {data['tomorrow']['min_avg_temp']} Grad {data['tomorrow']['city_name_min_avg']} "
+        f"und {data['tomorrow']['max_avg_temp']} Grad {data['tomorrow']['city_name_max_avg']}. "
+        f"Die Durchschnittstemperatur liegt morgen bei {data['tomorrow']['average_temp']} Grad. ")
+
     next_1 = (f"Am {data['next_1']['weekday']} {data['next_1']['common_code']}.  "
-                    f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_name_min']} und {data['next_1']['max_temp']} Grad. "
-                    f"{data['next_1']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_1']['weekday']} bei {data['next_1']['average_temp']} Grad. ")
+              f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_name_min']} und {data['next_1']['max_temp']} Grad. "
+              f"{data['next_1']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_1']['weekday']} bei {data['next_1']['average_temp']} Grad. ")
+
     next_2 = (f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
-                    f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} Grad {data['next_2']['city_name_min']} und {data['next_2']['max_temp']} Grad. "
-                    f"{data['next_2']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_2']['weekday']} bei {data['next_2']['average_temp']} Grad. ")
+              f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} Grad {data['next_2']['city_name_min']} und {data['next_2']['max_temp']} Grad. "
+              f"{data['next_2']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_2']['weekday']} bei {data['next_2']['average_temp']} Grad. ")
+
     next_3 = (f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
-                    f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_name_min']} und {data['next_3']['max_temp']} Grad. "
-                    f"{data['next_3']['city_name_max']}. Die Durchschnittstemperaturtliegt am {data['next_3']['weekday']} bei {data['next_3']['average_temp']} Grad. ")
-    three_days = f"{next_1} {next_2} {next_3}"
+              f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_name_min']} und {data['next_3']['max_temp']} Grad. "
+              f"{data['next_3']['city_name_max']}. Die Durchschnittstemperaturtliegt am {data['next_3']['weekday']} bei {data['next_3']['average_temp']} Grad. ")
 
-    # Create timestamp for the filenames
-    ts = time.time()
-    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y_%H%M%S')
+    # three_days
+    text.append(f"{next_1} {next_2} {next_3}")
+    
+    out = []
+    for idx, x in enumerate(text):
+        tts = gTTS(x, lang='de')
+        out.append(resources.get_new_ressource_path(format=".mp3"))
+        tts.save(out[idx])
 
-    # create the .mp3 filenames
-    file_name_today_weather_mp3 = resources.get_resource_path("temp/weather/" + "today_weather_" + timestamp + ".mp3")
-    file_name_today_temp_mp3 = resources.get_resource_path("temp/weather/" + "today_temp_" + timestamp + ".mp3")
-    file_name_tomorrow_weather_mp3 = resources.get_resource_path(
-        "temp/weather/" + "tomorrow_weather_" + timestamp + ".mp3")
-    file_name_tomorrow_temp_mp3 = resources.get_resource_path("temp/weather/" + "tomorow_temp_" + timestamp + ".mp3")
-    file_name_three_days_mp3 = resources.get_resource_path("temp/weather/" + "three_days_" + timestamp + ".mp3")
-
-    # Quelle: https://stackoverflow.com/questions/13890935/does-pythons-time-time-return-the-local-or-utc-timestamp
-
-    # die generierten .mp3 Dateien werden in resources/temp/weather zwischengespeichert
-
-    tts_1 = gTTS(today_weather, lang='de')
-    tts_1.save(file_name_today_weather_mp3)
-
-    tts_2 = gTTS(today_temp, lang='de')
-    tts_2.save(file_name_today_temp_mp3)
-
-    tts_3 = gTTS(tomorrow_weather, lang='de')
-    tts_3.save(file_name_tomorrow_weather_mp3)
-
-    tts_4 = gTTS(tomorrow_temp, lang='de')
-    tts_4.save(file_name_tomorrow_temp_mp3)
-
-    tts_5 = gTTS(three_days, lang='de')
-    tts_5.save(file_name_three_days_mp3)
-
-    return [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
-            file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
+    return out
