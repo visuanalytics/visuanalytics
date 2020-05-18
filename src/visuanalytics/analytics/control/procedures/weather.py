@@ -1,7 +1,7 @@
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.preprocessing import weather as pre
-from visuanalytics.analytics.processing.weather import weather_visualization as wv
+from visuanalytics.analytics.processing.weather import visualisation as wv
 
 # TODO(Max) not ready yet
 

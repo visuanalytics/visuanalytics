@@ -1,6 +1,8 @@
 """Module, dass Funktionen zur Benutzung von Ressourcen bereitstellt."""
 import contextlib
 import os
+import datetime
+import time
 
 RESOURCES_LOCATION = "../../resources"
 """
@@ -20,6 +22,23 @@ def get_resource_path(path: str):
     :return: Absoluter Pfad zur übergebener Ressource.
     """
     return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
+
+
+def get_new_ressource_path(location="temp/weather/", format=".png"):
+    """Erstellt einen neuen Ressource Pfad.
+
+        Verwendet :func:`get_resource_path` um den Pfad der Ressource zu erstellen.
+
+        :param location: Pfad der zu erstellenden Ressource.
+        :type location : str
+        :param format : Format der zu erstellenden Resource.
+        :type format : str
+
+        :raises: OSError
+        """
+    ts = time.time()
+    return get_resource_path(
+        location + str(datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y_%H%M%S__%f')) + format)
 
 
 def open_resource(path: str, mode: str = "rt"):

@@ -22,19 +22,23 @@ def get_audio_length(path_of_audio_file):
         length_of_audio = get_audio_length(path_of_audio_file)
         print(length_of_audio)
     """
-    process = subprocess.Popen(['ffmpeg', '-i', path_of_audio_file], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout, stderr = process.communicate()
-    matches = re.search(r"Duration:\s{1}(?P<hours>\d+?):(?P<minutes>\d+?):(?P<seconds>\d+\.\d+?),", stdout.decode(),
-                        re.DOTALL).groupdict()
+    out = []
+    for audio in path_of_audio_file:
+        print(audio)
+        process = subprocess.Popen(['ffmpeg', '-i', audio], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        stdout, stderr = process.communicate()
+        matches = re.search(r"Duration:\s{1}(?P<hours>\d+?):(?P<minutes>\d+?):(?P<seconds>\d+\.\d+?),", stdout.decode(),
+                            re.DOTALL).groupdict()
 
-    hours = float(matches['hours'])
-    minutes = float(matches['minutes'])
-    seconds = float(matches['seconds'])
+        hours = float(matches['hours'])
+        minutes = float(matches['minutes'])
+        seconds = float(matches['seconds'])
 
-    minutes_to_seconds = minutes * 60
-    hours_to_seconds = hours * 60 * 60
-    seconds_rounded_up = math.ceil(seconds)
+        minutes_to_seconds = minutes * 60
+        hours_to_seconds = hours * 60 * 60
+        seconds_rounded_up = math.ceil(seconds)
 
-    seconds_altogether = hours_to_seconds + minutes_to_seconds + seconds_rounded_up
+        seconds_altogether = hours_to_seconds + minutes_to_seconds + seconds_rounded_up
+        out.append(seconds_altogether)
 
-    return seconds_altogether
+    return out

@@ -1,7 +1,8 @@
-from visuanalytics.analytics.preprocessing import weather
-from visuanalytics.analytics.util import resources
-import unittest
 import json
+import unittest
+
+from visuanalytics.analytics.preprocessing.weather import visualisation
+from visuanalytics.analytics.util import resources
 
 input_single = {
     "city_name": "Gießen",
@@ -45,17 +46,17 @@ weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", 
 
 class PreprocessSingleTest(unittest.TestCase):
 
-    def test_num_days_taken(self):
-        actual = len(weather._preprocess_single(input_single)["Gießen"])
-        expected = weather.NUM_DAYS
+    def test_only_four_days_taken(self):
+        actual = len(visualisation._preprocess_single(input_single)["Gießen"])
+        expected = 5
         self.assertEqual(actual, expected)
 
-    def test_less_days_taken(self):
+    def test_maximum_four_days_taken(self):
         input_single_three_days = {
             "city_name": "Gießen",
             "data": input_single["data"][:3]
         }
-        actual = len(weather._preprocess_single(input_single_three_days)["Gießen"])
+        actual = len(visualisation._preprocess_single(input_single_three_days)["Gießen"])
         expected = 3
         self.assertEqual(actual, expected)
 
@@ -63,7 +64,7 @@ class PreprocessSingleTest(unittest.TestCase):
 class PreprocessTest(unittest.TestCase):
     with resources.open_resource("exampledata/example_weather.json") as file_handle:
         input = json.loads(file_handle.read())
-        output = weather.preprocess_weather_data(input)
+        output = visualisation.preprocess_weather_data(input)
 
     def test_contains_all_cities(self):
         actual = set((dict.keys(self.output["cities"])))
@@ -81,45 +82,45 @@ class PreprocessTest(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_data_icon_oneday_contains_allentrys(self):
-        actual = len(weather.data_icon_oneday(self.output, 0))
+        actual = len(visualisation.data_icon_oneday(self.output, 0))
         expected = 10
         self.assertEqual(actual, expected)
 
     def test_data_temp_oneday_contains_allentrys(self):
-        actual = len(weather.data_temp_oneday(self.output, 0))
+        actual = len(visualisation.data_temp_oneday(self.output, 0))
         expected = 10
         self.assertEqual(actual, expected)
 
     def test_data_mm_temp_threeday_contains_allentrys(self):
-        actual = len(weather.data_mm_temp_threeday(self.output))
+        actual = len(visualisation.data_mm_temp_threeday(self.output))
         expected = 6
         self.assertEqual(actual, expected)
 
     def test_data_icon_threeday_contains_allentrys(self):
-        actual = len(weather.data_icon_threeday(self.output))
+        actual = len(visualisation.data_icon_threeday(self.output))
         expected = 4
         self.assertEqual(actual, expected)
 
     def test_data_icon_oneday_check_if_tuple(self):
-        self.assertIsInstance(weather.data_icon_oneday(self.output, 0)[0][0], tuple)
+        self.assertIsInstance(visualisation.data_icon_oneday(self.output, 0)[0][0], tuple)
 
     def test_data_temp_oneday_check_if_tuple(self):
-        self.assertIsInstance(weather.data_temp_oneday(self.output, 0)[0][0], tuple)
+        self.assertIsInstance(visualisation.data_temp_oneday(self.output, 0)[0][0], tuple)
 
     def test_data_mm_temp_threeday_check_if_tuple(self):
-        self.assertIsInstance(weather.data_mm_temp_threeday(self.output)[0][0], tuple)
+        self.assertIsInstance(visualisation.data_mm_temp_threeday(self.output)[0][0], tuple)
 
     def test_data_icon_threeday_check_if_tuple(self):
-        self.assertIsInstance(weather.data_icon_threeday(self.output)[0][0], tuple)
+        self.assertIsInstance(visualisation.data_icon_threeday(self.output)[0][0], tuple)
 
     def test_data_icon_oneday_check_if_string(self):
-        self.assertIsInstance(weather.data_icon_oneday(self.output, 0)[0][1], str)
+        self.assertIsInstance(visualisation.data_icon_oneday(self.output, 0)[0][1], str)
 
     def test_data_temp_oneday_check_if_string(self):
-        self.assertIsInstance(weather.data_temp_oneday(self.output, 0)[0][1], str)
+        self.assertIsInstance(visualisation.data_temp_oneday(self.output, 0)[0][1], str)
 
     def test_data_mm_temp_threeday_check_if_string(self):
-        self.assertIsInstance(weather.data_mm_temp_threeday(self.output)[0][1], str)
+        self.assertIsInstance(visualisation.data_mm_temp_threeday(self.output)[0][1], str)
 
     def test_data_icon_threeday_check_if_string(self):
-        self.assertIsInstance(weather.data_icon_threeday(self.output)[0][3], str)
+        self.assertIsInstance(visualisation.data_icon_threeday(self.output)[0][3], str)
