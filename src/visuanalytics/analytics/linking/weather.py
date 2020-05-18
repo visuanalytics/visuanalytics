@@ -26,7 +26,7 @@ def to_forecast_germany(images, audios, audiol):
 
     file = open(resources.get_resource_path("temp/weather/input.txt"), "w")
     for i in audios:
-        file.write("file '" + i + "'\n")
+        file.write("file 'file:" + i + "'\n")
     file.close()
 
     output = resources.get_new_ressource_path(format=".wav")
@@ -36,7 +36,7 @@ def to_forecast_germany(images, audios, audiol):
 
     file = open(resources.get_resource_path("temp/weather/input.txt"), "w")
     for i in range(0, len(images)):
-        file.write("file '" + images[i] + "'\n")
+        file.write("file 'file:" + images[i] + "'\n")
         file.write("duration " + (str(int(audiol[i]))) + "\n")
     file.close()
 
