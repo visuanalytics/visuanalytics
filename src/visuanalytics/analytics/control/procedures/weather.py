@@ -5,7 +5,8 @@ from visuanalytics.analytics.preprocessing.weather import visualisation as pre_v
 from visuanalytics.analytics.processing.weather import visualisation as pro_visualisation, speech
 from visuanalytics.analytics.util import date_time, audio
 
-TESTING_MODE = 1
+
+# TODO(max) handle config not
 
 
 class WeatherSteps(Steps):
@@ -16,10 +17,8 @@ class WeatherSteps(Steps):
         self.__processed_data = {}
 
     def apis(self, pipeline_id: str):
-        if TESTING_MODE:
-            self.__json_data = api.get_example()
-        else:
-            self.__json_data = api.get_forecasts()
+        # if testing get example
+        self.__json_data = api.get_example() if self.config.get("testing", False) else api.get_forecasts()
 
     def preprocessing(self, pipeline_id: str):
         # Preprocess api data

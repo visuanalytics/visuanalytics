@@ -7,7 +7,7 @@ from visuanalytics.analytics.control.procedures.weather import WeatherSteps
 # TODO(Max) Implement (current just for testing)
 
 def main():
-    Pipeline(uuid.uuid4().hex, WeatherSteps({})).start()
+    Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": True})).start()
 
 
 if __name__ == "__main__":
