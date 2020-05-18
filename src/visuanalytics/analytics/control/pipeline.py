@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 
 from visuanalytics.analytics.control.procedures.steps import Steps
@@ -50,10 +51,11 @@ class Pipeline(object):
         print(f"Pipeline {self.id} Started")
 
         self.__start_time = time.time()
-        os.mkdir(resources.get_resource_path(f"temp/{self.id}"))
+        os.mkdir(resources.get_temp_resource_path("", self.id))
 
     def __cleanup(self):
-        os.rmdir(resources.get_resource_path(f"temp/{self.id}"))
+        # delete Directory
+        shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
 
         self.__end_time = time.time()
         print(f"Pipeline {self.id} Stoped")
@@ -83,7 +85,8 @@ class Pipeline(object):
 
         except Exception as er:
             # TODO(max)
-            print("Error", er.__cause__)
+            print("Error", er)
             self.__current_step = -2
             self.__cleanup()
+            raise er
             return False

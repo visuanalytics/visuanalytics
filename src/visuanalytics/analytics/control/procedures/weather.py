@@ -45,20 +45,20 @@ class WeatherSteps(Steps):
 
         # Generate images
         self.__processed_data["images"] = [
-            pro_visualisation.get_oneday_icons_image(data["icon_oneday_0"], data["date"][0]),
-            pro_visualisation.get_oneday_temp_image(data["temp_oneday_0"], data["date"][0]),
-            pro_visualisation.get_oneday_icons_image(data["icon_oneday_1"], data["date"][1]),
-            pro_visualisation.get_oneday_temp_image(data["temp_oneday_1"], data["date"][1]),
-            pro_visualisation.get_threeday_image(data["icon_threeday"], data["data_mm_temp_threeday"],
+            pro_visualisation.get_oneday_icons_image(pipeline_id, data["icon_oneday_0"], data["date"][0]),
+            pro_visualisation.get_oneday_temp_image(pipeline_id, data["temp_oneday_0"], data["date"][0]),
+            pro_visualisation.get_oneday_icons_image(pipeline_id, data["icon_oneday_1"], data["date"][1]),
+            pro_visualisation.get_oneday_temp_image(pipeline_id, data["temp_oneday_1"], data["date"][1]),
+            pro_visualisation.get_threeday_image(pipeline_id, data["icon_threeday"], data["data_mm_temp_threeday"],
                                                  data["date"][2:5])]
 
         # Generate Audio
-        self.__processed_data["audios"] = speech.first_weatherforecast_text_to_speech(data["merge_data"])
+        self.__processed_data["audios"] = speech.first_weatherforecast_text_to_speech(pipeline_id, data["merge_data"])
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         # clean preprocessed data
         self.__preprocessed_data = None
 
     def linking(self, pipeline_id: str):
-        linking.to_forecast_germany(self.__processed_data["images"], self.__processed_data["audios"],
+        linking.to_forecast_germany(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
                                     self.__processed_data["audio_length"])

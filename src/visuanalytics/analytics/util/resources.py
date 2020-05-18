@@ -1,13 +1,14 @@
 """Module, dass Funktionen zur Benutzung von Ressourcen bereitstellt."""
 import contextlib
 import os
-import datetime
-import time
+from datetime import datetime
 
 RESOURCES_LOCATION = "../../resources"
 """
 Relativer Pfad zu dem resources Ordner.
 """
+
+TEMP_LOCATION = "temp"
 
 
 # TODO(Max) vtl. für tmp resources Funktionen erstellen die,
@@ -24,21 +25,12 @@ def get_resource_path(path: str):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
 
 
-def get_new_ressource_path(location="temp/weather/", format=".png"):
-    """Erstellt einen neuen Ressource Pfad.
+def get_temp_resource_path(path: str, pipeline_id: str):
+    return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
-        Verwendet :func:`get_resource_path` um den Pfad der Ressource zu erstellen.
 
-        :param location: Pfad der zu erstellenden Ressource.
-        :type location : str
-        :param format : Format der zu erstellenden Resource.
-        :type format : str
-
-        :raises: OSError
-        """
-    ts = time.time()
-    return get_resource_path(
-        location + str(datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y_%H%M%S__%f')) + format)
+def new_temp_resource_path(pipeline_id: str, extension):
+    return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 
 
 def open_resource(path: str, mode: str = "rt"):
@@ -58,6 +50,10 @@ def open_resource(path: str, mode: str = "rt"):
     os.makedirs(os.path.dirname(res_path), exist_ok=True)
 
     return open(res_path, mode, encoding='utf-8')
+
+
+def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
+    return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
 def delete_resource(path: str):

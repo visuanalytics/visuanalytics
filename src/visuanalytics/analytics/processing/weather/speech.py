@@ -8,13 +8,12 @@ Generierung einer Audiodatei des Wetterberichts mit vorverarbeiteten Daten aus d
 In DATA sind aktuell nur Beispielwerte abgespeichert.
 """
 
-import datetime
-import time
-from visuanalytics.analytics.util import resources
 from gtts import gTTS
 
+from visuanalytics.analytics.util import resources
 
-def first_weatherforecast_text_to_speech(data):
+
+def first_weatherforecast_text_to_speech(pipeline_id, data):
     """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Audio-Datei.
 
     Es wird jeweils ein Text für die Wettervorhersage für heute und die drei darauffolgenden Tage erstellt.
@@ -22,6 +21,8 @@ def first_weatherforecast_text_to_speech(data):
     weather_descriptions, air_data_to_text, wind_data_to_text, date_to_weekday und time_to_text
     generiert werden.
 
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
     :param days: Liste mit 4 aufeinanderfolgenden Wochentagen
             -> weitere Infos von der API: Wird noch eingefügt
     :return: [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
@@ -96,11 +97,11 @@ def first_weatherforecast_text_to_speech(data):
 
     # three_days
     text.append(f"{next_1} {next_2} {next_3}")
-    
+
     out = []
     for idx, x in enumerate(text):
         tts = gTTS(x, lang='de')
-        out.append(resources.get_new_ressource_path(format=".mp3"))
+        out.append(resources.new_temp_resource_path(pipeline_id, "mp3"))
         tts.save(out[idx])
 
     return out
