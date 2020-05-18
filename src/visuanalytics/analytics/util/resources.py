@@ -26,10 +26,26 @@ def get_resource_path(path: str):
 
 
 def get_temp_resource_path(path: str, pipeline_id: str):
+    """Erstellt einen Absoluten Pfad zu der übergebene Ressource im Temp Ordner.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/temp` Ordner.
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
+    """
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
 def new_temp_resource_path(pipeline_id: str, extension):
+    """Erstellt einen Absoluten Pfad für eine neue resource.
+
+    Generiert einen neuen Namen mit Aktuellem zeitsteppel.
+    Verwendet um den pfad zu generieren :func:`get_temp_resource_path` mit dem ordner der `pipeline_id`.
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
+    :param extension: Dateierweiterung ohne `.`.
+    :param extension: str
+    """
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 
 
@@ -53,7 +69,16 @@ def open_resource(path: str, mode: str = "rt"):
 
 
 def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
-    return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path))
+    """Öffnet die übergebene Temp Ressource.
+
+    Verwendet :func:`get_temp_resource_path`
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :param path: Pfad zur Resource, Relativ zum `resources` Ordner.
+    :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
+
+    """
+    return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
 
 
 def delete_resource(path: str):
