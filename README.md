@@ -1,4 +1,4 @@
-# VisuAnalytics ![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)
+# VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22)
 
 ## Server Starten
 
@@ -51,7 +51,7 @@ Für die Dokumentation wird das Python Package [Sphinx](https://www.sphinx-doc.o
 ### Installation
 
 
-2. Dev Dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
+1. Dev Dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
 ### HTML Generieren
 
