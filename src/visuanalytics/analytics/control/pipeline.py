@@ -88,5 +88,4 @@ class Pipeline(object):
             print("Error", er)
             self.__current_step = -2
             self.__cleanup()
-            raise er
             return False
