@@ -29,6 +29,9 @@ def to_forecast_germany(pipeline_id, images, audios, audiol):
 
     """
 
+    # Save current Dir to change later back
+    path_before = os.getcwd()
+
     with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
         for i in audios:
             file.write("file 'file:" + i + "'\n")
@@ -47,5 +50,8 @@ def to_forecast_germany(pipeline_id, images, audios, audiol):
     shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + f"\"{output}\"" + " -s 1920x1080 " + f"\"{output2}\""
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     os.system(shell_cmd)
+
+    # Change await form the Dir, to be able to remove it
+    os.chdir(path_before)
 
     return output2
