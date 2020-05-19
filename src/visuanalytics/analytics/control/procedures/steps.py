@@ -4,8 +4,8 @@ class Steps(object):
     Ist die GrundKlasse von der alle Step Klassen erben sollen.
     Sollte **nicht** selbst in einer :class:´Pipeline` verwendet werden.
     Eine unterklasse **muss** die Functionen :func:`apis`, :func:`preprocessing`, :func:`processing` und :func:`linking`
-    überschreiben. Falls die reihnfolge auch überschrieben werden soll,
-    solten die hinweise in der Dokumentation für die variablen `step_max` und `sequence` beachtet werden.
+    überschreiben. Falls die Reihnfolge auch überschrieben werden soll,
+    solten die Hinweise in der Dokumentation für die Variablen `step_max` und `sequence` beachtet werden.
     """
 
     def __init__(self, config):
@@ -24,8 +24,8 @@ class Steps(object):
     def step_max(self):
         """int: höchste step id.
 
-        Falls sequence überschrieben wird **muss** diese variable auch überschrieben werden,
-        dieser wert **sollte** immer gleich dem höchsten wert in sequence sein.
+        Falls Sequence überschrieben wird **muss** diese Variable auch überschrieben werden,
+        dieser wert **sollte** immer gleich dem höchsten wert in der Sequence sein.
         """
         return self.__step_max
 
@@ -33,8 +33,8 @@ class Steps(object):
     def sequence(self):
         """list: Enthält alle Schritte mit den dazugehörigen functionen (fals vorhanden).
 
-        Die Schritte -2, -1, und 4 haben keine funktionen da dies Fehler oder start und Endpunkt definieren.
-        Falls die variable `sequence` überschrieben wird **muss** diese -2 und -1 enthalten,
+        Die Schritte -2, -1, und 4 haben keine Funktionen da diese Fehler, Start oder Endpunkt definieren.
+        Falls die Variable `sequence` überschrieben wird **muss** diese -2 und -1 enthalten,
         desweiteren sollte der letzte Schritt `Ready` sein da dessen function nie aufgerufen wird.
         """
         return self.__sequence

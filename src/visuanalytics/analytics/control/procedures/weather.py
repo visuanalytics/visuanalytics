@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import date_time, audio
 
 
 class WeatherSteps(Steps):
-    """Schritte für das erstellen eines Wetterberichtes"""
+    """Schritte für das Erstellen eines Wetterberichtes"""
 
     def __init__(self, config):
         super().__init__(config)
@@ -19,7 +19,7 @@ class WeatherSteps(Steps):
         self.__processed_data = {}
 
     def apis(self, pipeline_id: str):
-        """Holt die APi daten von der Wetter Api.
+        """Holt die APi Daten von der Wetter Api.
 
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
@@ -28,7 +28,7 @@ class WeatherSteps(Steps):
         self.__json_data = api.get_example() if self.config.get("testing", False) else api.get_forecasts()
 
     def preprocessing(self, pipeline_id: str):
-        """Verarbeitet die daten aus der Wetter API.
+        """Verarbeitet die Daten aus der Wetter API.
 
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
@@ -52,7 +52,7 @@ class WeatherSteps(Steps):
         self.__preprocessed_data["merge_data"] = transform.merge_data(data)
 
     def processing(self, pipeline_id: str):
-        """Erstellt aus den APi daten bilder und texte.
+        """Erstellt aus den APi Daten, Bilder und Texte.
 
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
@@ -76,7 +76,7 @@ class WeatherSteps(Steps):
         self.__preprocessed_data = None
 
     def linking(self, pipeline_id: str):
-        """Baut das viedeo zusammen.
+        """Baut das Video zusammen.
 
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
