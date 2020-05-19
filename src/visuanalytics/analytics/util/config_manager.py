@@ -4,7 +4,7 @@ import json
 import os
 
 CONFIG_LOCATION = "../../config.py"
-CONFIG_PRIVATE_LOCATION = "../../instance/confg.json"
+CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
 
 
 def get_public():

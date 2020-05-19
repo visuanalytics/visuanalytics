@@ -6,6 +6,7 @@ import json
 import requests
 
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util import config_manager
 
 CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
           "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
@@ -15,7 +16,7 @@ list: Städte, für die wir die Wettervorhersage von der Weatherbit-API beziehen
 
 WEATHERBIT_URL = "https://api.weatherbit.io/v2.0/forecast/daily?"
 
-WEATHERBIT_API_KEY = ""
+WEATHERBIT_API_KEY = config_manager.get_private()["api_keys"]["weatherbit"]
 
 
 # TODO: Private config-Datei für unsere API-keys anlegen.
