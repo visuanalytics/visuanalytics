@@ -185,7 +185,6 @@ CITY_NAMES = {
     "Dresden": "in Dresden",
     "Düsseldorf": "in Düsseldorf",
     "Frankfurt": "in Frankfurt am Main",
-    "Garmisch-Partenkirchen": "in Garmisch-Partenkirchen",
     "Gießen": "in Gießen",
     "Hamburg": "in Hamburg",
     "Hannover": "in Hannover",
@@ -195,7 +194,14 @@ CITY_NAMES = {
     "Nürnberg": "in Nürnberg",
     "Saarbrücken": "in Saarbrücken",
     "Schwerin": "in Schwerin",
-    "Stuttgart": "in Stuttgart"}
+    "Stuttgart": "in Stuttgart",
+    "Leipzig": "in Lepzig",
+    "Magdeburg": "in Magdeburg",
+    "Koblenz": "in Koblenz",
+    "Osnabrück": "in Osnabrück",
+    "Regensburg": "in Regensburg"
+
+}
 
 
 def city_name_to_text(city_name):

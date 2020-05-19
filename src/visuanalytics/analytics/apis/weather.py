@@ -8,7 +8,8 @@ import requests
 from visuanalytics.analytics.util import resources
 
 CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
-          "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz"]
+          "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Koblenz",
+          "Osnabrück", "Regensburg"]
 """
 list: Städte, für die wir die Wettervorhersage von der Weatherbit-API beziehen.
 """

@@ -88,7 +88,7 @@ def _preprocess_single(data):
 
 def _summaries(data):
     days = range(NUM_DAYS)
-    avg_temp = [statistics.mean(_get_for_day(i, "temp", data)) for i in days]
+    avg_temp = [statistics.mean(_get_for_day(i, "max_temp", data)) for i in days]
     min_temp = [min(_get_for_day(i, "min_temp", data)) for i in days]
     max_temp = [max(_get_for_day(i, "max_temp", data)) for i in days]
     icons = [statistical.mode(_get_for_day(i, "icon", data)) for i in days]
@@ -309,20 +309,20 @@ def get_city_with_max_min_avg_temp(data, date_in_future):
     cities_with_max_avg_temp = []
     cities_with_min_avg_temp = []
     for city in data['cities']:
-        cities_with_avg_temp.append(round(data['cities'][city][date_in_future]['temp']))
+        cities_with_avg_temp.append(round(data['cities'][city][date_in_future]['max_temp']))
     maxtemp_temp = max(cities_with_avg_temp)
     mintemp_temp = min(cities_with_avg_temp)
     for city in data['cities']:
-        if round(data['cities'][city][date_in_future]['temp']) == maxtemp_temp:
+        if round(data['cities'][city][date_in_future]['max_temp']) == maxtemp_temp:
             cities_with_max_avg_temp.append(city)
-        if round(data['cities'][city][date_in_future]['temp']) == mintemp_temp:
+        if round(data['cities'][city][date_in_future]['max_temp']) == mintemp_temp:
             cities_with_min_avg_temp.append(city)
     return_city_max = random.choice(cities_with_max_avg_temp)
     return_city_min = random.choice(cities_with_min_avg_temp)
 
-    return [return_city_max, round(data['cities'][return_city_max][date_in_future]['temp']),
+    return [return_city_max, round(data['cities'][return_city_max][date_in_future]['max_temp']),
             data['cities'][return_city_max][date_in_future]['code'],
-            return_city_min, round(data['cities'][return_city_min][date_in_future]['temp']),
+            return_city_min, round(data['cities'][return_city_min][date_in_future]['max_temp']),
             data['cities'][return_city_min][date_in_future]['code']]
 
 
