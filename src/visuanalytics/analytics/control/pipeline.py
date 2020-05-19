@@ -32,19 +32,23 @@ class Pipeline(object):
 
     @property
     def id(self):
-        """str: id des Pipelines"""
+        """str: id der Pipeline."""
         return self.__id
 
     def progress(self):
         """Fortschritt der Pipeline.
 
-        :return: Nummer des Aktullen Schritts, Anzahl aller Schritte
+        :return: Anzahl der schon ausgeführten schritte, Anzahl aller Schritte
         :rtype: int, int
         """
         return self.__current_step + 1, self.__steps.step_max + 1
 
     def current_step_name(self):
-        """Gibt den Namen des aktuellen Schritts zurück"""
+        """Gibt den Namen des aktuellen Schritts zurück.
+
+        :return: Name des Aktuellen Schrittes.
+        :rtype: str
+        """
         return self.__steps.sequence[self.__current_step]["name"]
 
     def __setup(self):

@@ -46,7 +46,7 @@ def to_forecast_germany(pipeline_id, images, audios, audiol):
             file.write("file 'file:" + images[i] + "'\n")
             file.write("duration " + (str(int(audiol[i]))) + "\n")
 
-    output2 = resources.get_resource_path("out/viedeo.mp4")
+    output2 = resources.get_resource_path("out/video.mp4")
     shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + f"\"{output}\"" + " -s 1920x1080 " + f"\"{output2}\""
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     os.system(shell_cmd)
