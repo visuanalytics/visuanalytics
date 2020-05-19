@@ -116,9 +116,9 @@ def get_weekday(data):
 def get_data_today_tomorrow_three(data):
     data_min_max = {}
     for i in range(5):
-        city_name_maximum, maximum_temp, code_maximum = visualisation.get_city_with_max_temp(data, i)
-        city_name_minimum, minimum_temp, code_minimum = visualisation.get_city_with_min_temp(data, i)
-        avg_temperatur = visualisation.get_city_with_max_min_avg_temp(data, i)
+        city_name_maximum, maximum_temp, code_maximum = get_city_with_max_temp(data, i)
+        city_name_minimum, minimum_temp, code_minimum = get_city_with_min_temp(data, i)
+        avg_temperatur = get_city_with_max_min_avg_temp(data, i)
         city_name_max = speech.city_name_to_text(city_name_maximum)
         city_name_min = speech.city_name_to_text(city_name_minimum)
         avg_temperatur[0] = speech.city_name_to_text(avg_temperatur[0])
