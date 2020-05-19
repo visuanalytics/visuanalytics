@@ -1,3 +1,4 @@
+from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.linking import weather as linking
@@ -34,13 +35,13 @@ class WeatherSteps(Steps):
         :type pipeline_id: str
         """
         # Preprocess api data
-        data = pre_visualisation.preprocess_weather_data(self.__json_data)
+        data = transform.preprocess_weather_data(self.__json_data)
 
         # clear JSON data (vtl. remove)
         self.__json_data = None
 
         # Preprocess visualisation data
-        self.__preprocessed_data["date"] = date_time.date_to_weekday(pre_visualisation.get_first_day(data))
+        self.__preprocessed_data["date"] = date_time.date_to_weekday(transform.get_first_day(data))
         self.__preprocessed_data["icon_oneday_0"] = pre_visualisation.data_icon_oneday(data, 0)
         self.__preprocessed_data["temp_oneday_0"] = pre_visualisation.data_temp_oneday(data, 0)
         self.__preprocessed_data["icon_oneday_1"] = pre_visualisation.data_icon_oneday(data, 1)
