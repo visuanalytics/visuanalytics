@@ -5,6 +5,7 @@ Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder zu gen
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+
 from visuanalytics.analytics.util import resources
 
 LOCATIONS_WEEKDAYS = [(220, 97), (840, 97), (1462, 97)]
@@ -13,9 +14,12 @@ list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 """
 
 
-def get_threeday_image(data, data2, weekdates):
+def get_threeday_image(pipeline_id, data, data2, weekdates):
     """
     Methode zum generieren des Bildes für die Vorhersage für die nächsten 3-5 Tage.
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
     :param weekdates: Wochentage für die nächsten 2-4 Tage
     :type weekdates : list
     :param data: Das Ergebnis der Methode :func:`data_icon_threeday()`.
@@ -43,16 +47,19 @@ def get_threeday_image(data, data2, weekdates):
         shifting = _get_shifting_weekday(weekdates[idx])
         _draw_text(draw, (item[0] + 4 + shifting, item[1] + 4), weekdates[idx], fontcolour="black")
         _draw_text(draw, (item[0] + shifting, item[1]), weekdates[idx])
-        
-    file = resources.get_new_ressource_path()
+
+    file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
 
     return file
 
 
-def get_oneday_icons_image(data, weekdate):
+def get_oneday_icons_image(pipeline_id, data, weekdate):
     """
     Methode zum generieren des Bildes für die Vorhersage für heute/morgen (Iconbild).
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
     :param weekdate: Wochentag des Datums für morgen
     :type weekdate : str
     :param data: Das Ergebnis der Methode :func:`data_icon_oneday()`.
@@ -70,14 +77,17 @@ def get_oneday_icons_image(data, weekdate):
     draw = ImageDraw.Draw(source_img)
     _draw_weekdays(draw, weekdate)
 
-    file = resources.get_new_ressource_path()
+    file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
     return file
 
 
-def get_oneday_temp_image(data, weekdate):
+def get_oneday_temp_image(pipeline_id, data, weekdate):
     """
     Methode zum generieren des Bildes für die Vorhersage für heute/morgen (Temperaturbild).
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
     :param weekdate: Wochentag des Datums für morgen
     :type weekdate : str
     :param data: Das Ergebnis der Methode :func:`data_temp_oneday()`
@@ -94,7 +104,7 @@ def get_oneday_temp_image(data, weekdate):
         _draw_text(draw, (item[0][0] + 14 + _get_shifting_temp(item[1]), item[0][1] + 1), item[1], fontsize=50)
 
     _draw_weekdays(draw, weekdate)
-    file = resources.get_new_ressource_path()
+    file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
 
     return file

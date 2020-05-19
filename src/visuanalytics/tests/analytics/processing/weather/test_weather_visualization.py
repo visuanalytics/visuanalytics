@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import unittest
 
 from visuanalytics.analytics.preprocessing.weather import visualisation as pre_visualisation
@@ -13,30 +14,24 @@ class PreprocessTest(unittest.TestCase):
         input = json.loads(file_handle.read())
         output = pre_visualisation.preprocess_weather_data(input)
         date = date_time.date_to_weekday(pre_visualisation.get_first_day(output))
-        path = resources.get_resource_path("temp/weather")
-        if not os.path.exists(path):
-            os.mkdir(path)
-        cleanup = []
+        os.mkdir(resources.get_resource_path("temp/pre_1"))
 
     def test_if_get_threeday_image_generates_image(self):
-        expected = pro_visualisation.get_threeday_image(pre_visualisation.data_icon_threeday(self.output),
+        expected = pro_visualisation.get_threeday_image("pre_1", pre_visualisation.data_icon_threeday(self.output),
                                                         pre_visualisation.data_mm_temp_threeday(self.output),
                                                         self.date[2:5])
-        self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_icons_image_generates_image(self):
-        expected = pro_visualisation.get_oneday_icons_image(pre_visualisation.data_icon_oneday(self.output, 0),
+        expected = pro_visualisation.get_oneday_icons_image("pre_1", pre_visualisation.data_icon_oneday(self.output, 0),
                                                             self.date[0])
-        self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_temp_image_generates_image(self):
-        expected = pro_visualisation.get_oneday_temp_image(pre_visualisation.data_temp_oneday(self.output, 0),
+        expected = pro_visualisation.get_oneday_temp_image("pre_1", pre_visualisation.data_temp_oneday(self.output, 0),
                                                            self.date[0])
-        self.cleanup.append(expected)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
-    def tearDown(self):
-        for clean in self.cleanup:
-            resources.delete_resource(clean)
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(resources.get_resource_path("temp/pre_1"), ignore_errors=True)

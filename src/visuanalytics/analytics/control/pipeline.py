@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 
 from visuanalytics.analytics.control.procedures.steps import Steps
@@ -8,8 +9,8 @@ from visuanalytics.analytics.util import resources
 class Pipeline(object):
     """Enthält alle informationen zu einer Pipeline, und führt alle Steps aus.
 
-    Benötigt beim ersttellen eine id, und Eine instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
-    Bei dem aufruf von Start werden alle Steps der reihe nach ausgeführt.
+    Benötigt beim Ersttellen eine id, und eine Instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
+    Bei dem Aufruf von Start werden alle Steps der Reihe nach ausgeführt.
     """
 
     def __init__(self, pipeline_id: str, steps: Steps):
@@ -21,39 +22,44 @@ class Pipeline(object):
 
     @property
     def start_time(self):
-        """float: startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` inizalisiert."""
+        """float: Startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` inizalisiert."""
         return self.__start_time
 
     @property
     def end_time(self):
-        """float: endzeit der Pipeline. Wird erst nach beendigung der Pipeline inizalisiert."""
+        """float: Endzeit der Pipeline. Wird erst nach Beendigung der Pipeline inizalisiert."""
         return self.__end_time
 
     @property
     def id(self):
-        """str: id des Pipelines"""
+        """str: id der Pipeline."""
         return self.__id
 
     def progress(self):
         """Fortschritt der Pipeline.
 
-        :return: Nummer des Aktullen Schritts, Anzahl aller Schritte
+        :return: Anzahl der schon ausgeführten schritte, Anzahl aller Schritte
         :rtype: int, int
         """
         return self.__current_step + 1, self.__steps.step_max + 1
 
     def current_step_name(self):
-        """Gibt den Namen des Aktuellen Schritts zurück"""
+        """Gibt den Namen des aktuellen Schritts zurück.
+
+        :return: Name des Aktuellen Schrittes.
+        :rtype: str
+        """
         return self.__steps.sequence[self.__current_step]["name"]
 
     def __setup(self):
         print(f"Pipeline {self.id} Started")
 
         self.__start_time = time.time()
-        os.mkdir(resources.get_resource_path(f"temp/{self.id}"))
+        os.mkdir(resources.get_temp_resource_path("", self.id))
 
     def __cleanup(self):
-        os.rmdir(resources.get_resource_path(f"temp/{self.id}"))
+        # delete Directory
+        shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
 
         self.__end_time = time.time()
         print(f"Pipeline {self.id} Stoped")
@@ -83,7 +89,7 @@ class Pipeline(object):
 
         except Exception as er:
             # TODO(max)
-            print("Error", er.__cause__)
+            print("Error", er)
             self.__current_step = -2
             self.__cleanup()
             return False
