@@ -93,7 +93,7 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
 
     next_3 = (f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
               f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_name_min']} und {data['next_3']['max_temp']} Grad. "
-              f"{data['next_3']['city_name_max']}. Die Durchschnittstemperaturtliegt am {data['next_3']['weekday']} bei {data['next_3']['average_temp']} Grad. ")
+              f"{data['next_3']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_3']['weekday']} bei {data['next_3']['average_temp']} Grad. ")
 
     # three_days
     text.append(f"{next_1} {next_2} {next_3}")
