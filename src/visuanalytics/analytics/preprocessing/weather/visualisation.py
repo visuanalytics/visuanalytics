@@ -4,11 +4,12 @@ Dieses Modul enthält die Funktionalität zum Vorverarbeiten der Wettervorhersag
 
 from visuanalytics.analytics.preprocessing.weather import transform
 
-LOCATIONS_TOMOROW = [("Konstanz", (898, 900)), ("Regensburg", (1080, 822)),
-                     ("Nürnberg", (930, 720)), ("Koblenz", (675, 610)),
-                     ("Gießen", (843, 540)), ("Leipzig", (1106, 482)),
-                     ("Magdeburg", (1006, 370)), ("Osnabrück", (755, 333)),
+LOCATIONS_TOMOROW = [("Konstanz", (898, 900)), ("München", (1080, 822)),
+                     ("Nürnberg", (930, 720)), ("Mainz", (675, 610)),
+                     ("Gießen", (843, 540)), ("Dresden", (1106, 482)),
+                     ("Hannover", (1006, 370)), ("Bremen", (755, 333)),
                      ("Hamburg", (986, 218)), ("Berlin", (1147, 270)), ]
+
 """
 list: Liste aus String, Tupel(int, int): X und Y Koordinaten der Positionen der Icons in der Vorhersage für morgen 
 sortiert nach den verschiedenen Orten/Regionen.

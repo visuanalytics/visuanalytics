@@ -308,15 +308,15 @@ def get_city_with_max_min_avg_temp(data, date_in_future):
     cities_with_avg_temp = []
     cities_with_max_avg_temp = []
     cities_with_min_avg_temp = []
-    for city in data['cities']:
-        cities_with_avg_temp.append(round(data['cities'][city][date_in_future]['max_temp']))
+    for city in visualisation.LOCATIONS_TOMOROW:
+        cities_with_avg_temp.append(round(data['cities'][city[0]][date_in_future]['max_temp']))
     maxtemp_temp = max(cities_with_avg_temp)
     mintemp_temp = min(cities_with_avg_temp)
-    for city in data['cities']:
-        if round(data['cities'][city][date_in_future]['max_temp']) == maxtemp_temp:
-            cities_with_max_avg_temp.append(city)
-        if round(data['cities'][city][date_in_future]['max_temp']) == mintemp_temp:
-            cities_with_min_avg_temp.append(city)
+    for city in visualisation.LOCATIONS_TOMOROW:
+        if round(data['cities'][city[0]][date_in_future]['max_temp']) == maxtemp_temp:
+            cities_with_max_avg_temp.append(city[0])
+        if round(data['cities'][city[0]][date_in_future]['max_temp']) == mintemp_temp:
+            cities_with_min_avg_temp.append(city[0])
     return_city_max = random.choice(cities_with_max_avg_temp)
     return_city_min = random.choice(cities_with_min_avg_temp)
 

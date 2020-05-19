@@ -197,8 +197,7 @@ CITY_NAMES = {
     "Stuttgart": "in Stuttgart",
     "Leipzig": "in Lepzig",
     "Magdeburg": "in Magdeburg",
-    "Koblenz": "in Koblenz",
-    "Osnabrück": "in Osnabrück",
+    "Mainz": "in Mainz",
     "Regensburg": "in Regensburg"
 
 }

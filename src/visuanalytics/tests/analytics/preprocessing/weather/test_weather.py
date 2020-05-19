@@ -37,8 +37,8 @@ input_single = {
 }
 
 city_names = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
-              "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Koblenz",
-              "Osnabrück", "Regensburg"]
+              "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Mainz",
+              "Regensburg"]
 
 summary_param_names = ["temp_avg", "temp_min", "temp_max", "common_icon", "common_code"]
 
