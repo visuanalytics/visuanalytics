@@ -179,56 +179,26 @@ def random_weather_descriptions(code):
     return text_weather
 
 
-CITY_DESCRIPTIONS = {
-    "Berlin": {0: "im Nordosten Deutschlands",
-               1: "in der Hauptstadt",
-               2: "in Berlin"},
-    "Bremen": {0: "im Norden Deutschlands",
-               1: "in der norddeutschen Hansestadt",
-               2: "in Bremen"},
-    "Dresden": {0: "im Osten Deutschlands",
-                1: "in der Nähe der tschechischen und polnischen Grenze",
-                2: "in Dresden"},
-    "Düsseldorf": {0: "im Westen Deutschlands",
-                   1: "in der Nähe der niederländischen Grenze",
-                   2: "in Düsseldorf"},
-    "Frankfurt": {0: "in der Mitte Deutschlands",
-                  1: "in Hessen",
-                  2: "in Frankfurt am Main"},
-    "Garmisch-Partenkirchen": {0: "an der österreichischen Grenze",
-                               1: "in der Nähe der Zugspitze",
-                               2: "in Garmisch-Partenkirchen"},
-    "Gießen": {0: "in Mittelhessen",
-               1: "in Gießen",
-               2: "in Gießen an der Lahn"},
-    "Hamburg": {0: "in der Hafenstadt Hamburg",
-                1: "im Norden Deutschlands",
-                2: "in Hamburg"},
-    "Hannover": {0: "in Hannover",
-                 1: "in Hannover",
-                 2: "in Hannover"},
-    "Kiel": {0: "an der Ostsee",
-             1: "in der Hafenstadt Kiel",
-             2: "im Norden Deutschlands"},
-    "München": {0: "im Süden Deutschlands",
-                1: "in der bayrischen Landeshauptstadt München",
-                2: "in München"},
-    "Nürnberg": {0: "im Nordens Bayerns",
-                 1: "im Südosten Deutschlands",
-                 2: "in Nürnberg"},
-    "Saarbrücken": {0: "an der französischen Grenze",
-                    1: "in der Nähe der franzäsischen Grenze",
-                    2: "in Saarbrücken"},
-    "Schwerin": {0: "im Norden Deutschlands",
-                 1: "in der Landeshauptstadt Mecklenburg-Vorpommerns",
-                 2: "in Schwerin"},
-    "Stuttgart": {0: "in der Landeshauptstadt Baden-Württembergs",
-                  1: "im Südwesten",
-                  2: "in Stuttgart"}
-}
+CITY_NAMES = {
+    "Berlin": "in Berlin",
+    "Bremen": "in Bremen",
+    "Dresden": "in Dresden",
+    "Düsseldorf": "in Düsseldorf",
+    "Frankfurt": "in Frankfurt am Main",
+    "Garmisch-Partenkirchen": "in Garmisch-Partenkirchen",
+    "Gießen": "in Gießen",
+    "Hamburg": "in Hamburg",
+    "Hannover": "in Hannover",
+    "Kiel": "in Kiel",
+    "Konstanz": "in Konstanz am Bodensee",
+    "München": "in München",
+    "Nürnberg": "in Nürnberg",
+    "Saarbrücken": "in Saarbrücken",
+    "Schwerin": "in Schwerin",
+    "Stuttgart": "in Stuttgart"}
 
 
-def random_city_descriptions(city_name):
+def city_name_to_text(city_name):
     """Gibt eine Beschreibung der Stadt aus.
 
     Um die Texte des Wetterberichts automatisch zu generieren und sie trotzdem nicht immer gleich aussehen, wird
@@ -245,6 +215,5 @@ def random_city_descriptions(city_name):
         x = random_city_descriptions(city_name)
         print(x + " scheint am Donnerstag die Sonne.")
     """
-    x = random.choice([0, 1, 2])
-    text_city = str(CITY_DESCRIPTIONS[city_name][x])
+    text_city = str(CITY_NAMES[city_name])
     return text_city
