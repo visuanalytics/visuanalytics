@@ -69,7 +69,7 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
     # today_temp
     text.append(
         f"Die Temperaturen liegen zwischen {data['today']['min_avg_temp']} Grad {data['today']['city_name_min_avg']} "
-        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max']}. "
+        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max_avg']}. "
         f"Die Durchschnittstemperatur liegt heute bei {data['today']['average_temp']} Grad. ")
 
     # tomorrow_weather

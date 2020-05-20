@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.preprocessing.weather import visualisation
 from visuanalytics.analytics.util import resources
 
@@ -36,7 +37,8 @@ input_single = {
 }
 
 city_names = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
-              "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Garmisch-Partenkirchen"]
+              "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Mainz",
+              "Regensburg"]
 
 summary_param_names = ["temp_avg", "temp_min", "temp_max", "common_icon", "common_code"]
 
@@ -47,7 +49,7 @@ weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", 
 class PreprocessSingleTest(unittest.TestCase):
 
     def test_only_four_days_taken(self):
-        actual = len(visualisation._preprocess_single(input_single)["Gießen"])
+        actual = len(transform._preprocess_single(input_single)["Gießen"])
         expected = 5
         self.assertEqual(actual, expected)
 
@@ -56,7 +58,7 @@ class PreprocessSingleTest(unittest.TestCase):
             "city_name": "Gießen",
             "data": input_single["data"][:3]
         }
-        actual = len(visualisation._preprocess_single(input_single_three_days)["Gießen"])
+        actual = len(transform._preprocess_single(input_single_three_days)["Gießen"])
         expected = 3
         self.assertEqual(actual, expected)
 
@@ -64,7 +66,7 @@ class PreprocessSingleTest(unittest.TestCase):
 class PreprocessTest(unittest.TestCase):
     with resources.open_resource("exampledata/example_weather.json") as file_handle:
         input = json.loads(file_handle.read())
-        output = visualisation.preprocess_weather_data(input)
+        output = transform.preprocess_weather_data(input)
 
     def test_contains_all_cities(self):
         actual = set((dict.keys(self.output["cities"])))

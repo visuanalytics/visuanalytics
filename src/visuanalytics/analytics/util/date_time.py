@@ -3,7 +3,7 @@ from datetime import datetime
 import datetime as dt
 import re
 
-from visuanalytics.analytics.preprocessing.weather import visualisation as weather
+from visuanalytics.analytics.preprocessing.weather import transform
 
 
 def date_to_weekday(valid_date):
@@ -46,7 +46,7 @@ def date_to_weekday(valid_date):
     days = []
     try:
         date = datetime.strptime(valid_date, '%Y-%m-%d').date()
-        for i in range(0, weather.NUM_DAYS):
+        for i in range(0, transform.NUM_DAYS):
             days.append(day_weekday[(date + dt.timedelta(days=i)).weekday()])
     except:
         # TODO: Fehlerbehandlung nochmal überarbeiten
