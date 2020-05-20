@@ -201,7 +201,6 @@ CITY_NAMES = {
     "Magdeburg": "in Magdeburg",
     "Mainz": "in Mainz",
     "Regensburg": "in Regensburg"
-
 }
 
 
