@@ -1,3 +1,4 @@
+import visuanalytics.analytics.preprocessing.weather.speech
 from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
@@ -50,7 +51,7 @@ class WeatherSteps(Steps):
         self.__preprocessed_data["data_mm_temp_threeday"] = pre_visualisation.data_mm_temp_threeday(data)
 
         # Preprocess speech data
-        self.__preprocessed_data["merge_data"] = transform.merge_data(data)
+        self.__preprocessed_data["merge_data"] = visuanalytics.analytics.preprocessing.weather.speech.merge_data(data)
 
     def processing(self, pipeline_id: str):
         """Erstellt aus den APi Daten, Bilder und Texte.
