@@ -20,11 +20,6 @@ WEATHERBIT_URL = "https://api.weatherbit.io/v2.0/forecast/daily?"
 WEATHERBIT_API_KEY = config_manager.get_private()["api_keys"]["weatherbit"]
 
 
-# TODO: Private config-Datei für unsere API-keys anlegen.
-# Zum Testen der Funktionen dieses Moduls: Bitte den API-Key aus Postman entnehmen bzw. die Daten aus der
-# example_weather.json-Datei einlesen und verwenden.
-
-
 def get_forecasts(single=False, cityname="Giessen"):
     # TODO (David): Die Städtenamen als Parameter übergeben statt eine globale Konstante zu verwenden
     """
@@ -42,20 +37,19 @@ def get_forecasts(single=False, cityname="Giessen"):
     """
     json_data = []
     if single:
-        response = requests.get(_forecast_request(cityname))
-        if response.status_code != 200:
-            raise ValueError("Response-Code: " + str(response.status_code))
-        json_data.append(json.loads(response.content))
+        json_data.append(_fetch(requests.get(_forecast_request(cityname))))
     else:
         for c in CITIES:
-            response = requests.get(_forecast_request(c))
-            if response.status_code != 200:
-                raise ValueError("Response-Code: " + str(response.status_code))
-            json_data.append(json.loads(response.content))
+            json_data.append(_fetch(requests.get(_forecast_request(c))))
     return json_data
 
 
-# TODO (David): API-key als Parameter übergeben statt Konstante zu verwenden
+def _fetch(response):
+    if response.status_code != 200:
+        raise ValueError("Response-Code: " + str(response.status_code))
+    return json.loads(response.content)
+
+
 def _forecast_request(location):
     return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
 
@@ -71,6 +65,5 @@ def get_example(single=False):
     if single:
         with resources.open_resource("exampledata/example_single_weather.json", "r") as json_file:
             return json.load(json_file)
-    else:
-        with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
-            return json.load(json_file)
+    with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
+        return json.load(json_file)

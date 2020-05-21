@@ -43,8 +43,9 @@ class SingleWeatherSteps(Steps):
         self.__json_data = None
 
         # Preprocess visualisation data
-        self.__preprocessed_data["date"] = date_time.date_to_weekday(transform.get_first_day(data, self.config.get(
-            "cityname")))
+        self.__preprocessed_data["date"] = date_time.date_to_weekday(
+            transform.get_first_day_single(data, self.config.get(
+                "cityname")))
         self.__preprocessed_data["data"] = data
 
     def processing(self, pipeline_id: str):
