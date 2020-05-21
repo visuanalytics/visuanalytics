@@ -25,7 +25,7 @@ WEATHERBIT_API_KEY = config_manager.get_private()["api_keys"]["weatherbit"]
 # example_weather.json-Datei einlesen und verwenden.
 
 
-def get_forecasts():
+def get_forecasts(single=False, cityname="Giessen"):
     # TODO (David): Die Städtenamen als Parameter übergeben statt eine globale Konstante zu verwenden
     """
     Bezieht die 16-Tage-Wettervorhersage für 15 Städte Deutschlands und bündelt sie in einer Liste.
@@ -41,11 +41,17 @@ def get_forecasts():
         socket.gaierror: Wenn keine Verbindung zum Internet besteht.
     """
     json_data = []
-    for c in CITIES:
-        response = requests.get(_forecast_request(c))
+    if single:
+        response = requests.get(_forecast_request(cityname))
         if response.status_code != 200:
             raise ValueError("Response-Code: " + str(response.status_code))
         json_data.append(json.loads(response.content))
+    else:
+        for c in CITIES:
+            response = requests.get(_forecast_request(c))
+            if response.status_code != 200:
+                raise ValueError("Response-Code: " + str(response.status_code))
+            json_data.append(json.loads(response.content))
     return json_data
 
 
@@ -54,7 +60,7 @@ def _forecast_request(location):
     return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
 
 
-def get_example():
+def get_example(single=False):
     """
     Bezieht die 16-Tage-Wettervorhersage für 15 Städte Deutschlands (aus der examples/weather.json)  und bündelt sie in einer Liste.
 
@@ -62,5 +68,9 @@ def get_example():
     :rtype: dict
 
     """
-    with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
-        return json.load(json_file)
+    if single:
+        with resources.open_resource("exampledata/example_single_weather.json", "r") as json_file:
+            return json.load(json_file)
+    else:
+        with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
+            return json.load(json_file)
