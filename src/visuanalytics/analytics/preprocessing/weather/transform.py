@@ -10,8 +10,8 @@ NUM_DAYS = 5
 int: Anzahl der Tage, für die die Wettervorhersage von der API bezogen wird.
 """
 
-RELEVANT_DATA = ["datetime", "temp", "low_temp", "min_temp", "high_temp", "max_temp", "app_min_temp", "app_max_temp",
-                 "wind_cdir", "wind_dir", "icon", "code", "sunrise_ts", "sunset_ts"]
+RELEVANT_DATA = ["valid_date", "max_temp", "min_temp", "app_min_temp", "app_max_temp",
+                 "wind_cdir_full", "wind_spd", "icon", "code", "sunrise_ts", "sunset_ts", "rh", "pop"]
 """
 list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Daten rausgefiltert werden sollen.
 """
@@ -108,7 +108,7 @@ def _get_for_day(day, attribute, data):
 
 
 def get_weekday(data):
-    date = data['cities']['Kiel'][0]['datetime']
+    date = data['cities']['Kiel'][0]['valid_date']
     weekdays = date_time.date_to_weekday(date)
     weekdays_for_dict = {"today": weekdays[0], "tomorrow": weekdays[1], "next_1": weekdays[2], "next_2": weekdays[3],
                          "next_3": weekdays[4]}
@@ -116,11 +116,11 @@ def get_weekday(data):
 
 
 def get_first_day(data):
-    return data['cities']['Kiel'][0]['datetime']
+    return data['cities']['Kiel'][0]['valid_date']
 
 
 def get_first_day_single(data, cityname):
-    return data[cityname][0]['datetime']
+    return data[cityname][0]['valid_date']
 
 
 def get_weather_icon(data, location, date_in_future):
