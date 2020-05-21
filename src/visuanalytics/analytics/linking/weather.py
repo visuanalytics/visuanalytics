@@ -3,11 +3,11 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video
 """
 
 import os
+import subprocess
 
 from visuanalytics.analytics.util import resources
 
 
-# TODO(max) vtl subprocess mit subprocess.Popen, Processoutput umleiten, auf Fehler prügen
 # TODO(max) change output dir
 
 def to_forecast(pipeline_id, images, audios, audiol):
@@ -26,6 +26,7 @@ def to_forecast(pipeline_id, images, audios, audiol):
     :type audiol: list
     :return:
     :rtype: str
+    :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
 
     """
 
@@ -37,9 +38,10 @@ def to_forecast(pipeline_id, images, audios, audiol):
             file.write("file 'file:" + i + "'\n")
 
     output = resources.new_temp_resource_path(pipeline_id, "mp3")
-    shell_cmd = "ffmpeg -f concat -safe 0 -i input.txt -c copy " + f"\"{output}\""
+    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i", "input.txt", "-c", "copy", output]
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
-    os.system(shell_cmd)
+    proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc1.check_returncode()
 
     with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
         for i in range(0, len(images)):
@@ -47,9 +49,10 @@ def to_forecast(pipeline_id, images, audios, audiol):
             file.write("duration " + (str(int(audiol[i]))) + "\n")
 
     output2 = resources.get_resource_path("out/video.mp4")
-    shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + f"\"{output}\"" + " -s 1920x1080 " + f"\"{output2}\""
+    args2 = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", "input.txt", "-i", output, "-s", "1920x1080", output2]
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
-    os.system(shell_cmd)
+    proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc2.check_returncode()
 
     # Change await form the Dir, to be able to remove it
     os.chdir(path_before)
