@@ -1,10 +1,8 @@
-from visuanalytics.analytics.preprocessing.weather import speech as pre_speech
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.linking import weather as linking
-from visuanalytics.analytics.preprocessing.weather import visualisation as pre_visualisation, transform
-from visuanalytics.analytics.processing.weather import visualisation as pro_visualisation, speech, speech_single, \
-    visualisation_single
+from visuanalytics.analytics.preprocessing.weather import transform
+from visuanalytics.analytics.processing.weather import speech_single, visualisation_single
 from visuanalytics.analytics.util import date_time, audio
 
 
