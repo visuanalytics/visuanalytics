@@ -12,9 +12,10 @@ gibt diesen zurück.
 from numpy import random
 
 from visuanalytics.analytics.preprocessing.weather import transform
+from visuanalytics.analytics.util import date_time
 
 
-def air_data_to_text(rh, pres):
+def rh_data_to_text(rh):
     """Wandelt die von der Weatherbit-API gegebenen Werte rh und pres in Text um.
 
     Diese Eingabeparameter sind Werte aus der Weatherbit-API.
@@ -32,11 +33,17 @@ def air_data_to_text(rh, pres):
         print(p)
     """
     rh_text = str(rh) + " Prozent"
+    return rh_text
+
+def pres_data_to_text(pres):
     pres_text = str(pres).replace(".", ",") + " Millibar"
-    return rh_text, pres_text
+    return pres_text
 
+def pop_data_to_text(pop):
+    pop_text = str(pop) + " Prozent"
+    return pop_text
 
-def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
+def wind_cdir_full_data_to_text(wind_cdir_full):
     """Wandelt alle Winddaten so um, dass sie flüssig vorgelesen werden können.
 
     Diese Eingabeparameter sind Werte aus der Weatherbit-API.
@@ -72,88 +79,127 @@ def wind_data_to_text(wind_cdir_full, wind_dir, wind_spd):
     wind_direction_1 = directions_dictionary[wind_cdir[0]]["noun"]
     wind_direction_2 = directions_dictionary[wind_cdir[1]]["noun"]
     wind_direction_text = wind_direction_1 + " " + wind_direction_2
-    wind_dir_degree_text = str(wind_dir) + " Grad"
-    wind_spd_text = str(round(wind_spd, 2)).replace(".", ",") + " Metern pro Sekunde"
-    return wind_direction_text, wind_dir_degree_text, wind_spd_text
+    return wind_direction_text
 
+def wind_spd_data_to_text(wind_spd):
+    wind_spd_text = str(round(wind_spd, 2)).replace(".", ",") + " Metern pro Sekunde"
+    return wind_spd_text
 
 WEATHER_DESCRIPTIONS = {
     "200": {0: "kommt es zu Gewittern mit leichtem Regen",
-            1: "ist mit Gewitter und leichtem Regen zu rechnen"},
+            1: "ist mit Gewitter und leichtem Regen zu rechnen",
+            2: "Gewitter & Regen"},
     "201": {0: "kommt es zu Gewittern mit Regen",
-            1: "ist mit Gewitter und Regen zu rechnen"},
+            1: "ist mit Gewitter und Regen zu rechnen",
+            2: "Gewitter & Regen"},
     "202": {0: "kommt es zu Gewittern mit starkem Regen",
-            1: "ist mit Gewitter und starkem Regen zu rechnen"},
+            1: "ist mit Gewitter und starkem Regen zu rechnen",
+            2: "Gewitter & Regen"},
     "230": {0: "kommt es zu Gewittern mit leichtem Nieselregen",
-            1: "ist mit Gewitter und leichtem Nieselregen zu rechnen"},
+            1: "ist mit Gewitter und leichtem Nieselregen zu rechnen",
+            2: "Gewitter & Nieselregen"},
     "231": {0: "kommt es zu Gewittern mit Nieselregen",
-            1: "ist mit Gewitter und Nieselregen zu rechnen"},
+            1: "ist mit Gewitter und Nieselregen zu rechnen",
+            2: "Gewitter & Nieselregen"},
     "232": {0: "kommt es zu Gewittern mit starkem Nieselregen",
-            1: "ist mit Gewitter und starkem Nieselregen zu rechnen"},
+            1: "ist mit Gewitter und starkem Nieselregen zu rechnen",
+            2: "Gewitter & Nieselregen"},
     "233": {0: "kommt es zu Gewittern mit Hagel",
-            1: "ist mit Gewitter und Hagel zu rechnen"},
+            1: "ist mit Gewitter und Hagel zu rechnen",
+            2: "Gewitter & Hagel"},
     "300": {0: "kommt es zu leichtem Nieselregen",
-            1: "ist mit leichtem Nieselregen zu rechnen"},
+            1: "ist mit leichtem Nieselregen zu rechnen",
+            2: "Nieselregen"},
     "301": {0: "kommt es zu Nieselregen",
-            1: "ist mit Nieselregen zu rechnen"},
+            1: "ist mit Nieselregen zu rechnen",
+            2: "Gewitter & Regen"},
     "302": {0: "kommt es zu starkem Nieselregen",
-            1: "ist mit starkem Nieselregen zu rechnen"},
+            1: "ist mit starkem Nieselregen zu rechnen",
+            2: "Nieselregen"},
     "500": {0: "kommt es zu leichtem Regen",
-            1: "ist es leicht regnerisch"},
+            1: "ist es leicht regnerisch",
+            2: "regnerisch"},
     "501": {0: "kommt es zu mäßigem Regen",
-            1: "ist es regnerisch"},
+            1: "ist es regnerisch",
+            2: "regnerisch"},
     "502": {0: "kommt es zu starkem Regen",
-            1: "ist es stark regnerisch"},
+            1: "ist es stark regnerisch",
+            2: "regnerisch"},
     "511": {0: "kommt es zu Eisregen",
-            1: "ist mit Eisregen zu rechnen"},
+            1: "ist mit Eisregen zu rechnen",
+            2: "Eisregen"},
     "520": {0: "kommt es zu leichtem Regenschauer",
-            1: "ist mit leichten Regenschauern zu rechnen"},
+            1: "ist mit leichten Regenschauern zu rechnen",
+            2: "regnerisch"},
     "521": {0: "kommt es zu Regenschauer",
-            1: "ist mit Regenschauern zu rechnen"},
+            1: "ist mit Regenschauern zu rechnen",
+            2: "regnerisch"},
     "522": {0: "kommt es zu starkem Regenschauer",
-            1: "ist mit starken Regenschauern zu rechnen"},
+            1: "ist mit starken Regenschauern zu rechnen",
+            2: "regnerisch"},
     "600": {0: "kommt es zu leichtem Schneefall",
-            1: "ist mit leichtem Schneefall zu rechnen"},
+            1: "ist mit leichtem Schneefall zu rechnen",
+            2: "Schnee"},
     "601": {0: "kommt es zu Schnee",
-            1: "ist mit Schnee zu rechnen"},
+            1: "ist mit Schnee zu rechnen",
+            2: "Schnee"},
     "602": {0: "kommt es zu starkem Schneefall",
-            1: "ist mit starkem Schneefall zu rechnen"},
+            1: "ist mit starkem Schneefall zu rechnen",
+            2: "Schnee"},
     "610": {0: "kommt es zu einem Mix aus Schnee und Regen",
-            1: "ist mit einem Mix aus Schnee und Regen zu rechnen"},
+            1: "ist mit einem Mix aus Schnee und Regen zu rechnen",
+            2: "Schnee & Regen"},
     "611": {0: "kommt es zu Schneeregen",
-            1: "ist mit Schneeregen zu rechnen"},
+            1: "ist mit Schneeregen zu rechnen",
+            2: "Schneeregen"},
     "612": {0: "kommt es zu starkem Schneeregen",
-            1: "ist mit starkem Schneeregen zu rechnen"},
+            1: "ist mit starkem Schneeregen zu rechnen",
+            2: "Schneeregen"},
     "621": {0: "kommt es zu Schneeschauer",
-            1: "ist mit Schneeschauern zu rechnen"},
+            1: "ist mit Schneeschauern zu rechnen",
+            2: "Schneeschauer"},
     "622": {0: "kommt es zu starkem Schneeschauer",
-            1: "ist mit starken Schneeschauern zu rechnen"},
+            1: "ist mit starken Schneeschauern zu rechnen",
+            2: "Schneeschauer"},
     "623": {0: "kommt es zu Windböen",
-            1: "ist mit Windböen zu rechnen"},
+            1: "ist mit Windböen zu rechnen",
+            2: "windig"},
     "700": {0: "kommt es zu Nebel",
-            1: "ist mit Nebel zu rechnen"},
+            1: "ist mit Nebel zu rechnen",
+            2: "nebelig"},
     "711": {0: "kommt es zu Nebel",
-            1: "ist mit Nebel zu rechnen"},
+            1: "ist mit Nebel zu rechnen",
+            2: "nebelig"},
     "721": {0: "kommt es zu Dunst",
-            1: "ist mit Nebel zu rechnen"},
+            1: "ist mit Nebel zu rechnen",
+            2: "nebelig"},
     "731": {0: "kommt es zu Staub in der Luft",
-            1: "ist mit Staub in der Luft zu rechnen"},
+            1: "ist mit Staub in der Luft zu rechnen",
+            2: "staubig"},
     "741": {0: "kommt es zu Nebel",
-            1: "ist mit Nebel zu rechnen"},
+            1: "ist mit Nebel zu rechnen",
+            2: "nebelig"},
     "751": {0: "kommt es zu Eisnebel",
-            1: "ist mit Eisnebel zu rechnen"},
+            1: "ist mit Eisnebel zu rechnen",
+            2: "Eisnebel"},
     "800": {0: "ist der Himmel klar",
-            1: "wird es heiter mit klarem Himmel"},
+            1: "wird es heiter mit klarem Himmel",
+            2: "heiter"},
     "801": {0: "sind nur wenige Wolken am Himmel",
-            1: "ist es leicht bewölkt"},
+            1: "ist es leicht bewölkt",
+            2: "leicht bewölkt"},
     "802": {0: "sind vereinzelte Wolken am Himmel",
-            1: "ist es vereinzelt bewölkt"},
-    "803": {0: "ist die Bewölkung durchbrochen",
-            1: "sind durchbrochene Wolken am Himmel"},
+            1: "ist es vereinzelt bewölkt",
+            2: "vereinzelt bewölkt"},
+    "803": {0: "ist die Wolkendecke durchbrochen",
+            1: "kommt es zu einer durchbrochenen Wolkendecke",
+            2: "bewölkt"},
     "804": {0: "kommt es zu bedecktem Himmel",
-            1: "ist es bewölkt"},
+            1: "ist es bewölkt",
+            2: "bewölkt"},
     "900": {0: "kommt es zu unbekanntem Niederschlag",
-            1: "ist mit unbekanntem Niederschlag zu rechnen"}
+            1: "ist mit unbekanntem Niederschlag zu rechnen",
+            2: "unbekannter Niederschlag"}
 }
 
 
@@ -179,7 +225,6 @@ def random_weather_descriptions(code):
     x = random.choice([0, 1])
     text_weather = str(WEATHER_DESCRIPTIONS[icon_code][x])
     return text_weather
-
 
 CITY_NAMES = {
     "Berlin": "in Berlin",
@@ -251,6 +296,11 @@ def get_data_today_tomorrow_three(data):
 
 
 def merge_data(data):
+    """ Zusammenführen der deutschlandweiten Wetterdaten für 5 Tage zu einem Dictionary mit Satzteilen.
+
+    :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API
+    :return: data_for_text: Dictionary aus relevanten Daten für einen deutschlandweiten Wetterbericht
+    """
     data_for_text = {}
     weekdays_for_dict = transform.get_weekday(data)
     average_temp, common_code = transform.get_average_per_day(data)
@@ -330,4 +380,25 @@ def merge_data(data):
                                      "city_name_min_avg": data_min_max[4]["city_name_min_avg"],
                                      "min_avg_temp": data_min_max[4]["min_avg_temp"],
                                      "code_min_avg": data_min_max[4]["code_min_avg"]}})
+    return data_for_text
+
+def merge_data_single(data):
+    """ Zusammenführen der einzelnen Wetterdaten einer Stadt (5 Tage) zu einem Dictionary mit Satzteilen.
+
+    :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API
+    :return: data_for_text: Dictionary aus relevanten Daten für den Wetterbericht einer bestimmten Stadt
+    """
+    date_sunset, time_sunset, time_text_sunset = date_time.time_change_format(data['sunset_ts'])
+    date_sunrise, time_sunrise, time_text_sunrise = date_time.time_change_format(data['sunrise_ts'])
+    data_for_text = {"max_temp": f"{str(data['max_temp'])} Grad",
+                     "min_temp": f"{str(data['min_temp'])} Grad",
+                     "app_max_temp": f"{str(data['app_max_temp'])} Grad",
+                     "app_min_temp": f"{str(data['app_min_temp'])} Grad",
+                     "wind_cdir_full": wind_cdir_full_data_to_text(data['wind_cdir_full']),
+                     "wind_spd": wind_spd_data_to_text(data['wind_spd']),
+                     "code": random_weather_descriptions(data['code']),
+                     "sunset_ts": time_text_sunset,
+                     "sunrise_ts": time_text_sunrise,
+                     "rh": rh_data_to_text(data['rh']),
+                     "pop": pop_data_to_text(data['pop'])}
     return data_for_text
