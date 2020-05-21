@@ -1,0 +1,26 @@
+def get_all_images_single_city(pipeline_id, data, date, cityname):
+    return [_generate_first_day_image(pipeline_id, data[cityname][0], date[0], cityname),
+            _generate_second_day_image(pipeline_id, data[cityname][1], date[1], cityname),
+            _generate_third_day_image(pipeline_id, data[cityname][2], date[2], cityname),
+            _generate_fourth_day_image(pipeline_id, data[cityname][3], date[3], cityname),
+            _generate_five_day_image(pipeline_id, data[cityname][4], date[4], cityname)]
+
+
+def _generate_first_day_image(pipeline_id, data, date, cityname):
+    pass
+
+
+def _generate_second_day_image(pipeline_id, data, date, cityname):
+    pass
+
+
+def _generate_third_day_image(pipeline_id, data, date, cityname):
+    pass
+
+
+def _generate_fourth_day_image(pipeline_id, data, date, cityname):
+    pass
+
+
+def _generate_five_day_image(pipeline_id, data, date, cityname):
+    pass

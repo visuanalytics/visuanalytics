@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import resources
 # TODO(max) vtl subprocess mit subprocess.Popen, Processoutput umleiten, auf Fehler prügen
 # TODO(max) change output dir
 
-def to_forecast_germany(pipeline_id, images, audios, audiol):
+def to_forecast(pipeline_id, images, audios, audiol):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
     Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen

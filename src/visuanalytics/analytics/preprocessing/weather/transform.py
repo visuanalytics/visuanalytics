@@ -17,7 +17,7 @@ list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Da
 """
 
 
-def preprocess_weather_data(api_data):
+def preprocess_weather_data(api_data, single=False):
     """
     Wandelt eine Liste von Weatherbit-Forecast-API-Responses in ein Dictionary um, das die für uns relevanten Daten enthält.
 
@@ -75,6 +75,8 @@ def preprocess_weather_data(api_data):
         vorkommen, wenn die Weatherbit-API geändert wird.
     """
     cities = dictionary.combine([_preprocess_single(d) for d in api_data])
+    if single:
+        return cities
     summaries = _summaries(cities)
     return {"cities": cities, "summaries": summaries}
 
@@ -115,6 +117,10 @@ def get_weekday(data):
 
 def get_first_day(data):
     return data['cities']['Kiel'][0]['datetime']
+
+
+def get_first_day_single(data, cityname):
+    return data[cityname][0]['datetime']
 
 
 def get_weather_icon(data, location, date_in_future):

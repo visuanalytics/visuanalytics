@@ -82,5 +82,5 @@ class WeatherSteps(Steps):
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
         """
-        linking.to_forecast_germany(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
-                                    self.__processed_data["audio_length"])
+        linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
+                            self.__processed_data["audio_length"])
