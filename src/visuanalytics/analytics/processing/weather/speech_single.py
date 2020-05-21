@@ -1,4 +1,5 @@
 from visuanalytics.analytics.preprocessing.weather import speech
+from visuanalytics.analytics.preprocessing.util import get_filepath_mp3 as fp
 from visuanalytics.analytics.util import resources
 from gtts import gTTS
 
@@ -41,11 +42,7 @@ def _generate_first_day_audio(pipeline_id, data_for_text, date, cityname):
         f"Der Wind kommt heute aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
         f"Die Sonne geht heute um {data['sunset_ts']} unter und geht morgen um {data['sunrise_ts']} wieder auf. "
     )
-
-    tts = gTTS(text, lang='de')
-    file_path = resources.new_temp_resource_path(pipeline_id, "mp3")
-    tts.save(file_path)
-    print("text: " + text)
+    file_path = fp.get_filepath_mp3(pipeline_id, text)
     return file_path
 
 
@@ -58,10 +55,7 @@ def _generate_second_day_audio(pipeline_id, data_for_text, date, cityname):
         f"Die Regenwahrscheinlichkeit liegt bei {data['pop']} und die relative Luftfeuchtigkeit liegt bei {data['rh']}. "
         f"Der Wind kommt aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
-    tts = gTTS(text, lang='de')
-    file_path = resources.new_temp_resource_path(pipeline_id, "mp3")
-    tts.save(file_path)
-    print("text: " + text)
+    file_path = fp.get_filepath_mp3(pipeline_id, text)
     return file_path
 
 
@@ -73,8 +67,5 @@ def _generate_three_days_audio(pipeline_id, data_for_text, date, cityname):
         f"Die Regenwahrscheinlichkeit liegt bei {data['pop']} und die relative Luftfeuchtigkeit liegt bei {data['rh']}. "
         f"Der Wind kommt aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
-    tts = gTTS(text, lang='de')
-    file_path = resources.new_temp_resource_path(pipeline_id, "mp3")
-    tts.save(file_path)
-    print("text: " + text)
+    file_path = fp.get_filepath_mp3(pipeline_id, text)
     return file_path
