@@ -42,8 +42,8 @@ city_names = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", 
 
 summary_param_names = ["temp_avg", "temp_min", "temp_max", "common_icon", "common_code"]
 
-weather_param_names = ["datetime", "temp", "low_temp", "min_temp", "high_temp", "max_temp", "app_min_temp",
-                       "app_max_temp", "wind_cdir", "wind_dir", "icon", "code", "sunrise_ts", "sunset_ts"]
+weather_param_names = ["valid_date", "max_temp", "min_temp", "app_min_temp", "app_max_temp",
+                       "wind_cdir_full", "wind_spd", "icon", "code", "sunrise_ts", "sunset_ts", "rh", "pop"]
 
 
 class PreprocessSingleTest(unittest.TestCase):
