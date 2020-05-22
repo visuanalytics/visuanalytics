@@ -1,6 +1,7 @@
 import os
 import shutil
 import time
+import logging
 
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.util import resources
@@ -19,6 +20,10 @@ class Pipeline(object):
         self.__end_time = 0.0
         self.__id = pipeline_id
         self.__current_step = -1
+
+        # set logging level to INFO when testing, otherwise only WARNING and ERROR messages are actually logged
+        if (self.__steps.config["testing"]):
+            logging.basicConfig(level=logging.INFO)
 
     @property
     def start_time(self):
@@ -51,9 +56,15 @@ class Pipeline(object):
         """
         return self.__steps.sequence[self.__current_step]["name"]
 
-    def __setup(self):
-        print(f"Pipeline {self.id} Started")
+    def current_log_message(self):
+        """Gibt die Log-Message des aktuellen Schritts zurück.
 
+        :return: Log-Message des Aktuellen Schrittes.
+        :rtype: str
+        """
+        return self.__steps.sequence[self.__current_step]["log_msg"]
+
+    def __setup(self):
         self.__start_time = time.time()
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
@@ -62,7 +73,11 @@ class Pipeline(object):
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
 
         self.__end_time = time.time()
-        print(f"Pipeline {self.id} Stoped")
+        if (self.__current_step != self.__steps.step_max):
+            logging.info(f"Pipeline {self.id} could not be finished.")
+        else:
+            completion_time = round(self.__end_time - self.__start_time, 2)
+            logging.info(f"{self.current_log_message()} Pipeline {self.id} in {completion_time}s")
 
     def start(self):
         """Führt alle Schritte die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind aus.
@@ -76,10 +91,13 @@ class Pipeline(object):
         :return: Wenn ohne fehler ausgeführt `True`, sonst `False`
         :rtype: bool
         """
+        logging.info(self.current_log_message())
         self.__setup()
+        logging.info(f"Started Pipeline {self.id}")
         try:
             for idx in range(0, self.__steps.step_max):
                 self.__current_step = idx
+                logging.info(self.current_log_message())
                 self.__steps.sequence[idx]["call"](self.id)
 
             # Set state to ready
@@ -89,7 +107,7 @@ class Pipeline(object):
 
         except Exception as er:
             # TODO(max)
-            print("Error", er)
             self.__current_step = -2
+            logging.error(f"{self.current_log_message()}: {er}")
             self.__cleanup()
             return False
