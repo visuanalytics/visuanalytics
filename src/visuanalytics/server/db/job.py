@@ -10,7 +10,7 @@ def create_job(steps_id: int):
     :type steps_id: int
     """
     with db.connect() as con:
-        con.execute("insert into job(steps) values (?)", steps_id)
+        con.execute("insert into job(steps) values (?)", [steps_id])
         con.commit()
 
 
@@ -29,15 +29,18 @@ def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekda
     # TODO(max) check if just on from date, weekday or daily
 
     with db.connect() as con:
-        con.execute("insert into schedule(job_id, date, time, weekday, daily) values (?, ?, ?, ?, ?)", job_id,
-                    exec_date, exec_time, weekday, daily)
+        con.execute("insert into schedule(job_id, date, time, weekday, daily) values (?, ?, ?, ?, ?)", [job_id,
+                                                                                                        exec_date,
+                                                                                                        exec_time,
+                                                                                                        weekday, daily])
         con.commit()
 
 
-def create_steps():
+def create_steps(name: str):
     """Erstellt eine abfolge von schritten."""
-    # TODO(max)
-    pass
+    with db.connect() as con:
+        con.execute("insert into steps(name) values (?)", [name])
+        con.commit()
 
 
 def get_schedule(job_id: int):
@@ -48,7 +51,7 @@ def get_schedule(job_id: int):
     :rtype: row
     """
     with db.connect() as con:
-        return con.execute("select date, time, weekday, daily from schedule where job_id == ?", job_id).fetchall()
+        return con.execute("select date, time, weekday, daily from schedule where job_id == ?", [job_id]).fetchall()
 
 
 def get_steps(job_id: int):
@@ -60,4 +63,5 @@ def get_steps(job_id: int):
     :rtype: row
     """
     with db.connect() as con:
-        return con.execute("select name from job as j, steps as s where j.id = ?and j.steps == s.id", job_id)
+        return con.execute("select name from job as j, steps as s where j.id = ?and j.steps == s.id",
+                           [job_id]).fetchall()

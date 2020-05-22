@@ -26,9 +26,10 @@ CREATE TABLE schedule
 -- Table: steps
 CREATE TABLE steps
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
-    name                                        NOT NULL UNIQUE
+    id   INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
+    name VARCHAR                                  NOT NULL UNIQUE
 );
+
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
