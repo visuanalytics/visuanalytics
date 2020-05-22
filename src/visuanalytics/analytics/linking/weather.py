@@ -74,7 +74,7 @@ def to_forecast(pipeline_id, images, audios, audiol):
 
 
 def _sum_audiol(audiol, index):
-    summe = 0
+    sum = 0
     for i in range(0, index + 1):
-        summe += audiol[i]
-    return int(summe) - 2
+        sum += audiol[i]
+    return int(sum) - 2
