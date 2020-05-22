@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import date_time
 from visuanalytics.analytics.util import resources
 
 
-class PreprocessTest(unittest.TestCase):
+class ProcessTest(unittest.TestCase):
     with resources.open_resource("exampledata/example_weather.json") as file_handle:
         input = json.loads(file_handle.read())
         output = transform.preprocess_weather_data(input, True)
