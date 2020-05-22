@@ -16,12 +16,12 @@ class ProcessTest(unittest.TestCase):
         output = transform.preprocess_weather_data(input, True)
         cityname = "Kiel"
         date = date_time.date_to_weekday(transform.get_first_day_single(output, cityname))
-        os.mkdir(resources.get_resource_path("temp/pre_1"))
+        os.mkdir(resources.get_resource_path("temp/pro_speech_single"))
 
     def test_if_get_all_audios_single_city_generates_audio(self):
-        expected = pro_speech_single.get_all_audios_single_city("pre_1", self.output, self.date[0:5], self.cityname)
+        expected = pro_speech_single.get_all_audios_single_city("pro_speech_single", self.output, self.date[0:5], self.cityname)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(resources.get_resource_path("temp/pre_1"), ignore_errors=True)
+        shutil.rmtree(resources.get_resource_path("temp/pro_speech_single"), ignore_errors=True)
