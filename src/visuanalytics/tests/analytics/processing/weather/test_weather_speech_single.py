@@ -20,7 +20,11 @@ class ProcessTest(unittest.TestCase):
 
     def test_if_get_all_audios_single_city_generates_audio(self):
         expected = pro_speech_single.get_all_audios_single_city("pro_speech_single", self.output, self.date[0:5], self.cityname)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEqual(os.path.exists(expected[0]), 1)
+        self.assertEqual(os.path.exists(expected[1]), 1)
+        self.assertEqual(os.path.exists(expected[2]), 1)
+        self.assertEqual(os.path.exists(expected[3]), 1)
+        self.assertEqual(os.path.exists(expected[4]), 1)
 
     @classmethod
     def tearDownClass(cls):
