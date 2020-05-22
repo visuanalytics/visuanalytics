@@ -19,7 +19,7 @@ def init_db(app):
         print("init DB")
 
         # create dir
-        os.makedirs(os.path.dirname(app.config), exist_ok=True)
+        os.makedirs(os.path.dirname(app.config["DATABASE"]), exist_ok=True)
 
         # create database
         db = sqlite3.connect(
@@ -28,6 +28,7 @@ def init_db(app):
         )
 
         with app.open_resource('db/schema.sql') as f:
+            print("F")
             db.executescript(f.read().decode('utf8'))
 
         db.close()
