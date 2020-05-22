@@ -126,3 +126,45 @@ class PreprocessTest(unittest.TestCase):
 
     def test_data_icon_threeday_check_if_string(self):
         self.assertIsInstance(visualisation.data_icon_threeday(self.output)[0][3], str)
+
+    def test_get_weekday(self):
+        """
+        Datum: 2020-05-19
+        """
+        actual = transform.get_weekday(self.output)
+        expected = {
+            'today': 'Dienstag',
+            'tomorrow': 'Mittwoch',
+            'next_1': 'Donnerstag',
+            'next_2': 'Freitag',
+            'next_3': 'Samstag'
+        }
+        self.assertEqual(actual, expected)
+
+    def test_get_city_with_max_temp(self):
+        actual_city, actual_temp, actual_code = transform.get_city_with_max_temp(self.output, 0)
+        city_array = []
+        code_array = []
+        for city in self.output['cities']:
+            if (round(self.output['cities'][city][0]['max_temp']) > actual_temp):
+                assert False
+            if (round(self.output['cities'][city][0]['max_temp']) == actual_temp):
+                city_array.append(city)
+                code_array.append(self.output['cities'][city][0]['code'])
+        for i in range(len(city_array)):
+            if (actual_city == city_array[i]):
+                assert actual_code == code_array[i]
+
+    def test_get_city_with_min_temp(self):
+        actual_city, actual_temp, actual_code = transform.get_city_with_min_temp(self.output, 0)
+        city_array = []
+        code_array = []
+        for city in self.output['cities']:
+            if (round(self.output['cities'][city][0]['min_temp']) < actual_temp):
+                assert False
+            if (round(self.output['cities'][city][0]['min_temp']) == actual_temp):
+                city_array.append(city)
+                code_array.append(self.output['cities'][city][0]['code'])
+        for i in range(len(city_array)):
+            if (actual_city == city_array[i]):
+                assert actual_code == code_array[i]
