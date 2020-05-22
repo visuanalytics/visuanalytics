@@ -65,20 +65,22 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
         print(wind_spd)
     """
     directions_dictionary = {
-        "west": {"noun": "West", "adjective": "westlich"},
-        "southwest": {"noun": "Südwest", "adjective": "südwestlich"},
-        "northwest": {"noun": "Nordwest", "adjective": "nordwestlich"},
-        "south": {"noun": "Süd", "adjective": "südlich"},
-        "east": {"noun": "Ost", "adjective": "östlich"},
-        "southeast": {"noun": "Südost", "adjective": "südöstlich"},
-        "northeast": {"noun": "Nordost", "adjective": "nordöstlich"},
-        "north": {"noun": "Nord", "adjective": "nördlich"}
+        "west": {0: "West", 1: "westlich"},
+        "southwest": {0: "Südwest", 1: "südwestlich"},
+        "northwest": {0: "Nordwest", 1: "nordwestlich"},
+        "south": {0: "Süd", 1: "südlich"},
+        "east": {0: "Ost", 1: "östlich"},
+        "southeast": {0: "Südost", 1: "südöstlich"},
+        "northeast": {0: "Nordost", 1: "nordöstlich"},
+        "north": {0: "Nord", 1: "nördlich"}
     }
 
     wind_cdir = wind_cdir_full.split("-")
-    wind_direction_1 = directions_dictionary[wind_cdir[0]]["noun"]
-    wind_direction_2 = directions_dictionary[wind_cdir[1]]["noun"]
-    wind_direction_text = wind_direction_1 + " " + wind_direction_2
+    wind_1 = wind_cdir[0]
+    wind_2 = wind_cdir[1]
+    wind_direction_1 = directions_dictionary[wind_1][0]
+    wind_direction_2 = directions_dictionary[wind_2][0]
+    wind_direction_text = f"{wind_direction_1} {wind_direction_2}"
     return wind_direction_text
 
 def wind_spd_data_to_text(wind_spd):
@@ -390,10 +392,10 @@ def merge_data_single(data):
     """
     date_sunset, time_sunset, time_text_sunset = date_time.time_change_format(data['sunset_ts'])
     date_sunrise, time_sunrise, time_text_sunrise = date_time.time_change_format(data['sunrise_ts'])
-    data_for_text = {"max_temp": f"{str(data['max_temp'])} Grad",
-                     "min_temp": f"{str(data['min_temp'])} Grad",
-                     "app_max_temp": f"{str(data['app_max_temp'])} Grad",
-                     "app_min_temp": f"{str(data['app_min_temp'])} Grad",
+    data_for_text = {"max_temp": f"{str(round(data['max_temp']))} Grad",
+                     "min_temp": f"{str(round(data['min_temp']))} Grad",
+                     "app_max_temp": f"{str(round(data['app_max_temp']))} Grad",
+                     "app_min_temp": f"{str(round(data['app_min_temp']))} Grad",
                      "wind_cdir_full": wind_cdir_full_data_to_text(data['wind_cdir_full']),
                      "wind_spd": wind_spd_data_to_text(data['wind_spd']),
                      "code": random_weather_descriptions(data['code']),
