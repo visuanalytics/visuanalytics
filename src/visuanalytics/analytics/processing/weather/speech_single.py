@@ -1,9 +1,27 @@
+"""
+Hier werden die Audiodateien für eine 5 Tage-Wettervorhersage für eine bestimmte Stadt generiert.
+
+Die Methode get_all_audios_single_city(pipeline_id, data, date, cityname) wenden die Methoden
+_generate_first_day_audio(pipeline_id, data_for_text, date, cityname)
+_generate_second_day_audio(pipeline_id, data_for_text, date, cityname)
+_generate_three_days_audio(pipeline_id, data_for_text, date, cityname)
+an, um für jeden Tag eine Audiodatei zu erhalten. Der Rückgabewert der eben genannten Methoden
+ist immer eine Audiodatei.
+"""
 from visuanalytics.analytics.preprocessing.weather import speech
-from visuanalytics.analytics.preprocessing.util import get_filepath_mp3 as fp
-from visuanalytics.analytics.util import resources
-from gtts import gTTS
+from visuanalytics.analytics.processing.util import filepath_mp3 as fp
 
 def get_all_audios_single_city(pipeline_id, data, date, cityname):
+    """
+    Generierung der Audiodateien für eine 5-Tage-Wettervorhersage für eine bestimmte Stadt.
+
+
+    :param pipeline_id: Ordnername der Audiodatei
+    :param data: Dictinary mit relevanten Wetterdaten
+    :param date: String mit Wochentag
+    :param cityname: String
+    :return: Gibt für jede generierte Audiodatei einen Pfad an, wo diese zu finden ist.
+    """
     return [_generate_first_day_audio(pipeline_id, data[cityname][0], date[0], cityname),
             _generate_second_day_audio(pipeline_id, data[cityname][1], date[1], cityname),
             _generate_three_days_audio(pipeline_id, data[cityname][2], date[2], cityname),
@@ -11,28 +29,6 @@ def get_all_audios_single_city(pipeline_id, data, date, cityname):
             _generate_three_days_audio(pipeline_id, data[cityname][4], date[4], cityname)]
 
 def _generate_first_day_audio(pipeline_id, data_for_text, date, cityname):
-    """
-
-    :param pipeline_id:
-    :param data_for_text:
-    :param date:
-    :param cityname:
-    :return:
-    """
-    """
-    Example: 
-    data = {"max_temp": f"{str(data['max_temp'])} Grad",
-            "min_temp": f"{str(data['min_temp'])} Grad",
-            "app_max_temp": f"{str(data['app_max_temp'])} Grad",
-            "app_min_temp": f"{str(data['app_min_temp'])} Grad",
-            "wind_cdir_full": wind_cdir_full_data_to_text(data['wind_cdir_full']),
-            "wind_spd": wind_spd_data_to_text(data['wind_spd']),
-            "code": random_weather_descriptions(data['code']),
-            "sunset_ts": time_text_sunset,
-            "sunrise_ts": time_text_sunrise,
-            "rh": rh_data_to_text(data['rh']),
-            "pop": pop_data_to_text(data['pop'])}
-    """
     data = speech.merge_data_single(data_for_text)
     text = (
         f"{cityname}  {data['code']} Die Höchstwerte erreichen am heutigen {date} {data['max_temp']}. "
