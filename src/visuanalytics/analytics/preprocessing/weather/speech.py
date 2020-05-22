@@ -74,13 +74,15 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
         "northeast": {0: "Nordost", 1: "nordöstlich"},
         "north": {0: "Nord", 1: "nördlich"}
     }
-
-    wind_cdir = wind_cdir_full.split("-")
-    wind_1 = wind_cdir[0]
-    wind_2 = wind_cdir[1]
-    wind_direction_1 = directions_dictionary[wind_1][0]
-    wind_direction_2 = directions_dictionary[wind_2][0]
-    wind_direction_text = f"{wind_direction_1} {wind_direction_2}"
+    if(wind_cdir_full.find("-") != -1):
+        wind_cdir = wind_cdir_full.split("-")
+        wind_1 = wind_cdir[0]
+        wind_2 = wind_cdir[1]
+        wind_direction_1 = directions_dictionary[wind_1][0]
+        wind_direction_2 = directions_dictionary[wind_2][0]
+        wind_direction_text = f"{wind_direction_1} {wind_direction_2}"
+    else:
+        wind_direction_text = f"{directions_dictionary[wind_cdir_full][0]}"
     return wind_direction_text
 
 def wind_spd_data_to_text(wind_spd):
