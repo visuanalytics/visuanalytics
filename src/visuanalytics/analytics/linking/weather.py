@@ -3,11 +3,11 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video
 """
 
 import os
+import subprocess
 
 from visuanalytics.analytics.util import resources
 
 
-# TODO(max) vtl subprocess mit subprocess.Popen, Processoutput umleiten, auf Fehler prügen
 # TODO(max) change output dir
 
 def to_forecast(pipeline_id, images, audios, audiol):
@@ -26,7 +26,7 @@ def to_forecast(pipeline_id, images, audios, audiol):
     :type audiol: list
     :return:
     :rtype: str
-
+    :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
     """
 
     # Save current Dir to change later back
@@ -37,21 +37,44 @@ def to_forecast(pipeline_id, images, audios, audiol):
             file.write("file 'file:" + i + "'\n")
 
     output = resources.new_temp_resource_path(pipeline_id, "mp3")
-    shell_cmd = "ffmpeg -f concat -safe 0 -i input.txt -c copy " + f"\"{output}\""
+    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i", "input.txt", "-c", "copy", output]
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
-    os.system(shell_cmd)
-
-    with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
-        for i in range(0, len(images)):
-            file.write("file 'file:" + images[i] + "'\n")
-            file.write("duration " + (str(int(audiol[i]))) + "\n")
+    proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc1.check_returncode()
 
     output2 = resources.get_resource_path("out/video.mp4")
-    shell_cmd = "ffmpeg -y -f concat -safe 0 -i input.txt -i " + f"\"{output}\"" + " -s 1920x1080 " + f"\"{output2}\""
+    args2 = ["ffmpeg", "-y"]
+    for i in range(0, len(images)):
+        args2.extend(("-loop", "1", "-t", str(int(audiol[i])), "-i", images[i]))
+
+    args2.extend(("-i", output, "-filter_complex"))
+
+    filter = ""
+    for i in range(0, len(images) - 1):
+        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=1.2:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
+            _sum_audiol(audiol, i)) + "/TB[f" + str(
+            i) + "];"
+    for j in range(0, len(images) - 1):
+        if j == 0:
+            filter += "[0][f0]overlay[bg1];"
+        elif j == len(images) - 2:
+            filter += "[bg" + str(j) + "][f" + str(j) + "]overlay,format=yuv420p[v]"
+        else:
+            filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
+
+    args2.extend((filter, "-map", "[v]", "-map", "5:a", "-shortest", "-s", "1920x1080", output2))
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
-    os.system(shell_cmd)
+    proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc2.check_returncode()
 
     # Change await form the Dir, to be able to remove it
     os.chdir(path_before)
 
     return output2
+
+
+def _sum_audiol(audiol, index):
+    sum = 0
+    for i in range(0, index + 1):
+        sum += audiol[i]
+    return int(sum) - 2
