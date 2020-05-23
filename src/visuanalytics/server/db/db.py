@@ -1,12 +1,13 @@
 import os
 import sqlite3
 
-from flask import current_app
+# TODO(max) vtl. move to someware else
+DATABASE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../instance/visuanalytics.db"))
 
 
 def connect():
     con = sqlite3.connect(
-        current_app.config['DATABASE'],
+        DATABASE_LOCATION,
         detect_types=sqlite3.PARSE_DECLTYPES,
     )
     con.row_factory = sqlite3.Row
@@ -15,15 +16,15 @@ def connect():
 
 def init_db(app):
     # if db file not exsists create one
-    if not os.path.exists(app.config["DATABASE"]):
+    if not os.path.exists(DATABASE_LOCATION):
         print("init DB")
 
         # create dir
-        os.makedirs(os.path.dirname(app.config["DATABASE"]), exist_ok=True)
+        os.makedirs(os.path.dirname(DATABASE_LOCATION), exist_ok=True)
 
         # create database
         db = sqlite3.connect(
-            app.config['DATABASE'],
+            DATABASE_LOCATION,
             detect_types=sqlite3.PARSE_DECLTYPES
         )
 
