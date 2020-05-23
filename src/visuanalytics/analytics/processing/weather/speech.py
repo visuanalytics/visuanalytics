@@ -13,7 +13,7 @@ from gtts import gTTS
 from visuanalytics.analytics.util import resources
 
 
-def first_weatherforecast_text_to_speech(pipeline_id, data):
+def get_all_audios_germany(pipeline_id, data):
     """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Audio-Datei.
 
     Es wird jeweils ein Text für die Wettervorhersage für heute und die drei darauffolgenden Tage erstellt.
@@ -29,31 +29,21 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
             file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
 
     Example:
-    data_for_text = {'today': {'weekday': 'Samstag', 'average_temp': 11, 'common_code': 804,
+    data_for_text = {'today': {'weekday': 'Samstag', 'common_code': 804,
                 'city_name_max': 'in der Hafenstadt Kiel', 'max_temp': '19', 'code_max': 'ist es leicht bewölkt',
-                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '0', 'code_min': 'ist es vereinzelt bewölkt',
-                'city_name_max_avg': 'Kiel', 'max_avg_temp': 13.6, 'code_max_avg': 801,
-                'city_name_min_avg': 'Garmisch-Partenkirchen', 'min_avg_temp': 7.6, 'code_min_avg': 804},
-            'tomorrow': {'weekday': 'Sonntag', 'average_temp': 12, 'common_code': 803,
+                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '0', 'code_min': 'ist es vereinzelt bewölkt'},
+            'tomorrow': {'weekday': 'Sonntag', 'common_code': 803,
                 'city_name_max': 'an der Ostsee', 'max_temp': '20', 'code_max': 'ist es leicht bewölkt',
-                'city_name_min': 'in Gießen', 'min_temp': '4', 'code_min': 'sind vereinzelte Wolken am Himmel',
-                'city_name_max_avg': 'Nürnberg', 'max_avg_temp': 14, 'code_max_avg': 802,
-                'city_name_min_avg': 'Garmisch-Partenkirchen', 'min_avg_temp': 10.2, 'code_min_avg': 803},
-            'next_1': {'weekday': 'Montag', 'average_temp': 14, 'common_code': 801,
+                'city_name_min': 'in Gießen', 'min_temp': '4', 'code_min': 'sind vereinzelte Wolken am Himmel'},
+            'next_1': {'weekday': 'Montag', 'common_code': 801,
                 'city_name_max': 'im Westen Deutschlands', 'max_temp': '23', 'code_max': 'ist die Bewölkung durchbrochen',
-                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '4', 'code_min': 'sind nur wenige Wolken am Himmel',
-                'city_name_max_avg': 'Kiel', 'max_avg_temp': 15.9, 'code_max_avg': 801,
-                'city_name_min_avg': 'Hamburg', 'min_avg_temp': 12.5, 'code_min_avg': 804},
-            'next_2': {'weekday': 'Dienstag', 'average_temp': 15, 'common_code': 803,
+                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '4', 'code_min': 'sind nur wenige Wolken am Himmel'},
+            'next_2': {'weekday': 'Dienstag', 'common_code': 803,
                 'city_name_max': 'in Düsseldorf', 'max_temp': '23', 'code_max': 'sind vereinzelte Wolken am Himmel',
-                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'sind durchbrochene Wolken am Himmel',
-                'city_name_max_avg': 'Frankfurt', 'max_avg_temp': 18.3, 'code_max_avg': 801,
-                'city_name_min_avg': 'Garmisch-Partenkirchen', 'min_avg_temp': 10.3, 'code_min_avg': 502},
-            'next_3': {'weekday': 'Mittwoch', 'average_temp': 15, 'common_code': 802,
+                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'sind durchbrochene Wolken am Himmel'},
+            'next_3': {'weekday': 'Mittwoch', 'common_code': 802,
                 'city_name_max': 'im Westen Deutschlands', 'max_temp': '25', 'code_max': 'wird es heiter mit klarem Himmel',
-                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'ist es vereinzelt bewölkt',
-                'city_name_max_avg': 'Düsseldorf', 'max_avg_temp': 19, 'code_max_avg': 800,
-                'city_name_min_avg': 'Garmisch-Partenkirchen', 'min_avg_temp': 10.2, 'code_min_avg': 501}}
+                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'ist es vereinzelt bewölkt'}}
     text = first_weatherforecast_text_to_speech(data_for_text)
     print(text)
     """
@@ -63,23 +53,23 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
 
     # today_weather
     text.append(
-        f"Am heutigen {data['today']['weekday']} {data['today']['code_max_avg']} {data['today']['city_name_max_avg']}. "
-        f"{data['today']['city_name_min_avg']} {data['today']['code_min_avg']}. ")
+        f"Am heutigen {data['today']['weekday']} {data['today']['code_max']} {data['today']['city_name_max']}. "
+        f"{data['today']['city_name_min']} {data['today']['code_min']}. ")
 
     # today_temp
     text.append(
-        f"Die Temperaturen liegen zwischen {data['today']['min_avg_temp']} Grad {data['today']['city_name_min_avg']} "
-        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max_avg']}. ")
+        f"Die Temperaturen liegen zwischen {data['today']['min_temp']} Grad {data['today']['city_name_min']} "
+        f"und {data['today']['max_temp']} Grad {data['today']['city_name_max']}. ")
 
     # tomorrow_weather
     text.append(
-        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min_avg']} {data['tomorrow']['city_name_min_avg']}. "
-        f"{data['tomorrow']['city_name_max_avg']} {data['tomorrow']['code_max_avg']}. ")
+        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min']} {data['tomorrow']['city_name_min']}. "
+        f"{data['tomorrow']['city_name_max']} {data['tomorrow']['code_max']}. ")
 
     # tomorrow_temp
     text.append(
-        f"Die Temperaturen liegen zwischen {data['tomorrow']['min_avg_temp']} Grad {data['tomorrow']['city_name_min_avg']} "
-        f"und {data['tomorrow']['max_avg_temp']} Grad {data['tomorrow']['city_name_max_avg']}. ")
+        f"Die Temperaturen liegen zwischen {data['tomorrow']['min_temp']} Grad {data['tomorrow']['city_name_min']} "
+        f"und {data['tomorrow']['max_temp']} Grad {data['tomorrow']['city_name_max']}. ")
 
     next_1 = (f"Am {data['next_1']['weekday']} {data['next_1']['common_code']}.  "
               f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_name_min']} und {data['next_1']['max_temp']} Grad "

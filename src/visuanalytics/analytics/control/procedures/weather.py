@@ -70,7 +70,7 @@ class WeatherSteps(Steps):
                                                  data["date"][2:5])]
 
         # Generate Audio
-        self.__processed_data["audios"] = speech.first_weatherforecast_text_to_speech(pipeline_id, data["merge_data"])
+        self.__processed_data["audios"] = speech.get_all_audios_germany(pipeline_id, data["merge_data"])
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         # clean preprocessed data
