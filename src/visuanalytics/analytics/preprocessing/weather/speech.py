@@ -390,7 +390,7 @@ def merge_data_single(data):
     """ Zusammenführen der einzelnen Wetterdaten einer Stadt (5 Tage) zu einem Dictionary mit Satzteilen.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API
-    :return: data_for_text: Dictionary aus relevanten Daten für den Wetterbericht einer bestimmten Stadt
+    :return: Dictionary aus relevanten Daten für den Wetterbericht einer bestimmten Stadt
     """
     date_sunset, time_sunset, time_text_sunset = date_time.time_change_format(data['sunset_ts'])
     date_sunrise, time_sunrise, time_text_sunrise = date_time.time_change_format(data['sunrise_ts'])
