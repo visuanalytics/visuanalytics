@@ -2,7 +2,6 @@
 
 Enthält die Startkonfiguration für den Flask-Server.
 """
-import os
 
 from flask import Flask
 
@@ -24,13 +23,9 @@ def create_app():
     # create
     app = Flask(__name__, instance_relative_config=True)
 
-    # set the right instance folder
-    app.instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../instance"))
-
     # configure the app
     app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'visuanalytics.db')
+        SECRET_KEY='dev'
     )
 
     # load the instance config, if it exists
