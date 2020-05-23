@@ -303,7 +303,7 @@ def merge_data(data):
     """ Zusammenführen der deutschlandweiten Wetterdaten für 5 Tage zu einem Dictionary mit Satzteilen.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API
-    :return: data_for_text: Dictionary aus relevanten Daten für einen deutschlandweiten Wetterbericht
+    :return: Dictionary aus relevanten Daten für einen deutschlandweiten Wetterbericht
     """
     data_for_text = {}
     weekdays_for_dict = transform.get_weekday(data)
