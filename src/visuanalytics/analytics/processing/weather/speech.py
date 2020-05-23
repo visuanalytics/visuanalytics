@@ -14,17 +14,15 @@ from visuanalytics.analytics.util import resources
 
 
 def get_all_audios_germany(pipeline_id, data):
-    """Generiert eine Textvorlage für einen Wetterbericht: Heute und 3-Tage-Vorhersage als Audio-Datei.
+    """Generiert eine Textvorlage für einen Wetterbericht: Heute, morgen und 3-Tage-Vorhersage als Audio-Datei.
 
-    Es wird jeweils ein Text für die Wettervorhersage für heute und die drei darauffolgenden Tage erstellt.
-    Die Sätze werden aus Satzteilen zusammengesetzt, die von den Modulen cities_descriptions,
-    weather_descriptions, air_data_to_text, wind_data_to_text, date_to_weekday und time_to_text
-    generiert werden.
+    Es wird jeweils ein Text für die Wettervorhersage für heute, morgen und die drei darauffolgenden Tage erstellt.
+    Die Sätze werden aus Satzteilen zusammengesetzt, die u.a. von den Modulen cities_descriptions,
+    weather_descriptions, date_to_weekday generiert werden.
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
-    :param days: Liste mit 4 aufeinanderfolgenden Wochentagen
-            -> weitere Infos von der API: Wird noch eingefügt
+    :param data: Dictionary mit relevanten Wetterdaten aus der API, wird in preprocessing.weather.speech.merge_data erstellt
     :return: [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
             file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
 
