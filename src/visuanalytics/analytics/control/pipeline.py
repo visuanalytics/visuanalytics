@@ -85,6 +85,7 @@ class Pipeline(object):
                 logger.info(f"Next step: {self.current_step_name()}")
                 self.__steps.sequence[idx]["call"](self.id)
                 logger.info(f"Step finished: {self.current_step_name()}!")
+                
             # Set state to ready
             self.__current_step = self.__steps.step_max
             self.__end_time = time.time()
