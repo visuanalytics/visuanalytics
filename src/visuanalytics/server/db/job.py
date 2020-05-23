@@ -48,7 +48,7 @@ def get_schedule(job_id: int):
     :param job_id: id des Jobs.
     :type job_id: int.
     :return: alle Zeitpläne
-    :rtype: row
+    :rtype: row[]
     """
     with db.connect() as con:
         return con.execute("select date, time, weekday, daily from schedule where job_id == ?", [job_id]).fetchall()
@@ -64,4 +64,4 @@ def get_steps(job_id: int):
     """
     with db.connect() as con:
         return con.execute("select name from job as j, steps as s where j.id = ?and j.steps == s.id",
-                           [job_id]).fetchall()
+                           [job_id]).fetchone()
