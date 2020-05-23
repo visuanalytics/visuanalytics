@@ -54,28 +54,15 @@ class Pipeline(object):
         """
         return self.__steps.sequence[self.__current_step]["name"]
 
-    def current_log_message(self):
-        """Gibt die Log-Message des aktuellen Schritts zurück.
-
-        :return: Log-Message des Aktuellen Schrittes.
-        :rtype: str
-        """
-        return self.__steps.sequence[self.__current_step]["log_msg"]
-
     def __setup(self):
-        self.__start_time = time.time()
+        logger.info(f"Initializing Pipeline {self.id}...")
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
     def __cleanup(self):
         # delete Directory
+        logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
-
-        self.__end_time = time.time()
-        if (self.__current_step != self.__steps.step_max):
-            logger.info(f"Pipeline {self.id} could not be finished.")
-        else:
-            completion_time = round(self.__end_time - self.__start_time, 2)
-            logger.info(f"{self.current_log_message()} Pipeline {self.id} in {completion_time}s")
+        logger.info("Finished cleanup!")
 
     def start(self):
         """Führt alle Schritte die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind aus.
@@ -89,23 +76,27 @@ class Pipeline(object):
         :return: Wenn ohne fehler ausgeführt `True`, sonst `False`
         :rtype: bool
         """
-        logger.info(self.current_log_message())
         self.__setup()
-        logger.info(f"Started Pipeline {self.id}")
+        self.__start_time = time.time()
+        logger.info(f"Pipeline {self.id} started!")
         try:
             for idx in range(0, self.__steps.step_max):
                 self.__current_step = idx
-                logger.info(self.current_log_message())
+                logger.info(f"Next step: {self.current_step_name()}")
                 self.__steps.sequence[idx]["call"](self.id)
-
+                logger.info(f"Step finished: {self.current_step_name()}!")
             # Set state to ready
             self.__current_step = self.__steps.step_max
+            self.__end_time = time.time()
+            completion_time = round(self.__end_time - self.__start_time, 2)
+            logger.info(f"Pipeline {self.id} finished in {completion_time}s")
             self.__cleanup()
             return True
 
         except Exception:
             # TODO(max)
             self.__current_step = -2
-            logger.exception(f"{self.current_log_message()}")
+            logger.exception(f"An error occurred: ")
+            logger.info(f"Pipeline {self.id} could not be finished.")
             self.__cleanup()
             return False
