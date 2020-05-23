@@ -140,31 +140,3 @@ class PreprocessTest(unittest.TestCase):
             'next_3': 'Samstag'
         }
         self.assertEqual(actual, expected)
-
-    def test_get_city_with_max_temp(self):
-        actual_city, actual_temp, actual_code = transform.get_city_with_max_temp(self.output, 0)
-        city_array = []
-        code_array = []
-        for city in self.output['cities']:
-            if (round(self.output['cities'][city][0]['max_temp']) > actual_temp):
-                assert False
-            if (round(self.output['cities'][city][0]['max_temp']) == actual_temp):
-                city_array.append(city)
-                code_array.append(self.output['cities'][city][0]['code'])
-        for i in range(len(city_array)):
-            if (actual_city == city_array[i]):
-                assert actual_code == code_array[i]
-
-    def test_get_city_with_min_temp(self):
-        actual_city, actual_temp, actual_code = transform.get_city_with_min_temp(self.output, 0)
-        city_array = []
-        code_array = []
-        for city in self.output['cities']:
-            if (round(self.output['cities'][city][0]['min_temp']) < actual_temp):
-                assert False
-            if (round(self.output['cities'][city][0]['min_temp']) == actual_temp):
-                city_array.append(city)
-                code_array.append(self.output['cities'][city][0]['code'])
-        for i in range(len(city_array)):
-            if (actual_city == city_array[i]):
-                assert actual_code == code_array[i]

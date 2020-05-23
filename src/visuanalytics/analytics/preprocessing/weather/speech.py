@@ -230,7 +230,7 @@ def get_data_today_tomorrow_three(data):
     for i in range(5):
         city_name_maximum, maximum_temp, code_maximum = transform.get_city_with_max_temp(data, i)
         city_name_minimum, minimum_temp, code_minimum = transform.get_city_with_min_temp(data, i)
-        avg_temperatur = transform.get_city_with_max_min_avg_temp(data, i)
+        avg_temperatur = transform.get_cities_max_temp(data, i)
         city_name_max = transform.speech.city_name_to_text(city_name_maximum)
         city_name_min = transform.speech.city_name_to_text(city_name_minimum)
         avg_temperatur[0] = transform.speech.city_name_to_text(avg_temperatur[0])
@@ -253,7 +253,7 @@ def get_data_today_tomorrow_three(data):
 def merge_data(data):
     data_for_text = {}
     weekdays_for_dict = transform.get_weekday(data)
-    average_temp, common_code = transform.get_average_per_day(data)
+    average_temp, common_code = transform.get_common_code_per_day(data)
     data_min_max = get_data_today_tomorrow_three(data)
     data_for_text.update({"today": {"weekday": weekdays_for_dict["today"],
                                     "average_temp": average_temp[0],
