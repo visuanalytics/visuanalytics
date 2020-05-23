@@ -1,9 +1,12 @@
 import os
 import shutil
 import time
+import logging
 
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.util import resources
+
+logger = logging.getLogger(__name__)
 
 
 class Pipeline(object):
@@ -51,9 +54,15 @@ class Pipeline(object):
         """
         return self.__steps.sequence[self.__current_step]["name"]
 
-    def __setup(self):
-        print(f"Pipeline {self.id} Started")
+    def current_log_message(self):
+        """Gibt die Log-Message des aktuellen Schritts zurück.
 
+        :return: Log-Message des Aktuellen Schrittes.
+        :rtype: str
+        """
+        return self.__steps.sequence[self.__current_step]["log_msg"]
+
+    def __setup(self):
         self.__start_time = time.time()
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
@@ -62,7 +71,11 @@ class Pipeline(object):
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
 
         self.__end_time = time.time()
-        print(f"Pipeline {self.id} Stoped")
+        if (self.__current_step != self.__steps.step_max):
+            logger.info(f"Pipeline {self.id} could not be finished.")
+        else:
+            completion_time = round(self.__end_time - self.__start_time, 2)
+            logger.info(f"{self.current_log_message()} Pipeline {self.id} in {completion_time}s")
 
     def start(self):
         """Führt alle Schritte die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind aus.
@@ -76,10 +89,13 @@ class Pipeline(object):
         :return: Wenn ohne fehler ausgeführt `True`, sonst `False`
         :rtype: bool
         """
+        logger.info(self.current_log_message())
         self.__setup()
+        logger.info(f"Started Pipeline {self.id}")
         try:
             for idx in range(0, self.__steps.step_max):
                 self.__current_step = idx
+                logger.info(self.current_log_message())
                 self.__steps.sequence[idx]["call"](self.id)
 
             # Set state to ready
@@ -87,9 +103,9 @@ class Pipeline(object):
             self.__cleanup()
             return True
 
-        except Exception as er:
+        except Exception:
             # TODO(max)
-            print("Error", er)
             self.__current_step = -2
+            logger.exception(f"{self.current_log_message()}")
             self.__cleanup()
             return False

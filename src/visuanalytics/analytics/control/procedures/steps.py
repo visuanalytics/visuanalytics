@@ -12,13 +12,15 @@ class Steps(object):
         self._config = config
         # Step_max muss mit der höchsten zahl in sequence übereinstimmen
         self.__step_max = 4
-        self.__sequence = {-2: {"name": "Error"},
-                           -1: {"name": "Not Started"},
-                           0: {"name": "Apis", "call": self.apis},
-                           1: {"name": "Preprocessing", "call": self.preprocessing},
-                           2: {"name": "Processing", "call": self.processing},
-                           3: {"name": "Linking", "call": self.linking},
-                           4: {"name": "Ready"}}
+        self.__sequence = {-2: {"name": "Error", "log_msg": "An error occured:"},
+                           -1: {"name": "Not Started", "log_msg": "Initializing pipeline..."},
+                           0: {"name": "Apis", "call": self.apis, "log_msg": "Retrieving data from APIs..."},
+                           1: {"name": "Preprocessing", "call": self.preprocessing,
+                               "log_msg": "Preprocessing API-data..."},
+                           2: {"name": "Processing", "call": self.processing,
+                               "log_msg": "Processing preprocessed data..."},
+                           3: {"name": "Linking", "call": self.linking, "log_msg": "Linking into final result..."},
+                           4: {"name": "Ready", "log_msg": "Successfully finished"}}
 
     @property
     def step_max(self):
