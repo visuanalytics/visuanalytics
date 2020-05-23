@@ -69,8 +69,7 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
     # today_temp
     text.append(
         f"Die Temperaturen liegen zwischen {data['today']['min_avg_temp']} Grad {data['today']['city_name_min_avg']} "
-        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max_avg']}. "
-        f"Die Durchschnittstemperatur liegt heute bei {data['today']['average_temp']} Grad. ")
+        f"und {data['today']['max_avg_temp']} Grad {data['today']['city_name_max_avg']}. ")
 
     # tomorrow_weather
     text.append(
@@ -80,20 +79,19 @@ def first_weatherforecast_text_to_speech(pipeline_id, data):
     # tomorrow_temp
     text.append(
         f"Die Temperaturen liegen zwischen {data['tomorrow']['min_avg_temp']} Grad {data['tomorrow']['city_name_min_avg']} "
-        f"und {data['tomorrow']['max_avg_temp']} Grad {data['tomorrow']['city_name_max_avg']}. "
-        f"Die Durchschnittstemperatur liegt morgen bei {data['tomorrow']['average_temp']} Grad. ")
+        f"und {data['tomorrow']['max_avg_temp']} Grad {data['tomorrow']['city_name_max_avg']}. ")
 
     next_1 = (f"Am {data['next_1']['weekday']} {data['next_1']['common_code']}.  "
               f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_name_min']} und {data['next_1']['max_temp']} Grad "
-              f"{data['next_1']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_1']['weekday']} bei {data['next_1']['average_temp']} Grad. ")
+              f"{data['next_1']['city_name_max']}. ")
 
     next_2 = (f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
               f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} Grad {data['next_2']['city_name_min']} und {data['next_2']['max_temp']} Grad "
-              f"{data['next_2']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_2']['weekday']} bei {data['next_2']['average_temp']} Grad. ")
+              f"{data['next_2']['city_name_max']}.  ")
 
     next_3 = (f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
               f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_name_min']} und {data['next_3']['max_temp']} Grad "
-              f"{data['next_3']['city_name_max']}. Die Durchschnittstemperatur liegt am {data['next_3']['weekday']} bei {data['next_3']['average_temp']} Grad. ")
+              f"{data['next_3']['city_name_max']}. ")
 
     # three_days
     text.append(f"{next_1} {next_2} {next_3}")

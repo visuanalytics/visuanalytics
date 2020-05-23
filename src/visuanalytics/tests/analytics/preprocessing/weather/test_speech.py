@@ -5,14 +5,14 @@ from visuanalytics.analytics.preprocessing.weather import speech
 
 class SpeechTest(unittest.TestCase):
 
-    def test_air_data_to_text(self):
-        actual = speech.air_data_to_text(58, 1000.27)
-        expected = "58 Prozent", "1000,27 Millibar"
+    def test_rh_data_to_text(self):
+        actual = speech.rh_data_to_text(58)
+        expected = "58 Prozent"
         self.assertEqual(actual, expected)
 
-    def test_wind_data_to_text(self):
-        actual = speech.wind_data_to_text("south-southeast", 252, 0.82764)
-        expected = "Süd Südost", "252 Grad", "0,83 Metern pro Sekunde"
+    def test_wind_cdir_full_data_to_text(self):
+        actual = speech.wind_cdir_full_data_to_text("south-southeast")
+        expected = "Süd Südost"
         self.assertEqual(actual, expected)
 
     def test_random_weather_descriptions(self):
