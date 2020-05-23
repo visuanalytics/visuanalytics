@@ -5,5 +5,4 @@ def get_filepath_mp3(pipeline_id, text):
     tts = gTTS(text, lang='de')
     file_path = resources.new_temp_resource_path(pipeline_id, "mp3")
     tts.save(file_path)
-    print("text: " + text)
     return file_path
