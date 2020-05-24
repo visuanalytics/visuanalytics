@@ -4,9 +4,11 @@ from visuanalytics.analytics.linking import weather as linking
 from visuanalytics.analytics.preprocessing.weather import transform, speech
 from visuanalytics.analytics.processing.weather import speech_single, visualisation_single
 from visuanalytics.analytics.util import date_time, audio
-
+import logging
 
 # TODO(max) handle config not
+
+logger = logging.getLogger(__name__)
 
 
 class SingleWeatherSteps(Steps):
@@ -25,10 +27,15 @@ class SingleWeatherSteps(Steps):
         :type pipeline_id: str
         """
         # if testing get example
-        self.__json_data = api.get_example(single=True) if self.config.get("testing", False) else api.get_forecasts(
-            True,
-            self.config.get(
-                "city_name"))
+
+        if self.config.get("testing", False):
+            logger.info("Using stored example data for testing...")
+            api.get_example(single=True)
+        else:
+            city_name = self.config.get("city_name")
+            logger.info(f"Retrieving forecast data for {city_name} from weatherbit-API...")
+            api.get_forecasts(True, city_name)
+
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -37,12 +44,14 @@ class SingleWeatherSteps(Steps):
         :type pipeline_id: str
         """
         # Preprocess api data
+        logger.info("Transforming local forecast data...")
         data = transform.preprocess_weather_data(self.__json_data, True)
 
         # clear JSON data (evtl. remove)
         self.__json_data = None
 
         # Preprocess visualisation data
+        logger.info("Preprocessing for visualisation...")
         self.__preprocessed_data["date"] = date_time.date_to_weekday(
             transform.get_first_day_single(data, self.config.get(
                 "city_name")))
@@ -61,15 +70,18 @@ class SingleWeatherSteps(Steps):
         data = self.__preprocessed_data
 
         # Generate images
+        city_name = self.config.get("city_name")
+        logger.info(f"Generating {city_name}-forecast images... ")
         self.__processed_data["images"] = visualisation_single.get_all_images_single_city(pipeline_id, data["data"],
-                                                                                          data["date"], self.config.get(
-                "city_name"))
+                                                                                          data["date"], city_name)
 
         # Generate Audio
+        logger.info("Generating {city_name}-forecast audios...")
         self.__processed_data["audios"] = speech_single.get_all_audios_single_city(pipeline_id, data["speech_data"],
-                                                                                   data["date"], self.config.get(
-                "city_name"))
-
+                                                                                   data["date"], city_name)
+        
+        # Get audio length
+        logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         # clean preprocessed data
@@ -81,5 +93,7 @@ class SingleWeatherSteps(Steps):
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
         """
+        city_name = self.config.get("city_name")
+        logger.info("Generating {city_name}-forecast video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
                             self.__processed_data["audio_length"])
