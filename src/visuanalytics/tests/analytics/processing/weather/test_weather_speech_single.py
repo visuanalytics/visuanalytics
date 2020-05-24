@@ -19,7 +19,7 @@ class ProcessTest(unittest.TestCase):
         os.mkdir(resources.get_resource_path("temp/pro_speech_single"))
 
     def test_if_get_all_audios_single_city_generates_audio(self):
-        expected = pro_speech_single.get_all_audios_single_city("pro_speech_single", self.output, self.date[0:5], self.cityname)
+        expected = pro_speech_single.get_all_audios_single_city("pro_speech_single", pre_speech.merge_data_single(self.output, self.cityname), self.date[0:5], self.cityname)
         self.assertEqual(os.path.exists(expected[0]), 1)
         self.assertEqual(os.path.exists(expected[1]), 1)
         self.assertEqual(os.path.exists(expected[2]), 1)

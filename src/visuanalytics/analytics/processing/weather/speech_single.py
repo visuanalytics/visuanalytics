@@ -23,14 +23,13 @@ def get_all_audios_single_city(pipeline_id, data, date, cityname):
     :param cityname: String
     :return: Gibt für jede generierte Audiodatei einen Pfad an, wo diese zu finden ist.
     """
-    return [_generate_first_day_audio(pipeline_id, data[cityname][0], date[0], cityname),
-            _generate_second_day_audio(pipeline_id, data[cityname][1], date[1], cityname),
-            _generate_three_days_audio(pipeline_id, data[cityname][2], date[2], cityname),
-            _generate_three_days_audio(pipeline_id, data[cityname][3], date[3], cityname),
-            _generate_three_days_audio(pipeline_id, data[cityname][4], date[4], cityname)]
+    return [_generate_first_day_audio(pipeline_id, data[0], date[0], cityname),
+            _generate_second_day_audio(pipeline_id, data[1], date[1], cityname),
+            _generate_three_days_audio(pipeline_id, data[2], date[2], cityname),
+            _generate_three_days_audio(pipeline_id, data[3], date[3], cityname),
+            _generate_three_days_audio(pipeline_id, data[4], date[4], cityname)]
 
-def _generate_first_day_audio(pipeline_id, data_for_text, date, cityname):
-    data = speech.merge_data_single(data_for_text)
+def _generate_first_day_audio(pipeline_id, data, date, cityname):
     text = (
         f"In {cityname} {data['code']}. Die Höchstwerte erreichen am heutigen {date} {data['max_temp']}. "
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
@@ -43,8 +42,7 @@ def _generate_first_day_audio(pipeline_id, data_for_text, date, cityname):
     return file_path
 
 
-def _generate_second_day_audio(pipeline_id, data_for_text, date, cityname):
-    data = speech.merge_data_single(data_for_text)
+def _generate_second_day_audio(pipeline_id, data, date, cityname):
     text = (
         f"In {cityname} {data['code']}. Die Höchstwerte erreichen am morgigen {date} {data['max_temp']}. "
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
@@ -56,8 +54,7 @@ def _generate_second_day_audio(pipeline_id, data_for_text, date, cityname):
     return file_path
 
 
-def _generate_three_days_audio(pipeline_id, data_for_text, date, cityname):
-    data = speech.merge_data_single(data_for_text)
+def _generate_three_days_audio(pipeline_id, data, date, cityname):
     text = (
         f"Am {date} {data['code']} bei Temperaturen von {data['min_temp']} bis {data['max_temp']}. "
         f"Die gefühlten Temperaturen liegen in {cityname} zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
