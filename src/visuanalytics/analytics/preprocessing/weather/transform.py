@@ -26,48 +26,51 @@ def preprocess_weather_data(api_data, single=False):
 
     :param api_data: Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
     :type api_data: dict
+    :param single: Boolean-Wert, welcher angibt, ob "summaries" im dictionary enthalten sein soll oder nicht
+    :type single: bool
 
     :returns:
         Ein Dictionary folgender Struktur:
         {
           "cities" : {
-              "muenchen" : [
+              "Kiel" : [
                 {
-                  "temp": 10,
-                  "temp_high": 15,
-                  "temp_low" : 2,
-                  "temp_max" : 17,
-                  "temp_min" : 0,
-                  "app_min_temp": -2.3,
-                  "app_max_temp": 18.3,
-                  "wind_dir": 252,
-                  "icon" : "c02d"
-                  "code" : "802",
-                  "date_time" :
-                  "wind_cdir": "WSW",
-                  "wind_dir": 252,
-                  "sunrise_ts": 1588823718,
-                  "sunset_ts": 1588877925
+                  "valid_date": '2020-05-19',
+                  "max_temp": 25,
+                  "min_temp" : 11.7,
+                  "app_max_temp " : 24.2,
+                  "app_min_temp" : 11.7,
+                  "wind_cdir_full" : 'north-northeast',
+                  "wind_spd": 3.37202,
+                  "icon": 'c02d',
+                  "code": 801,
+                  "sunrise_ts": 1589860056,
+                  "sunset_ts": 1589915169,
+                  "rh": 51,
+                  "pop: 0"
                 },
-                ...
+               ...
               ],
               ...
           },
           "summaries" : [
             {
-              "temp_min" : -2,
-              "temp_max" : 24,
-              "temp_avg" : 11,
+              "temp_min" : 6.5,
+              "temp_max" : 25,
+              "temp_avg" : 21.436842105263157,
               "common_icon" : c02d,
-              "common_code" : 802
+              "common_code" : 804
             },
             ...
           ]
         }
-        "cities" enthält zu jeder Stadt vier "Unter-Dictionaries", welche wiederum die Wetterdaten für je einen Tag
-        enthalten (insgesamt vier Tage).
-        "summaries" enthält für jeden der vier Tage ein Unter-Dictionary, welche die zusammenfassenden Daten für je einen
-        Tag enthalten.
+
+        "cities" enthält zu jeder Stadt ("Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
+        "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Mainz",
+        "Regensburg") fünf "Unter-Dictionaries", welche wiederum die Wetterdaten für je einen Tag
+        enthalten (today, tomorrow, next_1, next_2, next_3).
+        "summaries" enthält für jeden der fünf Tage ein Unter-Dictionary, welches jeweils die zusammenfassenden Daten für einen Tag angibt
+
     :rtype: dict
 
     :raises:
@@ -142,81 +145,35 @@ def get_min_temp(data, date_in_future):
     return f"{min_temp}\u00B0"
 
 
-def get_city_with_max_temp(data, date_in_future):
+def get_cities_max_temp(data, date_in_future):
     """
-    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der höchsten Temperatur herauszufinden
+    Methode, um aus Dictionary data (erstellt in der Methode preprocess_weather_data) von allen Höchsttemperaturen der Städte (Teilmenge von 'cities':
+    "Konstanz", "München", "Nürnberg", "Mainz", "Gießen", "Dresden", "Hannover", "Bremen", "Hamburg", "Berlin") an einem bestimmten Tag
+    die Höchste und Niedrigste herauszufinden. Zusätzlich zu diesen Temperaturen, werden die dazugehörigen Städte (wenn mehrere Städte, dann zufällig
+    ausgewählt) und der Code zum passenden Icon zurückgegeben.
 
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
-    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
-    :return: eine Stadt, die an diesem Tag die Höchsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Höchsttemperatur und das zugehörige Icon
+    :param date_in_future: Tag in der Zukunft; 0: today, 1: tomorrow, 2, next_1, 3: next_2, 4: next_3
+    :return: Array [eine Stadt, die an diesem Tag die höchste Höchsttemperatur hat; höchste Höchsttemperatur; Iconcode zur höchsten Höchsttemperatur;
+            eine Stadt, die an diesem Tag die niedrigste Höchstschnittstemperatur hat; niedrigste Höchsttemperatur; Iconcode zur niedrigsten Höchsttemperatur]
 
     Example:
-    city_with_max_temp = get_city_with_max_temp(data, 0)
-    print(city_with_max_temp) -> "muenchen", 23, 801
     """
 
-    max_temp = round(data['summaries'][date_in_future]['temp_max'])
     cities_with_max_temp = []
-    for city in data['cities']:
-        if round(data['cities'][city][date_in_future]['max_temp']) == max_temp:
-            cities_with_max_temp.append(city)
-    return_city = random.choice(cities_with_max_temp)
-    return return_city, max_temp, data['cities'][return_city][date_in_future]['code']
-
-
-def get_city_with_min_temp(data, date_in_future):
-    """
-    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
-
-    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
-    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
-    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
-
-    Example:
-    city_with_max_temp = get_city_with_min_temp(data, 0)
-    print(city_with_min_temp) -> "berlin", 19, c02d
-    """
-
-    min_temp = round(data['summaries'][date_in_future]['temp_min'])
-    cities_with_min_temp = []
-    for city in data['cities']:
-        if round(data['cities'][city][date_in_future]['min_temp']) == min_temp:
-            cities_with_min_temp.append(city)
-
-    return_city = random.choice(cities_with_min_temp)
-    return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
-
-
-def get_city_with_max_min_avg_temp(data, date_in_future):
-    """
-    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der höchsten Durchschnittstemperatur herauszufinden
-
-    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
-    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
-    :return: eine Stadt, die an diesem Tag die höchste Durchschnittstemperatur hat (wenn mehrere Städte gefunden werden,
-            wird eine zurfällig ausgesucht), die höchste Durchschnittstemperatur und das zugehörige Icon.
-            Und eine Stadt, die an diesem Tag die niedrigste Durchschnittstemperatur hat (wenn mehrere Städte gefunden werden,
-            wird eine zurfällig ausgesucht), die niedrigste Durchschnittstemperatur und das zugehörige Icon.
-
-    Example:
-    [city_name_max_avg, max_avg_temp, code_max_avg, city_name_min_avg, min_avg_temp, code_min_avg] = get_city_with_max_min_avg_temp(data, 0)
-    print(city_with_max_temp) -> "muenchen", 23, 801
-    """
-
-    cities_with_avg_temp = []
-    cities_with_max_avg_temp = []
-    cities_with_min_avg_temp = []
+    cities_with_highest_max_temp = []
+    cities_with_lowest_max_temp = []
     for city in visualisation.LOCATIONS_TOMOROW:
-        cities_with_avg_temp.append(round(data['cities'][city[0]][date_in_future]['max_temp']))
-    maxtemp_temp = max(cities_with_avg_temp)
-    mintemp_temp = min(cities_with_avg_temp)
+        cities_with_max_temp.append(round(data['cities'][city[0]][date_in_future]['max_temp']))
+    highest_max_temp = max(cities_with_max_temp)
+    lowest_max_temp = min(cities_with_max_temp)
     for city in visualisation.LOCATIONS_TOMOROW:
-        if round(data['cities'][city[0]][date_in_future]['max_temp']) == maxtemp_temp:
-            cities_with_max_avg_temp.append(city[0])
-        if round(data['cities'][city[0]][date_in_future]['max_temp']) == mintemp_temp:
-            cities_with_min_avg_temp.append(city[0])
-    return_city_max = random.choice(cities_with_max_avg_temp)
-    return_city_min = random.choice(cities_with_min_avg_temp)
+        if round(data['cities'][city[0]][date_in_future]['max_temp']) == highest_max_temp:
+            cities_with_highest_max_temp.append(city[0])
+        if round(data['cities'][city[0]][date_in_future]['max_temp']) == lowest_max_temp:
+            cities_with_lowest_max_temp.append(city[0])
+    return_city_max = random.choice(cities_with_highest_max_temp)
+    return_city_min = random.choice(cities_with_lowest_max_temp)
 
     return [return_city_max, round(data['cities'][return_city_max][date_in_future]['max_temp']),
             data['cities'][return_city_max][date_in_future]['code'],
@@ -224,13 +181,16 @@ def get_city_with_max_min_avg_temp(data, date_in_future):
             data['cities'][return_city_min][date_in_future]['code']]
 
 
-def get_average_per_day(data):
-    avg_temp = []
+def get_common_code_per_day(data):
+    """
+    Methode, die aus Dictionary (erstellt in der Methode preprocess_weather_data) aus 'summaries' für jeden Tag den Common Code herausfiltert,
+    also ein Array aus den Common Codes für die Tage today, tomorrow, next_1, next_2, next_2 zurückgibt
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :return: Array [common_code_today, common_code_tomorrow, common_code_next_1, common_code_next_2, common_code_next_3)
+    """
     common_code = []
     for summary in range(5):
-        avg_temp_data = round(data['summaries'][summary]['temp_avg'])
-        avg_temp.append(str(avg_temp_data))
         common_code_data = data['summaries'][summary]['common_code']
         common_code.append(speech.random_weather_descriptions(common_code_data))
 
-    return avg_temp, common_code
+    return common_code
