@@ -3,7 +3,7 @@
 import json
 import os
 
-CONFIG_LOCATION = "../../config.py"
+CONFIG_LOCATION = "../../config.json"
 CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
 
 
