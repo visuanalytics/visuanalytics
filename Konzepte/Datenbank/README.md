@@ -6,7 +6,7 @@
 
 ## Erklärung
 
-Für die Datenbank wird eine **SQLite** verwendet.
+Für die Datenbank wird eine **SQLite** Datenbank verwendet.
 
 > Eine spätere anbindung an einen **SQL** Server ist aber einfach möglich.
 
