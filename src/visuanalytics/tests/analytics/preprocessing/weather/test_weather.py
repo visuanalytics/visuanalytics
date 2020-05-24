@@ -141,30 +141,27 @@ class PreprocessTest(unittest.TestCase):
         }
         self.assertEqual(actual, expected)
 
-    def test_get_city_with_max_temp(self):
-        actual_city, actual_temp, actual_code = transform.get_city_with_max_temp(self.output, 0)
-        city_array = []
-        code_array = []
-        for city in self.output['cities']:
-            if (round(self.output['cities'][city][0]['max_temp']) > actual_temp):
+    def test_get_cities_max_temp(self):
+        cities_highest_max_temp = []
+        codes_highest_max_temp = []
+        cities_lowest_max_temp = []
+        codes_lowest_max_temp = []
+        cities_max_temp = transform.get_cities_max_temp(self.output, 0)
+        print(cities_max_temp)
+        print(cities_max_temp[1])
+        for city in visualisation.LOCATIONS_TOMOROW:
+            if ((round(self.output['cities'][city[0]][0]['max_temp']) > cities_max_temp[1]) | (
+                    round(self.output['cities'][city[0]][0]['max_temp']) < cities_max_temp[4])):
                 assert False
-            if (round(self.output['cities'][city][0]['max_temp']) == actual_temp):
-                city_array.append(city)
-                code_array.append(self.output['cities'][city][0]['code'])
-        for i in range(len(city_array)):
-            if (actual_city == city_array[i]):
-                assert actual_code == code_array[i]
-
-    def test_get_city_with_min_temp(self):
-        actual_city, actual_temp, actual_code = transform.get_city_with_min_temp(self.output, 0)
-        city_array = []
-        code_array = []
-        for city in self.output['cities']:
-            if (round(self.output['cities'][city][0]['min_temp']) < actual_temp):
-                assert False
-            if (round(self.output['cities'][city][0]['min_temp']) == actual_temp):
-                city_array.append(city)
-                code_array.append(self.output['cities'][city][0]['code'])
-        for i in range(len(city_array)):
-            if (actual_city == city_array[i]):
-                assert actual_code == code_array[i]
+            if (round(self.output['cities'][city[0]][0]['max_temp']) == cities_max_temp[1]):
+                cities_highest_max_temp.append(city)
+                codes_highest_max_temp.append(self.output['cities'][city[0]][0]['code'])
+            if (round(self.output['cities'][city[0]][0]['max_temp']) == cities_max_temp[4]):
+                cities_lowest_max_temp.append(city)
+                codes_lowest_max_temp.append(self.output['cities'][city[0]][0]['code'])
+        for i in range(len(cities_highest_max_temp)):
+            if (cities_max_temp[0] == cities_highest_max_temp[i]):
+                assert cities_max_temp[2] == codes_highest_max_temp[i]
+        for i in range(len(cities_lowest_max_temp)):
+            if (cities_max_temp[3] == cities_lowest_max_temp[i]):
+                assert cities_max_temp[5] == codes_lowest_max_temp[i]

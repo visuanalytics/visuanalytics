@@ -84,8 +84,9 @@ class WeatherSteps(Steps):
 
         # Generate Audio
         logger.info("Generating Germany-forecast audio...")
-        self.__processed_data["audios"] = speech.first_weatherforecast_text_to_speech(pipeline_id, data["merge_data"])
+        self.__processed_data["audios"] = speech.get_all_audios_germany(pipeline_id, data["merge_data"])
         logger.info("Determining audio length...")
+
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         # clean preprocessed data
