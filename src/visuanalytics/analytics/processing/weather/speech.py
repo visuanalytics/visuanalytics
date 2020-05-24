@@ -22,28 +22,30 @@ def get_all_audios_germany(pipeline_id, data):
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
-    :param data: Dictionary mit relevanten Wetterdaten aus der API, wird in preprocessing.weather.speech.merge_data erstellt
-    :return: [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
-            file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
+    :param data: Dictionary mit relevanten Wetterdaten aus der API (erstellt in der Methode
+    merge_data in preprocessing/weather/speech.py)
 
     Example:
-    data_for_text = {'today': {'weekday': 'Samstag', 'common_code': 804,
-                'city_name_max': 'in der Hafenstadt Kiel', 'max_temp': '19', 'code_max': 'ist es leicht bewölkt',
-                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '0', 'code_min': 'ist es vereinzelt bewölkt'},
+    data = {'today': {'weekday': 'Samstag', 'common_code': 804,
+                'city_highest_max': 'in der Hafenstadt Kiel', 'temp_highest_max': '19', 'code_highest_max': 'ist es leicht bewölkt',
+                'city_lowest_max': 'in Gießen an der Lahn', 'temp_lowest_max': '0', 'code_lowest_max': 'ist es vereinzelt bewölkt'},
             'tomorrow': {'weekday': 'Sonntag', 'common_code': 803,
-                'city_name_max': 'an der Ostsee', 'max_temp': '20', 'code_max': 'ist es leicht bewölkt',
-                'city_name_min': 'in Gießen', 'min_temp': '4', 'code_min': 'sind vereinzelte Wolken am Himmel'},
+                'city_highest_max': 'an der Ostsee', 'temp_highest_max': '20', 'code_highest_max': 'ist es leicht bewölkt',
+                'city_lowest_max': 'in Gießen', 'temp_lowest_max': '4', 'code_lowest_max': 'sind vereinzelte Wolken am Himmel'},
             'next_1': {'weekday': 'Montag', 'common_code': 801,
-                'city_name_max': 'im Westen Deutschlands', 'max_temp': '23', 'code_max': 'ist die Bewölkung durchbrochen',
-                'city_name_min': 'in Gießen an der Lahn', 'min_temp': '4', 'code_min': 'sind nur wenige Wolken am Himmel'},
+                'city_highest_max': 'im Westen Deutschlands', 'temp_highest_max': '23', 'code_highest_max': 'ist die Bewölkung durchbrochen',
+                'city_lowest_max': 'in Gießen an der Lahn', 'temp_lowest_max': '4', 'code_lowest_max': 'sind nur wenige Wolken am Himmel'},
             'next_2': {'weekday': 'Dienstag', 'common_code': 803,
-                'city_name_max': 'in Düsseldorf', 'max_temp': '23', 'code_max': 'sind vereinzelte Wolken am Himmel',
-                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'sind durchbrochene Wolken am Himmel'},
+                'city_highest_max': 'in Düsseldorf', 'temp_highest_max': '23', 'code_highest_max': 'sind vereinzelte Wolken am Himmel',
+                'city_lowest_max': 'in Hannover', 'temp_lowest_max': '7', 'code_lowest_max': 'sind durchbrochene Wolken am Himmel'},
             'next_3': {'weekday': 'Mittwoch', 'common_code': 802,
-                'city_name_max': 'im Westen Deutschlands', 'max_temp': '25', 'code_max': 'wird es heiter mit klarem Himmel',
-                'city_name_min': 'in Hannover', 'min_temp': '7', 'code_min': 'ist es vereinzelt bewölkt'}}
-    text = first_weatherforecast_text_to_speech(data_for_text)
-    print(text)
+                'city_highest_max': 'im Westen Deutschlands', 'temp_highest_max': '25', 'code_highest_max': 'wird es heiter mit klarem Himmel',
+                'city_lowest_max': 'in Hannover', 'temp_lowest_max': '7', 'code_lowest_max': 'ist es vereinzelt bewölkt'}}
+
+    :return: Array [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
+            file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
+
+
     """
     text = []
 
@@ -51,35 +53,35 @@ def get_all_audios_germany(pipeline_id, data):
 
     # today_weather
     text.append(
-        f"Am heutigen {data['today']['weekday']} {data['today']['code_max']} {data['today']['city_name_max']}. "
-        f"{data['today']['city_name_min']} {data['today']['code_min']}. ")
+        f"Am heutigen {data['today']['weekday']} {data['today']['code_highest_max']} {data['today']['city_highest_max']}. "
+        f"{data['today']['city_lowest_max']} {data['today']['code_lowest_max']}. ")
 
     # today_temp
     text.append(
-        f"Die Temperaturen liegen zwischen {data['today']['min_temp']} Grad {data['today']['city_name_min']} "
-        f"und {data['today']['max_temp']} Grad {data['today']['city_name_max']}. ")
+        f"Die Temperaturen liegen zwischen {data['today']['temp_lowest_max']} Grad {data['today']['city_lowest_max']} "
+        f"und {data['today']['temp_highest_max']} Grad {data['today']['city_highest_max']}. ")
 
     # tomorrow_weather
     text.append(
-        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_min']} {data['tomorrow']['city_name_min']}. "
-        f"{data['tomorrow']['city_name_max']} {data['tomorrow']['code_max']}. ")
+        f"Am morgigen {data['tomorrow']['weekday']} {data['tomorrow']['code_lowest_max']} {data['tomorrow']['city_lowest_max']}. "
+        f"{data['tomorrow']['city_highest_max']} {data['tomorrow']['code_highest_max']}. ")
 
     # tomorrow_temp
     text.append(
-        f"Die Temperaturen liegen zwischen {data['tomorrow']['min_temp']} Grad {data['tomorrow']['city_name_min']} "
-        f"und {data['tomorrow']['max_temp']} Grad {data['tomorrow']['city_name_max']}. ")
+        f"Die Temperaturen liegen zwischen {data['tomorrow']['temp_lowest_max']} Grad {data['tomorrow']['city_lowest_max']} "
+        f"und {data['tomorrow']['temp_highest_max']} Grad {data['tomorrow']['city_highest_max']}. ")
 
     next_1 = (f"Am {data['next_1']['weekday']} {data['next_1']['common_code']}.  "
-              f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_name_min']} und {data['next_1']['max_temp']} Grad "
-              f"{data['next_1']['city_name_max']}. ")
+              f"Die Temperaturen liegen zwischen {data['next_1']['temp_lowest_max']} Grad {data['next_1']['city_lowest_max']} und {data['next_1']['temp_highest_max']} Grad "
+              f"{data['next_1']['city_highest_max']}. ")
 
     next_2 = (f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
-              f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} Grad {data['next_2']['city_name_min']} und {data['next_2']['max_temp']} Grad "
-              f"{data['next_2']['city_name_max']}.  ")
+              f"Die Temperaturen liegen zwischen {data['next_2']['temp_lowest_max']} Grad {data['next_2']['city_lowest_max']} und {data['next_2']['temp_highest_max']} Grad "
+              f"{data['next_2']['city_highest_max']}.  ")
 
     next_3 = (f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
-              f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_name_min']} und {data['next_3']['max_temp']} Grad "
-              f"{data['next_3']['city_name_max']}. ")
+              f"Die Temperaturen liegen zwischen {data['next_3']['temp_lowest_max']} Grad {data['next_3']['city_lowest_max']} und {data['next_3']['temp_highest_max']} Grad "
+              f"{data['next_3']['city_highest_max']}. ")
 
     # three_days
     text.append(f"{next_1} {next_2} {next_3}")
