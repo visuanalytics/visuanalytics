@@ -122,8 +122,8 @@ def get_first_day(data):
     return data['cities']['Kiel'][0]['valid_date']
 
 
-def get_first_day_single(data, cityname):
-    return data[cityname][0]['valid_date']
+def get_first_day_single(data, city_name):
+    return data[city_name][0]['valid_date']
 
 
 def get_weather_icon(data, location, date_in_future):
