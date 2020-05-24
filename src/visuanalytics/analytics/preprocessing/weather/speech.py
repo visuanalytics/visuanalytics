@@ -386,7 +386,7 @@ def merge_data(data):
                                      "code_min_avg": data_min_max[4]["code_min_avg"]}})
     return data_for_text
 
-def merge_data_single(data, cityname):
+def merge_data_single(data, city_name):
     """ Zusammenführen der einzelnen Wetterdaten einer Stadt (5 Tage) zu einem Dictionary mit Satzteilen.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API
@@ -394,18 +394,18 @@ def merge_data_single(data, cityname):
     """
     data_list = []
     for day in range(0, 5):
-        date_sunset, time_sunset, time_text_sunset = date_time.time_change_format(data[cityname][day]['sunset_ts'])
-        date_sunrise, time_sunrise, time_text_sunrise = date_time.time_change_format(data[cityname][day]['sunrise_ts'])
-        data_for_text = {"max_temp": f"{str(round(data[cityname][day]['max_temp']))} Grad",
-                         "min_temp": f"{str(round(data[cityname][day]['min_temp']))} Grad",
-                         "app_max_temp": f"{str(round(data[cityname][day]['app_max_temp']))} Grad",
-                         "app_min_temp": f"{str(round(data[cityname][day]['app_min_temp']))} Grad",
-                         "wind_cdir_full": wind_cdir_full_data_to_text(data[cityname][day]['wind_cdir_full']),
-                         "wind_spd": wind_spd_data_to_text(data[cityname][day]['wind_spd']),
-                         "code": random_weather_descriptions(data[cityname][day]['code']),
+        date_sunset, time_sunset, time_text_sunset = date_time.time_change_format(data[city_name][day]['sunset_ts'])
+        date_sunrise, time_sunrise, time_text_sunrise = date_time.time_change_format(data[city_name][day]['sunrise_ts'])
+        data_for_text = {"max_temp": f"{str(round(data[city_name][day]['max_temp']))} Grad",
+                         "min_temp": f"{str(round(data[city_name][day]['min_temp']))} Grad",
+                         "app_max_temp": f"{str(round(data[city_name][day]['app_max_temp']))} Grad",
+                         "app_min_temp": f"{str(round(data[city_name][day]['app_min_temp']))} Grad",
+                         "wind_cdir_full": wind_cdir_full_data_to_text(data[city_name][day]['wind_cdir_full']),
+                         "wind_spd": wind_spd_data_to_text(data[city_name][day]['wind_spd']),
+                         "code": random_weather_descriptions(data[city_name][day]['code']),
                          "sunset_ts": time_text_sunset,
                          "sunrise_ts": time_text_sunrise,
-                         "rh": rh_data_to_text(data[cityname][day]['rh']),
-                         "pop": pop_data_to_text(data[cityname][day]['pop'])}
+                         "rh": rh_data_to_text(data[city_name][day]['rh']),
+                         "pop": pop_data_to_text(data[city_name][day]['pop'])}
         data_list.append(data_for_text)
     return data_list

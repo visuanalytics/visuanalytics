@@ -1,5 +1,7 @@
 from gtts import gTTS
+
 from visuanalytics.analytics.util import resources
+
 
 def get_filepath_mp3(pipeline_id, text):
     tts = gTTS(text, lang='de')

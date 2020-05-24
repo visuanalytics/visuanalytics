@@ -1,7 +1,7 @@
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.linking import weather as linking
-from visuanalytics.analytics.preprocessing.weather import transform
+from visuanalytics.analytics.preprocessing.weather import transform, speech
 from visuanalytics.analytics.processing.weather import speech_single, visualisation_single
 from visuanalytics.analytics.util import date_time, audio
 
@@ -28,7 +28,7 @@ class SingleWeatherSteps(Steps):
         self.__json_data = api.get_example(single=True) if self.config.get("testing", False) else api.get_forecasts(
             True,
             self.config.get(
-                "cityname"))
+                "city_name"))
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -45,7 +45,11 @@ class SingleWeatherSteps(Steps):
         # Preprocess visualisation data
         self.__preprocessed_data["date"] = date_time.date_to_weekday(
             transform.get_first_day_single(data, self.config.get(
-                "cityname")))
+                "city_name")))
+
+        # Preprocess speech data
+        self.__preprocessed_data["speech_data"] = speech.merge_data_single(data, self.config["city_name"])
+
         self.__preprocessed_data["data"] = data
 
     def processing(self, pipeline_id: str):
@@ -59,12 +63,13 @@ class SingleWeatherSteps(Steps):
         # Generate images
         self.__processed_data["images"] = visualisation_single.get_all_images_single_city(pipeline_id, data["data"],
                                                                                           data["date"], self.config.get(
-                "cityname"))
+                "city_name"))
 
         # Generate Audio
-        self.__processed_data["audios"] = speech_single.get_all_audios_single_city(pipeline_id, data["data"],
+        self.__processed_data["audios"] = speech_single.get_all_audios_single_city(pipeline_id, data["speech_data"],
                                                                                    data["date"], self.config.get(
-                "cityname"))
+                "city_name"))
+
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         # clean preprocessed data
