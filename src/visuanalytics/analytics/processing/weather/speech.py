@@ -22,8 +22,7 @@ def get_all_audios_germany(pipeline_id, data):
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
-    :param data: Dictionary mit relevanten Wetterdaten aus der API (erstellt in der Methode
-    merge_data in preprocessing/weather/speech.py)
+    :param data: Dictionary mit relevanten Wetterdaten aus der API (erstellt in der Methode merge_data in preprocessing/weather/speech.py)
 
     Example:
     data = {'today': {'weekday': 'Samstag', 'common_code': 804,

@@ -110,7 +110,7 @@ def wind_spd_data_to_text(wind_spd):
     Die Umwandlung in einen Satzteil in einem String dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
     :param wind_spd: Angabe der Windgeschwindigkeit in m/s (Wert aus der Weatherbit-API)
-    :return: wind_spd_text: String mit z.B. "0,83 Metern pro Sekunde"
+    :return: String mit z.B. "0,83 Metern pro Sekunde"
 
     Example:
         wind_spd = 0.827464
