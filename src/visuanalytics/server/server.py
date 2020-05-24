@@ -2,9 +2,11 @@
 
 Enthält die Startkonfiguration für den Flask-Server.
 """
+
 from flask import Flask
 
 from visuanalytics.server.api import api
+from visuanalytics.server.db import db
 from visuanalytics.server.home import home_views
 
 
@@ -18,14 +20,18 @@ def create_app():
     :rtype: Flask
     """
 
-    # create and configure the app
+    # create
     app = Flask(__name__, instance_relative_config=True)
+
+    # configure the app
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
 
     # load the instance config, if it exists
     app.config.from_pyfile('config.py', silent=True)
+
+    db.init_db(app)
 
     # Register the Blueprints
     api.register_all(app)
