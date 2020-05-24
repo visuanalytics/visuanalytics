@@ -20,7 +20,7 @@ WEATHERBIT_URL = "https://api.weatherbit.io/v2.0/forecast/daily?"
 WEATHERBIT_API_KEY = config_manager.get_private()["api_keys"]["weatherbit"]
 
 
-def get_forecasts(single=False, cityname="Giessen"):
+def get_forecasts(single=False, city_name="Giessen"):
     # TODO (David): Die Städtenamen als Parameter übergeben statt eine globale Konstante zu verwenden
     """
     Bezieht die 16-Tage-Wettervorhersage für 15 Städte Deutschlands und bündelt sie in einer Liste.
@@ -37,7 +37,7 @@ def get_forecasts(single=False, cityname="Giessen"):
     """
     json_data = []
     if single:
-        json_data.append(_fetch(requests.get(_forecast_request(cityname))))
+        json_data.append(_fetch(requests.get(_forecast_request(city_name))))
     else:
         for c in CITIES:
             json_data.append(_fetch(requests.get(_forecast_request(c))))
