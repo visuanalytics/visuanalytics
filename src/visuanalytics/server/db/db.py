@@ -29,7 +29,6 @@ def init_db(app):
         )
 
         with app.open_resource('db/schema.sql') as f:
-            print("F")
             db.executescript(f.read().decode('utf8'))
 
         db.close()
