@@ -1,16 +1,51 @@
-# Vergleich von gtts mit pico2wave
+# Vergleich von gTTS mit pico2wave
 
-- gtts ist eine Python-Library zur Umwandlung Text-to-Speech
-- pico2wave ist ein Kommandozeilentool für Linux/Unix-User
+#### Audiodateien erstellen
+- gTTS: siehe Python-Skript unter Data-Analytics/Organisation/Recherche/pico2wave/Vergleich_gtts_pico2wave/Testaudios_Vergleich.py  
+- pico2wave: siehe README unter Data-Analytics/Organisation/Recherche/pico2wave/README.md
 
-## Audiodatei mit gtts erstellen
-siehe Python-Skript unter Data-Analytics/Organisation/Recherche/pico2wave/Vergleich_gtts_pico2wave/Testaudios_Vergleich.py
+#### Allgemeiner Vergleich:
+- gTTS: Python-Library und Kommandozeilentool, wobei die API von Google Translate verwendet wird
+- pico2wave:Kommandozeilentool für Linux/Unix-User, welches von dem Unternehmen SVOX bereitgestellt wird
 
-## Audiodatei mit pico2wave erstellen
-"""
-pico2wave --lang de-DE --wave /home/student/Documents/Wetter.wav "Am Freitag ist es im Süden und Osten erst noch recht freundlich, von Westen her verdichten sich aber die Wolken und vom Nordwesten bis in die Mitte gibt es zum Teil kräftigen Regen, vereinzelt auch Gewitter. Höchstwerte 18 bis 30 Grad. Am Samstagvormittag ziehen die dichten Wolken samt Regen im Osten ab, während es in der Mitte weiterhin unverändert stark bewölkt ist und besonders in der südlichen Mitte weiter regnet oder schauert. Im Süden ist es zum Teil noch aufgelockert, hier entstehen allerdings erste Schauer oder Gewitter. Diese verstärken sich im Tagesverlauf weiter und bevorzugt zwischen Schwarzwald und Bayerischen Wald gibt es tagsüber längere Zeit Regen, der durchaus auch gewittrig ist. In den restlichen Landesteilen gibt es ab und zu Schauer sowie einzelne kurze Gewitter und dazwischen zeigt sich vor allem am Nachmittag auch mal die Sonne. Windig bei 14 bis 23 Grad. Am Sonntag ist es in weiten Landesteilen weiterhin wechselhaft und windig mit mehr Wolken als Sonne und Regen oder Schauern, vereinzelt mit Blitz und Donner. Im Südwesten ist es wieder freundlicher. 13 bis 22 Grad. Am Montag bleibt es vor allem nach Osten und Nordosten hin noch wechselhaft mit Schauern. Sonst ist es bei einem Mix aus Sonne und Wolken meist trocken. 13 bis 24 Grad. " 
-"""
+#### Vergleich mögliche Sprachen:
+- gTTS: 78 verschiedene Sprachen, darunter 14 Mal English (z.B. English (Australia) oder English (Ghana)), 3 Mal Spanish, German und Sprachen wie Czech oder Javanese
+- pico2wave: deutsch, englisch/amerikanisch, italienisch, französisch und spanisch
 
-## Geschwindigkeit
+#### Vergleich Audioformate:
+- gTTS: mp3-Datei
+- pico2wave:wav-Datei
 
-## Aussprache
+#### Vorteile gTTS:
+- eine Python-Library, die man direkt einbinden kann, sodass man die Funktionen des Moduls verwenden kann
+- einfaches Erstellen der Audiodateien (Dreizeiler)
+- viele verschiedene Einstellungen möglich: unterschiedliche Sprachen (lang='de'); Sprechgeschwindigkeit (slow=False oder slow=True); Sprachüberprüfung (lang_check=True);
+  Modul, um Text vorzuverarbeiten, um somit Aussprache zu optimieren (gtts.tokenizer mit den Funktionen pre_processor_func und tokenizer_func)
+- verschiedene Fehlermeldungen, die abgefangen werden können (AssertionError, ValueError, RuntimeError)
+- einzelne Wörter werden richtig und gut betont
+- deutliche Aussprache
+- gute Audioqualität 
+- intellektuelle (arrogante) Stimme, so wie unser Programm
+
+#### Nachteile gTTS:
+- teilweise unnatürlicher, stockender Redefluss
+
+#### Vorteile pico2wave:
+- sehr kompaktes, einfach zu bedienendes Kommandozeilenprogramm
+- guter Redefluss
+
+#### Nachteile pico2wave:
+- keine direkte Python-Library, man müsste ein Skript schreiben, um es einzubinden
+- bringt keine weiteren Einstellungsmöglichkeiten/ Funktionen mit sich
+- Aussprache manchmal etwas monoton, kaum Betonungen
+
+#### Begründung Entscheidung für gTTS:  
+
+Wir haben uns nach einem genaueren Vergleich der beiden TTS-Programme gTTS und pico2wave für das Programm gTTS entschieden. Dieses ließ sich einfach als Python-Library einbinden, sodass wir es direkt verwenden konnten. 
+Ebenso fanden wir es gut, dass die Bibliothek eine umfangreiche Funktionalität aufweist. So lassen sich viele Kleinigkeiten optimal für unsere Zwecke anpassen.
+Außerdem haben uns im Großen und Ganzen die erzeugten Audiodateien von der Aussprache, der Betonung und der generellen Audioqualität besser gefallen.
+
+#### Quellen
+
+https://wiki.ubuntuusers.de/Sprachausgabe/  
+https://gtts.readthedocs.io/en/latest/module.html
