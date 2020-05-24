@@ -29,10 +29,13 @@ def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekda
     # TODO(max) check if just on from date, weekday or daily
 
     with db.connect() as con:
-        con.execute("insert into schedule(job_id, date, time, weekday, daily) values (?, ?, ?, ?, ?)", [job_id,
-                                                                                                        exec_date,
-                                                                                                        exec_time,
-                                                                                                        weekday, daily])
+        con.execute("insert into schedule(date, time, weekday, daily) values (?, ?, ?, ?)", (
+            None if exec_date is None else exec_date.strftime("%Y-%m-%d"),
+            exec_time.strftime("%H:%M"),
+            weekday, daily))
+        schedule_id = con.execute("SELECT last_insert_rowid()").fetchone()
+        con.execute("insert into job_schedule(job_id, schedule_id) values (?, ?)", [job_id, schedule_id[0]])
+
         con.commit()
 
 
@@ -51,7 +54,10 @@ def get_schedule(job_id: int):
     :rtype: row[]
     """
     with db.connect() as con:
-        return con.execute("select date, time, weekday, daily from schedule where job_id == ?", [job_id]).fetchall()
+        return con.execute(
+            "select date, time, weekday, daily from schedule as s, job_schedule as js where js.job_id == ? "
+            "and s.id == js.schedule_id",
+            [job_id]).fetchall()
 
 
 def get_steps(job_id: int):
