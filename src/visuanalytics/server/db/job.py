@@ -27,6 +27,7 @@ def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekda
     :param daily: wenn True wird der job jeden tag ausgeführt. (optional)
     """
     # TODO(max) check if just on from date, weekday or daily
+    # TODO(max) check if exsits an just create entry to jbo_schedule
 
     with db.connect() as con:
         con.execute("insert into schedule(date, time, weekday, daily) values (?, ?, ?, ?)", (
