@@ -3,6 +3,11 @@ from shutil import which
 
 
 def all_installed(programs: list):
+    """Testet ob alle programme von der Liste installiert sind.
+
+    :param programs: Liste der benötigten programme.
+    :type programs: list
+    """
     for prog in programs:
         _check_installed(prog)
 
