@@ -13,6 +13,7 @@ def main():
     # Not ready will be moved later
     init()
 
+    # TODO(max) run in other Thread
     Scheduler().start()
     # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing})).start()
     # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()

@@ -19,10 +19,10 @@ class Scheduler(object):
     def __init__(self):
         super().__init__()
 
-    def _check_time(self, now: datetime, run_time: dt_time):
+    def __check_time(self, now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
-    def _run_jobs(self, schedule_id):
+    def __run_jobs(self, schedule_id):
         for job_step in job.get_all_schedules_steps(schedule_id):
             # If Step id is valid run
             if job_step["step_id"] < len(Scheduler.steps):
@@ -43,7 +43,7 @@ class Scheduler(object):
 
         for schedule in job.get_all_schedules():
             # Check if time is current Time
-            if not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
+            if not self.__check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
                 continue
             # If date is not none check if date is today
             if schedule["date"] and not schedule["date"] == now.date():
@@ -58,7 +58,7 @@ class Scheduler(object):
             if schedule["daily"] is not None and not schedule["daily"]:
                 continue
 
-            self._run_jobs(schedule["id"])
+            self.__run_jobs(schedule["id"])
 
     def start(self):
         logger.info("Scheduler started")
