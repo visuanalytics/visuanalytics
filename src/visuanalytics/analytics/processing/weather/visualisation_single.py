@@ -30,14 +30,14 @@ def get_all_images_single_city(pipeline_id, data, date, city_name, keys1=None, k
             _generate_first_second_day_image(pipeline_id, data[city_name][0:2], date[0:2], city_name, 1, keys1),
             _generate_three_days_image(pipeline_id, data[city_name][2:5], date[2:5], city_name, 0, keys2),
             _generate_three_days_image(pipeline_id, data[city_name][2:5], date[2:5], city_name, 1, keys2),
-            _generate_three_days_image(pipeline_id, data[city_name][2:5], date[2:5], city_name, 2, keys2)]
+            _generate_three_days_image(pipeline_id, data[city_name][2:5], date[2:5], city_name, 2, keys2),
+            _generate_first_second_day_image(pipeline_id, data[city_name][0:2], date[0:2], city_name, 2, keys1),
+            _generate_three_days_image(pipeline_id, data[city_name][2:5], date[2:5], city_name, 3, keys2)]
 
 
-"""
-[{'rh': 57, 'sunset_ts': 1590088706, 'sunrise_ts': 1590032139, 'app_min_temp': 4.1, 'wind_spd': 1.32611, 'pop': 0, 
-'wind_cdir_full': 'southeast', 'valid_date': '2020-05-21', 'app_max_temp': 23.9, 'max_temp': 24.4, 'min_temp': 7.2, 
-'icon': 'c02d', 'code': 801},]
-"""
+def combine_images_audiolength(images, audiol):
+    return ([images[5], images[0], images[1], images[5], images[6], images[2], images[3], images[4],
+             images[6]], [3, audiol[0] - 3, audiol[1] - 4, 4, 3, audiol[2] - 3, audiol[3], audiol[4] - 5, 5])
 
 
 def _generate_first_second_day_image(pipeline_id, data, date, city_name, which_date, keys):
