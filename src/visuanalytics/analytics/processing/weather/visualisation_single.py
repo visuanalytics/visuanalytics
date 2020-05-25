@@ -55,23 +55,14 @@ def _generate_first_second_day_image(pipeline_id, data, date, city_name, which_d
 
     for idx, d in enumerate(date):
         _draw_text(draw, LOCATION_WEEKDAYS_2[idx], d)
-
-    for idx, coord in enumerate(LOCATION_ICON_NAME_2):
-        _draw_text(draw, coord, str(data[idx]["code"]))
-
-    for idx, coord in enumerate(LOCATION_TEMP_MAX_2):
-        _draw_text(draw, coord, str(data[idx]["max_temp"]))
-
-    for idx, coord in enumerate(LOCATION_TEMP_MIN_2):
-        _draw_text(draw, coord, str(data[idx]["min_temp"]))
-
-    for idx, coord in enumerate(LOCATION_FIRST_ENTRY_NAME_2):
+        _draw_text(draw, LOCATION_ICON_NAME_2[idx], str(data[idx]["code"]))
+        _draw_text(draw, LOCATION_TEMP_MAX_2[idx], str(data[idx]["max_temp"]))
+        _draw_text(draw, LOCATION_TEMP_MIN_2[idx], str(data[idx]["min_temp"]))
         for i in range(0, 4):
-            _draw_text(draw, (coord[0], coord[1] + (i * 50)), keys[i][0])
-
-    for idx, coord in enumerate(LOCATION_FIRST_ENTRY_DATA_2):
-        for i in range(0, 4):
-            _draw_text(draw, (coord[0], coord[1] + (i * 60)), str(data[idx][keys[i][1]]))
+            _draw_text(draw, (LOCATION_FIRST_ENTRY_NAME_2[idx][0], LOCATION_FIRST_ENTRY_NAME_2[idx][1] + (i * 50)),
+                       keys[i][0])
+            _draw_text(draw, (LOCATION_FIRST_ENTRY_DATA_2[idx][0], LOCATION_FIRST_ENTRY_DATA_2[idx][1] + (i * 60)),
+                       str(data[idx][keys[i][1]]))
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -90,22 +81,14 @@ def _generate_three_days_image(pipeline_id, data, date, city_name, which_date, k
 
     draw = ImageDraw.Draw(source_img)
 
-    for idx, d in enumerate(date):
-        _draw_text(draw, LOCATION_WEEKDAYS_3[idx], d)
-
     _draw_text(draw, LOCATION_CITY_NAME, city_name)
 
-    for idx, coord in enumerate(LOCATION_TEMP_MAX_3):
-        _draw_text(draw, coord, str(data[idx]["max_temp"]))
-
-    for idx, coord in enumerate(LOCATION_TEMP_MIN_3):
-        _draw_text(draw, coord, str(data[idx]["min_temp"]))
-
-    for coord in LOCATION_FIRST_ENTRY_NAME_3:
-        _draw_text(draw, coord, keys[0])
-
-    for idx, coord in enumerate(LOCATION_FIRST_ENTRY_DATA_3):
-        _draw_text(draw, coord, str(data[idx][keys[1]]))
+    for idx, d in enumerate(date):
+        _draw_text(draw, LOCATION_WEEKDAYS_3[idx], d)
+        _draw_text(draw, LOCATION_TEMP_MAX_3[idx], str(data[idx]["max_temp"]))
+        _draw_text(draw, LOCATION_TEMP_MIN_3[idx], str(data[idx]["min_temp"]))
+        _draw_text(draw, LOCATION_FIRST_ENTRY_NAME_3[idx], keys[0])
+        _draw_text(draw, LOCATION_FIRST_ENTRY_DATA_3[idx], str(data[idx][keys[1]]))
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
