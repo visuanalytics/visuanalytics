@@ -30,12 +30,11 @@ class SingleWeatherSteps(Steps):
 
         if self.config.get("testing", False):
             logger.info("Using stored example data for testing...")
-            api.get_example(single=True)
+            self.__json_data = api.get_example(single=True)
         else:
             city_name = self.config.get("city_name")
             logger.info(f"Retrieving forecast data for {city_name} from weatherbit-API...")
-            api.get_forecasts(True, city_name)
-
+            self.__json_data = api.get_forecasts(True, city_name)
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -79,7 +78,7 @@ class SingleWeatherSteps(Steps):
         logger.info("Generating {city_name}-forecast audios...")
         self.__processed_data["audios"] = speech_single.get_all_audios_single_city(pipeline_id, data["speech_data"],
                                                                                    data["date"], city_name)
-        
+
         # Get audio length
         logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
