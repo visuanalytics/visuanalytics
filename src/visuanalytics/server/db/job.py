@@ -4,13 +4,38 @@ from visuanalytics.server.db import db
 
 
 def create_job(steps_id: int):
-    """Erstelt einen Job in der Datenbank
+    """Erstelt einen Job in der Datenbank.
 
     :param steps_id: id der vom job auszuführenden Schritte.
     :type steps_id: int
     """
     with db.connect() as con:
         con.execute("insert into job(steps) values (?)", [steps_id])
+        con.commit()
+
+
+def get_job_config(job_id: int):
+    """Gibt die configuration eines Jobs zurück.
+
+    :param job_id: id des jobs.
+    :type job_id: int
+    """
+
+    with db.connect() as con:
+        config = con.execute("select key, value from job_config where job_id = ?", [job_id]).fetchall()
+        return {c["key"]: c["value"] for c in config}
+
+
+def add_job_config(job_id: int, key, value):
+    """Erstellt eine Configuration für einen job.
+
+    :param job_id: id des Jobs.
+    :type job_id: int
+    :param key: Schlüssel für die Configuration.
+    :param value: wert für die Configuration.
+    """
+    with db.connect() as con:
+        con.execute("insert into job_config(job_id, key, value) values (?, ?, ?)", [job_id, key, value])
         con.commit()
 
 
@@ -51,7 +76,7 @@ def get_schedule(job_id: int):
     """Gibt alle Zeitpläne für einen job zurück.
     :param job_id: id des Jobs.
     :type job_id: int.
-    :return: alle Zeitpläne
+    :return: alle Zeitpläne für einen job
     :rtype: row[]
     """
     with db.connect() as con:
@@ -59,6 +84,27 @@ def get_schedule(job_id: int):
             "select date, time, weekday, daily from schedule as s, job_schedule as js where js.job_id == ? "
             "and s.id == js.schedule_id",
             [job_id]).fetchall()
+
+
+def get_all_schedules():
+    """Gibt alle Zetpläne zurück
+
+    :return: alle Zeitpläne
+    :rtype: row[]
+    """
+    with db.connect() as con:
+        return con.execute("select * from schedule").fetchall()
+
+
+def get_all_schedules_steps(schedule_id: int):
+    """Git für einen Zeitplan alle Jobs und steps zurück.
+
+    :return: alle Job and Step ids die zu der Scheduler id gehören.
+    :rtype: row[]
+    """
+    with db.connect() as con:
+        return con.execute("select j.id as 'job_id', j.steps as 'step_id' from job_schedule as js, job as j "
+                           "where js.schedule_id = ? and js.job_id = j.id and j.steps", [schedule_id]).fetchall()
 
 
 def get_steps(job_id: int):
