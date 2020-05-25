@@ -13,7 +13,7 @@
 - pico2wave: deutsch, englisch/amerikanisch, italienisch, französisch und spanisch
 
 #### Vergleich Audioformate:
-- gTTS: mp3-Datei
+- gTTS: wav-Datei, mp3-Datei
 - pico2wave:wav-Datei
 
 #### Vorteile gTTS:
