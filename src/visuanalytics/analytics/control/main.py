@@ -7,6 +7,7 @@ from visuanalytics.analytics.control.procedures.weather_single import SingleWeat
 from visuanalytics.analytics.control.procedures.weather import WeatherSteps
 from visuanalytics.analytics.util import resources
 
+
 # TODO(Max) Implement (current just for testing)
 
 
