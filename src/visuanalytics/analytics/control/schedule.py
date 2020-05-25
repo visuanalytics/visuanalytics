@@ -48,7 +48,7 @@ class Scheduler(object):
                 # For the Step id in the Database where no Step Klass found
                 logger.warning(f"Invalid Step id: '{job_step['step_id']}', for job {job_step['job_id']}")
 
-    def check_all(self, now: datetime):
+    def __check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
 
         for schedule in job.get_all_schedules():
@@ -83,11 +83,6 @@ class Scheduler(object):
 
                 # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
                 # TODO(max) catch exceptions that may raise
-                self.check_all(datetime.now())
+                self.__check_all(datetime.now())
 
                 time.sleep(60 - now)
-
-
-async def test():
-    await asyncio.sleep(10)
-    print("test")
