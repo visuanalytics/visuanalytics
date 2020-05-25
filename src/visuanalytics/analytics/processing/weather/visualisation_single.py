@@ -22,7 +22,8 @@ LOCATION_FIRST_ENTRY_DATA_3 = [(423, 740), (1055, 740), (1700, 740)]
 
 def get_all_images_single_city(pipeline_id, data, date, city_name, keys1=None, keys2=None):
     if keys1 is None:
-        keys1 = [("Regen", "pop"), ("Luftfeutigkeit", "rh"), ("gefühlt", "app_max_temp"), ("Windstärke", "wind_spd")]
+        keys1 = [("Regen [%]", "pop"), ("Luftfeuchtigkeit [%]", "rh"), ("gefühlt [°]", "app_max_temp"),
+                 ("Windstärke [m/s]", "wind_spd")]
     if keys2 is None:
         keys2 = ("Regen", "pop")
     return [_generate_first_second_day_image(pipeline_id, data[city_name][0:2], date[0:2], city_name, 0, keys1),
