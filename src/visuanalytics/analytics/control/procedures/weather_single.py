@@ -83,6 +83,11 @@ class SingleWeatherSteps(Steps):
         logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
+        temp_data = visualisation_single.combine_images_audiolength(self.__processed_data["images"],
+                                                                    self.__processed_data["audio_length"])
+        self.__processed_data["images"] = temp_data[0]
+        self.__processed_data["audio_length"] = temp_data[1]
+
         # clean preprocessed data
         self.__preprocessed_data = None
 

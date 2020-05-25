@@ -62,7 +62,7 @@ def to_forecast(pipeline_id, images, audios, audiol):
         else:
             filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
 
-    args2.extend((filter, "-map", "[v]", "-map", "5:a", "-shortest", "-s", "1920x1080", output2))
+    args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a", "-shortest", "-s", "1920x1080", output2))
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
