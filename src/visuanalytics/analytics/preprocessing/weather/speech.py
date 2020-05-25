@@ -1,13 +1,24 @@
 """
 Funktionen zum Umwandeln der Daten aus der API in Teile eines Wetterberichts.
 
-Globale Variablen:
+In diesem Modul findet man verschiedene Methoden/Funktionen, die values aus der API bekommen. Diese werden dann so
+verarbeitet, dass sie am Ende ein String sind mit ggf. Information darüber, welche Einheit der Wert hat. (Beispiel:
+ist rh=48. Ausgabe: "48 Prozent".)
+
+Des Weiteren beinhaltet dieses Modul zwei global definierte Variablen, die in Methoden/Funktionen in diesem Modul
+verwendet werden:
 - WEATHER_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen des Wetters anhand eines Codes.
 Funktion: random_weather_descriptions(code): Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
 gibt diesen zurück.
-- CITY_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen einer Stadt.
+- CITY_DESCRIPTIONS: Dictionary mit key:value <Stadtname>: "in <Stadtname>".
 Funktion: random_city_descriptions(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
 gibt diesen zurück.
+
+Die Methoden/Funktionen get_data_today_tomorrow_three, merge_data und merge_data_single bereiten die Daten vor, welche
+anschließend als Rückgabeparameter ein Dictionary zurückgeben. Die Dictionaries aus merge_data und merge_data_single
+erstellen die Dictionaries, die in processing.weather.speech.get_all_audios_germany und
+processing.weather.speech_single.get_all_audios_single_city benötigt werden, um Audiodateien für Wetterberichte
+(deutschlandweit und bezogen auf eine bestimmte Stadt) zu erstellen.
 """
 from numpy import random
 
@@ -20,8 +31,11 @@ def rh_data_to_text(rh):
 
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param rh: relative Luftfeuchtigkeit in % (Prozent) (Wert aus der Weatherbit-API)
+    :param rh: relative Luftfeuchtigkeit in % (Prozent) (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type rh: int
     :return: String mit z.B. "58 Prozent"
+    :rtype: str
 
     Example:
         rh = 58
@@ -37,7 +51,8 @@ def pres_data_to_text(pres):
 
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param pres: Luftdruck in mbar (Wert aus der Weatherbit-API)
+    :param pres: Luftdruck in mbar (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
     :return: String mit z.B. "0,83 Millibar"
 
     Example:
@@ -54,8 +69,11 @@ def pop_data_to_text(pop):
 
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param pop: Niederschlagswahrscheinlichkeit in % (Prozent) (Wert aus der Weatherbit-API)
+    :param pop: Niederschlagswahrscheinlichkeit in % (Prozent) (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type pop: int
     :return: String mit z.B. "58 Prozent"
+    :rtype: str
 
     Example:
         pop = 58
@@ -69,12 +87,16 @@ def pop_data_to_text(pop):
 def wind_cdir_full_data_to_text(wind_cdir_full):
     """Wandelt die Windrichtung so um, dass sie flüssig vorgelesen werden kann.
 
-    Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API.
+    Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API bzw. aus dem Dictionary, welches in
+    preprocessing.weather.transform.preprocess_weather_data erstellt wurde.
     Im Dictionary directions_dictionary sind die englischen Wörter für die Himmelsrichtungen auf zwei verschiedene
     Weisen auf Deutsch übersetzt. Die Übersetzungen dienen später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param wind_cdir_full: Angabe der Windrichtung Beispiel: west-southwest (Wert aus der Weatherbit-API)
-    :return: wind_direction String mit z.B. "West Südwest"
+    :param wind_cdir_full: Angabe der Windrichtung Beispiel: west-southwest (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type wind_cdir_full: str
+    :return: Windrichtung -> String mit z.B. "West Südwest"
+    :rtype: str
 
     Example:
         wind_cdir_full = "west-southwest"
@@ -82,14 +104,14 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
         print(wind_cdir_full)
     """
     directions_dictionary = {
-        "west": {0: "West", 1: "westlich"},
-        "southwest": {0: "Südwest", 1: "südwestlich"},
-        "northwest": {0: "Nordwest", 1: "nordwestlich"},
-        "south": {0: "Süd", 1: "südlich"},
-        "east": {0: "Ost", 1: "östlich"},
-        "southeast": {0: "Südost", 1: "südöstlich"},
-        "northeast": {0: "Nordost", 1: "nordöstlich"},
-        "north": {0: "Nord", 1: "nördlich"}
+        "west": {0: "West", 1: "westlich", 2: "Westen"},
+        "southwest": {0: "Südwest", 1: "südwestlich", 2: "Südwesten"},
+        "northwest": {0: "Nordwest", 1: "nordwestlich", 2: "Nordwesten"},
+        "south": {0: "Süd", 1: "südlich", 2: "Süden"},
+        "east": {0: "Ost", 1: "östlich", 2: "Osten"},
+        "southeast": {0: "Südost", 1: "südöstlich", 2: "Südosten"},
+        "northeast": {0: "Nordost", 1: "nordöstlich", 2: "Nordosten"},
+        "north": {0: "Nord", 1: "nördlich", 2: "Norden"}
     }
     if (wind_cdir_full.find("-") != -1):
         wind_cdir = wind_cdir_full.split("-")
@@ -99,18 +121,22 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
         wind_direction_2 = directions_dictionary[wind_2][0]
         wind_direction_text = f"{wind_direction_1} {wind_direction_2}"
     else:
-        wind_direction_text = f"{directions_dictionary[wind_cdir_full][0]}"
+        wind_direction_text = f"{directions_dictionary[wind_cdir_full][2]}"
     return wind_direction_text
 
 
 def wind_spd_data_to_text(wind_spd):
     """Wandelt die Windgeschwindigkeit so um, dass sie flüssig vorgelesen werden können.
 
-    Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API.
+    Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API bzw. aus dem Dictionary, welches in
+    preprocessing.weather.transform.preprocess_weather_data erstellt wurde.
     Die Umwandlung in einen Satzteil in einem String dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param wind_spd: Angabe der Windgeschwindigkeit in m/s (Wert aus der Weatherbit-API)
-    :return: String mit z.B. "0,83 Metern pro Sekunde"
+    :param wind_spd: Angabe der Windgeschwindigkeit in m/s (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type wind_spd: float
+    :return: Windrichtung -> String mit z.B. "0,83 Metern pro Sekunde"
+    :rtype: str
 
     Example:
         wind_spd = 0.827464
@@ -248,13 +274,16 @@ def random_weather_descriptions(code):
     String ausgegeben. Dieser Satzteil wird ein Teil des späteren Wetterberichts (.txt-Datei), welcher
     dann in eine Audio-Datei umgewandelt wird.
 
-    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer.
+    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer. (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type code: int
     :return text_weather: String. Wird am Ende als Beschreibung zum Wetter als Satzteil in den Wetterbericht eingebaut.
+    :rtype: str
 
     Example:
         code = 601
         text = random_weather_descriptions(code)
-        print("In Berlin " + text + ".")
+        print(f"In Berlin {text}. ")
     """
 
     icon_code = str(code)
@@ -294,20 +323,29 @@ def city_name_to_text(city_name):
     der Stadt sein oder zum Beispiel die Lage der Stadt in Deutschland. Mithilfe der Random-Funktion wird eine
     dieser Beschreibungen ausgewählt und später im Text des Wetterberichts eingefügt.
 
-    :param city_name: Die von der Weatherbit-API ausgegebene Stadt.
-    :return text_city: Gibt eine Stadt oder eine Eigenschaft (wie z.B. Himmelsrichtung) der eingegebenen Stadt als
-    Text aus.
+    :param city_name: Die von der Weatherbit-API ausgegebene Stadt. (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing.weather.transform.preprocess_weather_data)
+    :type city_name: str
+    :return text_city: Gibt eine Stadt aus und setzt ein "in " davor.
+    :rtype: str
 
     Example:
         city_name = "Schwerin"
         x = random_city_descriptions(city_name)
-        print(x + " scheint am Donnerstag die Sonne.")
+        print(f"{x} scheint am Donnerstag die Sonne.")
     """
     text_city = str(CITY_NAMES[city_name])
     return text_city
 
 
 def get_data_today_tomorrow_three(data):
+    """Verwendet Methoden aus preprocessing.weather.transform und preprocessing.weather.speech
+
+    :param data: Dictionary aus preprocessing.weather.transform.preprocess_weather_data
+    :type data: dict
+    :return: Dictionary mit relevanten Wetterdaten für eine 5-Tage-Deutschland-Wettervorhersage.
+    :rtype: dict
+    """
     data_lowest_and_highest_max = {}
     for i in range(5):
         cities_max_temp = transform.get_cities_max_temp(data, i)
@@ -328,8 +366,10 @@ def merge_data(data):
     """ Zusammenführen der deutschlandweiten Wetterdaten für 5 Tage zu einem Dictionary mit Satzteilen.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API (erstellt in der Methode
-    preprocess_weather_data in preprocessing/weather/transform.py)
+        preprocess_weather_data in preprocessing/weather/transform.py)
+    :type data: dict
     :return: Dictionary aus relevanten Daten für einen deutschlandweiten Wetterbericht
+    :rtype: dict
     """
     data_for_text = {}
     weekdays_for_dict = transform.get_weekday(data)
@@ -382,8 +422,10 @@ def merge_data_single(data, city_name):
     """ Zusammenführen der einzelnen Wetterdaten einer Stadt (5 Tage) zu einem Dictionary mit Satzteilen.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API (erstellt in der Methode
-    preprocess_weather_data in preprocessing/weather/transform.py)
+        preprocess_weather_data in preprocessing/weather/transform.py)
+    :type data: dict
     :return: Dictionary aus relevanten Daten für den Wetterbericht einer bestimmten Stadt
+    :rtype: dict
     """
 
     data_list = []

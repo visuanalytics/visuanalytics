@@ -32,10 +32,10 @@ def get_all_audios_single_city(pipeline_id, data, date, city_name):
 
 def _generate_first_day_audio(pipeline_id, data, date, city_name):
     text = (
-        f"In {city_name} {data['code']}. Die Höchstwerte erreichen am heutigen {date} {data['max_temp']}. "
+        f"Am heutigen {date} {data['code']}. Die Höchstwerte erreichen in {city_name} {data['max_temp']}. "
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
         f"Die gefühlten Temperaturen liegen zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
-        f"Die Regenwahrscheinlichkeit liegt bei {data['pop']} und die relative Luftfeuchtigkeit liegt bei {data['rh']}. "
+        f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']} und die relative Luftfeuchtigkeit bei {data['rh']}. "
         f"Der Wind kommt heute aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
         f"Die Sonne geht heute um {data['sunset_ts']} unter und geht morgen um {data['sunrise_ts']} wieder auf. "
     )
@@ -45,11 +45,11 @@ def _generate_first_day_audio(pipeline_id, data, date, city_name):
 
 def _generate_second_day_audio(pipeline_id, data, date, city_name):
     text = (
-        f"In {city_name} {data['code']}. Die Höchstwerte erreichen am morgigen {date} {data['max_temp']}. "
+        f"Am morgigen {date} {data['code']}. Die Höchstwerte erreichen in {city_name} {data['max_temp']}. "
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
         f"Die gefühlten Temperaturen liegen zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
-        f"Die Regenwahrscheinlichkeit liegt bei {data['pop']} und die relative Luftfeuchtigkeit liegt bei {data['rh']}. "
-        f"Der Wind kommt aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
+        f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']} und die relative Luftfeuchtigkeit bei {data['rh']}. "
+        f"Der Wind kommt morgen aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
     file_path = fp.get_filepath_mp3(pipeline_id, text)
     return file_path
@@ -58,9 +58,7 @@ def _generate_second_day_audio(pipeline_id, data, date, city_name):
 def _generate_three_days_audio(pipeline_id, data, date, city_name):
     text = (
         f"Am {date} {data['code']} bei Temperaturen von {data['min_temp']} bis {data['max_temp']}. "
-        f"Die gefühlten Temperaturen liegen in {city_name} zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
-        f"Die Regenwahrscheinlichkeit liegt bei {data['pop']} und die relative Luftfeuchtigkeit liegt bei {data['rh']}. "
-        f"Der Wind kommt aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
+        f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']}. Der Wind erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
     file_path = fp.get_filepath_mp3(pipeline_id, text)
     return file_path
