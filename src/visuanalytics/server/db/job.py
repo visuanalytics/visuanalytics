@@ -4,7 +4,7 @@ from visuanalytics.server.db import db
 
 
 def create_job(steps_id: int):
-    """Erstelt einen Job in der Datenbank
+    """Erstelt einen Job in der Datenbank.
 
     :param steps_id: id der vom job auszuführenden Schritte.
     :type steps_id: int
@@ -15,7 +15,7 @@ def create_job(steps_id: int):
 
 
 def get_job_config(job_id: int):
-    """Gibt die configuration eines Jobs zurück
+    """Gibt die configuration eines Jobs zurück.
 
     :param job_id: id des jobs.
     :type job_id: int
@@ -27,7 +27,8 @@ def get_job_config(job_id: int):
 
 
 def add_job_config(job_id: int, key, value):
-    """Erstellt eine Configuration für einen job
+    """Erstellt eine Configuration für einen job.
+
     :param job_id: id des Jobs.
     :type job_id: int
     :param key: Schlüssel für die Configuration.
@@ -96,7 +97,7 @@ def get_all_schedules():
 
 
 def get_all_schedules_steps(schedule_id: int):
-    """Git für einen Zeitplan alle Jobs und steps zurück
+    """Git für einen Zeitplan alle Jobs und steps zurück.
 
     :return: alle Job and Step ids die zu der Scheduler id gehören.
     :rtype: row[]
