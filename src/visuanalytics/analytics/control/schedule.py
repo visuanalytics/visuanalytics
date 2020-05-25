@@ -24,13 +24,15 @@ class Scheduler(object):
 
     def _run_jobs(self, schedule_id):
         for job_step in job.get_all_schedules_steps(schedule_id):
+            # If Step id is valid run
             if job_step["step_id"] < len(Scheduler.steps):
                 logger.info(f"Job {job_step['job_id']} started")
-                # TODO(max) vtl. use Process instated to use other cpu cores
-                # TODO(max) get config from db
+
+                config = job.get_job_config(job_step['job_id'])
+
                 t = threading.Thread(
                     target=Pipeline(uuid.uuid4().hex,
-                                    Scheduler.steps[job_step["step_id"]]({"testing": True})).start)
+                                    Scheduler.steps[job_step["step_id"]](config)).start)
                 t.start()
             else:
                 # For the Step id in the Database where no Step Klass found
@@ -38,12 +40,14 @@ class Scheduler(object):
 
     def check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
+
         for schedule in job.get_all_schedules():
             # Check if time is current Time
             if not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
                 continue
             # If date is not none check if date is today
             if schedule["date"] and not schedule["date"] == now.date():
+                # TODO Delete date schedule after run
                 continue
 
             # If weekday is not none check if weekday is same as today
@@ -62,7 +66,8 @@ class Scheduler(object):
             while True:
                 now = datetime.now().second
 
-                # TODO maby in onother thread to make sure it doesn't take more than a minute
+                # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
+                # TODO(max) catch exceptions that may raise
                 self.check_all(datetime.now())
 
                 time.sleep(60 - now)

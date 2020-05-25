@@ -14,6 +14,30 @@ def create_job(steps_id: int):
         con.commit()
 
 
+def get_job_config(job_id: int):
+    """Gibt die configuration eines Jobs zurück
+
+    :param job_id: id des jobs.
+    :type job_id: int
+    """
+
+    with db.connect() as con:
+        config = con.execute("select key, value from job_config where job_id = ?", [job_id]).fetchall()
+        return {c["key"]: c["value"] for c in config}
+
+
+def add_job_config(job_id: int, key, value):
+    """Erstellt eine Configuration für einen job
+    :param job_id: id des Jobs.
+    :type job_id: int
+    :param key: Schlüssel für die Configuration.
+    :param value: wert für die Configuration.
+    """
+    with db.connect() as con:
+        con.execute("insert into job_config(job_id, key, value) values (?, ?, ?)", [job_id, key, value])
+        con.commit()
+
+
 def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekday: int = None, daily: bool = None):
     """Erstellt einen zeitplan für einen job.
 
