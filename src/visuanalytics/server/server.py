@@ -4,7 +4,7 @@ Enthält die Startkonfiguration für den Flask-Server.
 """
 import mimetypes
 
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template
 
 from visuanalytics.server.api import api
 from visuanalytics.server.db import db
