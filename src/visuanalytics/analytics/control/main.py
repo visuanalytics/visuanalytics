@@ -20,8 +20,8 @@ def main():
     # TODO(max) run in other Thread
     # Scheduler().start()
     # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing})).start()
-    Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()
-    # Pipeline(uuid.uuid4().hex, HistorySteps({})).start()
+    # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()
+    Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing})).start()
 
 
 def init():
