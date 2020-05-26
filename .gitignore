@@ -156,4 +156,4 @@ fabric.properties
 /.idea/vcs.xml
 /bin/
 /src/visuanalytics/instance
-/.idea/other.xml
+.idea
