@@ -1,7 +1,7 @@
 from visuanalytics.analytics.preprocessing.weather import speech as pre_speech
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
-from visuanalytics.analytics.linking import weather as linking
+from visuanalytics.analytics.linking import linker as linking
 from visuanalytics.analytics.preprocessing.weather import visualisation as pre_visualisation, transform
 from visuanalytics.analytics.processing.weather import visualisation as pro_visualisation, speech
 from visuanalytics.analytics.util import date_time, audio
@@ -28,7 +28,7 @@ class WeatherSteps(Steps):
         :type pipeline_id: str
         """
         # if testing get example
-        if (self.config.get("testing", False)):
+        if self.config.get("testing", False):
             logger.info("Using stored weather data for tesing...")
             self.__json_data = api.get_example()
         else:
