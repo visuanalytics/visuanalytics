@@ -1,4 +1,4 @@
-def preprocess_weather_data(json_data):
+def preprocess_history_data(json_data):
     pass
 
 

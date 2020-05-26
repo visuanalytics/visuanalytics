@@ -44,7 +44,7 @@ class HistorySteps(Steps):
         """
         # Preprocess api data
         logger.info("Transforming local forecast data...")
-        data = transform.preprocess_weather_data(self.__json_data)
+        data = transform.preprocess_history_data(self.__json_data)
 
         # clear JSON data (evtl. remove)
         self.__json_data = None
