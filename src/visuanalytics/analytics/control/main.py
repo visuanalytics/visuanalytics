@@ -3,6 +3,7 @@ import os
 import uuid
 
 from visuanalytics.analytics.control.pipeline import Pipeline
+from visuanalytics.analytics.control.procedures.history import HistorySteps
 from visuanalytics.analytics.control.procedures.weather_single import SingleWeatherSteps
 from visuanalytics.analytics.control.schedule import Scheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
@@ -20,6 +21,7 @@ def main():
     # Scheduler().start()
     # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing})).start()
     Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()
+    # Pipeline(uuid.uuid4().hex, HistorySteps({})).start()
 
 
 def init():
