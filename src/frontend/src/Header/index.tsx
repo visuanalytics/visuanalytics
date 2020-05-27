@@ -1,7 +1,7 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { Navigation } from "./Navigation";
-import { Container, Box } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import { BlueDivider } from "./BlueDivider";
 
 interface Props {
