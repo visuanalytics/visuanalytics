@@ -52,9 +52,10 @@ def preprocess_history_data(json_data):
         ]
     )
 
-    :param json_data:
+    :param json_data: Json-Data der Zeit-Api (oder eingelesenen Data aus der Testdatei)
     :rtype dict
-    :return: tuple
+    :return: Überarbeitet Data Bsp oben angegebene
+    :rtype: tuple
 
     """
     output = ([], [])
