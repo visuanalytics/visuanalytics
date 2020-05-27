@@ -52,7 +52,7 @@ class HistorySteps(Steps):
         # Preprocess data
         logger.info("Preprocessing for visualisation and speech...")
 
-        self.__preprocessed_data["date"] = transform.get_date(data)
+        self.__preprocessed_data["date"] = transform.get_date(data[0])
 
         # Preprocess speech data
         self.__preprocessed_data["speech_data"] = speech.merge_data(data, self.__preprocessed_data["date"])
