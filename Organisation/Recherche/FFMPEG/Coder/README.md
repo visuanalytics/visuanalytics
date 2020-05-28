@@ -13,8 +13,15 @@ muss dieses Coding auf der CPU stattfinden.
 
 Es gibt viele weitere Einstellungen wie:
 -hwaccel cuvid
-was dafür sorgt das die decodierten frames in der GPU bleiben, dadurch übernimmt die GPU den gesamten
+sorgt dafür, dads die decodierten frames in der GPU bleiben, dadurch übernimmt die GPU den gesamten
 Rechenaufwand was sich aber bei uns nicht einsetzten lässt
+-vsync 0
+verhindert das Duplizieren oder Löschen von Frames
+-c:a copy
+sorgt dafür das das audio nicht neu gerendert wird
+
+Ein Bsp für ein kompletes GPU rendern wäre folgendes:
+ffmpeg -vsync 0 -hwaccel cuvid -c:v h264_cuvid -i input.mp4 -c:a copy -c:v h264_nvenc  output.mp4
 
 
 
