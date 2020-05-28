@@ -1,7 +1,7 @@
 import React from "react";
-import { ListItem, Divider, List, TextField, Button } from "@material-ui/core";
-import { TopicPanel } from "./TopicPanel";
-import { useStyles } from ".."
+import {ListItem, Divider, List, TextField, Button} from "@material-ui/core";
+import {TopicPanel} from "./TopicPanel";
+import {useStyles} from ".."
 
 
 export const TopicSelection: React.FC = () => {
@@ -10,9 +10,9 @@ export const TopicSelection: React.FC = () => {
     const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
     const renderTopic = (topic: string) => {
         return (
-            <ListItem>
-                <TopicPanel topic={topic} />
-                <Divider />
+            <ListItem key={topic}>
+                <TopicPanel topic={topic}/>
+                <Divider/>
             </ListItem>
         );
     }
@@ -21,19 +21,19 @@ export const TopicSelection: React.FC = () => {
             <div>
                 <h3 className={classes.jobCreateHeader}>Thema auswählen</h3>
             </div>
-            <Divider />
+            <Divider/>
             <List>
                 {topics.map(t => renderTopic(t))}
             </List>
-            <Divider />
+            <Divider/>
             <div className={classes.paddingSmall}>
                 <TextField id="standard-basic" label="Job-Name"></TextField>
             </div>
-            <Divider />
+            <Divider/>
             <div className={classes.paddingSmall}>
                 <Button className={classes.continueBtn}>
                     WEITER
-            </Button>
+                </Button>
             </div>
         </div>
     );
