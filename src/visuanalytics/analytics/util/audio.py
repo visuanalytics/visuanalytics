@@ -1,9 +1,10 @@
 import math
+import os
 import re
 import subprocess
 
 
-def get_audio_length(path_of_audio_file):
+def get_audio_length(path_of_audio_file, h264_nvenc):
     """Von einer .wav Audio-Datei Länge herausfinden
 
     Die Methode bekommt den Pfad zu der Audio-Datei (.wav/.mp3) als Argument übergeben. Ffmpeg wird als Subprozess gestartet,
@@ -14,8 +15,12 @@ def get_audio_length(path_of_audio_file):
     Wird benötigt um die Länge des generierten Videos auf die Länge der generierten Audiodatei anzupassen.
     Quelle: https://stackoverflow.com/questions/7833807/get-wav-file-length-or-duration
 
-    :param path_of_audio_file
+    :param path_of_audio_file: Pfad zu Datei
+    :type path_of_audio_file: list
+    :param h264_nvenc: Nvidia Hardwarebeschleunigung aktiv oder nicht
+    :type h264_nvenc: bool
     :return: seconds_altogether
+    :rtype: list
 
     Example:
         path_of_audio_file = "/home/lisa/Dokumente/Studium/4. Semester/SWTP/Data-Analytics/Organisation/Recherche/pico2wave/gtts_Test/test.wav"
@@ -23,6 +28,8 @@ def get_audio_length(path_of_audio_file):
         print(length_of_audio)
     """
     out = []
+    if h264_nvenc:
+        os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
     for audio in path_of_audio_file:
         process = subprocess.Popen(['ffmpeg', '-i', audio], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         stdout, stderr = process.communicate()

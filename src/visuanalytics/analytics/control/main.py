@@ -11,6 +11,7 @@ from visuanalytics.analytics.util import resources, external_programms, config_m
 # TODO(Max) Implement (current just for testing)
 
 testing = True
+h264_nvenc = False
 
 
 def main():
@@ -18,10 +19,12 @@ def main():
     init()
 
     # TODO(max) run in other Thread
+
     # Scheduler().start()
-    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing})).start()
-    # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()
-    Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing})).start()
+    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
+    Pipeline(uuid.uuid4().hex,
+             SingleWeatherSteps({"testing": testing, "city_name": "Giessen", "h264_nvenc": h264_nvenc})).start()
+    # Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
 
 
 def init():
