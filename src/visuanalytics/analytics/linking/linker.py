@@ -56,7 +56,7 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
 
     filter = ""
     for i in range(0, len(images) - 1):
-        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=1.2:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
+        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=0.8:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
             _sum_audiol(audiol, i)) + "/TB[f" + str(
             i) + "];"
     for j in range(0, len(images) - 1):
