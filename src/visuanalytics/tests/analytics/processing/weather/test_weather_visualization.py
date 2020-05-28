@@ -20,7 +20,7 @@ class PreprocessTest(unittest.TestCase):
     def test_if_get_threeday_image_generates_image(self):
         expected = pro_visualisation._get_threeday_image("pre_1", pre_visualisation.data_icon_threeday(self.output),
                                                          pre_visualisation.data_mm_temp_threeday(self.output),
-                                                         self.date[2:5])
+                                                         self.date[2:5], 0)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_icons_image_generates_image(self):
