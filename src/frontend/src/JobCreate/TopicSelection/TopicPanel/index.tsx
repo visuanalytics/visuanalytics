@@ -1,5 +1,5 @@
 import React from "react";
-import {makeStyles} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 interface Props {
     topic: string;
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     }
 });
 
-export function TopicPanel({topic}: Props) {
+export function TopicPanel({ topic }: Props) {
     const classes = useStyles();
     return (
         <div className={classes.panel}>

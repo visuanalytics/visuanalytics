@@ -1,7 +1,8 @@
 import React from "react";
-import {ListItem, Divider, List, TextField, Button} from "@material-ui/core";
-import {TopicPanel} from "./TopicPanel";
-import {useStyles} from ".."
+import { ListItem, Divider, List, TextField, Button } from "@material-ui/core";
+import { TopicPanel } from "./TopicPanel";
+import { ContinueButton } from "../ContinueButton";
+import { useStyles } from "../style";
 
 
 export const TopicSelection: React.FC = () => {
@@ -11,8 +12,8 @@ export const TopicSelection: React.FC = () => {
     const renderTopic = (topic: string) => {
         return (
             <ListItem key={topic}>
-                <TopicPanel topic={topic}/>
-                <Divider/>
+                <TopicPanel topic={topic} />
+                <Divider />
             </ListItem>
         );
     }
@@ -21,19 +22,19 @@ export const TopicSelection: React.FC = () => {
             <div>
                 <h3 className={classes.jobCreateHeader}>Thema auswählen</h3>
             </div>
-            <Divider/>
+            <Divider />
             <List>
                 {topics.map(t => renderTopic(t))}
             </List>
-            <Divider/>
+            <Divider />
             <div className={classes.paddingSmall}>
                 <TextField id="standard-basic" label="Job-Name"></TextField>
             </div>
-            <Divider/>
+            <Divider />
             <div className={classes.paddingSmall}>
-                <Button className={classes.continueBtn}>
+                <ContinueButton>
                     WEITER
-                </Button>
+                </ContinueButton>
             </div>
         </div>
     );

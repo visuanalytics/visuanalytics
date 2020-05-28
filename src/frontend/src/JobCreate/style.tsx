@@ -10,15 +10,6 @@ export const useStyles = makeStyles({
         fontWeight: "normal",
         fontSize: "x-large"
     },
-    continueBtn: {
-        color: "white",
-        backgroundColor: "#2E97C5",
-        "&:hover": {
-            backgroundColor: "#00638D",
-            borderColor: "#0062cc",
-            boxShadow: "none",
-        }
-    },
     paddingSmall: {
         padding: "20px"
     }
