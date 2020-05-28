@@ -5,7 +5,7 @@ import {useStyles} from ".."
 
 
 export const TopicSelection: React.FC = () => {
-    // const topics: string[] = useFetch("localhost:8080/topics"); TODO: make it work
+    // const topics: string[] = useFetch("/topics");
     const classes = useStyles();
     const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
     const renderTopic = (topic: string) => {
