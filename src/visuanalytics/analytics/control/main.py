@@ -12,7 +12,7 @@ from visuanalytics.analytics.util import resources, external_programms, config_m
 # TODO(Max) Implement (current just for testing)
 
 testing = True
-h264_nvenc = True
+h264_nvenc = False
 
 
 def main():

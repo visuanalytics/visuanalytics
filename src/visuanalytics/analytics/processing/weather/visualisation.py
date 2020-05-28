@@ -120,7 +120,7 @@ def _get_oneday_icons_image(pipeline_id, data, weekdate):
         icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 90, item[0][1] - 35), icon)
     draw = ImageDraw.Draw(source_img)
-    _draw_text(draw, (305, 40), weekdate)
+    _draw_text(draw, (305, 48), weekdate)
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -148,7 +148,7 @@ def _get_oneday_temp_image(pipeline_id, data, weekdate):
         source_img.paste(tile, (item[0][0] - 53, item[0][1]), tile)
         _draw_text(draw, item[0], item[1], fontsize=50)
 
-    _draw_text(draw, (305, 40), weekdate)
+    _draw_text(draw, (305, 48), weekdate)
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
 
