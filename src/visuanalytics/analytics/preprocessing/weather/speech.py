@@ -113,7 +113,7 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
         "northeast": {0: "Nordost", 1: "nordöstlich", 2: "Nordosten"},
         "north": {0: "Nord", 1: "nördlich", 2: "Norden"}
     }
-    if (wind_cdir_full.find("-") != -1):
+    if wind_cdir_full.find("-") != -1:
         wind_cdir = wind_cdir_full.split("-")
         wind_1 = wind_cdir[0]
         wind_2 = wind_cdir[1]

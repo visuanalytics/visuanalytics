@@ -1,6 +1,6 @@
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
-from visuanalytics.analytics.linking import weather as linking
+from visuanalytics.analytics.linking import linker as linking
 from visuanalytics.analytics.preprocessing.weather import transform, speech
 from visuanalytics.analytics.processing.weather import speech_single, visualisation_single
 from visuanalytics.analytics.util import date_time, audio
@@ -82,6 +82,11 @@ class SingleWeatherSteps(Steps):
         # Get audio length
         logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
+
+        temp_data = visualisation_single.combine_images_audiolength(self.__processed_data["images"],
+                                                                    self.__processed_data["audio_length"])
+        self.__processed_data["images"] = temp_data[0]
+        self.__processed_data["audio_length"] = temp_data[1]
 
         # clean preprocessed data
         self.__preprocessed_data = None

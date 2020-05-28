@@ -2,12 +2,12 @@
 
 Enthält die Startkonfiguration für den Flask-Server.
 """
+import mimetypes
 
-from flask import Flask
+from flask import Flask, render_template
 
 from visuanalytics.server.api import api
 from visuanalytics.server.db import db
-from visuanalytics.server.home import home_views
 
 
 def create_app():
@@ -21,7 +21,7 @@ def create_app():
     """
 
     # create
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True, static_url_path="/")
 
     # configure the app
     app.config.from_mapping(
@@ -33,8 +33,15 @@ def create_app():
 
     db.init_db(app)
 
+    # add js as mmetype to ensure that the content-type is correct for js files
+    mimetypes.add_type("text/javascript", ".js")
+
     # Register the Blueprints
     api.register_all(app)
-    app.register_blueprint(home_views.home_bp, url_prefix="/")
+
+    # Serve index.html
+    @app.route('/')
+    def index():
+        return render_template("index.html")
 
     return app
