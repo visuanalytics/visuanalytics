@@ -7,5 +7,5 @@ import { ComponentContext } from "../ComponentProvider";
  */
 export const Main = () => {
   const component = React.useContext(ComponentContext);
-  return <>{component?.current}</>;
+  return <>{component ? <component.current.component /> : null}</>;
 };
