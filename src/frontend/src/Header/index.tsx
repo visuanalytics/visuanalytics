@@ -4,11 +4,7 @@ import { Navigation } from "./Navigation";
 import { Box } from "@material-ui/core";
 import { BlueDivider } from "./BlueDivider";
 
-interface Props {
-  headline: string;
-}
-
-export const Header: React.FC<Props> = ({ headline }) => {
+export const Header = () => {
   return (
     <AppBar position="static" color="transparent">
       <Box height="3rem" display="flex" alignSelf="center">
