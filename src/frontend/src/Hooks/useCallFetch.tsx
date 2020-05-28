@@ -29,7 +29,6 @@ export const useCallFetch = (
   }, [url, parms, callBack, errorHandle, isMounted]);
 
   useEffect(() => {
-    console.log("effect");
     return () => {
       isMounted.current = false;
     };
