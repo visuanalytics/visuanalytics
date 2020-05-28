@@ -33,9 +33,7 @@ class WeatherSteps(Steps):
             self.__json_data = api.get_example()
         else:
             logger.info("Retrieving weather forecast data from weatherbit-api...")
-            api.get_forecasts()
-
-        # self.__json_data = api.get_example() if self.config.get("testing", False) else
+            self.__json_data = api.get_forecasts()
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -87,7 +85,7 @@ class WeatherSteps(Steps):
 
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"],
                                                                        self.config.get("h264_nvenc", False))
-        
+
         temp_data = pro_visualisation.combine_images_audiolength(self.__processed_data["images"],
                                                                  self.__processed_data["audio_length"])
         self.__processed_data["images"] = temp_data[0]
