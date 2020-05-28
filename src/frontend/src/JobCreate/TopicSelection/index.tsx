@@ -8,7 +8,7 @@ export const TopicSelection: React.FC = () => {
     // const topics: string[] = useFetch("localhost:8080/topics"); TODO: make it work
     const classes = useStyles();
     const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
-    function renderTopic(topic: string) {
+    const renderTopic = (topic: string) => {
         return (
             <ListItem>
                 <TopicPanel topic={topic} />
