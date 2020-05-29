@@ -28,7 +28,7 @@ export const TopicSelection: React.FC = () => {
             </List>
             <Divider />
             <div className={classes.paddingSmall}>
-                <TextField id="standard-basic" label="Job-Name"></TextField>
+                <TextField className={classes.inputField} variant="outlined" label="Job-Name"></TextField>
             </div>
             <Divider />
             <div className={classes.paddingSmall}>
