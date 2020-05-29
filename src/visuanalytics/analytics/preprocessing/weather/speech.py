@@ -26,26 +26,6 @@ from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.util import date_time
 
 
-def rh_data_to_text(rh):
-    """Wandelt die von der Weatherbit-API gegebenen Werte rh in Text um.
-
-    Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
-
-    :param rh: relative Luftfeuchtigkeit in % (Prozent) (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
-    :type rh: int
-    :return: String mit z.B. "58 Prozent"
-    :rtype: str
-
-    Example:
-        rh = 58
-        r = air_data_to_text(rh)
-        print(r)
-    """
-    rh_text = str(rh) + " Prozent"
-    return rh_text
-
-
 def pres_data_to_text(pres):
     """Wandelt die von der Weatherbit-API gegebenen Werte pres in Text um.
 
@@ -64,24 +44,24 @@ def pres_data_to_text(pres):
     return pres_text
 
 
-def pop_data_to_text(pop):
-    """Wandelt die von der Weatherbit-API gegebenen Werte pop in Text um.
+def percent_to_text(value):
+    """Wandelt Zahlenwerte, die in Prozent angegeben sind, in Text um.
 
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param pop: Niederschlagswahrscheinlichkeit in % (Prozent) (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
-    :type pop: int
+    :param value: ein Wert in % (Prozent) z.B. Niederschlagswahrscheinlichkeit oder relative Luftfeuchtigkeit
+        (Wert aus der Weatherbit-API bzw. Dictionary aus preprocessing.weather.transform.preprocess_weather_data)
+    :type value: int
     :return: String mit z.B. "58 Prozent"
     :rtype: str
 
     Example:
         pop = 58
-        pop_p = air_data_to_text(pop)
+        pop_p = percent_to_text(pop)
         print(pop_p)
     """
-    pop_text = str(pop) + " Prozent"
-    return pop_text
+    to_text = f"{str(value)} Prozent"
+    return to_text
 
 
 def wind_cdir_full_data_to_text(wind_cdir_full):
@@ -346,7 +326,7 @@ def get_data_today_tomorrow_three(data):
     :return: Dictionary mit relevanten Wetterdaten für eine 5-Tage-Deutschland-Wettervorhersage.
     :rtype: dict
     """
-    data_lowest_and_highest_max = {}
+    data_lowest_and_highest_max_and_min = {}
     for i in range(5):
         cities_max_temp = transform.get_cities_max_temp(data, i)
         city_highest_max = city_name_to_text(cities_max_temp[0])
@@ -355,11 +335,13 @@ def get_data_today_tomorrow_three(data):
         code_lowest_max = random_weather_descriptions(cities_max_temp[5])
         temp_highest_max = str(cities_max_temp[1])
         temp_lowest_max = str(cities_max_temp[4])
-        data_lowest_and_highest_max.update(
+        temp_min = transform.get_city_with_min_temp(data, i)
+        data_lowest_and_highest_max_and_min.update(
             {i: {"city_highest_max": city_highest_max, "temp_highest_max": temp_highest_max,
                  "code_highest_max": code_highest_max, "city_lowest_max": city_lowest_max,
-                 "temp_lowest_max": temp_lowest_max, "code_lowest_max": code_lowest_max}})
-    return data_lowest_and_highest_max
+                 "temp_lowest_max": temp_lowest_max, "code_lowest_max": code_lowest_max,
+                 "city_min_temp": temp_min[0], "min_temp": temp_min[1], "code_min_temp": temp_min[2]}})
+    return data_lowest_and_highest_max_and_min
 
 
 def merge_data(data):
@@ -374,47 +356,62 @@ def merge_data(data):
     data_for_text = {}
     weekdays_for_dict = transform.get_weekday(data)
     common_code = transform.get_common_code_per_day(data)
-    data_lowest_and_highest_max = get_data_today_tomorrow_three(data)
+    data_lowest_and_highest_max_and_min = get_data_today_tomorrow_three(data)
     data_for_text.update({"today": {"weekday": weekdays_for_dict["today"],
                                     "common_code": common_code[0],
-                                    "city_highest_max": data_lowest_and_highest_max[0]["city_highest_max"],
-                                    "temp_highest_max": data_lowest_and_highest_max[0]["temp_highest_max"],
-                                    "code_highest_max": data_lowest_and_highest_max[0]["code_highest_max"],
-                                    "city_lowest_max": data_lowest_and_highest_max[0]["city_lowest_max"],
-                                    "temp_lowest_max": data_lowest_and_highest_max[0]["temp_lowest_max"],
-                                    "code_lowest_max": data_lowest_and_highest_max[0]["code_lowest_max"]}})
+                                    "city_highest_max": data_lowest_and_highest_max_and_min[0]["city_highest_max"],
+                                    "temp_highest_max": data_lowest_and_highest_max_and_min[0]["temp_highest_max"],
+                                    "code_highest_max": data_lowest_and_highest_max_and_min[0]["code_highest_max"],
+                                    "city_lowest_max": data_lowest_and_highest_max_and_min[0]["city_lowest_max"],
+                                    "temp_lowest_max": data_lowest_and_highest_max_and_min[0]["temp_lowest_max"],
+                                    "code_lowest_max": data_lowest_and_highest_max_and_min[0]["code_lowest_max"],
+                                    "city_min_temp": data_lowest_and_highest_max_and_min[0]["city_min_temp"],
+                                    "min_temp": data_lowest_and_highest_max_and_min[0]["min_temp"],
+                                    "code_min_temp": data_lowest_and_highest_max_and_min[0]["code_min_temp"]}})
     data_for_text.update({"tomorrow": {"weekday": weekdays_for_dict["tomorrow"],
                                        "common_code": common_code[1],
-                                       "city_highest_max": data_lowest_and_highest_max[1]["city_highest_max"],
-                                       "temp_highest_max": data_lowest_and_highest_max[1]["temp_highest_max"],
-                                       "code_highest_max": data_lowest_and_highest_max[1]["code_highest_max"],
-                                       "city_lowest_max": data_lowest_and_highest_max[1]["city_lowest_max"],
-                                       "temp_lowest_max": data_lowest_and_highest_max[1]["temp_lowest_max"],
-                                       "code_lowest_max": data_lowest_and_highest_max[1]["code_lowest_max"]}})
+                                       "city_highest_max": data_lowest_and_highest_max_and_min[1]["city_highest_max"],
+                                       "temp_highest_max": data_lowest_and_highest_max_and_min[1]["temp_highest_max"],
+                                       "code_highest_max": data_lowest_and_highest_max_and_min[1]["code_highest_max"],
+                                       "city_lowest_max": data_lowest_and_highest_max_and_min[1]["city_lowest_max"],
+                                       "temp_lowest_max": data_lowest_and_highest_max_and_min[1]["temp_lowest_max"],
+                                       "code_lowest_max": data_lowest_and_highest_max_and_min[1]["code_lowest_max"],
+                                       "city_min_temp": data_lowest_and_highest_max_and_min[1]["city_min_temp"],
+                                       "min_temp": data_lowest_and_highest_max_and_min[1]["min_temp"],
+                                       "code_min_temp": data_lowest_and_highest_max_and_min[1]["code_min_temp"]}})
     data_for_text.update({"next_1": {"weekday": weekdays_for_dict["next_1"],
                                      "common_code": common_code[2],
-                                     "city_highest_max": data_lowest_and_highest_max[2]["city_highest_max"],
-                                     "temp_highest_max": data_lowest_and_highest_max[2]["temp_highest_max"],
-                                     "code_highest_max": data_lowest_and_highest_max[2]["code_highest_max"],
-                                     "city_lowest_max": data_lowest_and_highest_max[2]["city_lowest_max"],
-                                     "temp_lowest_max": data_lowest_and_highest_max[2]["temp_lowest_max"],
-                                     "code_lowest_max": data_lowest_and_highest_max[2]["code_lowest_max"]}})
+                                     "city_highest_max": data_lowest_and_highest_max_and_min[2]["city_highest_max"],
+                                     "temp_highest_max": data_lowest_and_highest_max_and_min[2]["temp_highest_max"],
+                                     "code_highest_max": data_lowest_and_highest_max_and_min[2]["code_highest_max"],
+                                     "city_lowest_max": data_lowest_and_highest_max_and_min[2]["city_lowest_max"],
+                                     "temp_lowest_max": data_lowest_and_highest_max_and_min[2]["temp_lowest_max"],
+                                     "code_lowest_max": data_lowest_and_highest_max_and_min[2]["code_lowest_max"],
+                                     "city_min_temp": data_lowest_and_highest_max_and_min[2]["city_min_temp"],
+                                     "min_temp": data_lowest_and_highest_max_and_min[2]["min_temp"],
+                                     "code_min_temp": data_lowest_and_highest_max_and_min[2]["code_min_temp"]}})
     data_for_text.update({"next_2": {"weekday": weekdays_for_dict["next_2"],
                                      "common_code": common_code[3],
-                                     "city_highest_max": data_lowest_and_highest_max[3]["city_highest_max"],
-                                     "temp_highest_max": data_lowest_and_highest_max[3]["temp_highest_max"],
-                                     "code_highest_max": data_lowest_and_highest_max[3]["code_highest_max"],
-                                     "city_lowest_max": data_lowest_and_highest_max[3]["city_lowest_max"],
-                                     "temp_lowest_max": data_lowest_and_highest_max[3]["temp_lowest_max"],
-                                     "code_lowest_max": data_lowest_and_highest_max[3]["code_lowest_max"]}})
+                                     "city_highest_max": data_lowest_and_highest_max_and_min[3]["city_highest_max"],
+                                     "temp_highest_max": data_lowest_and_highest_max_and_min[3]["temp_highest_max"],
+                                     "code_highest_max": data_lowest_and_highest_max_and_min[3]["code_highest_max"],
+                                     "city_lowest_max": data_lowest_and_highest_max_and_min[3]["city_lowest_max"],
+                                     "temp_lowest_max": data_lowest_and_highest_max_and_min[3]["temp_lowest_max"],
+                                     "code_lowest_max": data_lowest_and_highest_max_and_min[3]["code_lowest_max"],
+                                     "city_min_temp": data_lowest_and_highest_max_and_min[3]["city_min_temp"],
+                                     "min_temp": data_lowest_and_highest_max_and_min[3]["min_temp"],
+                                     "code_min_temp": data_lowest_and_highest_max_and_min[3]["code_min_temp"]}})
     data_for_text.update({"next_3": {"weekday": weekdays_for_dict["next_3"],
                                      "common_code": common_code[4],
-                                     "city_highest_max": data_lowest_and_highest_max[4]["city_highest_max"],
-                                     "temp_highest_max": data_lowest_and_highest_max[4]["temp_highest_max"],
-                                     "code_highest_max": data_lowest_and_highest_max[4]["code_highest_max"],
-                                     "city_lowest_max": data_lowest_and_highest_max[4]["city_lowest_max"],
-                                     "temp_lowest_max": data_lowest_and_highest_max[4]["temp_lowest_max"],
-                                     "code_lowest_max": data_lowest_and_highest_max[4]["code_lowest_max"]}})
+                                     "city_highest_max": data_lowest_and_highest_max_and_min[4]["city_highest_max"],
+                                     "temp_highest_max": data_lowest_and_highest_max_and_min[4]["temp_highest_max"],
+                                     "code_highest_max": data_lowest_and_highest_max_and_min[4]["code_highest_max"],
+                                     "city_lowest_max": data_lowest_and_highest_max_and_min[4]["city_lowest_max"],
+                                     "temp_lowest_max": data_lowest_and_highest_max_and_min[4]["temp_lowest_max"],
+                                     "code_lowest_max": data_lowest_and_highest_max_and_min[4]["code_lowest_max"],
+                                     "city_min_temp": data_lowest_and_highest_max_and_min[4]["city_min_temp"],
+                                     "min_temp": data_lowest_and_highest_max_and_min[4]["min_temp"],
+                                     "code_min_temp": data_lowest_and_highest_max_and_min[4]["code_min_temp"]}})
     return data_for_text
 
 
@@ -441,7 +438,7 @@ def merge_data_single(data, city_name):
                          "code": random_weather_descriptions(data[city_name][day]['code']),
                          "sunset_ts": time_text_sunset,
                          "sunrise_ts": time_text_sunrise,
-                         "rh": rh_data_to_text(data[city_name][day]['rh']),
-                         "pop": pop_data_to_text(data[city_name][day]['pop'])}
+                         "rh": percent_to_text(data[city_name][day]['rh']),
+                         "pop": percent_to_text(data[city_name][day]['pop'])}
         data_list.append(data_for_text)
     return data_list

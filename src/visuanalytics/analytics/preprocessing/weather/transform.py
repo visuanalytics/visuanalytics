@@ -145,6 +145,27 @@ def get_min_temp(data, date_in_future):
     return f"{min_temp}\u00B0"
 
 
+def get_city_with_min_temp(data, date_in_future):
+    """
+    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
+    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
+    Example:
+    city_with_max_temp = get_city_with_min_temp(data, 0)
+    print(city_with_min_temp) -> "berlin", 19, c02d
+    """
+
+    min_temp = round(data['summaries'][date_in_future]['temp_min'])
+    cities_with_min_temp = []
+    for city in data['cities']:
+        if round(data['cities'][city][date_in_future]['min_temp']) == min_temp:
+            cities_with_min_temp.append(city)
+
+    return_city = random.choice(cities_with_min_temp)
+    return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
+
+
 def get_cities_max_temp(data, date_in_future):
     """
     Methode, um aus Dictionary data (erstellt in der Methode preprocess_weather_data) von allen Höchsttemperaturen der Städte (Teilmenge von 'cities':
