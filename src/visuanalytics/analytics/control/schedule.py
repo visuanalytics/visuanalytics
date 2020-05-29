@@ -83,10 +83,13 @@ class Scheduler(object):
         logger.info("Scheduler started")
         while True:
             while True:
-                now = datetime.now().second
+                # TODO(max) vtl move try catch in for Loop to continue looping and not skip all jobs
+                try:
+                    # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
+                    self.__check_all(datetime.now())
+                except:
+                    logger.exception("An error occurred: ")
 
-                # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
-                # TODO(max) catch exceptions that may raise
-                self.__check_all(datetime.now())
+                now = datetime.now().second
 
                 time.sleep(60 - now)
