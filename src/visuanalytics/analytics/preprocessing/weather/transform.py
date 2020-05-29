@@ -184,7 +184,7 @@ def get_cities_max_temp(data, date_in_future):
     :type date_in_future: int
     :return: Array [eine Stadt, die an diesem Tag die höchste Höchsttemperatur hat; höchste Höchsttemperatur; Iconcode zur höchsten Höchsttemperatur;
             eine Stadt, die an diesem Tag die niedrigste Höchstschnittstemperatur hat; niedrigste Höchsttemperatur; Iconcode zur niedrigsten Höchsttemperatur]
-    :rtype: str Array
+    :rtype: str[]
     Example:
     """
 
@@ -219,7 +219,7 @@ def get_common_code_per_day(data):
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
     :type data: dict
     :return: Array [common_code_today, common_code_tomorrow, common_code_next_1, common_code_next_2, common_code_next_3)
-    :rtype: str Array
+    :rtype: str[]
     """
     common_code = []
     for summary in range(5):

@@ -21,7 +21,7 @@ def get_all_audios_germany(pipeline_id, data):
         preprocessing/weather/speech.py)
     :type data: dict
     :return: Array mit 7 Ordnerpfaden zu Audiodateien.
-    :rtype: str Array
+    :rtype: str[]
 
 
     Example:

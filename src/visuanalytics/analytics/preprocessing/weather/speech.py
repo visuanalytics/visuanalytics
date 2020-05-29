@@ -7,10 +7,10 @@ ist rh=48. Ausgabe: "48 Prozent".)
 
 Des Weiteren beinhaltet dieses Modul zwei global definierte Variablen, die in Methoden in diesem Modul verwendet werden:
 - WEATHER_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen des Wetters anhand eines Codes.
-Funktion: random_weather_descriptions(code): Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
+:func:'random_weather_descriptions': Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
 gibt diesen zurück.
 - CITY_DESCRIPTIONS: Dictionary mit key:value <Stadtname>: "in <Stadtname>".
-Funktion: city_name_to_text(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
+:func: 'city_name_to_text': Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
 gibt diesen zurück.
 
 Die Methoden get_data_today_tomorrow_three, merge_data und merge_data_single bereiten die Daten vor, welche
