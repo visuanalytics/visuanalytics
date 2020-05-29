@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export const useStyles = makeStyles({
+export const useStyles = makeStyles((theme) => ({
     jobCreateBox: {
         textAlign: "center",
         border: "solid #b4b4b4 1px",
@@ -11,6 +11,6 @@ export const useStyles = makeStyles({
         fontSize: "x-large"
     },
     paddingSmall: {
-        padding: "20px"
+        padding: theme.spacing(3)
     }
-});
+}));
