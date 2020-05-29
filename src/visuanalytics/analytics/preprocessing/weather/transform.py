@@ -149,11 +149,16 @@ def get_city_with_min_temp(data, date_in_future):
     """
     Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
     :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
-    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine zurfällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
+    :type date_in_future: int
+    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine
+        zufällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
+    :rtype: str, str, str
+
     Example:
-    city_with_max_temp = get_city_with_min_temp(data, 0)
-    print(city_with_min_temp) -> "berlin", 19, c02d
+        city_with_max_temp = get_city_with_min_temp(data, 0)
+        print(city_with_min_temp) -> "berlin", 19, c02d
     """
 
     min_temp = round(data['summaries'][date_in_future]['temp_min'])
@@ -174,10 +179,12 @@ def get_cities_max_temp(data, date_in_future):
     ausgewählt) und der Code zum passenden Icon zurückgegeben.
 
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
     :param date_in_future: Tag in der Zukunft; 0: today, 1: tomorrow, 2, next_1, 3: next_2, 4: next_3
+    :type date_in_future: int
     :return: Array [eine Stadt, die an diesem Tag die höchste Höchsttemperatur hat; höchste Höchsttemperatur; Iconcode zur höchsten Höchsttemperatur;
             eine Stadt, die an diesem Tag die niedrigste Höchstschnittstemperatur hat; niedrigste Höchsttemperatur; Iconcode zur niedrigsten Höchsttemperatur]
-
+    :rtype: str Array
     Example:
     """
 
@@ -203,11 +210,16 @@ def get_cities_max_temp(data, date_in_future):
 
 
 def get_common_code_per_day(data):
-    """
-    Methode, die aus Dictionary (erstellt in der Methode preprocess_weather_data) aus 'summaries' für jeden Tag den Common Code herausfiltert,
-    also ein Array aus den Common Codes für die Tage today, tomorrow, next_1, next_2, next_2 zurückgibt
+    """Nimmt den Common Code und gibt die Beschreibung dazu in Textform aus.
+
+    Methode, die aus Dictionary (erstellt in der Methode preprocess_weather_data) aus 'summaries' für jeden Tag den
+    Common Code herausfiltert, also ein Array aus den Common Codes für die Tage today, tomorrow, next_1, next_2,
+    next_2 zurückgibt.
+
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
     :return: Array [common_code_today, common_code_tomorrow, common_code_next_1, common_code_next_2, common_code_next_3)
+    :rtype: str Array
     """
     common_code = []
     for summary in range(5):
