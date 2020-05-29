@@ -145,6 +145,32 @@ def get_min_temp(data, date_in_future):
     return f"{min_temp}\u00B0"
 
 
+def get_city_with_min_temp(data, date_in_future):
+    """
+    Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
+    :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
+    :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
+    :type date_in_future: int
+    :return: eine Stadt, die an diesem Tag die Niedrigsttemperatur hat (wenn mehrere Städte gefunden werden, wird eine
+        zufällig ausgesucht), die Niedrigsttemperatur und das zugrhörige Icon
+    :rtype: str, str, str
+
+    Example:
+        city_with_max_temp = get_city_with_min_temp(data, 0)
+        print(city_with_min_temp) -> "berlin", 19, c02d
+    """
+
+    min_temp = round(data['summaries'][date_in_future]['temp_min'])
+    cities_with_min_temp = []
+    for city in data['cities']:
+        if round(data['cities'][city][date_in_future]['min_temp']) == min_temp:
+            cities_with_min_temp.append(city)
+
+    return_city = random.choice(cities_with_min_temp)
+    return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
+
+
 def get_cities_max_temp(data, date_in_future):
     """
     Methode, um aus Dictionary data (erstellt in der Methode preprocess_weather_data) von allen Höchsttemperaturen der Städte (Teilmenge von 'cities':
@@ -153,10 +179,12 @@ def get_cities_max_temp(data, date_in_future):
     ausgewählt) und der Code zum passenden Icon zurückgegeben.
 
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
     :param date_in_future: Tag in der Zukunft; 0: today, 1: tomorrow, 2, next_1, 3: next_2, 4: next_3
+    :type date_in_future: int
     :return: Array [eine Stadt, die an diesem Tag die höchste Höchsttemperatur hat; höchste Höchsttemperatur; Iconcode zur höchsten Höchsttemperatur;
             eine Stadt, die an diesem Tag die niedrigste Höchstschnittstemperatur hat; niedrigste Höchsttemperatur; Iconcode zur niedrigsten Höchsttemperatur]
-
+    :rtype: str[]
     Example:
     """
 
@@ -182,11 +210,16 @@ def get_cities_max_temp(data, date_in_future):
 
 
 def get_common_code_per_day(data):
-    """
-    Methode, die aus Dictionary (erstellt in der Methode preprocess_weather_data) aus 'summaries' für jeden Tag den Common Code herausfiltert,
-    also ein Array aus den Common Codes für die Tage today, tomorrow, next_1, next_2, next_2 zurückgibt
+    """Nimmt den Common Code und gibt die Beschreibung dazu in Textform aus.
+
+    Methode, die aus Dictionary (erstellt in der Methode preprocess_weather_data) aus 'summaries' für jeden Tag den
+    Common Code herausfiltert, also ein Array aus den Common Codes für die Tage today, tomorrow, next_1, next_2,
+    next_2 zurückgibt.
+
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
+    :type data: dict
     :return: Array [common_code_today, common_code_tomorrow, common_code_next_1, common_code_next_2, common_code_next_3)
+    :rtype: str[]
     """
     common_code = []
     for summary in range(5):
