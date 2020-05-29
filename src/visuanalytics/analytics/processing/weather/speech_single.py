@@ -16,7 +16,7 @@ def get_all_audios_single_city(pipeline_id, data, date, city_name):
     Generierung der Audiodateien für eine 5-Tage-Wettervorhersage für eine bestimmte Stadt.
 
 
-    :param pipeline_id: Ordnername der Audiodatei
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param data: Dictionary mit relevanten Wetterdaten, die in preprocessing.weather.speech.merge_data
     erstellt wurden
@@ -38,7 +38,7 @@ def get_all_audios_single_city(pipeline_id, data, date, city_name):
 def _generate_first_day_audio(pipeline_id, data, date, city_name):
     """Generierung von Text und Audiodatei für den heutigen Wetterbericht einer bestimmten Stadt.
 
-    :param pipeline_id: Ordnername der Audiodatei
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param data: Dictionary mit relevanten Wetterdaten, die in preprocessing.weather.speech.merge_data
     erstellt wurden
@@ -65,7 +65,7 @@ def _generate_first_day_audio(pipeline_id, data, date, city_name):
 def _generate_second_day_audio(pipeline_id, data, date, city_name):
     """Generierung von Text und Audiodatei für den morgigen Wetterbericht einer bestimmten Stadt.
 
-    :param pipeline_id: Ordnername der Audiodatei
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param data: Dictionary mit relevanten Wetterdaten, die in preprocessing.weather.speech.merge_data
     erstellt wurden
@@ -91,7 +91,7 @@ def _generate_second_day_audio(pipeline_id, data, date, city_name):
 def _generate_three_days_audio(pipeline_id, data, date, city_name):
     """Generierung von Text und Audiodatei für ein 3-Tage-Wetterbericht (ab übermorgen) einer bestimmten Stadt.
 
-    :param pipeline_id: Ordnername der Audiodatei
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param data: Dictionary mit relevanten Wetterdaten, die in preprocessing.weather.speech.merge_data
     erstellt wurden

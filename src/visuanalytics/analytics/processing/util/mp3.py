@@ -13,7 +13,7 @@ def text_to_mp3(pipeline_id, text):
 
     Der übergebene Text wird in eine Audiodatei im mp3-Format umgewandelt und in einem bestimmten Ordner abgespeichert.
 
-    :param pipeline_id: Ordnername der Audiodatei
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param text:
     :type text: str

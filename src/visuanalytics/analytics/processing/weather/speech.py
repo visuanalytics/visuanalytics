@@ -1,11 +1,6 @@
-# Autor: Tanja
-#
-# TODO: NOCH NICHT VOLLSTÄNDIG! NUR DEMO-VERSION
-# TODO: Vielleicht das Modul in "speech" umbenennen
-# Zur Vervollständigung werden weitere Module und das Dictionary mit den Daten der API und verarbeiteten Daten benötigt.
 """
-Generierung einer Audiodatei des Wetterberichts mit vorverarbeiteten Daten aus der Weatherbit-API.
-In DATA sind aktuell nur Beispielwerte abgespeichert.
+Generierung von Audiodateien für einen deutschlandweiten Wetterbericht mit vorbereiteten Daten aus der Weatherbit-API.
+Die Daten wurden in preprocessing/weather/transform und preprocessing/weather/speech vorbereitet.
 """
 
 from gtts import gTTS
@@ -14,7 +9,7 @@ from visuanalytics.analytics.util import resources
 
 
 def get_all_audios_germany(pipeline_id, data):
-    """Generiert eine Textvorlage für einen Wetterbericht: Heute, morgen und 3-Tage-Vorhersage als Audio-Datei.
+    """Generiert eine Textvorlage und Audiodateien für einen Wetterbericht (heute, morgen und 3-Tage-Vorhersage).
 
     Es wird jeweils ein Text für die Wettervorhersage für heute, morgen und die drei darauffolgenden Tage erstellt.
     Die Sätze werden aus Satzteilen zusammengesetzt, die u.a. von den Modulen cities_descriptions,
@@ -22,7 +17,12 @@ def get_all_audios_germany(pipeline_id, data):
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
-    :param data: Dictionary mit relevanten Wetterdaten aus der API (erstellt in der Methode merge_data in preprocessing/weather/speech.py)
+    :param data: Dictionary mit relevanten Wetterdaten aus der API (erstellt in der Methode merge_data in
+        preprocessing/weather/speech.py)
+    :type data: dict
+    :return: Array mit 7 Ordnerpfaden zu Audiodateien.
+    :rtype: str Array
+
 
     Example:
     data = {'today': {'weekday': 'Samstag', 'common_code': 804,
@@ -40,11 +40,6 @@ def get_all_audios_germany(pipeline_id, data):
             'next_3': {'weekday': 'Mittwoch', 'common_code': 802,
                 'city_highest_max': 'im Westen Deutschlands', 'temp_highest_max': '25', 'code_highest_max': 'wird es heiter mit klarem Himmel',
                 'city_lowest_max': 'in Hannover', 'temp_lowest_max': '7', 'code_lowest_max': 'ist es vereinzelt bewölkt'}}
-
-    :return: Array [file_name_today_weather_mp3, file_name_today_temp_mp3, file_name_tomorrow_weather_mp3,
-            file_name_tomorrow_temp_mp3, file_name_three_days_mp3]
-
-
     """
     text = []
 
