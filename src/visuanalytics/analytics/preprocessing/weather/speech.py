@@ -1,23 +1,22 @@
 """
 Funktionen zum Umwandeln der Daten aus der API in Teile eines Wetterberichts.
 
-In diesem Modul findet man verschiedene Methoden/Funktionen, die values aus der API bekommen. Diese werden dann so
+In diesem Modul findet man verschiedene Methoden, die Werte aus der API umwandeln können. Diese werden dann so
 verarbeitet, dass sie am Ende ein String sind mit ggf. Information darüber, welche Einheit der Wert hat. (Beispiel:
 ist rh=48. Ausgabe: "48 Prozent".)
 
-Des Weiteren beinhaltet dieses Modul zwei global definierte Variablen, die in Methoden/Funktionen in diesem Modul
-verwendet werden:
+Des Weiteren beinhaltet dieses Modul zwei global definierte Variablen, die in Methoden in diesem Modul verwendet werden:
 - WEATHER_DESCRIPTIONS: Dictionary mit verschiedenen Beschreibungen des Wetters anhand eines Codes.
 Funktion: random_weather_descriptions(code): Sucht eine Beschreibung für einen bestimmten Wetter-Code als String aus und
 gibt diesen zurück.
 - CITY_DESCRIPTIONS: Dictionary mit key:value <Stadtname>: "in <Stadtname>".
-Funktion: random_city_descriptions(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
+Funktion: city_name_to_text(city_name): Sucht eine Beschreibung für eine bestimmte Stadt als String aus und
 gibt diesen zurück.
 
-Die Methoden/Funktionen get_data_today_tomorrow_three, merge_data und merge_data_single bereiten die Daten vor, welche
+Die Methoden get_data_today_tomorrow_three, merge_data und merge_data_single bereiten die Daten vor, welche
 anschließend als Rückgabeparameter ein Dictionary zurückgeben. Die Dictionaries aus merge_data und merge_data_single
-erstellen die Dictionaries, die in processing.weather.speech.get_all_audios_germany und
-processing.weather.speech_single.get_all_audios_single_city benötigt werden, um Audiodateien für Wetterberichte
+erstellen die Dictionaries, die in processing/weather/speech/get_all_audios_germany und
+processing/weather/speech_single/get_all_audios_single_city benötigt werden, um Audiodateien für Wetterberichte
 (deutschlandweit und bezogen auf eine bestimmte Stadt) zu erstellen.
 """
 from numpy import random
@@ -31,16 +30,19 @@ def pres_data_to_text(pres):
 
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param pres: Luftdruck in mbar (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
+    :param pres: Luftdruck in mbar (Millibar) (Wert aus der Weatherbit-API bzw. Dictionary aus
+        preprocessing/weather/transform/preprocess_weather_data)
+    :type pres: float
     :return: String mit z.B. "0,83 Millibar"
+    :rtype: str
 
     Example:
         pres = 0.83
         p = air_data_to_text(pres)
         print(pres)
     """
-    pres_text = str(pres).replace(".", ",") + " Millibar"
+    pres_replace = str(pres).replace(".", ",")
+    pres_text = f"{pres_replace} Millibar"
     return pres_text
 
 
@@ -50,15 +52,15 @@ def percent_to_text(value):
     Der Ausgabeparameter dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
     :param value: ein Wert in % (Prozent) z.B. Niederschlagswahrscheinlichkeit oder relative Luftfeuchtigkeit
-        (Wert aus der Weatherbit-API bzw. Dictionary aus preprocessing.weather.transform.preprocess_weather_data)
+        (Wert aus der Weatherbit-API bzw. Dictionary aus preprocessing/weather/transform/preprocess_weather_data)
     :type value: int
     :return: String mit z.B. "58 Prozent"
     :rtype: str
 
     Example:
-        pop = 58
-        pop_p = percent_to_text(pop)
-        print(pop_p)
+        value = 58
+        value_p = percent_to_text(value)
+        print(value_p)
     """
     to_text = f"{str(value)} Prozent"
     return to_text
@@ -68,12 +70,12 @@ def wind_cdir_full_data_to_text(wind_cdir_full):
     """Wandelt die Windrichtung so um, dass sie flüssig vorgelesen werden kann.
 
     Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API bzw. aus dem Dictionary, welches in
-    preprocessing.weather.transform.preprocess_weather_data erstellt wurde.
+    preprocessing/weather/transform/preprocess_weather_data erstellt wurde.
     Im Dictionary directions_dictionary sind die englischen Wörter für die Himmelsrichtungen auf zwei verschiedene
     Weisen auf Deutsch übersetzt. Die Übersetzungen dienen später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
-    :param wind_cdir_full: Angabe der Windrichtung Beispiel: west-southwest (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
+    :param wind_cdir_full: Angabe der Windrichtung Beispiel: west-southwest (Wert aus der Weatherbit-API bzw. Dictionary
+        aus preprocessing/weather/transform/preprocess_weather_data)
     :type wind_cdir_full: str
     :return: Windrichtung -> String mit z.B. "West Südwest"
     :rtype: str
@@ -109,11 +111,11 @@ def wind_spd_data_to_text(wind_spd):
     """Wandelt die Windgeschwindigkeit so um, dass sie flüssig vorgelesen werden können.
 
     Dieser Eingabeparameter ist ein Wert aus der Weatherbit-API bzw. aus dem Dictionary, welches in
-    preprocessing.weather.transform.preprocess_weather_data erstellt wurde.
+    preprocessing/weather/transform/preprocess_weather_data erstellt wurde.
     Die Umwandlung in einen Satzteil in einem String dient später der flüssigeren Wiedergabe des Textes als Audiodatei.
 
     :param wind_spd: Angabe der Windgeschwindigkeit in m/s (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
+        preprocessing/weather/transform/preprocess_weather_data)
     :type wind_spd: float
     :return: Windrichtung -> String mit z.B. "0,83 Metern pro Sekunde"
     :rtype: str
@@ -130,34 +132,34 @@ def wind_spd_data_to_text(wind_spd):
 WEATHER_DESCRIPTIONS = {
     "200": {0: "kommt es zu Gewittern mit leichtem Regen",
             1: "ist mit Gewitter und leichtem Regen zu rechnen",
-            2: "Gewitter & Regen"},
+            2: "Gewitter"},
     "201": {0: "kommt es zu Gewittern mit Regen",
             1: "ist mit Gewitter und Regen zu rechnen",
-            2: "Gewitter & Regen"},
+            2: "Gewitter"},
     "202": {0: "kommt es zu Gewittern mit starkem Regen",
             1: "ist mit Gewitter und starkem Regen zu rechnen",
-            2: "Gewitter & Regen"},
+            2: "Gewitter"},
     "230": {0: "kommt es zu Gewittern mit leichtem Nieselregen",
             1: "ist mit Gewitter und leichtem Nieselregen zu rechnen",
-            2: "Gewitter & Nieselregen"},
+            2: "Gewitter"},
     "231": {0: "kommt es zu Gewittern mit Nieselregen",
             1: "ist mit Gewitter und Nieselregen zu rechnen",
-            2: "Gewitter & Nieselregen"},
+            2: "Gewitter"},
     "232": {0: "kommt es zu Gewittern mit starkem Nieselregen",
             1: "ist mit Gewitter und starkem Nieselregen zu rechnen",
-            2: "Gewitter & Nieselregen"},
+            2: "Gewitter"},
     "233": {0: "kommt es zu Gewittern mit Hagel",
             1: "ist mit Gewitter und Hagel zu rechnen",
-            2: "Gewitter & Hagel"},
+            2: "Gewitter"},
     "300": {0: "kommt es zu leichtem Nieselregen",
             1: "ist mit leichtem Nieselregen zu rechnen",
-            2: "Nieselregen"},
+            2: "regnerisch"},
     "301": {0: "kommt es zu Nieselregen",
             1: "ist mit Nieselregen zu rechnen",
-            2: "Gewitter & Regen"},
+            2: "regnerisch"},
     "302": {0: "kommt es zu starkem Nieselregen",
             1: "ist mit starkem Nieselregen zu rechnen",
-            2: "Nieselregen"},
+            2: "regnerisch"},
     "500": {0: "kommt es zu leichtem Regen",
             1: "ist es leicht regnerisch",
             2: "regnerisch"},
@@ -232,10 +234,10 @@ WEATHER_DESCRIPTIONS = {
             2: "leicht bewölkt"},
     "802": {0: "sind vereinzelte Wolken am Himmel",
             1: "ist es vereinzelt bewölkt",
-            2: "vereinzelt bewölkt"},
+            2: "leicht bewölkt"},
     "803": {0: "ist die Wolkendecke durchbrochen",
             1: "kommt es zu einer durchbrochenen Wolkendecke",
-            2: "bewölkt"},
+            2: "leicht bewölkt"},
     "804": {0: "kommt es zu bedecktem Himmel",
             1: "ist es bewölkt",
             2: "bewölkt"},
@@ -254,8 +256,8 @@ def random_weather_descriptions(code):
     String ausgegeben. Dieser Satzteil wird ein Teil des späteren Wetterberichts (.txt-Datei), welcher
     dann in eine Audio-Datei umgewandelt wird.
 
-    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer. (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
+    :param code: Wetter-Icon aus der Weatherbit-API, z.B. 501 als Integer. (Wert aus der Weatherbit-API bzw. Dictionary
+        aus preprocessing/weather/transform/preprocess_weather_data)
     :type code: int
     :return text_weather: String. Wird am Ende als Beschreibung zum Wetter als Satzteil in den Wetterbericht eingebaut.
     :rtype: str
@@ -296,15 +298,15 @@ CITY_NAMES = {
 
 
 def city_name_to_text(city_name):
-    """Gibt eine Beschreibung der Stadt aus.
+    """Gibt eine Stadt aus.
 
     Um die Texte des Wetterberichts automatisch zu generieren und sie trotzdem nicht immer gleich aussehen, wird
-    hier das Dictionary CITY_DESCRIPTIONS verwendet mit verschiedenen Beschreibungen zu einer Stadt. Dies kann ganz normal der Name
-    der Stadt sein oder zum Beispiel die Lage der Stadt in Deutschland. Mithilfe der Random-Funktion wird eine
-    dieser Beschreibungen ausgewählt und später im Text des Wetterberichts eingefügt.
+    hier das Dictionary CITY_DESCRIPTIONS verwendet mit verschiedenen Beschreibungen zu einer Stadt. Dies kann ganz
+    normal der Name der Stadt sein oder zum Beispiel die Lage der Stadt in Deutschland. Mithilfe der Random-Funktion
+    wird eine dieser Beschreibungen ausgewählt und später im Text des Wetterberichts eingefügt.
 
     :param city_name: Die von der Weatherbit-API ausgegebene Stadt. (Wert aus der Weatherbit-API bzw. Dictionary aus
-        preprocessing.weather.transform.preprocess_weather_data)
+        preprocessing/weather/transform/preprocess_weather_data)
     :type city_name: str
     :return text_city: Gibt eine Stadt aus und setzt ein "in " davor.
     :rtype: str
@@ -319,9 +321,12 @@ def city_name_to_text(city_name):
 
 
 def get_data_today_tomorrow_three(data):
-    """Verwendet Methoden aus preprocessing.weather.transform und preprocessing.weather.speech
+    """Erstellt ein Dictionary mithilfe der Methoden aus preprocessing/weather/transform und preprocessing/weather/speech.
 
-    :param data: Dictionary aus preprocessing.weather.transform.preprocess_weather_data
+    In dieser Methode werden 5 Dictionaries (für jeden Tag der Wettervorhersage eins) erstellt, welche Teil eines
+    Dictionaries werden, welches in merge_data erstellt wird.
+
+    :param data: Dictionary aus preprocessing/weather/transform/preprocess_weather_data
     :type data: dict
     :return: Dictionary mit relevanten Wetterdaten für eine 5-Tage-Deutschland-Wettervorhersage.
     :rtype: dict
@@ -346,6 +351,8 @@ def get_data_today_tomorrow_three(data):
 
 def merge_data(data):
     """ Zusammenführen der deutschlandweiten Wetterdaten für 5 Tage zu einem Dictionary mit Satzteilen.
+
+    Dieses Dictionary wird mithilfe der Dictionaries aus get_data_today_tomorrow_three() und weiteren Methonden erstellt.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API (erstellt in der Methode
         preprocess_weather_data in preprocessing/weather/transform.py)
@@ -417,6 +424,10 @@ def merge_data(data):
 
 def merge_data_single(data, city_name):
     """ Zusammenführen der einzelnen Wetterdaten einer Stadt (5 Tage) zu einem Dictionary mit Satzteilen.
+
+    Diese Methode erstellt ein Dictionary mit allen Wetterdaten der kommenden 5 Tage für eine bestimmte Stadt. Die
+    Wetterdaten, die aus der Weatherbit-API kommen, werden in Satzteile umgewandelt. So dass am Ende die Lückentexte in
+    processing/weather/speech_single.py gefüllt werden können.
 
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API (erstellt in der Methode
         preprocess_weather_data in preprocessing/weather/transform.py)
