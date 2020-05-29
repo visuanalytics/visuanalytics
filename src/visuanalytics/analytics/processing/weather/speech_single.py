@@ -55,7 +55,7 @@ def _generate_first_day_audio(pipeline_id, data, date, city_name):
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
         f"Die gefühlten Temperaturen liegen zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
         f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']} und die relative Luftfeuchtigkeit bei {data['rh']}. "
-        f"Der Wind kommt heute aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
+        f"Der Wind erreicht heute Geschwindigkeiten von {data['wind_spd']} und kommt aus Richtung {data['wind_cdir_full']}. "
         f"Die Sonne geht heute um {data['sunset_ts']} unter und geht morgen um {data['sunrise_ts']} wieder auf. "
     )
     file_path = fp.text_to_mp3(pipeline_id, text)
@@ -82,7 +82,7 @@ def _generate_second_day_audio(pipeline_id, data, date, city_name):
         f"Die Tiefstwerte liegen bei {data['min_temp']}. "
         f"Die gefühlten Temperaturen liegen zwischen {data['app_min_temp']} und {data['app_max_temp']}. "
         f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']} und die relative Luftfeuchtigkeit bei {data['rh']}. "
-        f"Der Wind kommt morgen aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
+        f"Der Wind erreicht morgen Geschwindigkeiten von {data['wind_spd']} und kommt aus Richtung {data['wind_cdir_full']}. "
     )
     file_path = fp.text_to_mp3(pipeline_id, text)
     return file_path
