@@ -1,7 +1,6 @@
 import logging
 import os
 
-from visuanalytics.analytics.control import job_from_config
 from visuanalytics.analytics.control.schedule import Scheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
 
@@ -15,8 +14,7 @@ def main():
     init()
 
     # TODO(max) run in other Thread
-    Scheduler(job_from_config.get_all_schedules, job_from_config.get_all_schedules_steps,
-              job_from_config.get_job_config).start()
+    Scheduler().start()
 
     # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
     # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen", "h264_nvenc": h264_nvenc})).start()

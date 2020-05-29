@@ -26,23 +26,19 @@ class Scheduler(object):
     """
     steps = {1: WeatherSteps, 2: SingleWeatherSteps}
 
-    def __init__(self, get_all_schedules=job.get_all_schedules, get_all_steps=job.get_all_schedules_steps,
-                 get_job_config=job.get_job_config):
+    def __init__(self):
         super().__init__()
-        self.__get_all_schedules = get_all_schedules
-        self.__get_all_steps = get_all_steps
-        self.__get_job_config = get_job_config
 
     def __check_time(self, now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
     def __run_jobs(self, schedule_id):
-        for job_step in self.__get_all_steps(schedule_id):
+        for job_step in job.get_all_schedules_steps(schedule_id):
             # If Step id is valid run
             if job_step["step_id"] < len(Scheduler.steps):
                 logger.info(f"Job {job_step['job_id']} started")
 
-                config = self.__get_job_config(job_step['job_id'])
+                config = job.get_job_config(job_step['job_id'])
 
                 t = threading.Thread(
                     target=Pipeline(uuid.uuid4().hex,
@@ -55,7 +51,7 @@ class Scheduler(object):
     def __check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
 
-        for schedule in self.__get_all_schedules():
+        for schedule in job.get_all_schedules():
             # Check if time is current Time
             if not self.__check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
                 continue
