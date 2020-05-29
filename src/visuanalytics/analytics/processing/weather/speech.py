@@ -68,19 +68,19 @@ def get_all_audios_germany(pipeline_id, data):
     # next_1 (1. Tag der 3-Wetter-Übersicht)
     text.append(
         f"Am {data['next_1']['weekday']} {data['next_1']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_1']['temp_lowest_max']} Grad {data['next_1']['city_lowest_max']} und {data['next_1']['temp_highest_max']} Grad "
+        f"Die Temperaturen liegen zwischen {data['next_1']['min_temp']} Grad {data['next_1']['city_min_temp']} und {data['next_1']['temp_highest_max']} Grad "
         f"{data['next_1']['city_highest_max']}. ")
 
     # next_2 (2. Tag der 3-Wetter-Übersicht)
     text.append(
         f"Am {data['next_2']['weekday']} {data['next_2']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_2']['temp_lowest_max']} Grad {data['next_2']['city_lowest_max']} und {data['next_2']['temp_highest_max']} Grad "
+        f"Die Temperaturen liegen zwischen {data['next_2']['min_temp']} Grad {data['next_2']['city_min_temp']} und {data['next_2']['temp_highest_max']} Grad "
         f"{data['next_2']['city_highest_max']}.  ")
 
     # next_3 (3. Tag der 3-Wetter-Übersicht)
     text.append(
         f"Am {data['next_3']['weekday']} {data['next_3']['common_code']}.  "
-        f"Die Temperaturen liegen zwischen {data['next_3']['temp_lowest_max']} Grad {data['next_3']['city_lowest_max']} und {data['next_3']['temp_highest_max']} Grad "
+        f"Die Temperaturen liegen zwischen {data['next_3']['min_temp']} Grad {data['next_3']['city_min_temp']} und {data['next_3']['temp_highest_max']} Grad "
         f"{data['next_3']['city_highest_max']}. ")
 
     out = []
