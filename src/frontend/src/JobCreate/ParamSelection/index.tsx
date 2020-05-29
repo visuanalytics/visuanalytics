@@ -1,7 +1,7 @@
-import React, { ReactElement } from "react";
-import { Divider, TextField, MenuItem } from "@material-ui/core";
-import { ContinueButton } from "../ContinueButton";
-import { useStyles } from "../style";
+import React, {ReactElement} from "react";
+import {Divider, TextField, MenuItem} from "@material-ui/core";
+import {ContinueButton} from "../ContinueButton";
+import {useStyles} from "../style";
 
 
 interface Props {
@@ -13,7 +13,7 @@ interface Param {
     possibleValues: string[]
 }
 
-export const ParamSelection: React.FC<Props> = ({ topic }: Props) => {
+export const ParamSelection: React.FC<Props> = ({topic}: Props) => {
     // const paramInfo: = useFetch("/params?topic=" + topic);
     const classes = useStyles();
     const paramInfo: Param[] = [
@@ -26,13 +26,13 @@ export const ParamSelection: React.FC<Props> = ({ topic }: Props) => {
             "possibleValues": ["ja", "nein"]
         }
     ]
-    const renderParam = (param: Param) => {
+    const renderParamField = (param: Param) => {
         const name: string = param.name;
         const possibleValues: string[] = param.possibleValues;
         let inputField: ReactElement;
         if (possibleValues.length === 0) {
             inputField = (
-                <TextField className={classes.inputField} variant="outlined" label={name} key={name} />
+                <TextField className={classes.inputField} variant="outlined" label={name} key={name}/>
             )
         } else {
             inputField = (
@@ -56,9 +56,9 @@ export const ParamSelection: React.FC<Props> = ({ topic }: Props) => {
             <div>
                 <h3 className={classes.jobCreateHeader}>Parameter festlegen</h3>
             </div>
-            <Divider />
-            {paramInfo.map(p => renderParam(p))}
-            <Divider />
+            <Divider/>
+            {paramInfo.map(p => renderParamField(p))}
+            <Divider/>
             <div className={classes.paddingSmall}>
                 <ContinueButton>
                     WEITER
