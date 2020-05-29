@@ -8,7 +8,7 @@ _generate_three_days_audio(pipeline_id, data_for_text, date, city_name)
 an, um für jeden Tag eine Audiodatei zu erhalten. Der Rückgabewert der eben genannten Methoden
 ist immer eine Audiodatei. Die dritte Methode wird drei Mal angewandt.
 """
-from visuanalytics.analytics.processing.util import filepath_mp3 as fp
+from visuanalytics.analytics.processing.util import mp3 as fp
 
 
 def get_all_audios_single_city(pipeline_id, data, date, city_name):
@@ -58,7 +58,7 @@ def _generate_first_day_audio(pipeline_id, data, date, city_name):
         f"Der Wind kommt heute aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
         f"Die Sonne geht heute um {data['sunset_ts']} unter und geht morgen um {data['sunrise_ts']} wieder auf. "
     )
-    file_path = fp.get_filepath_mp3(pipeline_id, text)
+    file_path = fp.text_to_mp3(pipeline_id, text)
     return file_path
 
 
@@ -84,7 +84,7 @@ def _generate_second_day_audio(pipeline_id, data, date, city_name):
         f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']} und die relative Luftfeuchtigkeit bei {data['rh']}. "
         f"Der Wind kommt morgen aus Richtung {data['wind_cdir_full']} und erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
-    file_path = fp.get_filepath_mp3(pipeline_id, text)
+    file_path = fp.text_to_mp3(pipeline_id, text)
     return file_path
 
 
@@ -107,5 +107,5 @@ def _generate_three_days_audio(pipeline_id, data, date, city_name):
         f"Am {date} {data['code']} bei Temperaturen von {data['min_temp']} bis {data['max_temp']}. "
         f"Die Regenwahrscheinlichkeit liegt am {date} bei {data['pop']}. Der Wind erreicht Geschwindigkeiten von {data['wind_spd']}. "
     )
-    file_path = fp.get_filepath_mp3(pipeline_id, text)
+    file_path = fp.text_to_mp3(pipeline_id, text)
     return file_path
