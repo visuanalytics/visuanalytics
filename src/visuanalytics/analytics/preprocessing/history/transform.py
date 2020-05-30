@@ -76,7 +76,7 @@ def preprocess_history_data(json_data):
 
 
 def get_date(data):
-    """Wandelt 'release_date' in Datum und Jahr um.
+    """Wandelt 'release_date' in Daten, Jahr und " vor wie vielen Jahren" um.
     
     In der Zeit-API wird das Datum wie folgt dargestellt: 2019-05-31T18:50:44Z (UTC ISO 8601: YYYY-MM-DDThh:mm:ssZ)
     Dieses Format wird eingelesen und am Ende wird das Datum des Artikels und das Jahr des Artikels ausgegeben.
