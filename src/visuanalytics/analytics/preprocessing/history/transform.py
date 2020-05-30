@@ -1,6 +1,7 @@
 """
 Modul zum transformieren der Json data in eine handlichere Struktur sowie anpassung des Datums, sodass es später in der Audio datei erwähnt werden kann
 """
+from datetime import datetime
 
 from visuanalytics.analytics.util import dictionary
 
@@ -75,5 +76,38 @@ def preprocess_history_data(json_data):
 
 
 def get_date(data):
-    # todo
-    pass
+    """Wandelt 'release_date' in Datum und Jahr um.
+    
+    In der Zeit-API wird das Datum wie folgt dargestellt: 2019-05-31T18:50:44Z (UTC ISO 8601: YYYY-MM-DDThh:mm:ssZ)
+    Dieses Format wird eingelesen und am Ende wird das Datum des Artikels und das Jahr des Artikels ausgegeben.
+    
+    :param data: Dictionary der JSON-Daten, aber nur der erste Teil in dem 10 Einträge/Artikel stehen.
+    :type data: dict
+    :return: Daten der Einträge/Artikel im Format YYYY-MM-DDThh:mm:ssZ und das Jahr
+    :rtype: str[], str
+    """
+    today = datetime.now()
+    date = []
+    for i in range(0, 10):
+        date_api = data[0][i]['release_date']
+        historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
+        new_format = "%Y-%m-%d"
+        date.append(historical_date.strftime(new_format))
+
+    date_api = data[0][0]['release_date']
+    historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
+    year = "%Y"
+    historical_year = historical_date.strftime(year)
+    years_ago = int(today.year) - int(historical_year)
+
+    # TODO: kind of error handling
+    for j in range(1, 10):
+        date_api_test = data[0][j]['release_date']
+        historical_date_test = datetime.strptime(date_api_test, "%Y-%m-%dT%H:%M:%SZ")
+        year = "%Y"
+        historical_year_test = historical_date_test.strftime(year)
+        years_ago_test = int(today.year) - int(historical_year_test)
+        if (years_ago_test != years_ago):
+            print("Fehler: unterschiedliche Jahre in der Vergangenheit")
+
+    return date, years_ago
