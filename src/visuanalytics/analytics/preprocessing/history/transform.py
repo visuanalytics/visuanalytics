@@ -88,26 +88,39 @@ def get_date(data):
     """
     today = datetime.now()
     date = []
-    for i in range(0, 10):
-        date_api = data[0][i]['release_date']
-        historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
-        new_format = "%Y-%m-%d"
-        date.append(historical_date.strftime(new_format))
+    historical_year = []
+    years_ago = []
+    for i in range(4):
+        for j in range(10):
+            date_api = data[i][j]['release_date']
+            historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
+            new_format = "%Y-%m-%d"
+            date.append(historical_date.strftime(new_format))
 
-    date_api = data[0][0]['release_date']
-    historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
-    year = "%Y"
-    historical_year = historical_date.strftime(year)
-    years_ago = int(today.year) - int(historical_year)
+        date_api = data[i][j]['release_date']
+        historical_date = datetime.strptime(date_api, "%Y-%m-%dT%H:%M:%SZ")
+        year = "%Y"
+        historical_year.append(historical_date.strftime(year))
+        years_ago.append(str(int(today.year) - int(historical_year[i])))
 
     # TODO: kind of error handling
-    for j in range(1, 10):
-        date_api_test = data[0][j]['release_date']
-        historical_date_test = datetime.strptime(date_api_test, "%Y-%m-%dT%H:%M:%SZ")
-        year = "%Y"
-        historical_year_test = historical_date_test.strftime(year)
-        years_ago_test = int(today.year) - int(historical_year_test)
-        if (years_ago_test != years_ago):
-            print("Fehler: unterschiedliche Jahre in der Vergangenheit")
+    # for j in range(1, 10):
+    #    date_api_test = data[0][j]['release_date']
+    #    historical_date_test = datetime.strptime(date_api_test, "%Y-%m-%dT%H:%M:%SZ")
+    #    year = "%Y"
+    #    historical_year_test = historical_date_test.strftime(year)
+    #    if (historical_year_test != historical_year):
+    #        print("Fehler: unterschiedliche Jahre in der Vergangenheit")
 
-    return date, historical_year, years_ago
+    return [date, historical_year, years_ago]
+
+
+KNOWN_WORDS = ["spd", "Spd", "csu", "Csu", "cdu", "Cdu", "usa", "Usa", "eu", "Eu"]
+
+
+def grammar_keywords(data):
+    for i in range(4):
+        for keyword in data[1][i]:
+            if keyword in KNOWN_WORDS:
+                keyword.toUpper()
+    return data
