@@ -83,8 +83,8 @@ def get_date(data):
     
     :param data: Dictionary der JSON-Daten, aber nur der erste Teil in dem 10 Einträge/Artikel stehen.
     :type data: dict
-    :return: Daten der Einträge/Artikel im Format YYYY-MM-DDThh:mm:ssZ und das Jahr
-    :rtype: str[], str
+    :return: Daten der aller Einträge/Artikel im Format YYYY-MM-DDThh:mm:ssZ, Jahr (einmal) und wie viele Jahre es ab heute her ist (einmal)
+    :rtype: str[], str, int
     """
     today = datetime.now()
     date = []
@@ -110,4 +110,4 @@ def get_date(data):
         if (years_ago_test != years_ago):
             print("Fehler: unterschiedliche Jahre in der Vergangenheit")
 
-    return date, years_ago
+    return date, historical_year, years_ago
