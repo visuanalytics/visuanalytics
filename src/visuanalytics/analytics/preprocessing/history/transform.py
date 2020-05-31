@@ -13,7 +13,15 @@ list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Da
 
 def preprocess_history_data(json_data):
     """
-    Wandelt eine Liste von Zeit-Forecast-API-Responses in ein Tupel/Liste/Dictionary um, das die für uns relevanten Daten enthält.
+    Wandelt eine Liste von Zeit-Forecast-API-Responses in ein Tupel um, das die für uns relevanten Daten enthält. Dieses Tupel besteht
+    aus drei Listen.
+    Die erste Liste enthält Listen und zwar so viele, wie in Jahren angefordert wurden (hier immer 4 Jahre). Diese Listen enthalten
+    jeweils Dictionaries und zwar so viele, wie es Artikel gibt (hier immer 10 Jahre), in denen Infos zu und der Teasertext selbst drin steht.
+    Die zweite Liste enthält Listen (hier wieder 4). In jeder Liste sind jeweils zu einem Jahr die Keywords zu allen Artikeln enthalten und
+    zwar in absteigender Reihenfolge ihres Aufkommens. Also die Liste fängt mit einem am häufigsten vorkommenen Keyword an und endet mit
+    einem Keyword, dass am seltesten vorkam.
+    Die dritte Liste enthält Dictionaries (hier wieder 4). In jedem Dictionary sind jeweils zu einem Jahr als Keys die Keywords und als Value
+    der zugehörige Wert, wie häufig dieses vorgekommen ist zu allen Artikeln enthalten.
 
     Um die weitere Verarbeitung zu vereinfachen, werden die Zeit-Daten in dieser Funktionen in eine leichter
     handzuhabende Struktur gebracht. Dazu werden irrelevante Parameter weggelassen und die allgemeine Struktur angepasst.
@@ -50,12 +58,21 @@ def preprocess_history_data(json_data):
 
             Die Einträge sind direkt nach der Häufigkeit sortiert, das erste Element der Liste hat die
             größte Zahl im Api Request
+        ],
+        [
+            {   'aachen': 1,
+                'afd': 4,
+                'afrika': 1,
+                'altersunterschied': 1,
+                'altona': 2,
+                usw.
+            }
         ]
     )
 
     :param json_data: Json-Data der Zeit-Api (oder eingelesenen Data aus der Testdatei)
     :rtype dict
-    :return: Überarbeitet Data Bsp oben angegebene
+    :return: vorverarbeitetes Data-Objekt der Zeit-Api
     :rtype: tuple
 
     """
