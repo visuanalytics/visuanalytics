@@ -59,7 +59,8 @@ def preprocess_history_data(json_data):
     :rtype: tuple
 
     """
-    output = ([], [])
+    output = ([], [], [])
+    key_dict = {}
     for idx in range(0, len(json_data)):
         data = []
         for i in range(0, len(json_data[idx]["matches"])):
@@ -72,6 +73,11 @@ def preprocess_history_data(json_data):
         for w in sorted(tosort, key=tosort.get, reverse=True):
             data.append(w)
         output[1].append(data)
+        for j in range(0, int(len(json_data[idx]["facets"]["keyword"]) / 2)):
+            key_dict.update(
+                {json_data[idx]["facets"]["keyword"][j * 2]: json_data[idx]["facets"]["keyword"][(j * 2) + 1]})
+        output[2].append(key_dict)
+    # print(output[2])
     return output
 
 
