@@ -75,6 +75,7 @@ def preprocess_history_data(json_data):
     return output
 
 
+# TODO: am Anfang der Steps Klasse erstellen lassen, sonst könnte es Probleme geben
 def get_date(data):
     """Wandelt 'release_date' in Daten, Jahr und " vor wie vielen Jahren" um.
     
@@ -110,17 +111,32 @@ def get_date(data):
     #    year = "%Y"
     #    historical_year_test = historical_date_test.strftime(year)
     #    if (historical_year_test != historical_year):
-    #        print("Fehler: unterschiedliche Jahre in der Vergangenheit")
+    #        raise Exception("Fehler: unterschiedliche Jahre in der Vergangenheit")
 
     return [date, historical_year, years_ago]
 
 
-KNOWN_WORDS = ["spd", "Spd", "csu", "Csu", "cdu", "Cdu", "usa", "Usa", "eu", "Eu"]
+UPPERCASE_WORDS = ["spd", "Spd", "csu", "Csu", "cdu", "Cdu", "usa", "Usa", "eu", "Eu", "fdp", "Fdp", "bbc", "Bbc",
+                   "faz", "Faz", "fc", "Fc", "hsv", "Hsv"]
+"""
+Liste mit Wörtern bei denen wir wissen, dass sie gegebenenfalls als Keyword auftauchen und wissen, dass sie komplett
+groß geschrieben werden.
+"""
 
 
 def grammar_keywords(data):
+    """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten.
+
+    :param data: Bekommt die vorverarbeiteten Daten aus der API
+    :type data: Liste
+    :return: Gibt die Data so wieder aus, nur dass die Keywords nun die Groß- und Kleinschreibung beachten.
+    :rtype: Liste
+    """
+    # TODO: was passiert bei Namen und Bindestrichen?
     for i in range(4):
         for keyword in data[1][i]:
-            if keyword in KNOWN_WORDS:
-                keyword.toUpper()
+            if keyword in UPPERCASE_WORDS:
+                keyword.upper()
+            else:
+                keyword.capitalize()
     return data
