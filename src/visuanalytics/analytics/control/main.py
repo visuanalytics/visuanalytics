@@ -22,8 +22,9 @@ def main():
     # TODO(max) run in other Thread
 
     # Scheduler().start()
-    Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
-    # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen", "h264_nvenc": h264_nvenc})).start()
+    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
+    Pipeline(uuid.uuid4().hex,
+             SingleWeatherSteps({"testing": testing, "city_name": "Giessen", "h264_nvenc": h264_nvenc})).start()
     # Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
 
 

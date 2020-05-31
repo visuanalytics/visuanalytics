@@ -4,8 +4,8 @@ Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder zu gen
 
 from PIL import Image
 from PIL import ImageDraw
-from PIL import ImageFont
 
+from visuanalytics.analytics.processing.util.text_draw import draw_text
 from visuanalytics.analytics.util import resources
 
 LOCATIONS_WEEKDAYS = [(345, 52), (960, 52), (1585, 52)]
@@ -88,10 +88,10 @@ def _get_threeday_image(pipeline_id, data, data2, weekdates, which_date):
     draw = ImageDraw.Draw(source_img)
 
     for item in data2:
-        _draw_text(draw, item[0], item[1])
+        draw_text(draw, item[0], item[1])
 
     for idx, item in enumerate(LOCATIONS_WEEKDAYS):
-        _draw_text(draw, item, weekdates[idx])
+        draw_text(draw, item, weekdates[idx])
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -120,7 +120,7 @@ def _get_oneday_icons_image(pipeline_id, data, weekdate):
         icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 90, item[0][1] - 35), icon)
     draw = ImageDraw.Draw(source_img)
-    _draw_text(draw, (305, 48), weekdate)
+    draw_text(draw, (305, 48), weekdate)
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -146,24 +146,10 @@ def _get_oneday_temp_image(pipeline_id, data, weekdate):
     tile = Image.open(resources.get_resource_path("weather/kachel.png"))
     for item in data:
         source_img.paste(tile, (item[0][0] - 53, item[0][1]), tile)
-        _draw_text(draw, item[0], item[1], fontsize=50)
+        draw_text(draw, item[0], item[1], font_size=50)
 
-    _draw_text(draw, (305, 48), weekdate)
+    draw_text(draw, (305, 48), weekdate)
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
 
     return file
-
-
-def _draw_text(draw, position, content, fontsize=70, fontcolour="white", path="weather/Dosis-Bold.ttf"):
-    ttype = ImageFont.truetype(resources.get_resource_path(path), fontsize)
-    w, h = ttype.getsize(content)
-    draw.text(((position[0] - (w / 2)), position[1]), content,
-              font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
-              fill=fontcolour)
-
-
-def _draw_text_fix(draw, position, content, fontsize=70, fontcolour="white", path="weather/Dosis-Bold.ttf"):
-    draw.text(position, content,
-              font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
-              fill=fontcolour)
