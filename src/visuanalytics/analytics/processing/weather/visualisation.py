@@ -146,7 +146,7 @@ def _get_oneday_temp_image(pipeline_id, data, weekdate):
     tile = Image.open(resources.get_resource_path("weather/kachel.png"))
     for item in data:
         source_img.paste(tile, (item[0][0] - 53, item[0][1]), tile)
-        draw_text(draw, item[0], item[1], fontsize=50)
+        draw_text(draw, item[0], item[1], font_size=50)
 
     draw_text(draw, (305, 48), weekdate)
     file = resources.new_temp_resource_path(pipeline_id, "png")

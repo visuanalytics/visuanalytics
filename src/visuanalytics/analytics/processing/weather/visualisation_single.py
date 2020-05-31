@@ -60,24 +60,24 @@ def _generate_first_second_day_image(pipeline_id, data, date, city_name, which_d
 
     draw = ImageDraw.Draw(source_img)
 
-    draw_text(draw, LOCATION_CITY_NAME, city_name, fontsize=120)
+    draw_text(draw, LOCATION_CITY_NAME, city_name, font_size=120)
 
     for idx, d in enumerate(date):
         if idx == which_date or which_date == 2:
             colour = "white"
-        draw_text(draw, LOCATION_WEEKDAYS_2[idx], d, fontcolour=colour)
+        draw_text(draw, LOCATION_WEEKDAYS_2[idx], d, font_colour=colour)
         draw_text(draw, LOCATION_ICON_NAME_2[idx], WEATHER_DESCRIPTIONS[str(data[idx]["code"])][2],
-                  path="weather/Dosis-Medium.ttf", fontcolour=colour)
-        draw_text(draw, LOCATION_TEMP_MAX_2[idx], str(round(data[idx]["max_temp"])) + "\u00B0", fontsize=110,
-                  fontcolour=colour)
-        draw_text(draw, LOCATION_TEMP_MIN_2[idx], str(round(data[idx]["min_temp"])) + "\u00B0", fontsize=80,
-                  fontcolour=colour)
+                  font_path="weather/Dosis-Medium.ttf", font_colour=colour)
+        draw_text(draw, LOCATION_TEMP_MAX_2[idx], str(round(data[idx]["max_temp"])) + "\u00B0", font_size=110,
+                  font_colour=colour)
+        draw_text(draw, LOCATION_TEMP_MIN_2[idx], str(round(data[idx]["min_temp"])) + "\u00B0", font_size=80,
+                  font_colour=colour)
         for i in range(0, 4):
             draw_text_fix(draw, (LOCATION_FIRST_ENTRY_NAME_2[idx][0], LOCATION_FIRST_ENTRY_NAME_2[idx][1] + (i * 70)),
-                          keys[i][0], path="weather/Dosis-Regular.ttf", fontsize=45, fontcolour=colour)
+                          keys[i][0], font_path="weather/Dosis-Regular.ttf", font_size=45, font_colour=colour)
             draw_text_fix(draw, (LOCATION_FIRST_ENTRY_DATA_2[idx][0], LOCATION_FIRST_ENTRY_DATA_2[idx][1] + (i * 70)),
-                          str(round(data[idx][keys[i][1]], 2)) + keys[i][2], path="weather/Dosis-Regular.ttf",
-                          fontsize=45, fontcolour=colour)
+                          str(round(data[idx][keys[i][1]], 2)) + keys[i][2], font_path="weather/Dosis-Regular.ttf",
+                          font_size=45, font_colour=colour)
         colour = "#949994"
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
@@ -100,21 +100,22 @@ def _generate_three_days_image(pipeline_id, data, date, city_name, which_date, k
 
     draw = ImageDraw.Draw(source_img)
 
-    draw_text(draw, LOCATION_CITY_NAME, city_name, fontsize=120)
+    draw_text(draw, LOCATION_CITY_NAME, city_name, font_size=120)
 
     for idx, d in enumerate(date):
         if idx == which_date or which_date == 3:
             colour = "white"
-        draw_text(draw, LOCATION_WEEKDAYS_3[idx], d, fontcolour=colour)
-        draw_text(draw, LOCATION_TEMP_MAX_3[idx], str(round(data[idx]["max_temp"])) + "\u00B0", fontsize=110,
-                  fontcolour=colour)
-        draw_text(draw, LOCATION_TEMP_MIN_3[idx], str(round(data[idx]["min_temp"])) + "\u00B0", fontsize=80,
-                  fontcolour=colour)
-        draw_text_fix(draw, LOCATION_FIRST_ENTRY_NAME_3[idx], keys[0], path="weather/Dosis-Regular.ttf", fontsize=45,
-                      fontcolour=colour)
+        draw_text(draw, LOCATION_WEEKDAYS_3[idx], d, font_colour=colour)
+        draw_text(draw, LOCATION_TEMP_MAX_3[idx], str(round(data[idx]["max_temp"])) + "\u00B0", font_size=110,
+                  font_colour=colour)
+        draw_text(draw, LOCATION_TEMP_MIN_3[idx], str(round(data[idx]["min_temp"])) + "\u00B0", font_size=80,
+                  font_colour=colour)
+        draw_text_fix(draw, LOCATION_FIRST_ENTRY_NAME_3[idx], keys[0], font_path="weather/Dosis-Regular.ttf",
+                      font_size=45,
+                      font_colour=colour)
         draw_text_fix(draw, LOCATION_FIRST_ENTRY_DATA_3[idx], str(data[idx][keys[1]]) + keys[2],
-                      path="weather/Dosis-Regular.ttf",
-                      fontsize=45, fontcolour=colour)
+                      font_path="weather/Dosis-Regular.ttf",
+                      font_size=45, font_colour=colour)
         colour = "#949994"
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
