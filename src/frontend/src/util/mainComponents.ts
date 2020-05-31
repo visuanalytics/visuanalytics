@@ -4,7 +4,7 @@ import { FC } from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
 
-export type Component = {
+export type MainComponent = {
   component: FC;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   navName: string;
@@ -12,9 +12,9 @@ export type Component = {
 
 /**
  * Object das Alle main Componenten mit Icon und Navigations namen beinhalte.
- * Die Keys müssen in Components eingetragen werden.
+ * Die Keys müssen in ComponentKey eingetragen werden.
  */
-export const components = {
+export const mainComponents = {
   home: {
     component: Home,
     icon: HomeIcon,
@@ -23,6 +23,6 @@ export const components = {
 };
 
 /**
- * Type für alle Keys von components
+ * Type für alle Keys von mainComponents
  */
-export type Components = "home";
+export type ComponentKey = "home";

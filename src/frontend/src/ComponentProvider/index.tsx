@@ -1,12 +1,16 @@
 import React from "react";
-import { Components, Component, components } from "../util/mainComponents";
+import {
+  ComponentKey,
+  MainComponent,
+  mainComponents,
+} from "../util/mainComponents";
 
 // Component das zuerst Angezeigt wird
-const startComponent: Components = "home";
+const startComponent: ComponentKey = "home";
 
 type ComponentContextType = {
-  current: Component;
-  setCurrent: (next: Components) => void;
+  current: MainComponent;
+  setCurrent: (next: ComponentKey) => void;
 };
 
 export const ComponentContext = React.createContext<
@@ -20,12 +24,12 @@ interface Props {}
  * um das Aktuelle Component auszuwählen.
  */
 export const ComponentProvider: React.FC<Props> = ({ children }) => {
-  const [current, setCurrent] = React.useState<Component>(
-    components[startComponent]
+  const [current, setCurrent] = React.useState<MainComponent>(
+    mainComponents[startComponent]
   );
 
-  const handleSetCurrent = (next: Components) => {
-    setCurrent(components[next]);
+  const handleSetCurrent = (next: ComponentKey) => {
+    setCurrent(mainComponents[next]);
   };
 
   return (
