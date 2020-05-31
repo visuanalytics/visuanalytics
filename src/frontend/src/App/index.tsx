@@ -1,11 +1,15 @@
 import React from "react";
-
-// TODO
+import { ComponentProvider } from "../ComponentProvider";
+import { Main } from "./Main";
+import { Header } from "../Header";
 
 const App = () => {
   return (
     <div>
-      <img src="/images/logo.png" alt="logo" />
+      <ComponentProvider>
+        <Header />
+        <Main />
+      </ComponentProvider>
     </div>
   );
 };
