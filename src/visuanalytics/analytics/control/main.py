@@ -1,7 +1,7 @@
 import logging
 import os
 
-from visuanalytics.analytics.control.schedule import Scheduler
+from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
 
 

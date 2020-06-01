@@ -7,7 +7,6 @@ from datetime import datetime, time as dt_time
 from visuanalytics.analytics.control.pipeline import Pipeline
 from visuanalytics.analytics.control.procedures.weather import WeatherSteps
 from visuanalytics.analytics.control.procedures.weather_single import SingleWeatherSteps
-from visuanalytics.server.db import job
 
 logger = logging.getLogger(__name__)
 
@@ -29,46 +28,28 @@ class Scheduler(object):
     def __init__(self):
         super().__init__()
 
-    def __check_time(self, now: datetime, run_time: dt_time):
+    @staticmethod
+    def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
-    def __run_jobs(self, schedule_id):
-        for job_step in job.get_all_schedules_steps(schedule_id):
-            # If Step id is valid run
-            if job_step["step_id"] < len(Scheduler.steps):
-                logger.info(f"Job {job_step['job_id']} started")
+    @staticmethod
+    def _check_steps_id(step_id, job_id):
+        if step_id < len(Scheduler.steps):
+            return True
+        else:
+            # For the Step id where no Step Klass found
+            logger.warning(f"Invalid Step id: '{step_id}', for job {job_id}")
+            return False
 
-                config = job.get_job_config(job_step['job_id'])
+    @staticmethod
+    def _start_job(steps_id: int, config: dict):
+        t = threading.Thread(
+            target=Pipeline(uuid.uuid4().hex,
+                            Scheduler.steps[steps_id](config)).start)
+        t.start()
 
-                t = threading.Thread(
-                    target=Pipeline(uuid.uuid4().hex,
-                                    Scheduler.steps[job_step["step_id"]](config)).start)
-                t.start()
-            else:
-                # For the Step id in the Database where no Step Klass found
-                logger.warning(f"Invalid Step id: '{job_step['step_id']}', for job {job_step['job_id']}")
-
-    def __check_all(self, now: datetime):
-        logger.info(f"Check if something needs to be done at: {now}")
-
-        for schedule in job.get_all_schedules():
-            # Check if time is current Time
-            if not self.__check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
-                continue
-            # If date is not none check if date is today
-            if schedule["date"] and not schedule["date"] == now.date():
-                # TODO Delete date schedule after run
-                continue
-
-            # If weekday is not none check if weekday is same as today
-            if schedule["weekday"] and not schedule["weekday"] == now.weekday():
-                continue
-
-            # if daily is not none check if daily is true
-            if schedule["daily"] is not None and not schedule["daily"]:
-                continue
-
-            self.__run_jobs(schedule["id"])
+    def _check_all(self, now):
+        assert False, "Not implemented"
 
     def start(self):
         """Started den Scheduler.
@@ -82,7 +63,7 @@ class Scheduler(object):
                 # TODO(max) vtl move try catch in for Loop to continue looping and not skip all jobs
                 try:
                     # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
-                    self.__check_all(datetime.now())
+                    self._check_all(datetime.now())
                 except:
                     logger.exception("An error occurred: ")
 
