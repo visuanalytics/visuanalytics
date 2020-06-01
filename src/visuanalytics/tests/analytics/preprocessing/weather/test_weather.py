@@ -127,20 +127,6 @@ class PreprocessTest(unittest.TestCase):
     def test_data_icon_threeday_check_if_string(self):
         self.assertIsInstance(visualisation.data_icon_threeday(self.output)[0][3], str)
 
-    def test_get_weekday(self):
-        """
-        Datum: 2020-05-19
-        """
-        actual = transform.get_weekday(self.output)
-        expected = {
-            'today': 'Dienstag',
-            'tomorrow': 'Mittwoch',
-            'next_1': 'Donnerstag',
-            'next_2': 'Freitag',
-            'next_3': 'Samstag'
-        }
-        self.assertEqual(actual, expected)
-
     def test_get_cities_max_temp(self):
         cities_highest_max_temp = []
         codes_highest_max_temp = []
