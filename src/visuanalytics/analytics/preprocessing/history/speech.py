@@ -76,8 +76,11 @@ def get_teaser_texts(data, most_often_keys):
     elif (len(teaser_with_keyword) == 1):
         text_1, text_2 = random_teaser_text(data)
         teaser_text_1 = teaser_with_keyword[0]
-        teaser_text_2 = text_1
-
+        if (text_1 != teaser_text_1):
+            teaser_text_2 = text_1
+        else:
+            teaser_text_2 = text_2
+            
     elif (len(teaser_with_keyword) >= 2):
         teaser_text_1 = teaser_with_keyword[0]
         teaser_text_2 = teaser_with_keyword[1]
