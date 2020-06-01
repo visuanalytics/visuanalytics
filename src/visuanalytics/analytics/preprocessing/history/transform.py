@@ -166,13 +166,13 @@ def grammar_keywords(data):
 
 
 def string_formatting(text):
-    """Überprüft auf " und ersetzt diese mit \".
+    """Überprüft auf " und ersetzt diese mit \" und überprüft auf / und ersetzt mit Leerzeichen
 
-    :param text: Erhält einen String und prüft diesen auf " z.B. bei Zitaten und ändert diese um in \", damit es kein
-    Problem gibt, bei der Erstellung der Texte mit Hilfe von formatted strings.
+    :param text: Erhält einen String
     :type: str
     :return: Geprüfter Text, ggf. mit ersetztem "
     :rtype: str
     """
-    return_text = text.replace('"', '\"')
+    text_1 = text.replace('"', '\"')
+    return_text = text_1.replace('/', ' ')
     return return_text
