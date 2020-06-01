@@ -1,0 +1,12 @@
+{
+  "jobs": [
+    {
+      "name": "name",
+      "id": 0,
+      "steps_id": 1,
+      "time": "12:00",
+      "daily": true,
+      "config": {}
+    }
+  ]
+}
