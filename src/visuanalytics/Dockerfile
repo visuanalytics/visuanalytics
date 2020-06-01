@@ -19,4 +19,4 @@ COPY --chown=appuser . ./visuanalytics
 # Expose Server Post
 #EXPOSE 5000
 
-CMD ["python", "visuanalytics"]
+CMD ["python", "-m", "visuanalytics"]
