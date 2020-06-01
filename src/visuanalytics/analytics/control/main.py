@@ -1,34 +1,37 @@
 import logging
 import os
 
-from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
+from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
+from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
-
-
 # TODO(Max) Implement (current just for testing)
+from visuanalytics.server.db import db
+
+
 def main():
     config = config_manager.get_public()
 
     init(config)
 
-    Scheduler().start()
-
-    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": config.get("testing", false), "h264_nvenc": config.get("h264_nvenc", false)})).start()
-    # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": config.get("testing", false), "h264_nvenc": config.get("h264_nvenc", false), "city_name": "Giessen"})).start()
-    # Pipeline(uuid.uuid4().hex, HistorySteps({"testing": config.get("testing", false), "h264_nvenc": config.get("h264_nvenc", false)})).start()
+    # If db is in use Start db Scheduler else run Json Scheduler
+    if config["db"]["use"]:
+        DbScheduler(config["steps_base_config"]).start()
+    else:
+        JsonScheduler("jobs.json", config["steps_base_config"]).start()
 
 
 def init(config: dict):
     # Check if all external Programmes are installed
-    external_programms.all_installed(config.get("external_programms", []))
+    external_programms.all_installed(config.get("external_programms"))
 
     # initialize logging
     level = logging.INFO if config.get("testing", False) else logging.WARNING
     logging.basicConfig(format='%(module)s %(levelname)s: %(message)s', level=level)
 
-    # init db
-    # DB is currently not in use
-    # db.init_db()
+    # if db is in use Inizalisize Database
+    if config["db"]["use"]:
+        # init db
+        db.init_db()
 
     # create temp and out directory
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
