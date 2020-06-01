@@ -7,7 +7,10 @@ from visuanalytics.server.db import job
 logger = logging.getLogger(__name__)
 
 
-class DBScheduler(Scheduler):
+class DbScheduler(Scheduler):
+    def __init__(self, base_config=None):
+        super().__init__(base_config)
+
     def __run_jobs(self, schedule_id):
         for job_step in job.get_all_schedules_steps(schedule_id):
             # If Step id is valid run

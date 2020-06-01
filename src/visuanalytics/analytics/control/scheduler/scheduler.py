@@ -25,8 +25,11 @@ class Scheduler(object):
     """
     steps = {1: WeatherSteps, 2: SingleWeatherSteps}
 
-    def __init__(self):
+    def __init__(self, base_config=None):
         super().__init__()
+        if base_config is None:
+            base_config = {}
+        self._base_config = base_config
 
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
@@ -41,8 +44,10 @@ class Scheduler(object):
             logger.warning(f"Invalid Step id: '{step_id}', for job {job_id}")
             return False
 
-    @staticmethod
-    def _start_job(steps_id: int, config: dict):
+    def _start_job(self, steps_id: int, config: dict):
+        # Add base_config if exists
+        config = {**config, **self._base_config}
+
         t = threading.Thread(
             target=Pipeline(uuid.uuid4().hex,
                             Scheduler.steps[steps_id](config)).start)
