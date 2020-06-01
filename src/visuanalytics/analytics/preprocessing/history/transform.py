@@ -163,3 +163,16 @@ def grammar_keywords(data):
             else:
                 keyword.capitalize()
     return data
+
+
+def string_formatting(text):
+    """Überprüft auf " und ersetzt diese mit \".
+
+    :param text: Erhält einen String und prüft diesen auf " z.B. bei Zitaten und ändert diese um in \", damit es kein
+    Problem gibt, bei der Erstellung der Texte mit Hilfe von formatted strings.
+    :type: str
+    :return: Geprüfter Text, ggf. mit ersetztem "
+    :rtype: str
+    """
+    return_text = text.replace('"', '\"')
+    return return_text
