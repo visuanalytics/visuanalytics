@@ -1,11 +1,12 @@
+import logging
+
 from visuanalytics.analytics.apis import history as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.linking import linker as linking
 from visuanalytics.analytics.preprocessing.history import transform, speech, visualisation
-from visuanalytics.analytics.processing.history import visualisation as pro_visualisation
 from visuanalytics.analytics.processing.history import speech as pro_speech
+from visuanalytics.analytics.processing.history import visualisation as pro_visualisation
 from visuanalytics.analytics.util import audio
-import logging
 
 # TODO(max) handle config not
 
@@ -33,7 +34,7 @@ class HistorySteps(Steps):
             logger.info("Using stored example data for testing...")
             self.__json_data = api.get_example()
         else:
-            logger.info(f"Retrieving forecast data from Zeit-API...")
+            logger.info(f"Retrieving history data from Zeit-API...")
             self.__json_data = api.get_forecasts()
 
     def preprocessing(self, pipeline_id: str):
@@ -43,7 +44,7 @@ class HistorySteps(Steps):
         :type pipeline_id: str
         """
         # Preprocess api data
-        logger.info("Transforming local forecast data...")
+        logger.info("Transforming history data...")
         data = transform.preprocess_history_data(self.__json_data)
 
         # clear JSON data (evtl. remove)
@@ -70,12 +71,12 @@ class HistorySteps(Steps):
         data = self.__preprocessed_data
 
         # Generate images
-        logger.info(f"Generating forecast images... ")
+        logger.info(f"Generating wordcloud images... ")
         self.__processed_data["images"] = pro_visualisation.get_all_images(pipeline_id, data["visualisation_data"],
                                                                            data["date"])
 
         # Generate Audio
-        logger.info("Generating forecast audios...")
+        logger.info("Generating history audios...")
         self.__processed_data["audios"] = pro_speech.get_all_audios(pipeline_id, data["speech_data"],
                                                                     data["date"])
 
@@ -93,6 +94,6 @@ class HistorySteps(Steps):
         :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
         :type pipeline_id: str
         """
-        logger.info("Generating forecast video...")
+        logger.info("Generating wordcloud history video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
                             self.__processed_data["audio_length"], self.config.get("h264_nvenc", False))
