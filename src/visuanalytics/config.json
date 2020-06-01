@@ -1,5 +1,7 @@
 {
   "external_programms": [
     "ffmpeg"
-  ]
+  ],
+  "testing": true,
+  "h264_nvenc": false
 }
