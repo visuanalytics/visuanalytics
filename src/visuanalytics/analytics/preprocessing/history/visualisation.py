@@ -1,6 +1,11 @@
 # TODO wordclouds erstellen oder nur vorbereiten
 
+from visuanalytics.analytics.preprocessing.history import transform
+
+
 def merge_data(data, date):
+    data = transform.grammar_keywords(data)
+
     """
     Filtert aus dem Tupel, welches in der Methode preprocess_history_data in preprocessing/history/transform.py erstellt wird,
     die Dictionaries heraus. In jedem Dictionary sind jeweils zu einem Jahr als Keys die Keywords und als Value

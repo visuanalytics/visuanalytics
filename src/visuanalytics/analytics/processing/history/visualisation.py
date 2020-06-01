@@ -8,18 +8,11 @@ from visuanalytics.analytics.util import resources
 
 
 # TODO docstring schreiben!!
-def black_color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
     """
-
-    :param word:
-    :param font_size:
-    :param position:
-    :param orientation:
-    :param random_state:
-    :param kwargs:
-    :return:
+    Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
     """
-    return "hsl(0, 0%%, %d%%)" % random.randint(30, 80)
+    return "hsl(38, 73%%, %d%%)" % random.randint(30, 80)
 
 
 def get_all_images(pipeline_id, data, date):
@@ -43,7 +36,7 @@ def get_all_images(pipeline_id, data, date):
     for i in range(len(data)):
         wordcloud = WordCloud(background_color="white", width=1920, height=1080, collocations=False, max_font_size=400,
                               mask=mask).generate(data[i])
-        wordcloud.recolor(color_func=black_color_func)
+        wordcloud.recolor(color_func=color_func)
         plt.axis("off")
         plt.imshow(wordcloud, interpolation='bilinear')
         file = resources.new_temp_resource_path(pipeline_id, "png")

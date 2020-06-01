@@ -148,7 +148,7 @@ groß geschrieben werden.
 
 
 def grammar_keywords(data):
-    """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten.
+    """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten. Dabei wird die 3. Liste mit den keywords aktualisiert.
 
     :param data: Bekommt die vorverarbeiteten Daten aus der API
     :type data: Liste
@@ -156,10 +156,11 @@ def grammar_keywords(data):
     :rtype: Liste
     """
     # TODO: was passiert bei Namen und Bindestrichen?
+
     for i in range(4):
-        for keyword in data[1][i]:
+        for keyword in data[2][i]:
             if keyword in UPPERCASE_WORDS:
-                keyword.upper()
+                data[2][i][keyword.upper()] = data[2][i].pop(keyword)
             else:
-                keyword.capitalize()
+                data[2][i][keyword.capitalize()] = data[2][i].pop(keyword)
     return data
