@@ -9,16 +9,6 @@ import datetime as dt
 
 from visuanalytics.analytics.util import resources, config_manager
 
-ZEIT_URL = "http://api.zeit.de/"
-"""
-URL zur Zeit Api
-"""
-
-ZEIT_API_KEY = config_manager.get_private()["api_keys"]["zeit"]
-"""
-Der Zeit API Key geladen aus der Datei welche nur lokal liegt
-"""
-
 
 def get_forecasts(times=None):
     """
@@ -40,7 +30,7 @@ def get_forecasts(times=None):
     if times is None:
         times = [1, 2, 5, 10]
     json_data = []
-    headers = {'X-Authorization': ZEIT_API_KEY}
+    headers = {'X-Authorization': config_manager.get_private()["api_keys"]["zeit"]}
     for k in times:
         date = datetime.now() - relativedelta(years=k)
         date2 = date + dt.timedelta(days=7)
@@ -54,7 +44,7 @@ def get_forecasts(times=None):
 
 
 def _forecast_request(time_start, time_end):
-    return ZEIT_URL + "content?q=" + time_start + "T00:00:00Z TO " + time_end + "T23:59:59.999Z]&facet_field=keyword"
+    return "http://api.zeit.de/content?q=" + time_start + "T00:00:00Z TO " + time_end + "T23:59:59.999Z]&facet_field=keyword"
 
 
 def get_example():
@@ -64,6 +54,6 @@ def get_example():
        :return: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren ( aus der json Datein gelesen)
        :rtype: dict
 
-       """
+    """
     with resources.open_resource("exampledata/example_history.json", "r") as json_file:
         return json.load(json_file)

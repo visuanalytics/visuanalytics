@@ -28,6 +28,7 @@ LOCATIONS_TEMP_MIN_THREEDAYS = [(213, 931), (833, 931), (1455, 931)]
 """
 list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
 """
+
 LOCATIONS_TEMP_MAX_THREEDAYS = [(483, 931), (1102, 931), (1730, 931)]
 """
 list:Liste aus Tupeln: X und Y Koordinaten der Max Temperaturen in der 3 Tages Vorhersage.

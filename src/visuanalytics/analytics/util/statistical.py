@@ -12,9 +12,9 @@ def mode(list):
     :param list: Die Eingabeliste, für die der Modus bestimmt werden soll.
     :type list: list
 
-    :returns:
-        Das am häufigsten auftretende Element der Liste. Treten mehrere Elemente gleich häufig auf, wird von
-        diesen das erste gefundene Element ausgewählt.
+    :return: Das am häufigsten auftretende Element der Liste. Treten mehrere Elemente gleich häufig auf, wird von
+             diesen das erste gefundene Element ausgewählt.
+    :rtype: str
 
     :raise:
         IndexError: Bei einer leeren Liste.
