@@ -21,7 +21,7 @@ def preprocess_history_data(json_data):
     zwar in absteigender Reihenfolge ihres Aufkommens. Also die Liste fängt mit einem am häufigsten vorkommenen Keyword an und endet mit
     einem Keyword, dass am seltesten vorkam.
     Die dritte Liste enthält Dictionaries (hier wieder 4). In jedem Dictionary sind jeweils zu einem Jahr als Keys die Keywords und als Value
-    der zugehörige Wert, wie häufig dieses vorgekommen ist zu allen Artikeln enthalten.
+    der zugehörige Wert, wie häufig dieses vorgekommen ist, zu allen Artikeln enthalten.
 
     Um die weitere Verarbeitung zu vereinfachen, werden die Zeit-Daten in dieser Funktionen in eine leichter
     handzuhabende Struktur gebracht. Dazu werden irrelevante Parameter weggelassen und die allgemeine Struktur angepasst.
@@ -94,7 +94,7 @@ def preprocess_history_data(json_data):
             key_dict.update(
                 {json_data[idx]["facets"]["keyword"][j * 2]: json_data[idx]["facets"]["keyword"][(j * 2) + 1]})
         output[2].append(key_dict)
-    print(output[2])
+    # print(output[2])
     return output
 
 
