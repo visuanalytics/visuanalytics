@@ -1,9 +1,9 @@
 FROM jrottenberg/ffmpeg:3.3-nvidia
 
 # install Python
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.8 \
-    python3.8-dev \
+    python3-setuptools\
     python3-pip
 
 # install Requirements
