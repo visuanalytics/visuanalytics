@@ -1,8 +1,14 @@
-FROM python:3.7.7-stretch
+FROM jrottenberg/ffmpeg:3.3-nvidia
+
+# install Python
+RUN apt-get update && apt-get install -y \
+    python3.8 \
+    python3.8-dev \
+    python3-pip
 
 # install Requirements
 COPY requirements.txt /tmp/
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
 # Change User
 RUN useradd --create-home appuser
@@ -17,6 +23,9 @@ COPY --chown=appuser . ./visuanalytics
 #ENV FLASK_APP=visuanalytics.server.server:create_app
 
 # Expose Server Post
-#EXPOSE 5000
+# EXPOSE 5000
 
-CMD ["python", "-m", "visuanalytics"]
+# Reset Entry point from Base image
+ENTRYPOINT []
+
+CMD ["python3", "-m", "visuanalytics"]
