@@ -15,7 +15,7 @@ def text_to_mp3(pipeline_id, text):
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
-    :param text:
+    :param text: Text der in Audio umgewandelt werdne soll
     :type text: str
     :return: Dateipfad als String
     :rtype: str

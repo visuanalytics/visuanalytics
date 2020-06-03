@@ -82,7 +82,7 @@ class HistorySteps(Steps):
         # Get audio length
         logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(
-            self.__processed_data["audios"], self.config.get("h264_nvenc", False))
+            self.__processed_data["audios"])
 
         # clean preprocessed data
         self.__preprocessed_data = None

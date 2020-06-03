@@ -3,7 +3,7 @@ import statistics
 from numpy import random
 
 from visuanalytics.analytics.preprocessing.weather import speech, visualisation
-from visuanalytics.analytics.util import date_time, dictionary, statistical
+from visuanalytics.analytics.util import dictionary, statistical
 
 NUM_DAYS = 5
 """
@@ -29,7 +29,7 @@ def preprocess_weather_data(api_data, single=False):
     :param single: Boolean-Wert, welcher angibt, ob "summaries" im dictionary enthalten sein soll oder nicht
     :type single: bool
 
-    :returns:
+    :return:
         Ein Dictionary folgender Struktur:
         {
           "cities" : {
@@ -110,37 +110,98 @@ def _get_for_day(day, attribute, data):
     return [d[attribute] for d in days]
 
 
-def get_weekday(data):
-    date = data['cities']['Kiel'][0]['valid_date']
-    weekdays = date_time.date_to_weekday(date)
-    weekdays_for_dict = {"today": weekdays[0], "tomorrow": weekdays[1], "next_1": weekdays[2], "next_2": weekdays[3],
-                         "next_3": weekdays[4]}
-    return weekdays_for_dict
-
-
 def get_first_day(data):
+    """
+    Methode um den Ersten tag des Wetterberichts zu bekommen (es wird immer die Stadt Kiel verwendet)
+    (für DE Vorhersage)
+
+    :param data: Überarbeitete Data aus der Weather API
+    :type data: dict
+    :return: Den ersten Tage (zb. 01.06.2020) des zu erstellenden Wetterberichts
+    :rtype: str
+    """
     return data['cities']['Kiel'][0]['valid_date']
 
 
 def get_first_day_single(data, city_name):
+    """
+       Methode um den Ersten tag des Wetterberichts zu bekommen (Stadt hängt von city_name ab)
+        (Für single city Vorhersage)
+
+       :param data: Überarbeitete Data aus der Weather API
+       :type data: dict
+       :param city_name: Stadt für welchen der Tag herausgezogen werden soll
+       :type city_name: str
+       :return: Den ersten Tage (zb. 01.06.2020) des zu erstellenden Wetterberichts
+       :rtype: str
+
+    """
     return data[city_name][0]['valid_date']
 
 
 def get_weather_icon(data, location, date_in_future):
+    """
+    Methode um das passende Icon zu bekommen an einem bestimmtem Tag an einem bestimmtem Ort
+
+    :param data: Überarbeitete Data aus der Weather API
+    :type data: dict
+    :param location: Ort für den das Icon benörigt wird
+    :type location: str
+    :param date_in_future: Der Tag für welchen das Icon zurückgegeben werden soll
+    :type date_in_future: int
+    :return: Den Namen der Datei des angeforderten Icons
+    :rtype: str
+
+    """
     return data['cities'][location][date_in_future]['icon']
 
 
 def get_weather_temp(data, location, date_in_future):
+    """
+        Methode um die Temperatur zu bekommen an einem bestimmtem Tag an einem bestimmtem Ort
+
+        :param data: Überarbeitete Data aus der Weather API
+        :type data: dict
+        :param location: Ort für den die Temperatur benörigt wird
+        :type location: str
+        :param date_in_future: Der Tag für welchen die Temperatur zurückgegeben werden soll
+        :type date_in_future: int
+        :return: Die angeforderte Temperatur
+        :rtype: str
+
+        """
     temp = round(data['cities'][location][date_in_future]['max_temp'])
     return f"{temp}\u00B0"
 
 
 def get_max_temp(data, date_in_future):
+    """
+        Methode um die Maximale Temperatur zu bekommen an einem bestimmtem Tag
+
+        :param data: Überarbeitete Data aus der Weather API
+        :type data: dict
+        :param date_in_future: Der Tag für welchen die max Temperatur zurückgegeben werden soll
+        :type date_in_future: int
+        :return: Die Max Temperatur
+        :rtype: str
+
+        """
     max_temp = round(data['summaries'][date_in_future]['temp_max'])
     return f"{max_temp}\u00B0"
 
 
 def get_min_temp(data, date_in_future):
+    """
+    Methode um die Minimale Temperatur zu bekommen an einem bestimmtem Tag
+
+    :param data: Überarbeitete Data aus der Weather API
+    :type data: dict
+    :param date_in_future: Der Tag für welchen die min Temperatur zurückgegeben werden soll
+    :type date_in_future: int
+    :return: Die Min Temperatur
+    :rtype: str
+
+    """
     min_temp = round(data['summaries'][date_in_future]['temp_min'])
     return f"{min_temp}\u00B0"
 
@@ -148,6 +209,7 @@ def get_min_temp(data, date_in_future):
 def get_city_with_min_temp(data, date_in_future):
     """
     Methode, um aus Dictionary zu einem bestimmten Tag eine Stadt mit der niedriegsten Temperatur herauszufinden
+
     :param data: Dictionary, dass in der Methode preprocess_weather_data erstellt wird
     :type data: dict
     :param date_in_future: Tag in der Zukunft; 0: heute, 1: morgen, 2, übermorgen, 3: überübermorgen, 4: überüberübermorgen
@@ -185,7 +247,6 @@ def get_cities_max_temp(data, date_in_future):
     :return: Array [eine Stadt, die an diesem Tag die höchste Höchsttemperatur hat; höchste Höchsttemperatur; Iconcode zur höchsten Höchsttemperatur;
             eine Stadt, die an diesem Tag die niedrigste Höchstschnittstemperatur hat; niedrigste Höchsttemperatur; Iconcode zur niedrigsten Höchsttemperatur]
     :rtype: str[]
-    Example:
     """
 
     cities_with_max_temp = []
