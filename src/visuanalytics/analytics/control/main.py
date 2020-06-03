@@ -35,7 +35,7 @@ def init():
 
     # initialize logging
     level = logging.INFO if testing else logging.WARNING
-    logging.basicConfig(format='%(module)s %(levelname)s: %(message)s', level=level)
+    logging.basicConfig(format=f'%(module)s %(levelname)s: %(message)s', level=level)
 
     # create temp and out directory
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)

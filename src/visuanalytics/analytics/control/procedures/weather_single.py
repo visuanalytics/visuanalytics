@@ -31,6 +31,7 @@ class SingleWeatherSteps(Steps):
         if self.config.get("testing", False):
             logger.info("Using stored example data for testing...")
             self.__json_data = api.get_example(single=True)
+            self.config["city_name"] = "Gießen"
         else:
             city_name = self.config.get("city_name")
             p_code = self.config.get("p_code")
