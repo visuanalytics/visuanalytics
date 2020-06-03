@@ -1,3 +1,6 @@
+"""
+Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder für den Lokalen Wetterbericht zu generieren.
+"""
 from PIL import Image
 from PIL import ImageDraw
 
@@ -7,25 +10,86 @@ from visuanalytics.analytics.processing.util.text_draw import draw_text, draw_te
 from visuanalytics.analytics.util import resources
 
 LOCATION_CITY_NAME = (962, 35)
+"""
+tupel: X und Y Koordinaten der Position des Ortsnamen.
+"""
 LOCATION_WEEKDAYS_2 = [(552, 213), (1360, 213)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Wochentage (2 Tages Bild).
+"""
 LOCATION_WEEKDAYS_3 = [(347, 285), (953, 285), (1567, 285)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Wochentage (3 Tages Bild).
+"""
 LOCATION_ICONS_2 = [(246, 280), (1065, 280)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Wettericons (2 Tages Bild).
+"""
 LOCATION_ICONS_3 = [(50, 420), (690, 420), (1300, 420)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Wettericons (3 Tages Bild).
+"""
 LOCATION_TEMP_MAX_2 = [(700, 370), (1530, 370)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Max Temperatur (2 Tages Bild).
+"""
 LOCATION_TEMP_MAX_3 = [(462, 440), (1070, 440), (1673, 440)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Max Temperatur (3 Tages Bild).
+"""
 LOCATION_TEMP_MIN_2 = [(794, 480), (1608, 480)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Min Temperatur (2 Tages Bild).
+"""
 LOCATION_TEMP_MIN_3 = [(540, 550), (1150, 550), (1765, 550)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Min Temperatur (3 Tages Bild).
+"""
 LOCATION_ICON_NAME_2 = [(520, 570), (1350, 570)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position der Text-Kurz-Beschreibung des Icons (2 Tages Bild).
+"""
 LOCATION_FIRST_ENTRY_NAME_2 = [(270, 660), (1090, 660)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position des ersten Eintrages für die Tabelle mit den Windangaben etc. 
+(Name des Eintrags zb. Windstärke) (2 Tages Bild).
+"""
 LOCATION_FIRST_ENTRY_DATA_2 = [(675, 660), (1500, 660)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position des ersten Eintrages für die Tabelle mit den Daten 
+(Name des Eintrags zb. 5 m/s) (2 Tages Bild).
+"""
 LOCATION_FIRST_ENTRY_NAME_3 = [(120, 730), (730, 730), (1342, 730)]
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position des ersten Eintrages für die Tabelle mit den Windangaben etc. 
+(Name des Eintrags zb. Windstärke) (3 Tages Bild).
+"""
 LOCATION_FIRST_ENTRY_DATA_3 = [(443, 730), (1055, 730), (1660, 730)]
-
-
-# 949994
+"""
+list: Liste aus Tupeln: X und Y Koordinaten der Position des ersten Eintrages für die Tabelle mit den Daten 
+(Name des Eintrags zb. 5 m/s) (3 Tages Bild).
+"""
 
 
 def get_all_images_single_city(pipeline_id, data, date, city_name, keys1=None, keys2=None):
+    """
+       generiert alle Bilder die für den Lokalen Wetterbericht benötigt werden
+
+        :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+        :type pipeline_id: str
+        :param data: Die Überarbeitet JSON Data von der Wather API
+        :type data: dict
+        :param date: Wochentage für den Bericht
+        :type date: list
+        :param city_name: Name der Stadt für den der Wetterbericht erstellt werden soll
+        :type city_name: str
+        :param keys1: Keywörter die angezeigt werden sollen (2 Tages Bild)
+        :type keys1: list
+        :param keys2: Keywörter die angezeigt werden sollen (3 Tages Bild)
+        :type keys2: list
+        :return: Eine Liste mit Bildern die erstelt wurden
+        :rtype: list
+       """
     if keys1 is None:
         keys1 = [("Regen", "pop", " %"), ("Luftfeuchtigkeit", "rh", " %"), ("gefühlt", "app_max_temp", "\u00B0"),
                  ("Windstärke", "wind_spd", " m/s")]
@@ -41,6 +105,16 @@ def get_all_images_single_city(pipeline_id, data, date, city_name, keys1=None, k
 
 
 def combine_images_audiolength(images, audiol):
+    """
+       Kombiniert das 3 Tages images und das 2 Tages Image, auf dem nichts markiert ist mit den anderen Bildern zur vorbereitung von ffmpeg
+
+       :param images: Liste mit allen images
+       :type images: list
+       :param audiol: Liste aller Audiolängen
+       :type audiol: list
+       :return: Neues Tupel bestehend aus den sortierten images und audiolängen
+       :rtype: tuple
+       """
     return ([images[5], images[0], images[1], images[5], images[6], images[2], images[3], images[4],
              images[6]], [3, audiol[0] - 3, audiol[1] - 4, 4, 3, audiol[2] - 3, audiol[3], audiol[4] - 5, 5])
 

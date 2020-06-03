@@ -44,7 +44,7 @@ def new_temp_resource_path(pipeline_id: str, extension):
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param extension: Dateierweiterung ohne `.`.
-    :param extension: str
+    :type extension: str
     """
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 

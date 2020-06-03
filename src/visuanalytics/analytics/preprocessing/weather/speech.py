@@ -349,7 +349,7 @@ def get_data_today_tomorrow_three(data):
     return data_lowest_and_highest_max_and_min
 
 
-def merge_data(data):
+def merge_data(data, weekdays_for_dict):
     """ Zusammenführen der deutschlandweiten Wetterdaten für 5 Tage zu einem Dictionary mit Satzteilen.
 
     Dieses Dictionary wird mithilfe der Dictionaries aus get_data_today_tomorrow_three() und weiteren Methonden erstellt.
@@ -357,14 +357,15 @@ def merge_data(data):
     :param data: Dictionary mit ausgewählten Daten aus der Weatherbit-API (erstellt in der Methode
         preprocess_weather_data in preprocessing/weather/transform.py)
     :type data: dict
+    :param weekdays_for_dict: Liste bestehend aus den nächsten 5 Wochentagen (Montag, Dienstag ... etc)
+    :type weekdays_for_dict: list
     :return: Dictionary aus relevanten Daten für einen deutschlandweiten Wetterbericht
     :rtype: dict
     """
     data_for_text = {}
-    weekdays_for_dict = transform.get_weekday(data)
     common_code = transform.get_common_code_per_day(data)
     data_lowest_and_highest_max_and_min = get_data_today_tomorrow_three(data)
-    data_for_text.update({"today": {"weekday": weekdays_for_dict["today"],
+    data_for_text.update({"today": {"weekday": weekdays_for_dict[0],
                                     "common_code": common_code[0],
                                     "city_highest_max": data_lowest_and_highest_max_and_min[0]["city_highest_max"],
                                     "temp_highest_max": data_lowest_and_highest_max_and_min[0]["temp_highest_max"],
@@ -375,7 +376,7 @@ def merge_data(data):
                                     "city_min_temp": data_lowest_and_highest_max_and_min[0]["city_min_temp"],
                                     "min_temp": data_lowest_and_highest_max_and_min[0]["min_temp"],
                                     "code_min_temp": data_lowest_and_highest_max_and_min[0]["code_min_temp"]}})
-    data_for_text.update({"tomorrow": {"weekday": weekdays_for_dict["tomorrow"],
+    data_for_text.update({"tomorrow": {"weekday": weekdays_for_dict[1],
                                        "common_code": common_code[1],
                                        "city_highest_max": data_lowest_and_highest_max_and_min[1]["city_highest_max"],
                                        "temp_highest_max": data_lowest_and_highest_max_and_min[1]["temp_highest_max"],
@@ -386,7 +387,7 @@ def merge_data(data):
                                        "city_min_temp": data_lowest_and_highest_max_and_min[1]["city_min_temp"],
                                        "min_temp": data_lowest_and_highest_max_and_min[1]["min_temp"],
                                        "code_min_temp": data_lowest_and_highest_max_and_min[1]["code_min_temp"]}})
-    data_for_text.update({"next_1": {"weekday": weekdays_for_dict["next_1"],
+    data_for_text.update({"next_1": {"weekday": weekdays_for_dict[2],
                                      "common_code": common_code[2],
                                      "city_highest_max": data_lowest_and_highest_max_and_min[2]["city_highest_max"],
                                      "temp_highest_max": data_lowest_and_highest_max_and_min[2]["temp_highest_max"],
@@ -397,7 +398,7 @@ def merge_data(data):
                                      "city_min_temp": data_lowest_and_highest_max_and_min[2]["city_min_temp"],
                                      "min_temp": data_lowest_and_highest_max_and_min[2]["min_temp"],
                                      "code_min_temp": data_lowest_and_highest_max_and_min[2]["code_min_temp"]}})
-    data_for_text.update({"next_2": {"weekday": weekdays_for_dict["next_2"],
+    data_for_text.update({"next_2": {"weekday": weekdays_for_dict[3],
                                      "common_code": common_code[3],
                                      "city_highest_max": data_lowest_and_highest_max_and_min[3]["city_highest_max"],
                                      "temp_highest_max": data_lowest_and_highest_max_and_min[3]["temp_highest_max"],
@@ -408,7 +409,7 @@ def merge_data(data):
                                      "city_min_temp": data_lowest_and_highest_max_and_min[3]["city_min_temp"],
                                      "min_temp": data_lowest_and_highest_max_and_min[3]["min_temp"],
                                      "code_min_temp": data_lowest_and_highest_max_and_min[3]["code_min_temp"]}})
-    data_for_text.update({"next_3": {"weekday": weekdays_for_dict["next_3"],
+    data_for_text.update({"next_3": {"weekday": weekdays_for_dict[4],
                                      "common_code": common_code[4],
                                      "city_highest_max": data_lowest_and_highest_max_and_min[4]["city_highest_max"],
                                      "temp_highest_max": data_lowest_and_highest_max_and_min[4]["temp_highest_max"],

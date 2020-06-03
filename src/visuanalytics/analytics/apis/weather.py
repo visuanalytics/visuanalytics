@@ -15,10 +15,6 @@ CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Fra
 list: Städte, für die wir die Wettervorhersage von der Weatherbit-API beziehen.
 """
 
-WEATHERBIT_URL = "https://api.weatherbit.io/v2.0/forecast/daily?"
-
-WEATHERBIT_API_KEY = config_manager.get_private()["api_keys"]["weatherbit"]
-
 
 def get_forecasts(single=False, city_name="Giessen", p_code=None):
     # TODO (David): Die Städtenamen als Parameter übergeben statt eine globale Konstante zu verwenden
@@ -27,6 +23,10 @@ def get_forecasts(single=False, city_name="Giessen", p_code=None):
 
     Jede JSON-Antwort wird mittels json.loads() in ein dictionary konvertiert und in einer Liste gespeichert.
 
+    :param single: Boolean Wert ob die Anfrage eine Single Anfrage ist oder eine die alle Städte abfragt
+    :type single: bool
+    :param city_name: Wenn single == true dann ist dieser Wert die Stadt die abgefragt werden soll
+    :type city_name: str
     :returns: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren.
     :rtype: dict
 
@@ -54,12 +54,17 @@ def _forecast_request(location, p_code):
     if p_code is None:
         return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
     return WEATHERBIT_URL + "postal_code=" + p_code + "&country=DE&key=" + WEATHERBIT_API_KEY
+def _forecast_request(location):
+    return "https://api.weatherbit.io/v2.0/forecast/daily?city=" + location + "&key=" + \
+           config_manager.get_private()["api_keys"]["weatherbit"]
 
 
 def get_example(single=False):
     """
     Bezieht die 16-Tage-Wettervorhersage für 15 Städte Deutschlands (aus der examples/weather.json)  und bündelt sie in einer Liste.
 
+    :param single: Boolean Wert ob die Anfrage eine Single Anfrage ist oder eine die alle Städte abfragt
+    :type single: bool
     :return: Eine Liste von Dictionaries, welche je eine JSON-Response der API repräsentieren ( aus der json datein gelesen)
     :rtype: dict
 
