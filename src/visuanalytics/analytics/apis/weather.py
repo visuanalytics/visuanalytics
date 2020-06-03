@@ -41,7 +41,6 @@ def get_forecasts(single=False, city_name="Giessen", p_code=None):
     else:
         for c in CITIES:
             json_data.append(_fetch(requests.get(_forecast_request(c, p_code))))
-    print(json_data)
     return json_data
 
 
