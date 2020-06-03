@@ -52,10 +52,9 @@ def _fetch(response):
 
 def _forecast_request(location, p_code):
     if p_code is None:
-        return WEATHERBIT_URL + "city=" + location + "&key=" + WEATHERBIT_API_KEY
-    return WEATHERBIT_URL + "postal_code=" + p_code + "&country=DE&key=" + WEATHERBIT_API_KEY
-def _forecast_request(location):
-    return "https://api.weatherbit.io/v2.0/forecast/daily?city=" + location + "&key=" + \
+        return "https://api.weatherbit.io/v2.0/forecast/daily?" + "city=" + location + "&key=" + \
+               config_manager.get_private()["api_keys"]["weatherbit"]
+    return "https://api.weatherbit.io/v2.0/forecast/daily?" + "postal_code=" + p_code + "&country=DE&key=" + \
            config_manager.get_private()["api_keys"]["weatherbit"]
 
 
