@@ -1,10 +1,11 @@
+import logging
+
 from visuanalytics.analytics.apis import weather as api
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.linking import linker as linking
 from visuanalytics.analytics.preprocessing.weather import transform, speech
 from visuanalytics.analytics.processing.weather import speech_single, visualisation_single
 from visuanalytics.analytics.util import date_time, audio
-import logging
 
 # TODO(max) handle config not
 
@@ -77,7 +78,7 @@ class SingleWeatherSteps(Steps):
                                                                                           data["date"], city_name)
 
         # Generate Audio
-        logger.info("Generating {city_name}-forecast audios...")
+        logger.info(f"Generating {city_name}-forecast audios...")
         self.__processed_data["audios"] = speech_single.get_all_audios_single_city(pipeline_id, data["speech_data"],
                                                                                    data["date"], city_name)
 
@@ -100,6 +101,6 @@ class SingleWeatherSteps(Steps):
         :type pipeline_id: str
         """
         city_name = self.config.get("city_name")
-        logger.info("Generating {city_name}-forecast video...")
+        logger.info(f"Generating {city_name}-forecast video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
                             self.__processed_data["audio_length"], self.config.get("h264_nvenc", False))
