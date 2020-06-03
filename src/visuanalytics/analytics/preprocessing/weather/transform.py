@@ -17,7 +17,7 @@ list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Da
 """
 
 
-def preprocess_weather_data(api_data, single=False):
+def preprocess_weather_data(api_data, city_name=None, single=False):
     """
     Wandelt eine Liste von Weatherbit-Forecast-API-Responses in ein Dictionary um, das die für uns relevanten Daten enthält.
 
@@ -26,6 +26,8 @@ def preprocess_weather_data(api_data, single=False):
 
     :param api_data: Eine Liste von dictionaries, die jeweils eine JSON-Response mit den Wettervorhersage-Daten enthält.
     :type api_data: dict
+    :param city_name: Der Namen der Stadt für welche der Wetterbericht ist
+    :type city_name: str
     :param single: Boolean-Wert, welcher angibt, ob "summaries" im dictionary enthalten sein soll oder nicht
     :type single: bool
 
@@ -77,18 +79,20 @@ def preprocess_weather_data(api_data, single=False):
         KeyError: Wenn ein Schlüssel nicht im Dictionary enthalten ist. Dies sollte unter normalen Umständen nur
         vorkommen, wenn die Weatherbit-API geändert wird.
     """
-    cities = dictionary.combine([_preprocess_single(d) for d in api_data])
     if single:
+        cities = dictionary.combine([_preprocess_single(d, city_name) for d in api_data])
         return cities
+    cities = dictionary.combine([_preprocess_single(d, None) for d in api_data])
     summaries = _summaries(cities)
     return {"cities": cities, "summaries": summaries}
 
 
-def _preprocess_single(data):
-    city = data["city_name"]
+def _preprocess_single(data, city_name):
+    if city_name is None:
+        city_name = data["city_name"]
     days = data["data"][:NUM_DAYS]
     selected_data = [dictionary.select_pairs(RELEVANT_DATA, dictionary.flatten(d)) for d in days]
-    return {city: selected_data}
+    return {city_name: selected_data}
 
 
 def _summaries(data):

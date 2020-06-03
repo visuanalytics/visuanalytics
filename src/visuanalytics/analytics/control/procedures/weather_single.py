@@ -33,8 +33,9 @@ class SingleWeatherSteps(Steps):
             self.__json_data = api.get_example(single=True)
         else:
             city_name = self.config.get("city_name")
+            p_code = self.config.get("p_code")
             logger.info(f"Retrieving forecast data for {city_name} from weatherbit-API...")
-            self.__json_data = api.get_forecasts(True, city_name)
+            self.__json_data = api.get_forecasts(True, city_name, p_code)
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -44,7 +45,7 @@ class SingleWeatherSteps(Steps):
         """
         # Preprocess api data
         logger.info("Transforming local forecast data...")
-        data = transform.preprocess_weather_data(self.__json_data, True)
+        data = transform.preprocess_weather_data(self.__json_data, self.config["city_name"], True)
 
         # clear JSON data (evtl. remove)
         self.__json_data = None
