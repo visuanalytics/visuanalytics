@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg:3.3-nvidia
+FROM jrottenberg/ffmpeg:4.2-nvidia
 
 # install Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
