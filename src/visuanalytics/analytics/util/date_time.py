@@ -14,18 +14,6 @@ def date_to_weekday(valid_date):
     Wird benötigt für die Darstellung auf der Wetterkarte und für die Texte, die für die
     Audiodatei generiert werden.
     Quelle: https://databraineo.com/ki-training-resources/python/wochentag-datum-calendar/
-
-    Args:
-        valid_date (date): Datum mit dem Format YYYY-MM-DD.
-
-    Returns:
-        List: days
-            mit so vielen Einträgen wie von der Wetter Api generiert Einträgen:
-            days[0] -> dayofweek_today (heute)
-            days[1] -> dayofweek_1 (morgen)
-            days[2] -> dayofweek_2 (übermorgen)
-            days[3] -> dayofweek_3 (überübermorgen)
-            etc.
     Example:
         valid_date = "2020-05-09"
         days = date_to_weekday(valid_date)
@@ -33,6 +21,12 @@ def date_to_weekday(valid_date):
         print("Morgen ist", days[1]) # dayofweek_1
         print("Übermorgen ist", days[2]) # dayofweek_2
         print("Überübermorgen ist", days[3]) # dayofweek_3
+
+    :param valid_date: Ein beilibieges datum im format %Y-%m-%d
+    :type valid_date: str
+    :return: Eine Liste aus Wochentagen der nächsten x Tage ausgehend von valid_date
+    :rtype: list
+
     """
     day_weekday = {
         0: "Montag",
@@ -64,7 +58,8 @@ def time_change_format(timestamp):
     kann, dass sie, wenn sie als Text vorgelesen wird, sich flüssig anhört. Es ist 5 Uhr 15.
     Beispiel: Es ist 5 Uhr 15.
 
-    :param timestamp:
+    :param timestamp: zeitstempel
+    :type timestamp: float
     :return: date, time, time_text
 
     Example:

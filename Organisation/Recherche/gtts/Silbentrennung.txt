@@ -1,0 +1,16 @@
+Silbentrennung
+Der Wind kommt heu-te aus Rich-tung Nord Nord-ost und er-reicht Ge-schwin-dig-kei-ten von (20)  drei Kom-ma drei sie-ben Me-tern pro (29) Se-kun-de. (32)
+Der Wind kommt heu-te aus Rich-tung Süd-os-ten und er-reicht Ge-schin-dig-kei-ten von eins Kom-ma drei drei Me-tern pro (28) Se-kun-de. (31) Zu lange Pause nach pro.
+Der Wind kommt heu-te aus Rich-tung Sü-den und er-reicht Ge-schwin-dig-kei-ten von eins Kom-ma drei drei Me-tern pro (27) Se-kun-de. (30) normale Pause nach pro.
+Der Wind kommt heu-te aus Rich-tung Süd Süd-ost und er-reicht Ge-schwin-dig-kei-ten von eins Kom-ma drei drei Me-tern pro (28) Se-kun-de. (31) Zu lange Pause nach pro.
+Der Wind kommt mor-gen aus Rich-tung Sü-den und er-reicht Ge-schwin-dig-kei-ten von eins Kom-ma neun fünf Me-tern pro (27) Se-kun-de. (30) normale Pause nach pro.
+Der Wind kommt mor-gen aus Rich-tung Nord-os-ten und er-reicht Ge-schwin-dig-kei-ten von (20) drei Kom-ma acht drei Me-tern pro (28) Se-kun-de. (31)
+Der Wind er-reicht Ge-schwin-dig-kei-ten von zwei Kom-ma acht vier Me-tern pro (18) Se-kun-de. (21) normale Pause nach pro.
+Der Wind er-reicht Ge-schwin-dig-kei-ten von vier Kom-ma drei vier Me-tern pro (18) Se-kun-de. (21) normale Pause nach pro.
+Der Wind er-reicht Ge-schwin-dig-kei-ten von zwei Kom-ma neun sechs Me-tern pro  (18) Se-kun-de. (21) normale Pause nach pro.
+Der Wind er-reicht Ge-schwin-dig-kei-ten von drei Kom-ma (13) null fünf Me-tern pro Se-kun-de. (21)
+Der Wind er-reicht Ge-schwin-dig-kei-ten von null Kom-ma (13) sie-ben sie-ben Me-tern pro Se-kun-de. (23)
+Der Wind er-reicht Ge-schwin-dig-kei-ten von drei Kom-ma (13) null fünf Me-tern pro Se-kun-de. (21)
+
+
+-> Satz umgeschrieben, so dass es normaler klingt.

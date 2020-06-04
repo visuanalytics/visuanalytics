@@ -10,6 +10,13 @@ RELEVANT_DATA = ["release_date", "title", "supertitle", "teaser_text"]
 list: Liste von JSON-Attributen, welche interessant für uns sind und aus den Daten rausgefiltert werden sollen.
 """
 
+UPPERCASE_WORDS = ["spd", "Spd", "csu", "Csu", "cdu", "Cdu", "usa", "Usa", "eu", "Eu", "fdp", "Fdp", "bbc", "Bbc",
+                   "faz", "Faz", "fc", "Fc", "hsv", "Hsv"]
+"""
+Liste mit Wörtern bei denen wir wissen, dass sie gegebenenfalls als Keyword auftauchen und wissen, dass sie komplett
+groß geschrieben werden.
+"""
+
 
 def preprocess_history_data(json_data):
     """
@@ -72,7 +79,7 @@ def preprocess_history_data(json_data):
 
     :param json_data: Json-Data der Zeit-Api (oder eingelesenen Data aus der Testdatei)
     :rtype dict
-    :return: vorverarbeitetes Data-Objekt der Zeit-Api
+    :return: vorverarbeitetes Daten der Zeit-Api
     :rtype: tuple
 
     """
@@ -94,7 +101,6 @@ def preprocess_history_data(json_data):
             key_dict.update(
                 {json_data[idx]["facets"]["keyword"][j * 2]: json_data[idx]["facets"]["keyword"][(j * 2) + 1]})
         output[2].append(key_dict)
-    # print(output[2])
     return output
 
 
@@ -139,21 +145,13 @@ def get_date(data):
     return [date, historical_year, years_ago]
 
 
-UPPERCASE_WORDS = ["spd", "Spd", "csu", "Csu", "cdu", "Cdu", "usa", "Usa", "eu", "Eu", "fdp", "Fdp", "bbc", "Bbc",
-                   "faz", "Faz", "fc", "Fc", "hsv", "Hsv"]
-"""
-Liste mit Wörtern bei denen wir wissen, dass sie gegebenenfalls als Keyword auftauchen und wissen, dass sie komplett
-groß geschrieben werden.
-"""
-
-
 def grammar_keywords(data):
     """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten. Dabei wird die 3. Liste mit den keywords aktualisiert.
 
     :param data: Bekommt die vorverarbeiteten Daten aus der API
-    :type data: Liste
+    :type data: list
     :return: Gibt die Data so wieder aus, nur dass die Keywords nun die Groß- und Kleinschreibung beachten.
-    :rtype: Liste
+    :rtype: list
     """
     # TODO: was passiert bei Namen und Bindestrichen?
 

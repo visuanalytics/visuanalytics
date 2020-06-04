@@ -50,7 +50,7 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
     output2 = resources.get_resource_path("out/video.mp4")
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
-        args2.extend(("-loop", "1", "-t", str(int(audiol[i])), "-i", images[i]))
+        args2.extend(("-loop", "1", "-t", str(audiol[i]), "-i", images[i]))
 
     args2.extend(("-i", output, "-c:a", "copy", "-filter_complex"))
 
@@ -87,4 +87,4 @@ def _sum_audiol(audiol, index):
     sum = 0
     for i in range(0, index + 1):
         sum += audiol[i]
-    return int(sum) - 2
+    return int(sum)

@@ -60,7 +60,7 @@ class WeatherSteps(Steps):
 
         # Preprocess speech data
         logger.info("Preprocessing for speech...")
-        self.__preprocessed_data["merge_data"] = pre_speech.merge_data(data)
+        self.__preprocessed_data["merge_data"] = pre_speech.merge_data(data, self.__preprocessed_data["date"])
 
     def processing(self, pipeline_id: str):
         """Erstellt aus den APi Daten, Bilder und Texte.
@@ -83,8 +83,7 @@ class WeatherSteps(Steps):
         self.__processed_data["audios"] = speech.get_all_audios_germany(pipeline_id, data["merge_data"])
         logger.info("Determining audio length...")
 
-        self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"],
-                                                                       self.config.get("h264_nvenc", False))
+        self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
 
         temp_data = pro_visualisation.combine_images_audiolength(self.__processed_data["images"],
                                                                  self.__processed_data["audio_length"])
