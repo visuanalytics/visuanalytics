@@ -5,63 +5,155 @@
     {
       "type": "request",
       "api_key_name": "test",
-      "values": ["Test1, Test2"],
-      "url": "https://www.test.de?test1=%0&test2=%1&key=%!"
+      "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
     },
     {
-      "type": "request_multi",
+      "type": "request_multiple",
       "api_key_name": "test",
-      "values": ["Test1"],
-      "steps_value": ["Hallo", "Test", "Hallo2"],
-      "url": "https://www.test.de?test=%?&test1=%0&key=%!&city=$config_city"
+      "steps_value": [
+        "Hallo",
+        "Test",
+        "Hallo2"
+      ],
+      "use_loop_as_key": true,
+      "url": "https://www.test.de?test={_loop}&test1={config.test}&key={_api_key}&city={config.city}"
+    },
+    {
+      "type": "request_multiple_custom",
+      "requests": [
+        {
+          "type": "request",
+          "api_key_name": "test",
+          "url": "https://www.test.de?test1={config.test}&test2=Test2&key={_api_key}"
+        },
+        {
+          "type": "request",
+          "api_key_name": "test2",
+          "url": "https://www.test2.de?test1=hallo"
+        }
+      ]
     }
   ],
-  "data": [
+  "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "",
+      "transform": [
+        {
+          "type": "select",
+          "relevant_keys": [
+            "data"
+          ]
+        },
+        {
+          "type": "select_range",
+          "sub_key": "data",
+          "range_start": 0,
+          "range_end": 5
+        },
+        {
+          "type": "transform_array",
+          "array_key": "data",
+          "transform": [
+            {
+              "type": "select",
+              "array_key": "data",
+              "relevant_keys": [
+                "date",
+                "tommorow",
+                "hallo",
+                "test",
+                "text",
+                "test"
+              ]
+            },
+            {
+              "type": "append",
+              "key": "max_temp",
+              "new_key": "....summaries.{_idx}.max_temp"
+            }
+          ]
+        },
+        {
+          "type": "add_symbole",
+          "keys": [
+            "test"
+          ],
+          "pattern": "{text} test"
+        },
+        {
+          "type": "replace",
+          "keys": [
+            "pressure",
+            "dec"
+          ],
+          "new_keys": [
+            "new_pres",
+            "new_dec"
+          ],
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "hallo",
+            "test"
+          ],
+          "new_keys": [
+            "abc",
+            "def"
+          ]
+        },
+        {
+          "type": "date_format",
+          "keys": [
+            "date",
+            "tommorow"
+          ],
+          "format": "%Y-%m-%d"
+        }
+      ]
+    },
     {
       "type": "date_now",
       "key": "date",
       "format": "%Y-%m-%d"
     },
     {
-      "type": "alias",
-      "api_keys": ["hallo", "test"],
-      "keys": ["abc", "def"]
-    },
-    {
-      "type": "transform",
-      "api_keys": ["date", "tommorow"],
-      "transformation": {
-        "type": "date_format",
-        "format": "%Y-%m-%d"
-      }
-    },
-    {
-      "type": "transform",
-      "api_keys": ["text"],
-      "new_keys": ["long_text"],
-      "transformation": {
-        "type": "add_symbole",
-        "pattern": "%0 test"
-      }
-    },
-    {
-      "type": "transform",
-      "api_keys": ["pressure", "dec"],
-      "transformation": {
-        "type": "replace",
-        "old_value": ".",
-        "new_value": ",",
-        "count": 1
-      }
+      "type": "loop",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "transform": [
+        {
+          "type": "calculate",
+          "action": "mean",
+          "key": "summaries.{_loop}.max_temp",
+          "new_key": "summaries.{_loop}.temp_avg"
+        },
+        {
+          "type": "calculate",
+          "action": "max",
+          "key": "summaries.{_loop}.max_temp"
+        }
+      ]
     }
   ],
   "images": {
     "wetter1": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "test/test.png",
       "overlay": [
         {
           "type": "text",
+          "description": "",
           "pos_x": 10,
           "pos_y": 2,
           "preset": "wetter1",
@@ -72,9 +164,26 @@
           "type": "api_text",
           "pos_x": 10,
           "pos_y": 2,
+          "preset": "wetter1",
           "anchor_point": "center",
-          "keys": ["cities.kiel"],
-          "pattern": "Test: %0 $config_name"
+          "pattern": "Test: {kiel.data.0.temp} {config.city}"
+        },
+        {
+          "type": "api_text_array",
+          "pos_x": [
+            10,
+            20,
+            30
+          ],
+          "pos_y": [
+            1,
+            2,
+            7
+          ],
+          "preset": "wetter1",
+          "anchor_point": "config",
+          "array_key": "",
+          "pattern": "Test: {data.0.temp} {_loop}"
         }
       ]
     },
@@ -83,21 +192,22 @@
     }
   },
   "audio": {
-    "a1": {
-      "parts": [
-        {
-          "type": "text",
-          "text": "hallo"
-        },
-        {
-          "type": "api_text",
-          "keys": ["value", "value2"],
-          "pattern": "Test: %0, %1"
-        }
-      ]
+    "config": {
+      "lang": "de",
+      "format": "mp3"
+    },
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Test: {values}, {test}"
+          }
+        ]
+      }
     }
   },
-  "transitions": [
+  "sequence": [
     {
       "image": "wetter1",
       "time": 3,
@@ -108,6 +218,15 @@
       "time": 10
     }
   ],
+  "run_config": {
+    "testing": {
+      "defalt_value": false,
+      "possible_values": [
+        true,
+        false
+      ]
+    }
+  },
   "presets": {
     "wetter1": {
       "color": "#08638",
