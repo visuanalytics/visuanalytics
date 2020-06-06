@@ -1,6 +1,5 @@
 import React from 'react';
 import {Param} from "../param";
-import {Props} from "../props";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {useStyles} from "./style";
 import {ExpansionPanelSummary} from "./style";
-import {MenuItem} from "@material-ui/core";
+import {renderParamField} from "../util/renderParamFields";
 
 export interface Job {
     id: string;
@@ -25,8 +24,8 @@ export interface Job {
     params: Param[];
 }
 
-export const JobList: React.FC<Props> = ({topic}) => {
-    // const jobInfo: = useFetch("/jobs?topic=" + topic);
+export const JobList: React.FC = () => {
+    // const jobInfo: Job[] = useFetch("/jobs");
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
@@ -38,7 +37,7 @@ export const JobList: React.FC<Props> = ({topic}) => {
         {
             "id": "1",
             "name": "Wetter DE",
-            "topic": topic,
+            "topic": "Wetter",
             "schedule": "täglich",
             "next": "0d 21h 32min",
             "params": [
@@ -94,36 +93,6 @@ export const JobList: React.FC<Props> = ({topic}) => {
             )
         }
 
-        const renderParamField = (param: Param) => {
-            const name: string = param.name;
-            const possibleValues: string[] = param.possibleValues;
-            if (possibleValues.length === 0) {
-                return (
-                    <TextField
-                        className={classes.inputFields}
-                        variant="outlined"
-                        label={name}/>
-                )
-            }
-            return (
-                <TextField
-                    className={classes.inputFields}
-                    variant="outlined"
-                    label={name}
-                    defaultValue={param.selected}
-                    InputProps={{
-                        readOnly: state.edit,
-                    }}
-                    select>
-                    {possibleValues.map((val) => (
-                        <MenuItem key={val} value={val}>
-                            {val}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            )
-        }
-
         const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
         };
@@ -157,7 +126,7 @@ export const JobList: React.FC<Props> = ({topic}) => {
                             <div>
                                 {paramInfo.map(p =>
                                     <div>
-                                        {renderParamField(p)}
+                                        {renderParamField(p,classes,state.edit)}
                                     </div>)
                                 }
                             </div>
