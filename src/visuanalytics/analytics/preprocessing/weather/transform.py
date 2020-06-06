@@ -234,7 +234,7 @@ def get_city_with_min_temp(data, date_in_future):
             cities_with_min_temp.append(city)
 
     return_city = random.choice(cities_with_min_temp)
-    return return_city, min_temp, data['cities'][return_city][date_in_future]['code']
+    return speech.city_name_to_text(return_city), min_temp, data['cities'][return_city][date_in_future]['code']
 
 
 def get_cities_max_temp(data, date_in_future):
