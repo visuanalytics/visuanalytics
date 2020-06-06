@@ -8,7 +8,7 @@ from visuanalytics.server.db import db
 
 
 def main():
-    config = config_manager.get_public()
+    config = config_manager.get_config()
 
     init(config)
 

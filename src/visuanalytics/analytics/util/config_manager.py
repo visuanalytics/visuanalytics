@@ -7,21 +7,38 @@ CONFIG_LOCATION = "../../config.json"
 CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
 
 
-def get_public():
-    """
-    Ermöglicht den Zugriff auf die öffentliche Konfigurationsdatei.
+def _get_config_path(config_location):
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), config_location))
 
-    :return: Die öffentliche Konfigurationsdatei in Form eines Dictionaries.
+
+def get_config():
+    """
+    Ermöglicht den Zugriff auf die Konfigurations Dateien.
+    Verwendet zuerst die Config datei in `CONFIG_LOCATION`,
+    ist auch eine Config datei  in `CONFIG_PRIVATE_LOCATION` vorhanden
+    werden beide configurationen verwendet, bei dopplungen werden die einstellungen
+    aus `CONFIG_PRIVATE_LOACTION` verwendet.
+    Der key `api_keys` wird von `CONFIG_PRIVATE_LOCATION` entfernt.
+
+    :return: Die Konfigurationsdateien in form eines Dictionaries.
     :rtype: dict
-
-    :raises:
-        FileNotFoundError: Wenn die öffentliche Konfigurationsdatei nicht existiert.
     """
+
+    private_config = {}
+
     try:
-        with open(os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_LOCATION))) as fh:
-            return json.loads(fh.read())
+        with open(_get_config_path(CONFIG_LOCATION)) as fh:
+            public_config = json.loads(fh.read())
+
+        # if exists get private config
+        if os.path.exists(_get_config_path(CONFIG_PRIVATE_LOCATION)):
+            with open(_get_config_path(CONFIG_PRIVATE_LOCATION)) as fh:
+                private_config = json.loads(fh.read())
+                private_config.pop("api_keys", "")
+
+        return {**public_config, **private_config}
     except FileNotFoundError as e:
-        e.strerror = "Public configuration file does not exist"
+        e.strerror = "Public Configuration file does not exist"
         raise e
 
 
