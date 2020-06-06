@@ -5,8 +5,8 @@ from visuanalytics.analytics.preprocessing.weather import speech
 
 class SpeechTest(unittest.TestCase):
 
-    def test_rh_data_to_text(self):
-        actual = speech.rh_data_to_text(58)
+    def test_percent_to_text(self):
+        actual = speech.percent_to_text(58)
         expected = "58 Prozent"
         self.assertEqual(actual, expected)
 

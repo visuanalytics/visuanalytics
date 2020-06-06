@@ -4,11 +4,11 @@ Dieses Modul enthält die Funktionalität zum Vorverarbeiten der Wettervorhersag
 
 from visuanalytics.analytics.preprocessing.weather import transform
 
-LOCATIONS_TOMOROW = [("Konstanz", (898, 900)), ("München", (1080, 822)),
-                     ("Nürnberg", (930, 720)), ("Mainz", (675, 610)),
-                     ("Gießen", (843, 540)), ("Dresden", (1106, 482)),
-                     ("Hannover", (1006, 370)), ("Bremen", (755, 333)),
-                     ("Hamburg", (986, 218)), ("Berlin", (1147, 270)), ]
+LOCATIONS_TOMOROW = [("Konstanz", (950, 900)), ("München", (1130, 822)),
+                     ("Nürnberg", (980, 720)), ("Mainz", (725, 600)),
+                     ("Gießen", (895, 540)), ("Dresden", (1155, 472)),
+                     ("Hannover", (1055, 370)), ("Bremen", (805, 333)),
+                     ("Hamburg", (1035, 200)), ("Berlin", (1197, 260)), ]
 
 """
 list: Liste aus String, Tupel(int, int): X und Y Koordinaten der Positionen der Icons in der Vorhersage für morgen 
@@ -24,11 +24,12 @@ list: Liste aus String, Tupel(int, int)x3: X und Y Koordinaten der Positionen de
 sortiert nach den verschiedenen Orten/Regionen.
 """
 
-LOCATIONS_TEMP_MIN_THREEDAYS = [(160, 946), (783, 946), (1400, 946)]
+LOCATIONS_TEMP_MIN_THREEDAYS = [(213, 931), (833, 931), (1455, 931)]
 """
 list: Liste aus Tupeln: X und Y Koordinaten der Min Temperaturen in der 3 Tages Vorhersage.
 """
-LOCATIONS_TEMP_MAX_THREEDAYS = [(433, 946), (1052, 946), (1680, 946)]
+
+LOCATIONS_TEMP_MAX_THREEDAYS = [(483, 931), (1102, 931), (1730, 931)]
 """
 list:Liste aus Tupeln: X und Y Koordinaten der Max Temperaturen in der 3 Tages Vorhersage.
 """

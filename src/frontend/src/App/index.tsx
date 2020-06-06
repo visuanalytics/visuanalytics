@@ -1,13 +1,17 @@
 import React from "react";
+import { ComponentProvider } from "../ComponentProvider";
+import { Main } from "./Main";
+import { Header } from "../Header";
 
-// TODO
-
-function App() {
+const App = () => {
   return (
     <div>
-      <img src="/images/logo.png" alt="logo" />
+      <ComponentProvider>
+        <Header />
+        <Main />
+      </ComponentProvider>
     </div>
   );
-}
+};
 
 export default App;

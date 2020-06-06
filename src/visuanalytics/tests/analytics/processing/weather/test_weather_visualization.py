@@ -18,19 +18,20 @@ class PreprocessTest(unittest.TestCase):
         os.mkdir(resources.get_resource_path("temp/pre_1"))
 
     def test_if_get_threeday_image_generates_image(self):
-        expected = pro_visualisation.get_threeday_image("pre_1", pre_visualisation.data_icon_threeday(self.output),
-                                                        pre_visualisation.data_mm_temp_threeday(self.output),
-                                                        self.date[2:5])
+        expected = pro_visualisation._get_threeday_image("pre_1", pre_visualisation.data_icon_threeday(self.output),
+                                                         pre_visualisation.data_mm_temp_threeday(self.output),
+                                                         self.date[2:5], 0)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_icons_image_generates_image(self):
-        expected = pro_visualisation.get_oneday_icons_image("pre_1", pre_visualisation.data_icon_oneday(self.output, 0),
-                                                            self.date[0])
+        expected = pro_visualisation._get_oneday_icons_image("pre_1",
+                                                             pre_visualisation.data_icon_oneday(self.output, 0),
+                                                             self.date[0])
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_if_get_oneday_temp_image_generates_image(self):
-        expected = pro_visualisation.get_oneday_temp_image("pre_1", pre_visualisation.data_temp_oneday(self.output, 0),
-                                                           self.date[0])
+        expected = pro_visualisation._get_oneday_temp_image("pre_1", pre_visualisation.data_temp_oneday(self.output, 0),
+                                                            self.date[0])
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     @classmethod

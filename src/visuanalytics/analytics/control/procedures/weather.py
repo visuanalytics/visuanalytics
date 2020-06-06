@@ -33,9 +33,7 @@ class WeatherSteps(Steps):
             self.__json_data = api.get_example()
         else:
             logger.info("Retrieving weather forecast data from weatherbit-api...")
-            api.get_forecasts()
-
-        # self.__json_data = api.get_example() if self.config.get("testing", False) else
+            self.__json_data = api.get_forecasts()
 
     def preprocessing(self, pipeline_id: str):
         """Verarbeitet die Daten aus der Wetter API.
@@ -53,16 +51,16 @@ class WeatherSteps(Steps):
         # Preprocess visualisation data
         logger.info("Preprocessing for visualisation...")
         self.__preprocessed_data["date"] = date_time.date_to_weekday(transform.get_first_day(data))
-        self.__preprocessed_data["icon_oneday_0"] = pre_visualisation.data_icon_oneday(data, 0)
-        self.__preprocessed_data["temp_oneday_0"] = pre_visualisation.data_temp_oneday(data, 0)
-        self.__preprocessed_data["icon_oneday_1"] = pre_visualisation.data_icon_oneday(data, 1)
-        self.__preprocessed_data["temp_oneday_1"] = pre_visualisation.data_temp_oneday(data, 1)
+        self.__preprocessed_data["icon_oneday"] = [pre_visualisation.data_icon_oneday(data, 0),
+                                                   pre_visualisation.data_icon_oneday(data, 1)]
+        self.__preprocessed_data["temp_oneday"] = [pre_visualisation.data_temp_oneday(data, 0),
+                                                   pre_visualisation.data_temp_oneday(data, 1)]
         self.__preprocessed_data["icon_threeday"] = pre_visualisation.data_icon_threeday(data)
         self.__preprocessed_data["data_mm_temp_threeday"] = pre_visualisation.data_mm_temp_threeday(data)
 
         # Preprocess speech data
         logger.info("Preprocessing for speech...")
-        self.__preprocessed_data["merge_data"] = pre_speech.merge_data(data)
+        self.__preprocessed_data["merge_data"] = pre_speech.merge_data(data, self.__preprocessed_data["date"])
 
     def processing(self, pipeline_id: str):
         """Erstellt aus den APi Daten, Bilder und Texte.
@@ -74,13 +72,11 @@ class WeatherSteps(Steps):
 
         # Generate images
         logger.info("Generating Germany-forecast images...")
-        self.__processed_data["images"] = [
-            pro_visualisation.get_oneday_icons_image(pipeline_id, data["icon_oneday_0"], data["date"][0]),
-            pro_visualisation.get_oneday_temp_image(pipeline_id, data["temp_oneday_0"], data["date"][0]),
-            pro_visualisation.get_oneday_icons_image(pipeline_id, data["icon_oneday_1"], data["date"][1]),
-            pro_visualisation.get_oneday_temp_image(pipeline_id, data["temp_oneday_1"], data["date"][1]),
-            pro_visualisation.get_threeday_image(pipeline_id, data["icon_threeday"], data["data_mm_temp_threeday"],
-                                                 data["date"][2:5])]
+        self.__processed_data["images"] = pro_visualisation.get_all_images_germany(pipeline_id, data["icon_oneday"],
+                                                                                   data["temp_oneday"],
+                                                                                   data["icon_threeday"],
+                                                                                   data["data_mm_temp_threeday"],
+                                                                                   data["date"])
 
         # Generate Audio
         logger.info("Generating Germany-forecast audio...")
@@ -88,6 +84,11 @@ class WeatherSteps(Steps):
         logger.info("Determining audio length...")
 
         self.__processed_data["audio_length"] = audio.get_audio_length(self.__processed_data["audios"])
+
+        temp_data = pro_visualisation.combine_images_audiolength(self.__processed_data["images"],
+                                                                 self.__processed_data["audio_length"])
+        self.__processed_data["images"] = temp_data[0]
+        self.__processed_data["audio_length"] = temp_data[1]
 
         # clean preprocessed data
         self.__preprocessed_data = None
@@ -100,4 +101,4 @@ class WeatherSteps(Steps):
         """
         logger.info("Generating Germany-forecast video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
-                            self.__processed_data["audio_length"])
+                            self.__processed_data["audio_length"], self.config.get("h264_nvenc", False))

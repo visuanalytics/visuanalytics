@@ -1,0 +1,118 @@
+{
+  "id": 0,
+  "name": "name",
+  "api": [
+    {
+      "type": "request",
+      "api_key_name": "test",
+      "values": ["Test1, Test2"],
+      "url": "https://www.test.de?test1=%0&test2=%1&key=%!"
+    },
+    {
+      "type": "request_multi",
+      "api_key_name": "test",
+      "values": ["Test1"],
+      "steps_value": ["Hallo", "Test", "Hallo2"],
+      "url": "https://www.test.de?test=%?&test1=%0&key=%!&city=$config_city"
+    }
+  ],
+  "data": [
+    {
+      "type": "date_now",
+      "key": "date",
+      "format": "%Y-%m-%d"
+    },
+    {
+      "type": "alias",
+      "api_keys": ["hallo", "test"],
+      "keys": ["abc", "def"]
+    },
+    {
+      "type": "transform",
+      "api_keys": ["date", "tommorow"],
+      "transformation": {
+        "type": "date_format",
+        "format": "%Y-%m-%d"
+      }
+    },
+    {
+      "type": "transform",
+      "api_keys": ["text"],
+      "new_keys": ["long_text"],
+      "transformation": {
+        "type": "add_symbole",
+        "pattern": "%0 test"
+      }
+    },
+    {
+      "type": "transform",
+      "api_keys": ["pressure", "dec"],
+      "transformation": {
+        "type": "replace",
+        "old_value": ".",
+        "new_value": ",",
+        "count": 1
+      }
+    }
+  ],
+  "images": {
+    "wetter1": {
+      "type": "picture_pillow",
+      "path": "test/test.png",
+      "overlay": [
+        {
+          "type": "text",
+          "pos_x": 10,
+          "pos_y": 2,
+          "preset": "wetter1",
+          "anchor_point": "center",
+          "text": "hallo"
+        },
+        {
+          "type": "api_text",
+          "pos_x": 10,
+          "pos_y": 2,
+          "anchor_point": "center",
+          "keys": ["cities.kiel"],
+          "pattern": "Test: %0 $config_name"
+        }
+      ]
+    },
+    "wetter2": {
+      "type": "wordcloud"
+    }
+  },
+  "audio": {
+    "a1": {
+      "parts": [
+        {
+          "type": "text",
+          "text": "hallo"
+        },
+        {
+          "type": "api_text",
+          "keys": ["value", "value2"],
+          "pattern": "Test: %0, %1"
+        }
+      ]
+    }
+  },
+  "transitions": [
+    {
+      "image": "wetter1",
+      "time": 3,
+      "audio": "a1"
+    },
+    {
+      "image": "wetter2",
+      "time": 10
+    }
+  ],
+  "presets": {
+    "wetter1": {
+      "color": "#08638",
+      "font_size": 5,
+      "font": "dosis"
+    }
+  }
+}

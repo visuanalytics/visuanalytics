@@ -4,6 +4,7 @@ import uuid
 
 from visuanalytics.analytics.control.pipeline import Pipeline
 from visuanalytics.analytics.control.procedures.history import HistorySteps
+from visuanalytics.analytics.control.procedures.weather import WeatherSteps
 from visuanalytics.analytics.control.procedures.weather_single import SingleWeatherSteps
 from visuanalytics.analytics.control.schedule import Scheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
@@ -11,6 +12,7 @@ from visuanalytics.analytics.util import resources, external_programms, config_m
 # TODO(Max) Implement (current just for testing)
 
 testing = True
+h264_nvenc = False
 
 
 def main():
@@ -18,10 +20,13 @@ def main():
     init()
 
     # TODO(max) run in other Thread
+
     # Scheduler().start()
-    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing})).start()
-    # Pipeline(uuid.uuid4().hex, SingleWeatherSteps({"testing": testing, "city_name": "Giessen"})).start()
-    Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing})).start()
+    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
+    Pipeline(uuid.uuid4().hex,
+             SingleWeatherSteps(
+                 {"testing": testing, "city_name": "Biebertal", "p_code": "35444", "h264_nvenc": h264_nvenc})).start()
+    # Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
 
 
 def init():

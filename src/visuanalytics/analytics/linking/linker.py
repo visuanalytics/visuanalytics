@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import resources
 
 # TODO(max) change output dir
 
-def to_forecast(pipeline_id, images, audios, audiol):
+def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
     Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
@@ -24,13 +24,18 @@ def to_forecast(pipeline_id, images, audios, audiol):
     :type audios: list
     :param audiol: Eine Liste aus Strings Elementen mit den Audiolängen der Audios
     :type audiol: list
-    :return:
+    :param h264_nvenc: Nvidia Hardwarebeschleunigung aktiv oder nicht
+    :type h264_nvenc: bool
+    :return: Pfad des erstellten Videos
     :rtype: str
     :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
     """
 
     # Save current Dir to change later back
     path_before = os.getcwd()
+
+    if h264_nvenc:
+        os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
     with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
         for i in audios:
@@ -45,13 +50,13 @@ def to_forecast(pipeline_id, images, audios, audiol):
     output2 = resources.get_resource_path("out/video.mp4")
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
-        args2.extend(("-loop", "1", "-t", str(int(audiol[i])), "-i", images[i]))
+        args2.extend(("-loop", "1", "-t", str(audiol[i]), "-i", images[i]))
 
-    args2.extend(("-i", output, "-filter_complex"))
+    args2.extend(("-i", output, "-c:a", "copy", "-filter_complex"))
 
     filter = ""
     for i in range(0, len(images) - 1):
-        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=1.2:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
+        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=0.8:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
             _sum_audiol(audiol, i)) + "/TB[f" + str(
             i) + "];"
     for j in range(0, len(images) - 1):
@@ -62,7 +67,12 @@ def to_forecast(pipeline_id, images, audios, audiol):
         else:
             filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
 
-    args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a", "-shortest", "-s", "1920x1080", output2))
+    args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
+
+    if h264_nvenc:
+        args2.extend(("-c:v", "h264_nvenc"))
+
+    args2.extend(("-shortest", "-s", "1920x1080", output2))
     os.chdir(resources.get_temp_resource_path("", pipeline_id))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
@@ -77,4 +87,4 @@ def _sum_audiol(audiol, index):
     sum = 0
     for i in range(0, index + 1):
         sum += audiol[i]
-    return int(sum) - 2
+    return int(sum)
