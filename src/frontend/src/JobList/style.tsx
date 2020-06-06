@@ -1,10 +1,9 @@
-import React from 'react';
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import {withStyles} from '@material-ui/core/styles';
 import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 
 export const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+        createStyles({
         root: {
             width: '100%',
         },
