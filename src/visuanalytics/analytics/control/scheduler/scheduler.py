@@ -23,7 +23,7 @@ class Scheduler(object):
     :param steps: Dictionary zum überstezen der Step id zu einer Step Klasse.
     :type steps: dict
     """
-    steps = {1: WeatherSteps, 2: SingleWeatherSteps}
+    steps = {0: WeatherSteps, 1: SingleWeatherSteps}
 
     def __init__(self, base_config=None):
         super().__init__()
