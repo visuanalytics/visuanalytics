@@ -17,6 +17,11 @@ RUN apt-get update \
 COPY requirements.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
+# create links to subfolders to make the names shorter when mouting
+RUN ln -s /home/appuser/visuanalytics/out /out; \
+    ln -s /home/appuser/visuanalytics/instance/config.json /config.json; \
+    ln -s /home/appuser/visuanalytics/resources/jobs.json /jobs.json
+
 # Change User
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
