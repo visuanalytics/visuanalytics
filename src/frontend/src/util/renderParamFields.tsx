@@ -1,5 +1,5 @@
 import React from 'react';
-import {Param} from '../param';
+import {Param} from './param';
 import TextField from '@material-ui/core/TextField';
 import {MenuItem} from '@material-ui/core';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Param} from "../param";
+import {Param} from "../util/param";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
