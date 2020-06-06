@@ -59,12 +59,19 @@
               "type": "select",
               "array_key": "data",
               "relevant_keys": [
-                "date",
-                "tomorrow",
-                "hallo",
-                "test",
-                "text",
-                "test"
+                "valid_date",
+                "max_temp",
+                "min_temp",
+                "app_min_temp",
+                "app_max_temp",
+                "wind_cdir_full",
+                "wind_spd",
+                "icon",
+                "code",
+                "sunrise_ts",
+                "sunset_ts",
+                "rh",
+                "pop"
               ]
             },
             {
