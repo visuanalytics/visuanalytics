@@ -32,9 +32,12 @@ def init(config: dict):
         # init db
         db.init_db()
 
-    # create temp and out directory
+    # create temp dir
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
-    os.makedirs(resources.get_resource_path("out"), exist_ok=True)
+
+    # create out dir
+    out_dir = config.get("steps_base_config", {}).get("output_path", "out")
+    os.makedirs(resources.path_from_root(out_dir), exist_ok=True)
 
 
 if __name__ == "__main__":

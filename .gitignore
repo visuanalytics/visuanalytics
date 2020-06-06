@@ -158,3 +158,4 @@ fabric.properties
 /src/visuanalytics/instance
 .idea
 /Organisation/Arbeitszeiten/.~lock.Arbeitszeiten_v2.1.xlsm#
+out

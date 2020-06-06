@@ -8,7 +8,8 @@
   },
   "steps_base_config": {
     "testing": true,
-    "h264_nvenc": false
+    "h264_nvenc": false,
+    "output_path": "out"
   },
   "testing": true
 }
