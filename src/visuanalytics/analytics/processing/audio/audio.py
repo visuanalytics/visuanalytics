@@ -11,10 +11,17 @@ def generate_audio(name, value, config):
     tts = gTTS(text, config["lang"])
     file_path = resources.new_temp_resource_path(name, config["format"])
     tts.save(file_path)
+    # replace_with_audio_path(value, file_path)
     return file_path
 
 
-with open("/exampledata/step-example_weather_single_test.json") as fp:
+def replace_with_audio_path(value, file_path):
+    for key, v in value.items():
+        value.update(key=file_path)
+    pass
+
+
+with open("step-example_weather_single_test.json") as fp:
     d = json.loads(fp)
 
 x = generate_audio(d["name"], d["audio"]["audios"]["a1"], d["audio"]["config"])
