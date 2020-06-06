@@ -4,7 +4,6 @@ import os
 from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
-# TODO(Max) Implement (current just for testing)
 from visuanalytics.server.db import db
 
 
@@ -13,7 +12,7 @@ def main():
 
     init(config)
 
-    # If db is in use Start db Scheduler else run Json Scheduler
+    # If db is in use Start DbScheduler else run JsonScheduler
     if config["db"]["use"]:
         DbScheduler(config["steps_base_config"]).start()
     else:
