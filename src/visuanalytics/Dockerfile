@@ -1,7 +1,14 @@
 FROM jrottenberg/ffmpeg:4.2-nvidia
 
+# Set Timezone
+ENV TZ="Europe/Berlin"
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends\
+    tzdata
+
 # install Python
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
     python3.8 \
     python3-setuptools\
     python3-pip
