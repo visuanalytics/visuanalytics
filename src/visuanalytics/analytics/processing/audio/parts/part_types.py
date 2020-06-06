@@ -1,5 +1,5 @@
 def audio_parts(parts):
     text = ""
-    for i in parts:
-        text = "{text} {i}"
+    for parts.patterns in parts:
+        text = "{text} {parts.patterns}"
     return text
