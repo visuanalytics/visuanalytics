@@ -82,7 +82,7 @@ class HistorySteps(Steps):
         # Get audio length
         logger.info("Determining audio length...")
         self.__processed_data["audio_length"] = audio.get_audio_length(
-            self.__processed_data["audios"], self.config.get("h264_nvenc", False))
+            self.__processed_data["audios"])
 
         # clean preprocessed data
         self.__preprocessed_data = None
@@ -95,4 +95,5 @@ class HistorySteps(Steps):
         """
         logger.info("Generating forecast video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
-                            self.__processed_data["audio_length"], self.config.get("h264_nvenc", False))
+                            self.__processed_data["audio_length"], self.config.get("h264_nvenc", False),
+                            self.config.get("output_path"), "History")

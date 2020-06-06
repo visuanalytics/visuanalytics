@@ -12,6 +12,7 @@ def get_public():
     Ermöglicht den Zugriff auf die öffentliche Konfigurationsdatei.
 
     :return: Die öffentliche Konfigurationsdatei in Form eines Dictionaries.
+    :rtype: dict
 
     :raises:
         FileNotFoundError: Wenn die öffentliche Konfigurationsdatei nicht existiert.
@@ -29,6 +30,7 @@ def get_private():
     Ermöglicht den Zugriff auf die private Konfigurationsdatei.
 
     :return: Die private Konfigurationsdatei in Form eines Dictionaries.
+    :rtype: dict
 
     :raises:
         FileNotFoundError: Wenn die private Konfigurationsdatei nicht existiert.

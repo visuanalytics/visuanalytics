@@ -49,7 +49,7 @@ weather_param_names = ["valid_date", "max_temp", "min_temp", "app_min_temp", "ap
 class PreprocessSingleTest(unittest.TestCase):
 
     def test_only_four_days_taken(self):
-        actual = len(transform._preprocess_single(input_single)["Gießen"])
+        actual = len(transform._preprocess_single(input_single, None)["Gießen"])
         expected = 5
         self.assertEqual(actual, expected)
 
@@ -58,7 +58,7 @@ class PreprocessSingleTest(unittest.TestCase):
             "city_name": "Gießen",
             "data": input_single["data"][:3]
         }
-        actual = len(transform._preprocess_single(input_single_three_days)["Gießen"])
+        actual = len(transform._preprocess_single(input_single_three_days, None)["Gießen"])
         expected = 3
         self.assertEqual(actual, expected)
 
@@ -126,20 +126,6 @@ class PreprocessTest(unittest.TestCase):
 
     def test_data_icon_threeday_check_if_string(self):
         self.assertIsInstance(visualisation.data_icon_threeday(self.output)[0][3], str)
-
-    def test_get_weekday(self):
-        """
-        Datum: 2020-05-19
-        """
-        actual = transform.get_weekday(self.output)
-        expected = {
-            'today': 'Dienstag',
-            'tomorrow': 'Mittwoch',
-            'next_1': 'Donnerstag',
-            'next_2': 'Freitag',
-            'next_3': 'Samstag'
-        }
-        self.assertEqual(actual, expected)
 
     def test_get_cities_max_temp(self):
         cities_highest_max_temp = []

@@ -1,11 +1,11 @@
 """
-Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder zu generieren.
+Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder für den DE Wetterbericht zu generieren.
 """
 
 from PIL import Image
 from PIL import ImageDraw
-from PIL import ImageFont
 
+from visuanalytics.analytics.processing.util.text_draw import draw_text
 from visuanalytics.analytics.util import resources
 
 LOCATIONS_WEEKDAYS = [(345, 52), (960, 52), (1585, 52)]
@@ -16,20 +16,20 @@ list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 
 def get_all_images_germany(pipeline_id, icon_oneday, temp_oneday, icon_threeday, data_mm_temp_threeday, date):
     """
-    generiert alle Bilder die für den Deutschland bericht benörigt werden
+    generiert alle Bilder die für den Deutschland Bericht benötigt werden
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param icon_oneday: Das Ergebnis der Methode :func:`data_icon_oneday()`.
-    :type: list
+    :type icon_oneday : list
     :param temp_oneday: Das Ergebnis der Methode :func:`data_temp_oneday()`
-    :type:list
+    :type temp_oneday:list
     :param icon_threeday: Das Ergebnis der Methode :func:`data_icon_threeday()`.
-    :type:list
+    :type icon_threeday:list
     :param data_mm_temp_threeday: Das Ergebnis der Methode :func:`data_mm_temp_threeday()`.
-    :type:list
+    :type data_mm_temp_threeday:list
     :param date: Wochentage für den Bericht
-    :type:list
+    :type date:list
     :return: Eine Liste mit Bildern die erstelt wurden
     :rtype: list
     """
@@ -45,7 +45,7 @@ def get_all_images_germany(pipeline_id, icon_oneday, temp_oneday, icon_threeday,
 
 def combine_images_audiolength(images, audiol):
     """
-    Kombiniert das 3 Tages images, wo nichts markiert ist mit den anderen Bildern zur Vorbereitung von ffmpeg
+    Kombiniert das 3 Tages images, auf dem nichts markiert ist mit den anderen Bildern zur vorbereitung von ffmpeg
 
     :param images: Liste mit allen images
     :type images: list
@@ -56,7 +56,7 @@ def combine_images_audiolength(images, audiol):
     """
     return ([images[0], images[1], images[2], images[3], images[7], images[4],
              images[5], images[6], images[7]],
-            [audiol[0], audiol[1], audiol[2], audiol[3] - 1, 2, audiol[4] - 2, audiol[5] - 1, audiol[6] - 3, 5])
+            [audiol[0], audiol[1], audiol[2], audiol[3], 1.5, audiol[4] - 1.5, audiol[5], audiol[6] - 3, 3])
 
 
 def _get_threeday_image(pipeline_id, data, data2, weekdates, which_date):
@@ -88,10 +88,10 @@ def _get_threeday_image(pipeline_id, data, data2, weekdates, which_date):
     draw = ImageDraw.Draw(source_img)
 
     for item in data2:
-        _draw_text(draw, item[0], item[1])
+        draw_text(draw, item[0], item[1])
 
     for idx, item in enumerate(LOCATIONS_WEEKDAYS):
-        _draw_text(draw, item, weekdates[idx])
+        draw_text(draw, item, weekdates[idx])
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -120,7 +120,7 @@ def _get_oneday_icons_image(pipeline_id, data, weekdate):
         icon = icon.resize([160, 160], Image.LANCZOS)
         source_img.paste(icon, (item[0][0] - 90, item[0][1] - 35), icon)
     draw = ImageDraw.Draw(source_img)
-    _draw_text(draw, (305, 48), weekdate)
+    draw_text(draw, (305, 48), weekdate)
 
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -146,24 +146,10 @@ def _get_oneday_temp_image(pipeline_id, data, weekdate):
     tile = Image.open(resources.get_resource_path("weather/kachel.png"))
     for item in data:
         source_img.paste(tile, (item[0][0] - 53, item[0][1]), tile)
-        _draw_text(draw, item[0], item[1], fontsize=50)
+        draw_text(draw, item[0], item[1], font_size=50)
 
-    _draw_text(draw, (305, 48), weekdate)
+    draw_text(draw, (305, 48), weekdate)
     file = resources.new_temp_resource_path(pipeline_id, "png")
     Image.composite(img1, source_img, img1).save(file)
 
     return file
-
-
-def _draw_text(draw, position, content, fontsize=70, fontcolour="white", path="weather/Dosis-Bold.ttf"):
-    ttype = ImageFont.truetype(resources.get_resource_path(path), fontsize)
-    w, h = ttype.getsize(content)
-    draw.text(((position[0] - (w / 2)), position[1]), content,
-              font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
-              fill=fontcolour)
-
-
-def _draw_text_fix(draw, position, content, fontsize=70, fontcolour="white", path="weather/Dosis-Bold.ttf"):
-    draw.text(position, content,
-              font=ImageFont.truetype(resources.get_resource_path(path), fontsize),
-              fill=fontcolour)
