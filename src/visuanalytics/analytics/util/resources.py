@@ -62,7 +62,7 @@ def get_out_path(out_path, job_name, format=".mp4"):
     :return: Die aktuelle Uhrzeit für den Dateinamen zum erstellen des Videos
     :rtype: str
     """
-    return out_path + "/" + job_name + datetime.now().strftime('%Y-%m-%d_%H-%M.%S') + format
+    return os.path.join(out_path, f"{job_name}-{datetime.now().strftime('%Y-%m-%d_%H-%M.%S')}{format}")
 
 
 def open_resource(path: str, mode: str = "rt"):
