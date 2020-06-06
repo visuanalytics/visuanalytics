@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import resources
 
 # TODO(max) change output dir
 
-def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
+def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_name):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
     Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
@@ -26,6 +26,10 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
     :type audiol: list
     :param h264_nvenc: Nvidia Hardwarebeschleunigung aktiv oder nicht
     :type h264_nvenc: bool
+    :param out_path: Path an dem das Video abgelegt werden soll
+    :type out_path: str
+    :param job_name: Eine Beschreibung des Jobs der gerade ausgeführt wird ( wird für den dateinamen benötigt)
+    :type job_name: str
     :return: Pfad des erstellten Videos
     :rtype: str
     :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
@@ -47,7 +51,7 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc):
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_resource_path("out/video.mp4")
+    output2 = resources.get_out_path(out_path, job_name)
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audiol[i]), "-i", images[i]))

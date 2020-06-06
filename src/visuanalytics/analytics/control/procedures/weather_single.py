@@ -103,4 +103,5 @@ class SingleWeatherSteps(Steps):
         city_name = self.config.get("city_name")
         logger.info(f"Generating {city_name}-forecast video...")
         linking.to_forecast(pipeline_id, self.__processed_data["images"], self.__processed_data["audios"],
-                            self.__processed_data["audio_length"], self.config.get("h264_nvenc", False))
+                            self.__processed_data["audio_length"], self.config.get("h264_nvenc", False),
+                            self.config.get("output_path"), "Weather-Single")
