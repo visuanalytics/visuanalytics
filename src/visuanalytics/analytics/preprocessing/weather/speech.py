@@ -345,8 +345,7 @@ def get_data_today_tomorrow_three(data):
             {i: {"city_highest_max": city_highest_max, "temp_highest_max": temp_highest_max,
                  "code_highest_max": code_highest_max, "city_lowest_max": city_lowest_max,
                  "temp_lowest_max": temp_lowest_max, "code_lowest_max": code_lowest_max,
-                 "city_min_temp": temp_min[0], "min_temp": temp_min[1],
-                 "code_min_temp": temp_min[2]}})
+                 "city_min_temp": temp_min[0], "min_temp": temp_min[1], "code_min_temp": temp_min[2]}})
     return data_lowest_and_highest_max_and_min
 
 
