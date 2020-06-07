@@ -35,19 +35,16 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_n
     :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
     """
 
-    # Save current Dir to change later back
-    path_before = os.getcwd()
-
     if h264_nvenc:
         os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
     with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
         for i in audios:
             file.write("file 'file:" + i + "'\n")
-
     output = resources.new_temp_resource_path(pipeline_id, "mp3")
-    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i", "input.txt", "-c", "copy", output]
-    os.chdir(resources.get_temp_resource_path("", pipeline_id))
+    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i", resources.get_temp_resource_path("input.txt", pipeline_id),
+             "-c", "copy",
+             output]
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
@@ -77,12 +74,8 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_n
         args2.extend(("-c:v", "h264_nvenc"))
 
     args2.extend(("-shortest", "-s", "1920x1080", output2))
-    os.chdir(resources.get_temp_resource_path("", pipeline_id))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
-
-    # Change await form the Dir, to be able to remove it
-    os.chdir(path_before)
 
     return output2
 
