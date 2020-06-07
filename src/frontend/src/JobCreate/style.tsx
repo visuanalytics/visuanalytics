@@ -17,10 +17,4 @@ export const useStyles = makeStyles((theme) => ({
     inputField: {
         width: 300
     },
-    centerBox: {
-        width: 80,
-        margin: "0 auto",
-        position: "relative",
-        padding: theme.spacing(3)
-    }
 }));
