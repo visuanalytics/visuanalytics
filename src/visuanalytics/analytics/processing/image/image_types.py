@@ -7,5 +7,5 @@ IMAGE_TYPES = {
 }
 
 
-def generate_image(name, values):
-    IMAGE_TYPES[values["type"]](name, values)
+def generate_image(pipeline_id, name, values):
+    return IMAGE_TYPES[values["type"]](pipeline_id, name, values)
