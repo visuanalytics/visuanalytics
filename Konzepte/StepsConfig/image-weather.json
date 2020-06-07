@@ -1,12 +1,12 @@
 {
   "images": {
     "weather1": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Wetter-mogen.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 48,
@@ -15,7 +15,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             860,
             1040,
@@ -59,12 +59,12 @@
       ]
     },
     "weather2": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Wetter-mogen.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 48,
@@ -73,7 +73,7 @@
         },
         {
           "description": "kachel",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             897,
             1077,
@@ -105,7 +105,7 @@
         },
         {
           "description": "temperatur",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             950,
@@ -148,12 +148,12 @@
       ]
     },
     "weather3": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Wetter-mogen.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 48,
@@ -162,7 +162,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             860,
             1040,
@@ -206,12 +206,12 @@
       ]
     },
     "weather4": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Wetter-mogen.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 48,
@@ -220,7 +220,7 @@
         },
         {
           "description": "kachel",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             897,
             1077,
@@ -252,7 +252,7 @@
         },
         {
           "description": "temperatur",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             950,
@@ -295,12 +295,12 @@
       ]
     },
     "weather5": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/DE3Tage0.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             342,
@@ -321,7 +321,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             110,
             735,
@@ -383,7 +383,7 @@
         },
         {
           "description": "temp_max",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -408,7 +408,7 @@
         },
         {
           "description": "temp_min",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -434,12 +434,12 @@
       ]
     },
     "weather6": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/DE3Tage1.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             342,
@@ -460,7 +460,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             110,
             735,
@@ -522,7 +522,7 @@
         },
         {
           "description": "temp_max",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -547,7 +547,7 @@
         },
         {
           "description": "temp_min",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -573,12 +573,12 @@
       ]
     },
     "weather7": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/DE3Tage2.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             342,
@@ -599,7 +599,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             110,
             735,
@@ -661,7 +661,7 @@
         },
         {
           "description": "temp_max",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -686,7 +686,7 @@
         },
         {
           "description": "temp_min",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -712,12 +712,12 @@
       ]
     },
     "weather8": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/DE3Tage3.png",
       "overlay": [
         {
           "description": "week_day",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             342,
@@ -738,7 +738,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image_array",
           "pos_x": [
             110,
             735,
@@ -787,7 +787,7 @@
         },
         {
           "description": "temp_max",
-          "type": "api_text",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             483,
@@ -812,7 +812,7 @@
         },
         {
           "description": "temp_min",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": [
             483,

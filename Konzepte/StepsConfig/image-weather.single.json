@@ -1,12 +1,12 @@
 {
   "images": {
     "weather1": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_2day0.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 246,
           "pos_y": 280,
           "size_x": 350,
@@ -16,7 +16,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1065,
           "pos_y": 280,
           "size_x": 350,
@@ -26,7 +26,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -35,7 +35,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             552,
@@ -56,7 +56,7 @@
         },
         {
           "description": "weather_discription",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             520,
@@ -77,7 +77,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             700,
@@ -98,7 +98,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             794,
@@ -119,7 +119,7 @@
         },
         {
           "description": "entry_name_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             270,
@@ -143,7 +143,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -167,7 +167,7 @@
         },
         {
           "description": "entry_var_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             675,
@@ -191,7 +191,7 @@
         },
         {
           "description": "entry_var_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1500,
@@ -216,12 +216,12 @@
       ]
     },
     "weather2": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_2day1.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 246,
           "pos_y": 280,
           "size_x": 350,
@@ -231,7 +231,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1065,
           "pos_y": 280,
           "size_x": 350,
@@ -241,7 +241,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -250,7 +250,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             552,
@@ -271,7 +271,7 @@
         },
         {
           "description": "weather_discription",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             520,
@@ -292,7 +292,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             700,
@@ -313,7 +313,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             794,
@@ -334,7 +334,7 @@
         },
         {
           "description": "entry_name_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             270,
@@ -358,7 +358,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -382,7 +382,7 @@
         },
         {
           "description": "entry_var_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             675,
@@ -406,7 +406,7 @@
         },
         {
           "description": "entry_var_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1500,
@@ -431,12 +431,12 @@
       ]
     },
     "weather3": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_3day2.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 246,
           "pos_y": 280,
           "size_x": 350,
@@ -446,7 +446,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1065,
           "pos_y": 280,
           "size_x": 350,
@@ -456,7 +456,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -465,7 +465,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             552,
@@ -486,7 +486,7 @@
         },
         {
           "description": "weather_discription",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             520,
@@ -507,7 +507,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             700,
@@ -528,7 +528,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             794,
@@ -549,7 +549,7 @@
         },
         {
           "description": "entry_name_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             270,
@@ -573,7 +573,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -597,7 +597,7 @@
         },
         {
           "description": "entry_var_day1",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             675,
@@ -621,7 +621,7 @@
         },
         {
           "description": "entry_var_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1500,
@@ -646,12 +646,12 @@
       ]
     },
     "weather4": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_3day0.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 50,
           "pos_y": 420,
           "size_x": 350,
@@ -661,7 +661,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 690,
           "pos_y": 420,
           "size_x": 350,
@@ -671,7 +671,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1300,
           "pos_y": 420,
           "size_x": 350,
@@ -681,7 +681,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -690,7 +690,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             347,
@@ -715,7 +715,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             462,
@@ -740,7 +740,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             540,
@@ -765,7 +765,7 @@
         },
         {
           "description": "entry_name_day3-5",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             120,
@@ -786,7 +786,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -812,12 +812,12 @@
       ]
     },
     "weather5": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_3day0.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 50,
           "pos_y": 420,
           "size_x": 350,
@@ -827,7 +827,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 690,
           "pos_y": 420,
           "size_x": 350,
@@ -837,7 +837,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1300,
           "pos_y": 420,
           "size_x": 350,
@@ -847,7 +847,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -856,7 +856,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             347,
@@ -881,7 +881,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             462,
@@ -906,7 +906,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             540,
@@ -931,7 +931,7 @@
         },
         {
           "description": "entry_name_day3-5",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             120,
@@ -952,7 +952,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -978,12 +978,12 @@
       ]
     },
     "weather6": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_3day0.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 50,
           "pos_y": 420,
           "size_x": 350,
@@ -993,7 +993,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 690,
           "pos_y": 420,
           "size_x": 350,
@@ -1003,7 +1003,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1300,
           "pos_y": 420,
           "size_x": 350,
@@ -1013,7 +1013,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -1022,7 +1022,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             347,
@@ -1047,7 +1047,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             462,
@@ -1072,7 +1072,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             540,
@@ -1097,7 +1097,7 @@
         },
         {
           "description": "entry_name_day3-5",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             120,
@@ -1118,7 +1118,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
@@ -1144,12 +1144,12 @@
       ]
     },
     "weather7": {
-      "type": "picture_pillow",
+      "type": "pillow",
       "path": "weather/Ort_3day0.png",
       "overlay": [
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 50,
           "pos_y": 420,
           "size_x": 350,
@@ -1159,7 +1159,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 690,
           "pos_y": 420,
           "size_x": 350,
@@ -1169,7 +1169,7 @@
         },
         {
           "description": "icon",
-          "type": "image_in_image",
+          "type": "image",
           "pos_x": 1300,
           "pos_y": 420,
           "size_x": 350,
@@ -1179,7 +1179,7 @@
         },
         {
           "description": "city_name",
-          "type": "api_text",
+          "type": "text",
           "anchor_point": "center",
           "pos_x": 962,
           "pos_y": 35,
@@ -1188,7 +1188,7 @@
         },
         {
           "description": "week_day",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             347,
@@ -1213,7 +1213,7 @@
         },
         {
           "description": "max_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             462,
@@ -1238,7 +1238,7 @@
         },
         {
           "description": "min_temp",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
             540,
@@ -1263,7 +1263,7 @@
         },
         {
           "description": "entry_name_day3-5",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             120,
@@ -1284,7 +1284,7 @@
         },
         {
           "description": "entry_name_day2",
-          "type": "api_text_array",
+          "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
             1090,
