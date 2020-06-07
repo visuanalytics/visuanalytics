@@ -18,10 +18,6 @@ def merge_data(data, date):
     :type date:
     :return:
     """
-    first_dictionary_for_string = data[2][0]
-    second_dictionary_for_string = data[2][1]
-    third_dictionary_for_string = data[2][2]
-    fourth_dictionary_for_string = data[2][3]
 
     first_string = ""
     second_string = ""
