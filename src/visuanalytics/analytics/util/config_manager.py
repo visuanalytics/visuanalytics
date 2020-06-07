@@ -2,8 +2,9 @@
 
 import json
 import os
+from json import JSONDecodeError
 
-CONFIG_LOCATION = "../../config.json"
+CONFIG_LOCATION = "../../config.jso"
 CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
 
 
@@ -14,7 +15,8 @@ def _get_config_path(config_location):
 def _merge_config(public_config: dict, private_config: dict):
     # merge sub dict steps_base_config
     public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
-    private_config.pop("steps_base_config")
+    private_config.pop("steps_base_config", None)
+    print(public_config)
 
     public_config.update(private_config)
 
@@ -47,7 +49,7 @@ def get_config():
         _merge_config(public_config, private_config)
         return public_config
 
-    except FileNotFoundError as e:
+    except (FileNotFoundError, JSONDecodeError) as e:
         e.strerror = "Public Configuration file does not exist"
         raise e
 
