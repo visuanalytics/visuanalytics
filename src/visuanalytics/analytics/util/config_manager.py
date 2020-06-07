@@ -11,6 +11,14 @@ def _get_config_path(config_location):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), config_location))
 
 
+def _merge_config(public_config: dict, private_config: dict):
+    # merge sub dict steps_base_config
+    public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
+    private_config.pop("steps_base_config")
+
+    public_config.update(private_config)
+
+
 def get_config():
     """
     Ermöglicht den Zugriff auf die Konfigurations Dateien.
@@ -36,7 +44,9 @@ def get_config():
                 private_config = json.loads(fh.read())
                 private_config.pop("api_keys", "")
 
-        return {**public_config, **private_config}
+        _merge_config(public_config, private_config)
+        return public_config
+
     except FileNotFoundError as e:
         e.strerror = "Public Configuration file does not exist"
         raise e
