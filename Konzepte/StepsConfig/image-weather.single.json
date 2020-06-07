@@ -12,7 +12,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{0.icon}.png"
+          "pattern": "weather/icons/{0|icon}.png"
         },
         {
           "description": "icon",
@@ -22,7 +22,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{1.icon}.png"
+          "pattern": "weather/icons/{1|icon}.png"
         },
         {
           "description": "city_name",
@@ -31,7 +31,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -50,8 +50,8 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{0.date}",
-            "{1.date}"
+            "{0|date}",
+            "{1|date}"
           ]
         },
         {
@@ -71,8 +71,8 @@
             "weather_brown_3"
           ],
           "pattern": [
-            "{0.discription}",
-            "{1.discription}"
+            "{0|discription}",
+            "{1|discription}"
           ]
         },
         {
@@ -92,8 +92,8 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{0.max_temp}",
-            "{1.max_temp}"
+            "{0|max_temp}",
+            "{1|max_temp}"
           ]
         },
         {
@@ -113,8 +113,8 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{0.min_temp}",
-            "{1.min_temp}"
+            "{0|min_temp}",
+            "{1|min_temp}"
           ]
         },
         {
@@ -135,10 +135,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -159,10 +159,10 @@
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -183,10 +183,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{0.pop}",
-            "{0.rh}",
-            "{0.app_max_temp}",
-            "{0.wind_spd}"
+            "{0|pop}",
+            "{0|rh}",
+            "{0|app_max_temp}",
+            "{0|wind_spd}"
           ]
         },
         {
@@ -207,10 +207,10 @@
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{1.pop}",
-            "{1.rh}",
-            "{1.app_max_temp}",
-            "{1.wind_spd}"
+            "{1|pop}",
+            "{1|rh}",
+            "{1|app_max_temp}",
+            "{1|wind_spd}"
           ]
         }
       ]
@@ -227,7 +227,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{0.icon}.png"
+          "pattern": "weather/icons/{0|icon}.png"
         },
         {
           "description": "icon",
@@ -237,7 +237,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{1.icon}.png"
+          "pattern": "weather/icons/{1|icon}.png"
         },
         {
           "description": "city_name",
@@ -246,7 +246,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -265,8 +265,8 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{0.date}",
-            "{1.date}"
+            "{0|date}",
+            "{1|date}"
           ]
         },
         {
@@ -286,8 +286,8 @@
             "weather_white_3"
           ],
           "pattern": [
-            "{0.discription}",
-            "{1.discription}"
+            "{0|discription}",
+            "{1|discription}"
           ]
         },
         {
@@ -307,8 +307,8 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{0.max_temp}",
-            "{1.max_temp}"
+            "{0|max_temp}",
+            "{1|max_temp}"
           ]
         },
         {
@@ -328,8 +328,8 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{0.min_temp}",
-            "{1.min_temp}"
+            "{0|min_temp}",
+            "{1|min_temp}"
           ]
         },
         {
@@ -350,10 +350,10 @@
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -374,10 +374,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -398,10 +398,10 @@
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{0.pop}",
-            "{0.rh}",
-            "{0.app_max_temp}",
-            "{0.wind_spd}"
+            "{0|pop}",
+            "{0|rh}",
+            "{0|app_max_temp}",
+            "{0|wind_spd}"
           ]
         },
         {
@@ -422,10 +422,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{1.pop}",
-            "{1.rh}",
-            "{1.app_max_temp}",
-            "{1.wind_spd}"
+            "{1|pop}",
+            "{1|rh}",
+            "{1|app_max_temp}",
+            "{1|wind_spd}"
           ]
         }
       ]
@@ -442,7 +442,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{0.icon}.png"
+          "pattern": "weather/icons/{0|icon}.png"
         },
         {
           "description": "icon",
@@ -452,7 +452,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{1.icon}.png"
+          "pattern": "weather/icons/{1|icon}.png"
         },
         {
           "description": "city_name",
@@ -461,7 +461,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -480,8 +480,8 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{0.date}",
-            "{1.date}"
+            "{0|date}",
+            "{1|date}"
           ]
         },
         {
@@ -501,8 +501,8 @@
             "weather_white_3"
           ],
           "pattern": [
-            "{0.discription}",
-            "{1.discription}"
+            "{0|discription}",
+            "{1|discription}"
           ]
         },
         {
@@ -522,8 +522,8 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{0.max_temp}",
-            "{1.max_temp}"
+            "{0|max_temp}",
+            "{1|max_temp}"
           ]
         },
         {
@@ -543,8 +543,8 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{0.min_temp}",
-            "{1.min_temp}"
+            "{0|min_temp}",
+            "{1|min_temp}"
           ]
         },
         {
@@ -565,10 +565,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -589,10 +589,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{entryname.0}",
-            "{entryname.1}",
-            "{entryname.2}",
-            "{entryname.3}"
+            "{entryname|0}",
+            "{entryname|1}",
+            "{entryname|2}",
+            "{entryname|3}"
           ]
         },
         {
@@ -613,10 +613,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{0.pop}",
-            "{0.rh}",
-            "{0.app_max_temp}",
-            "{0.wind_spd}"
+            "{0|pop}",
+            "{0|rh}",
+            "{0|app_max_temp}",
+            "{0|wind_spd}"
           ]
         },
         {
@@ -637,10 +637,10 @@
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{1.pop}",
-            "{1.rh}",
-            "{1.app_max_temp}",
-            "{1.wind_spd}"
+            "{1|pop}",
+            "{1|rh}",
+            "{1|app_max_temp}",
+            "{1|wind_spd}"
           ]
         }
       ]
@@ -657,7 +657,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{2.icon}.png"
+          "pattern": "weather/icons/{2|icon}.png"
         },
         {
           "description": "icon",
@@ -667,7 +667,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{3.icon}.png"
+          "pattern": "weather/icons/{3|icon}.png"
         },
         {
           "description": "icon",
@@ -677,7 +677,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{4.icon}.png"
+          "pattern": "weather/icons/{4|icon}.png"
         },
         {
           "description": "city_name",
@@ -686,7 +686,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -708,9 +708,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{2.date}",
-            "{3.date}",
-            "{4.date}"
+            "{2|date}",
+            "{3|date}",
+            "{4|date}"
           ]
         },
         {
@@ -733,9 +733,9 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{2.max_temp}",
-            "{3.max_temp}",
-            "{4.max_temp}"
+            "{2|max_temp}",
+            "{3|max_temp}",
+            "{4|max_temp}"
           ]
         },
         {
@@ -758,9 +758,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{2.min_temp}",
-            "{3.min_temp}",
-            "{4.min_temp}"
+            "{2|min_temp}",
+            "{3|min_temp}",
+            "{4|min_temp}"
           ]
         },
         {
@@ -782,7 +782,7 @@
             "weather_brown_5",
             "weather_brown_5"
           ],
-          "pattern": "{specialentryname.0}"
+          "pattern": "{specialentryname|0}"
         },
         {
           "description": "entry_name_day2",
@@ -804,9 +804,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{2.pop}",
-            "{3.pop}",
-            "{4.pop}"
+            "{2|pop}",
+            "{3|pop}",
+            "{4|pop}"
           ]
         }
       ]
@@ -823,7 +823,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{2.icon}.png"
+          "pattern": "weather/icons/{2|icon}.png"
         },
         {
           "description": "icon",
@@ -833,7 +833,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{3.icon}.png"
+          "pattern": "weather/icons/{3|icon}.png"
         },
         {
           "description": "icon",
@@ -843,7 +843,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{4.icon}.png"
+          "pattern": "weather/icons/{4|icon}.png"
         },
         {
           "description": "city_name",
@@ -852,7 +852,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -874,9 +874,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{2.date}",
-            "{3.date}",
-            "{4.date}"
+            "{2|date}",
+            "{3|date}",
+            "{4|date}"
           ]
         },
         {
@@ -899,9 +899,9 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{2.max_temp}",
-            "{3.max_temp}",
-            "{4.max_temp}"
+            "{2|max_temp}",
+            "{3|max_temp}",
+            "{4|max_temp}"
           ]
         },
         {
@@ -924,9 +924,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{2.min_temp}",
-            "{3.min_temp}",
-            "{4.min_temp}"
+            "{2|min_temp}",
+            "{3|min_temp}",
+            "{4|min_temp}"
           ]
         },
         {
@@ -948,7 +948,7 @@
             "weather_white_5",
             "weather_brown_5"
           ],
-          "pattern": "{specialentryname.0}"
+          "pattern": "{specialentryname|0}"
         },
         {
           "description": "entry_name_day2",
@@ -970,9 +970,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{2.pop}",
-            "{3.pop}",
-            "{4.pop}"
+            "{2|pop}",
+            "{3|pop}",
+            "{4|pop}"
           ]
         }
       ]
@@ -989,7 +989,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{2.icon}.png"
+          "pattern": "weather/icons/{2|icon}.png"
         },
         {
           "description": "icon",
@@ -999,7 +999,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "L",
-          "pattern": "weather/icons/{3.icon}.png"
+          "pattern": "weather/icons/{3|icon}.png"
         },
         {
           "description": "icon",
@@ -1009,7 +1009,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{4.icon}.png"
+          "pattern": "weather/icons/{4|icon}.png"
         },
         {
           "description": "city_name",
@@ -1018,7 +1018,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -1040,9 +1040,9 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{2.date}",
-            "{3.date}",
-            "{4.date}"
+            "{2|date}",
+            "{3|date}",
+            "{4|date}"
           ]
         },
         {
@@ -1065,9 +1065,9 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{2.max_temp}",
-            "{3.max_temp}",
-            "{4.max_temp}"
+            "{2|max_temp}",
+            "{3|max_temp}",
+            "{4|max_temp}"
           ]
         },
         {
@@ -1090,9 +1090,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{2.min_temp}",
-            "{3.min_temp}",
-            "{4.min_temp}"
+            "{2|min_temp}",
+            "{3|min_temp}",
+            "{4|min_temp}"
           ]
         },
         {
@@ -1114,7 +1114,7 @@
             "weather_brown_5",
             "weather_white_5"
           ],
-          "pattern": "{specialentryname.0}"
+          "pattern": "{specialentryname|0}"
         },
         {
           "description": "entry_name_day2",
@@ -1136,9 +1136,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{2.pop}",
-            "{3.pop}",
-            "{4.pop}"
+            "{2|pop}",
+            "{3|pop}",
+            "{4|pop}"
           ]
         }
       ]
@@ -1155,7 +1155,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{2.icon}.png"
+          "pattern": "weather/icons/{2|icon}.png"
         },
         {
           "description": "icon",
@@ -1165,7 +1165,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{3.icon}.png"
+          "pattern": "weather/icons/{3|icon}.png"
         },
         {
           "description": "icon",
@@ -1175,7 +1175,7 @@
           "size_x": 350,
           "size_y": 350,
           "colour": "RGBA",
-          "pattern": "weather/icons/{4.icon}.png"
+          "pattern": "weather/icons/{4|icon}.png"
         },
         {
           "description": "city_name",
@@ -1184,7 +1184,7 @@
           "pos_x": 962,
           "pos_y": 35,
           "preset": "weather_white_1",
-          "pattern": "{config.city}"
+          "pattern": "{config|city}"
         },
         {
           "description": "week_day",
@@ -1206,9 +1206,9 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{2.date}",
-            "{3.date}",
-            "{4.date}"
+            "{2|date}",
+            "{3|date}",
+            "{4|date}"
           ]
         },
         {
@@ -1231,9 +1231,9 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{2.max_temp}",
-            "{3.max_temp}",
-            "{4.max_temp}"
+            "{2|max_temp}",
+            "{3|max_temp}",
+            "{4|max_temp}"
           ]
         },
         {
@@ -1256,9 +1256,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{2.min_temp}",
-            "{3.min_temp}",
-            "{4.min_temp}"
+            "{2|min_temp}",
+            "{3|min_temp}",
+            "{4|min_temp}"
           ]
         },
         {
@@ -1280,7 +1280,7 @@
             "weather_white_5",
             "weather_white_5"
           ],
-          "pattern": "{specialentryname.0}"
+          "pattern": "{specialentryname|0}"
         },
         {
           "description": "entry_name_day2",
@@ -1302,9 +1302,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{2.pop}",
-            "{3.pop}",
-            "{4.pop}"
+            "{2|pop}",
+            "{3|pop}",
+            "{4|pop}"
           ]
         }
       ]
