@@ -1,0 +1,858 @@
+{
+  "images": {
+    "weather1": {
+      "type": "picture_pillow",
+      "path": "weather/Wetter-mogen.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "{data|kiel|0|date}"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            860,
+            1040,
+            890,
+            635,
+            805,
+            1065,
+            965,
+            715,
+            945,
+            1107
+          ],
+          "pos_y": [
+            865,
+            787,
+            685,
+            565,
+            505,
+            437,
+            335,
+            298,
+            165,
+            225
+          ],
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "RGBA",
+          "pattern": [
+            "weather/icons/{data|Konstanz|0|icon}.png",
+            "weather/icons/{data|München|0|icon}.png",
+            "weather/icons/{data|Nürnberg|0|icon}.png",
+            "weather/icons/{data|Mainz|0|icon}.png",
+            "weather/icons/{data|Gießen|0|icon}.png",
+            "weather/icons/{data|Dresden|0|icon}.png",
+            "weather/icons/{data|Hannover|0|icon}.png",
+            "weather/icons/{data|Bremen|0|icon}.png",
+            "weather/icons/{data|Hamburg|0|icon}.png",
+            "weather/icons/{data|Berlin|0|icon}.png"
+          ]
+        }
+      ]
+    },
+    "weather2": {
+      "type": "picture_pillow",
+      "path": "weather/Wetter-mogen.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "{data|kiel|0|date}"
+        },
+        {
+          "description": "kachel",
+          "type": "image_in_image",
+          "pos_x": [
+            897,
+            1077,
+            927,
+            672,
+            842,
+            1102,
+            1002,
+            752,
+            982,
+            1144
+          ],
+          "pos_y": [
+            900,
+            822,
+            720,
+            600,
+            540,
+            472,
+            370,
+            333,
+            200,
+            260
+          ],
+          "size_x": null,
+          "size_y": null,
+          "colour": "RGBA",
+          "pattern": "weather/kachel.png"
+        },
+        {
+          "description": "temperatur",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            950,
+            1130,
+            980,
+            725,
+            895,
+            1155,
+            1055,
+            805,
+            1035,
+            1197
+          ],
+          "pos_y": [
+            900,
+            822,
+            720,
+            600,
+            540,
+            472,
+            370,
+            333,
+            200,
+            260
+          ],
+          "preset": "weather_white_3",
+          "pattern": [
+            "{data|Konstanz|0|max_temp}",
+            "{data|München|0|max_temp}",
+            "{data|Nürnberg|0|max_temp}",
+            "{data|Mainz|0|max_temp}",
+            "{data|Gießen|0|max_temp}",
+            "{data|Dresden|0|max_temp}",
+            "{data|Hannover|0|max_temp}",
+            "{data|Bremen|0|max_temp}",
+            "{data|Hamburg|0|max_temp}",
+            "{data|Berlin|0|max_temp}"
+          ]
+        }
+      ]
+    },
+    "weather3": {
+      "type": "picture_pillow",
+      "path": "weather/Wetter-mogen.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "{data|kiel|1|date}"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            860,
+            1040,
+            890,
+            635,
+            805,
+            1065,
+            965,
+            715,
+            945,
+            1107
+          ],
+          "pos_y": [
+            865,
+            787,
+            685,
+            565,
+            505,
+            437,
+            335,
+            298,
+            165,
+            225
+          ],
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "RGBA",
+          "pattern": [
+            "weather/icons/{data|Konstanz|1|icon}.png",
+            "weather/icons/{data|München|1|icon}.png",
+            "weather/icons/{data|Nürnberg|1|icon}.png",
+            "weather/icons/{data|Mainz|1|icon}.png",
+            "weather/icons/{data|Gießen|1|icon}.png",
+            "weather/icons/{data|Dresden|1|icon}.png",
+            "weather/icons/{data|Hannover|1|icon}.png",
+            "weather/icons/{data|Bremen|1|icon}.png",
+            "weather/icons/{data|Hamburg|1|icon}.png",
+            "weather/icons/{data|Berlin|1|icon}.png"
+          ]
+        }
+      ]
+    },
+    "weather4": {
+      "type": "picture_pillow",
+      "path": "weather/Wetter-mogen.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "{data|kiel|1|date}"
+        },
+        {
+          "description": "kachel",
+          "type": "image_in_image",
+          "pos_x": [
+            897,
+            1077,
+            927,
+            672,
+            842,
+            1102,
+            1002,
+            752,
+            982,
+            1144
+          ],
+          "pos_y": [
+            900,
+            822,
+            720,
+            600,
+            540,
+            472,
+            370,
+            333,
+            200,
+            260
+          ],
+          "size_x": null,
+          "size_y": null,
+          "colour": "RGBA",
+          "pattern": "weather/kachel.png"
+        },
+        {
+          "description": "temperatur",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            950,
+            1130,
+            980,
+            725,
+            895,
+            1155,
+            1055,
+            805,
+            1035,
+            1197
+          ],
+          "pos_y": [
+            900,
+            822,
+            720,
+            600,
+            540,
+            472,
+            370,
+            333,
+            200,
+            260
+          ],
+          "preset": "weather_white_3",
+          "pattern": [
+            "{data|Konstanz|1|max_temp}",
+            "{data|München|1|max_temp}",
+            "{data|Nürnberg|1|max_temp}",
+            "{data|Mainz|1|max_temp}",
+            "{data|Gießen|1|max_temp}",
+            "{data|Dresden|1|max_temp}",
+            "{data|Hannover|1|max_temp}",
+            "{data|Bremen|1|max_temp}",
+            "{data|Hamburg|1|max_temp}",
+            "{data|Berlin|1|max_temp}"
+          ]
+        }
+      ]
+    },
+    "weather5": {
+      "type": "picture_pillow",
+      "path": "weather/DE3Tage0.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            342,
+            960,
+            1585
+          ],
+          "pos_y": [
+            52,
+            52,
+            52
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{data|kiel|2|date}",
+            "{data|kiel|3|date}",
+            "{data|kiel|4|date}"
+          ]
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            110,
+            735,
+            1360,
+            235,
+            855,
+            1472,
+            310,
+            930,
+            1554,
+            272,
+            890,
+            1510
+          ],
+          "pos_y": [
+            504,
+            504,
+            504,
+            270,
+            207,
+            207,
+            427,
+            427,
+            427,
+            670,
+            670,
+            670
+          ],
+          "size_x": 200,
+          "size_y": 200,
+          "colour": [
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L"
+          ],
+          "pattern": [
+            "weather/icons/{data|Gießen|2|icon}.png",
+            "weather/icons/{data|Gießen|3|icon}.png",
+            "weather/icons/{data|Gießen|4|icon}.png",
+            "weather/icons/{data|Hamburg|2|icon}.png",
+            "weather/icons/{data|Hamburg|3|icon}.png",
+            "weather/icons/{data|Hamburg|4|icon}.png",
+            "weather/icons/{data|Dreden|2|icon}.png",
+            "weather/icons/{data|Dreden|3|icon}.png",
+            "weather/icons/{data|Dreden|4|icon}.png",
+            "weather/icons/{data|München|2|icon}.png",
+            "weather/icons/{data|München|3|icon}.png",
+            "weather/icons/{data|München|4|icon}.png"
+          ]
+        },
+        {
+          "description": "temp_max",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_white_2",
+            "weather_brown_2",
+            "weather_brown_2"
+          ],
+          "pattern": [
+            "{summary|2|max_temp}",
+            "{summary|3|max_temp}",
+            "{summary|4|max_temp}"
+          ]
+        },
+        {
+          "description": "temp_min",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_white_2",
+            "weather_brown_2",
+            "weather_brown_2"
+          ],
+          "pattern": [
+            "{summary|2|min_temp}",
+            "{summary|3|min_temp}",
+            "{summary|4|min_temp}"
+          ]
+        }
+      ]
+    },
+    "weather6": {
+      "type": "picture_pillow",
+      "path": "weather/DE3Tage1.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            342,
+            960,
+            1585
+          ],
+          "pos_y": [
+            52,
+            52,
+            52
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{data|kiel|2|date}",
+            "{data|kiel|3|date}",
+            "{data|kiel|4|date}"
+          ]
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            110,
+            735,
+            1360,
+            235,
+            855,
+            1472,
+            310,
+            930,
+            1554,
+            272,
+            890,
+            1510
+          ],
+          "pos_y": [
+            504,
+            504,
+            504,
+            270,
+            207,
+            207,
+            427,
+            427,
+            427,
+            670,
+            670,
+            670
+          ],
+          "size_x": 200,
+          "size_y": 200,
+          "colour": [
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L"
+          ],
+          "pattern": [
+            "weather/icons/{data|Gießen|2|icon}.png",
+            "weather/icons/{data|Gießen|3|icon}.png",
+            "weather/icons/{data|Gießen|4|icon}.png",
+            "weather/icons/{data|Hamburg|2|icon}.png",
+            "weather/icons/{data|Hamburg|3|icon}.png",
+            "weather/icons/{data|Hamburg|4|icon}.png",
+            "weather/icons/{data|Dreden|2|icon}.png",
+            "weather/icons/{data|Dreden|3|icon}.png",
+            "weather/icons/{data|Dreden|4|icon}.png",
+            "weather/icons/{data|München|2|icon}.png",
+            "weather/icons/{data|München|3|icon}.png",
+            "weather/icons/{data|München|4|icon}.png"
+          ]
+        },
+        {
+          "description": "temp_max",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_brown_2",
+            "weather_white_2",
+            "weather_brown_2"
+          ],
+          "pattern": [
+            "{summary|2|max_temp}",
+            "{summary|3|max_temp}",
+            "{summary|4|max_temp}"
+          ]
+        },
+        {
+          "description": "temp_min",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_brown_2",
+            "weather_white_2",
+            "weather_brown_2"
+          ],
+          "pattern": [
+            "{summary|2|min_temp}",
+            "{summary|3|min_temp}",
+            "{summary|4|min_temp}"
+          ]
+        }
+      ]
+    },
+    "weather7": {
+      "type": "picture_pillow",
+      "path": "weather/DE3Tage2.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            342,
+            960,
+            1585
+          ],
+          "pos_y": [
+            52,
+            52,
+            52
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{data|kiel|2|date}",
+            "{data|kiel|3|date}",
+            "{data|kiel|4|date}"
+          ]
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            110,
+            735,
+            1360,
+            235,
+            855,
+            1472,
+            310,
+            930,
+            1554,
+            272,
+            890,
+            1510
+          ],
+          "pos_y": [
+            504,
+            504,
+            504,
+            270,
+            207,
+            207,
+            427,
+            427,
+            427,
+            670,
+            670,
+            670
+          ],
+          "size_x": 200,
+          "size_y": 200,
+          "colour": [
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA",
+            "L",
+            "L",
+            "RGBA"
+          ],
+          "pattern": [
+            "weather/icons/{data|Gießen|2|icon}.png",
+            "weather/icons/{data|Gießen|3|icon}.png",
+            "weather/icons/{data|Gießen|4|icon}.png",
+            "weather/icons/{data|Hamburg|2|icon}.png",
+            "weather/icons/{data|Hamburg|3|icon}.png",
+            "weather/icons/{data|Hamburg|4|icon}.png",
+            "weather/icons/{data|Dreden|2|icon}.png",
+            "weather/icons/{data|Dreden|3|icon}.png",
+            "weather/icons/{data|Dreden|4|icon}.png",
+            "weather/icons/{data|München|2|icon}.png",
+            "weather/icons/{data|München|3|icon}.png",
+            "weather/icons/{data|München|4|icon}.png"
+          ]
+        },
+        {
+          "description": "temp_max",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_brown_2",
+            "weather_brown_2",
+            "weather_white_2"
+          ],
+          "pattern": [
+            "{summary|2|max_temp}",
+            "{summary|3|max_temp}",
+            "{summary|4|max_temp}"
+          ]
+        },
+        {
+          "description": "temp_min",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_brown_2",
+            "weather_brown_2",
+            "weather_white_2"
+          ],
+          "pattern": [
+            "{summary|2|min_temp}",
+            "{summary|3|min_temp}",
+            "{summary|4|min_temp}"
+          ]
+        }
+      ]
+    },
+    "weather8": {
+      "type": "picture_pillow",
+      "path": "weather/DE3Tage3.png",
+      "overlay": [
+        {
+          "description": "week_day",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            342,
+            960,
+            1585
+          ],
+          "pos_y": [
+            52,
+            52,
+            52
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{data|kiel|2|date}",
+            "{data|kiel|3|date}",
+            "{data|kiel|4|date}"
+          ]
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": [
+            110,
+            735,
+            1360,
+            235,
+            855,
+            1472,
+            310,
+            930,
+            1554,
+            272,
+            890,
+            1510
+          ],
+          "pos_y": [
+            504,
+            504,
+            504,
+            270,
+            207,
+            207,
+            427,
+            427,
+            427,
+            670,
+            670,
+            670
+          ],
+          "size_x": 200,
+          "size_y": 200,
+          "colour": "RGBA",
+          "pattern": [
+            "weather/icons/{data|Gießen|2|icon}.png",
+            "weather/icons/{data|Gießen|3|icon}.png",
+            "weather/icons/{data|Gießen|4|icon}.png",
+            "weather/icons/{data|Hamburg|2|icon}.png",
+            "weather/icons/{data|Hamburg|3|icon}.png",
+            "weather/icons/{data|Hamburg|4|icon}.png",
+            "weather/icons/{data|Dreden|2|icon}.png",
+            "weather/icons/{data|Dreden|3|icon}.png",
+            "weather/icons/{data|Dreden|4|icon}.png",
+            "weather/icons/{data|München|2|icon}.png",
+            "weather/icons/{data|München|3|icon}.png",
+            "weather/icons/{data|München|4|icon}.png"
+          ]
+        },
+        {
+          "description": "temp_max",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_white_2",
+            "weather_white_2",
+            "weather_white_2"
+          ],
+          "pattern": [
+            "{summary|2|max_temp}",
+            "{summary|3|max_temp}",
+            "{summary|4|max_temp}"
+          ]
+        },
+        {
+          "description": "temp_min",
+          "type": "api_text",
+          "anchor_point": "center",
+          "pos_x": [
+            483,
+            1102,
+            1730
+          ],
+          "pos_y": [
+            931,
+            931,
+            931
+          ],
+          "preset": [
+            "weather_white_2",
+            "weather_white_2",
+            "weather_white_2"
+          ],
+          "pattern": [
+            "{summary|2|min_temp}",
+            "{summary|3|min_temp}",
+            "{summary|4|min_temp}"
+          ]
+        }
+      ]
+    },
+    "presets": {
+      "weather_white_2": {
+        "color": "white",
+        "font_size": 70,
+        "font": "weather/Dosis-Bold.ttf"
+      },
+      "weather_white_3": {
+        "color": "white",
+        "font_size": 50,
+        "font": "weather/Dosis-Regular.ttf"
+      },
+      "weather_brown_2": {
+        "color": "white",
+        "font_size": 70,
+        "font": "weather/Dosis-Bold.ttf"
+      }
+    }
+  }
+}
