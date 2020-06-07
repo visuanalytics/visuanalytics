@@ -208,11 +208,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {data.today.weekday} {data.today.code_highest_max} {data.today.city_highest_max}. "
+            "pattern": "Am heutigen {data|today|weekday} {data|today|code_highest_max} {data|today|city_highest_max}. "
           },
           {
             "type": "text",
-            "pattern": "{data.today.city_lowest_max} {data.today.code_lowest_max}. "
+            "pattern": "{data|today|city_lowest_max} {data|today|code_lowest_max}. "
           }
         ]
       },
@@ -220,7 +220,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {data.today.temp_lowest_max} Grad {data.today.city_lowest_max} und {data.today.temp_highest_max} Grad {data.today.city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {data|today|temp_lowest_max} Grad {data|today|city_lowest_max} und {data|today|temp_highest_max} Grad {data|today|city_highest_max}. "
           }
         ]
       },
@@ -228,11 +228,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {data.tomorrow.weekday} {data.tomorrow.code_lowest_max} {data.tomorrow.city_lowest_max}. "
+            "pattern": "Am morgigen {data|tomorrow|weekday} {data|tomorrow|code_lowest_max} {data|tomorrow|city_lowest_max}. "
           },
           {
             "type": "text",
-            "pattern": "{data.tomorrow.city_highest_max} {data.tomorrow.code_highest_max}. "
+            "pattern": "{data|tomorrow|city_highest_max} {data|tomorrow|code_highest_max}. "
           }
         ]
       },
@@ -240,7 +240,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {data.tomorrow.temp_lowest_max} Grad {data.tomorrow.city_lowest_max} und {data.tomorrow.temp_highest_max} Grad {data.tomorrow.city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {data|tomorrow|temp_lowest_max} Grad {data|tomorrow|city_lowest_max} und {data|tomorrow|temp_highest_max} Grad {data|tomorrow|city_highest_max}. "
           }
         ]
       },
@@ -248,11 +248,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data.next_1.weekday} {data.next_1.common_code}.  "
+            "pattern": "Am {data|next_1|weekday} {data|next_1|common_code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {data.next_1.min_temp} Grad {data.next_1.city_min_temp} und {data.next_1.temp_highest_max} Grad {data.next_1.city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {data|next_1|min_temp} Grad {data|next_1|city_min_temp} und {data|next_1|temp_highest_max} Grad {data|next_1|city_highest_max}. "
           }
         ]
       },
@@ -260,11 +260,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data.next_2.weekday} {data.next_2.common_code}.  "
+            "pattern": "Am {data|next_2|weekday} {data|next_2|common_code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {data.next_2.min_temp} Grad {data.next_2.city_min_temp} und {data.next_2.temp_highest_max} Grad {data.next_2.city_highest_max}.  "
+            "pattern": "Die Temperaturen liegen zwischen {data|next_2|min_temp} Grad {data|next_2|city_min_temp} und {data|next_2|temp_highest_max} Grad {data|next_2|city_highest_max}.  "
           }
         ]
       },
@@ -272,11 +272,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data.next_3.weekday} {data.next_3.common_code}.  "
+            "pattern": "Am {data|next_3|weekday} {data|next_3|common_code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {data.next_3.min_temp} Grad {data.next_3.city_min_temp} und {data.next_3.temp_highest_max} Grad {data.next_3.city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {data|next_3|min_temp} Grad {data|next_3|city_min_temp} und {data|next_3|temp_highest_max} Grad {data|next_3|city_highest_max}. "
           }
         ]
       }
