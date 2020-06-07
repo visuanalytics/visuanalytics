@@ -4,7 +4,7 @@ import json
 import os
 from json import JSONDecodeError
 
-CONFIG_LOCATION = "../../config.jso"
+CONFIG_LOCATION = "../../config.json"
 CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
 
 
