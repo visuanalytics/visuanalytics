@@ -1,9 +1,9 @@
 from visuanalytics.analytics.transform.transform_types import TRANSFORM_TYPES
 
 
-def transform(values, data):
-    for value in values:
-        TRANSFORM_TYPES[value["type"]](value, data)
+def transform(transformations, data):
+    for transformation in transformations:
+        TRANSFORM_TYPES[transformation["type"]](transformation, data)
 
 
 def transform_array(values, data):
