@@ -46,7 +46,7 @@ class Scheduler(object):
 
     def _start_job(self, steps_id: int, config: dict):
         # Add base_config if exists
-        config = {**config, **self._base_config}
+        config = {**self._base_config, **config}
 
         t = threading.Thread(
             target=Pipeline(uuid.uuid4().hex,
