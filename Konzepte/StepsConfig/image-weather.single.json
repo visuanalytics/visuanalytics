@@ -11,7 +11,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{0.icon}.png"
         },
         {
           "description": "icon",
@@ -20,7 +21,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "L",
+          "pattern": "weather/icons/{1.icon}.png"
         },
         {
           "description": "city_name",
@@ -224,7 +226,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "L",
+          "pattern": "weather/icons/{0.icon}.png"
         },
         {
           "description": "icon",
@@ -233,7 +236,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{1.icon}.png"
         },
         {
           "description": "city_name",
@@ -437,7 +441,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{0.icon}.png"
         },
         {
           "description": "icon",
@@ -446,7 +451,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{1.icon}.png"
         },
         {
           "description": "city_name",
@@ -646,20 +652,32 @@
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 246,
-          "pos_y": 280,
+          "pos_x": 50,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{2.icon}.png"
         },
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 1065,
-          "pos_y": 280,
+          "pos_x": 690,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "L",
+          "pattern": "weather/icons/{3.icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": 1300,
+          "pos_y": 420,
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "L",
+          "pattern": "weather/icons/{4.icon}.png"
         },
         {
           "description": "city_name",
@@ -800,20 +818,32 @@
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 246,
-          "pos_y": 280,
+          "pos_x": 50,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "L",
+          "pattern": "weather/icons/{2.icon}.png"
         },
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 1065,
-          "pos_y": 280,
+          "pos_x": 690,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{3.icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": 1300,
+          "pos_y": 420,
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "L",
+          "pattern": "weather/icons/{4.icon}.png"
         },
         {
           "description": "city_name",
@@ -954,20 +984,32 @@
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 246,
-          "pos_y": 280,
+          "pos_x": 50,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "L",
+          "pattern": "weather/icons/{2.icon}.png"
         },
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 1065,
-          "pos_y": 280,
+          "pos_x": 690,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "L",
+          "pattern": "weather/icons/{3.icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": 1300,
+          "pos_y": 420,
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "RGBA",
+          "pattern": "weather/icons/{4.icon}.png"
         },
         {
           "description": "city_name",
@@ -1108,20 +1150,32 @@
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 246,
-          "pos_y": 280,
+          "pos_x": 50,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{2.icon}.png"
         },
         {
           "description": "icon",
           "type": "image_in_image",
-          "pos_x": 1065,
-          "pos_y": 280,
+          "pos_x": 690,
+          "pos_y": 420,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L"
+          "colour": "RGBA",
+          "pattern": "weather/icons/{3.icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image_in_image",
+          "pos_x": 1300,
+          "pos_y": 420,
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "RGBA",
+          "pattern": "weather/icons/{4.icon}.png"
         },
         {
           "description": "city_name",
