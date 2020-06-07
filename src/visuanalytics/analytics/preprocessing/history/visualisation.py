@@ -21,27 +21,18 @@ def merge_data(data, date):
     first_dictionary_for_string = data[2][0]
     second_dictionary_for_string = data[2][1]
     third_dictionary_for_string = data[2][2]
-    forth_dictionary_for_string = data[2][3]
+    fourth_dictionary_for_string = data[2][3]
 
     first_string = ""
     second_string = ""
     third_string = ""
-    forth_string = ""
+    fourth_string = ""
 
-    for item in first_dictionary_for_string.items():
-        for i in range(item[1]):
-            first_string = first_string + item[0] + " "
+    string = [first_string, second_string, third_string, fourth_string]
 
-    for item in second_dictionary_for_string.items():
-        for i in range(item[1]):
-            second_string = second_string + item[0] + " "
+    for i in range(4):
+        for item in data[2][i].items():
+            for j in range(item[1]):
+                string[i] = string[i] + item[0] + " "
 
-    for item in third_dictionary_for_string.items():
-        for i in range(item[1]):
-            third_string = third_string + item[0] + " "
-
-    for item in forth_dictionary_for_string.items():
-        for i in range(item[1]):
-            forth_string = forth_string + item[0] + " "
-
-    return [first_string, second_string, third_string, forth_string]
+    return string
