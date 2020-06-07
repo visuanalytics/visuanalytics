@@ -16,8 +16,7 @@ def _merge_config(public_config: dict, private_config: dict):
     # merge sub dict steps_base_config
     public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
     private_config.pop("steps_base_config", None)
-    print(public_config)
-
+    
     public_config.update(private_config)
 
 
