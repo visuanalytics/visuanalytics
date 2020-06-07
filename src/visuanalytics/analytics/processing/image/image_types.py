@@ -8,4 +8,4 @@ IMAGE_TYPES = {
 
 
 def generate_image(name, values):
-    IMAGE_TYPES[name](name, values)
+    IMAGE_TYPES[values["type"]](name, values)
