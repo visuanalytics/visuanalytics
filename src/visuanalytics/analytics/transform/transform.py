@@ -1,12 +1,15 @@
+from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.transform_types import TRANSFORM_TYPES
 
 
-def transform(transformations, data):
-    for transformation in transformations:
+def transform(values: dict, data: StepData):
+    for transformation in values["transformation"]:
+        transformation["_loop_states"] = values.get("_loop_states", {})
+
         TRANSFORM_TYPES[transformation["type"]](transformation, data)
 
 
-def transform_array(values, data):
-    for idx, entry in enumerate(data[values["array_key"]]):
-        entry["_idx"] = idx
+def transform_array(values: dict, data: StepData):
+    for idx, entry in enumerate(data.get_data(values["array_key"])):
+        data.save_loop(values, idx, entry)
         transform(values, entry)
