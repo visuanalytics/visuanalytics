@@ -6,32 +6,6 @@
       "type": "request",
       "api_key_name": "test",
       "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
-    },
-    {
-      "type": "request_multiple",
-      "api_key_name": "test",
-      "steps_value": [
-        "Hallo",
-        "Test",
-        "Hallo2"
-      ],
-      "use_loop_as_key": true,
-      "url": "https://www.test.de?test={_loop}&test1={config.test}&key={_api_key}&city={config.city}"
-    },
-    {
-      "type": "request_multiple_custom",
-      "requests": [
-        {
-          "type": "request",
-          "api_key_name": "test",
-          "url": "https://www.test.de?test1={config.test}&test2=Test2&key={_api_key}"
-        },
-        {
-          "type": "request",
-          "api_key_name": "test2",
-          "url": "https://www.test2.de?test1=hallo"
-        }
-      ]
     }
   ],
   "transform": [
