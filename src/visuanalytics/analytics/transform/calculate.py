@@ -5,6 +5,12 @@ from visuanalytics.analytics.util import statistical
 
 
 def calculate_mean(values: dict, data: StepData):
+    """Berechnet den Mittelwert von Werten, die in einem Array stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["key"], values)
     new_key = calculate_get_new_keys(values, -1, values["key"])
     new_value = np.mean(value)
@@ -12,6 +18,12 @@ def calculate_mean(values: dict, data: StepData):
 
 
 def calculate_max(values: dict, data: StepData):
+    """Sucht den Maximalwert von Werten, die in einem Array stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["key"], values)
     new_key = calculate_get_new_keys(values, -1, values["key"])
     new_value = max(value)
@@ -19,6 +31,12 @@ def calculate_max(values: dict, data: StepData):
 
 
 def calculate_min(values: dict, data: StepData):
+    """Sucht den Minimalwert von Werten, die in einem Array stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["key"], values)
     new_key = calculate_get_new_keys(values, -1, values["key"])
     new_value = min(value)
@@ -26,6 +44,12 @@ def calculate_min(values: dict, data: StepData):
 
 
 def calculate_round(values: dict, data: StepData):
+    """Rundet gegebene Werte auf eine bestimmte Nachkommastelle ab.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, idx, key)
 
@@ -40,6 +64,12 @@ def calculate_round(values: dict, data: StepData):
 
 
 def calculate_mode(values: dict, data: StepData):
+    """Bestimmt den am häufigsten in einem Array vorkommenden Value.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["key"], values)
     new_key = calculate_get_new_keys(values, -1, values["key"])
     new_value = statistical.mode(value)
@@ -47,6 +77,15 @@ def calculate_mode(values: dict, data: StepData):
 
 
 def calculate_get_new_keys(values: dict, idx, key):
+    """Prüft nach, ob values["new_keys"] vorhanden ist.
+
+    Prüft nach, ob values["new_keys"] vorhanden ist. Wenn nicht, wird values["keys"] ausgewählt.
+
+    :param values:Werte aus der JSON-Datei
+    :param idx: Index des Arrays, welches gerade betrachtet wird. Wenn nur ein Wert, dann idx < 0
+    :param key: value["key"]
+    :return:
+    """
     if idx < 0:
         return values["new_keys"] if values.get("new_keys", None) else key
 
