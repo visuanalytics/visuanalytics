@@ -5,18 +5,14 @@
     {
       "type": "request",
       "api_key_name": "test",
-      "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
+      "url_pattern": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
     },
     {
       "type": "request_multiple",
       "api_key_name": "test",
-      "steps_value": [
-        "Hallo",
-        "Test",
-        "Hallo2"
-      ],
+      "steps_value": ["Hallo", "Test", "Hallo2"],
       "use_loop_as_key": true,
-      "url": "https://www.test.de?test={_loop}&test1={config.test}&key={_api_key}&city={config.city}"
+      "url_pattern": "https://www.test.de?test={_loop}&test1={config|test}&key={_api_key}&city={config|city}"
     },
     {
       "type": "request_multiple_custom",
@@ -24,12 +20,12 @@
         {
           "type": "request",
           "api_key_name": "test",
-          "url": "https://www.test.de?test1={config.test}&test2=Test2&key={_api_key}"
+          "url_pattern": "https://www.test.de?test1={config|test}&test2=Test2&key={_api_key}"
         },
         {
           "type": "request",
           "api_key_name": "test2",
-          "url": "https://www.test2.de?test1=hallo"
+          "url_pattern": "https://www.test2.de?test1=hallo"
         }
       ]
     }
@@ -37,13 +33,11 @@
   "transform": [
     {
       "type": "transform_array",
-      "array_key": "",
+      "array_key": "_req",
       "transform": [
         {
           "type": "select",
-          "relevant_keys": [
-            "data"
-          ]
+          "relevant_keys": ["_loop|data"]
         },
         {
           "type": "select_range",
@@ -59,89 +53,65 @@
               "type": "select",
               "array_key": "data",
               "relevant_keys": [
-                "date",
-                "tommorow",
-                "hallo",
-                "test",
-                "text",
-                "test"
+                "_loop|date",
+                "_loop|tommorow",
+                "_loop|hallo",
+                "_loop|test",
+                "_loop|text",
+                "_loop|test"
               ]
             },
             {
               "type": "append",
               "key": "max_temp",
-              "new_key": "....summaries.{_idx}.max_temp"
+              "new_key": "summaries|{_idx}|max_temp"
             }
           ]
         },
         {
           "type": "add_symbole",
-          "keys": [
-            "test"
-          ],
-          "pattern": "{text} test"
+          "keys": ["_loop|test"],
+          "pattern": "{_key} test"
         },
         {
           "type": "replace",
-          "keys": [
-            "pressure",
-            "dec"
-          ],
-          "new_keys": [
-            "new_pres",
-            "new_dec"
-          ],
+          "keys": ["_loop|pressure", "_loop|dec"],
+          "new_keys": ["_loop|new_pres", "_loop|new_dec"],
           "old_value": ".",
           "new_value": ",",
           "count": 1
         },
         {
           "type": "alias",
-          "keys": [
-            "hallo",
-            "test"
-          ],
-          "new_keys": [
-            "abc",
-            "def"
-          ]
+          "keys": ["_loop|hallo", "_loop|test"],
+          "new_keys": ["_loop|abc", "_loop|def"]
         },
         {
           "type": "date_format",
-          "keys": [
-            "date",
-            "tommorow"
-          ],
+          "keys": ["_loop|date", "_loop|tommorow"],
           "format": "%Y-%m-%d"
         }
       ]
     },
     {
       "type": "date_now",
-      "key": "date",
+      "key": "_loop|date",
       "format": "%Y-%m-%d"
     },
     {
       "type": "loop",
-      "values": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
+      "values": [0, 1, 2, 3, 4, 5],
       "transform": [
         {
           "type": "calculate",
           "action": "mean",
-          "key": "summaries.{_loop}.max_temp",
-          "new_key": "summaries.{_loop}.temp_avg"
+          "key": "summaries|{_loop}|max_temp",
+          "new_key": "summaries|{_loop}|temp_avg"
         },
         {
           "type": "calculate",
           "action": "max",
-          "key": "summaries.{_loop}.max_temp"
+          "key": "summaries|{_loop}|max_temp"
         }
       ]
     }
@@ -161,29 +131,30 @@
           "text": "hallo"
         },
         {
-          "type": "api_text",
+          "type": "text",
           "pos_x": 10,
           "pos_y": 2,
           "preset": "wetter1",
           "anchor_point": "center",
-          "pattern": "Test: {kiel.data.0.temp} {config.city}"
+          "pattern": "Test: {kiel|data|0|temp} {config|city}"
         },
         {
-          "type": "api_text_array",
-          "pos_x": [
-            10,
-            20,
-            30
-          ],
-          "pos_y": [
-            1,
-            2,
-            7
-          ],
+          "type": "text_array",
+          "pos_x": [10, 20, 30],
+          "pos_y": [1, 2, 7],
           "preset": "wetter1",
           "anchor_point": "config",
           "array_key": "",
-          "pattern": "Test: {data.0.temp} {_loop}"
+          "pattern": "Test: {data|0|temp} {_loop}"
+        },
+        {
+          "type": "image",
+          "pos_x": 1065,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "colour": "L",
+          "pattern": "weather/icons/{1|icon}.png"
         }
       ]
     },
@@ -221,10 +192,7 @@
   "run_config": {
     "testing": {
       "defalt_value": false,
-      "possible_values": [
-        true,
-        false
-      ]
+      "possible_values": [true, false]
     }
   },
   "presets": {
