@@ -75,7 +75,7 @@
           ]
         },
         {
-          "type": "add_symbole",
+          "type": "add_symbol",
           "keys": [
             "test"
           ],
@@ -110,9 +110,17 @@
           "type": "date_format",
           "keys": [
             "date",
-            "tommorow"
+            "tomorrow"
           ],
           "format": "%Y-%m-%d"
+        },
+        {
+          "type": "date_weekday",
+          "keys": [
+            "date",
+            "tomorrow"
+          ],
+          "format": "weekday"
         }
       ]
     },
