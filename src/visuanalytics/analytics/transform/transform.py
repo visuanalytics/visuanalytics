@@ -16,43 +16,49 @@ def transform_array(values: dict, data: StepData):
         transform(values, entry)
 
 
-def transform_select(values, data):
+def transform_select(values: dict, data: StepData):
+    for idx, entry in enumerate(data.get_data(values["relevant_keys"])):
+        data.save_loop(values, entry)
+
+
+def transform_select_range(values: dict, data: StepData):
     assert False, "Not Implemented"
 
 
-def transform_select_range(values, data):
+def transform_append(values: dict, data: StepData):
     assert False, "Not Implemented"
 
 
-def transform_append(values, data):
-    assert False, "Not Implemented"
+def transform_add_symbol(values: dict, data: StepData):
+    for idx, entry in enumerate(data.get_data(values["keys"])):
+        data.save_loop(values, idx, entry)
+        new_entry = transform_get_new_keys(values, data, idx, entry)
+        new_values = data.format(data.get_data(values['pattern']))
+        data.insert_data_array(new_entry, new_values, idx, entry)
 
 
-def transform_add_symbol(values, data):
-    for idx, entry in enumerate(data[values["keys"]]):
-        new_entry = transform_get_new_keys(values, idx, entry)
-        data.insert_data_array(new_entry, data.format(values['pattern']), idx, entry)
-
-
-def transform_replace(values, data):
-    for idx, entry in enumerate(data[values["keys"]]):
-        new_entry = transform_get_new_keys(values, idx, entry)
-        new_value = data.get_data(entry).replace(values["old_value"], values["new_value"], values.get("count", -1))
+def transform_replace(values: dict, data: StepData):
+    for idx, entry in enumerate(data.get_data(values["keys"])):
+        data.save_loop(values, idx, entry)
+        new_entry = transform_get_new_keys(values, data, idx, entry)
+        new_value = data.get_data(entry).replace(data.get_data(values["old_value"]), data.get_data(values["new_value"]),
+                                                 data.get_data(values.get("count", -1)))
         data.insert_data_array(new_entry, new_value, idx, entry)
 
 
-def transform_alias(values, data):
+def transform_alias(values: dict, data: StepData):
     assert False, "Not Implemented"
 
 
-def transform_date_format(values, data):
-    for idx, entry in enumerate(data[values["keys"]]):
-        new_entry = transform_get_new_keys(values, idx, entry)
-        new_value = datetime.strptime(entry, values["format"]).date()
+def transform_date_format(values: dict, data: StepData):
+    for idx, entry in enumerate(data.get_data(values["keys"])):
+        data.save_loop(values, idx, entry)
+        new_entry = transform_get_new_keys(values, data, idx, entry)
+        new_value = datetime.strptime(entry, data.get_data(values["format"])).date()
         data.insert_data_array(new_entry, new_value, idx, entry)
 
 
-def transform_date_weekday(values, data):
+def transform_date_weekday(values: dict, data: StepData):
     day_weekday = {
         0: "Montag",
         1: "Dienstag",
@@ -62,27 +68,28 @@ def transform_date_weekday(values, data):
         5: "Samstag",
         6: "Sonntag"
     }
-    for idx, entry in enumerate(data[values["keys"]]):
-        new_entry = transform_get_new_keys(values, idx, entry)
-        new_value = day_weekday[datetime.strptime(entry, values["format"]).weekday()]
+    for idx, entry in enumerate(data.get_data(values["keys"])):
+        data.save_loop(values, idx, entry)
+        new_entry = transform_get_new_keys(values, data, idx, entry)
+        new_value = day_weekday[datetime.strptime(entry, data.get_data(values["format"])).weekday()]
         data.insert_data_array(new_entry, new_value, idx, entry)
 
 
-def transform_date_now(values, data):
-    entry = data[values["key"]]
-    new_entry = values["new_keys"][0] if values.get("new_keys") else entry
-    new_value = datetime.strptime(data[values["key"]], values["format"]).today()
+def transform_date_now(values: dict, data: StepData):
+    entry = data.get_data(values["key"])
+    new_entry = data.get_data(values["new_keys"][0]) if data.get_data(values.get("new_keys")) else entry
+    new_value = datetime.strptime(data.get_data(values["key"]), data.get_data(values["format"])).today()
     data.insert(new_entry, new_value)
 
 
 def transform_loop(values: dict, data: StepData):
-    for idx, value in enumerate(values["values"]):
+    for idx, value in enumerate(data.get_data(values["values"])):
         data.save_loop(values, idx, value)
         transform(values, value)
 
 
-def transform_get_new_keys(values, idx, entry):
-    return values["new_keys"][idx] if values.get("new_keys") else entry
+def transform_get_new_keys(values: dict, data: StepData, idx, entry):
+    return data.get_data(values["new_keys"][idx]) if data.get_data(values.get("new_keys")) else entry
 
 
 TRANSFORM_TYPES = {
