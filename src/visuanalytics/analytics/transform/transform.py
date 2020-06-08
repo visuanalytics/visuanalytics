@@ -13,3 +13,9 @@ def transform_array(values: dict, data: StepData):
     for idx, entry in enumerate(data.get_data(values["array_key"])):
         data.save_loop(values, idx, entry)
         transform(values, entry)
+
+
+def transform_loop(values: dict, data: StepData):
+    for idx, value in enumerate(values["values"]):
+        data.save_loop(values, idx, value)
+        transform(values, value)
