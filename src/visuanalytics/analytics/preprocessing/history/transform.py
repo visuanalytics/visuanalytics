@@ -79,7 +79,7 @@ def preprocess_history_data(json_data):
 
     :param json_data: Json-Data der Zeit-Api (oder eingelesenen Data aus der Testdatei)
     :rtype dict
-    :return: vorverarbeitetes Daten der Zeit-Api
+    :return: vorverarbeitetes Data-Objekt der Zeit-Api
     :rtype: tuple
 
     """
@@ -101,6 +101,7 @@ def preprocess_history_data(json_data):
             key_dict.update(
                 {json_data[idx]["facets"]["keyword"][j * 2]: json_data[idx]["facets"]["keyword"][(j * 2) + 1]})
         output[2].append(key_dict)
+        
     return output
 
 
@@ -162,3 +163,16 @@ def grammar_keywords(data):
             else:
                 data[2][i][keyword.capitalize()] = data[2][i].pop(keyword)
     return data
+
+
+def string_formatting(text):
+    """Überprüft auf " und ersetzt diese mit \" und überprüft auf / und ersetzt mit Leerzeichen
+
+    :param text: Erhält einen String
+    :type: str
+    :return: Geprüfter Text, ggf. mit ersetztem "
+    :rtype: str
+    """
+    text_1 = text.replace('"', '\"')
+    return_text = text_1.replace('/', ' ')
+    return return_text

@@ -11,6 +11,15 @@ from visuanalytics.analytics.util import resources
 def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
     """
     Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+    
+    :param word:
+    :param font_size:
+    :param position:
+    :param orientation:
+    :param random_state:
+    :param kwargs:
+    :return:
+    """
     """
     return "hsl(38, 73%%, %d%%)" % random.randint(30, 80)
 
@@ -37,6 +46,7 @@ def get_all_images(pipeline_id, data, date):
         wordcloud = WordCloud(background_color="white", width=1920, height=1080, collocations=False, max_font_size=400,
                               mask=mask).generate(data[i])
         wordcloud.recolor(color_func=color_func)
+
         plt.axis("off")
         plt.imshow(wordcloud, interpolation='bilinear')
         file = resources.new_temp_resource_path(pipeline_id, "png")
