@@ -33,7 +33,7 @@ def calculate_round(values: dict, data: StepData):
         new_key = calculate_get_new_keys(values, idx, key)
 
         if values.get("count", None):
-            new_value = round(value, data.get_data(values["count"], values))
+            new_value = round(value, data.format(values["count"], values))
         else:
             new_value = round(value)
         data.insert_data(new_key, new_value, values)

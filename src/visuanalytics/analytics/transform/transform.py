@@ -47,8 +47,8 @@ def transform_replace(values: dict, data: StepData):
         new_key = transform_get_new_keys(values, idx, key)
 
         new_value = value.replace(data.format(values["old_value"], values),
-                                  data.get_data(values["new_value"], values),
-                                  data.get_data(values.get("count", -1), values))
+                                  data.format(values["new_value"], values),
+                                  data.format(values.get("count", -1), values))
         data.insert_data(new_key, new_value, values)
 
 
@@ -71,13 +71,14 @@ def transform_key_to_dicttext(values: dict, data: StepData):
 
 
 def transform_date_format(values: dict, data: StepData):
-    for idx, entry in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, entry)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, idx, key)
 
-        value = data.get_data(values["format"], values)
-        new_key = transform_get_new_keys(values, idx, entry)
+        value = data.get_data(values["key"], values)
+        date_format = data.format(values["format"], values)
+        new_key = transform_get_new_keys(values, idx, key)
 
-        new_value = datetime.strptime(entry, value).date()
+        new_value = datetime.strptime(value, date_format).date()
         data.insert_data(new_key, new_value, values)
 
 
@@ -95,7 +96,7 @@ def transform_date_weekday(values: dict, data: StepData):
         data.save_loop_key(values, idx, key)
 
         value = data.get_data(values["key"], values)
-        date_format = data.get_data(values["format"], values)
+        date_format = data.format(values["format"], values)
         new_key = transform_get_new_keys(values, idx, key)
 
         new_value = day_weekday[datetime.strptime(value, date_format).weekday()]
@@ -104,7 +105,7 @@ def transform_date_weekday(values: dict, data: StepData):
 
 def transform_date_now(values: dict, data: StepData):
     value = data.get_data(values["key"], values)
-    date_format = data.get_data(values["format"], values)
+    date_format = data.format(values["format"], values)
 
     new_key = datetime.strptime(value, date_format).today()
 
