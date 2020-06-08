@@ -1,15 +1,16 @@
 import json
 
 from gtts import gTTS
+from visuanalytics.analytics.control.procedures.step_data import StepData
 
 from visuanalytics.analytics.processing.audio.parts import part
 from visuanalytics.analytics.util import resources
 
 
-def generate_audio(name, value, config):
-    text = part.audio_parts(value["parts"])
+def generate_audio(values: dict, data: StepData, config):
+    text = part.audio_parts(values["parts"], data)
     tts = gTTS(text, config["lang"])
-    file_path = resources.new_temp_resource_path(name, config["format"])
+    file_path = resources.new_temp_resource_path(values, config["format"])
     tts.save(file_path)
     # replace_with_audio_path(value, file_path)
     return file_path
