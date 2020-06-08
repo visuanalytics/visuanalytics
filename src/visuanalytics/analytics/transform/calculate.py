@@ -1,42 +1,50 @@
 import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.util import statistical
 
 
 def calculate_mean(values: dict, data: StepData):
-    entry = data.get_data((values["key"], values))
-    new_entry = calculate_get_new_keys(values, data, -1, entry)
-    new_values = np.mean(entry)
-    data.insert_data(new_entry, new_values)
+    key = values["key"]
+    new_key = calculate_get_new_keys(values, -1, key)
+    new_value = np.mean(key)
+    data.insert_data(new_key, new_value, values)
 
 
 def calculate_max(values: dict, data: StepData):
-    entry = data.get_data((values["key"], values))
-    new_entry = calculate_get_new_keys(values, data, -1, entry)
-    new_values = max(entry)
-    data.insert_data(new_entry, new_values)
+    key = values["key"]
+    new_key = calculate_get_new_keys(values, -1, key)
+    new_value = max(key)
+    data.insert_data(new_key, new_value, values)
 
 
 def calculate_min(values: dict, data: StepData):
-    entry = data.get_data((values["key"], values))
-    new_entry = calculate_get_new_keys(values, data, -1, entry)
-    new_values = min(entry)
-    data.insert_data(new_entry, new_values)
+    key = values["key"]
+    new_key = calculate_get_new_keys(values, -1, key)
+    new_value = min(key)
+    data.insert_data(new_key, new_value, values)
 
 
 def calculate_round(values: dict, data: StepData):
-    for idx, entry in enumerate(data.get_data(values["keys"], values)):
-        data.save_loop(values, idx, entry)
-        new_entry = calculate_get_new_keys(values, data, idx, entry)
-        new_values = round(entry, data.get_data(values["count"]))
-        data.insert_data(new_entry, new_values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop(values, idx, key)
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = round(key, data.get_data(values.get("count", -1)))
+        data.insert_data(new_key, new_value, values)
 
 
-def calculate_get_new_keys(values: dict, data: StepData, idx, entry):
+def calculate_mode(values: dict, data: StepData):
+    key = values["key"]
+    new_key = calculate_get_new_keys(values, -1, key)
+    new_value = statistical.mode(key)
+    data.insert_data(new_key, new_value, values)
+
+
+def calculate_get_new_keys(values: dict, idx, key):
     if (idx == -1):
-        x = data.get_data(values["new_key"], values) if data.get_data(values.get("new_key"), values) else entry
+        x = values["new_keys"] if values.get("new_keys", None) else key
     else:
-        x = data.get_data(values["new_keys"][idx], values) if data.get_data(values.get("new_keys"), values) else entry
+        x = values["new_keys"][idx] if values.get("new_keys", None) else key
     return x
 
 
@@ -44,5 +52,6 @@ CALCULATE_ACTIONS = {
     "mean": calculate_mean,
     "max": calculate_max,
     "min": calculate_min,
-    "round": calculate_round
+    "round": calculate_round,
+    "mode": calculate_mode
 }
