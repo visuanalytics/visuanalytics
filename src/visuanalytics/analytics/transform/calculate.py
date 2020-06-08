@@ -1,4 +1,4 @@
-from statistics import mean
+import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 
@@ -6,7 +6,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 def calculate_mean(values: dict, data: StepData):
     entry = data.get_data((values["key"], values))
     new_entry = calculate_get_new_keys(values, data, -1, entry)
-    new_values = mean(entry)
+    new_values = np.mean(entry)
     data.insert_data(new_entry, new_values)
 
 

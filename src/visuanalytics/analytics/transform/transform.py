@@ -58,7 +58,7 @@ def transform_alias(values: dict, data: StepData):
 
 # TODO: code to weather_description
 # TODO: wind_cdir_full to text string
-def transform_key_to_random_dicttext(values: dict, data: StepData):
+def transform_key_to_dicttext(values: dict, data: StepData):
     # for idx, entry in enumerate(data.get_data(values["keys"], values)):
     #    data.save_loop(values, idx, entry)
     #    new_entry = transform_get_new_keys(values, data, idx, entry)
