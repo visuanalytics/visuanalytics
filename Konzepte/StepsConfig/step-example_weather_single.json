@@ -426,13 +426,39 @@
   },
   "sequence": [
     {
-      "image": "wetter1",
+      "image": "weather1",
       "time": 3,
       "audio": "a1"
     },
     {
-      "image": "wetter2",
-      "time": 10
+      "image": "weather2",
+      "time": 10,
+      "audio": "a2"
+    },
+    {
+      "image": "weather3",
+      "time": 10,
+      "audio": "a3"
+    },
+    {
+      "image": "weather4",
+      "time": 10,
+      "audio": "a4"
+    },
+    {
+      "image": "weather5",
+      "time": 10,
+      "audio": "a5"
+    },
+    {
+      "image": "weather6",
+      "time": 10,
+      "audio": "a5"
+    },
+    {
+      "image": "weather7",
+      "time": 10,
+      "audio": "a5"
     }
   ],
   "run_config": {
