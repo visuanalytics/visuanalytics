@@ -33,3 +33,15 @@ def data_insert_pattern(keys, data, value, split_key="|"):
         reduce(operator.getitem, keys, data)[last] = value
     else:
         data[keys] = value
+
+
+# TODO(max) maybe move
+def data_remove_pattern(keys, data, split_key="|"):
+    if isinstance(keys, str) and '|' in keys:
+        key_array = keys.split(split_key)
+        keys = map(_to_int, key_array[:-1])
+        last = _to_int(key_array[-1])
+
+        reduce(operator.getitem, keys, data).pop(last, None)
+    else:
+        data.pop(keys, None)
