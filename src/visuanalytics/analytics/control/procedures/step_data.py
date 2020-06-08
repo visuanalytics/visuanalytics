@@ -1,5 +1,6 @@
 from visuanalytics.analytics.util import config_manager
-from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern
+from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
+    data_remove_pattern
 
 
 class StepData(object):
@@ -40,13 +41,27 @@ class StepData(object):
         return self.__formatter.format(value_string, data)
 
     def insert_data(self, key_string: str, value, values: dict):
-        self.__data = {**self.__data, **values.get("_loop_states", {})}
-        key_string = self.__formatter.format(key_string, self.__data)
+        key_string = self.__prepare_data_manipulation(key_string, values)
 
         data_insert_pattern(key_string, self.__data, value)
 
-        # Remove temporary Used data
+        self.__clean_up_data_manipulation()
+
+    def remove_data(self, key_string: str, values: dict):
+        key_string = self.__prepare_data_manipulation(key_string, values)
+
+        data_remove_pattern(key_string, self.__data)
+
+        self.__clean_up_data_manipulation()
+
+    def __prepare_data_manipulation(self, key_string: str, values: dict):
+        # Save loop values current into data to Access them
+        self.__data = {**self.__data, **values.get("_loop_states", {})}
+        return self.format(key_string, values)
+
+    def __clean_up_data_manipulation(self):
+        # Remove temporary Used loop data
         # TODO(Max) vtl. solve better
         self.__data.pop("_loop", None)
-        print(self.__data.pop("_key", None))
+        self.__data.pop("_key", None)
         self.__data.pop("_idx", None)
