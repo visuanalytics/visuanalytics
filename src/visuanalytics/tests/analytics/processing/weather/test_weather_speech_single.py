@@ -13,13 +13,16 @@ from visuanalytics.analytics.util import resources
 class ProcessTest(unittest.TestCase):
     with resources.open_resource("exampledata/example_weather.json") as file_handle:
         input = json.loads(file_handle.read())
-        output = transform.preprocess_weather_data(input, True)
         city_name = "Kiel"
+        output = transform.preprocess_weather_data(input, city_name, True)
         date = date_time.date_to_weekday(transform.get_first_day_single(output, city_name))
         os.mkdir(resources.get_resource_path("temp/pro_speech_single"))
 
     def test_if_get_all_audios_single_city_generates_audio(self):
-        expected = pro_speech_single.get_all_audios_single_city("pro_speech_single", pre_speech.merge_data_single(self.output, self.city_name), self.date[0:5], self.city_name)
+        expected = pro_speech_single.get_all_audios_single_city("pro_speech_single",
+                                                                pre_speech.merge_data_single(self.output,
+                                                                                             self.city_name),
+                                                                self.date[0:5], self.city_name)
         self.assertEqual(os.path.exists(expected[0]), 1)
         self.assertEqual(os.path.exists(expected[1]), 1)
         self.assertEqual(os.path.exists(expected[2]), 1)

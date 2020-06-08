@@ -1,5 +1,5 @@
 """
-Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder zu generieren.
+Dieses Modul dient dazu um aus gegebenen Daten von der Weather API Bilder für den DE Wetterbericht zu generieren.
 """
 
 from PIL import Image
@@ -16,20 +16,20 @@ list: Liste aus Tupeln: X und Y Koordinaten der Wochentagsanzeige.
 
 def get_all_images_germany(pipeline_id, icon_oneday, temp_oneday, icon_threeday, data_mm_temp_threeday, date):
     """
-    generiert alle Bilder die für den Deutschland bericht benörigt werden
+    generiert alle Bilder die für den Deutschland Bericht benötigt werden
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param icon_oneday: Das Ergebnis der Methode :func:`data_icon_oneday()`.
-    :type: list
+    :type icon_oneday : list
     :param temp_oneday: Das Ergebnis der Methode :func:`data_temp_oneday()`
-    :type:list
+    :type temp_oneday:list
     :param icon_threeday: Das Ergebnis der Methode :func:`data_icon_threeday()`.
-    :type:list
+    :type icon_threeday:list
     :param data_mm_temp_threeday: Das Ergebnis der Methode :func:`data_mm_temp_threeday()`.
-    :type:list
+    :type data_mm_temp_threeday:list
     :param date: Wochentage für den Bericht
-    :type:list
+    :type date:list
     :return: Eine Liste mit Bildern die erstelt wurden
     :rtype: list
     """
@@ -45,7 +45,7 @@ def get_all_images_germany(pipeline_id, icon_oneday, temp_oneday, icon_threeday,
 
 def combine_images_audiolength(images, audiol):
     """
-    Kombiniert das 3 Tages images, wo nichts markiert ist mit den anderen Bildern zur Vorbereitung von ffmpeg
+    Kombiniert das 3 Tages images, auf dem nichts markiert ist mit den anderen Bildern zur vorbereitung von ffmpeg
 
     :param images: Liste mit allen images
     :type images: list
@@ -56,7 +56,7 @@ def combine_images_audiolength(images, audiol):
     """
     return ([images[0], images[1], images[2], images[3], images[7], images[4],
              images[5], images[6], images[7]],
-            [audiol[0], audiol[1], audiol[2], audiol[3] - 1, 2, audiol[4] - 2, audiol[5] - 1, audiol[6] - 3, 5])
+            [audiol[0], audiol[1], audiol[2], audiol[3], 1.5, audiol[4] - 1.5, audiol[5], audiol[6] - 3, 3])
 
 
 def _get_threeday_image(pipeline_id, data, data2, weekdates, which_date):
