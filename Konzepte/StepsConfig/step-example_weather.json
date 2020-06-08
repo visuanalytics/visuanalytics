@@ -84,42 +84,96 @@
         {
           "type": "add_symbol",
           "keys": [
-            "test"
+            "max_temp",
+            "min_temp",
+            "app_max_temp",
+            "app_min_temp"
           ],
-          "pattern": "{text} test"
+          "new_keys": [
+            "max_temp",
+            "min_temp",
+            "app_max_temp",
+            "app_min_temp"
+          ],
+          "pattern": "{text} Grad"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "wind_spd"
+          ],
+          "new_keys": [
+            "wind_spd"
+          ],
+          "pattern": "{text} Metern pro Sekunde"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "rh",
+            "pop"
+          ],
+          "new_keys": [
+            "rh",
+            "pop"
+          ],
+          "pattern": "{text} Prozent"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "city_name"
+          ],
+          "new_keys": [
+            "city_name"
+          ],
+          "pattern": "in {city_name} "
         },
         {
           "type": "replace",
           "keys": [
-            "pressure",
-            "dec"
+            "max_temp",
+            "min_temp",
+            "app_max_temp",
+            "app_min_temp",
+            "wind_spd",
+            "rh",
+            "pop"
           ],
           "new_keys": [
-            "new_pres",
-            "new_dec"
+            "max_temp",
+            "min_temp",
+            "app_max_temp",
+            "app_min_temp",
+            "wind_spd",
+            "rh",
+            "pop"
           ],
           "old_value": ".",
           "new_value": ",",
           "count": 1
         },
         {
-          "type": "alias",
+          "type": "date_weekday",
           "keys": [
-            "hallo",
-            "test"
+            "valid_date"
           ],
           "new_keys": [
-            "abc",
-            "def"
-          ]
+            "valid_date"
+          ],
+          "format": "weekday"
         },
         {
           "type": "date_format",
           "keys": [
-            "date",
-            "tomorrow"
+            "sunset_ts",
+            "sunrise_ts"
           ],
-          "format": "%Y-%m-%d"
+          "new_keys": [
+            "sunset_ts",
+            "sunrise_ts"
+          ],
+          "format": "%h Uhr %m"
         }
       ]
     },
@@ -143,12 +197,63 @@
           "type": "calculate",
           "action": "mean",
           "key": "summaries.{_loop}.max_temp",
-          "new_key": "summaries.{_loop}.temp_avg"
+          "new_key": "temp_avg"
         },
         {
           "type": "calculate",
           "action": "max",
-          "key": "summaries.{_loop}.max_temp"
+          "key": "summaries.{_loop}.max_temp",
+          "new_key": "max_temp"
+        },
+        {
+          "type": "calculate",
+          "action": "min",
+          "key": "summaries.{_loop}.min_temp",
+          "new_key": "min_temp"
+        },
+        {
+          "type": "calculate",
+          "action": "mode",
+          "key": "summaries.{_loop}.icon",
+          "new_key": "common_icon"
+        },
+        {
+          "type": "calculate",
+          "action": "mode",
+          "key": "summaries.{_loop}.code",
+          "new_key": "common_code"
+        },
+        {
+          "type": "calculate",
+          "action": "round",
+          "keys": [
+            "max_temp",
+            "min_temp",
+            "app_min_temp",
+            "app_max_temp",
+            "rh",
+            "pop"
+          ],
+          "new_keys": [
+            "max_temp",
+            "min_temp",
+            "app_min_temp",
+            "app_max_temp",
+            "rh",
+            "pop"
+          ],
+          "count": 0
+        },
+        {
+          "type": "calculate",
+          "action": "round",
+          "keys": [
+            "wind_spd"
+          ],
+          "new_keys": [
+            "wind_spd"
+          ],
+          "count": 2
         }
       ]
     }
