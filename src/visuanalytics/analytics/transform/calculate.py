@@ -5,47 +5,52 @@ from visuanalytics.analytics.util import statistical
 
 
 def calculate_mean(values: dict, data: StepData):
-    key = values["key"]
-    new_key = calculate_get_new_keys(values, -1, key)
-    new_value = np.mean(key)
+    value = data.get_data(values["key"], values)
+    new_key = calculate_get_new_keys(values, -1, values["key"])
+    new_value = np.mean(value)
     data.insert_data(new_key, new_value, values)
 
 
 def calculate_max(values: dict, data: StepData):
-    key = values["key"]
-    new_key = calculate_get_new_keys(values, -1, key)
-    new_value = max(key)
+    value = data.get_data(values["key"], values)
+    new_key = calculate_get_new_keys(values, -1, values["key"])
+    new_value = max(value)
     data.insert_data(new_key, new_value, values)
 
 
 def calculate_min(values: dict, data: StepData):
-    key = values["key"]
-    new_key = calculate_get_new_keys(values, -1, key)
-    new_value = min(key)
+    value = data.get_data(values["key"], values)
+    new_key = calculate_get_new_keys(values, -1, values["key"])
+    new_value = min(value)
     data.insert_data(new_key, new_value, values)
 
 
 def calculate_round(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
-        data.save_loop(values, idx, key)
+        data.save_loop_key(values, idx, key)
+
+        value = data.get_data(key, values)
         new_key = calculate_get_new_keys(values, idx, key)
-        new_value = round(key, data.get_data(values.get("count", -1)))
+
+        if values.get("count", None):
+            new_value = round(value, data.get_data(values["count"], values))
+        else:
+            new_value = round(value)
         data.insert_data(new_key, new_value, values)
 
 
 def calculate_mode(values: dict, data: StepData):
-    key = values["key"]
-    new_key = calculate_get_new_keys(values, -1, key)
-    new_value = statistical.mode(key)
+    value = data.get_data(values["key"], values)
+    new_key = calculate_get_new_keys(values, -1, values["key"])
+    new_value = statistical.mode(value)
     data.insert_data(new_key, new_value, values)
 
 
 def calculate_get_new_keys(values: dict, idx, key):
-    if (idx == -1):
-        x = values["new_keys"] if values.get("new_keys", None) else key
-    else:
-        x = values["new_keys"][idx] if values.get("new_keys", None) else key
-    return x
+    if idx < 0:
+        return values["new_keys"] if values.get("new_keys", None) else key
+
+    return values["new_keys"][idx] if values.get("new_keys", None) else key
 
 
 CALCULATE_ACTIONS = {
