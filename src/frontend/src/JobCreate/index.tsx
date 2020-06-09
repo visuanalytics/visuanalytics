@@ -12,6 +12,17 @@ import { TopicSelection } from './TopicSelection';
 export default function JobCreate() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
+    const [selectComplete, setSelectComplete] = React.useState(false);
+    const [selectedTopic, setSelectedTopic] = React.useState<string>("");
+
+    const handleSelectTopic = (topicName: string) => {
+        setSelectedTopic(topicName);
+    }
+
+    const handleSelectComplete = (isComplete: boolean) => {
+        setSelectComplete(isComplete);
+    }
+
     const steps = [
         "Thema auswählen",
         "Parameter festlegen",
@@ -19,7 +30,7 @@ export default function JobCreate() {
     ];
     const descriptions = [
         "Zu welchem Thema sollen Videos generiert werden?",
-        "Nähere Angaben für das zu generierende Video:",
+        "Parameter auswählen für: '" + selectedTopic + "'",
         "Wann sollen neue Videos generiert werden"
     ];
 
@@ -27,15 +38,15 @@ export default function JobCreate() {
         switch (step) {
             case 0:
                 return (
-                    <TopicSelection />
+                    <TopicSelection selectTopicHandler={handleSelectTopic} selectCompleteHandler={handleSelectComplete} />
                 );
             case 1:
                 return (
-                    <ParamSelection topic="Wetter" />
+                    <ParamSelection topic={selectedTopic} selectCompleteHandler={handleSelectComplete} />
                 )
             case 2:
                 return (
-                    <TopicSelection />
+                    <TopicSelection selectTopicHandler={handleSelectTopic} selectCompleteHandler={handleSelectComplete} />
                 )
             default:
                 return 'Unknown step';
@@ -75,7 +86,7 @@ export default function JobCreate() {
                         <BackButton onClick={handleBack} style={{ marginLeft: 20 }} disabled={activeStep <= 0}>
                             {"Zurück"}
                         </BackButton>
-                        <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}>
+                        <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }} disabled={!selectComplete}>
                             {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                         </ContinueButton>
                     </span>

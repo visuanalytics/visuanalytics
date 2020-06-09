@@ -1,10 +1,10 @@
 import React from "react";
-import { Divider, TextField, MenuItem } from "@material-ui/core";
-import { ContinueButton } from "../ContinueButton";
+import { TextField, MenuItem } from "@material-ui/core";
 import { useStyles } from "../style";
 
-interface Props {
+interface ParamSelectionProps {
     topic: string;
+    selectCompleteHandler: (isCompleted: boolean) => void;
 }
 
 interface Param {
@@ -12,9 +12,10 @@ interface Param {
     possibleValues: string[]
 }
 
-export const ParamSelection: React.FC<Props> = ({ topic }) => {
+export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     // const paramInfo: = useFetch("/params?topic=" + topic);
     const classes = useStyles();
+
     const paramInfo: Param[] = [
         {
             "name": "Spieltag",
@@ -25,6 +26,7 @@ export const ParamSelection: React.FC<Props> = ({ topic }) => {
             "possibleValues": ["ja", "nein"]
         }
     ]
+
     const renderParamField = (param: Param) => {
         const name: string = param.name;
         const possibleValues: string[] = param.possibleValues;
@@ -38,6 +40,7 @@ export const ParamSelection: React.FC<Props> = ({ topic }) => {
         }
         return (
             <TextField
+                onChange={() => alert("Changed")}
                 className={classes.inputField}
                 variant="outlined"
                 label={name}
@@ -51,6 +54,7 @@ export const ParamSelection: React.FC<Props> = ({ topic }) => {
             </TextField>
         )
     }
+
     return (
         <div>
             {paramInfo.map(p =>
