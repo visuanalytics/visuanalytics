@@ -72,6 +72,13 @@ def calculate_mode(values: dict, data: StepData):
     data.insert_data(new_key, new_value, values)
 
 
+def calculate_ms_to_kmh(values: dict, data: StepData):
+    value = data.get_data(values["key"], values)
+    new_key = calculate_get_new_keys(values, -1, values["key"])
+    new_value = value * 3.6
+    data.insert_data(new_key, new_value, values)
+
+
 def calculate_get_new_keys(values: dict, idx, key):
     """Prüft nach, ob values["new_keys"] bzw. values["new_key"] vorhanden ist.
 
