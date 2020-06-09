@@ -10,7 +10,7 @@ def api_request(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    url = data.format_api(values["url_pattern"], values["api_key_name"])
+    url = data.format_api(values["url_pattern"], values["api_key_name"], values)
     data.init_data(_fetch(url))
 
 
@@ -20,10 +20,14 @@ def api_request_multiple(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+    data_array = []
+
     for idx, value in values["steps_value"]:
         data.save_loop(values, idx, value)
-        url = data.format_api(values["url_pattern"], values["api_key_name"])
-        data.init_data(_fetch(url))
+        url = data.format_api(values["url_pattern"], values["api_key_name"], values)
+        data_array.append(_fetch(url))
+
+    data.init_data({"_req": data_array})
 
 
 def api_request_multiple_custom(values: dict, data: StepData):
