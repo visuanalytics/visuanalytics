@@ -3,6 +3,7 @@ import { Button } from "@material-ui/core";
 
 export const ContinueButton = withStyles((theme: Theme) => ({
     root: {
+        width: 120,
         color: "white",
         backgroundColor: "#2E97C5",
         "&:hover": {
