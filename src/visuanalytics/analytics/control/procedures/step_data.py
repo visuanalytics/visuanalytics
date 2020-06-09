@@ -1,3 +1,5 @@
+import numbers
+
 from visuanalytics.analytics.util import config_manager
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
@@ -40,7 +42,7 @@ class StepData(object):
 
     def format(self, value_string, values: dict):
         # if value_string is int just return value
-        if isinstance(value_string, int):
+        if isinstance(value_string, numbers.Number):
             return value_string
 
         data = {**self.__data, **values.get("_loop_states", {})}
