@@ -37,7 +37,6 @@ def transform_add_symbol(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, idx, key)
@@ -52,7 +51,6 @@ def transform_replace(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, idx, key)
@@ -75,7 +73,6 @@ def transform_date_format(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, idx, key)
@@ -93,7 +90,6 @@ def transform_date_weekday(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     day_weekday = {
         0: "Montag",
@@ -120,7 +116,6 @@ def transform_date_now(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     value = data.get_data(values["key"], values)
     date_format = data.format(values["format"], values)
@@ -135,20 +130,19 @@ def transform_wind_direction(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     key = (values["key"])
     value = data.get_data(values["key"], values)
     new_key = transform_get_new_keys(values, -1, key)
-    if value.find(data.get_data(values["delimiter"])) != -1:
+    if value.find(data.format(values["delimiter"])) != -1:
         wind = value.split("-")
         wind_1 = wind[0]
         wind_2 = wind[1]
-        wind_dir_1 = data.get_data(values["dict"][wind_1][0])
-        wind_dir_2 = data.get_data(values["dict"][wind_2][0])
+        wind_dir_1 = data.format(values["dict"][wind_1][0])
+        wind_dir_2 = data.format(values["dict"][wind_2][0])
         new_value = f"{wind_dir_1} {wind_dir_2}"
     else:
-        new_value = data.get_data(values["dict"][value][2])
+        new_value = data.format(values["dict"][value][2])
     data.insert_data(new_key, new_value, values)
 
 
@@ -157,13 +151,12 @@ def transform_choose_random(values: dict, data: StepData):
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :return:
     """
     key = (values["key"])
     value = data.get_data(values["key"], values)
-    decision = random.choice(data.get_data(values["choice"], values))
+    decision = random.choice(data.format(values["choice"], values))
     new_key = transform_get_new_keys(values, -1, key)
-    new_value = data.get_data(values["dict"][value][decision], values)
+    new_value = data.format(values["dict"][value][decision], values)
     data.insert_data(new_key, new_value, values)
 
 
