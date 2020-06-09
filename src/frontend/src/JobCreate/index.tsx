@@ -14,6 +14,24 @@ export default function JobCreate() {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = ["Thema auswählen", "Parameter festlegen", "Zeitplan auswählen"];
 
+    function getSelectPanel(step: number) {
+        switch (step) {
+            case 0:
+                return (
+                    <TopicSelection />
+                );
+            case 1:
+                return (
+                    <ParamSelection topic="Wetter" />
+                )
+            case 2:
+                return (
+                    <TopicSelection />
+                )
+            default:
+                return 'Unknown step';
+        }
+    }
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -41,7 +59,7 @@ export default function JobCreate() {
                     <h3 className={classes.jobCreateHeader}>Header</h3>
                 </div>
                 <Divider />
-
+                {getSelectPanel(activeStep)}
                 <Divider />
                 <div className={classes.paddingSmall}>
                     <span>

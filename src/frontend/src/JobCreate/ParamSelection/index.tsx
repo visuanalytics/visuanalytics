@@ -52,22 +52,12 @@ export const ParamSelection: React.FC<Props> = ({ topic }) => {
         )
     }
     return (
-        <div className={classes.jobCreateBox}>
-            <div>
-                <h3 className={classes.jobCreateHeader}>Parameter festlegen</h3>
-            </div>
-            <Divider />
+        <div>
             {paramInfo.map(p =>
                 <div className={classes.paddingSmall} key={p.name}>
                     {renderParamField(p)}
                 </div>)
             }
-            <Divider />
-            <div className={classes.paddingSmall}>
-                <ContinueButton>
-                    WEITER
-                </ContinueButton>
-            </div>
         </div>
     );
 };
