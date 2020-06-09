@@ -37,7 +37,11 @@ class StepData(object):
     def format_api(self, value_string: str, api_key_name: str):
         return self.__formatter.format(value_string, {**self.__data, "_api_key": self.get_api_key(api_key_name)})
 
-    def format(self, value_string: str, values: dict):
+    def format(self, value_string, values: dict):
+        # if value_string is int just return value
+        if isinstance(value_string, int):
+            return value_string
+
         data = {**self.__data, **values.get("_loop_states", {})}
         return self.__formatter.format(value_string, data)
 
