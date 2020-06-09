@@ -19,7 +19,7 @@ class StepData(object):
 
     def save_loop_key(self, values: dict, idx, key):
         values["_loop_states"] = {**values.get("_loop_states", {}),
-                                  **{"_idx": idx, "_loop": self.get_data(key, values)}}
+                                  **{"_idx": idx, "_key": self.get_data(key, values)}}
 
     @property
     def data(self):
