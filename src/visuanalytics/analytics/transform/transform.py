@@ -86,6 +86,16 @@ def transform_date_format(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_timestamp(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        date = datetime.fromtimestamp(value)
+        new_key = transform_get_new_keys(values, idx, key)
+        new_value = date.strftime(data.format(values["format"], values))
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_date_weekday(values: dict, data: StepData):
     """Wandelt das Datum in den Wochentag in.
 
@@ -181,6 +191,7 @@ TRANSFORM_TYPES = {
     "replace": transform_replace,
     "alias": transform_alias,
     "date_format": transform_date_format,
+    "timestamp": transform_timestamp,
     "date_weekday": transform_date_weekday,
     "date_now": transform_date_now,
     "loop": transform_loop,
