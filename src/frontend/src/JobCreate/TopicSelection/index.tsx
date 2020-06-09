@@ -26,7 +26,6 @@ export const TopicSelection: React.FC = () => {
             <div className={classes.paddingSmall}>
                 <TextField className={classes.inputField} variant="outlined" label="Job-Name"></TextField>
             </div>
-            <Divider />
         </div>
     );
 };
