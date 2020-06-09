@@ -101,5 +101,7 @@ CALCULATE_ACTIONS = {
     "max": calculate_max,
     "min": calculate_min,
     "round": calculate_round,
-    "mode": calculate_mode
+    "mode": calculate_mode,
+    "ms_to_kmh": calculate_ms_to_kmh
+
 }
