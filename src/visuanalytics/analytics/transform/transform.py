@@ -19,9 +19,10 @@ def transform_array(values: dict, data: StepData):
 
 
 def transform_select(values: dict, data: StepData):
-    for key in values["relevant_keys"]:
-        data.save_loop_key(values, key)
-        # TODO
+    assert False, "Not Implemented"
+    # for key in values["relevant_keys"]:
+    # data.save_loop_key(values, key)
+    # TODO
 
 
 def transform_select_range(values: dict, data: StepData):
@@ -55,7 +56,7 @@ def transform_replace(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
 
-        value = data.get_data(key, values)
+        value = str(data.get_data(key, values))
         new_key = transform_get_new_keys(values, idx, key)
 
         new_value = value.replace(data.format(values["old_value"], values),
@@ -103,11 +104,12 @@ def transform_date_weekday(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
 
-        value = data.get_data(values["key"], values)
-        date_format = data.format(values["format"], values)
+        value = data.get_data(values["keys"][idx], values)
+        given_format = data.format(values["given_format"], values)
+        date = datetime.strptime(value, given_format).date()
         new_key = transform_get_new_keys(values, idx, key)
 
-        new_value = day_weekday[datetime.strptime(value, date_format).weekday()]
+        new_value = day_weekday[date.weekday()]
         data.insert_data(new_key, new_value, values)
 
 
