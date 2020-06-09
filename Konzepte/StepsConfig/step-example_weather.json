@@ -33,12 +33,12 @@
   "transform": [
     {
       "type": "transform_array",
-      "array_key": "",
+      "array_key": "_req",
       "transform": [
         {
           "type": "select",
           "relevant_keys": [
-            "data"
+            "_loop|data"
           ]
         },
         {
@@ -55,95 +55,106 @@
               "type": "select",
               "array_key": "data",
               "relevant_keys": [
-                "valid_date",
-                "max_temp",
-                "min_temp",
-                "app_min_temp",
-                "app_max_temp",
-                "wind_cdir_full",
-                "wind_spd",
-                "icon",
-                "code",
-                "sunrise_ts",
-                "sunset_ts",
-                "rh",
-                "pop"
+                "_loop|valid_date",
+                "_loop|max_temp",
+                "_loop|min_temp",
+                "_loop|app_min_temp",
+                "_loop|app_max_temp",
+                "_loop|wind_cdir_full",
+                "_loop|wind_spd",
+                "_loop|icon",
+                "_loop|code",
+                "_loop|sunrise_ts",
+                "_loop|sunset_ts",
+                "_loop|rh",
+                "_loop|pop"
               ]
             },
             {
               "type": "append",
+              "key": "min_temp",
+              "new_key": "summaries|{_idx}|temp_min"
+            },
+            {
+              "type": "append",
               "key": "max_temp",
-              "new_key": "....summaries.{_idx}.max_temp"
+              "new_key": "summaries|{_idx}|max_temp"
+            },
+            {
+              "type": "append",
+              "key": "avg_temp",
+              "new_key": "summaries|{_idx}|avg_temp"
+            },
+            {
+              "type": "append",
+              "key": "icon",
+              "new_key": "summaries|{_idx}|icon"
+            },
+            {
+              "type": "append",
+              "key": "code",
+              "new_key": "summaries|{_idx}|code"
             }
           ]
         },
         {
           "type": "add_symbol",
           "keys": [
-            "max_temp",
-            "min_temp",
-            "app_max_temp",
-            "app_min_temp"
+            "_loop|max_temp",
+            "_loop|min_temp",
+            "_loop|app_max_temp",
+            "_loop|app_min_temp"
           ],
           "new_keys": [
-            "max_temp",
-            "min_temp",
-            "app_max_temp",
-            "app_min_temp"
+            "_loop|str_max_temp",
+            "_loop|str_min_temp",
+            "_loop|str_app_max_temp",
+            "_loop|str_app_min_temp"
           ],
-          "pattern": "{text} Grad"
+          "pattern": "{_key} Grad"
         },
         {
           "type": "add_symbol",
           "keys": [
-            "wind_spd"
+            "_loop|wind_spd"
           ],
           "new_keys": [
-            "wind_spd"
+            "_loop|str_wind_spd"
           ],
-          "pattern": "{text} Metern pro Sekunde"
+          "pattern": "{_key} Metern pro Sekunde"
         },
         {
           "type": "add_symbol",
           "keys": [
-            "rh",
-            "pop"
+            "_loop|rh",
+            "_loop|pop"
           ],
           "new_keys": [
-            "rh",
-            "pop"
+            "_loop|str_rh",
+            "_loop|str_pop"
           ],
-          "pattern": "{text} Prozent"
+          "pattern": "{_key} Prozent"
         },
         {
           "type": "add_symbol",
           "keys": [
-            "city_name"
+            "_loop|city_name"
           ],
           "new_keys": [
-            "city_name"
+            "_loop|str_city_name"
           ],
-          "pattern": "in {city_name} "
+          "pattern": "in {_key} "
         },
         {
           "type": "replace",
           "keys": [
-            "max_temp",
-            "min_temp",
-            "app_max_temp",
-            "app_min_temp",
-            "wind_spd",
-            "rh",
-            "pop"
-          ],
-          "new_keys": [
-            "max_temp",
-            "min_temp",
-            "app_max_temp",
-            "app_min_temp",
-            "wind_spd",
-            "rh",
-            "pop"
+            "_loop|max_temp",
+            "_loop|min_temp",
+            "_loop|app_max_temp",
+            "_loop|app_min_temp",
+            "_loop|wind_spd",
+            "_loop|rh",
+            "_loop|pop"
           ],
           "old_value": ".",
           "new_value": ",",
@@ -152,29 +163,29 @@
         {
           "type": "date_weekday",
           "keys": [
-            "valid_date"
+            "_loop|valid_date"
           ],
           "new_keys": [
-            "valid_date"
+            "_loop|str_valid_date"
           ],
           "format": "weekday"
         },
         {
           "type": "date_format",
           "keys": [
-            "sunset_ts",
-            "sunrise_ts"
+            "_loop|sunset_ts",
+            "_loop|sunrise_ts"
           ],
           "new_keys": [
-            "sunset_ts",
-            "sunrise_ts"
+            "_loop|str_sunset_ts",
+            "_loop|str_sunrise_ts"
           ],
           "format": "%h Uhr %m"
         },
         {
           "type": "wind_direction",
-          "key": "wind_cdir_full",
-          "new_key": "wind_cdir_full",
+          "key": "_loop|wind_cdir_full",
+          "new_key": "_loop|str_wind_cdir_full",
           "dict": [
             {
               "west": {
@@ -216,10 +227,10 @@
         {
           "type": "choose_random",
           "keys": [
-            "code"
+            "_loop|code"
           ],
           "new_keys": [
-            "code"
+            "_loop|str_code"
           ],
           "dict": [
             {
@@ -424,7 +435,7 @@
     },
     {
       "type": "date_now",
-      "key": "date",
+      "key": "_loop|date",
       "format": "%Y-%m-%d"
     },
     {
@@ -441,51 +452,43 @@
         {
           "type": "calculate",
           "action": "mean",
-          "key": "summaries.{_loop}.max_temp",
-          "new_key": "temp_avg"
+          "key": "summaries|{_loop}|max_temp",
+          "new_key": "summaries|{_loop}|temp_avg"
         },
         {
           "type": "calculate",
           "action": "max",
-          "key": "summaries.{_loop}.max_temp",
-          "new_key": "max_temp"
+          "key": "summaries|{_loop}|max_temp",
+          "new_key": "summaries|{_loop}|max_max_temp"
         },
         {
           "type": "calculate",
           "action": "min",
-          "key": "summaries.{_loop}.min_temp",
-          "new_key": "min_temp"
+          "key": "summaries|{_loop}|min_temp",
+          "new_key": "summaries|{_loop}|min_min_temp"
         },
         {
           "type": "calculate",
           "action": "mode",
-          "key": "summaries.{_loop}.icon",
-          "new_key": "common_icon"
+          "key": "summaries|{_loop}|icon",
+          "new_key": "summaries|{_loop}|common_icon"
         },
         {
           "type": "calculate",
           "action": "mode",
-          "key": "summaries.{_loop}.code",
-          "new_key": "common_code"
+          "key": "summaries|{_loop}|code",
+          "new_key": "summaries|{_loop}|common_code"
         },
         {
           "type": "calculate",
           "action": "round",
           "keys": [
-            "max_temp",
-            "min_temp",
-            "app_min_temp",
-            "app_max_temp",
-            "rh",
-            "pop"
-          ],
-          "new_keys": [
-            "max_temp",
-            "min_temp",
-            "app_min_temp",
-            "app_max_temp",
-            "rh",
-            "pop"
+            "_loop|max_temp",
+            "_loop|min_temp",
+            "_loop|app_min_temp",
+            "_loop|app_max_temp",
+            "_loop|rh",
+            "_loop|pop"
           ],
           "count": 0
         },
@@ -493,10 +496,7 @@
           "type": "calculate",
           "action": "round",
           "keys": [
-            "wind_spd"
-          ],
-          "new_keys": [
-            "wind_spd"
+            "_loop|wind_spd"
           ],
           "count": 2
         }
