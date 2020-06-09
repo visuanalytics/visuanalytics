@@ -14,6 +14,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {useStyles} from "./style";
 import {ExpansionPanelSummary} from "./style";
 import {renderParamField} from "../util/renderParamFields";
+import {Button} from "@material-ui/core";
+import Backdrop from '@material-ui/core/Backdrop';
+import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 
 export interface Job {
     id: string;
@@ -33,6 +36,7 @@ export const JobList: React.FC = () => {
         editIcon: 'block',
         doneIcon: 'none'
     });
+    const [open, setOpen] = React.useState(false);
     const jobInfo: Job[] = [
         {
             "id": "1",
@@ -82,15 +86,18 @@ export const JobList: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <TextField
-                            className={classes.inputFields}
-                            id='standard-read-only-input'
-                            label="Zeitplan"
-                            defaultValue={job.schedule}
-                            InputProps={{
-                                readOnly: state.edit,
-                            }}
-                        />
+                        <Button className={classes.inputButton} onClick={handleToggle}>
+                            <TextField
+                                className={classes.inputFields}
+                                id='standard-read-only-input'
+                                label="Zeitplan"
+                                defaultValue={job.schedule}
+                                InputProps={{
+                                    readOnly: state.edit,
+                                }}
+                            />
+                        </Button>
+
                     </div>
                     <div>
                         <TextField
@@ -106,6 +113,12 @@ export const JobList: React.FC = () => {
                 </div>
             )
         }
+        const handleClose = () => {
+            setOpen(false);
+        };
+        const handleToggle = () => {
+            setOpen(!open);
+        };
 
         const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
@@ -136,6 +149,9 @@ export const JobList: React.FC = () => {
                         <Grid item md={6}>
                             {renderTextField()}
                         </Grid>
+                        <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
+                            <ScheduleSelection />
+                        </Backdrop>
                         <Grid item md={6}>
                             <div>
                                 {paramInfo.map(p =>

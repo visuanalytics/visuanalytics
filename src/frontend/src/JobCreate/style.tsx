@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles((theme) => ({
     jobCreateBox: {
+        backgroundColor: 'white',
         textAlign: "center",
         border: "solid #b4b4b4 1px",
         borderRadius: "10px",

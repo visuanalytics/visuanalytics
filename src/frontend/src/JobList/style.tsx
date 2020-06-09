@@ -23,6 +23,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         expIcon: {
             margin: 'auto 20px'
         },
+        backdrop: {
+            zIndex: theme.zIndex.drawer + 1,
+        },
+        inputButton: {
+            padding: 0,
+            width: '100%',
+            justifyContent: 'normal',
+        }
     }),
 );
 
