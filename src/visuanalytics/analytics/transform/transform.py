@@ -137,6 +137,7 @@ def transform_date_now(values: dict, data: StepData):
     data.insert_data(values["key"], new_key, values)
 
 
+# TODO: dictionary Zugriff funktioniert noch nicht
 def transform_wind_direction(values: dict, data: StepData):
     """Wandelt einen String von Windrichtungen um.
 
@@ -158,6 +159,7 @@ def transform_wind_direction(values: dict, data: StepData):
     data.insert_data(new_key, new_value, values)
 
 
+# TODO: dictionary Zugriff funktioniert noch nicht
 def transform_choose_random(values: dict, data: StepData):
     """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Value aus.
 
@@ -165,10 +167,13 @@ def transform_choose_random(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     key = (values["key"])
-    value = data.get_data(values["key"], values)
-    decision = random.choice(data.format(values["choice"], values))
+    value = str(data.get_data(values["key"], values))
+    choice_list = []
+    for idx in range(len(values["choice"])):
+        choice_list.append(data.format(values["choice"][idx], values))
+    decision = str(random.choice(choice_list))
     new_key = transform_get_new_keys(values, -1, key)
-    new_value = data.format(values["dict"][value][decision], values)
+    new_value = data.format(data.format(data.format(values["dict"], values)[value], values)[decision], values)
     data.insert_data(new_key, new_value, values)
 
 
