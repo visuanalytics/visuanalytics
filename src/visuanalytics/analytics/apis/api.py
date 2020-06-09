@@ -1,18 +1,27 @@
 import json
 
+import requests
 from visuanalytics.analytics.control.procedures.step_data import StepData
 
 
 def api_request(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    # api_key_name = data.get_data(values["api_key_name"])
+    # api_key = config_manager.get_private()["api_keys"][api_key_name]
+    url = data.get_data(values["url_pattern"])
+    data.append(_fetch(requests.get(url)))
 
 
 def api_request_multiple(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    # api_key_name = data.get_data(values["api_key_name"])
+    # api_key = config_manager.get_private()["api_keys"][api_key_name]
+    url = data.get_data(values['url_pattern'])
+    for c in values["steps_value"]:
+        data.append(_fetch(requests.get(url)))
 
 
 def api_request_multiple_custom(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    for idx, value in values["request"]:
+        api_request(values["request"][idx])
 
 
 def _fetch(response):
