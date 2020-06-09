@@ -179,12 +179,12 @@
             "_loop|valid_date"
           ],
           "new_keys": [
-            "_loop|str_valid_date"
+            "_loop|weekday"
           ],
-          "format": "weekday"
+          "given_format": "%Y-%m-%d"
         },
         {
-          "type": "date_format",
+          "type": "timestamp",
           "keys": [
             "_loop|sunset_ts",
             "_loop|sunrise_ts"
@@ -541,27 +541,27 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {date} {data|code}. Die Höchstwerte erreichen in {city_name} {data|max_temp}. "
+            "pattern": "Am heutigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {str_city_name} {data|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {data|min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {data|str_min_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|app_min_temp} und {data|app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|str_app_min_temp} und {data|str_app_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {date} bei {data|pop} und die relative Luftfeuchtigkeit bei {data|rh}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {dataweekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {data|wind_spd} und kommt aus Richtung {data|wind_cdir_full}. "
+            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {data|str_wind_spd} und kommt aus Richtung {data|str_wind_cdir_full}. "
           },
           {
             "type": "text",
-            "pattern": "Die Sonne geht heute um {data|sunset_ts} unter und geht morgen um {data|sunrise_ts} wieder auf. "
+            "pattern": "Die Sonne geht heute um {data|str_sunset_ts} unter und geht morgen um {data|str_sunrise_ts} wieder auf. "
           }
         ]
       },
@@ -569,23 +569,23 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {date} {data|code}. Die Höchstwerte erreichen in {city_name} {data|max_temp}. "
+            "pattern": "Am morgigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {str_city_name} {data|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {data|min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {data|str_min_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|app_min_temp} und {data|app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|str_app_min_temp} und {data|str_app_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {date} bei {data|pop} und die relative Luftfeuchtigkeit bei {data|rh}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {data|wind_spd} und kommt aus Richtung {data|wind_cdir_full}. "
+            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {data|str_wind_spd} und kommt aus Richtung {data|str_wind_cdir_full}. "
           }
         ]
       },
@@ -593,11 +593,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {date} {data.code} bei Temperaturen von {data|min_temp} bis {data|max_temp}. "
+            "pattern": "Am {data|weekday} {data|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {date} bei {data|pop}. Der Wind erreicht Geschwindigkeiten von {data|wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       },
@@ -605,11 +605,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {date} {data.code} bei Temperaturen von {data|min_temp} bis {data|max_temp}. "
+            "pattern": "Am {data|weekday} {data|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {date} bei {data|pop}. Der Wind erreicht Geschwindigkeiten von {data|wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       },
@@ -617,11 +617,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {date} {data|code} bei Temperaturen von {data|min_temp} bis {data|max_temp}. "
+            "pattern": "Am {data|weekday} {data|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {date} bei {data|pop}. Der Wind erreicht Geschwindigkeiten von {data|wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       }

@@ -228,12 +228,16 @@
         "_loop|valid_date"
       ],
       "new_keys": [
-        "_loop|str_valid_date"
+        "today",
+        "tomorrow",
+        "next_1",
+        "next_2",
+        "next_3"
       ],
-      "format": "weekday"
+      "given_format": "%Y-%m-%d"
     },
     {
-      "type": "date_format",
+      "type": "timestamp",
       "keys": [
         "_loop|sunset_ts",
         "_loop|sunrise_ts"
