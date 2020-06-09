@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     jobCreateHeader: {
         fontWeight: "normal",
-        fontSize: "x-large"
+        fontSize: "large"
     },
     paddingSmall: {
         padding: theme.spacing(3)
