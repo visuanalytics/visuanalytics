@@ -34,7 +34,8 @@ class StepData(object):
 
         return data_get_pattern(key_string, data)
 
-    def format_api(self, value_string: str, api_key_name: str):
+    def format_api(self, value_string: str, api_key_name: str, values: dict):
+        api_key_name = self.format(api_key_name, values)
         return self.__formatter.format(value_string, {**self.__data, "_api_key": self.get_api_key(api_key_name)})
 
     def format(self, value_string, values: dict):
