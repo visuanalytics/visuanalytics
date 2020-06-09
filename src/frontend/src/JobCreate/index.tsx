@@ -12,9 +12,18 @@ import { TopicSelection } from './TopicSelection';
 export default function JobCreate() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
-    const steps = ["Thema auswählen", "Parameter festlegen", "Zeitplan auswählen"];
+    const steps = [
+        "Thema auswählen",
+        "Parameter festlegen",
+        "Zeitplan auswählen"
+    ];
+    const descriptions = [
+        "Zu welchem Thema sollen Videos generiert werden?",
+        "Nähere Angaben für das zu generierende Video:",
+        "Wann sollen neue Videos generiert werden"
+    ];
 
-    function getSelectPanel(step: number) {
+    const getSelectPanel = (step: number) => {
         switch (step) {
             case 0:
                 return (
@@ -56,11 +65,11 @@ export default function JobCreate() {
             </Stepper>
             <div className={classes.jobCreateBox}>
                 <div>
-                    <h3 className={classes.jobCreateHeader}>Header</h3>
+                    <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                 </div>
-                <Divider />
+                <Divider /> {/* TODO: use GreyDivider */}
                 {getSelectPanel(activeStep)}
-                <Divider />
+                <Divider /> {/* TODO: use GreyDivider */}
                 <div className={classes.paddingSmall}>
                     <span>
                         <BackButton onClick={handleBack} style={{ marginLeft: 20 }} disabled={activeStep <= 0}>
