@@ -1,48 +1,187 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22)
 
-## Server Starten
+## Programm Starten
 
-### Development Server Starten
+### Configuration
 
-Flask bringt einen Development Server mit der bei Datei Änderungen Automatisch neu startet.
+#### Config.json
+
+Dies ist die Configurations datei für das Programm, sie hat das folgendes Vormat:
+
+~~~json
+{
+  "api_keys": {
+    "weatherbit": "APIKey"
+  },
+  "steps_base_config": {
+    "testing": false,
+    "h264_nvenc": false
+  },
+  "testing": false
+}
+~~~
+
+`api_keys`:
+
+Die Api Keys für die Verwendeten Apis:
+- `weatherbit`: Api Key für [weatherbit.io](https://www.weatherbit.io)
+
+`steps_base_config`:
+
+Die Konfiguration die für jeden Job gelten soll (Die configurationen in [jobs.json](#jobs.json) sind höherwertig)
+
+- `testing`:
+  
+  Wenn `testing` aktiviert ist werden keine Api Abfragen gemacht. 
+  Zur generierung des Videos werden Beispieldaten verwendet.
+
+  > Für den Wetterbericht sind nur Beispieldaten für `Gießen` vorhanden.
+
+- `h264_nvenc`:
+
+  Wenn `h264_nvenc` aktiviert ist wird diese Option bei `FFmpeg` verwendet. Diese activiert dann die Hardwarebeschleunigung bei Nvidea Grafikarten. 
+  Damit diese Option funktioniert muss man ein paar Sachen beachten (Weitere Infos bei [Mit Docker](#Mit-Docker) und [Ohne Docker](#Ohne-Docker)).
+
+`testing`:
+
+Wenn `testing` aktiviert ist wird die *logging ausgabe* auf Info Level activiert.
+
+
+#### Jobs.json
+
+Diese datei legt fest Wann die Verschiedene Videos generiert werden sollen:
+
+~~~JSON
+{
+  "jobs": [
+    {
+      "name": "Wetter in Biebertal",
+      "id": 0,
+      "steps_id": 1,
+      "time": "19:41",
+      "daily": true,
+      "config": {
+		    "city_name": "Biebertal", 
+		    "p_code": "35444"
+	    }
+    }
+  ]
+}
+~~~
+
+`name`: Name des Jobs
+
+`id`: Id des Jobs (sollte einzigartig sein)
+
+`steps_id`:
+
+Id welches video generiert werden soll. 
+Aktuelle Optionen:
+- 0: Deutschlandweiter Wetterbericht
+- 1: Wetterbericht für einen Ort
+
+*Einstellen der Zeit*:
+
+Um den Zeitpunkt der Generierung festzulegen gibt es 4 mögliche einträgen:
+
+- `time`:
+
+  Uhrzeit der Ausführung. Die Uhrzeit muss im format `"%H:%M"` angegeben werden. z.B.: `10:00`.
+
+  > muss immer angegeben werden.
+
+- `daily`:
+
+  Wenn `true` wird der Job jeden Tage ausgeführt
+
+- `date`: 
+
+  Datum Wann der job generiert werden soll. Ist ein datum angegeben wird der Job nur einmal ausgeführt. Das datum muss im format `"%y-%m-%d"`angegeben werden. z.B.: `2020-06-09`
+
+- `weekdays`:
+
+  Angabe der Wochentage wann der Job ausgeführt werden soll. Die Wochentage werden als Array von Zahlen angegeben wobei `0=Montag`, `1=Dienstag` usw. angegeben wird. z.B.: `[0, 5, 6]` (Wird Montags, Samstags und Sontags ausgeführt).
+
+> Achtung die angabe von `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also eins der Drei angegeben werden, es darf aber nicht mehr als eins angegeben werden.
+
+`config`:
+
+Hier kann man die Configurationen für die Jobs angeben.
+Mögliche Configurationen:
+
+*Wetterbericht Deutschland (id: 0)*:
+
+  - Alle Einstellungen die man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+
+*Wetterbericht für einen Ort (id: 1)*:
+
+  - Alle Einstellungen die man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - `city_name`: Name des Ortes
+  - `p_code`: Postleitzahl des ortes
+
+  > Ist nur `city_name` angegeben wird versucht diese Stadt zu finden es kann aber sein das die name nicht gefunden wird, daher ist die zusätzliche angabge einer Postleitzahl mit `p_code` Ratsam. Der angegebene `city_name` wird dann inerhalb des Videos als Stadt namen Angezeigt.
+
+  > Aktuell sind nur Städte in Deutschland möglich diese wird man aber später noch einstellen können.
 
 ### Mit Docker
 
-1. `docker build -t visuanalytics src/visuanalytics`
-2. `docker run -p 5000:5000 -t visuanalytics`
+*Benötigte Software*: 
+  - Docker
 
-### In der Console
+*Docker Container erstellen:*
 
-1. in den src ordner wechseln: `cd src`
-2. Python Packete installieren: `pip install -r visuanalytics/requirements.txt`
-3. environment variable setzen:
-    - Linux: 
-        - `export FLASK_APP=visuanalytics.server.server:create_app`
-        - `export FLASK_ENV=development`
-    - Windows: 
-        - `set FLASK_APP = visuanalytics.server.server:create_app`
-        - `set FLASK_ENV = development`
-3. development Server starten `flask run`
+~~~shell
+docker build -t visuanalytics src/visuanalytics
+~~~
 
-### Mit Pycharm
+*Docker Container Starten:*
 
-1. Python Packete installieren: `pip install -r src/visuanalytics/requirements.txt`
-2. run configuration Bearbeiten
-3. Flask Tempalte hinzufügen
-4. Flask Run Config Bearbeiten:
-    ~~~
-    Target type: Module name
-    Target: visuanalytics.server.server
-    Aplication: create_app
-    ...
-    Flask_Debug: True
-    ~~~
+> Die Pfade hinter `source=` müssen durch Pfade zu den Dateien (die in [Configuration](#Configuration) beschrieben werden) bzw. zu Output Ordner ersetzt werden.
 
-> Damit die Run Config funktioniert muss der Ordner `src` als 'sources root' makiert sein.
+*Linux:*
 
-### Production server Starten
+~~~shell
+docker run -t \
+	--mount type=bind,source=/home/user/out,target=/out \
+	--mount type=bind,source=/home/user/config.json,target=/config.json \
+	--mount type=bind,source=/home/user/jobs.json,target=/jobs.json \
+	visuanalytics
+~~~
 
-TODO
+*Windows:*
+
+~~~shell
+docker run -t ^
+	--mount type=bind,source=C:\Users\user\out,target=/out  ^
+	--mount type=bind,source=C:\Users\user\config.json,target=/config.json ^
+	--mount type=bind,source=C:\Users\user\jobs.json,target=/jobs.json ^
+	visuanalytics
+~~~
+
+> Wenn man die Hardware beschleunigung eine Nvida Grafikarte verwenden will kann man beim Starten noch die Option `--runtime="nvidia"` angeben. Dafür muss man vorher allerdings ein Paar sachen Configurien/Installieren. Eine Anleitung dafür defindet sich [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html) (Dies ist nicht die Offizielle doku wir fanden diese aber hilfreicher. Die Doku von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu))
+
+### Ohne Docker
+
+*Benötigte Software*:
+  
+  - Python >=3.6
+  - Pip
+  - FFmpeg
+
+*In den Src Ordner Wechseln*: `cd src`
+
+*Packete Installieren*:
+  - `pip install -r visuanalytics/requiraments.txt`
+
+- Config Dateien Anlegen/Verändern (diese werden [hier](#Configuration) beschrieben werden):
+  - Die Datei `config.json` muss sich in dem Ordner `visuanalytics/insance` befinden.
+  - Die Datei `jobs.json` befindet sich im Ordner `visuanalytics/resources` diese kann angepasst werden.  
+
+*Programm Starten*: `python -m visuanalytics`
+
+> unter Linux kann es sein das man `pip3` und `python3` verwenden muss damit die richtige Python version verwendet wird.
+
+> um die Option `h264_nvenc` (erklärung siehe [config.json](#config.json)) zu verwendet müssen ein paar einstellungen vorgenommen werden eine gute Anleitung defindet sich [hier](https://developer.nvidia.com/ffmpeg)
 
 ## Doku Generieren
 
@@ -52,6 +191,9 @@ Für die Dokumentation wird das Python Package [Sphinx](https://www.sphinx-doc.o
 
 
 1. Dev Dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
+
+> unter Linux kann es sein das man `pip3` verwenden muss damit die richtige Python version verwendet wird.
+
 
 ### HTML Generieren
 
