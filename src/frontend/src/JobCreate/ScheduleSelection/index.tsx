@@ -20,12 +20,7 @@ export const ScheduleSelection: React.FC = () => {
     };
 
     return (
-        <div className={classes.jobCreateBox}>
-            <div>
-                <h3 className={classes.jobCreateHeader}>Zeitplan festlegen</h3>
-                <p>Wann sollen neue Videos generiert werden?</p>
-            </div>
-            <GreyDivider />
+        <div>
             <div className={classes.paddingSmall}>
                 <FormControlLabel value="daily" control={<Radio
                     checked={selectedSchedule === "daily"}
@@ -58,12 +53,6 @@ export const ScheduleSelection: React.FC = () => {
             <Divider />
             <div className={classes.paddingSmall} >
                 <TimeInputField date={selectedDate} handler={handleDateChange} />
-            </div>
-            <GreyDivider />
-            <div className={classes.paddingSmall}>
-                <ContinueButton>
-                    WEITER
-                </ContinueButton>
             </div>
         </div >
     );
