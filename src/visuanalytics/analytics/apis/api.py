@@ -5,26 +5,44 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 
 
 def api_request(values: dict, data: StepData):
-    # api_key_name = data.get_data(values["api_key_name"])
-    # api_key = config_manager.get_private()["api_keys"][api_key_name]
-    url = data.get_data(values["url_pattern"])
-    data.append(_fetch(requests.get(url)))
+    """Fragt einmal die gewünschten Daten einer API ab.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    url = data.format_api(values["url_pattern"], values["api_key_name"])
+    data.init_data(_fetch(url))
 
 
 def api_request_multiple(values: dict, data: StepData):
-    # api_key_name = data.get_data(values["api_key_name"])
-    # api_key = config_manager.get_private()["api_keys"][api_key_name]
-    url = data.get_data(values['url_pattern'])
-    for c in values["steps_value"]:
-        data.append(_fetch(requests.get(url)))
+    """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, value in values["steps_value"]:
+        data.save_loop(values, idx, value)
+        url = data.format_api(values["url_pattern"], values["api_key_name"])
+        data.init_data(_fetch(url))
 
 
 def api_request_multiple_custom(values: dict, data: StepData):
-    for idx, value in values["request"]:
-        api_request(values["request"][idx])
+    """Fragt unterschiedliche Daten einer API ab.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for value in values["requests"]:
+        api_request(value, data)
 
 
-def _fetch(response):
+def _fetch(url):
+    """Abfrage einer API und Umwandlung der API-Antwort in ein Dictionary.
+
+    :param url: url der gewünschten API-Anfrage
+    :return: Antwort der API als Dictionary
+    """
+    response = requests.get(url)
     if response.status_code != 200:
         raise ValueError("Response-Code: " + str(response.status_code))
     return json.loads(response.content)
