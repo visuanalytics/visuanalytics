@@ -6,7 +6,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 
 
 def transform(values: dict, data: StepData):
-    for transformation in values["transformation"]:
+    for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 
         TRANSFORM_TYPES[transformation["type"]](transformation, data)
@@ -15,7 +15,7 @@ def transform(values: dict, data: StepData):
 def transform_array(values: dict, data: StepData):
     for idx, entry in enumerate(data.get_data(values["array_key"], values)):
         data.save_loop(values, idx, entry)
-        transform(values, entry)
+        transform(values, data)
 
 
 def transform_select(values: dict, data: StepData):
@@ -77,7 +77,7 @@ def transform_date_format(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, idx, key)
 
-        value = data.get_data(values["key"], values)
+        value = data.get_data(key, values)
         date_format = data.format(values["format"], values)
         new_key = transform_get_new_keys(values, idx, key)
 
@@ -163,7 +163,7 @@ def transform_choose_random(values: dict, data: StepData):
 def transform_loop(values: dict, data: StepData):
     for idx, value in enumerate(data.get_data(values["values"], values)):
         data.save_loop(values, idx, value)
-        transform(values, value)
+        transform(values, data)
 
 
 def transform_get_new_keys(values: dict, idx, key):
