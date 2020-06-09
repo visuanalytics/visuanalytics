@@ -19,8 +19,8 @@ def transform_array(values: dict, data: StepData):
 
 
 def transform_select(values: dict, data: StepData):
-    for idx, key in enumerate(values["relevant_keys"]):
-        data.save_loop_key(values, key, values)
+    for key in values["relevant_keys"]:
+        data.save_loop_key(values, key)
         # TODO
 
 
@@ -39,7 +39,7 @@ def transform_add_symbol(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, key)
+        data.save_loop_key(values, key)
         new_key = transform_get_new_keys(values, idx, key)
 
         new_values = data.format(values['pattern'], values)
@@ -53,7 +53,7 @@ def transform_replace(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, key)
+        data.save_loop_key(values, key)
 
         value = data.get_data(key, values)
         new_key = transform_get_new_keys(values, idx, key)
@@ -75,7 +75,7 @@ def transform_date_format(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, key)
+        data.save_loop_key(values, key)
 
         value = data.get_data(key, values)
         date_format = data.format(values["format"], values)
@@ -101,7 +101,7 @@ def transform_date_weekday(values: dict, data: StepData):
         6: "Sonntag"
     }
     for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, key)
+        data.save_loop_key(values, key)
 
         value = data.get_data(values["key"], values)
         date_format = data.format(values["format"], values)

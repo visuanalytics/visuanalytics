@@ -48,7 +48,7 @@ def calculate_round(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, idx, key)
+        data.save_loop_key(values, key)
 
         value = data.get_data(key, values)
         new_key = calculate_get_new_keys(values, idx, key)
