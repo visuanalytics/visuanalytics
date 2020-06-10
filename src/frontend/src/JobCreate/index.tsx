@@ -15,10 +15,15 @@ export default function JobCreate() {
     const classes = useStyles();
     const [activeStep, setActiveStep] = React.useState(0);
     const [selectComplete, setSelectComplete] = React.useState(false);
-    const [selectedTopic, setSelectedTopic] = React.useState<string>("");
+    const [selectedTopic, setSelectedTopic] = React.useState("");
+    const [jobName, setJobName] = React.useState("");
 
     const handleSelectTopic = (topicName: string) => {
         setSelectedTopic(topicName);
+    }
+
+    const handleEnterJobName = (jobName: string) => {
+        setJobName(jobName);
     }
 
     const handleSelectComplete = (isComplete: boolean) => {
@@ -40,11 +45,18 @@ export default function JobCreate() {
         switch (step) {
             case 0:
                 return (
-                    <TopicSelection selectTopicHandler={handleSelectTopic} selectCompleteHandler={handleSelectComplete} />
+                    <TopicSelection
+                        selectedTopic={selectedTopic}
+                        jobName={jobName}
+                        selectTopicHandler={handleSelectTopic}
+                        enterJobNameHandler={handleEnterJobName}
+                        selectCompleteHandler={handleSelectComplete} />
                 );
             case 1:
                 return (
-                    <ParamSelection topic={selectedTopic} selectCompleteHandler={handleSelectComplete} />
+                    <ParamSelection
+                        topic={selectedTopic}
+                        selectCompleteHandler={handleSelectComplete} />
                 )
             case 2:
                 return (

@@ -3,8 +3,8 @@ import { makeStyles, Button } from "@material-ui/core";
 
 interface TopicPanelProps {
     topic: string;
+    selectedTopic: string,
     selectTopicHandler: (topicName: string) => void;
-    selectCompleteHandler: (completed: boolean) => void;
 }
 
 const useStyles = makeStyles({
@@ -19,7 +19,8 @@ const useStyles = makeStyles({
         height: 80,
         transition: "0.2s",
         "&:hover": {
-            backgroundColor: "#00638D",
+            border: "solid #00638D 5px",
+            backgroundColor: "#2E97C5",
         },
     }
 });
@@ -29,9 +30,9 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     return (
         <Button
             className={classes.panel}
+            style={props.topic === props.selectedTopic ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
                 props.selectTopicHandler(props.topic);
-                props.selectCompleteHandler(true);
             }
             }>
             {props.topic}

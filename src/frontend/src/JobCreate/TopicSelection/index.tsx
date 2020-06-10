@@ -4,7 +4,10 @@ import { TopicPanel } from "./TopicPanel";
 import { useStyles } from "../style";
 
 interface TopicSelectionProps {
+    selectedTopic: string,
+    jobName: string,
     selectTopicHandler: (topicName: string) => void;
+    enterJobNameHandler: (jobName: string) => void;
     selectCompleteHandler: (completed: boolean) => void;
 }
 
@@ -12,30 +15,27 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     // const topics: string[] = useFetch("/topics");
     const classes = useStyles();
     const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
-    const [selected, setSelected] = React.useState({ topic: false, name: false });
 
     useEffect(() => {
         handleSelectComplete();
-    }, [selected]);
+    }, [props.jobName, props.selectedTopic]);
 
     const handleSelectComplete = () => {
-        const selectCompleted = selected.topic && selected.name;
+        const selectCompleted = props.selectedTopic !== "" && props.jobName !== "";
         props.selectCompleteHandler(selectCompleted);
     }
 
-    const handleTopicSelected = () => {
-        setSelected({ ...selected, topic: true });
-    }
-
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const entered = event.target.value.trim() !== "";
-        setSelected({ ...selected, name: entered })
+        props.enterJobNameHandler(event.target.value.trim());
     }
 
     const renderTopicPanel = (topic: string) => {
         return (
             <ListItem key={topic}>
-                <TopicPanel topic={topic} selectTopicHandler={props.selectTopicHandler} selectCompleteHandler={handleTopicSelected} />
+                <TopicPanel
+                    topic={topic}
+                    selectedTopic={props.selectedTopic}
+                    selectTopicHandler={props.selectTopicHandler} />
                 <Divider />
             </ListItem>
         );
@@ -48,7 +48,11 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
             </List>
             <Divider />
             <div className={classes.paddingSmall}>
-                <TextField className={classes.inputField} variant="outlined" label="Job-Name" onChange={handleInput}></TextField>
+                <TextField className={classes.inputField}
+                    value={props.jobName}
+                    variant="outlined"
+                    label="Job-Name"
+                    onChange={handleInput}></TextField>
             </div>
         </div>
     );
