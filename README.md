@@ -2,11 +2,11 @@
 
 ## Programm Starten
 
-### Configuration
+### Konfiguration
 
 #### Config.json
 
-Dies ist die Configurations datei für das Programm, sie hat das folgendes Vormat:
+Die Konfigurationsdatei für das Programm hat folgendes Format:
 
 ~~~json
 {
@@ -28,28 +28,26 @@ Die Api Keys für die Verwendeten Apis:
 
 `steps_base_config`:
 
-Die Konfiguration die für jeden Job gelten soll (Die configurationen in [jobs.json](#jobs.json) sind höherwertig)
+Die Konfiguration die für jeden Job gelten soll (Die Konfigurationen in [jobs.json](#jobs.json) sind höherwertig)
 
 - `testing`:
   
-  Wenn `testing` aktiviert ist werden keine Api Abfragen gemacht. 
-  Zur generierung des Videos werden Beispieldaten verwendet.
-
-  > Für den Wetterbericht sind nur Beispieldaten für `Gießen` vorhanden.
+  Wenn `testing` aktiviert ist, werden keine API-Abfragen gemacht. 
+  Zur Generierung des Videos werden Beispieldaten verwendet.
 
 - `h264_nvenc`:
 
-  Wenn `h264_nvenc` aktiviert ist wird diese Option bei `FFmpeg` verwendet. Diese activiert dann die Hardwarebeschleunigung bei Nvidea Grafikarten. 
-  Damit diese Option funktioniert muss man ein paar Sachen beachten (Weitere Infos bei [Mit Docker](#Mit-Docker) und [Ohne Docker](#Ohne-Docker)).
+  Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardwarebeschleunigung bei Nvidia Grafikarten. 
+  Damit diese Option funktioniert, muss man ein paar Sachen beachten (Weitere Infos bei [Mit Docker](#Mit-Docker) und [Ohne Docker](#Ohne-Docker)).
 
 `testing`:
 
-Wenn `testing` aktiviert ist wird die *logging ausgabe* auf Info Level activiert.
+Wenn `testing` aktiviert ist wird die *logging Ausgabe* auf Info Level aktiviert.
 
 
 #### Jobs.json
 
-Diese datei legt fest Wann die Verschiedene Videos generiert werden sollen:
+Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert werden sollen:
 
 ~~~JSON
 {
@@ -75,47 +73,47 @@ Diese datei legt fest Wann die Verschiedene Videos generiert werden sollen:
 
 `steps_id`:
 
-Id welches video generiert werden soll. 
+Id des Videos, welches generiert werden soll. 
 Aktuelle Optionen:
 - 0: Deutschlandweiter Wetterbericht
 - 1: Wetterbericht für einen Ort
 
 *Einstellen der Zeit*:
 
-Um den Zeitpunkt der Generierung festzulegen gibt es 4 mögliche einträgen:
+Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
 
 - `time`:
 
-  Uhrzeit der Ausführung. Die Uhrzeit muss im format `"%H:%M"` angegeben werden. z.B.: `10:00`.
+  Uhrzeit der Ausführung. Die Uhrzeit muss im Format `"%H:%M"` angegeben werden. z.B.: `10:00`.
 
   > muss immer angegeben werden.
 
 - `daily`:
 
-  Wenn `true` wird der Job jeden Tage ausgeführt
+  Wenn dieser Wert 'true' ist, wird der Job jeden Tag ausgeführt
 
 - `date`: 
 
-  Datum Wann der job generiert werden soll. Ist ein datum angegeben wird der Job nur einmal ausgeführt. Das datum muss im format `"%y-%m-%d"`angegeben werden. z.B.: `2020-06-09`
+  Datum an welchem der Job generiert werden soll. Ist ein Datum angegeben, so wird der Job nur einmal ausgeführt. Das Datum muss in dem Format '%y-%m-%d' angegeben werden. z.B.: '2020-06-09'
 
 - `weekdays`:
 
-  Angabe der Wochentage wann der Job ausgeführt werden soll. Die Wochentage werden als Array von Zahlen angegeben wobei `0=Montag`, `1=Dienstag` usw. angegeben wird. z.B.: `[0, 5, 6]` (Wird Montags, Samstags und Sontags ausgeführt).
+  Angabe der Wochentage, an welchen der Job ausgeführt werden soll. Die Wochentage werden als Array von Zahlen angegeben wobei `0=Montag`, `1=Dienstag` usw. angegeben wird. z.B.: `[0, 5, 6]` (Wird Montags, Samstags und Sontags ausgeführt).
 
 > Achtung die angabe von `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also eins der Drei angegeben werden, es darf aber nicht mehr als eins angegeben werden.
 
 `config`:
 
-Hier kann man die Configurationen für die Jobs angeben.
-Mögliche Configurationen:
+Hier kann man die Konfigurationen für die Jobs angeben.
+Mögliche Konfigurationen:
 
 *Wetterbericht Deutschland (id: 0)*:
 
-  - Alle Einstellungen die man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
 
 *Wetterbericht für einen Ort (id: 1)*:
 
-  - Alle Einstellungen die man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
   - `city_name`: Name des Ortes
   - `p_code`: Postleitzahl des ortes
 
@@ -136,7 +134,7 @@ docker build -t visuanalytics src/visuanalytics
 
 *Docker Container Starten:*
 
-> Die Pfade hinter `source=` müssen durch Pfade zu den Dateien (die in [Configuration](#Configuration) beschrieben werden) bzw. zu Output Ordner ersetzt werden.
+> Die Pfade hinter `source=` müssen durch Pfade zu den Dateien (die in [Konfiguration](#Konfiguration) beschrieben werden) bzw. zu Output Ordner ersetzt werden.
 
 *Linux:*
 
@@ -158,7 +156,7 @@ docker run -t ^
 	visuanalytics
 ~~~
 
-> Wenn man die Hardware beschleunigung eine Nvida Grafikarte verwenden will kann man beim Starten noch die Option `--runtime="nvidia"` angeben. Dafür muss man vorher allerdings ein Paar sachen Configurien/Installieren. Eine Anleitung dafür defindet sich [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html) (Dies ist nicht die Offizielle doku wir fanden diese aber hilfreicher. Die Doku von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu))
+> Wenn man die Hardwarebeschleunigung eine Nvidia Grafikarte verwenden will, kann man beim Starten noch die Option `--runtime="nvidia"` angeben. Dafür muss man vorher allerdings ein Paar Konfigurationen/Installationen vornehmen. Eine Anleitung dafür defindet sich [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html) (Dies ist nicht die offizielle Doku wir fanden diese aber hilfreicher. Die Doku von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu))
 
 ### Ohne Docker
 
@@ -181,7 +179,7 @@ docker run -t ^
 
 > unter Linux kann es sein das man `pip3` und `python3` verwenden muss damit die richtige Python version verwendet wird.
 
-> um die Option `h264_nvenc` (erklärung siehe [config.json](#config.json)) zu verwendet müssen ein paar einstellungen vorgenommen werden eine gute Anleitung defindet sich [hier](https://developer.nvidia.com/ffmpeg)
+> um die Option `h264_nvenc` (Erklärung siehe [config.json](#config.json)) zu verwendet müssen ein paar einstellungen vorgenommen werden eine gute Anleitung defindet sich [hier](https://developer.nvidia.com/ffmpeg)
 
 ## Doku Generieren
 

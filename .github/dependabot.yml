@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/src/frontend"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  labels:
+  - dependencies
+- package-ecosystem: pip
+  directory: "/src/visuanalytics"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  labels:
+  - dependencies
