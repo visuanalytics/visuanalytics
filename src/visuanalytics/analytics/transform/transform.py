@@ -189,6 +189,12 @@ def transform_loop(values: dict, data: StepData):
         transform(values, data)
 
 
+def transform_add_data(values: dict, data: StepData):
+    new_key = data.format(values["new_key"], values)
+    value = data.format(values["pattern"], values)
+    data.insert_data(new_key, values, values)
+
+
 def transform_get_new_keys(values: dict, idx, key):
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 
@@ -207,5 +213,6 @@ TRANSFORM_TYPES = {
     "date_now": transform_date_now,
     "loop": transform_loop,
     "wind_direction": transform_wind_direction,
-    "choose_random": transform_choose_random
+    "choose_random": transform_choose_random,
+    "add_data": transform_add_data
 }
