@@ -30,7 +30,13 @@ def transform_select_range(values: dict, data: StepData):
 
 
 def transform_append(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    if values["_loop_states"]["_idx"] == 0:
+        data.insert_data(values["new_key"], [], values)
+
+    array = data.get_data(values["new_key"], values)
+    value = data.get_data(values["key"], values)
+
+    array.append(value)
 
 
 def transform_add_symbol(values: dict, data: StepData):
