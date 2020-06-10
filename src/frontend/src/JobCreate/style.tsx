@@ -16,5 +16,5 @@ export const useStyles = makeStyles((theme) => ({
     },
     inputField: {
         width: 300
-    }
+    },
 }));
