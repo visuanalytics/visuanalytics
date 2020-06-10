@@ -64,7 +64,7 @@ export default function JobCreate() {
     };
 
     return (
-        <div style={{ width: 1000 }}>
+        <div className={classes.root}>
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps: { completed?: boolean } = {};
@@ -85,7 +85,7 @@ export default function JobCreate() {
                 <GreyDivider />
                 <div className={classes.paddingSmall}>
                     <span>
-                        <BackButton onClick={handleBack} style={{ marginLeft: 20 }} disabled={activeStep <= 0}>
+                        <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                             {"Zurück"}
                         </BackButton>
                         <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }} disabled={!selectComplete}>
