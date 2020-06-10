@@ -72,7 +72,13 @@ def transform_replace(values: dict, data: StepData):
 
 
 def transform_alias(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    for key, new_key in zip(values["keys"], values["new_keys"]):
+        value = data.get_data(key, values)
+        new_key = data.format(new_key, values)
+
+        # TODO(max) maybe just replace key not insert and delete
+        data.insert_data(new_key, value, values)
+        data.remove_data(key, values)
 
 
 def transform_date_format(values: dict, data: StepData):
