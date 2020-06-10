@@ -26,7 +26,11 @@ def transform_select(values: dict, data: StepData):
 
 
 def transform_select_range(values: dict, data: StepData):
-    assert False, "Not Implemented"
+    value_array = data.get_data(values["array_key"], values)
+    range_start = data.format(values["range_start"], values)
+    range_end = data.format(values["range_end"], values)
+
+    data.insert_data(values["array_key"], value_array[range_start:range_end], values)
 
 
 def transform_append(values: dict, data: StepData):
