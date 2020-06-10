@@ -9,6 +9,7 @@ import { BackButton } from './BackButton';
 import { ParamSelection } from './ParamSelection';
 import { TopicSelection } from './TopicSelection';
 import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
 
 export default function JobCreate() {
     const classes = useStyles();
@@ -79,9 +80,9 @@ export default function JobCreate() {
                 <div>
                     <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                 </div>
-                <Divider /> {/* TODO: use GreyDivider */}
+                <GreyDivider />
                 {getSelectPanel(activeStep)}
-                <Divider /> {/* TODO: use GreyDivider */}
+                <GreyDivider />
                 <div className={classes.paddingSmall}>
                     <span>
                         <BackButton onClick={handleBack} style={{ marginLeft: 20 }} disabled={activeStep <= 0}>
