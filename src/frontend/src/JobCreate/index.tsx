@@ -8,6 +8,7 @@ import { ContinueButton } from './ContinueButton';
 import { BackButton } from './BackButton';
 import { ParamSelection } from './ParamSelection';
 import { TopicSelection } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
 
 export default function JobCreate() {
     const classes = useStyles();
@@ -31,7 +32,7 @@ export default function JobCreate() {
     const descriptions = [
         "Zu welchem Thema sollen Videos generiert werden?",
         "Parameter auswählen für: '" + selectedTopic + "'",
-        "Wann sollen neue Videos generiert werden"
+        "Wann sollen neue Videos generiert werden?"
     ];
 
     const getSelectPanel = (step: number) => {
@@ -46,7 +47,7 @@ export default function JobCreate() {
                 )
             case 2:
                 return (
-                    <TopicSelection selectTopicHandler={handleSelectTopic} selectCompleteHandler={handleSelectComplete} />
+                    <ScheduleSelection />
                 )
             default:
                 return 'Unknown step';
