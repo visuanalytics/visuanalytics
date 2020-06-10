@@ -1,8 +1,6 @@
 import React from "react";
 import { useStyles } from "../style";
 import { Divider, FormControlLabel, Radio } from "@material-ui/core";
-import { ContinueButton } from "../ContinueButton";
-import { GreyDivider } from "../GreyDivider";
 import { WeekdayCheckboxes } from "./WeekdayCheckboxes";
 import { DateInputField, TimeInputField } from "./DateTimeInput"
 
