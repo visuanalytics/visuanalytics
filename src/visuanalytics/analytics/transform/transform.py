@@ -107,10 +107,10 @@ def transform_date_format(values: dict, data: StepData):
         data.save_loop_key(values, key)
 
         value = data.get_data(key, values)
-        date_format = data.format(values["format"], values)
+        given_format = data.format(values["given_format"], values)
+        date = datetime.strptime(value, given_format).date()
+        new_value = date.strftime(data.format(values["format"], values))
         new_key = transform_get_new_keys(values, idx, key)
-
-        new_value = datetime.strptime(value, date_format).date()
         data.insert_data(new_key, new_value, values)
 
 
@@ -152,57 +152,56 @@ def transform_date_weekday(values: dict, data: StepData):
 
 
 def transform_date_now(values: dict, data: StepData):
-    """Generiert das heutige Datum.
+    """Generiert das heutige Datum und gibt es im gewünschten Format aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    value = data.get_data(values["key"], values)
+    new_key = values["new_key"]
     date_format = data.format(values["format"], values)
+    value = datetime.now()
+    new_value = value.strftime(date_format)
+    data.insert_data(new_key, new_value, values)
 
-    new_key = datetime.strptime(value, date_format).today()
 
-    data.insert_data(values["key"], new_key, values)
-
-
-# TODO: dictionary Zugriff funktioniert noch nicht
 def transform_wind_direction(values: dict, data: StepData):
     """Wandelt einen String von Windrichtungen um.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    key = (values["key"])
+    key = values["key"]
     value = data.get_data(values["key"], values)
     new_key = transform_get_new_keys(values, -1, key)
-    if value.find(data.format(values["delimiter"])) != -1:
+    if value.find(data.format(values["delimiter"], values)) != -1:
         wind = value.split("-")
         wind_1 = wind[0]
         wind_2 = wind[1]
-        wind_dir_1 = data.format(values["dict"][wind_1][0])
-        wind_dir_2 = data.format(values["dict"][wind_2][0])
+        wind_dir_1 = data.format(values["dict"][wind_1]["0"], values)
+        wind_dir_2 = data.format(values["dict"][wind_2]["0"], values)
         new_value = f"{wind_dir_1} {wind_dir_2}"
     else:
-        new_value = data.format(values["dict"][value][2])
+        new_value = data.format(values["dict"][value]["1"], values)
     data.insert_data(new_key, new_value, values)
 
 
-# TODO: dictionary Zugriff funktioniert noch nicht
 def transform_choose_random(values: dict, data: StepData):
     """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Value aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    key = (values["key"])
-    value = str(data.get_data(values["key"], values))
-    choice_list = []
-    for idx in range(len(values["choice"])):
-        choice_list.append(data.format(values["choice"][idx], values))
-    decision = str(random.choice(choice_list))
-    new_key = transform_get_new_keys(values, -1, key)
-    new_value = data.format(data.format(data.format(values["dict"], values)[value], values)[decision], values)
-    data.insert_data(new_key, new_value, values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = str(data.get_data(key, values))
+        choice_list = []
+        for x in range(len(values["choice"])):
+            choice_list.append(data.format(values["choice"][x], values))
+        decision = str(random.choice(choice_list))
+        new_key = transform_get_new_keys(values, -1, key)
+        new_value = data.format(values["dict"][value][decision], values)
+        data.insert_data(new_key, new_value, values)
 
 
 def transform_loop(values: dict, data: StepData):
