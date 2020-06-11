@@ -6,9 +6,9 @@ from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data
 
 
 class StepData(object):
-    def __init__(self, run_config):
+    def __init__(self, run_config, pipeline_id):
         super().__init__()
-        self.__data = {"_conf": run_config}
+        self.__data = {"_conf": run_config, "_pipe_id": pipeline_id}
         self.__formatter = StepPatternFormatter()
 
     @staticmethod
@@ -29,6 +29,17 @@ class StepData(object):
 
     def init_data(self, data: dict):
         self.__data.update(data)
+
+    def clear_data(self):
+        # Save Config and Pipe id
+        _conf = self.__data["_conf"]
+        _pipe_id = self.__data["_pipe_id"]
+
+        self.__data.clear()
+
+        # Restore Config and Pipe id
+        self.__data["_conf"] = _conf
+        self.__data["_pipe_id"] = _pipe_id
 
     def get_data(self, key_string: str, values: dict):
         data = {**self.__data, **values.get("_loop_states", {})}
