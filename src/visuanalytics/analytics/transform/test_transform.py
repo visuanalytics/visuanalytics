@@ -18,6 +18,6 @@ def test_transform(config_name, data: dict):
 
 
 # Die daten die eigentlich aus der api kommen
-data = {"_req": [{"test": "cdef"}, {"test": "abcd"}]}
+data = {"_req": [{"test": [2, 3.4, 8, 9]}, {"test": [2.4, 1.4, 8, 1]}]}
 print(f"Data: {data}")
 test_transform("steps/example.json", data)

@@ -12,11 +12,9 @@
       "array_key": "_req",
       "transform": [
         {
-          "type": "add_symbol",
-          "keys": [
-            "_loop|test"
-          ],
-          "pattern": "{_key} test"
+          "type": "calculate",
+          "key": "_loop|test",
+          "action": "mean"
         }
       ]
     }
