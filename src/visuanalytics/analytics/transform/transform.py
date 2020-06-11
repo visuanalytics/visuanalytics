@@ -127,18 +127,17 @@ def transform_date_weekday(values: dict, data: StepData):
 
 
 def transform_date_now(values: dict, data: StepData):
-    # TODO
-    """Generiert das heutige Datum.
+    """Generiert das heutige Datum und gibt es im gewünschten Format aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    value = data.get_data(values["key"], values)
+    key = values["new_key"]
+    new_key = transform_get_new_keys(values, -1, key)
     date_format = data.format(values["format"], values)
-
-    new_key = datetime.strptime(value, date_format).today()
-
-    data.insert_data(values["key"], new_key, values)
+    value = datetime.now()
+    new_value = value.strftime(date_format)
+    data.insert_data(new_key, new_value, values)
 
 
 def transform_wind_direction(values: dict, data: StepData):
