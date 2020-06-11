@@ -3,13 +3,19 @@ from datetime import datetime
 from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.transform import calculate
 
 
 def transform(values: dict, data: StepData):
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
-
-        TRANSFORM_TYPES[transformation["type"]](transformation, data)
+        transform_type = transformation["type"]
+        if (transform_type == "transform_array") | (transform_type == "date_now"):
+            TRANSFORM_TYPES[transformation["type"]](transformation, data)
+        elif transform_type == "loop":
+            for loop in transformation["transform"]:
+                if loop["type"] == "calculate":
+                    calculate.CALCULATE_ACTIONS[loop["action"]](loop, data)
 
 
 def transform_array(values: dict, data: StepData):

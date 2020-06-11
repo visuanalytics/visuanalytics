@@ -11,8 +11,10 @@ def calculate_mean(values: dict, data: StepData):
     :param data: Daten aus der API
     :return:
     """
-    value = data.get_data(values["key"], values)
-    new_key = calculate_get_new_keys(values, -1, values["key"])
+    key = values["key"]
+    print(key)
+    value = data.get_data(key, values)
+    new_key = calculate_get_new_keys(values, -1, key)
     new_value = np.mean(value)
     data.insert_data(new_key, new_value, values)
 
