@@ -16,14 +16,16 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     const classes = useStyles();
     const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
 
+    const jobName = props.jobName;
+    const selectedTopic = props.selectedTopic;
+    const selectCompleteHandler = props.selectCompleteHandler;
     useEffect(() => {
+        const handleSelectComplete = () => {
+            const selectCompleted = selectedTopic !== "" && jobName !== "";
+            selectCompleteHandler(selectCompleted);
+        };
         handleSelectComplete();
-    }, [props.jobName, props.selectedTopic]);
-
-    const handleSelectComplete = () => {
-        const selectCompleted = props.selectedTopic !== "" && props.jobName !== "";
-        props.selectCompleteHandler(selectCompleted);
-    }
+    }, [jobName, selectedTopic, selectCompleteHandler]);
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value.trim());
