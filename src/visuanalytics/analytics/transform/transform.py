@@ -204,7 +204,15 @@ def transform_choose_random(values: dict, data: StepData):
 
 
 def transform_loop(values: dict, data: StepData):
-    for idx, value in enumerate(data.get_data(values["values"], values)):
+    loop_values = values.get("values", None)
+
+    # is Values is none use range
+    if loop_values is None:
+        start = data.format(values.get("range_start", 0), values)
+        stop = data.format(values["range_stop"], values)
+        loop_values = range(start, stop)
+
+    for idx, value in enumerate(loop_values):
         data.save_loop(values, idx, value)
         transform(values, data)
 
