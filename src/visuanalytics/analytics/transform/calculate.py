@@ -20,7 +20,7 @@ def calculate_mean(values: dict, data: StepData):
         data.save_loop_key(values, key)
         value = data.get_data(key, values)
         new_key = calculate_get_new_keys(values, idx, key)
-        mean_value = np.mean(value)
+        mean_value = float(np.mean(value))
         if values.get("decimal", None):
             new_value = round(mean_value, data.format(values["decimal"], values))
         else:
