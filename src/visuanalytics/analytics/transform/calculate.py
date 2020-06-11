@@ -16,11 +16,16 @@ def calculate_mean(values: dict, data: StepData):
     :param data: Daten aus der API
     :return:
     """
-    key = values["key"]
-    value = data.get_data(key, values)
-    new_key = calculate_get_new_keys(values, -1, key)
-    new_value = np.mean(value)
-    data.insert_data(new_key, new_value, values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = calculate_get_new_keys(values, idx, key)
+        mean_value = np.mean(value)
+        if values.get("decimal", None):
+            new_value = round(mean_value, data.format(values["decimal"], values))
+        else:
+            new_value = round(mean_value)
+        data.insert_data(new_key, new_value, values)
 
 
 def calculate_max(values: dict, data: StepData):
@@ -29,10 +34,12 @@ def calculate_max(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    value = data.get_data(values["key"], values)
-    new_key = calculate_get_new_keys(values, -1, values["key"])
-    new_value = max(value)
-    data.insert_data(new_key, new_value, values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = max(value)
+        data.insert_data(new_key, new_value, values)
 
 
 def calculate_min(values: dict, data: StepData):
@@ -41,14 +48,16 @@ def calculate_min(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    value = data.get_data(values["key"], values)
-    new_key = calculate_get_new_keys(values, -1, values["key"])
-    new_value = min(value)
-    data.insert_data(new_key, new_value, values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = min(value)
+        data.insert_data(new_key, new_value, values)
 
 
 def calculate_round(values: dict, data: StepData):
-    """Rundet gegebene Werte auf eine bestimmte Nachkommastelle ab.
+    """Rundet gegebene Werte auf eine gewünschte Nachkommastelle ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -59,8 +68,8 @@ def calculate_round(values: dict, data: StepData):
         value = data.get_data(key, values)
         new_key = calculate_get_new_keys(values, idx, key)
 
-        if values.get("count", None):
-            new_value = round(value, data.format(values["count"], values))
+        if values.get("decimal", None):
+            new_value = round(value, data.format(values["decimal"], values))
         else:
             new_value = round(value)
         data.insert_data(new_key, new_value, values)
@@ -72,17 +81,30 @@ def calculate_mode(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    value = data.get_data(values["key"], values)
-    new_key = calculate_get_new_keys(values, -1, values["key"])
-    new_value = statistical.mode(value)
-    data.insert_data(new_key, new_value, values)
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = statistical.mode(value)
+        data.insert_data(new_key, new_value, values)
 
 
 def calculate_ms_to_kmh(values: dict, data: StepData):
-    value = data.get_data(values["key"], values)
-    new_key = calculate_get_new_keys(values, -1, values["key"])
-    new_value = value * 3.6
-    data.insert_data(new_key, new_value, values)
+    """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = calculate_get_new_keys(values, idx, key)
+        kmh = (value * 3.6)
+        if values.get("decimal", None):
+            new_value = round(kmh, data.format(values["decimal"], values))
+        else:
+            new_value = round(kmh)
+        data.insert_data(new_key, new_value, values)
 
 
 def calculate_get_new_keys(values: dict, idx, key):
@@ -97,7 +119,7 @@ def calculate_get_new_keys(values: dict, idx, key):
     :return: Inhalt von values["new_keys"] bzw. Inhalt von values["new_key"]
     """
     if idx < 0:
-        return values["new_key"] if values.get("new_key", None) else key
+        return values["new_keys"] if values.get("new_keys", None) else key
 
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 
