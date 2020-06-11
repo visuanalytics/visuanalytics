@@ -16,7 +16,7 @@
         {
           "type": "select",
           "relevant_keys": [
-            "_loop|data"
+            "data"
           ]
         },
         {
@@ -33,19 +33,19 @@
               "type": "select",
               "array_key": "data",
               "relevant_keys": [
-                "_loop|valid_date",
-                "_loop|max_temp",
-                "_loop|min_temp",
-                "_loop|app_min_temp",
-                "_loop|app_max_temp",
-                "_loop|wind_cdir_full",
-                "_loop|wind_spd",
-                "_loop|icon",
-                "_loop|code",
-                "_loop|sunrise_ts",
-                "_loop|sunset_ts",
-                "_loop|rh",
-                "_loop|pop"
+                "valid_date",
+                "max_temp",
+                "min_temp",
+                "app_min_temp",
+                "app_max_temp",
+                "wind_cdir_full",
+                "wind_spd",
+                "icon",
+                "code",
+                "sunrise_ts",
+                "sunset_ts",
+                "rh",
+                "pop"
               ]
             },
             {
