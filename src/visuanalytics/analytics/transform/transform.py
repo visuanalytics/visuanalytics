@@ -4,6 +4,7 @@ from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import calculate
+from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 
 
 def transform(values: dict, data: StepData):
@@ -20,10 +21,20 @@ def transform_array(values: dict, data: StepData):
 
 
 def transform_select(values: dict, data: StepData):
-    assert False, "Not Implemented"
-    # for key in values["relevant_keys"]:
-    # data.save_loop_key(values, key)
-    # TODO
+    # TODO(max) Not working yet
+    root = values.get("_loop_states", {}).get("_loop", None)
+
+    if root is None:
+        root = data.data
+
+    new_root = {}
+
+    for key in values["relevant_keys"]:
+        key = data.format(key, values)
+        data_insert_pattern(key, new_root, data_get_pattern(key, root))
+        # data.remove_data(f"_loop|{key}", values)
+
+    root = new_root
 
 
 def transform_select_range(values: dict, data: StepData):
