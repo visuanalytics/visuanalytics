@@ -1,50 +1,39 @@
 import React from "react";
 import { TextField, MenuItem } from "@material-ui/core";
 import { useStyles } from "../style";
+import { Param } from "../../util/param";
 
 interface ParamSelectionProps {
     topic: string;
-    selectCompleteHandler: (isCompleted: boolean) => void;
-}
-
-interface Param {
-    name: string,
-    possibleValues: string[]
+    params: Param[];
+    selectParamHandler: (key: string, value: string) => void;
 }
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
-    // const paramInfo: = useFetch("/params?topic=" + topic);
     const classes = useStyles();
 
-    const paramInfo: Param[] = [
-        {
-            "name": "Spieltag",
-            "possibleValues": ["aktuell", "letzter", "vorletzter"]
-        },
-        {
-            "name": "Twitter-Wordcloud",
-            "possibleValues": ["ja", "nein"]
-        }
-    ]
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
+        props.selectParamHandler(name, event.target.value);
+    }
 
     const renderParamField = (param: Param) => {
         const name: string = param.name;
         const possibleValues: string[] = param.possibleValues;
-        if (possibleValues.length === 0) {
+        if (possibleValues.length === 0)
             return (
                 <TextField
                     className={classes.inputField}
                     variant="outlined"
                     label={name} />
             )
-        }
         return (
             <TextField
-                onChange={() => alert("Changed")}
+                onChange={(e) => { handleChange(e, name) }}
                 className={classes.inputField}
                 variant="outlined"
                 label={name}
                 defaultValue=""
+                value={lookupByName(name, props.params)?.selected}
                 select>
                 {possibleValues.map((val) => (
                     <MenuItem key={val} value={val}>
@@ -57,7 +46,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     return (
         <div>
-            {paramInfo.map(p =>
+            {props.params.map(p =>
                 <div className={classes.paddingSmall} key={p.name}>
                     {renderParamField(p)}
                 </div>)
@@ -65,3 +54,13 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         </div>
     );
 };
+
+const lookupByName: ((k: string, _: Param[]) => Param | null) = (k: string, list: Param[]) => {
+    var val: Param | null = null;
+    list.forEach((e: Param) => {
+        if (e.name === k) {
+            val = e;
+        }
+    })
+    return val;
+}
