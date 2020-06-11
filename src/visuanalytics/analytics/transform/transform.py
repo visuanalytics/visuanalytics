@@ -3,6 +3,7 @@ from datetime import datetime
 from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.transform.calculate import calculate
 
 
 def transform(values: dict, data: StepData):
@@ -224,5 +225,6 @@ TRANSFORM_TYPES = {
     "loop": transform_loop,
     "wind_direction": transform_wind_direction,
     "choose_random": transform_choose_random,
-    "add_data": transform_add_data
+    "add_data": transform_add_data,
+    "calculate": calculate
 }

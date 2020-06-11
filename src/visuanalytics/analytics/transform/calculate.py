@@ -4,6 +4,11 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import statistical
 
 
+def calculate(values: dict, data: StepData):
+    action = data.format(values["action"], values)
+    CALCULATE_ACTIONS[action](values, data)
+
+
 def calculate_mean(values: dict, data: StepData):
     """Berechnet den Mittelwert von Werten, die in einem Array stehen.
 
