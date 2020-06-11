@@ -14,9 +14,10 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {useStyles} from "./style";
 import {ExpansionPanelSummary} from "./style";
 import {renderParamField} from "../util/renderParamFields";
-import {Button} from "@material-ui/core";
+import {Button, Fade, Modal} from "@material-ui/core";
 import Backdrop from '@material-ui/core/Backdrop';
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
+import {ContinueButton} from "../JobCreate/ContinueButton";
 
 export interface Job {
     id: string;
@@ -48,7 +49,7 @@ export const JobList: React.FC = () => {
                 {
                     "name": "Vorhersage",
                     "selected": "2+3",
-                    "possibleValues": ["2","2+3"]
+                    "possibleValues": ["2", "2+3"]
                 }
             ]
         },
@@ -62,7 +63,7 @@ export const JobList: React.FC = () => {
                 {
                     "name": "Vorhersage",
                     "selected": "2+3",
-                    "possibleValues": ["2","2+3"]
+                    "possibleValues": ["2", "2+3"]
                 }
             ]
         }
@@ -86,7 +87,7 @@ export const JobList: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <Button className={classes.inputButton} onClick={handleToggle}>
+                        <Button className={classes.inputButton} onClick={handleOpen}>
                             <TextField
                                 className={classes.inputFields}
                                 id='standard-read-only-input'
@@ -113,11 +114,12 @@ export const JobList: React.FC = () => {
                 </div>
             )
         }
+        const handleOpen = () => {
+            setOpen(true);
+        };
+
         const handleClose = () => {
             setOpen(false);
-        };
-        const handleToggle = () => {
-            setOpen(!open);
         };
 
         const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -149,14 +151,30 @@ export const JobList: React.FC = () => {
                         <Grid item md={6}>
                             {renderTextField()}
                         </Grid>
-                        <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
-                            <ScheduleSelection />
-                        </Backdrop>
+                        <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            className={classes.modal}
+                            open={open}
+                            onClose={handleClose}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                                timeout: 500,
+                            }}
+                        >
+                            <Fade in={open}>
+                                <div className={classes.backdropContent}>
+                                    <ScheduleSelection/>
+                                    <ContinueButton>SPEICHERN</ContinueButton>
+                                </div>
+                            </Fade>
+                        </Modal>
                         <Grid item md={6}>
                             <div>
                                 {paramInfo.map(p =>
                                     <div>
-                                        {renderParamField(p,classes,state.edit)}
+                                        {renderParamField(p, classes, state.edit)}
                                     </div>)
                                 }
                             </div>

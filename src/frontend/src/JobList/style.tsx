@@ -30,7 +30,15 @@ export const useStyles = makeStyles((theme: Theme) =>
             padding: 0,
             width: '100%',
             justifyContent: 'normal',
-        }
+        },
+        backdropContent: {
+            backgroundColor: 'white'
+        },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
     }),
 );
 
