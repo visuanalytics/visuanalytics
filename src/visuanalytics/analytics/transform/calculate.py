@@ -17,7 +17,6 @@ def calculate_mean(values: dict, data: StepData):
     :return:
     """
     key = values["key"]
-    print(key)
     value = data.get_data(key, values)
     new_key = calculate_get_new_keys(values, -1, key)
     new_value = np.mean(value)
