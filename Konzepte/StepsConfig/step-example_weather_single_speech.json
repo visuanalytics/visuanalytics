@@ -1,10 +1,10 @@
 {
   "id": 0,
-  "name": "name",
+  "name": "weather_single",
   "api": [
     {
       "type": "request",
-      "api_key_name": "test",
+      "api_key_name": "weatherbit",
       "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
     }
   ],
@@ -111,7 +111,7 @@
           ]
         },
         {
-          "type": "add_symbol",
+          "type": "replace",
           "keys": [
             "_loop|max_temp",
             "_loop|min_temp",
@@ -124,20 +124,50 @@
             "_loop|str_app_max_temp",
             "_loop|str_app_min_temp"
           ],
-          "pattern": "{_key} Grad"
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
         },
         {
           "type": "add_symbol",
           "keys": [
+            "_loop|str_max_temp",
+            "_loop|str_min_temp",
+            "_loop|str_app_max_temp",
+            "_loop|str_app_min_temp"
+          ],
+          "pattern": "{_key} Grad"
+        },
+        {
+          "type": "calculate",
+          "keys": [
             "_loop|wind_spd"
           ],
           "new_keys": [
-            "_loop|wind_spd"
+            "_loop|str_wind_spd"
           ],
-          "pattern": "{_key} Metern pro Sekunde"
+          "action": "ms_to_kmh",
+          "decimal": 2
+        },
+        {
+          "type": "replace",
+          "keys": [
+            "_loop|str_wind_spd"
+          ],
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
         },
         {
           "type": "add_symbol",
+          "keys": [
+            "_loop|str_wind_spd"
+          ],
+          "pattern": "{_key} Kilometern pro Stunde"
+        },
+        {
+          "type": "calculate",
+          "action": "round",
           "keys": [
             "_loop|rh",
             "_loop|pop"
@@ -145,33 +175,15 @@
           "new_keys": [
             "_loop|str_rh",
             "_loop|str_pop"
-          ],
-          "pattern": "{_key} Prozent"
+          ]
         },
         {
           "type": "add_symbol",
           "keys": [
-            "_loop|city_name"
+            "_loop|str_rh",
+            "_loop|str_pop"
           ],
-          "new_keys": [
-            "_loop|str_city_name"
-          ],
-          "pattern": "in {_key} "
-        },
-        {
-          "type": "replace",
-          "keys": [
-            "_loop|max_temp",
-            "_loop|min_temp",
-            "_loop|app_max_temp",
-            "_loop|app_min_temp",
-            "_loop|wind_spd",
-            "_loop|rh",
-            "_loop|pop"
-          ],
-          "old_value": ".",
-          "new_value": ",",
-          "count": 1
+          "pattern": "{_key} Prozent"
         },
         {
           "type": "date_weekday",
@@ -193,7 +205,7 @@
             "_loop|str_sunset_ts",
             "_loop|str_sunrise_ts"
           ],
-          "format": "%h Uhr %m"
+          "format": "%H Uhr %M"
         },
         {
           "type": "wind_direction",
@@ -444,7 +456,7 @@
     },
     {
       "type": "date_now",
-      "key": "_loop|date",
+      "new_key": "date_today",
       "format": "%Y-%m-%d"
     },
     {
@@ -456,29 +468,6 @@
         3,
         4,
         5
-      ],
-      "transform": [
-        {
-          "type": "calculate",
-          "action": "round",
-          "keys": [
-            "_loop|max_temp",
-            "_loop|min_temp",
-            "_loop|app_min_temp",
-            "_loop|app_max_temp",
-            "_loop|rh",
-            "_loop|pop"
-          ],
-          "count": 0
-        },
-        {
-          "type": "calculate",
-          "action": "round",
-          "keys": [
-            "_loop|wind_spd"
-          ],
-          "count": 2
-        }
       ]
     }
   ],
@@ -530,14 +519,27 @@
   "audio": {
     "config": {
       "lang": "de",
-      "format": "mp3"
+      "format": "mp3",
+      "subpairs": [
+        {
+          "01": "1",
+          "02": "2",
+          "03": "3",
+          "04": "4",
+          "05": "5",
+          "06": "6",
+          "07": "7",
+          "08": "8",
+          "09": "9"
+        }
+      ]
     },
     "audios": {
       "a1": {
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {str_city_name} {data|str_max_temp}. "
+            "pattern": "Am heutigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {city_name} {data|str_max_temp}. "
           },
           {
             "type": "text",
@@ -549,7 +551,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {dataweekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
           },
           {
             "type": "text",
@@ -565,7 +567,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {str_city_name} {data|str_max_temp}. "
+            "pattern": "Am morgigen {data|weekday} {data|str_code}. Die Höchstwerte erreichen in {city_name} {data|str_max_temp}. "
           },
           {
             "type": "text",
@@ -662,7 +664,7 @@
   ],
   "run_config": {
     "testing": {
-      "defalt_value": false,
+      "default_value": false,
       "possible_values": [
         true,
         false
