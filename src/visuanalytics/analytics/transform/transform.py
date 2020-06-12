@@ -45,10 +45,13 @@ def transform_select_range(values: dict, data: StepData):
 
 
 def transform_append(values: dict, data: StepData):
-    if values["_loop_states"]["_idx"] == 0:
+    # TODO(Max) improve
+    try:
+        array = data.get_data(values["new_key"], values)
+    except KeyError:
         data.insert_data(values["new_key"], [], values)
+        array = data.get_data(values["new_key"], values)
 
-    array = data.get_data(values["new_key"], values)
     value = data.get_data(values["key"], values)
 
     array.append(value)
