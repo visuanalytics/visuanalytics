@@ -20,6 +20,12 @@ def transform_array(values: dict, data: StepData):
         transform(values, data)
 
 
+def transform_dict(values: dict, data: StepData):
+    for entry in data.get_data(values["dict_key"], values).items():
+        data.save_loop(values, entry[0], entry[1])
+        transform(values, data)
+
+
 def transform_select(values: dict, data: StepData):
     root = values.get("_loop_states", {}).get("_loop", None)
 
@@ -232,6 +238,7 @@ def transform_get_new_keys(values: dict, idx, key):
 
 TRANSFORM_TYPES = {
     "transform_array": transform_array,
+    "transform_dict": transform_dict,
     "select": transform_select,
     "select_range": transform_select_range,
     "append": transform_append,
