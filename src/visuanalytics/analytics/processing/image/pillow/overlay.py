@@ -9,24 +9,24 @@ DRAW_TYPES = {
 }
 
 
-def add_text(overlay, source_img, draw, presets):
-    content = "overlay[pattern]"  # todo (jannik)
-    DRAW_TYPES[overlay["anchestor_point"]](draw, (overlay["x"], overlay["y"]), content,
-                                           presets[overlay["preset"]["font_size"]],
-                                           presets[overlay["preset"]["font_colour"]],
-                                           presets[overlay["preset"]["font_path"]])
+def add_text(overlay, source_img, draw, presets, step_data):
+    content = step_data.format(overlay["pattern"], step_data.data)
+    DRAW_TYPES[overlay["anchor_point"]](draw, (overlay["pos_x"], overlay["pos_y"]), content,
+                                        presets[overlay["preset"]]["font_size"],
+                                        presets[overlay["preset"]]["color"],
+                                        presets[overlay["preset"]]["font"])
 
 
-def add_text_array(overlay, source_img, draw, presets):
-    for idx in enumerate(overlay["pos_x"]):
+def add_text_array(overlay, source_img, draw, presets, step_data):
+    for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["preset"], list):
             preset = overlay["preset"][idx]
         else:
             preset = overlay["preset"]
         if isinstance(overlay["pattern"], list):
-            pattern = overlay["preset"][idx]
+            pattern = overlay["pattern"][idx]
         else:
-            pattern = overlay["preset"]
+            pattern = overlay["pattern"]
         new_overlay = {
             "description": overlay["description"],
             "anchor_point": overlay["anchor_point"],
@@ -34,28 +34,28 @@ def add_text_array(overlay, source_img, draw, presets):
             "pos_y": overlay["pos_y"][idx],
             "pattern": pattern,
             "preset": preset}
-        add_text(new_overlay, source_img, draw, presets)
+        add_text(new_overlay, source_img, draw, presets, step_data)
 
 
-def add_image(overlay, source_img, draw, presets):
-    path = "overlay[pattern]"  # todo (jannik)
+def add_image(overlay, source_img, draw, presets, step_data):
+    path = step_data.format(overlay["pattern"], step_data.data)
     icon = Image.open(
         resources.get_resource_path(path)).convert(overlay["colour"])
     if overlay["size_x"] is not None:
         icon = icon.resize([overlay["size_x"], overlay["size_y"]], Image.LANCZOS)
-    source_img.paste(icon, (overlay["pos_x"]["pos_y"]), icon)
+    source_img.paste(icon, (overlay["pos_x"], overlay["pos_y"]), icon)
 
 
-def add_image_array(overlay, source_img, draw, presets):
-    for idx in enumerate(overlay["pos_x"]):
+def add_image_array(overlay, source_img, draw, presets, step_data):
+    for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["colour"], list):
             colour = overlay["colour"][idx]
         else:
             colour = overlay["colour"]
         if isinstance(overlay["pattern"], list):
-            pattern = overlay["preset"][idx]
+            pattern = overlay["pattern"][idx]
         else:
-            pattern = overlay["preset"]
+            pattern = overlay["pattern"]
         new_overlay = {
             "description": overlay["description"],
             "size_x": overlay["size_x"],
@@ -64,4 +64,4 @@ def add_image_array(overlay, source_img, draw, presets):
             "pos_y": overlay["pos_y"][idx],
             "pattern": pattern,
             "colour": colour}
-        add_image(new_overlay, source_img, draw, presets)
+        add_image(new_overlay, source_img, draw, presets, step_data)

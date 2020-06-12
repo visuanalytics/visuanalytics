@@ -1,2 +1,2 @@
-def generate_image_wordcloud(pipeline_id, name, values):
+def generate_image_wordcloud(pipeline_id, image, presets, step_data):
     pass
