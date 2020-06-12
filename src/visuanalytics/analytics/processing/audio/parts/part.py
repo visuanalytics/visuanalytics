@@ -1,5 +1,5 @@
 def audio_parts(values, data):
-    return "".join([f"{AUDIO_PARTS_TYPES[value['type']](value, data)} " for value in values["parts"]])
+    return "".join([f"{AUDIO_PARTS_TYPES[value['type']](value, data)} " for value in values])
     
 
 def audio_parts_text(values, data):
