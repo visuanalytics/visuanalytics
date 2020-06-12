@@ -18,12 +18,17 @@ def test_transform(config_name, data: dict):
     print(f"Data after Transform: {step_data.data}")
 
 
-with resources.open_resource("exampledata/example_weather.json") as fp:
-    api_data = json.loads(fp.read())
+def test():
+    with resources.open_resource("exampledata/example_weather.json") as fp:
+        api_data = json.loads(fp.read())
 
-# Die daten die eigentlich aus der api kommen
-t1 = time.time()
-data = {"_req": api_data}
-print(f"Data: {data}")
-test_transform("steps/example.json", data)
-print(time.time() - t1)
+    # Die daten die eigentlich aus der api kommen
+    t1 = time.time()
+    data = {"_req": api_data}
+    print(f"Data: {data}")
+    test_transform("steps/example.json", data)
+    print(time.time() - t1)
+
+
+if __name__ == "__main__":
+    test()
