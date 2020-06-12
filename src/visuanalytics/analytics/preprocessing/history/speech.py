@@ -1,6 +1,7 @@
 from numpy import random
 
 from visuanalytics.analytics.preprocessing.history import speech
+from visuanalytics.analytics.preprocessing.history import transform
 
 
 def random_teaser_text(data):
@@ -67,6 +68,7 @@ def get_teaser_texts(data, most_often_keys):
                 txtlower = txt.lower()
                 if (txtlower.find(most_often_keys[i][j]) != -1):
                     teaser_with_keyword.append(txt)
+                    data[y]['teaser_text'] = ""
 
     if (len(teaser_with_keyword) == 0):
         teaser_text_1, teaser_text_2 = random_teaser_text(data)
@@ -74,15 +76,20 @@ def get_teaser_texts(data, most_often_keys):
     elif (len(teaser_with_keyword) == 1):
         text_1, text_2 = random_teaser_text(data)
         teaser_text_1 = teaser_with_keyword[0]
-        teaser_text_2 = text_1
-
+        if (text_1 != teaser_text_1):
+            teaser_text_2 = text_1
+        else:
+            teaser_text_2 = text_2
+            
     elif (len(teaser_with_keyword) >= 2):
         teaser_text_1 = teaser_with_keyword[0]
         teaser_text_2 = teaser_with_keyword[1]
     else:
         raise Exception("No teaser texts available.")
 
-    return teaser_text_1, teaser_text_2
+    teaser_1 = transform.string_formatting(teaser_text_1)
+    teaser_2 = transform.string_formatting(teaser_text_2)
+    return teaser_1, teaser_2
 
 
 def merge_data(data, date):

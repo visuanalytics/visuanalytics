@@ -1,5 +1,8 @@
+import logging
 import os
 import sqlite3
+
+logger = logging.getLogger(__name__)
 
 # TODO(max) vtl. move to someware else
 DATABASE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../instance/visuanalytics.db"))
@@ -14,10 +17,10 @@ def connect():
     return con
 
 
-def init_db(app):
+def init_db():
     # if db file not exsists create one
     if not os.path.exists(DATABASE_LOCATION):
-        print("init DB")
+        logger.info("Initialize Database ...")
 
         # create dir
         os.makedirs(os.path.dirname(DATABASE_LOCATION), exist_ok=True)
@@ -28,7 +31,9 @@ def init_db(app):
             detect_types=sqlite3.PARSE_DECLTYPES
         )
 
-        with app.open_resource('db/schema.sql') as f:
-            db.executescript(f.read().decode('utf8'))
+        with open(os.path.join(os.path.abspath(__file__), 'schema.sql')) as f:
+            db.executescript(f.read())
 
         db.close()
+
+        logger.info("Database Initialisation Done!")
