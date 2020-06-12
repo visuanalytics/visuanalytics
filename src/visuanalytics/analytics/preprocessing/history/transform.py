@@ -20,7 +20,15 @@ groß geschrieben werden.
 
 def preprocess_history_data(json_data):
     """
-    Wandelt eine Liste von Zeit-Forecast-API-Responses in ein Tupel/Liste/Dictionary um, das die für uns relevanten Daten enthält.
+    Wandelt eine Liste von Zeit-Forecast-API-Responses in ein Tupel um, das die für uns relevanten Daten enthält. Dieses Tupel besteht
+    aus drei Listen.
+    Die erste Liste enthält Listen und zwar so viele, wie in Jahren angefordert wurden (hier immer 4 Jahre). Diese Listen enthalten
+    jeweils Dictionaries und zwar so viele, wie es Artikel gibt (hier immer 10 Jahre), in denen Infos zu und der Teasertext selbst drin steht.
+    Die zweite Liste enthält Listen (hier wieder 4). In jeder Liste sind jeweils zu einem Jahr die Keywords zu allen Artikeln enthalten und
+    zwar in absteigender Reihenfolge ihres Aufkommens. Also die Liste fängt mit einem am häufigsten vorkommenen Keyword an und endet mit
+    einem Keyword, dass am seltesten vorkam.
+    Die dritte Liste enthält Dictionaries (hier wieder 4). In jedem Dictionary sind jeweils zu einem Jahr als Keys die Keywords und als Value
+    der zugehörige Wert, wie häufig dieses vorgekommen ist, zu allen Artikeln enthalten.
 
     Um die weitere Verarbeitung zu vereinfachen, werden die Zeit-Daten in dieser Funktionen in eine leichter
     handzuhabende Struktur gebracht. Dazu werden irrelevante Parameter weggelassen und die allgemeine Struktur angepasst.
@@ -57,16 +65,25 @@ def preprocess_history_data(json_data):
 
             Die Einträge sind direkt nach der Häufigkeit sortiert, das erste Element der Liste hat die
             größte Zahl im Api Request
+        ],
+        [
+            {   'aachen': 1,
+                'afd': 4,
+                'afrika': 1,
+                'altersunterschied': 1,
+                'altona': 2,
+                usw.
+            }
         ]
     )
 
     :param json_data: Json-Data der Zeit-Api (oder eingelesenen Data aus der Testdatei)
-    :type json_data: dict
-    :return: Überarbeitet Data Bsp oben angegebene
+    :rtype dict
+    :return: vorverarbeitetes Data-Objekt der Zeit-Api
     :rtype: tuple
 
     """
-    output = ([], [])
+    output = ([], [], [])
     for idx in range(0, len(json_data)):
         data = []
         for i in range(0, len(json_data[idx]["matches"])):
@@ -79,6 +96,12 @@ def preprocess_history_data(json_data):
         for w in sorted(tosort, key=tosort.get, reverse=True):
             data.append(w)
         output[1].append(data)
+        key_dict = {}
+        for j in range(0, int(len(json_data[idx]["facets"]["keyword"]) / 2)):
+            key_dict.update(
+                {json_data[idx]["facets"]["keyword"][j * 2]: json_data[idx]["facets"]["keyword"][(j * 2) + 1]})
+        output[2].append(key_dict)
+        
     return output
 
 
@@ -124,7 +147,7 @@ def get_date(data):
 
 
 def grammar_keywords(data):
-    """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten.
+    """Korrigiert die Groß- und Kleinschreibung der Keywords aus den API-Daten. Dabei wird die 3. Liste mit den keywords aktualisiert.
 
     :param data: Bekommt die vorverarbeiteten Daten aus der API
     :type data: list
@@ -132,10 +155,24 @@ def grammar_keywords(data):
     :rtype: list
     """
     # TODO: was passiert bei Namen und Bindestrichen?
+
     for i in range(4):
-        for keyword in data[1][i]:
+        for keyword in data[2][i]:
             if keyword in UPPERCASE_WORDS:
-                keyword.upper()
+                data[2][i][keyword.upper()] = data[2][i].pop(keyword)
             else:
-                keyword.capitalize()
+                data[2][i][keyword.capitalize()] = data[2][i].pop(keyword)
     return data
+
+
+def string_formatting(text):
+    """Überprüft auf " und ersetzt diese mit \" und überprüft auf / und ersetzt mit Leerzeichen
+
+    :param text: Erhält einen String
+    :type: str
+    :return: Geprüfter Text, ggf. mit ersetztem "
+    :rtype: str
+    """
+    text_1 = text.replace('"', '\"')
+    return_text = text_1.replace('/', ' ')
+    return return_text
