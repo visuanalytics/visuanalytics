@@ -1,53 +1,44 @@
 import logging
 import os
-import uuid
-from pathlib import Path
 
-from visuanalytics.analytics.control.pipeline import Pipeline
-from visuanalytics.analytics.control.procedures.history import HistorySteps
-from visuanalytics.analytics.control.procedures.weather import WeatherSteps
-from visuanalytics.analytics.control.procedures.weather_single import SingleWeatherSteps
-from visuanalytics.analytics.control.schedule import Scheduler
+from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
+from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
-
-# TODO(Max) Implement (current just for testing)
-
-testing = True
-h264_nvenc = False
+from visuanalytics.server.db import db
 
 
-def main(path=None):
-    # todo Max, Pfad aus datei einlesen oder default wert
-    if path is None:
-        path = str(Path.home()) + "/Videos-Data-Analytics"
-    # Not ready will be moved later
-    init(path)
+def main():
+    config = config_manager.get_config()
 
-    # TODO(max) run in other Thread
+    init(config)
 
-    # Scheduler().start()
-    # Pipeline(uuid.uuid4().hex, WeatherSteps({"testing": testing, "h264_nvenc": h264_nvenc, "output_path": path})).start()
-    Pipeline(uuid.uuid4().hex,
-             SingleWeatherSteps(
-                 {"testing": testing, "city_name": "Biebertal", "p_code": "35444", "h264_nvenc": h264_nvenc,
-                  "output_path": path})).start()
+    # If db is in use Start DbScheduler else run JsonScheduler
+    if config["db"]["use"]:
+        DbScheduler(config["steps_base_config"]).start()
+    else:
+        JsonScheduler("jobs.json", config["steps_base_config"]).start()
 
 
-# Pipeline(uuid.uuid4().hex, HistorySteps({"testing": testing, "h264_nvenc": h264_nvenc})).start()
-
-
-def init(path):
+def init(config: dict):
     # Check if all external Programmes are installed
-    external_programms.all_installed(config_manager.get_public().get("external_programms", []))
+    external_programms.all_installed(config.get("external_programms"))
 
     # initialize logging
-    level = logging.INFO if testing else logging.WARNING
+    level = logging.INFO if config.get("testing", False) else logging.WARNING
     logging.basicConfig(format='%(module)s %(levelname)s: %(message)s', level=level)
 
-    # create temp and out directory
-    os.makedirs(path, exist_ok=True)
+    # if db is in use Inizalisize Database
+    if config["db"]["use"]:
+        # init db
+        db.init_db()
+
+    # create temp dir
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
-    os.makedirs(resources.get_resource_path("out"), exist_ok=True)
+
+    # create out und instance dir
+    out_dir = config.get("steps_base_config", {}).get("output_path", "out")
+    os.makedirs(resources.path_from_root(out_dir), exist_ok=True)
+    os.makedirs(resources.path_from_root("instance"), exist_ok=True)
 
 
 if __name__ == "__main__":

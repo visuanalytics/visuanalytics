@@ -1,7 +1,7 @@
+import logging
 import os
 import shutil
 import time
-import logging
 
 from visuanalytics.analytics.control.procedures.steps import Steps
 from visuanalytics.analytics.util import resources
@@ -85,7 +85,7 @@ class Pipeline(object):
                 logger.info(f"Next step: {self.current_step_name()}")
                 self.__steps.sequence[idx]["call"](self.id)
                 logger.info(f"Step finished: {self.current_step_name()}!")
-                
+
             # Set state to ready
             self.__current_step = self.__steps.step_max
             self.__end_time = time.time()
@@ -95,7 +95,6 @@ class Pipeline(object):
             return True
 
         except Exception:
-            # TODO(max)
             self.__current_step = -2
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
