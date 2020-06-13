@@ -3,6 +3,7 @@ import json
 import time
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
 
@@ -16,6 +17,7 @@ def test_transform(config_name, data: dict):
 
     transform(values, step_data)
     print(f"Data after Transform: {step_data.data}")
+    generate_audios(values, step_data)
 
 
 def test():
