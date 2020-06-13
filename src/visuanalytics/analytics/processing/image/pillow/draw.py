@@ -50,3 +50,9 @@ def draw_text_fix(draw, position, content, font_size, font_colour, font_path):
     draw.text(position, content,
               font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
               fill=font_colour)
+
+
+DRAW_TYPES = {
+    "center": draw_text,
+    "left": draw_text_fix
+}

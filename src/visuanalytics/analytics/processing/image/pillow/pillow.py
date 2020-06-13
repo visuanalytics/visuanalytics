@@ -1,15 +1,8 @@
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.processing.image.pillow.overlay import add_text, add_text_array, add_image, add_image_array
+from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 from visuanalytics.analytics.util import resources
 from PIL import Image
 from PIL import ImageDraw
-
-OVERLAY_TYPES = {
-    "text": add_text,
-    "text_array": add_text_array,
-    "image": add_image,
-    "image_array": add_image_array
-}
 
 
 def generate_image_pillow(values: dict, presets: dict, step_data: StepData):
