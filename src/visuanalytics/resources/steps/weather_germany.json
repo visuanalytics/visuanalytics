@@ -71,6 +71,13 @@
               ]
             },
             {
+              "type": "calculate",
+              "action": "round",
+              "keys": [
+                "_loop|max_temp"
+              ]
+            },
+            {
               "type": "append",
               "key": "_loop|min_temp",
               "new_key": "summaries|{_idx}|min_temp"
@@ -409,6 +416,16 @@
                 "0",
                 "1"
               ]
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|max_temp"
+              ],
+              "new_keys": [
+                "_loop|sym_max_temp"
+              ],
+              "pattern": "{_key}\u00B0"
             }
           ]
         }
@@ -476,6 +493,18 @@
             "summaries|{_loop}|min_temp"
           ],
           "count": 0
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "summaries|{_loop}|max_temp",
+            "summaries|{_loop}|min_temp"
+          ],
+          "new_keys": [
+            "summaries|{_loop}|sym_max_temp",
+            "summaries|{_loop}|sym_min_temp"
+          ],
+          "pattern": "{_key}\u00B0"
         }
       ]
     }
@@ -521,8 +550,8 @@
             165,
             225
           ],
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 160,
+          "size_y": 160,
           "colour": "RGBA",
           "pattern": [
             "weather/icons/{_req|Konstanz|data|0|weather|icon}.png",
@@ -614,16 +643,16 @@
           ],
           "preset": "weather_white_3",
           "pattern": [
-            "{_req|Konstanz|data|0|max_temp}",
-            "{_req|München|data|0|max_temp}",
-            "{_req|Nürnberg|data|0|max_temp}",
-            "{_req|Mainz|data|0|max_temp}",
-            "{_req|Gießen|data|0|max_temp}",
-            "{_req|Dresden|data|0|max_temp}",
-            "{_req|Hannover|data|0|max_temp}",
-            "{_req|Bremen|data|0|max_temp}",
-            "{_req|Hamburg|data|0|max_temp}",
-            "{_req|Berlin|data|0|max_temp}"
+            "{_req|Konstanz|data|0|sym_max_temp}",
+            "{_req|München|data|0|sym_max_temp}",
+            "{_req|Nürnberg|data|0|sym_max_temp}",
+            "{_req|Mainz|data|0|sym_max_temp}",
+            "{_req|Gießen|data|0|sym_max_temp}",
+            "{_req|Dresden|data|0|sym_max_temp}",
+            "{_req|Hannover|data|0|sym_max_temp}",
+            "{_req|Bremen|data|0|sym_max_temp}",
+            "{_req|Hamburg|data|0|sym_max_temp}",
+            "{_req|Berlin|data|0|sym_max_temp}"
           ]
         }
       ]
@@ -668,8 +697,8 @@
             165,
             225
           ],
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 160,
+          "size_y": 160,
           "colour": "RGBA",
           "pattern": [
             "weather/icons/{_req|Konstanz|data|1|weather|icon}.png",
@@ -761,16 +790,16 @@
           ],
           "preset": "weather_white_3",
           "pattern": [
-            "{_req|Konstanz|data|1|max_temp}",
-            "{_req|München|data|1|max_temp}",
-            "{_req|Nürnberg|data|1|max_temp}",
-            "{_req|Mainz|data|1|max_temp}",
-            "{_req|Gießen|data|1|max_temp}",
-            "{_req|Dresden|data|1|max_temp}",
-            "{_req|Hannover|data|1|max_temp}",
-            "{_req|Bremen|data|1|max_temp}",
-            "{_req|Hamburg|data|1|max_temp}",
-            "{_req|Berlin|data|1|max_temp}"
+            "{_req|Konstanz|data|1|sym_max_temp}",
+            "{_req|München|data|1|sym_max_temp}",
+            "{_req|Nürnberg|data|1|sym_max_temp}",
+            "{_req|Mainz|data|1|sym_max_temp}",
+            "{_req|Gießen|data|1|sym_max_temp}",
+            "{_req|Dresden|data|1|sym_max_temp}",
+            "{_req|Hannover|data|1|sym_max_temp}",
+            "{_req|Bremen|data|1|sym_max_temp}",
+            "{_req|Hamburg|data|1|sym_max_temp}",
+            "{_req|Berlin|data|1|sym_max_temp}"
           ]
         }
       ]
@@ -793,7 +822,11 @@
             52,
             52
           ],
-          "preset": "weather_white_2",
+          "preset": [
+            "weather_white_2",
+            "weather_brown_2",
+            "weather_brown_2"
+          ],
           "pattern": [
             "{_req|Kiel|data|2|today}",
             "{_req|Kiel|data|3|today}",
@@ -822,8 +855,8 @@
             504,
             504,
             270,
-            207,
-            207,
+            270,
+            270,
             427,
             427,
             427,
@@ -882,9 +915,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{summaries|2|max_temp}",
-            "{summaries|3|max_temp}",
-            "{summaries|4|max_temp}"
+            "{summaries|2|sym_max_temp}",
+            "{summaries|3|sym_max_temp}",
+            "{summaries|4|sym_max_temp}"
           ]
         },
         {
@@ -892,9 +925,9 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            483,
-            1102,
-            1730
+            213,
+            833,
+            1455
           ],
           "pos_y": [
             931,
@@ -907,9 +940,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{summaries|2|min_temp}",
-            "{summaries|3|min_temp}",
-            "{summaries|4|min_temp}"
+            "{summaries|2|sym_min_temp}",
+            "{summaries|3|sym_min_temp}",
+            "{summaries|4|sym_min_temp}"
           ]
         }
       ]
@@ -932,7 +965,11 @@
             52,
             52
           ],
-          "preset": "weather_white_2",
+          "preset": [
+            "weather_brown_2",
+            "weather_white_2",
+            "weather_brown_2"
+          ],
           "pattern": [
             "{_req|Kiel|data|2|today}",
             "{_req|Kiel|data|3|today}",
@@ -961,8 +998,8 @@
             504,
             504,
             270,
-            207,
-            207,
+            270,
+            270,
             427,
             427,
             427,
@@ -1021,9 +1058,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{summaries|2|max_temp}",
-            "{summaries|3|max_temp}",
-            "{summaries|4|max_temp}"
+            "{summaries|2|sym_max_temp}",
+            "{summaries|3|sym_max_temp}",
+            "{summaries|4|sym_max_temp}"
           ]
         },
         {
@@ -1031,9 +1068,9 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            483,
-            1102,
-            1730
+            213,
+            833,
+            1455
           ],
           "pos_y": [
             931,
@@ -1046,9 +1083,9 @@
             "weather_brown_2"
           ],
           "pattern": [
-            "{summaries|2|min_temp}",
-            "{summaries|3|min_temp}",
-            "{summaries|4|min_temp}"
+            "{summaries|2|sym_min_temp}",
+            "{summaries|3|sym_min_temp}",
+            "{summaries|4|sym_min_temp}"
           ]
         }
       ]
@@ -1071,7 +1108,11 @@
             52,
             52
           ],
-          "preset": "weather_white_2",
+          "preset": [
+            "weather_brown_2",
+            "weather_brown_2",
+            "weather_white_2"
+          ],
           "pattern": [
             "{_req|Kiel|data|2|today}",
             "{_req|Kiel|data|3|today}",
@@ -1100,8 +1141,8 @@
             504,
             504,
             270,
-            207,
-            207,
+            270,
+            270,
             427,
             427,
             427,
@@ -1160,9 +1201,9 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{summaries|2|max_temp}",
-            "{summaries|3|max_temp}",
-            "{summaries|4|max_temp}"
+            "{summaries|2|sym_max_temp}",
+            "{summaries|3|sym_max_temp}",
+            "{summaries|4|sym_max_temp}"
           ]
         },
         {
@@ -1170,9 +1211,9 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            483,
-            1102,
-            1730
+            213,
+            833,
+            1455
           ],
           "pos_y": [
             931,
@@ -1185,9 +1226,9 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{summaries|2|min_temp}",
-            "{summaries|3|min_temp}",
-            "{summaries|4|min_temp}"
+            "{summaries|2|sym_min_temp}",
+            "{summaries|3|sym_min_temp}",
+            "{summaries|4|sym_min_temp}"
           ]
         }
       ]
@@ -1239,8 +1280,8 @@
             504,
             504,
             270,
-            207,
-            207,
+            270,
+            270,
             427,
             427,
             427,
@@ -1286,9 +1327,9 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{summaries|2|max_temp}",
-            "{summaries|3|max_temp}",
-            "{summaries|4|max_temp}"
+            "{summaries|2|sym_max_temp}",
+            "{summaries|3|sym_max_temp}",
+            "{summaries|4|sym_max_temp}"
           ]
         },
         {
@@ -1296,9 +1337,9 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            483,
-            1102,
-            1730
+            213,
+            833,
+            1455
           ],
           "pos_y": [
             931,
@@ -1311,29 +1352,12 @@
             "weather_white_2"
           ],
           "pattern": [
-            "{summaries|2|min_temp}",
-            "{summaries|3|min_temp}",
-            "{summaries|4|min_temp}"
+            "{summaries|2|sym_min_temp}",
+            "{summaries|3|sym_min_temp}",
+            "{summaries|4|sym_min_temp}"
           ]
         }
       ]
-    },
-    "presets": {
-      "weather_white_2": {
-        "color": "white",
-        "font_size": 70,
-        "font": "weather/Dosis-Bold.ttf"
-      },
-      "weather_white_3": {
-        "color": "white",
-        "font_size": 50,
-        "font": "weather/Dosis-Regular.ttf"
-      },
-      "weather_brown_2": {
-        "color": "white",
-        "font_size": 70,
-        "font": "weather/Dosis-Bold.ttf"
-      }
     }
   },
   "audio": {
@@ -1430,5 +1454,21 @@
       ]
     }
   },
-  "presets": {}
+  "presets": {
+    "weather_white_2": {
+      "color": "white",
+      "font_size": 70,
+      "font": "weather/Dosis-Bold.ttf"
+    },
+    "weather_white_3": {
+      "color": "white",
+      "font_size": 50,
+      "font": "weather/Dosis-Bold.ttf"
+    },
+    "weather_brown_2": {
+      "color": "#949994",
+      "font_size": 70,
+      "font": "weather/Dosis-Bold.ttf"
+    }
+  }
 }

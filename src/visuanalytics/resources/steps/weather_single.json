@@ -49,6 +49,17 @@
               ]
             },
             {
+              "type": "calculate",
+              "action": "round",
+              "keys": [
+                "_loop|rh",
+                "_loop|pop",
+                "_loop|max_temp",
+                "_loop|min_temp",
+                "_loop|app_max_temp"
+              ]
+            },
+            {
               "type": "replace",
               "keys": [
                 "_loop|max_temp",
@@ -81,16 +92,13 @@
               "keys": [
                 "_loop|wind_spd"
               ],
-              "new_keys": [
-                "_loop|str_wind_spd"
-              ],
               "action": "ms_to_kmh",
               "decimal": 2
             },
             {
               "type": "replace",
               "keys": [
-                "_loop|str_wind_spd"
+                "_loop|wind_spd"
               ],
               "old_value": ".",
               "new_value": ",",
@@ -99,25 +107,20 @@
             {
               "type": "add_symbol",
               "keys": [
+                "_loop|wind_spd"
+              ],
+              "new_keys": [
                 "_loop|str_wind_spd"
               ],
               "pattern": "{_key} Kilometern pro Stunde"
             },
             {
-              "type": "calculate",
-              "action": "round",
+              "type": "add_symbol",
               "keys": [
                 "_loop|rh",
                 "_loop|pop"
               ],
               "new_keys": [
-                "_loop|str_rh",
-                "_loop|str_pop"
-              ]
-            },
-            {
-              "type": "add_symbol",
-              "keys": [
                 "_loop|str_rh",
                 "_loop|str_pop"
               ],
@@ -389,6 +392,42 @@
                 "0",
                 "1"
               ]
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|wind_spd"
+              ],
+              "new_keys": [
+                "_loop|sym_wind_spd"
+              ],
+              "pattern": "{_key} km/h"
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|app_max_temp",
+                "_loop|max_temp",
+                "_loop|min_temp"
+              ],
+              "new_keys": [
+                "_loop|sym_app_max_temp",
+                "_loop|sym_max_temp",
+                "_loop|sym_min_temp"
+              ],
+              "pattern": "{_key}\u00B0"
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|rh",
+                "_loop|pop"
+              ],
+              "new_keys": [
+                "_loop|sym_rh",
+                "_loop|sym_pop"
+              ],
+              "pattern": "{_key} %"
             }
           ]
         }
@@ -493,8 +532,8 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{_req|0|data|0|max_temp}",
-            "{_req|0|data|1|max_temp}"
+            "{_req|0|data|0|sym_max_temp}",
+            "{_req|0|data|1|sym_max_temp}"
           ]
         },
         {
@@ -514,8 +553,8 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{_req|0|data|0|min_temp}",
-            "{_req|0|data|1|min_temp}"
+            "{_req|0|data|0|sym_min_temp}",
+            "{_req|0|data|1|sym_min_temp}"
           ]
         },
         {
@@ -523,20 +562,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            270,
-            270,
-            270,
-            270
+            260,
+            260,
+            260,
+            260
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -547,20 +586,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090,
-            1090
+            1080,
+            1080,
+            1080,
+            1080
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -571,23 +610,23 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            675,
-            675,
-            675,
-            675
+            665,
+            665,
+            665,
+            665
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{_req|0|data|0|pop}",
-            "{_req|0|data|0|rh}",
-            "{_req|0|data|0|app_max_temp}",
-            "{_req|0|data|0|wind_spd}"
+            "{_req|0|data|0|sym_pop}",
+            "{_req|0|data|0|sym_rh}",
+            "{_req|0|data|0|sym_app_max_temp}",
+            "{_req|0|data|0|sym_wind_spd}"
           ]
         },
         {
@@ -595,23 +634,23 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1500,
-            1500,
-            1500,
-            1500
+            1480,
+            1480,
+            1480,
+            1480
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{_req|0|data|1|pop}",
-            "{_req|0|data|1|rh}",
-            "{_req|0|data|1|app_max_temp}",
-            "{_req|0|data|1|wind_spd}"
+            "{_req|0|data|1|sym_pop}",
+            "{_req|0|data|1|sym_rh}",
+            "{_req|0|data|1|sym_app_max_temp}",
+            "{_req|0|data|1|sym_wind_spd}"
           ]
         }
       ]
@@ -708,8 +747,8 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{_req|0|data|0|max_temp}",
-            "{_req|0|data|1|max_temp}"
+            "{_req|0|data|0|sym_max_temp}",
+            "{_req|0|data|1|sym_max_temp}"
           ]
         },
         {
@@ -729,8 +768,8 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{_req|0|data|0|min_temp}",
-            "{_req|0|data|1|min_temp}"
+            "{_req|0|data|0|sym_min_temp}",
+            "{_req|0|data|1|sym_min_temp}"
           ]
         },
         {
@@ -738,20 +777,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            270,
-            270,
-            270,
-            270
+            260,
+            260,
+            260,
+            260
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -762,20 +801,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090,
-            1090
+            1080,
+            1080,
+            1080,
+            1080
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -786,23 +825,23 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            675,
-            675,
-            675,
-            675
+            665,
+            665,
+            665,
+            665
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_brown_6",
           "pattern": [
-            "{_req|0|data|0|pop}",
-            "{_req|0|data|0|rh}",
-            "{_req|0|data|0|app_max_temp}",
-            "{_req|0|data|0|wind_spd}"
+            "{_req|0|data|0|sym_pop}",
+            "{_req|0|data|0|sym_rh}",
+            "{_req|0|data|0|sym_app_max_temp}",
+            "{_req|0|data|0|sym_wind_spd}"
           ]
         },
         {
@@ -810,30 +849,30 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1500,
-            1500,
-            1500,
-            1500
+            1480,
+            1480,
+            1480,
+            1480
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{_req|0|data|1|pop}",
-            "{_req|0|data|1|rh}",
-            "{_req|0|data|1|app_max_temp}",
-            "{_req|0|data|1|wind_spd}"
+            "{_req|0|data|1|sym_pop}",
+            "{_req|0|data|1|sym_rh}",
+            "{_req|0|data|1|sym_app_max_temp}",
+            "{_req|0|data|1|sym_wind_spd}"
           ]
         }
       ]
     },
     "weather3": {
       "type": "pillow",
-      "path": "weather/Ort_3day2.png",
+      "path": "weather/Ort_2day2.png",
       "overlay": [
         {
           "description": "icon",
@@ -923,8 +962,8 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{_req|0|data|0|max_temp}",
-            "{_req|0|data|1|max_temp}"
+            "{_req|0|data|0|sym_max_temp}",
+            "{_req|0|data|1|sym_max_temp}"
           ]
         },
         {
@@ -944,8 +983,8 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{_req|0|data|0|min_temp}",
-            "{_req|0|data|1|min_temp}"
+            "{_req|0|data|0|sym_min_temp}",
+            "{_req|0|data|1|sym_min_temp}"
           ]
         },
         {
@@ -953,20 +992,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            270,
-            270,
-            270,
-            270
+            260,
+            260,
+            260,
+            260
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -977,20 +1016,20 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090,
-            1090
+            1080,
+            1080,
+            1080,
+            1080
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "Regenwahrscheinlichkeit",
+            "Regen",
             "Luftfeuchtigkeit",
             "gefühlte Temperatur",
             "Windgeschwindigkeit"
@@ -1001,23 +1040,23 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            675,
-            675,
-            675,
-            675
+            665,
+            665,
+            665,
+            665
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{_req|0|data|0|pop}",
-            "{_req|0|data|0|rh}",
-            "{_req|0|data|0|app_max_temp}",
-            "{_req|0|data|0|wind_spd}"
+            "{_req|0|data|0|sym_pop}",
+            "{_req|0|data|0|sym_rh}",
+            "{_req|0|data|0|sym_app_max_temp}",
+            "{_req|0|data|0|sym_wind_spd}"
           ]
         },
         {
@@ -1025,23 +1064,23 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1500,
-            1500,
-            1500,
-            1500
+            1480,
+            1480,
+            1480,
+            1480
           ],
           "pos_y": [
             660,
-            740,
-            810,
-            880
+            738,
+            806,
+            874
           ],
           "preset": "weather_white_6",
           "pattern": [
-            "{_req|0|data|1|pop}",
-            "{_req|0|data|1|rh}",
-            "{_req|0|data|1|app_max_temp}",
-            "{_req|0|data|1|wind_spd}"
+            "{_req|0|data|1|sym_pop}",
+            "{_req|0|data|1|sym_rh}",
+            "{_req|0|data|1|sym_app_max_temp}",
+            "{_req|0|data|1|sym_wind_spd}"
           ]
         }
       ]
@@ -1120,7 +1159,7 @@
           "anchor_point": "center",
           "pos_x": [
             462,
-            1070,
+            1080,
             1673
           ],
           "pos_y": [
@@ -1134,9 +1173,9 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{_req|0|data|2|max_temp}",
-            "{_req|0|data|3|max_temp}",
-            "{_req|0|data|4|max_temp}"
+            "{_req|0|data|2|sym_max_temp}",
+            "{_req|0|data|3|sym_max_temp}",
+            "{_req|0|data|4|sym_max_temp}"
           ]
         },
         {
@@ -1159,9 +1198,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{_req|0|data|2|min_temp}",
-            "{_req|0|data|3|min_temp}",
-            "{_req|0|data|4|min_temp}"
+            "{_req|0|data|2|sym_min_temp}",
+            "{_req|0|data|3|sym_min_temp}",
+            "{_req|0|data|4|sym_min_temp}"
           ]
         },
         {
@@ -1179,42 +1218,42 @@
             730
           ],
           "preset": [
-            "weather_white_5",
-            "weather_brown_5",
-            "weather_brown_5"
+            "weather_white_6",
+            "weather_brown_6",
+            "weather_brown_6"
           ],
-          "pattern": "Regenwahrscheinlichkeit"
+          "pattern": "Regen"
         },
         {
           "description": "entry_name_day2",
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090
+            443,
+            1055,
+            1660
           ],
           "pos_y": [
-            660,
-            740,
-            810
+            730,
+            730,
+            730
           ],
           "preset": [
-            "weather_white_5",
-            "weather_brown_5",
-            "weather_brown_5"
+            "weather_white_6",
+            "weather_brown_6",
+            "weather_brown_6"
           ],
           "pattern": [
-            "{_req|0|data|2|pop}",
-            "{_req|0|data|3|pop}",
-            "{_req|0|data|4|pop}"
+            "{_req|0|data|2|sym_pop}",
+            "{_req|0|data|3|sym_pop}",
+            "{_req|0|data|4|sym_pop}"
           ]
         }
       ]
     },
     "weather5": {
       "type": "pillow",
-      "path": "weather/Ort_3day0.png",
+      "path": "weather/Ort_3day1.png",
       "overlay": [
         {
           "description": "icon",
@@ -1286,7 +1325,7 @@
           "anchor_point": "center",
           "pos_x": [
             462,
-            1070,
+            1080,
             1673
           ],
           "pos_y": [
@@ -1300,9 +1339,9 @@
             "weather_brown_4"
           ],
           "pattern": [
-            "{_req|0|data|2|max_temp}",
-            "{_req|0|data|3|max_temp}",
-            "{_req|0|data|4|max_temp}"
+            "{_req|0|data|2|sym_max_temp}",
+            "{_req|0|data|3|sym_max_temp}",
+            "{_req|0|data|4|sym_max_temp}"
           ]
         },
         {
@@ -1325,9 +1364,9 @@
             "weather_brown_5"
           ],
           "pattern": [
-            "{_req|0|data|2|min_temp}",
-            "{_req|0|data|3|min_temp}",
-            "{_req|0|data|4|min_temp}"
+            "{_req|0|data|2|sym_min_temp}",
+            "{_req|0|data|3|sym_min_temp}",
+            "{_req|0|data|4|sym_min_temp}"
           ]
         },
         {
@@ -1345,42 +1384,42 @@
             730
           ],
           "preset": [
-            "weather_brown_5",
-            "weather_white_5",
-            "weather_brown_5"
+            "weather_brown_6",
+            "weather_white_6",
+            "weather_brown_6"
           ],
-          "pattern": "Regenwahrscheinlichkeit"
+          "pattern": "Regen"
         },
         {
           "description": "entry_name_day2",
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090
+            443,
+            1055,
+            1660
           ],
           "pos_y": [
-            660,
-            740,
-            810
+            730,
+            730,
+            730
           ],
           "preset": [
-            "weather_brown_5",
-            "weather_white_5",
-            "weather_brown_5"
+            "weather_brown_6",
+            "weather_white_6",
+            "weather_brown_6"
           ],
           "pattern": [
-            "{_req|0|data|2|pop}",
-            "{_req|0|data|3|pop}",
-            "{_req|0|data|4|pop}"
+            "{_req|0|data|2|sym_pop}",
+            "{_req|0|data|3|sym_pop}",
+            "{_req|0|data|4|sym_pop}"
           ]
         }
       ]
     },
     "weather6": {
       "type": "pillow",
-      "path": "weather/Ort_3day0.png",
+      "path": "weather/Ort_3day2.png",
       "overlay": [
         {
           "description": "icon",
@@ -1452,7 +1491,7 @@
           "anchor_point": "center",
           "pos_x": [
             462,
-            1070,
+            1080,
             1673
           ],
           "pos_y": [
@@ -1466,9 +1505,9 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{_req|0|data|2|max_temp}",
-            "{_req|0|data|3|max_temp}",
-            "{_req|0|data|4|max_temp}"
+            "{_req|0|data|2|sym_max_temp}",
+            "{_req|0|data|3|sym_max_temp}",
+            "{_req|0|data|4|sym_max_temp}"
           ]
         },
         {
@@ -1491,9 +1530,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{_req|0|data|2|min_temp}",
-            "{_req|0|data|3|min_temp}",
-            "{_req|0|data|4|min_temp}"
+            "{_req|0|data|2|sym_min_temp}",
+            "{_req|0|data|3|sym_min_temp}",
+            "{_req|0|data|4|sym_min_temp}"
           ]
         },
         {
@@ -1511,42 +1550,42 @@
             730
           ],
           "preset": [
-            "weather_brown_5",
-            "weather_brown_5",
-            "weather_white_5"
+            "weather_brown_6",
+            "weather_brown_6",
+            "weather_white_6"
           ],
-          "pattern": "Regenwahrscheinlichkeit"
+          "pattern": "Regen"
         },
         {
           "description": "entry_name_day2",
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090
+            443,
+            1055,
+            1660
           ],
           "pos_y": [
-            660,
-            740,
-            810
+            730,
+            730,
+            730
           ],
           "preset": [
-            "weather_brown_5",
-            "weather_brown_5",
-            "weather_white_5"
+            "weather_brown_6",
+            "weather_brown_6",
+            "weather_white_6"
           ],
           "pattern": [
-            "{_req|0|data|2|pop}",
-            "{_req|0|data|3|pop}",
-            "{_req|0|data|4|pop}"
+            "{_req|0|data|2|sym_pop}",
+            "{_req|0|data|3|sym_pop}",
+            "{_req|0|data|4|sym_pop}"
           ]
         }
       ]
     },
     "weather7": {
       "type": "pillow",
-      "path": "weather/Ort_3day0.png",
+      "path": "weather/Ort_3day3.png",
       "overlay": [
         {
           "description": "icon",
@@ -1618,7 +1657,7 @@
           "anchor_point": "center",
           "pos_x": [
             462,
-            1070,
+            1080,
             1673
           ],
           "pos_y": [
@@ -1632,9 +1671,9 @@
             "weather_white_4"
           ],
           "pattern": [
-            "{_req|0|data|2|max_temp}",
-            "{_req|0|data|3|max_temp}",
-            "{_req|0|data|4|max_temp}"
+            "{_req|0|data|2|sym_max_temp}",
+            "{_req|0|data|3|sym_max_temp}",
+            "{_req|0|data|4|sym_max_temp}"
           ]
         },
         {
@@ -1657,9 +1696,9 @@
             "weather_white_5"
           ],
           "pattern": [
-            "{_req|0|data|2|min_temp}",
-            "{_req|0|data|3|min_temp}",
-            "{_req|0|data|4|min_temp}"
+            "{_req|0|data|2|sym_min_temp}",
+            "{_req|0|data|3|sym_min_temp}",
+            "{_req|0|data|4|sym_min_temp}"
           ]
         },
         {
@@ -1677,35 +1716,35 @@
             730
           ],
           "preset": [
-            "weather_white_5",
-            "weather_white_5",
-            "weather_white_5"
+            "weather_white_6",
+            "weather_white_6",
+            "weather_white_6"
           ],
-          "pattern": "Regenwahrscheinlichkeit"
+          "pattern": "Regen"
         },
         {
           "description": "entry_name_day2",
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            1090,
-            1090,
-            1090
+            443,
+            1055,
+            1660
           ],
           "pos_y": [
-            660,
-            740,
-            810
+            730,
+            730,
+            730
           ],
           "preset": [
-            "weather_white_5",
-            "weather_white_5",
-            "weather_white_5"
+            "weather_white_6",
+            "weather_white_6",
+            "weather_white_6"
           ],
           "pattern": [
-            "{_req|0|data|2|pop}",
-            "{_req|0|data|3|pop}",
-            "{_req|0|data|4|pop}"
+            "{_req|0|data|2|sym_pop}",
+            "{_req|0|data|3|sym_pop}",
+            "{_req|0|data|4|sym_pop}"
           ]
         }
       ]
@@ -1803,7 +1842,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
+            "pattern": "Die Regen liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
           },
           {
             "type": "text",
@@ -1831,7 +1870,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
+            "pattern": "Die Regen liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
           },
           {
             "type": "text",
@@ -1847,7 +1886,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regen liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       },
@@ -1859,7 +1898,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regen liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       },
@@ -1871,7 +1910,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regen liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
           }
         ]
       }
