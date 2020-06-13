@@ -25,9 +25,10 @@ def test_transform(x, config_name, data: dict):
 
     transform(values, step_data)
     print(f"Data after Transform: {step_data.data}")
-    generate_audios(values, step_data)
+    #  generate_audios(values, step_data)
 
-    visualization.generate_all_images("1", values["images"], step_data)
+    visualization.generate_all_images(values, step_data)
+    print(values["images"])
 
 
 def test():
@@ -58,4 +59,4 @@ def test2():
 
 
 if __name__ == "__main__":
-    test2()
+    test()

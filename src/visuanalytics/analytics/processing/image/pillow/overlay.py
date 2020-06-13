@@ -1,3 +1,4 @@
+from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.draw import draw_text, draw_text_fix
 from PIL import Image
 
@@ -9,7 +10,7 @@ DRAW_TYPES = {
 }
 
 
-def add_text(overlay, source_img, draw, presets, step_data):
+def add_text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     content = step_data.format(overlay["pattern"], step_data.data)
     DRAW_TYPES[overlay["anchor_point"]](draw, (overlay["pos_x"], overlay["pos_y"]), content,
                                         presets[overlay["preset"]]["font_size"],
@@ -17,7 +18,7 @@ def add_text(overlay, source_img, draw, presets, step_data):
                                         presets[overlay["preset"]]["font"])
 
 
-def add_text_array(overlay, source_img, draw, presets, step_data):
+def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["preset"], list):
             preset = overlay["preset"][idx]
@@ -37,7 +38,7 @@ def add_text_array(overlay, source_img, draw, presets, step_data):
         add_text(new_overlay, source_img, draw, presets, step_data)
 
 
-def add_image(overlay, source_img, draw, presets, step_data):
+def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     path = step_data.format(overlay["pattern"], step_data.data)
     icon = Image.open(
         resources.get_resource_path(path)).convert(overlay["colour"])
@@ -46,7 +47,7 @@ def add_image(overlay, source_img, draw, presets, step_data):
     source_img.paste(icon, (overlay["pos_x"], overlay["pos_y"]), icon)
 
 
-def add_image_array(overlay, source_img, draw, presets, step_data):
+def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["colour"], list):
             colour = overlay["colour"][idx]
