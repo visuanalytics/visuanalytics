@@ -186,6 +186,55 @@
               "delimiter": "-"
             },
             {
+              "type": "replace_kv",
+              "keys": [
+                "_loop|weather|code"
+              ],
+              "new_keys": [
+                "_loop|weather|str_code_short"
+              ],
+              "dict": {
+                "200": "Gewitter",
+                "201": "Gewitter",
+                "202": "Gewitter",
+                "230": "Gewitter",
+                "231": "Gewitter",
+                "232": "Gewitter",
+                "233": "Gewitter",
+                "300": "regnerisch",
+                "301": "Nieselregen",
+                "302": "regnerisch",
+                "500": "Regen",
+                "501": "Regen",
+                "502": "Regen",
+                "511": "Eisregen",
+                "520": "Regenschauer",
+                "521": "Regenschauer",
+                "522": "Regenschauer",
+                "600": "Schnee",
+                "601": "Schnee",
+                "602": "Schnee",
+                "610": "Schnee",
+                "611": "Schneeregen",
+                "612": "Schneeregen",
+                "621": "Schneeschauer",
+                "622": "Schneeschauer",
+                "623": "windig",
+                "700": "nebelig",
+                "711": "nebelig",
+                "721": "nebelig",
+                "731": "staubig",
+                "741": "nebelig",
+                "751": "Eisnebel",
+                "800": "heiter",
+                "801": "leicht bewölkt",
+                "802": "leicht bewölkt",
+                "803": "leicht bewölkt",
+                "804": "bewölkt",
+                "900": "unbekannt"
+              }
+            },
+            {
               "type": "choose_random",
               "keys": [
                 "_loop|weather|code"
@@ -196,193 +245,155 @@
               "dict": {
                 "200": {
                   "0": "kommt es zu Gewittern mit leichtem Regen",
-                  "1": "ist mit Gewitter und leichtem Regen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und leichtem Regen zu rechnen"
                 },
                 "201": {
                   "0": "kommt es zu Gewittern mit Regen",
-                  "1": "ist mit Gewitter und Regen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und Regen zu rechnen"
                 },
                 "202": {
                   "0": "kommt es zu Gewittern mit starkem Regen",
-                  "1": "ist mit Gewitter und starkem Regen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und starkem Regen zu rechnen"
                 },
                 "230": {
                   "0": "kommt es zu Gewittern mit leichtem Nieselregen",
-                  "1": "ist mit Gewitter und leichtem Nieselregen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und leichtem Nieselregen zu rechnen"
                 },
                 "231": {
                   "0": "kommt es zu Gewittern mit Nieselregen",
-                  "1": "ist mit Gewitter und Nieselregen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und Nieselregen zu rechnen"
                 },
                 "232": {
                   "0": "kommt es zu Gewittern mit starkem Nieselregen",
-                  "1": "ist mit Gewitter und starkem Nieselregen zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und starkem Nieselregen zu rechnen"
                 },
                 "233": {
                   "0": "kommt es zu Gewittern mit Hagel",
-                  "1": "ist mit Gewitter und Hagel zu rechnen",
-                  "2": "Gewitter"
+                  "1": "ist mit Gewitter und Hagel zu rechnen"
                 },
                 "300": {
                   "0": "kommt es zu leichtem Nieselregen",
-                  "1": "ist mit leichtem Nieselregen zu rechnen",
-                  "2": "regnerisch"
+                  "1": "ist mit leichtem Nieselregen zu rechnen"
                 },
                 "301": {
                   "0": "kommt es zu Nieselregen",
-                  "1": "ist mit Nieselregen zu rechnen",
-                  "2": "Nieselregen"
+                  "1": "ist mit Nieselregen zu rechnen"
                 },
                 "302": {
                   "0": "kommt es zu starkem Nieselregen",
-                  "1": "ist mit starkem Nieselregen zu rechnen",
-                  "2": "regnerisch"
+                  "1": "ist mit starkem Nieselregen zu rechnen"
                 },
                 "500": {
                   "0": "kommt es zu leichtem Regen",
-                  "1": "ist es leicht regnerisch",
-                  "2": "Regen"
+                  "1": "ist es leicht regnerisch"
                 },
                 "501": {
                   "0": "kommt es zu mäßigem Regen",
-                  "1": "ist es regnerisch",
-                  "2": "Regen"
+                  "1": "ist es regnerisch"
                 },
                 "502": {
                   "0": "kommt es zu starkem Regen",
-                  "1": "ist es stark regnerisch",
-                  "2": "Regen"
+                  "1": "ist es stark regnerisch"
                 },
                 "511": {
                   "0": "kommt es zu Eisregen",
-                  "1": "ist mit Eisregen zu rechnen",
-                  "2": "Eisregen"
+                  "1": "ist mit Eisregen zu rechnen"
                 },
                 "520": {
                   "0": "kommt es zu leichtem Regenschauer",
-                  "1": "ist mit leichten Regenschauern zu rechnen",
-                  "2": "Regenschauer"
+                  "1": "ist mit leichten Regenschauern zu rechnen"
                 },
                 "521": {
                   "0": "kommt es zu Regenschauer",
-                  "1": "ist mit Regenschauern zu rechnen",
-                  "2": "Regenschauer"
+                  "1": "ist mit Regenschauern zu rechnen"
                 },
                 "522": {
                   "0": "kommt es zu starkem Regenschauer",
-                  "1": "ist mit starken Regenschauern zu rechnen",
-                  "2": "Regenschauer"
+                  "1": "ist mit starken Regenschauern zu rechnen"
                 },
                 "600": {
                   "0": "kommt es zu leichtem Schneefall",
-                  "1": "ist mit leichtem Schneefall zu rechnen",
-                  "2": "Schnee"
+                  "1": "ist mit leichtem Schneefall zu rechnen"
                 },
                 "601": {
                   "0": "kommt es zu Schnee",
-                  "1": "ist mit Schnee zu rechnen",
-                  "2": "Schnee"
+                  "1": "ist mit Schnee zu rechnen"
                 },
                 "602": {
                   "0": "kommt es zu starkem Schneefall",
-                  "1": "ist mit starkem Schneefall zu rechnen",
-                  "2": "Schnee"
+                  "1": "ist mit starkem Schneefall zu rechnen"
                 },
                 "610": {
                   "0": "kommt es zu einem Mix aus Schnee und Regen",
-                  "1": "ist mit einem Mix aus Schnee und Regen zu rechnen",
-                  "2": "Schnee"
+                  "1": "ist mit einem Mix aus Schnee und Regen zu rechnen"
                 },
                 "611": {
                   "0": "kommt es zu Schneeregen",
-                  "1": "ist mit Schneeregen zu rechnen",
-                  "2": "Schneeregen"
+                  "1": "ist mit Schneeregen zu rechnen"
                 },
                 "612": {
                   "0": "kommt es zu starkem Schneeregen",
-                  "1": "ist mit starkem Schneeregen zu rechnen",
-                  "2": "Schneeregen"
+                  "1": "ist mit starkem Schneeregen zu rechnen"
                 },
                 "621": {
                   "0": "kommt es zu Schneeschauer",
-                  "1": "ist mit Schneeschauern zu rechnen",
-                  "2": "Schneeschauer"
+                  "1": "ist mit Schneeschauern zu rechnen"
                 },
                 "622": {
                   "0": "kommt es zu starkem Schneeschauer",
-                  "1": "ist mit starken Schneeschauern zu rechnen",
-                  "2": "Schneeschauer"
+                  "1": "ist mit starken Schneeschauern zu rechnen"
                 },
                 "623": {
                   "0": "kommt es zu Windböen",
-                  "1": "ist mit Windböen zu rechnen",
-                  "2": "windig"
+                  "1": "ist mit Windböen zu rechnen"
                 },
                 "700": {
                   "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen",
-                  "2": "nebelig"
+                  "1": "ist mit Nebel zu rechnen"
                 },
                 "711": {
                   "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen",
-                  "2": "nebelig"
+                  "1": "ist mit Nebel zu rechnen"
                 },
                 "721": {
                   "0": "kommt es zu Dunst",
-                  "1": "ist mit Nebel zu rechnen",
-                  "2": "nebelig"
+                  "1": "ist mit Nebel zu rechnen"
                 },
                 "731": {
                   "0": "kommt es zu Staub in der Luft",
-                  "1": "ist mit Staub in der Luft zu rechnen",
-                  "2": "staubig"
+                  "1": "ist mit Staub in der Luft zu rechnen"
                 },
                 "741": {
                   "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen",
-                  "2": "nebelig"
+                  "1": "ist mit Nebel zu rechnen"
                 },
                 "751": {
                   "0": "kommt es zu Eisnebel",
-                  "1": "ist mit Eisnebel zu rechnen",
-                  "2": "Eisnebel"
+                  "1": "ist mit Eisnebel zu rechnen"
                 },
                 "800": {
                   "0": "ist der Himmel klar",
-                  "1": "wird es heiter mit klarem Himmel",
-                  "2": "heiter"
+                  "1": "wird es heiter mit klarem Himmel"
                 },
                 "801": {
                   "0": "sind nur wenige Wolken am Himmel",
-                  "1": "ist es leicht bewölkt",
-                  "2": "leicht bewölkt"
+                  "1": "ist es leicht bewölkt"
                 },
                 "802": {
                   "0": "sind vereinzelte Wolken am Himmel",
-                  "1": "ist es vereinzelt bewölkt",
-                  "2": "leicht bewölkt"
+                  "1": "ist es vereinzelt bewölkt"
                 },
                 "803": {
                   "0": "ist es bewölkt, vereinzelt kommt die Sonne durch",
-                  "1": "ist es bewölkt, vereinzelt kommt die Sonne durch",
-                  "2": "leicht bewölkt"
+                  "1": "ist es bewölkt, vereinzelt kommt die Sonne durch"
                 },
                 "804": {
                   "0": "kommt es zu bedecktem Himmel",
-                  "1": "ist es bewölkt",
-                  "2": "bewölkt"
+                  "1": "ist es bewölkt"
                 },
                 "900": {
                   "0": "kommt es zu unbekanntem Niederschlag",
-                  "1": "ist mit unbekanntem Niederschlag zu rechnen",
-                  "2": "unbekannt"
+                  "1": "ist mit unbekanntem Niederschlag zu rechnen"
                 }
               },
               "choice": [
@@ -468,27 +479,27 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {data|weekday} {data|weather|str_code}. Die Höchstwerte erreichen in {city_name} {data|str_max_temp}. "
+            "pattern": "Am heutigen {_req|0|data|0|weekday} {_req|0|data|0|weather|str_code}. Die Höchstwerte erreichen in {conf|city_name} {_req|0|data|0|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {data|str_min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {_req|0|data|0|str_min_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|str_app_min_temp} und {data|str_app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|0|data|0|str_app_min_temp} und {__req|0|data|0|str_app_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|0|data|0|weekday} bei {_req|0|data|0|str_pop} und die relative Luftfeuchtigkeit bei {_req|0|data|0|str_rh}. "
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {data|str_wind_spd} und kommt aus Richtung {data|str_wind_cdir_full}. "
+            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {_req|0|data|0|str_wind_spd} und kommt aus Richtung {_req|0|data|0|str_wind_cdir_full}. "
           },
           {
             "type": "text",
-            "pattern": "Die Sonne geht heute um {data|str_sunset_ts} unter und geht morgen um {data|str_sunrise_ts} wieder auf. "
+            "pattern": "Die Sonne geht heute um {_req|0|data|0|str_sunset_ts} unter und geht morgen um {_req|0|data|0|str_sunrise_ts} wieder auf. "
           }
         ]
       },
@@ -496,23 +507,23 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {data|weekday} {data|weather|str_code}. Die Höchstwerte erreichen in {city_name} {data|str_max_temp}. "
+            "pattern": "Am morgigen {_req|0|data|1|weekday} {_req|0|data|1|weather|str_code}. Die Höchstwerte erreichen in {conf|city_name} {_req|0|data|1|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {data|str_min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {_req|0|data|1|str_min_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {data|str_app_min_temp} und {data|str_app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|0|data|1|str_app_min_temp} und {_req|0|data|1|str_app_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop} und die relative Luftfeuchtigkeit bei {data|str_rh}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|0|data|1|weekday} bei {_req|0|data|1|str_pop} und die relative Luftfeuchtigkeit bei {_req|0|data|1|str_rh}. "
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {data|str_wind_spd} und kommt aus Richtung {data|str_wind_cdir_full}. "
+            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {_req|0|data|1|str_wind_spd} und kommt aus Richtung {_req|0|data|1|str_wind_cdir_full}. "
           }
         ]
       },
@@ -520,11 +531,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data|weekday} {data|weather|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
+            "pattern": "Am {_req|0|data|2|weekday} {_req|0|data|2|weather|str_code} bei Temperaturen von {_req|0|data|2|str_min_temp} bis {_req|0|data|2|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|0|data|2|weekday} bei {_req|0|data|2|str_pop}. Der Wind erreicht Geschwindigkeiten von {_req|0|data|2|str_wind_spd}. "
           }
         ]
       },
@@ -532,11 +543,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data|weekday} {data|weather|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
+            "pattern": "Am {_req|0|data|3|weekday} {_req|0|data|3|weather|str_code} bei Temperaturen von {_req|0|data|3|str_min_temp} bis {_req|0|data|3|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|0|data|3|weekday} bei {_req|0|data|3|str_pop}. Der Wind erreicht Geschwindigkeiten von {_req|0|data|3|str_wind_spd}. "
           }
         ]
       },
@@ -544,11 +555,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {data|weekday} {data|weather|str_code} bei Temperaturen von {data|str_min_temp} bis {data|str_max_temp}. "
+            "pattern": "Am {_req|0|data|4|weekday} {_req|0|data|4|weather|str_code} bei Temperaturen von {_req|0|data|4|str_min_temp} bis {_req|0|data|4|str_max_temp}. "
           },
           {
             "type": "text",
-            "pattern": "Die Regenwahrscheinlichkeit liegt am {data|weekday} bei {data|str_pop}. Der Wind erreicht Geschwindigkeiten von {data|str_wind_spd}. "
+            "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|0|data|4|weekday} bei {_req|0|data|4|str_pop}. Der Wind erreicht Geschwindigkeiten von {_req|0|data|4|str_wind_spd}. "
           }
         ]
       }

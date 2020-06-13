@@ -95,6 +95,22 @@ def transform_replace(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_replace_kv(values: dict, data: StepData):
+    """Setzt den value zu einem key als neuen value für die JSON.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = str(data.get_data(key, values))
+        new_key = transform_get_new_keys(values, idx, key)
+
+        new_value = data.format(values["dict"][value], values)
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_alias(values: dict, data: StepData):
     for key, new_key in zip(values["keys"], values["new_keys"]):
         value = data.get_data(key, values)
