@@ -260,6 +260,7 @@ TRANSFORM_TYPES = {
     "append": transform_append,
     "add_symbol": transform_add_symbol,
     "replace": transform_replace,
+    "replace_kv": transform_replace_kv,
     "alias": transform_alias,
     "date_format": transform_date_format,
     "timestamp": transform_timestamp,
