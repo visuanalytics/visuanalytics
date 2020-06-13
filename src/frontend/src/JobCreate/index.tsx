@@ -11,6 +11,19 @@ import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import { Param } from '../util/param';
 
+export enum Weekday {
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+}
+
+export interface Schedule {
+    daily: boolean,
+    weekly: boolean,
+    onDate: boolean,
+    weekdays: Weekday[],
+    date: Date | null,
+    time: Date | null
+}
+
 export default function JobCreate() {
     const classes = useStyles();
 
@@ -24,6 +37,16 @@ export default function JobCreate() {
 
     // state for param selection logic
     const [selectedParams, setSelectedParams] = React.useState<Param[]>([]);
+
+    // state for schedule selection logic
+    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
+        daily: false,
+        weekly: false,
+        onDate: false,
+        weekdays: [],
+        date: new Date(),
+        time: new Date()
+    });
 
     // when selected topic changes, fetch new parameter list
     useEffect(() => {
@@ -59,6 +82,13 @@ export default function JobCreate() {
         }
     }, [selectedParams, activeStep])
 
+    // when a weekly schedule is selected, check if at least one weekday checkbox is checked
+    useEffect(() => {
+        if (activeStep === 2 && selectedSchedule.weekly) {
+            setSelectComplete(selectedSchedule.weekdays.length > 0);
+        }
+    }, [selectedSchedule, activeStep])
+
     // handlers for stepper logic
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -84,6 +114,31 @@ export default function JobCreate() {
             return e;
         })
         setSelectedParams(newList);
+    }
+
+    // handler for schedule selection logic
+    const handleSelectDaily = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+    }
+    const handleSelectWeekly = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+    }
+    const handleSelectOnDate = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+    }
+    const handleAddWeekDay = (d: Weekday) => {
+        const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
+        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+    }
+    const handleRemoveWeekday = (d: Weekday) => {
+        const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
+        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+    }
+    const handleSelectDate = (date: Date | null) => {
+        setSelectedSchedule({ ...selectedSchedule, date: date })
+    }
+    const handleSelectTime = (time: Date | null) => {
+        setSelectedSchedule({ ...selectedSchedule, time: time })
     }
 
     // stepper texts
@@ -118,7 +173,16 @@ export default function JobCreate() {
                 )
             case 2:
                 return (
-                    <ScheduleSelection />
+                    <ScheduleSelection
+                        schedule={selectedSchedule}
+                        selectDailyHandler={handleSelectDaily}
+                        selectWeeklyHandler={handleSelectWeekly}
+                        selectOnDateHandler={handleSelectOnDate}
+                        addWeekDayHandler={handleAddWeekDay}
+                        removeWeekDayHandler={handleRemoveWeekday}
+                        selectDateHandler={handleSelectDate}
+                        selectTimeHandler={handleSelectTime}
+                    />
                 )
             default:
                 return 'Unknown step';
