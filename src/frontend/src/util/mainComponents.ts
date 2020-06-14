@@ -20,6 +20,9 @@ export const mainComponents = {
     icon: HomeIcon,
     navName: "Home",
   },
+  jobcreate: {
+    component:
+  }
 };
 
 /**
