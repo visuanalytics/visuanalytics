@@ -44,13 +44,14 @@ class Scheduler(object):
             logger.warning(f"Invalid Step id: '{step_id}', for job {job_id}")
             return False
 
-    def _start_job(self, steps_id: int, config: dict):
+    def _start_job(self, steps_name: str, config: dict):
         # Add base_config if exists
         config = {**self._base_config, **config}
 
         t = threading.Thread(
             target=Pipeline(uuid.uuid4().hex,
-                            Scheduler.steps[steps_id](config)).start)
+                            steps_name,
+                            config).start)
         t.start()
 
     def _check_all(self, now):
