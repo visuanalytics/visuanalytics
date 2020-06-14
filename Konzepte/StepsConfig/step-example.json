@@ -90,6 +90,14 @@
           "type": "date_format",
           "keys": ["_loop|date", "_loop|tommorow"],
           "format": "%Y-%m-%d"
+        },
+        {
+          "type": "date_weekday",
+          "keys": [
+            "date",
+            "tomorrow"
+          ],
+          "format": "weekday"
         }
       ]
     },
