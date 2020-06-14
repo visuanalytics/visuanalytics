@@ -6,19 +6,21 @@ import os
 import subprocess
 from mutagen.mp3 import MP3
 
+from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 
-def link(pipeline_id, images, audios, sequence, h264_nvenc, out_path, job_name):
+def link(values: dict, h264_nvenc, out_path, step_data: StepData):
     out_images, out_audios, out_audio_l = [], [], []
-    for s in sequence:
-        out_images.append(images[s["image"]])
+    for s in values["sequence"]:
+        out_images.append(values["images"][step_data.format(s["image"])])
         if s["audio_l"] is None:
-            out_audio_l.append(s["time_diff"])
+            out_audio_l.append(step_data.format(s["time_diff"]))
         else:
-            out_audios.append(audios[s["audio_l"]])
-            out_audio_l.append(s["time_diff"] + MP3(audios[s["audio_l"]]).info.length)
-    return _link(pipeline_id, out_images, out_audios, out_audio_l, h264_nvenc, out_path, job_name)
+            out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
+            out_audio_l.append(step_data.format(s["time_diff"]) + MP3(
+                values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
+    return _link(values["id"], out_images, out_audios, out_audio_l, h264_nvenc, out_path, values["name"])
 
 
 def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):

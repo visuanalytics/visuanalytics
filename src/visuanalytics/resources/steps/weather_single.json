@@ -1853,7 +1853,53 @@
       }
     }
   },
-  "sequence": [],
+  "sequence": [
+    {
+      "image": "wetter3",
+      "time_diff": 3,
+      "audio_l": null
+    },
+    {
+      "image": "wetter1",
+      "time_diff": -3,
+      "audio_l": "a1"
+    },
+    {
+      "image": "wetter2",
+      "time_diff": -4,
+      "audio_l": "a2"
+    },
+    {
+      "image": "wetter3",
+      "time_diff": 4,
+      "audio_l": null
+    },
+    {
+      "image": "wetter7",
+      "time_diff": 3,
+      "audio_l": null
+    },
+    {
+      "image": "wetter4",
+      "time_diff": -3,
+      "audio_l": "a3"
+    },
+    {
+      "image": "wetter5",
+      "time_diff": 0,
+      "audio_l": "a4"
+    },
+    {
+      "image": "wetter6",
+      "time_diff": -5,
+      "audio_l": "a5"
+    },
+    {
+      "image": "wetter7",
+      "time_diff": 5,
+      "audio_l": null
+    }
+  ],
   "run_config": {
     "testing": {
       "default_value": false,
