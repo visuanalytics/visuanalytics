@@ -150,8 +150,8 @@
             "_loop|str_sunset_ts",
             "_loop|str_sunrise_ts"
           ],
-          "find": "^[0][1-9]",
-          "replace_by": ""
+          "find": "[0][1-9]",
+          "replace_by": "[1-9]"
         },
         {
           "type": "wind_direction",
