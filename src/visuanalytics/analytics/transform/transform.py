@@ -242,6 +242,26 @@ def transform_choose_random(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_find_equal(values: dict, data: StepData):
+    """innerhalb von loop
+
+    :param values:
+    :param data:
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = data.get_data(key, values)
+        new_key = transform_get_new_keys(values, idx, key)
+        search_through = data.format(values["search_through"], values)
+        replace_by = data.format(values["replace_by"], values)
+        if value == search_through:
+            new_value = replace_by
+        else:
+            new_value = value
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_loop(values: dict, data: StepData):
     loop_values = values.get("values", None)
 
@@ -281,6 +301,7 @@ TRANSFORM_TYPES = {
     "timestamp": transform_timestamp,
     "date_weekday": transform_date_weekday,
     "date_now": transform_date_now,
+    "find_equal": transform_find_equal,
     "loop": transform_loop,
     "wind_direction": transform_wind_direction,
     "choose_random": transform_choose_random,
