@@ -158,7 +158,7 @@ def transform_timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = transform_get_new_keys(values, idx, key)
-        if values.get("zeropaded", False):
+        if values.get("zeropaded_off", False):
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
             data.insert_data(new_key, new_value, values)
         else:
