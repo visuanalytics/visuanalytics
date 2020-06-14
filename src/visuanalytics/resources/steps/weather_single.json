@@ -142,16 +142,8 @@
             "_loop|str_sunset_ts",
             "_loop|str_sunrise_ts"
           ],
-          "format": "%H Uhr %M"
-        },
-        {
-          "type": "regex",
-          "keys": [
-            "_loop|str_sunset_ts",
-            "_loop|str_sunrise_ts"
-          ],
-          "find": "[0][1-9]",
-          "replace_by": "[1-9]"
+          "format": "%H Uhr %M",
+          "zeropaded_off": true
         },
         {
           "type": "wind_direction",
