@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from numpy import random
@@ -119,6 +120,19 @@ def transform_alias(values: dict, data: StepData):
         # TODO(max) maybe just replace key not insert and delete
         data.insert_data(new_key, value, values)
         data.remove_data(key, values)
+
+
+def transform_regex(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = str(data.get_data(key, values))
+        new_key = transform_get_new_keys(values, idx, key)
+
+        find = data.format(values["find"][value], values)
+        replace_by = data.format(values["replace_by"][value], values)
+        new_value = re.sub(find, replace_by, value)
+        data.insert_data(new_key, new_value, values)
 
 
 def transform_date_format(values: dict, data: StepData):
@@ -262,6 +276,7 @@ TRANSFORM_TYPES = {
     "replace": transform_replace,
     "replace_kv": transform_replace_kv,
     "alias": transform_alias,
+    "regex": transform_regex,
     "date_format": transform_date_format,
     "timestamp": transform_timestamp,
     "date_weekday": transform_date_weekday,

@@ -146,6 +146,15 @@
               "format": "%H Uhr %M"
             },
             {
+              "type": "regex",
+              "keys": [
+                "_loop|str_sunset_ts",
+                "_loop|str_sunrise_ts"
+              ],
+              "find": "^[0][1-9]",
+              "replace_by": ""
+            },
+            {
               "type": "wind_direction",
               "key": "_loop|wind_cdir_full",
               "new_key": "_loop|str_wind_cdir_full",
