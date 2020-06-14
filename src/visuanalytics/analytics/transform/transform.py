@@ -129,8 +129,8 @@ def transform_regex(values: dict, data: StepData):
         value = str(data.get_data(key, values))
         new_key = transform_get_new_keys(values, idx, key)
 
-        find = data.format(values["find"][value], values)
-        replace_by = data.format(values["replace_by"][value], values)
+        find = data.format(values["find"], values)
+        replace_by = data.format(values["replace_by"], values)
         new_value = re.sub(find, replace_by, value)
         data.insert_data(new_key, new_value, values)
 
@@ -158,8 +158,12 @@ def transform_timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = transform_get_new_keys(values, idx, key)
-        new_value = date.strftime(data.format(values["format"], values))
-        data.insert_data(new_key, new_value, values)
+        if values.get("zeropaded", False):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+            data.insert_data(new_key, new_value, values)
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
+            data.insert_data(new_key, new_value, values)
 
 
 def transform_date_weekday(values: dict, data: StepData):
@@ -279,7 +283,7 @@ def transform_loop(values: dict, data: StepData):
 def transform_add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
-    data.insert_data(new_key, values, values)
+    data.insert_data(new_key, value, values)
 
 
 def transform_get_new_keys(values: dict, idx, key):
