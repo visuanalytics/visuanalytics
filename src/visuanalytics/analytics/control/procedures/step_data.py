@@ -51,8 +51,10 @@ class StepData(object):
         api_key_name = self.format(api_key_name, values)
         return self.__formatter.format(value_string, {**self.__data, "_api_key": self.get_api_key(api_key_name)})
 
-    def format(self, value_string, values: dict):
+    def format(self, value_string, values=None):
         # if value_string is int just return value
+        if values is None:
+            values = {}
         if isinstance(value_string, numbers.Number):
             return value_string
 
