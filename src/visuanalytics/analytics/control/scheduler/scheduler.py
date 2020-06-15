@@ -5,8 +5,6 @@ import uuid
 from datetime import datetime, time as dt_time
 
 from visuanalytics.analytics.control.pipeline import Pipeline
-from visuanalytics.analytics.control.procedures.weather import WeatherSteps
-from visuanalytics.analytics.control.procedures.weather_single import SingleWeatherSteps
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +21,6 @@ class Scheduler(object):
     :param steps: Dictionary zum überstezen der Step id zu einer Step Klasse.
     :type steps: dict
     """
-    steps = {0: WeatherSteps, 1: SingleWeatherSteps}
 
     def __init__(self, base_config=None):
         super().__init__()
@@ -34,15 +31,6 @@ class Scheduler(object):
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
-
-    @staticmethod
-    def _check_steps_id(step_id, job_id):
-        if step_id < len(Scheduler.steps):
-            return True
-        else:
-            # For the Step id where no Step Klass found
-            logger.warning(f"Invalid Step id: '{step_id}', for job {job_id}")
-            return False
 
     def _start_job(self, steps_name: str, config: dict):
         # Add base_config if exists
