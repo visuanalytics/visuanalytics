@@ -247,6 +247,7 @@ def transform_choose_random(values: dict, data: StepData):
 
 
 def transform_find_equal(values: dict, data: StepData):
+    # TODO
     """innerhalb von loop
 
     :param values:
