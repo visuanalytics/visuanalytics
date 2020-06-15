@@ -129,8 +129,8 @@ def transform_regex(values: dict, data: StepData):
         value = str(data.get_data(key, values))
         new_key = transform_get_new_keys(values, idx, key)
 
-        find = data.format(values["find"][value], values)
-        replace_by = data.format(values["replace_by"][value], values)
+        find = data.format(values["find"], values)
+        replace_by = data.format(values["replace_by"], values)
         new_value = re.sub(find, replace_by, value)
         data.insert_data(new_key, new_value, values)
 
@@ -158,8 +158,12 @@ def transform_timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = transform_get_new_keys(values, idx, key)
-        new_value = date.strftime(data.format(values["format"], values))
-        data.insert_data(new_key, new_value, values)
+        if values.get("zeropaded_off", False):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+            data.insert_data(new_key, new_value, values)
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
+            data.insert_data(new_key, new_value, values)
 
 
 def transform_date_weekday(values: dict, data: StepData):
@@ -242,6 +246,27 @@ def transform_choose_random(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_find_equal(values: dict, data: StepData):
+    # TODO
+    """innerhalb von loop
+
+    :param values:
+    :param data:
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = data.get_data(key, values)
+        new_key = transform_get_new_keys(values, idx, key)
+        search_through = data.format(values["search_through"], values)
+        replace_by = data.format(values["replace_by"], values)
+        if value == search_through:
+            new_value = replace_by
+        else:
+            new_value = value
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_loop(values: dict, data: StepData):
     loop_values = values.get("values", None)
 
@@ -259,7 +284,7 @@ def transform_loop(values: dict, data: StepData):
 def transform_add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
-    data.insert_data(new_key, values, values)
+    data.insert_data(new_key, value, values)
 
 
 def transform_get_new_keys(values: dict, idx, key):
@@ -281,6 +306,7 @@ TRANSFORM_TYPES = {
     "timestamp": transform_timestamp,
     "date_weekday": transform_date_weekday,
     "date_now": transform_date_now,
+    "find_equal": transform_find_equal,
     "loop": transform_loop,
     "wind_direction": transform_wind_direction,
     "choose_random": transform_choose_random,
