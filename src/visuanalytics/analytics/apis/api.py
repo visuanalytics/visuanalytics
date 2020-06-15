@@ -6,17 +6,21 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 
-def api_request(values: dict, data: StepData):
+def api(values: dict, data: StepData):
+    API_TYPES[values["api"]["type"]](values["api"], data, values["name"])
+
+
+def api_request(values: dict, data: StepData, name):
     """Fragt einmal die gewünschten Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     url = data.format_api(values["url_pattern"], values["api_key_name"], values)
-    data.init_data({"_req": _fetch(url, data.data["_conf"].get("testing", False), values["name"])})
+    data.init_data({"_req": _fetch(url, data.data["_conf"].get("testing", False), name)})
 
 
-def api_request_multiple(values: dict, data: StepData):
+def api_request_multiple(values: dict, data: StepData, name):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -29,7 +33,7 @@ def api_request_multiple(values: dict, data: StepData):
         for idx, key in values["steps_value"]:
             data.save_loop(values, idx, key)
             url = data.format_api(values["url_pattern"], values["api_key_name"], values)
-            data_dict[key] = _fetch(url, data.data["_conf"].get("testing", False), values["name"])
+            data_dict[key] = _fetch(url, data.data["_conf"].get("testing", False), name)
         return data.init_data({"_req": data_dict})
 
     data_array = []
@@ -37,19 +41,21 @@ def api_request_multiple(values: dict, data: StepData):
     for idx, value in values["steps_value"]:
         data.save_loop(values, idx, value)
         url = data.format_api(values["url_pattern"], values["api_key_name"], values)
-        data_array.append(_fetch(url, data.data["_conf"].get("testing", False), values["name"]))
+        data_array.append(_fetch(url, data.data["_conf"].get("testing", False), name))
 
     data.init_data({"_req": data_array})
 
 
-def api_request_multiple_custom(values: dict, data: StepData):
+def api_request_multiple_custom(values: dict, data: StepData, name):
     """Fragt unterschiedliche Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for value in values["requests"]:
-        api_request(value, data)
+        # TODO(max) improve
+        value["name"] = name
+        api(value, data)
 
 
 def _fetch(url, testing=False, name=""):
@@ -61,6 +67,8 @@ def _fetch(url, testing=False, name=""):
     if testing:
         with resources.open_resource(f"exampledata/{name}") as fp:
             return json.loads(fp.read())
+
+        # TODO(max) Catch possible errors
 
     response = requests.get(url)
     if response.status_code != 200:
