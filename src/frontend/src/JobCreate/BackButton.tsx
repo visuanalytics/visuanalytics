@@ -1,13 +1,13 @@
 import { withStyles, Theme } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 
-export const ContinueButton = withStyles((theme: Theme) => ({
+export const BackButton = withStyles((theme: Theme) => ({
     root: {
         width: 120,
         color: "white",
-        backgroundColor: "#2E97C5",
+        backgroundColor: "#bcbcbc",
         "&:hover": {
-            backgroundColor: "#00638D",
+            backgroundColor: "#909090",
             borderColor: "#0062cc",
             boxShadow: "none",
         }

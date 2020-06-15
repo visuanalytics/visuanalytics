@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from numpy import random
@@ -95,6 +96,22 @@ def transform_replace(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_translate_key(values: dict, data: StepData):
+    """Setzt den value zu einem key als neuen value für die JSON.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = str(data.get_data(key, values))
+        new_key = transform_get_new_keys(values, idx, key)
+
+        new_value = data.format(values["dict"][value], values)
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_alias(values: dict, data: StepData):
     for key, new_key in zip(values["keys"], values["new_keys"]):
         value = data.get_data(key, values)
@@ -103,6 +120,19 @@ def transform_alias(values: dict, data: StepData):
         # TODO(max) maybe just replace key not insert and delete
         data.insert_data(new_key, value, values)
         data.remove_data(key, values)
+
+
+def transform_regex(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = str(data.get_data(key, values))
+        new_key = transform_get_new_keys(values, idx, key)
+
+        find = data.format(values["find"], values)
+        replace_by = data.format(values["replace_by"], values)
+        new_value = re.sub(find, replace_by, value)
+        data.insert_data(new_key, new_value, values)
 
 
 def transform_date_format(values: dict, data: StepData):
@@ -128,8 +158,12 @@ def transform_timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = transform_get_new_keys(values, idx, key)
-        new_value = date.strftime(data.format(values["format"], values))
-        data.insert_data(new_key, new_value, values)
+        if values.get("zeropaded_off", False):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+            data.insert_data(new_key, new_value, values)
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
+            data.insert_data(new_key, new_value, values)
 
 
 def transform_date_weekday(values: dict, data: StepData):
@@ -212,6 +246,27 @@ def transform_choose_random(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
+def transform_find_equal(values: dict, data: StepData):
+    # TODO
+    """innerhalb von loop
+
+    :param values:
+    :param data:
+    """
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+
+        value = data.get_data(key, values)
+        new_key = transform_get_new_keys(values, idx, key)
+        search_through = data.format(values["search_through"], values)
+        replace_by = data.format(values["replace_by"], values)
+        if value == search_through:
+            new_value = replace_by
+        else:
+            new_value = value
+        data.insert_data(new_key, new_value, values)
+
+
 def transform_loop(values: dict, data: StepData):
     loop_values = values.get("values", None)
 
@@ -229,7 +284,7 @@ def transform_loop(values: dict, data: StepData):
 def transform_add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
-    data.insert_data(new_key, values, values)
+    data.insert_data(new_key, value, values)
 
 
 def transform_get_new_keys(values: dict, idx, key):
@@ -244,11 +299,14 @@ TRANSFORM_TYPES = {
     "append": transform_append,
     "add_symbol": transform_add_symbol,
     "replace": transform_replace,
+    "translate_key": transform_translate_key,
     "alias": transform_alias,
+    "regex": transform_regex,
     "date_format": transform_date_format,
     "timestamp": transform_timestamp,
     "date_weekday": transform_date_weekday,
     "date_now": transform_date_now,
+    "find_equal": transform_find_equal,
     "loop": transform_loop,
     "wind_direction": transform_wind_direction,
     "choose_random": transform_choose_random,
