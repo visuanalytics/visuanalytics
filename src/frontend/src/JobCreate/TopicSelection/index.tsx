@@ -1,7 +1,7 @@
 import React from "react";
-import {ListItem, Divider, List, TextField, Button} from "@material-ui/core";
-import {TopicPanel} from "./TopicPanel";
-import {useStyles} from "../style";
+import { ListItem, Divider, List, TextField, Button } from "@material-ui/core";
+import { TopicPanel } from "./TopicPanel";
+import { useStyles } from "../style";
 
 interface TopicSelectionProps {
     selectedTopic: string,
@@ -25,8 +25,8 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                 <TopicPanel
                     topic={topic}
                     selectedTopic={props.selectedTopic}
-                    selectTopicHandler={props.selectTopicHandler}/>
-                <Divider/>
+                    selectTopicHandler={props.selectTopicHandler} />
+                <Divider />
             </ListItem>
         );
     }
@@ -36,13 +36,13 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
             <List>
                 {topics.map(t => renderTopicPanel(t))}
             </List>
-            <Divider/>
+            <Divider />
             <div className={classes.paddingSmall}>
                 <TextField className={classes.inputField}
-                           value={props.jobName}
-                           variant="outlined"
-                           label="Job-Name"
-                           onChange={handleInput}></TextField>
+                    value={props.jobName}
+                    variant="outlined"
+                    label="Job-Name"
+                    onChange={handleInput}></TextField>
             </div>
         </div>
     );
