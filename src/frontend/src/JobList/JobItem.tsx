@@ -16,6 +16,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import {ContinueButton} from "../JobCreate/ContinueButton";
 import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
+import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
+import {Schedule, Weekday} from "../JobCreate";
 
 
 
@@ -29,6 +31,39 @@ export const JobItem: React.FC<Job> = (job) => {
         doneIcon: 'none'
     });
     const [open, setOpen] = React.useState(false);
+    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
+        daily: true,
+        weekly: false,
+        onDate: false,
+        weekdays: [],
+        date: new Date(),
+        time: new Date()
+    });
+
+    // handler for schedule selection logic
+    const handleSelectDaily = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+    }
+    const handleSelectWeekly = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+    }
+    const handleSelectOnDate = () => {
+        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+    }
+    const handleAddWeekDay = (d: Weekday) => {
+        const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
+        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+    }
+    const handleRemoveWeekday = (d: Weekday) => {
+        const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
+        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+    }
+    const handleSelectDate = (date: Date | null) => {
+        setSelectedSchedule({ ...selectedSchedule, date: date })
+    }
+    const handleSelectTime = (time: Date | null) => {
+        setSelectedSchedule({ ...selectedSchedule, time: time })
+    }
 
     const renderJobItem = (job: Job) => {
         const paramInfo: Param[] = job.params;
@@ -119,6 +154,16 @@ export const JobItem: React.FC<Job> = (job) => {
                         >
                             <Fade in={open}>
                                 <div className={classes.backdropContent}>
+                                    <ScheduleSelection
+                                        schedule={selectedSchedule}
+                                        selectDailyHandler={handleSelectDaily}
+                                        selectWeeklyHandler={handleSelectWeekly}
+                                        selectOnDateHandler={handleSelectOnDate}
+                                        addWeekDayHandler={handleAddWeekDay}
+                                        removeWeekDayHandler={handleRemoveWeekday}
+                                        selectDateHandler={handleSelectDate}
+                                        selectTimeHandler={handleSelectTime}
+                                    />
                                     <ContinueButton>SPEICHERN</ContinueButton>
                                 </div>
                             </Fade>
