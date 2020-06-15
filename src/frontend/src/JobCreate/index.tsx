@@ -40,7 +40,7 @@ export default function JobCreate() {
 
     // state for schedule selection logic
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
-        daily: false,
+        daily: true,
         weekly: false,
         onDate: false,
         weekdays: [],
@@ -84,6 +84,14 @@ export default function JobCreate() {
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
+        if (activeStep === 2) {
+            if (selectedSchedule.weekly) {
+                setSelectComplete(selectedSchedule.weekdays.length > 0);
+            } else {
+                setSelectComplete(true);
+            }
+        }
+
         if (activeStep === 2 && selectedSchedule.weekly) {
             setSelectComplete(selectedSchedule.weekdays.length > 0);
         }
