@@ -42,7 +42,8 @@ def test():
     t1 = time.time()
     data = {"_req": new_data}
     print(f"Data: {data}")
-    test_transform({}, "steps/weather_germany.json", data)
+    test_transform({"out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+                   "steps/weather_germany.json", data)
     print(time.time() - t1)
 
 
@@ -54,7 +55,9 @@ def test2():
     t1 = time.time()
     data = {"_req": api_data}
     print(f"Data: {data}")
-    test_transform({"city_name": "Giessen"}, "steps/weather_single.json", data)
+    test_transform(
+        {"city_name": "Giessen", "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+        "steps/weather_single.json", data)
     print(time.time() - t1)
 
 
