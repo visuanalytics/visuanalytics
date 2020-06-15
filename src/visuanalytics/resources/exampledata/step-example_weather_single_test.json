@@ -1,0 +1,317 @@
+{
+  "id": 0,
+  "name": "name",
+  "api": [
+    {
+      "type": "request",
+      "api_key_name": "test",
+      "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
+    },
+    {
+      "type": "request_multiple",
+      "api_key_name": "test",
+      "steps_value": [
+        "Hallo",
+        "Test",
+        "Hallo2"
+      ],
+      "use_loop_as_key": true,
+      "url": "https://www.test.de?test={_loop}&test1={config.test}&key={_api_key}&city={config.city}"
+    },
+    {
+      "type": "request_multiple_custom",
+      "requests": [
+        {
+          "type": "request",
+          "api_key_name": "test",
+          "url": "https://www.test.de?test1={config.test}&test2=Test2&key={_api_key}"
+        },
+        {
+          "type": "request",
+          "api_key_name": "test2",
+          "url": "https://www.test2.de?test1=hallo"
+        }
+      ]
+    }
+  ],
+  "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "",
+      "transform": [
+        {
+          "type": "select",
+          "relevant_keys": [
+            "data"
+          ]
+        },
+        {
+          "type": "select_range",
+          "sub_key": "data",
+          "range_start": 0,
+          "range_end": 5
+        },
+        {
+          "type": "transform_array",
+          "array_key": "data",
+          "transform": [
+            {
+              "type": "select",
+              "array_key": "data",
+              "relevant_keys": [
+                "date",
+                "tomorrow",
+                "hallo",
+                "test",
+                "text",
+                "test"
+              ]
+            },
+            {
+              "type": "append",
+              "key": "max_temp",
+              "new_key": "....summaries.{_idx}.max_temp"
+            }
+          ]
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "test"
+          ],
+          "pattern": "{text} test"
+        },
+        {
+          "type": "replace",
+          "keys": [
+            "pressure",
+            "dec"
+          ],
+          "new_keys": [
+            "new_pres",
+            "new_dec"
+          ],
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "hallo",
+            "test"
+          ],
+          "new_keys": [
+            "abc",
+            "def"
+          ]
+        },
+        {
+          "type": "date_format",
+          "keys": [
+            "date",
+            "tomorrow"
+          ],
+          "format": "%Y-%m-%d"
+        }
+      ]
+    },
+    {
+      "type": "date_now",
+      "key": "date",
+      "format": "%Y-%m-%d"
+    },
+    {
+      "type": "loop",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "transform": [
+        {
+          "type": "calculate",
+          "action": "mean",
+          "key": "summaries.{_loop}.max_temp",
+          "new_key": "summaries.{_loop}.temp_avg"
+        },
+        {
+          "type": "calculate",
+          "action": "max",
+          "key": "summaries.{_loop}.max_temp"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "wetter1": {
+      "type": "pillow",
+      "path": "test/test.png",
+      "overlay": [
+        {
+          "type": "text",
+          "description": "",
+          "pos_x": 10,
+          "pos_y": 2,
+          "preset": "wetter1",
+          "anchor_point": "center",
+          "text": "hallo"
+        },
+        {
+          "type": "api_text",
+          "pos_x": 10,
+          "pos_y": 2,
+          "preset": "wetter1",
+          "anchor_point": "center",
+          "pattern": "Test: {kiel.data.0.temp} {config.city}"
+        },
+        {
+          "type": "api_text_array",
+          "pos_x": [
+            10,
+            20,
+            30
+          ],
+          "pos_y": [
+            1,
+            2,
+            7
+          ],
+          "preset": "wetter1",
+          "anchor_point": "config",
+          "array_key": "",
+          "pattern": "Test: {data.0.temp} {_loop}"
+        }
+      ]
+    },
+    "wetter2": {
+      "type": "wordcloud"
+    }
+  },
+  "audio": {
+    "config": {
+      "lang": "de",
+      "format": "mp3"
+    },
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am heutigen Samstag kommt es zu Gewitter. Die Höchstwerte erreichen in Gießen 15 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Tiefstwerte liegen bei 12 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die gefühlten Temperaturen liegen zwischen 10 Grad und 14 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Regenwahrscheinlichkeit liegt am Samstag bei 95 Prozent und die relative Luftfeuchtigkeit bei 65 Prozent. "
+          },
+          {
+            "type": "text",
+            "pattern": "Der Wind erreicht heute Geschwindigkeiten von 15 Kilometern pro Stunde und kommt aus Richtung Süd Südwest. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Sonne geht heute um 21 Uhr 30 unter und geht morgen um 5 Uhr 55 wieder auf. "
+          }
+        ]
+      },
+      "a2": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am morgigen Sonntag kommt es zu Regen. Die Höchstwerte erreichen in Gießen 17 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Tiefstwerte liegen bei 11 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die gefühlten Temperaturen liegen zwischen 10 Grad und 16 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Regenwahrscheinlichkeit liegt am Sonntag bei 80 Prozent und die relative Luftfeuchtigkeit bei 59 Prozent. "
+          },
+          {
+            "type": "text",
+            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von 11 Kilometern pro Stunde und kommt aus Richtung Südwesten. "
+          }
+        ]
+      },
+      "a3": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am Montag kommt es zu Schneefall bei Temperaturen von - 2 Grad bis 9 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Regenwahrscheinlichkeit liegt am Montag bei 5 Prozent. Der Wind erreicht Geschwindigkeiten von 15 Kilometern pro Stunde. "
+          }
+        ]
+      },
+      "a4": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am Dienstag kommt es zu Sonnenschein bei Temperaturen von 10 Grad bis 19 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Regenwahrscheinlichkeit liegt am Dienstag bei 35 Prozent. Der Wind erreicht Geschwindigkeiten von 7 Kilometern pro Stunde. "
+          }
+        ]
+      },
+      "a5": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am Mittwoch kommt es zu Hagel bei Temperaturen von 12 Grad bis 15 Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Regenwahrscheinlichkeit liegt am Mittwoch bei 50 Prozent. Der Wind erreicht Geschwindigkeiten von 5 Kilometern pro Stunde. "
+          }
+        ]
+      }
+    }
+  },
+  "sequence": [
+    {
+      "image": "wetter1",
+      "time": 3,
+      "audio": "a1"
+    },
+    {
+      "image": "wetter2",
+      "time": 10
+    }
+  ],
+  "run_config": {
+    "testing": {
+      "defalt_value": false,
+      "possible_values": [
+        true,
+        false
+      ]
+    }
+  },
+  "presets": {
+    "wetter1": {
+      "color": "#08638",
+      "font_size": 5,
+      "font": "dosis"
+    }
+  }
+}

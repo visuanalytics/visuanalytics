@@ -4,17 +4,16 @@ import { Divider, FormControlLabel, Radio } from "@material-ui/core";
 import { WeekdayCheckboxes } from "./WeekdayCheckboxes";
 import { DateInputField, TimeInputField } from "./DateTimeInput"
 import { Schedule, Weekday } from "..";
-import { datePickerDefaultProps } from "@material-ui/pickers/constants/prop-types";
 
 interface ScheduleSelectionProps {
     schedule: Schedule,
     selectDailyHandler: () => void;
     selectWeeklyHandler: () => void;
     selectOnDateHandler: () => void;
-    addWeekDayHandler: (_: Weekday) => void;
-    removeWeekDayHandler: (_: Weekday) => void;
-    selectDateHandler: (_: Date | null) => void;
-    selectTimeHandler: (_: Date | null) => void;
+    addWeekDayHandler: (day: Weekday) => void;
+    removeWeekDayHandler: (day: Weekday) => void;
+    selectDateHandler: (date: Date | null) => void;
+    selectTimeHandler: (date: Date | null) => void;
 }
 
 export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {

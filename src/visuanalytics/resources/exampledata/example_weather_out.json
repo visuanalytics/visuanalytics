@@ -1,0 +1,2969 @@
+{
+  "_conf": {},
+  "_pipe_id": "1",
+  "_req": {
+    "Kiel": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "25",
+          "min_temp": "11,7",
+          "app_min_temp": "11,7",
+          "app_max_temp": "24,2",
+          "wind_cdir_full": "Nord Nordost",
+          "wind_spd": "3,37202",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1589860056,
+          "sunset_ts": 1589915169,
+          "rh": "51",
+          "pop": "0",
+          "str_max_temp": "25 Grad",
+          "str_min_temp": "11.7 Grad",
+          "str_app_max_temp": "24.2 Grad",
+          "str_app_min_temp": "11.7 Grad",
+          "str_wind_spd": "3.37202 Metern pro Sekunde",
+          "str_rh": "51 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es leicht bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "24,2",
+          "min_temp": "12,9",
+          "app_min_temp": "12,9",
+          "app_max_temp": "23,7",
+          "wind_cdir_full": "Nordosten",
+          "wind_spd": "3,83245",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1589946391,
+          "sunset_ts": 1590001641,
+          "rh": "58",
+          "pop": "0",
+          "str_max_temp": "24.2 Grad",
+          "str_min_temp": "12.9 Grad",
+          "str_app_max_temp": "23.7 Grad",
+          "str_app_min_temp": "12.9 Grad",
+          "str_wind_spd": "3.83245 Metern pro Sekunde",
+          "str_rh": "58 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es leicht bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "25,1",
+          "min_temp": "11,6",
+          "app_min_temp": "11,6",
+          "app_max_temp": "24,6",
+          "wind_cdir_full": "Nord Nordost",
+          "wind_spd": "3,0519",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1590032727,
+          "sunset_ts": 1590088111,
+          "rh": "61",
+          "pop": "0",
+          "str_max_temp": "25.1 Grad",
+          "str_min_temp": "11.6 Grad",
+          "str_app_max_temp": "24.6 Grad",
+          "str_app_min_temp": "11.6 Grad",
+          "str_wind_spd": "3.0519 Metern pro Sekunde",
+          "str_rh": "61 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es leicht bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "27,1",
+          "min_temp": "14,2",
+          "app_min_temp": "14,3",
+          "app_max_temp": "27,1",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "0,766858",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590119066,
+          "sunset_ts": 1590174581,
+          "rh": "67",
+          "pop": "10",
+          "str_max_temp": "27.1 Grad",
+          "str_min_temp": "14.2 Grad",
+          "str_app_max_temp": "27.1 Grad",
+          "str_app_min_temp": "14.3 Grad",
+          "str_wind_spd": "0.766858 Metern pro Sekunde",
+          "str_rh": "67 Prozent",
+          "str_pop": "10 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "23,6",
+          "min_temp": "11,1",
+          "app_min_temp": "11,2",
+          "app_max_temp": "23",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "3,05222",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590205407,
+          "sunset_ts": 1590261049,
+          "rh": "73",
+          "pop": "45",
+          "str_max_temp": "23.6 Grad",
+          "str_min_temp": "11.1 Grad",
+          "str_app_max_temp": "23 Grad",
+          "str_app_min_temp": "11.2 Grad",
+          "str_wind_spd": "3.05222 Metern pro Sekunde",
+          "str_rh": "73 Prozent",
+          "str_pop": "45 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        }
+      ]
+    },
+    "Berlin": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "18,3",
+          "min_temp": "12,1",
+          "app_min_temp": "12,1",
+          "app_max_temp": "18,3",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,99953",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589857633,
+          "sunset_ts": 1589915206,
+          "rh": "64",
+          "pop": "20",
+          "str_max_temp": "18.3 Grad",
+          "str_min_temp": "12.1 Grad",
+          "str_app_max_temp": "18.3 Grad",
+          "str_app_min_temp": "12.1 Grad",
+          "str_wind_spd": "2.99953 Metern pro Sekunde",
+          "str_rh": "64 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "19,1",
+          "min_temp": "10,9",
+          "app_min_temp": "10,9",
+          "app_max_temp": "18,3",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "2,32281",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589943950,
+          "sunset_ts": 1590001694,
+          "rh": "56",
+          "pop": "20",
+          "str_max_temp": "19.1 Grad",
+          "str_min_temp": "10.9 Grad",
+          "str_app_max_temp": "18.3 Grad",
+          "str_app_min_temp": "10.9 Grad",
+          "str_wind_spd": "2.32281 Metern pro Sekunde",
+          "str_rh": "56 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "19,3",
+          "min_temp": "8",
+          "app_min_temp": "8",
+          "app_max_temp": "18,1",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "1,64968",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590030270,
+          "sunset_ts": 1590088182,
+          "rh": "47",
+          "pop": "0",
+          "str_max_temp": "19.3 Grad",
+          "str_min_temp": "8 Grad",
+          "str_app_max_temp": "18.1 Grad",
+          "str_app_min_temp": "8 Grad",
+          "str_wind_spd": "1.64968 Metern pro Sekunde",
+          "str_rh": "47 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "19,6",
+          "min_temp": "9,2",
+          "app_min_temp": "9,3",
+          "app_max_temp": "18,2",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "4,60777",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590116592,
+          "sunset_ts": 1590174668,
+          "rh": "46",
+          "pop": "0",
+          "str_max_temp": "19.6 Grad",
+          "str_min_temp": "9.2 Grad",
+          "str_app_max_temp": "18.2 Grad",
+          "str_app_min_temp": "9.3 Grad",
+          "str_wind_spd": "4.60777 Metern pro Sekunde",
+          "str_rh": "46 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "16,4",
+          "min_temp": "10,2",
+          "app_min_temp": "10,3",
+          "app_max_temp": "15,6",
+          "wind_cdir_full": "S\u00fcd S\u00fcdwest",
+          "wind_spd": "4,39612",
+          "weather": {
+            "icon": "r01d",
+            "code": 500
+          },
+          "sunrise_ts": 1590202917,
+          "sunset_ts": 1590261152,
+          "rh": "65",
+          "pop": "85",
+          "str_max_temp": "16.4 Grad",
+          "str_min_temp": "10.2 Grad",
+          "str_app_max_temp": "15.6 Grad",
+          "str_app_min_temp": "10.3 Grad",
+          "str_wind_spd": "4.39612 Metern pro Sekunde",
+          "str_rh": "65 Prozent",
+          "str_pop": "85 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regen"
+          }
+        }
+      ]
+    },
+    "Dresden": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "20,4",
+          "min_temp": "9,8",
+          "app_min_temp": "9,8",
+          "app_max_temp": "19,7",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,42024",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589858284,
+          "sunset_ts": 1589914547,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "20.4 Grad",
+          "str_min_temp": "9.8 Grad",
+          "str_app_max_temp": "19.7 Grad",
+          "str_app_min_temp": "9.8 Grad",
+          "str_wind_spd": "2.42024 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "19,6",
+          "min_temp": "12",
+          "app_min_temp": "12",
+          "app_max_temp": "18,6",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "1,71127",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589944611,
+          "sunset_ts": 1590001026,
+          "rh": "63",
+          "pop": "15",
+          "str_max_temp": "19.6 Grad",
+          "str_min_temp": "12 Grad",
+          "str_app_max_temp": "18.6 Grad",
+          "str_app_min_temp": "12 Grad",
+          "str_wind_spd": "1.71127 Metern pro Sekunde",
+          "str_rh": "63 Prozent",
+          "str_pop": "15 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "18,4",
+          "min_temp": "6,8",
+          "app_min_temp": "3,6",
+          "app_max_temp": "18,3",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,24942",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590030940,
+          "sunset_ts": 1590087505,
+          "rh": "54",
+          "pop": "0",
+          "str_max_temp": "18.4 Grad",
+          "str_min_temp": "6.8 Grad",
+          "str_app_max_temp": "18.3 Grad",
+          "str_app_min_temp": "3.6 Grad",
+          "str_wind_spd": "1.24942 Metern pro Sekunde",
+          "str_rh": "54 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "20",
+          "min_temp": "9,3",
+          "app_min_temp": "9,6",
+          "app_max_temp": "18,8",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "3,10143",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590117271,
+          "sunset_ts": 1590173982,
+          "rh": "59",
+          "pop": "0",
+          "str_max_temp": "20 Grad",
+          "str_min_temp": "9.3 Grad",
+          "str_app_max_temp": "18.8 Grad",
+          "str_app_min_temp": "9.6 Grad",
+          "str_wind_spd": "3.10143 Metern pro Sekunde",
+          "str_rh": "59 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "18,6",
+          "min_temp": "8,8",
+          "app_min_temp": "9,7",
+          "app_max_temp": "17,8",
+          "wind_cdir_full": "S\u00fcd S\u00fcdwest",
+          "wind_spd": "3,90916",
+          "weather": {
+            "icon": "r04d",
+            "code": 520
+          },
+          "sunrise_ts": 1590203605,
+          "sunset_ts": 1590260458,
+          "rh": "70",
+          "pop": "85",
+          "str_max_temp": "18.6 Grad",
+          "str_min_temp": "8.8 Grad",
+          "str_app_max_temp": "17.8 Grad",
+          "str_app_min_temp": "9.7 Grad",
+          "str_wind_spd": "3.90916 Metern pro Sekunde",
+          "str_rh": "70 Prozent",
+          "str_pop": "85 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regenschauer"
+          }
+        }
+      ]
+    },
+    "Hannover": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "19,5",
+          "min_temp": "12,2",
+          "app_min_temp": "12,2",
+          "app_max_temp": "18,7",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,52072",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589858317,
+          "sunset_ts": 1589915806,
+          "rh": "64",
+          "pop": "20",
+          "str_max_temp": "19.5 Grad",
+          "str_min_temp": "12.2 Grad",
+          "str_app_max_temp": "18.7 Grad",
+          "str_app_min_temp": "12.2 Grad",
+          "str_wind_spd": "2.52072 Metern pro Sekunde",
+          "str_rh": "64 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "21,6",
+          "min_temp": "11,2",
+          "app_min_temp": "11,2",
+          "app_max_temp": "20,7",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "1,62911",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589944633,
+          "sunset_ts": 1590002295,
+          "rh": "60",
+          "pop": "20",
+          "str_max_temp": "21.6 Grad",
+          "str_min_temp": "11.2 Grad",
+          "str_app_max_temp": "20.7 Grad",
+          "str_app_min_temp": "11.2 Grad",
+          "str_wind_spd": "1.62911 Metern pro Sekunde",
+          "str_rh": "60 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "22,2",
+          "min_temp": "9,4",
+          "app_min_temp": "9,4",
+          "app_max_temp": "21,3",
+          "wind_cdir_full": "Osten",
+          "wind_spd": "1,76706",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590030950,
+          "sunset_ts": 1590088782,
+          "rh": "47",
+          "pop": "0",
+          "str_max_temp": "22.2 Grad",
+          "str_min_temp": "9.4 Grad",
+          "str_app_max_temp": "21.3 Grad",
+          "str_app_min_temp": "9.4 Grad",
+          "str_wind_spd": "1.76706 Metern pro Sekunde",
+          "str_rh": "47 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "21,8",
+          "min_temp": "9,6",
+          "app_min_temp": "9,7",
+          "app_max_temp": "21,6",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "3,34296",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590117270,
+          "sunset_ts": 1590175268,
+          "rh": "79",
+          "pop": "30",
+          "str_max_temp": "21.8 Grad",
+          "str_min_temp": "9.6 Grad",
+          "str_app_max_temp": "21.6 Grad",
+          "str_app_min_temp": "9.7 Grad",
+          "str_wind_spd": "3.34296 Metern pro Sekunde",
+          "str_rh": "79 Prozent",
+          "str_pop": "30 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "17,7",
+          "min_temp": "8,7",
+          "app_min_temp": "9,5",
+          "app_max_temp": "15,4",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "3,73607",
+          "weather": {
+            "icon": "r01d",
+            "code": 500
+          },
+          "sunrise_ts": 1590203592,
+          "sunset_ts": 1590261753,
+          "rh": "87",
+          "pop": "85",
+          "str_max_temp": "17.7 Grad",
+          "str_min_temp": "8.7 Grad",
+          "str_app_max_temp": "15.4 Grad",
+          "str_app_min_temp": "9.5 Grad",
+          "str_wind_spd": "3.73607 Metern pro Sekunde",
+          "str_rh": "87 Prozent",
+          "str_pop": "85 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regen"
+          }
+        }
+      ]
+    },
+    "Bremen": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "17,8",
+          "min_temp": "11,9",
+          "app_min_temp": "11,9",
+          "app_max_temp": "17,8",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,80628",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589858233,
+          "sunset_ts": 1589915806,
+          "rh": "71",
+          "pop": "20",
+          "str_max_temp": "17.8 Grad",
+          "str_min_temp": "11.9 Grad",
+          "str_app_max_temp": "17.8 Grad",
+          "str_app_min_temp": "11.9 Grad",
+          "str_wind_spd": "2.80628 Metern pro Sekunde",
+          "str_rh": "71 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "20",
+          "min_temp": "10,1",
+          "app_min_temp": "10,1",
+          "app_max_temp": "19,2",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,30526",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589944550,
+          "sunset_ts": 1590002295,
+          "rh": "68",
+          "pop": "0",
+          "str_max_temp": "20 Grad",
+          "str_min_temp": "10.1 Grad",
+          "str_app_max_temp": "19.2 Grad",
+          "str_app_min_temp": "10.1 Grad",
+          "str_wind_spd": "1.30526 Metern pro Sekunde",
+          "str_rh": "68 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "23,1",
+          "min_temp": "9,5",
+          "app_min_temp": "9,5",
+          "app_max_temp": "22,3",
+          "wind_cdir_full": "Osten",
+          "wind_spd": "1,89742",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590030870,
+          "sunset_ts": 1590088782,
+          "rh": "52",
+          "pop": "0",
+          "str_max_temp": "23.1 Grad",
+          "str_min_temp": "9.5 Grad",
+          "str_app_max_temp": "22.3 Grad",
+          "str_app_min_temp": "9.5 Grad",
+          "str_wind_spd": "1.89742 Metern pro Sekunde",
+          "str_rh": "52 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind vereinzelte Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "22,1",
+          "min_temp": "10,8",
+          "app_min_temp": "10,8",
+          "app_max_temp": "22",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "4,97699",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590117192,
+          "sunset_ts": 1590175268,
+          "rh": "81",
+          "pop": "30",
+          "str_max_temp": "22.1 Grad",
+          "str_min_temp": "10.8 Grad",
+          "str_app_max_temp": "22 Grad",
+          "str_app_min_temp": "10.8 Grad",
+          "str_wind_spd": "4.97699 Metern pro Sekunde",
+          "str_rh": "81 Prozent",
+          "str_pop": "30 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "18,5",
+          "min_temp": "8",
+          "app_min_temp": "8,5",
+          "app_max_temp": "16,9",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "4,15082",
+          "weather": {
+            "icon": "r04d",
+            "code": 520
+          },
+          "sunrise_ts": 1590203517,
+          "sunset_ts": 1590261753,
+          "rh": "87",
+          "pop": "80",
+          "str_max_temp": "18.5 Grad",
+          "str_min_temp": "8 Grad",
+          "str_app_max_temp": "16.9 Grad",
+          "str_app_min_temp": "8.5 Grad",
+          "str_wind_spd": "4.15082 Metern pro Sekunde",
+          "str_rh": "87 Prozent",
+          "str_pop": "80 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist mit leichten Regenschauern zu rechnen"
+          }
+        }
+      ]
+    },
+    "D\u00fcsseldorf": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "22,8",
+          "min_temp": "10,7",
+          "app_min_temp": "10,7",
+          "app_max_temp": "22,2",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "2,44258",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589859558,
+          "sunset_ts": 1589915748,
+          "rh": "51",
+          "pop": "0",
+          "str_max_temp": "22.8 Grad",
+          "str_min_temp": "10.7 Grad",
+          "str_app_max_temp": "22.2 Grad",
+          "str_app_min_temp": "10.7 Grad",
+          "str_wind_spd": "2.44258 Metern pro Sekunde",
+          "str_rh": "51 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "20,5",
+          "min_temp": "12,8",
+          "app_min_temp": "12,8",
+          "app_max_temp": "19,9",
+          "wind_cdir_full": "S\u00fcden",
+          "wind_spd": "2,09984",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945883,
+          "sunset_ts": 1590002228,
+          "rh": "66",
+          "pop": "0",
+          "str_max_temp": "20.5 Grad",
+          "str_min_temp": "12.8 Grad",
+          "str_app_max_temp": "19.9 Grad",
+          "str_app_min_temp": "12.8 Grad",
+          "str_wind_spd": "2.09984 Metern pro Sekunde",
+          "str_rh": "66 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "26,2",
+          "min_temp": "10,8",
+          "app_min_temp": "10,8",
+          "app_max_temp": "25,8",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "1,09038",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590032210,
+          "sunset_ts": 1590088706,
+          "rh": "58",
+          "pop": "0",
+          "str_max_temp": "26.2 Grad",
+          "str_min_temp": "10.8 Grad",
+          "str_app_max_temp": "25.8 Grad",
+          "str_app_min_temp": "10.8 Grad",
+          "str_wind_spd": "1.09038 Metern pro Sekunde",
+          "str_rh": "58 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "26,6",
+          "min_temp": "17,1",
+          "app_min_temp": "17,1",
+          "app_max_temp": "26,3",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "2,21912",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590118539,
+          "sunset_ts": 1590175183,
+          "rh": "54",
+          "pop": "30",
+          "str_max_temp": "26.6 Grad",
+          "str_min_temp": "17.1 Grad",
+          "str_app_max_temp": "26.3 Grad",
+          "str_app_min_temp": "17.1 Grad",
+          "str_wind_spd": "2.21912 Metern pro Sekunde",
+          "str_rh": "54 Prozent",
+          "str_pop": "30 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "24,5",
+          "min_temp": "12,2",
+          "app_min_temp": "12,3",
+          "app_max_temp": "21,1",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "3,70966",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204870,
+          "sunset_ts": 1590261659,
+          "rh": "62",
+          "pop": "55",
+          "str_max_temp": "24.5 Grad",
+          "str_min_temp": "12.2 Grad",
+          "str_app_max_temp": "21.1 Grad",
+          "str_app_min_temp": "12.3 Grad",
+          "str_wind_spd": "3.70966 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "55 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    },
+    "Frankfurt": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "24,8",
+          "min_temp": "9,7",
+          "app_min_temp": "9,7",
+          "app_max_temp": "24,1",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,36482",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589859558,
+          "sunset_ts": 1589915748,
+          "rh": "51",
+          "pop": "0",
+          "str_max_temp": "24.8 Grad",
+          "str_min_temp": "9.7 Grad",
+          "str_app_max_temp": "24.1 Grad",
+          "str_app_min_temp": "9.7 Grad",
+          "str_wind_spd": "1.36482 Metern pro Sekunde",
+          "str_rh": "51 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "21,8",
+          "min_temp": "12,7",
+          "app_min_temp": "12,7",
+          "app_max_temp": "21,2",
+          "wind_cdir_full": "Nord Nordost",
+          "wind_spd": "1,95897",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945883,
+          "sunset_ts": 1590002228,
+          "rh": "61",
+          "pop": "0",
+          "str_max_temp": "21.8 Grad",
+          "str_min_temp": "12.7 Grad",
+          "str_app_max_temp": "21.2 Grad",
+          "str_app_min_temp": "12.7 Grad",
+          "str_wind_spd": "1.95897 Metern pro Sekunde",
+          "str_rh": "61 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "22,9",
+          "min_temp": "10,8",
+          "app_min_temp": "10,8",
+          "app_max_temp": "22,2",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "1,50253",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590032210,
+          "sunset_ts": 1590088706,
+          "rh": "57",
+          "pop": "0",
+          "str_max_temp": "22.9 Grad",
+          "str_min_temp": "10.8 Grad",
+          "str_app_max_temp": "22.2 Grad",
+          "str_app_min_temp": "10.8 Grad",
+          "str_wind_spd": "1.50253 Metern pro Sekunde",
+          "str_rh": "57 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "27,4",
+          "min_temp": "14,2",
+          "app_min_temp": "14,3",
+          "app_max_temp": "26,6",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "1,79739",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590118539,
+          "sunset_ts": 1590175183,
+          "rh": "52",
+          "pop": "0",
+          "str_max_temp": "27.4 Grad",
+          "str_min_temp": "14.2 Grad",
+          "str_app_max_temp": "26.6 Grad",
+          "str_app_min_temp": "14.3 Grad",
+          "str_wind_spd": "1.79739 Metern pro Sekunde",
+          "str_rh": "52 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "24,3",
+          "min_temp": "13,7",
+          "app_min_temp": "14",
+          "app_max_temp": "20,9",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "2,43525",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204870,
+          "sunset_ts": 1590261659,
+          "rh": "60",
+          "pop": "20",
+          "str_max_temp": "24.3 Grad",
+          "str_min_temp": "13.7 Grad",
+          "str_app_max_temp": "20.9 Grad",
+          "str_app_min_temp": "14 Grad",
+          "str_wind_spd": "2.43525 Metern pro Sekunde",
+          "str_rh": "60 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    },
+    "N\u00fcrnberg": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "24,1",
+          "min_temp": "9,8",
+          "app_min_temp": "9,8",
+          "app_max_temp": "23,4",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "1,98221",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589858959,
+          "sunset_ts": 1589915148,
+          "rh": "54",
+          "pop": "0",
+          "str_max_temp": "24.1 Grad",
+          "str_min_temp": "9.8 Grad",
+          "str_app_max_temp": "23.4 Grad",
+          "str_app_min_temp": "9.8 Grad",
+          "str_wind_spd": "1.98221 Metern pro Sekunde",
+          "str_rh": "54 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "19,7",
+          "min_temp": "13,2",
+          "app_min_temp": "13,2",
+          "app_max_temp": "18,9",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "1,73459",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945284,
+          "sunset_ts": 1590001627,
+          "rh": "63",
+          "pop": "0",
+          "str_max_temp": "19.7 Grad",
+          "str_min_temp": "13.2 Grad",
+          "str_app_max_temp": "18.9 Grad",
+          "str_app_min_temp": "13.2 Grad",
+          "str_wind_spd": "1.73459 Metern pro Sekunde",
+          "str_rh": "63 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "21,6",
+          "min_temp": "7,8",
+          "app_min_temp": "7,8",
+          "app_max_temp": "20,7",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "1,58475",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590031610,
+          "sunset_ts": 1590088105,
+          "rh": "57",
+          "pop": "0",
+          "str_max_temp": "21.6 Grad",
+          "str_min_temp": "7.8 Grad",
+          "str_app_max_temp": "20.7 Grad",
+          "str_app_min_temp": "7.8 Grad",
+          "str_wind_spd": "1.58475 Metern pro Sekunde",
+          "str_rh": "57 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "25,3",
+          "min_temp": "12",
+          "app_min_temp": "12,1",
+          "app_max_temp": "24,5",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,80485",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590117939,
+          "sunset_ts": 1590174582,
+          "rh": "59",
+          "pop": "0",
+          "str_max_temp": "25.3 Grad",
+          "str_min_temp": "12 Grad",
+          "str_app_max_temp": "24.5 Grad",
+          "str_app_min_temp": "12.1 Grad",
+          "str_wind_spd": "1.80485 Metern pro Sekunde",
+          "str_rh": "59 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "23,4",
+          "min_temp": "9,7",
+          "app_min_temp": "10,2",
+          "app_max_temp": "22,3",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "3,33246",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204271,
+          "sunset_ts": 1590261058,
+          "rh": "74",
+          "pop": "55",
+          "str_max_temp": "23.4 Grad",
+          "str_min_temp": "9.7 Grad",
+          "str_app_max_temp": "22.3 Grad",
+          "str_app_min_temp": "10.2 Grad",
+          "str_wind_spd": "3.33246 Metern pro Sekunde",
+          "str_rh": "74 Prozent",
+          "str_pop": "55 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        }
+      ]
+    },
+    "Stuttgart": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "23",
+          "min_temp": "11",
+          "app_min_temp": "11",
+          "app_max_temp": "22,2",
+          "wind_cdir_full": "S\u00fcden",
+          "wind_spd": "2,14689",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1589858884,
+          "sunset_ts": 1589915148,
+          "rh": "53",
+          "pop": "0",
+          "str_max_temp": "23 Grad",
+          "str_min_temp": "11 Grad",
+          "str_app_max_temp": "22.2 Grad",
+          "str_app_min_temp": "11 Grad",
+          "str_wind_spd": "2.14689 Metern pro Sekunde",
+          "str_rh": "53 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es leicht bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "21",
+          "min_temp": "11,9",
+          "app_min_temp": "11,9",
+          "app_max_temp": "20,4",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "2,12103",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945210,
+          "sunset_ts": 1590001627,
+          "rh": "60",
+          "pop": "0",
+          "str_max_temp": "21 Grad",
+          "str_min_temp": "11.9 Grad",
+          "str_app_max_temp": "20.4 Grad",
+          "str_app_min_temp": "11.9 Grad",
+          "str_wind_spd": "2.12103 Metern pro Sekunde",
+          "str_rh": "60 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "22,2",
+          "min_temp": "10,1",
+          "app_min_temp": "10,1",
+          "app_max_temp": "21,5",
+          "wind_cdir_full": "Osten",
+          "wind_spd": "1,54131",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1590031539,
+          "sunset_ts": 1590088105,
+          "rh": "61",
+          "pop": "0",
+          "str_max_temp": "22.2 Grad",
+          "str_min_temp": "10.1 Grad",
+          "str_app_max_temp": "21.5 Grad",
+          "str_app_min_temp": "10.1 Grad",
+          "str_wind_spd": "1.54131 Metern pro Sekunde",
+          "str_rh": "61 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind nur wenige Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "27,9",
+          "min_temp": "13,2",
+          "app_min_temp": "13,3",
+          "app_max_temp": "26,8",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,10335",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590117871,
+          "sunset_ts": 1590174582,
+          "rh": "56",
+          "pop": "0",
+          "str_max_temp": "27.9 Grad",
+          "str_min_temp": "13.2 Grad",
+          "str_app_max_temp": "26.8 Grad",
+          "str_app_min_temp": "13.3 Grad",
+          "str_wind_spd": "1.10335 Metern pro Sekunde",
+          "str_rh": "56 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "24,1",
+          "min_temp": "11,5",
+          "app_min_temp": "12,4",
+          "app_max_temp": "23,6",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "3,01815",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204204,
+          "sunset_ts": 1590261058,
+          "rh": "68",
+          "pop": "60",
+          "str_max_temp": "24.1 Grad",
+          "str_min_temp": "11.5 Grad",
+          "str_app_max_temp": "23.6 Grad",
+          "str_app_min_temp": "12.4 Grad",
+          "str_wind_spd": "3.01815 Metern pro Sekunde",
+          "str_rh": "68 Prozent",
+          "str_pop": "60 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    },
+    "M\u00fcnchen": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "22,4",
+          "min_temp": "10,6",
+          "app_min_temp": "10,6",
+          "app_max_temp": "21,7",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,92196",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589858924,
+          "sunset_ts": 1589913968,
+          "rh": "56",
+          "pop": "0",
+          "str_max_temp": "22.4 Grad",
+          "str_min_temp": "10.6 Grad",
+          "str_app_max_temp": "21.7 Grad",
+          "str_app_min_temp": "10.6 Grad",
+          "str_wind_spd": "1.92196 Metern pro Sekunde",
+          "str_rh": "56 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind vereinzelte Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "18,9",
+          "min_temp": "12",
+          "app_min_temp": "12",
+          "app_max_temp": "18,2",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "1,46985",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589945257,
+          "sunset_ts": 1590000440,
+          "rh": "67",
+          "pop": "20",
+          "str_max_temp": "18.9 Grad",
+          "str_min_temp": "12 Grad",
+          "str_app_max_temp": "18.2 Grad",
+          "str_app_min_temp": "12 Grad",
+          "str_wind_spd": "1.46985 Metern pro Sekunde",
+          "str_rh": "67 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "19,9",
+          "min_temp": "9,5",
+          "app_min_temp": "9,5",
+          "app_max_temp": "19",
+          "wind_cdir_full": "Nordosten",
+          "wind_spd": "1,76418",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590031592,
+          "sunset_ts": 1590086910,
+          "rh": "65",
+          "pop": "0",
+          "str_max_temp": "19.9 Grad",
+          "str_min_temp": "9.5 Grad",
+          "str_app_max_temp": "19 Grad",
+          "str_app_min_temp": "9.5 Grad",
+          "str_wind_spd": "1.76418 Metern pro Sekunde",
+          "str_rh": "65 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "22,9",
+          "min_temp": "11",
+          "app_min_temp": "11",
+          "app_max_temp": "22,2",
+          "wind_cdir_full": "Osten",
+          "wind_spd": "1,72785",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590117928,
+          "sunset_ts": 1590173380,
+          "rh": "63",
+          "pop": "0",
+          "str_max_temp": "22.9 Grad",
+          "str_min_temp": "11 Grad",
+          "str_app_max_temp": "22.2 Grad",
+          "str_app_min_temp": "11 Grad",
+          "str_wind_spd": "1.72785 Metern pro Sekunde",
+          "str_rh": "63 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "25,2",
+          "min_temp": "10,8",
+          "app_min_temp": "11,4",
+          "app_max_temp": "24,4",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "2,34845",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204267,
+          "sunset_ts": 1590259848,
+          "rh": "68",
+          "pop": "55",
+          "str_max_temp": "25.2 Grad",
+          "str_min_temp": "10.8 Grad",
+          "str_app_max_temp": "24.4 Grad",
+          "str_app_min_temp": "11.4 Grad",
+          "str_wind_spd": "2.34845 Metern pro Sekunde",
+          "str_rh": "68 Prozent",
+          "str_pop": "55 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        }
+      ]
+    },
+    "Saarbr\u00fccken": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "23,6",
+          "min_temp": "9,4",
+          "app_min_temp": "9,4",
+          "app_max_temp": "22,9",
+          "wind_cdir_full": "Nordwesten",
+          "wind_spd": "1,43617",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1589859558,
+          "sunset_ts": 1589915748,
+          "rh": "53",
+          "pop": "0",
+          "str_max_temp": "23.6 Grad",
+          "str_min_temp": "9.4 Grad",
+          "str_app_max_temp": "22.9 Grad",
+          "str_app_min_temp": "9.4 Grad",
+          "str_wind_spd": "1.43617 Metern pro Sekunde",
+          "str_rh": "53 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es leicht bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "22,1",
+          "min_temp": "10,8",
+          "app_min_temp": "10,8",
+          "app_max_temp": "21,5",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,99086",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589945883,
+          "sunset_ts": 1590002228,
+          "rh": "64",
+          "pop": "0",
+          "str_max_temp": "22.1 Grad",
+          "str_min_temp": "10.8 Grad",
+          "str_app_max_temp": "21.5 Grad",
+          "str_app_min_temp": "10.8 Grad",
+          "str_wind_spd": "1.99086 Metern pro Sekunde",
+          "str_rh": "64 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind vereinzelte Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "24,2",
+          "min_temp": "9,7",
+          "app_min_temp": "9,7",
+          "app_max_temp": "23,7",
+          "wind_cdir_full": "Nordosten",
+          "wind_spd": "1,72725",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1590032210,
+          "sunset_ts": 1590088706,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "24.2 Grad",
+          "str_min_temp": "9.7 Grad",
+          "str_app_max_temp": "23.7 Grad",
+          "str_app_min_temp": "9.7 Grad",
+          "str_wind_spd": "1.72725 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind nur wenige Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "25,1",
+          "min_temp": "11",
+          "app_min_temp": "11",
+          "app_max_temp": "24,9",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,40846",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590118539,
+          "sunset_ts": 1590175183,
+          "rh": "73",
+          "pop": "0",
+          "str_max_temp": "25.1 Grad",
+          "str_min_temp": "11 Grad",
+          "str_app_max_temp": "24.9 Grad",
+          "str_app_min_temp": "11 Grad",
+          "str_wind_spd": "1.40846 Metern pro Sekunde",
+          "str_rh": "73 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "20,5",
+          "min_temp": "8,5",
+          "app_min_temp": "9",
+          "app_max_temp": "17,4",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "2,39072",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204870,
+          "sunset_ts": 1590261659,
+          "rh": "82",
+          "pop": "25",
+          "str_max_temp": "20.5 Grad",
+          "str_min_temp": "8.5 Grad",
+          "str_app_max_temp": "17.4 Grad",
+          "str_app_min_temp": "9 Grad",
+          "str_wind_spd": "2.39072 Metern pro Sekunde",
+          "str_rh": "82 Prozent",
+          "str_pop": "25 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    },
+    "Schwerin": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "15,6",
+          "min_temp": "10,4",
+          "app_min_temp": "10,4",
+          "app_max_temp": "15,6",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "3,88311",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589857718,
+          "sunset_ts": 1589915206,
+          "rh": "80",
+          "pop": "10",
+          "str_max_temp": "15.6 Grad",
+          "str_min_temp": "10.4 Grad",
+          "str_app_max_temp": "15.6 Grad",
+          "str_app_min_temp": "10.4 Grad",
+          "str_wind_spd": "3.88311 Metern pro Sekunde",
+          "str_rh": "80 Prozent",
+          "str_pop": "10 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "15,7",
+          "min_temp": "8,5",
+          "app_min_temp": "8,5",
+          "app_max_temp": "15,7",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "2,51051",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589944033,
+          "sunset_ts": 1590001694,
+          "rh": "69",
+          "pop": "0",
+          "str_max_temp": "15.7 Grad",
+          "str_min_temp": "8.5 Grad",
+          "str_app_max_temp": "15.7 Grad",
+          "str_app_min_temp": "8.5 Grad",
+          "str_wind_spd": "2.51051 Metern pro Sekunde",
+          "str_rh": "69 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "17,2",
+          "min_temp": "10,3",
+          "app_min_temp": "10,3",
+          "app_max_temp": "17,2",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,63568",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590030350,
+          "sunset_ts": 1590088182,
+          "rh": "64",
+          "pop": "20",
+          "str_max_temp": "17.2 Grad",
+          "str_min_temp": "10.3 Grad",
+          "str_app_max_temp": "17.2 Grad",
+          "str_app_min_temp": "10.3 Grad",
+          "str_wind_spd": "1.63568 Metern pro Sekunde",
+          "str_rh": "64 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "17,9",
+          "min_temp": "7,1",
+          "app_min_temp": "4",
+          "app_max_temp": "17,9",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "5,26575",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590116670,
+          "sunset_ts": 1590174668,
+          "rh": "70",
+          "pop": "0",
+          "str_max_temp": "17.9 Grad",
+          "str_min_temp": "7.1 Grad",
+          "str_app_max_temp": "17.9 Grad",
+          "str_app_min_temp": "4 Grad",
+          "str_wind_spd": "5.26575 Metern pro Sekunde",
+          "str_rh": "70 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "14,2",
+          "min_temp": "7,6",
+          "app_min_temp": "8,1",
+          "app_max_temp": "13,8",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "5,2203",
+          "weather": {
+            "icon": "r02d",
+            "code": 501
+          },
+          "sunrise_ts": 1590202992,
+          "sunset_ts": 1590261152,
+          "rh": "75",
+          "pop": "90",
+          "str_max_temp": "14.2 Grad",
+          "str_min_temp": "7.6 Grad",
+          "str_app_max_temp": "13.8 Grad",
+          "str_app_min_temp": "8.1 Grad",
+          "str_wind_spd": "5.2203 Metern pro Sekunde",
+          "str_rh": "75 Prozent",
+          "str_pop": "90 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es regnerisch"
+          }
+        }
+      ]
+    },
+    "Hamburg": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "15,1",
+          "min_temp": "10,7",
+          "app_min_temp": "10,7",
+          "app_max_temp": "15,1",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "3,05121",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589858317,
+          "sunset_ts": 1589915806,
+          "rh": "80",
+          "pop": "20",
+          "str_max_temp": "15.1 Grad",
+          "str_min_temp": "10.7 Grad",
+          "str_app_max_temp": "15.1 Grad",
+          "str_app_min_temp": "10.7 Grad",
+          "str_wind_spd": "3.05121 Metern pro Sekunde",
+          "str_rh": "80 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "18,6",
+          "min_temp": "8,4",
+          "app_min_temp": "8,4",
+          "app_max_temp": "18,1",
+          "wind_cdir_full": "S\u00fcden",
+          "wind_spd": "1,44649",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589944633,
+          "sunset_ts": 1590002295,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "18.6 Grad",
+          "str_min_temp": "8.4 Grad",
+          "str_app_max_temp": "18.1 Grad",
+          "str_app_min_temp": "8.4 Grad",
+          "str_wind_spd": "1.44649 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "20,1",
+          "min_temp": "10,9",
+          "app_min_temp": "10,9",
+          "app_max_temp": "19,4",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,72035",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590030950,
+          "sunset_ts": 1590088782,
+          "rh": "56",
+          "pop": "20",
+          "str_max_temp": "20.1 Grad",
+          "str_min_temp": "10.9 Grad",
+          "str_app_max_temp": "19.4 Grad",
+          "str_app_min_temp": "10.9 Grad",
+          "str_wind_spd": "1.72035 Metern pro Sekunde",
+          "str_rh": "56 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "21,9",
+          "min_temp": "10,3",
+          "app_min_temp": "10,5",
+          "app_max_temp": "21,5",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "4,34016",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590117270,
+          "sunset_ts": 1590175268,
+          "rh": "65",
+          "pop": "0",
+          "str_max_temp": "21.9 Grad",
+          "str_min_temp": "10.3 Grad",
+          "str_app_max_temp": "21.5 Grad",
+          "str_app_min_temp": "10.5 Grad",
+          "str_wind_spd": "4.34016 Metern pro Sekunde",
+          "str_rh": "65 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "17,9",
+          "min_temp": "8",
+          "app_min_temp": "8,4",
+          "app_max_temp": "15,8",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "3,7484",
+          "weather": {
+            "icon": "r01d",
+            "code": 500
+          },
+          "sunrise_ts": 1590203592,
+          "sunset_ts": 1590261753,
+          "rh": "80",
+          "pop": "85",
+          "str_max_temp": "17.9 Grad",
+          "str_min_temp": "8 Grad",
+          "str_app_max_temp": "15.8 Grad",
+          "str_app_min_temp": "8.4 Grad",
+          "str_wind_spd": "3.7484 Metern pro Sekunde",
+          "str_rh": "80 Prozent",
+          "str_pop": "85 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regen"
+          }
+        }
+      ]
+    },
+    "Gie\u00dfen": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "24,2",
+          "min_temp": "6,5",
+          "app_min_temp": "3,2",
+          "app_max_temp": "23,5",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "1,83944",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589859558,
+          "sunset_ts": 1589915748,
+          "rh": "53",
+          "pop": "0",
+          "str_max_temp": "24.2 Grad",
+          "str_min_temp": "6.5 Grad",
+          "str_app_max_temp": "23.5 Grad",
+          "str_app_min_temp": "3.2 Grad",
+          "str_wind_spd": "1.83944 Metern pro Sekunde",
+          "str_rh": "53 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "21,8",
+          "min_temp": "10,9",
+          "app_min_temp": "10,9",
+          "app_max_temp": "21,1",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,8525",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589945883,
+          "sunset_ts": 1590002228,
+          "rh": "63",
+          "pop": "0",
+          "str_max_temp": "21.8 Grad",
+          "str_min_temp": "10.9 Grad",
+          "str_app_max_temp": "21.1 Grad",
+          "str_app_min_temp": "10.9 Grad",
+          "str_wind_spd": "1.8525 Metern pro Sekunde",
+          "str_rh": "63 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "22,8",
+          "min_temp": "7,8",
+          "app_min_temp": "7,8",
+          "app_max_temp": "22,1",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,1397",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590032210,
+          "sunset_ts": 1590088706,
+          "rh": "61",
+          "pop": "0",
+          "str_max_temp": "22.8 Grad",
+          "str_min_temp": "7.8 Grad",
+          "str_app_max_temp": "22.1 Grad",
+          "str_app_min_temp": "7.8 Grad",
+          "str_wind_spd": "1.1397 Metern pro Sekunde",
+          "str_rh": "61 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "23,4",
+          "min_temp": "9,7",
+          "app_min_temp": "9,8",
+          "app_max_temp": "23,1",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "1,68388",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590118539,
+          "sunset_ts": 1590175183,
+          "rh": "73",
+          "pop": "0",
+          "str_max_temp": "23.4 Grad",
+          "str_min_temp": "9.7 Grad",
+          "str_app_max_temp": "23.1 Grad",
+          "str_app_min_temp": "9.8 Grad",
+          "str_wind_spd": "1.68388 Metern pro Sekunde",
+          "str_rh": "73 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "20,3",
+          "min_temp": "8,7",
+          "app_min_temp": "9,4",
+          "app_max_temp": "18,2",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "2,89373",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204870,
+          "sunset_ts": 1590261659,
+          "rh": "80",
+          "pop": "25",
+          "str_max_temp": "20.3 Grad",
+          "str_min_temp": "8.7 Grad",
+          "str_app_max_temp": "18.2 Grad",
+          "str_app_min_temp": "9.4 Grad",
+          "str_wind_spd": "2.89373 Metern pro Sekunde",
+          "str_rh": "80 Prozent",
+          "str_pop": "25 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    },
+    "Konstanz": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "23,5",
+          "min_temp": "14,4",
+          "app_min_temp": "14,4",
+          "app_max_temp": "22,8",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "2,70437",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589859456,
+          "sunset_ts": 1589914569,
+          "rh": "50",
+          "pop": "0",
+          "str_max_temp": "23.5 Grad",
+          "str_min_temp": "14.4 Grad",
+          "str_app_max_temp": "22.8 Grad",
+          "str_app_min_temp": "14.4 Grad",
+          "str_wind_spd": "2.70437 Metern pro Sekunde",
+          "str_rh": "50 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind vereinzelte Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "21,5",
+          "min_temp": "14,1",
+          "app_min_temp": "14,1",
+          "app_max_temp": "20,9",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "2,3024",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945791,
+          "sunset_ts": 1590001040,
+          "rh": "59",
+          "pop": "0",
+          "str_max_temp": "21.5 Grad",
+          "str_min_temp": "14.1 Grad",
+          "str_app_max_temp": "20.9 Grad",
+          "str_app_min_temp": "14.1 Grad",
+          "str_wind_spd": "2.3024 Metern pro Sekunde",
+          "str_rh": "59 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "22,8",
+          "min_temp": "12,1",
+          "app_min_temp": "12,1",
+          "app_max_temp": "22,1",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,35971",
+          "weather": {
+            "icon": "c02d",
+            "code": 801
+          },
+          "sunrise_ts": 1590032128,
+          "sunset_ts": 1590087511,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "22.8 Grad",
+          "str_min_temp": "12.1 Grad",
+          "str_app_max_temp": "22.1 Grad",
+          "str_app_min_temp": "12.1 Grad",
+          "str_wind_spd": "1.35971 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind nur wenige Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "26,7",
+          "min_temp": "9,6",
+          "app_min_temp": "9,8",
+          "app_max_temp": "26,3",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "0,88267",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590118467,
+          "sunset_ts": 1590173980,
+          "rh": "75",
+          "pop": "35",
+          "str_max_temp": "26.7 Grad",
+          "str_min_temp": "9.6 Grad",
+          "str_app_max_temp": "26.3 Grad",
+          "str_app_min_temp": "9.8 Grad",
+          "str_wind_spd": "0.88267 Metern pro Sekunde",
+          "str_rh": "75 Prozent",
+          "str_pop": "35 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "26,1",
+          "min_temp": "10,5",
+          "app_min_temp": "10,9",
+          "app_max_temp": "25,8",
+          "wind_cdir_full": "S\u00fcden",
+          "wind_spd": "1,98026",
+          "weather": {
+            "icon": "t02d",
+            "code": 201
+          },
+          "sunrise_ts": 1590204808,
+          "sunset_ts": 1590260449,
+          "rh": "79",
+          "pop": "65",
+          "str_max_temp": "26.1 Grad",
+          "str_min_temp": "10.5 Grad",
+          "str_app_max_temp": "25.8 Grad",
+          "str_app_min_temp": "10.9 Grad",
+          "str_wind_spd": "1.98026 Metern pro Sekunde",
+          "str_rh": "79 Prozent",
+          "str_pop": "65 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist mit Gewitter und Regen zu rechnen"
+          }
+        }
+      ]
+    },
+    "Magdeburg": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "18,8",
+          "min_temp": "15",
+          "app_min_temp": "15",
+          "app_max_temp": "18",
+          "wind_cdir_full": "Nordwesten",
+          "wind_spd": "3,53713",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589857633,
+          "sunset_ts": 1589915206,
+          "rh": "55",
+          "pop": "0",
+          "str_max_temp": "18.8 Grad",
+          "str_min_temp": "15 Grad",
+          "str_app_max_temp": "18 Grad",
+          "str_app_min_temp": "15 Grad",
+          "str_wind_spd": "3.53713 Metern pro Sekunde",
+          "str_rh": "55 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "20,6",
+          "min_temp": "9,6",
+          "app_min_temp": "9,6",
+          "app_max_temp": "19,5",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "2,23004",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589943950,
+          "sunset_ts": 1590001694,
+          "rh": "56",
+          "pop": "0",
+          "str_max_temp": "20.6 Grad",
+          "str_min_temp": "9.6 Grad",
+          "str_app_max_temp": "19.5 Grad",
+          "str_app_min_temp": "9.6 Grad",
+          "str_wind_spd": "2.23004 Metern pro Sekunde",
+          "str_rh": "56 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "21,8",
+          "min_temp": "9,3",
+          "app_min_temp": "9,3",
+          "app_max_temp": "20,9",
+          "wind_cdir_full": "Ost Nordost",
+          "wind_spd": "1,50233",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590030270,
+          "sunset_ts": 1590088182,
+          "rh": "53",
+          "pop": "0",
+          "str_max_temp": "21.8 Grad",
+          "str_min_temp": "9.3 Grad",
+          "str_app_max_temp": "20.9 Grad",
+          "str_app_min_temp": "9.3 Grad",
+          "str_wind_spd": "1.50233 Metern pro Sekunde",
+          "str_rh": "53 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "19,9",
+          "min_temp": "8,4",
+          "app_min_temp": "8,4",
+          "app_max_temp": "19,3",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "4,16092",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590116592,
+          "sunset_ts": 1590174668,
+          "rh": "67",
+          "pop": "0",
+          "str_max_temp": "19.9 Grad",
+          "str_min_temp": "8.4 Grad",
+          "str_app_max_temp": "19.3 Grad",
+          "str_app_min_temp": "8.4 Grad",
+          "str_wind_spd": "4.16092 Metern pro Sekunde",
+          "str_rh": "67 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "15,4",
+          "min_temp": "9",
+          "app_min_temp": "9,7",
+          "app_max_temp": "13,8",
+          "wind_cdir_full": "S\u00fcd S\u00fcdwest",
+          "wind_spd": "3,73553",
+          "weather": {
+            "icon": "r01d",
+            "code": 500
+          },
+          "sunrise_ts": 1590202917,
+          "sunset_ts": 1590261152,
+          "rh": "79",
+          "pop": "90",
+          "str_max_temp": "15.4 Grad",
+          "str_min_temp": "9 Grad",
+          "str_app_max_temp": "13.8 Grad",
+          "str_app_min_temp": "9.7 Grad",
+          "str_wind_spd": "3.73553 Metern pro Sekunde",
+          "str_rh": "79 Prozent",
+          "str_pop": "90 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regen"
+          }
+        }
+      ]
+    },
+    "Leipzig": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "19,9",
+          "min_temp": "14,9",
+          "app_min_temp": "14,9",
+          "app_max_temp": "19,1",
+          "wind_cdir_full": "Westen",
+          "wind_spd": "2,63373",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1589857633,
+          "sunset_ts": 1589915206,
+          "rh": "54",
+          "pop": "10",
+          "str_max_temp": "19.9 Grad",
+          "str_min_temp": "14.9 Grad",
+          "str_app_max_temp": "19.1 Grad",
+          "str_app_min_temp": "14.9 Grad",
+          "str_wind_spd": "2.63373 Metern pro Sekunde",
+          "str_rh": "54 Prozent",
+          "str_pop": "10 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "20,3",
+          "min_temp": "11,6",
+          "app_min_temp": "11,6",
+          "app_max_temp": "19,3",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "2,16731",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589943950,
+          "sunset_ts": 1590001694,
+          "rh": "58",
+          "pop": "20",
+          "str_max_temp": "20.3 Grad",
+          "str_min_temp": "11.6 Grad",
+          "str_app_max_temp": "19.3 Grad",
+          "str_app_min_temp": "11.6 Grad",
+          "str_wind_spd": "2.16731 Metern pro Sekunde",
+          "str_rh": "58 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "20,7",
+          "min_temp": "7,9",
+          "app_min_temp": "7,9",
+          "app_max_temp": "19,8",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,31972",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590030270,
+          "sunset_ts": 1590088182,
+          "rh": "54",
+          "pop": "0",
+          "str_max_temp": "20.7 Grad",
+          "str_min_temp": "7.9 Grad",
+          "str_app_max_temp": "19.8 Grad",
+          "str_app_min_temp": "7.9 Grad",
+          "str_wind_spd": "1.31972 Metern pro Sekunde",
+          "str_rh": "54 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "20,6",
+          "min_temp": "8",
+          "app_min_temp": "8,1",
+          "app_max_temp": "20,1",
+          "wind_cdir_full": "Osten",
+          "wind_spd": "3,29093",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590116592,
+          "sunset_ts": 1590174668,
+          "rh": "69",
+          "pop": "0",
+          "str_max_temp": "20.6 Grad",
+          "str_min_temp": "8 Grad",
+          "str_app_max_temp": "20.1 Grad",
+          "str_app_min_temp": "8.1 Grad",
+          "str_wind_spd": "3.29093 Metern pro Sekunde",
+          "str_rh": "69 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "16,8",
+          "min_temp": "7,7",
+          "app_min_temp": "7,9",
+          "app_max_temp": "16,8",
+          "wind_cdir_full": "S\u00fcdwesten",
+          "wind_spd": "3,23821",
+          "weather": {
+            "icon": "r04d",
+            "code": 520
+          },
+          "sunrise_ts": 1590202917,
+          "sunset_ts": 1590261152,
+          "rh": "85",
+          "pop": "85",
+          "str_max_temp": "16.8 Grad",
+          "str_min_temp": "7.7 Grad",
+          "str_app_max_temp": "16.8 Grad",
+          "str_app_min_temp": "7.9 Grad",
+          "str_wind_spd": "3.23821 Metern pro Sekunde",
+          "str_rh": "85 Prozent",
+          "str_pop": "85 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu leichtem Regenschauer"
+          }
+        }
+      ]
+    },
+    "Mainz": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "24,4",
+          "min_temp": "17,1",
+          "app_min_temp": "17,1",
+          "app_max_temp": "23,6",
+          "wind_cdir_full": "Nord Nordwest",
+          "wind_spd": "2,48974",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589859558,
+          "sunset_ts": 1589915748,
+          "rh": "38",
+          "pop": "0",
+          "str_max_temp": "24.4 Grad",
+          "str_min_temp": "17.1 Grad",
+          "str_app_max_temp": "23.6 Grad",
+          "str_app_min_temp": "17.1 Grad",
+          "str_wind_spd": "2.48974 Metern pro Sekunde",
+          "str_rh": "38 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "22,1",
+          "min_temp": "11,5",
+          "app_min_temp": "11,5",
+          "app_max_temp": "21,5",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,3853",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589945883,
+          "sunset_ts": 1590002228,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "22.1 Grad",
+          "str_min_temp": "11.5 Grad",
+          "str_app_max_temp": "21.5 Grad",
+          "str_app_min_temp": "11.5 Grad",
+          "str_wind_spd": "1.3853 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "25,8",
+          "min_temp": "11,2",
+          "app_min_temp": "11,2",
+          "app_max_temp": "25,4",
+          "wind_cdir_full": "S\u00fcdosten",
+          "wind_spd": "0,805364",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1590032210,
+          "sunset_ts": 1590088706,
+          "rh": "61",
+          "pop": "0",
+          "str_max_temp": "25.8 Grad",
+          "str_min_temp": "11.2 Grad",
+          "str_app_max_temp": "25.4 Grad",
+          "str_app_min_temp": "11.2 Grad",
+          "str_wind_spd": "0.805364 Metern pro Sekunde",
+          "str_rh": "61 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es vereinzelt bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "25,8",
+          "min_temp": "16",
+          "app_min_temp": "16,1",
+          "app_max_temp": "25,2",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "1,71536",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590118539,
+          "sunset_ts": 1590175183,
+          "rh": "51",
+          "pop": "0",
+          "str_max_temp": "25.8 Grad",
+          "str_min_temp": "16 Grad",
+          "str_app_max_temp": "25.2 Grad",
+          "str_app_min_temp": "16.1 Grad",
+          "str_wind_spd": "1.71536 Metern pro Sekunde",
+          "str_rh": "51 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "23,8",
+          "min_temp": "12,8",
+          "app_min_temp": "13,2",
+          "app_max_temp": "20,8",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,76764",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590204870,
+          "sunset_ts": 1590261659,
+          "rh": "62",
+          "pop": "10",
+          "str_max_temp": "23.8 Grad",
+          "str_min_temp": "12.8 Grad",
+          "str_app_max_temp": "20.8 Grad",
+          "str_app_min_temp": "13.2 Grad",
+          "str_wind_spd": "2.76764 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "10 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "kommt es zu bedecktem Himmel"
+          }
+        }
+      ]
+    },
+    "Regensburg": {
+      "data": [
+        {
+          "valid_date": "2020-05-19",
+          "max_temp": "24,1",
+          "min_temp": "16,4",
+          "app_min_temp": "16,4",
+          "app_max_temp": "23,6",
+          "wind_cdir_full": "West Nordwest",
+          "wind_spd": "2,58159",
+          "weather": {
+            "icon": "c02d",
+            "code": 802
+          },
+          "sunrise_ts": 1589858284,
+          "sunset_ts": 1589914547,
+          "rh": "42",
+          "pop": "0",
+          "str_max_temp": "24.1 Grad",
+          "str_min_temp": "16.4 Grad",
+          "str_app_max_temp": "23.6 Grad",
+          "str_app_min_temp": "16.4 Grad",
+          "str_wind_spd": "2.58159 Metern pro Sekunde",
+          "str_rh": "42 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Dienstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "sind vereinzelte Wolken am Himmel"
+          }
+        },
+        {
+          "valid_date": "2020-05-20",
+          "max_temp": "19,4",
+          "min_temp": "11,8",
+          "app_min_temp": "11,8",
+          "app_max_temp": "18,6",
+          "wind_cdir_full": "S\u00fcd S\u00fcdost",
+          "wind_spd": "2,06403",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1589944611,
+          "sunset_ts": 1590001026,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "19.4 Grad",
+          "str_min_temp": "11.8 Grad",
+          "str_app_max_temp": "18.6 Grad",
+          "str_app_min_temp": "11.8 Grad",
+          "str_wind_spd": "2.06403 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Mittwoch",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": "20,5",
+          "min_temp": "8,5",
+          "app_min_temp": "8,5",
+          "app_max_temp": "19,6",
+          "wind_cdir_full": "West S\u00fcdwest",
+          "wind_spd": "1,44328",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590030940,
+          "sunset_ts": 1590087505,
+          "rh": "62",
+          "pop": "0",
+          "str_max_temp": "20.5 Grad",
+          "str_min_temp": "8.5 Grad",
+          "str_app_max_temp": "19.6 Grad",
+          "str_app_min_temp": "8.5 Grad",
+          "str_wind_spd": "1.44328 Metern pro Sekunde",
+          "str_rh": "62 Prozent",
+          "str_pop": "0 Prozent",
+          "today": "Donnerstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": "22,5",
+          "min_temp": "9,9",
+          "app_min_temp": "10",
+          "app_max_temp": "21,7",
+          "wind_cdir_full": "Ost S\u00fcdost",
+          "wind_spd": "1,63653",
+          "weather": {
+            "icon": "c03d",
+            "code": 803
+          },
+          "sunrise_ts": 1590117271,
+          "sunset_ts": 1590173982,
+          "rh": "66",
+          "pop": "20",
+          "str_max_temp": "22.5 Grad",
+          "str_min_temp": "9.9 Grad",
+          "str_app_max_temp": "21.7 Grad",
+          "str_app_min_temp": "10 Grad",
+          "str_wind_spd": "1.63653 Metern pro Sekunde",
+          "str_rh": "66 Prozent",
+          "str_pop": "20 Prozent",
+          "today": "Freitag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt, vereinzelt kommt die Sonne durch"
+          }
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": "23,3",
+          "min_temp": "10,4",
+          "app_min_temp": "10,7",
+          "app_max_temp": "23",
+          "wind_cdir_full": "S\u00fcden",
+          "wind_spd": "2,77509",
+          "weather": {
+            "icon": "c04d",
+            "code": 804
+          },
+          "sunrise_ts": 1590203605,
+          "sunset_ts": 1590260458,
+          "rh": "78",
+          "pop": "50",
+          "str_max_temp": "23.3 Grad",
+          "str_min_temp": "10.4 Grad",
+          "str_app_max_temp": "23 Grad",
+          "str_app_min_temp": "10.7 Grad",
+          "str_wind_spd": "2.77509 Metern pro Sekunde",
+          "str_rh": "78 Prozent",
+          "str_pop": "50 Prozent",
+          "today": "Samstag",
+          "str_sunset_ts": "May Uhr 05",
+          "str_sunrise_ts": "May Uhr 05",
+          "str_weather": {
+            "code": "ist es bew\u00f6lkt"
+          }
+        }
+      ]
+    }
+  },
+  "summaries": {
+    "0": {
+      "min_temp": 6,
+      "max_temp": 25,
+      "icon": "c02d",
+      "code": 804,
+      "temp_avg": 21
+    },
+    "1": {
+      "min_temp": 8,
+      "max_temp": 24,
+      "icon": "c03d",
+      "code": 803,
+      "temp_avg": 20
+    },
+    "2": {
+      "min_temp": 7,
+      "max_temp": 26,
+      "icon": "c02d",
+      "code": 802,
+      "temp_avg": 22
+    },
+    "3": {
+      "min_temp": 7,
+      "max_temp": 28,
+      "icon": "c04d",
+      "code": 804,
+      "temp_avg": 23
+    },
+    "4": {
+      "min_temp": 8,
+      "max_temp": 26,
+      "icon": "c04d",
+      "code": 804,
+      "temp_avg": 21
+    }
+  }
+}
