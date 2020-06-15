@@ -214,7 +214,7 @@ def transform_wind_direction(values: dict, data: StepData):
     """
     key = values["key"]
     value = data.get_data(values["key"], values)
-    new_key = transform_get_new_keys(values, -1, key)
+    new_key = values["new_key"] if values.get("new_key", None) else key
     if value.find(data.format(values["delimiter"], values)) != -1:
         wind = value.split("-")
         wind_1 = wind[0]
