@@ -65,7 +65,7 @@ def _fetch(url, testing=False, name=""):
     :return: Antwort der API als Dictionary
     """
     if testing:
-        with resources.open_resource(f"exampledata/{name}") as fp:
+        with resources.open_resource(f"exampledata/{name}.json") as fp:
             return json.loads(fp.read())
 
         # TODO(max) Catch possible errors
