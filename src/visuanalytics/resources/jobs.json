@@ -3,21 +3,21 @@
     {
       "name": "Wetter in Deutschland",
       "id": 0,
-      "steps_id": 0,
+      "steps": "weather_germany",
       "time": "12:00",
       "daily": true,
       "config": {}
     },
-	{
+    {
       "name": "Wetter in Biebertal",
       "id": 1,
-      "steps_id": 1,
+      "steps": "weather_single",
       "time": "10:00",
       "daily": true,
       "config": {
-		"city_name": "Biebertal", 
-		"p_code": "35444"
-	  }
+        "city_name": "Biebertal",
+        "p_code": "35444"
+      }
     }
   ]
 }
