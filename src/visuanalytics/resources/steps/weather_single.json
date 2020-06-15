@@ -186,7 +186,7 @@
           "delimiter": "-"
         },
         {
-          "type": "replace_kv",
+          "type": "translate_key",
           "keys": [
             "_loop|weather|code"
           ],
