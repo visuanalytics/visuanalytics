@@ -5,7 +5,7 @@
     {
       "type": "request",
       "api_key_name": "weatherbit",
-      "url": "https://www.test.de?test1={config_1}&test2=Test2&key={_api_key}"
+      "url": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}"
     }
   ],
   "transform": [
@@ -52,7 +52,8 @@
             "_loop|pop",
             "_loop|max_temp",
             "_loop|min_temp",
-            "_loop|app_max_temp"
+            "_loop|app_max_temp",
+            "_loop|app_min_temp"
           ]
         },
         {
@@ -1766,7 +1767,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {_req|data|0|weekday} {_req|data|0|weather|str_code}. Die Höchstwerte erreichen in {conf|city_name} {_req|data|0|str_max_temp}. "
+            "pattern": "Am heutigen {_req|data|0|weekday} {_req|data|0|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|0|str_max_temp}. "
           },
           {
             "type": "text",
@@ -1794,7 +1795,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|str_code}. Die Höchstwerte erreichen in {conf|city_name} {_req|data|1|str_max_temp}. "
+            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|1|str_max_temp}. "
           },
           {
             "type": "text",
