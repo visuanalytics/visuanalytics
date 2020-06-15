@@ -96,7 +96,7 @@ def transform_replace(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
-def transform_replace_kv(values: dict, data: StepData):
+def transform_translate_key(values: dict, data: StepData):
     """Setzt den value zu einem key als neuen value für die JSON.
 
     :param values: Werte aus der JSON-Datei
@@ -274,7 +274,7 @@ TRANSFORM_TYPES = {
     "append": transform_append,
     "add_symbol": transform_add_symbol,
     "replace": transform_replace,
-    "replace_kv": transform_replace_kv,
+    "translate_key": transform_translate_key,
     "alias": transform_alias,
     "regex": transform_regex,
     "date_format": transform_date_format,
