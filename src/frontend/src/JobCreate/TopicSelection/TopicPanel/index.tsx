@@ -1,8 +1,10 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
 
-interface Props {
+interface TopicPanelProps {
     topic: string;
+    selectedTopic: string,
+    selectTopicHandler: (topicName: string) => void;
 }
 
 const useStyles = makeStyles({
@@ -17,16 +19,23 @@ const useStyles = makeStyles({
         height: 80,
         transition: "0.2s",
         "&:hover": {
-            backgroundColor: "#00638D",
+            border: "solid #00638D 5px",
+            backgroundColor: "#2E97C5",
         },
     }
 });
 
-export function TopicPanel({ topic }: Props) {
+export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
     return (
-        <div className={classes.panel}>
-            {topic}
-        </div>
+        <Button
+            className={classes.panel}
+            style={props.topic === props.selectedTopic ? { border: "solid #00638D 7px" } : { border: "" }}
+            onClick={() => {
+                props.selectTopicHandler(props.topic);
+            }
+            }>
+            {props.topic}
+        </Button>
     )
 }
