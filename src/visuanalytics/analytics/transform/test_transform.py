@@ -3,11 +3,7 @@ import json
 import time
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-
 from visuanalytics.analytics.processing.image import visualization
-
-from visuanalytics.analytics.processing.audio.audio import generate_audios
-
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
 
@@ -32,7 +28,7 @@ def test_transform(x, config_name, data: dict):
 
 
 def test():
-    with resources.open_resource("exampledata/example_weather.json") as fp:
+    with resources.open_resource("exampledata/weather_germany.json") as fp:
         api_data = json.loads(fp.read())
 
     new_data = {}
@@ -42,13 +38,13 @@ def test():
     t1 = time.time()
     data = {"_req": new_data}
     print(f"Data: {data}")
-    test_transform({"out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+    test_transform({"out_path": "output_path", "h264_nvenc": "true"},
                    "steps/weather_germany.json", data)
     print(time.time() - t1)
 
 
 def test2():
-    with resources.open_resource("exampledata/example_single_weather.json") as fp:
+    with resources.open_resource("exampledata/weather_single.json") as fp:
         api_data = json.loads(fp.read())
 
     # Die daten die eigentlich aus der api kommen
@@ -56,7 +52,7 @@ def test2():
     data = {"_req": api_data}
     print(f"Data: {data}")
     test_transform(
-        {"city_name": "Giessen", "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+        {"city_name": "Giessen", "output_path": "out", "h264_nvenc": "true"},
         "steps/weather_single.json", data)
     print(time.time() - t1)
 

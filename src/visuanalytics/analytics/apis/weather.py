@@ -3,10 +3,11 @@ Dieses Modul enthält die Funktionalität zum Beziehen der Wettervorhersage-Date
 """
 
 import json
+
 import requests
 
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util import config_manager
+from visuanalytics.analytics.util import resources
 
 CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Frankfurt", "Nürnberg", "Stuttgart",
           "München", "Saarbrücken", "Schwerin", "Hamburg", "Gießen", "Konstanz", "Magdeburg", "Leipzig", "Mainz",
@@ -73,7 +74,7 @@ def get_example(single=False):
 
     """
     if single:
-        with resources.open_resource("exampledata/example_single_weather.json", "r") as json_file:
+        with resources.open_resource("exampledata/weather_single.json", "r") as json_file:
             return json.load(json_file)
-    with resources.open_resource("exampledata/example_weather.json", "r") as json_file:
+    with resources.open_resource("exampledata/weather_germany.json", "r") as json_file:
         return json.load(json_file)

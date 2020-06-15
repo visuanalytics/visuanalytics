@@ -11,7 +11,7 @@ from visuanalytics.analytics.util import resources
 
 
 class PreprocessTest(unittest.TestCase):
-    with resources.open_resource("exampledata/example_weather.json") as file_handle:
+    with resources.open_resource("exampledata/weather_germany.json") as file_handle:
         input = json.loads(file_handle.read())
         output = transform.preprocess_weather_data(input)
         date = date_time.date_to_weekday(transform.get_first_day(output))

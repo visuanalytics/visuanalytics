@@ -1,11 +1,12 @@
 """
 Dieses Modul enthält die Funktionalität zum Beziehen der History-Daten von der Zeit-API.
 """
-import json
-import requests
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import datetime as dt
+import json
+from datetime import datetime
+
+import requests
+from dateutil.relativedelta import relativedelta
 
 from visuanalytics.analytics.util import resources, config_manager
 
@@ -55,5 +56,5 @@ def get_example():
        :rtype: dict
 
     """
-    with resources.open_resource("exampledata/example_history.json", "r") as json_file:
+    with resources.open_resource("exampledata/history.json", "r") as json_file:
         return json.load(json_file)
