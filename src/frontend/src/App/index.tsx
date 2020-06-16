@@ -8,6 +8,17 @@ const theme = createMuiTheme({
     typography: {
         fontFamily: 'Dosis',
     },
+    overrides: {
+        MuiStepIcon: {
+            active: {
+                color: '#2E97C5 !important'
+            },
+            completed: {
+                color: '#2E97C5 !important'
+            }
+        }
+
+    }
 });
 
 const App = () => {
