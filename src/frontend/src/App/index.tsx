@@ -1,8 +1,8 @@
 import React from "react";
-import {ComponentProvider} from "../ComponentProvider";
-import {Main} from "./Main";
-import {Header} from "../Header";
-import {createMuiTheme, MuiThemeProvider} from "@material-ui/core";
+import { ComponentProvider } from "../ComponentProvider";
+import { Main } from "./Main";
+import { Header } from "../Header";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 
 const theme = createMuiTheme({
     typography: {
@@ -16,8 +16,17 @@ const theme = createMuiTheme({
             completed: {
                 color: '#2E97C5 !important'
             }
+        },
+        MuiRadio: {
+            root: {
+                color: "#2E97C5 !important"
+            },
+        },
+        MuiCheckbox: {
+            root: {
+                color: "#2E97C5 !important"
+            }
         }
-
     }
 });
 
@@ -26,8 +35,8 @@ const App = () => {
         <div>
             <MuiThemeProvider theme={theme}>
                 <ComponentProvider>
-                    <Header/>
-                    <Main/>
+                    <Header />
+                    <Main />
                 </ComponentProvider>
             </MuiThemeProvider>
         </div>
