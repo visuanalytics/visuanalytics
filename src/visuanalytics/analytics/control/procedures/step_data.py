@@ -49,7 +49,15 @@ class StepData(object):
 
     def format_api(self, value_string: str, api_key_name: str, values: dict):
         api_key_name = self.format(api_key_name, values)
-        return self.__formatter.format(value_string, {**self.__data, "_api_key": self.get_api_key(api_key_name)})
+        data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+        return self.__formatter.format(value_string, data)
+
+    def format_header(self, header: dict, api_key_name: str, values: dict):
+        api_key_name = self.format(api_key_name, values)
+        data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+        for key in header:
+            header[key] = self.__formatter.format(header[key], data)
+        return header
 
     def format(self, value_string, values=None):
         # if value_string is int just return value

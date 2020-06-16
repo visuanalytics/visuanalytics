@@ -2,6 +2,7 @@
 import json
 import time
 
+from visuanalytics.analytics.apis.api import api
 from visuanalytics.analytics.control.procedures.step_data import StepData
 
 from visuanalytics.analytics.processing.image import visualization
@@ -20,9 +21,10 @@ def test_transform(x, config_name, data: dict):
     with resources.open_resource(config_name) as fp:
         values = json.loads(fp.read())
 
-    step_data = StepData(x, "1")
+    step_data = StepData(x, "0")
     step_data.init_data(data)
 
+    api(values, step_data)
     transform(values, step_data)
     print(f"Data after Transform: {step_data.data}")
     #  generate_audios(values, step_data)
@@ -56,10 +58,11 @@ def test2():
     data = {"_req": api_data}
     print(f"Data: {data}")
     test_transform(
-        {"city_name": "Giessen", "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+        {"city_name": "Giessen", "p_code": "35444", "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics",
+         "h264_nvenc": "true"},
         "steps/weather_single.json", data)
     print(time.time() - t1)
 
 
 if __name__ == "__main__":
-    test2()
+    test()
