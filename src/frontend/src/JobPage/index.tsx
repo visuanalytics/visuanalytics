@@ -7,7 +7,7 @@ export const JobPage = () => {
     const classes = useStyles();
     return (
         <Container maxWidth={"md"} className={classes.margin}>
-            <Paper variant="outlined" className={classes.paper}>
+            <Paper elevation={0} className={classes.paper}>
                 <JobCreate/>
             </Paper>
         </Container>
