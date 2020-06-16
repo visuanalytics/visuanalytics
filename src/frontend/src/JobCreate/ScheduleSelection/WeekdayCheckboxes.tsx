@@ -40,6 +40,7 @@ export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
                         value={day}
                         onChange={handleChange} />}
                 label={getLabel(day)}
+                labelPlacement="top"
             />
         )
     }
@@ -52,7 +53,7 @@ export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
     return (
         <div>
             <FormControl component="fieldset" >
-                <FormGroup >
+                <FormGroup row>
                     {weekdays.map(renderCheckBox)}
                 </FormGroup>
             </FormControl>
