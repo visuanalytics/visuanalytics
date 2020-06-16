@@ -75,16 +75,6 @@
           "count": 1
         },
         {
-          "type": "add_symbol",
-          "keys": [
-            "_loop|str_max_temp",
-            "_loop|str_min_temp",
-            "_loop|str_app_max_temp",
-            "_loop|str_app_min_temp"
-          ],
-          "pattern": "{_key} Grad"
-        },
-        {
           "type": "calculate",
           "keys": [
             "_loop|wind_spd"
@@ -1767,15 +1757,15 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {_req|data|0|weekday} {_req|data|0|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|0|str_max_temp}. "
+            "pattern": "Am heutigen {_req|data|0|weekday} {_req|data|0|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|0|str_max_temp} Grad. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {_req|data|0|str_min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {_req|data|0|str_min_temp} Grad. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|0|str_app_min_temp} und {_req|data|0|str_app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|0|str_app_min_temp} und {_req|data|0|str_app_max_temp} Grad. "
           },
           {
             "type": "text",
@@ -1795,15 +1785,15 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|1|str_max_temp}. "
+            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|1|str_max_temp} Grad. "
           },
           {
             "type": "text",
-            "pattern": "Die Tiefstwerte liegen bei {_req|data|1|str_min_temp}. "
+            "pattern": "Die Tiefstwerte liegen bei {_req|data|1|str_min_temp} Grad. "
           },
           {
             "type": "text",
-            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|1|str_app_min_temp} und {_req|data|1|str_app_max_temp}. "
+            "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|1|str_app_min_temp} und {_req|data|1|str_app_max_temp} Grad. "
           },
           {
             "type": "text",
@@ -1819,7 +1809,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|2|weekday} {_req|data|2|weather|str_code} bei Temperaturen von {_req|data|2|str_min_temp} bis {_req|data|2|str_max_temp}. "
+            "pattern": "Am {_req|data|2|weekday} {_req|data|2|weather|str_code} bei Temperaturen von {_req|data|2|str_min_temp} bis {_req|data|2|str_max_temp} Grad. "
           },
           {
             "type": "text",
@@ -1831,7 +1821,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|3|weekday} {_req|data|3|weather|str_code} bei Temperaturen von {_req|data|3|str_min_temp} bis {_req|data|3|str_max_temp}. "
+            "pattern": "Am {_req|data|3|weekday} {_req|data|3|weather|str_code} bei Temperaturen von {_req|data|3|str_min_temp} bis {_req|data|3|str_max_temp} Grad. "
           },
           {
             "type": "text",
@@ -1843,7 +1833,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|4|weekday} {_req|data|4|weather|str_code} bei Temperaturen von {_req|data|4|str_min_temp} bis {_req|data|4|str_max_temp}. "
+            "pattern": "Am {_req|data|4|weekday} {_req|data|4|weather|str_code} bei Temperaturen von {_req|data|4|str_min_temp} bis {_req|data|4|str_max_temp} Grad. "
           },
           {
             "type": "text",
