@@ -19,12 +19,12 @@ const theme = createMuiTheme({
         },
         MuiRadio: {
             root: {
-                color: "#2E97C5 !important"
+                color: "#00638D !important"
             },
         },
         MuiCheckbox: {
             root: {
-                color: "#2E97C5 !important"
+                color: "#00638D !important"
             }
         }
     }
