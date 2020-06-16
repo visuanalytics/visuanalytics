@@ -13,7 +13,7 @@ interface TopicSelectionProps {
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     // const topics: string[] = useFetch("/topics");
     const classes = useStyles();
-    const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
+    const topics: string[] = ["Deutschlandweiter Wetterbericht", "Ortsbezogener Wetterbericht", "Bundesliga-Ergebnisse"]
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value);

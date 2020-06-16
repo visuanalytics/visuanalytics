@@ -22,6 +22,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         if (possibleValues.length === 0)
             return (
                 <TextField
+                    onChange={(e) => { handleChange(e, name) }}
                     className={classes.inputField}
                     variant="outlined"
                     label={name} />
