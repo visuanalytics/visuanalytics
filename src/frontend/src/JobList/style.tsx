@@ -30,6 +30,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             padding: 0,
             width: '100%',
             justifyContent: 'normal',
+            textTransform: 'none'
         },
         backdropContent: {
             backgroundColor: 'white'
