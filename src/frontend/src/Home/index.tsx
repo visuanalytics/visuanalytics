@@ -18,7 +18,7 @@ export const Home = () => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <IconButton aria-label="delete" className={classes.button} size="small" onClick={() => components?.setCurrent("jobcreate")}>
+                    <IconButton aria-label="delete" className={classes.button} size="small" onClick={() => components?.setCurrent("jobpage")}>
                         <AddCircleIcon fontSize="large"/>
                     </IconButton>
                 </Grid>

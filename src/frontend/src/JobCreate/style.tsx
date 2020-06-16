@@ -2,14 +2,14 @@ import { makeStyles } from "@material-ui/core";
 
 export const useStyles = makeStyles((theme) => ({
     root: {
-        width: 1000,
+        width: '100%',
     },
     jobCreateBox: {
         backgroundColor: 'white',
         textAlign: "center",
         border: "solid #b4b4b4 1px",
         borderRadius: "10px",
-        width: 800,
+        width: '100%',
     },
     jobCreateHeader: {
         fontWeight: "normal",

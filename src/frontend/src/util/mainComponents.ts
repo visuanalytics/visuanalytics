@@ -4,7 +4,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { FC } from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
-import JobCreate from "../JobCreate";
+import { JobPage } from "../JobPage";
 
 export type MainComponent = {
   component: FC;
@@ -22,8 +22,8 @@ export const mainComponents = {
     icon: HomeIcon,
     navName: "Home",
   },
-  jobcreate: {
-    component: JobCreate,
+  jobpage: {
+    component: JobPage,
     icon: AddCircleIcon,
     navName: "Job erstellen",
   }
@@ -32,4 +32,4 @@ export const mainComponents = {
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobcreate";
+export type ComponentKey = "home" | "jobpage";

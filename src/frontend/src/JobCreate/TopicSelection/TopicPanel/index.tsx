@@ -15,7 +15,7 @@ const useStyles = makeStyles({
         backgroundColor: "#2E97C5",
         color: "white",
         fontSize: "x-large",
-        width: 800,
+        width: '100%',
         height: 80,
         transition: "0.2s",
         "&:hover": {
