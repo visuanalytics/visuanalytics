@@ -14,6 +14,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         button: {
             color: 'white',
         },
+        paper: {
+            padding: '20px',
+        },
         heading: {
             fontSize: theme.typography.pxToRem(25),
             flexBasis: '77%',
@@ -33,7 +36,10 @@ export const useStyles = makeStyles((theme: Theme) =>
             textTransform: 'none'
         },
         backdropContent: {
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            padding: '20px',
+            textAlign: "center",
+            borderRadius: '4px'
         },
         modal: {
             display: 'flex',
