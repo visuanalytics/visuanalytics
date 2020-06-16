@@ -17,6 +17,20 @@ export const JobList: React.FC = () => {
     const jobInfo: Job[] = [
         {
             "id": "1",
+            "name": "Wetter Gießen",
+            "topic": "Wetter",
+            "schedule": "wöchentlich",
+            "next": "0d 21h 32min",
+            "params": [
+                {
+                    "name": "Vorhersage",
+                    "selected": "2+3",
+                    "possibleValues": ["2", "2+3"]
+                }
+            ]
+        },
+        {
+            "id": "2",
             "name": "Wetter DE",
             "topic": "Wetter",
             "schedule": "täglich",
@@ -29,20 +43,6 @@ export const JobList: React.FC = () => {
                 }
             ]
         },
-        {
-            "id": "2",
-            "name": "Wetter Gießen",
-            "topic": "Wetter",
-            "schedule": "wöchentlich",
-            "next": "0d 21h 32min",
-            "params": [
-                {
-                    "name": "Vorhersage",
-                    "selected": "2+3",
-                    "possibleValues": ["2", "2+3"]
-                }
-            ]
-        }
     ]
 
 
@@ -50,7 +50,7 @@ export const JobList: React.FC = () => {
     return (
         <>
             {jobInfo.map(j =>
-                <div>
+                <div key={j.id}>
                     <JobItem
                         id={j.id}
                         name={j.name}

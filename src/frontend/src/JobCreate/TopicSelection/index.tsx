@@ -1,5 +1,5 @@
 import React from "react";
-import { ListItem, Divider, List, TextField, Button } from "@material-ui/core";
+import { ListItem, Divider, List, TextField } from "@material-ui/core";
 import { TopicPanel } from "./TopicPanel";
 import { useStyles } from "../style";
 
@@ -42,7 +42,8 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     value={props.jobName}
                     variant="outlined"
                     label="Job-Name"
-                    onChange={handleInput}></TextField>
+                    onChange={handleInput}
+                />
             </div>
         </div>
     );

@@ -171,7 +171,7 @@ export const JobItem: React.FC<Job> = (job) => {
                         <Grid item md={6}>
                             <div>
                                 {paramInfo.map(p =>
-                                    <div>
+                                    <div key={p.name}>
                                         {renderParamField(p, classes, state.edit)}
                                     </div>)
                                 }
