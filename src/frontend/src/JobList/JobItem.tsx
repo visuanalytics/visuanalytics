@@ -9,6 +9,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Grid from "@material-ui/core/Grid";
@@ -133,6 +134,11 @@ export const JobItem: React.FC<Job> = (job) => {
                             <IconButton className={classes.button} onClick={handleEditClick}>
                                 <EditIcon style={{display: state.editIcon}} />
                                 <CheckCircleIcon style={{display: state.doneIcon}} />
+                            </IconButton>
+                        </div>
+                        <div onClick={(event) => event.stopPropagation()}>
+                            <IconButton className={classes.button} >
+                                <DeleteIcon />
                             </IconButton>
                         </div>
                     </ExpansionPanelSummary>
