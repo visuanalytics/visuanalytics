@@ -4,11 +4,28 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video
 
 import os
 import subprocess
+from mutagen.mp3 import MP3
 
+from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 
-def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_name):
+def link(values: dict, step_data: StepData):
+    out_images, out_audios, out_audio_l = [], [], []
+    for s in values["sequence"]:
+        out_images.append(values["images"][step_data.format(s["image"])])
+        if s["audio_l"] is None:
+            out_audio_l.append(step_data.format(s["time_diff"]))
+        else:
+            out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
+            out_audio_l.append(step_data.format(s["time_diff"]) + MP3(
+                values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
+    return _link(step_data.data["_pipe_id"], out_images, out_audios, out_audio_l,
+                 step_data.data["_conf"].get("h264_nvenc", False),
+                 step_data.data["_conf"]["out_path"], values["name"])
+
+
+def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
     Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
@@ -20,8 +37,8 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_n
     :type images: list
     :param audios: Eine Liste aus String Elementen mit den Dateinamen zu den Audios
     :type audios: list
-    :param audiol: Eine Liste aus Strings Elementen mit den Audiolängen der Audios
-    :type audiol: list
+    :param audio_l: Eine Liste aus Strings Elementen mit den Audiolängen der Audios
+    :type audio_l: list
     :param h264_nvenc: Nvidia Hardwarebeschleunigung aktiv oder nicht
     :type h264_nvenc: bool
     :param out_path: Path an dem das Video abgelegt werden soll
@@ -49,14 +66,14 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_n
     output2 = resources.get_out_path(out_path, job_name)
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
-        args2.extend(("-loop", "1", "-t", str(audiol[i]), "-i", images[i]))
+        args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
 
     args2.extend(("-i", output, "-c:a", "copy", "-filter_complex"))
 
     filter = ""
     for i in range(0, len(images) - 1):
         filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=0.8:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
-            _sum_audiol(audiol, i)) + "/TB[f" + str(
+            _sum_audio_l(audio_l, i)) + "/TB[f" + str(
             i) + "];"
     for j in range(0, len(images) - 1):
         if j == 0:
@@ -78,8 +95,8 @@ def to_forecast(pipeline_id, images, audios, audiol, h264_nvenc, out_path, job_n
     return output2
 
 
-def _sum_audiol(audiol, index):
+def _sum_audio_l(audio_l, index):
     sum = 0
     for i in range(0, index + 1):
-        sum += audiol[i]
+        sum += audio_l[i]
     return int(sum)

@@ -30,6 +30,7 @@ export default function JobCreate() {
     // states for stepper logic
     const [activeStep, setActiveStep] = React.useState(0);
     const [selectComplete, setSelectComplete] = React.useState(false);
+    const [finished, setFinished] = React.useState(false);
 
     // states for topic selection logic
     const [selectedTopic, setSelectedTopic] = React.useState("");
@@ -40,13 +41,19 @@ export default function JobCreate() {
 
     // state for schedule selection logic
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
-        daily: false,
+        daily: true,
         weekly: false,
         onDate: false,
         weekdays: [],
         date: new Date(),
         time: new Date()
     });
+
+    useEffect(() => {
+        if (activeStep === 3) {
+            setFinished(true);
+        }
+    }, [activeStep])
 
     // when selected topic changes, fetch new parameter list
     useEffect(() => {
@@ -84,6 +91,14 @@ export default function JobCreate() {
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
+        if (activeStep === 2) {
+            if (selectedSchedule.weekly) {
+                setSelectComplete(selectedSchedule.weekdays.length > 0);
+            } else {
+                setSelectComplete(true);
+            }
+        }
+
         if (activeStep === 2 && selectedSchedule.weekly) {
             setSelectComplete(selectedSchedule.weekdays.length > 0);
         }
@@ -185,7 +200,7 @@ export default function JobCreate() {
                     />
                 )
             default:
-                return 'Unknown step';
+                return "";
         }
     }
 
@@ -203,22 +218,31 @@ export default function JobCreate() {
                 })}
             </Stepper>
             <div className={classes.jobCreateBox}>
-                <div>
-                    <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
-                </div>
-                <GreyDivider />
-                {getSelectPanel(activeStep)}
-                <GreyDivider />
-                <div className={classes.paddingSmall}>
-                    <span>
-                        <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
-                            {"Zurück"}
-                        </BackButton>
-                        <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }} disabled={!selectComplete}>
-                            {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
-                        </ContinueButton>
-                    </span>
-                </div>
+                {!finished
+                    ?
+                    <div>
+                        <div>
+                            <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
+                        </div>
+                        <GreyDivider />
+                        {getSelectPanel(activeStep)}
+                        <GreyDivider />
+                        <div className={classes.paddingSmall}>
+                            <span>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
+                                    {"Zurück"}
+                                </BackButton>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }} disabled={!selectComplete}>
+                                    {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
+                                </ContinueButton>
+                            </span>
+                        </div>
+                    </div>
+                    :
+                    <div className={classes.paddingSmall}>
+                        Der Job wurde erstellt!
+                    </div>
+                }
             </div>
         </div>
     );
