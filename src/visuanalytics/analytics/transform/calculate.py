@@ -41,6 +41,9 @@ def calculate_max(values: dict, data: StepData):
         new_value = max(value)
         data.insert_data(new_key, new_value, values)
 
+        if values.get("save_idx_to", None):
+            data.insert_data(values["save_idx_to"][idx], value.index(new_value), values)
+
 
 def calculate_min(values: dict, data: StepData):
     """Sucht den Minimalwert von Werten, die in einem Array stehen.
@@ -54,6 +57,9 @@ def calculate_min(values: dict, data: StepData):
         new_key = calculate_get_new_keys(values, idx, key)
         new_value = min(value)
         data.insert_data(new_key, new_value, values)
+
+        if values.get("save_idx_to", None):
+            data.insert_data(values["save_idx_to"][idx], value.index(new_value), values)
 
 
 def calculate_round(values: dict, data: StepData):
