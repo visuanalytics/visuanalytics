@@ -21,13 +21,13 @@ export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
 
     const getLabel = (day: Weekday) => {
         switch (day) {
-            case Weekday.MONDAY: return "mo";
-            case Weekday.TUESDAY: return "di";
-            case Weekday.WEDNESDAY: return "mi"
-            case Weekday.THURSDAY: return "do";
-            case Weekday.FRIDAY: return "fr";
-            case Weekday.SATURDAY: return "sa";
-            case Weekday.SUNDAY: return "so"
+            case Weekday.MONDAY: return "Mo";
+            case Weekday.TUESDAY: return "Di";
+            case Weekday.WEDNESDAY: return "Mi"
+            case Weekday.THURSDAY: return "Do";
+            case Weekday.FRIDAY: return "Fr";
+            case Weekday.SATURDAY: return "Sa";
+            case Weekday.SUNDAY: return "So"
         }
     }
 
