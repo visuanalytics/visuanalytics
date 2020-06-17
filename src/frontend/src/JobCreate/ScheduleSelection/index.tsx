@@ -30,7 +30,6 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                             value="daily"
                         />} label="täglich" />
                     </div>
-
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall}>
@@ -50,7 +49,6 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                             />
                         </div>
                     </Collapse>
-
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall} >
@@ -59,7 +57,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                             checked={props.schedule.onDate}
                             onChange={props.selectOnDateHandler}
                             value="onDate"
-                        />} label="Datum auswählen" />
+                        />} label="an festem Datum" />
                     </div>
                     <Collapse in={props.schedule.onDate}>
                         <DateInputField date={props.schedule.date} handler={props.selectDateHandler} />
