@@ -77,7 +77,7 @@ export const JobItem: React.FC<Job> = (job) => {
                             label="Thema"
                             defaultValue={job.topic}
                             InputProps={{
-                                disabled: state.edit,
+                                disabled: true,
                             }}
                             variant="outlined"
                         />
@@ -162,7 +162,7 @@ export const JobItem: React.FC<Job> = (job) => {
                             }}
                         >
                             <Fade in={open}>
-                                <Container maxWidth={"sm"} className={classes.backdropContent}>
+                                <Container className={classes.backdropContent}>
                                     <Paper variant="outlined" className={classes.paper}>
                                         <ScheduleSelection
                                             schedule={selectedSchedule}

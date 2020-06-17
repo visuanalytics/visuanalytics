@@ -17,6 +17,13 @@ const theme = createMuiTheme({
                 color: 'rgb(0, 99, 141) !important'
             }
         },
+        MuiInputBase: {
+            root: {
+                '& [class*="Mui-disabled"]' : {
+                    color: '#6E6E6E'
+                }
+            }
+        },
         MuiRadio: {
             root: {
                 color: "#00638D !important"
