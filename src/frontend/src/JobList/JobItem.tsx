@@ -77,8 +77,9 @@ export const JobItem: React.FC<Job> = (job) => {
                             label="Thema"
                             defaultValue={job.topic}
                             InputProps={{
-                                readOnly: state.edit,
+                                disabled: state.edit,
                             }}
+                            variant="outlined"
                         />
                     </div>
                     <div>
@@ -88,8 +89,10 @@ export const JobItem: React.FC<Job> = (job) => {
                                 label="Zeitplan"
                                 defaultValue={job.schedule}
                                 InputProps={{
-                                    readOnly: state.edit,
+                                    disabled: state.edit,
+                                    readOnly: true
                                 }}
+                                variant="outlined"
                             />
                         </Button>
 
@@ -100,8 +103,9 @@ export const JobItem: React.FC<Job> = (job) => {
                             label="nächstes Video"
                             defaultValue={job.next}
                             InputProps={{
-                                readOnly: true,
+                                disabled: true,
                             }}
+                            variant="outlined"
                         />
                     </div>
                 </div>
