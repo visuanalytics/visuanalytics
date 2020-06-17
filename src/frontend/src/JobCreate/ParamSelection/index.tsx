@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, MenuItem } from "@material-ui/core";
+import { TextField, MenuItem, Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param } from "../../util/param";
 
@@ -22,6 +22,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         if (possibleValues.length === 0)
             return (
                 <TextField
+                    required
                     onChange={(e) => { handleChange(e, name) }}
                     className={classes.inputField}
                     variant="outlined"
@@ -29,6 +30,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
             )
         return (
             <TextField
+                required
                 onChange={(e) => { handleChange(e, name) }}
                 className={classes.inputField}
                 variant="outlined"
@@ -46,13 +48,16 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     }
 
     return (
-        <div>
-            {props.params.map(p =>
-                <div className={classes.paddingSmall} key={p.name}>
-                    {renderParamField(p)}
-                </div>)
-            }
-        </div>
+        <Fade in={true}>
+            <div>
+                {props.params.map(p =>
+                    <div className={classes.paddingSmall} key={p.name}>
+                        {renderParamField(p)}
+                    </div>)
+                }
+            </div>
+        </Fade>
+
     );
 };
 

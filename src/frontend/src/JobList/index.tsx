@@ -1,6 +1,7 @@
 import React from 'react';
 import { Param } from "../util/param";
 import { JobItem } from "./JobItem";
+import { Fade } from '@material-ui/core';
 
 export interface Job {
     id: string;
@@ -42,20 +43,21 @@ export const JobList: React.FC = () => {
 
 
     return (
-        <>
-            {jobInfo.map(j =>
-                <div key={j.id}>
-                    <JobItem
-                        id={j.id}
-                        name={j.name}
-                        topic={j.topic}
-                        schedule={j.schedule}
-                        next={j.next}
-                        params={j.params}
-                    />
-                </div>)
-            }
-        </>
+        <Fade in={true}>
+            <div>
+                {jobInfo.map(j =>
+                    <div key={j.id}>
+                        <JobItem
+                            id={j.id}
+                            name={j.name}
+                            topic={j.topic}
+                            schedule={j.schedule}
+                            next={j.next}
+                            params={j.params}
+                        />
+                    </div>)
+                }
+            </div>
+        </Fade>
     )
-
 }
