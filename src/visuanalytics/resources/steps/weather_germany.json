@@ -1,35 +1,33 @@
 {
   "id": 0,
   "name": "weather_germany",
-  "api": [
-    {
-      "type": "request_multiple",
-      "api_key_name": "test",
-      "steps_value": [
-        "Kiel",
-        "Berlin",
-        "Dresden",
-        "Hannover",
-        "Bremen",
-        "Düsseldorf",
-        "Frankfurt",
-        "Nürnberg",
-        "Stuttgart",
-        "München",
-        "Saarbrücken",
-        "Schwerin",
-        "Hamburg",
-        "Gießen",
-        "Konstanz",
-        "Magdeburg",
-        "Leipzig",
-        "Mainz",
-        "Regensburg"
-      ],
-      "use_loop_as_key": true,
-      "url": "https://www.test.de?test={_loop}&test1={config.test}&key={_api_key}&city={config.city}"
-    }
-  ],
+  "api": {
+    "type": "request_multiple",
+    "api_key_name": "weatherbit",
+    "steps_value": [
+      "Kiel",
+      "Berlin",
+      "Dresden",
+      "Hannover",
+      "Bremen",
+      "Düsseldorf",
+      "Frankfurt",
+      "Nürnberg",
+      "Stuttgart",
+      "München",
+      "Saarbrücken",
+      "Schwerin",
+      "Hamburg",
+      "Gießen",
+      "Konstanz",
+      "Magdeburg",
+      "Leipzig",
+      "Mainz",
+      "Regensburg"
+    ],
+    "use_loop_as_key": true,
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}"
+  },
   "transform": [
     {
       "type": "transform_dict",
@@ -1503,7 +1501,7 @@
       "time_diff": 3,
       "audio_l": null
     }
-  ]
+  ],
   "run_config": {
     "testing": {
       "default_value": false,

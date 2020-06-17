@@ -1,13 +1,11 @@
 {
   "id": 0,
   "name": "weather_single",
-  "api": [
-    {
-      "type": "request",
-      "api_key_name": "weatherbit",
-      "url": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}"
-    }
-  ],
+  "api": {
+    "type": "request",
+    "api_key_name": "weatherbit",
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}"
+  },
   "transform": [
     {
       "type": "select",
