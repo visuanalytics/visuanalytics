@@ -10,6 +10,7 @@ import { TopicSelection } from './TopicSelection';
 import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import { Param } from '../util/param';
+import { Fade } from '@material-ui/core';
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -239,9 +240,11 @@ export default function JobCreate() {
                         </div>
                     </div>
                     :
-                    <div className={classes.paddingSmall}>
-                        Der Job wurde erstellt!
-                    </div>
+                    <Fade in={true}>
+                        <div className={classes.paddingSmall}>
+                            Der Job wurde erstellt!
+                        </div>
+                    </Fade>
                 }
             </div>
         </div>
