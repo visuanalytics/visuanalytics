@@ -221,7 +221,7 @@ def transform_wind_direction(values: dict, data: StepData):
         wind_2 = wind[1]
         wind_dir_1 = data.format(values["dict"][wind_1]["0"], values)
         wind_dir_2 = data.format(values["dict"][wind_2]["0"], values)
-        new_value = f"{wind_dir_1} {wind_dir_2}"
+        new_value = f"{wind_dir_1}-{wind_dir_2}"
     else:
         new_value = data.format(values["dict"][value]["1"], values)
     data.insert_data(new_key, new_value, values)
