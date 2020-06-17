@@ -474,7 +474,7 @@
             "_loop|max_temp"
           ],
           "save_idx_to": [
-            "_loop|temp_max_cities"
+            "_loop|temp_max_city"
           ]
         },
         {
@@ -484,28 +484,28 @@
             "_loop|min_temp"
           ],
           "save_idx_to": [
-            "_loop|temp_min_cities"
+            "_loop|temp_min_city"
           ]
         },
         {
           "type": "add_symbol",
           "keys": [
-            "cities|{_loop|temp_max_cities}",
-            "cities|{_loop|temp_min_cities}"
+            "cities|{_loop|temp_max_city}",
+            "cities|{_loop|temp_min_city}"
           ],
           "new_keys": [
-            "_loop|temp_max_cities",
-            "_loop|temp_min_cities"
+            "_loop|temp_max_city",
+            "_loop|temp_min_city"
           ],
           "pattern": "{_key}"
         },
         {
           "type": "add_symbol",
           "keys": [
-            "_req|{_loop|temp_max_cities}|data|{_idx}|weather|code"
+            "_req|{_loop|temp_max_city}|data|{_idx}|weather|code"
           ],
           "new_keys": [
-            "_loop|max_cities_code"
+            "_loop|temp_max_city_code"
           ],
           "pattern": "{_key}"
         },
