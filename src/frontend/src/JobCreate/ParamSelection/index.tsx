@@ -26,7 +26,10 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                     onChange={(e) => { handleChange(e, name) }}
                     className={classes.inputField}
                     variant="outlined"
-                    label={name} />
+                    label={name}
+                    defaultValue=""
+                    value={lookupByName(name, props.params)?.selected}
+                />
             )
         return (
             <TextField
