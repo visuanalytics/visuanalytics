@@ -6,7 +6,7 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 
 const theme = createMuiTheme({
     typography: {
-        fontFamily: 'Dosis',
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     },
     overrides: {
         MuiStepIcon: {
@@ -14,7 +14,7 @@ const theme = createMuiTheme({
                 color: '#2E97C5 !important'
             },
             completed: {
-                color: '#2E97C5 !important'
+                color: 'rgb(0, 99, 141) !important'
             }
         },
         MuiRadio: {
