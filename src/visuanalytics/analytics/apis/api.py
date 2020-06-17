@@ -16,9 +16,10 @@ def api_request(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    url, x = _create_query(values, data)
+    url, header, body = _create_query(values, data)
     data.init_data(
-        {"_req": _fetch(url, x[0], x[1], values.get("method", "get"), data.data["_conf"].get("testing", False), name)})
+        {"_req": _fetch(url, header, body, values.get("method", "get"), data.data["_conf"].get("testing", False),
+                        name)})
 
 
 def api_request_multiple(values: dict, data: StepData, name):
@@ -57,12 +58,12 @@ def api_request_multiple_custom(values: dict, data: StepData, name):
 
 
 def _create_query(values: dict, data: StepData):
-    x = [values.get("header", None), values.get("body", None)]
-    for idx, key in enumerate(x):
-        if x[idx] is not None:
-            x[idx] = data.format_json(x[idx], values["api_key_name"], values)
+    req_values = [values.get("header", None), values.get("body", None)]
+    for idx, key in enumerate(req_values):
+        if req_values[idx] is not None:
+            req_values[idx] = data.format_json(req_values[idx], values["api_key_name"], values)
     url = data.format_api(values["url_pattern"], values["api_key_name"], values)
-    return url, x[0], x[1]
+    return url, req_values[0], req_values[1]
 
 
 def _fetch(url, header, body, method, testing=False, name=""):
