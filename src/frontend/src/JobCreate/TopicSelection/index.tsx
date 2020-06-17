@@ -1,5 +1,5 @@
 import React from "react";
-import { ListItem, Divider, List, TextField } from "@material-ui/core";
+import { ListItem, Divider, List, TextField, Fade } from "@material-ui/core";
 import { TopicPanel } from "./TopicPanel";
 import { useStyles } from "../style";
 
@@ -13,7 +13,7 @@ interface TopicSelectionProps {
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     // const topics: string[] = useFetch("/topics");
     const classes = useStyles();
-    const topics: string[] = ["Wettervorhersage: Deutschland", "Wettervorhersage: lokal", "Bundesliga-Ergebnisse"]
+    const topics: string[] = ["Deutschlandweiter Wetterbericht", "Ortsbezogener Wetterbericht", "Bundesliga-Ergebnisse"]
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value);
@@ -32,19 +32,22 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     }
 
     return (
-        <div>
-            <List>
-                {topics.map(t => renderTopicPanel(t))}
-            </List>
-            <Divider />
-            <div className={classes.paddingSmall}>
-                <TextField className={classes.inputField}
-                    value={props.jobName}
-                    variant="outlined"
-                    label="Job-Name"
-                    onChange={handleInput}
-                />
+        <Fade in={true}>
+            <div>
+                <List>
+                    {topics.map(t => renderTopicPanel(t))}
+                </List>
+                <Divider />
+                <div className={classes.paddingSmall}>
+                    <TextField className={classes.inputField}
+                        required
+                        value={props.jobName}
+                        variant="outlined"
+                        label="Job-Name"
+                        onChange={handleInput}
+                    />
+                </div>
             </div>
-        </div>
+        </Fade>
     );
 };

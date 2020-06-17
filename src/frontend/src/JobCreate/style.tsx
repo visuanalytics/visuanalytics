@@ -21,4 +21,9 @@ export const useStyles = makeStyles((theme) => ({
     inputField: {
         width: 300
     },
+    centerDiv: {
+        textAlign: "left",
+        margin: "0 auto",
+        width: 170
+    }
 }));
