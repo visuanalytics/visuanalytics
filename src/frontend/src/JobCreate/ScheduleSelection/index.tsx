@@ -1,6 +1,6 @@
 import React from "react";
 import { useStyles } from "../style";
-import { Divider, FormControlLabel, Radio, Fade } from "@material-ui/core";
+import { Divider, FormControlLabel, Radio, Fade, Collapse } from "@material-ui/core";
 import { WeekdayCheckboxes } from "./WeekdayCheckboxes";
 import { DateInputField, TimeInputField } from "./DateTimeInput"
 import { Schedule, Weekday } from "..";
@@ -41,13 +41,16 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                             value="weekly"
                         />} label="wöchentlich" />
                     </div>
-                    {props.schedule.weekly &&
-                        <WeekdayCheckboxes
-                            schedule={props.schedule}
-                            addWeekDayHandler={props.addWeekDayHandler}
-                            removeWeekDayHandler={props.removeWeekDayHandler}
-                        />
-                    }
+                    <Collapse in={props.schedule.weekly}>
+                        <div>
+                            <WeekdayCheckboxes
+                                schedule={props.schedule}
+                                addWeekDayHandler={props.addWeekDayHandler}
+                                removeWeekDayHandler={props.removeWeekDayHandler}
+                            />
+                        </div>
+                    </Collapse>
+
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall} >
@@ -58,9 +61,9 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                             value="onDate"
                         />} label="Datum auswählen" />
                     </div>
-                    {props.schedule.onDate &&
+                    <Collapse in={props.schedule.onDate}>
                         <DateInputField date={props.schedule.date} handler={props.selectDateHandler} />
-                    }
+                    </Collapse>
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall} >
