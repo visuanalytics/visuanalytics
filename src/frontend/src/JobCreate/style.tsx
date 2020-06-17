@@ -24,6 +24,6 @@ export const useStyles = makeStyles((theme) => ({
     centerDiv: {
         textAlign: "left",
         margin: "0 auto",
-        width: 170
+        width: 180
     }
 }));

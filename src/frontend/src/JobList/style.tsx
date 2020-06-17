@@ -39,7 +39,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: 'white',
             padding: '20px',
             textAlign: "center",
-            borderRadius: '4px'
+            borderRadius: '4px',
+            width: '35%'
         },
         modal: {
             display: 'flex',
