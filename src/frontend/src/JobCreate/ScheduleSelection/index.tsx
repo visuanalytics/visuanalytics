@@ -23,19 +23,24 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
         <Fade in={true}>
             <div>
                 <div className={classes.paddingSmall}>
-                    <FormControlLabel value="daily" control={<Radio
-                        checked={props.schedule.daily}
-                        onChange={props.selectDailyHandler}
-                        value="daily"
-                    />} label="täglich" />
+                    <div className={classes.centerDiv}>
+                        <FormControlLabel value="daily" control={<Radio
+                            checked={props.schedule.daily}
+                            onChange={props.selectDailyHandler}
+                            value="daily"
+                        />} label="täglich" />
+                    </div>
+
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall}>
-                    <FormControlLabel value="weekly" control={<Radio
-                        checked={props.schedule.weekly}
-                        onChange={props.selectWeeklyHandler}
-                        value="weekly"
-                    />} label="wöchentlich" />
+                    <div className={classes.centerDiv}>
+                        <FormControlLabel value="weekly" control={<Radio
+                            checked={props.schedule.weekly}
+                            onChange={props.selectWeeklyHandler}
+                            value="weekly"
+                        />} label="wöchentlich" />
+                    </div>
                     {props.schedule.weekly &&
                         <WeekdayCheckboxes
                             schedule={props.schedule}
@@ -46,11 +51,13 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall} >
-                    <FormControlLabel value="onDate" control={<Radio
-                        checked={props.schedule.onDate}
-                        onChange={props.selectOnDateHandler}
-                        value="onDate"
-                    />} label="Datum auswählen" />
+                    <div className={classes.centerDiv}>
+                        <FormControlLabel value="onDate" control={<Radio
+                            checked={props.schedule.onDate}
+                            onChange={props.selectOnDateHandler}
+                            value="onDate"
+                        />} label="Datum auswählen" />
+                    </div>
                     {props.schedule.onDate &&
                         <DateInputField date={props.schedule.date} handler={props.selectDateHandler} />
                     }
