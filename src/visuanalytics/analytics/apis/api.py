@@ -29,15 +29,17 @@ def api_request_multiple(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    header = values.get("header", None)
-    if header is not None:
-        header = data.format_header(header, values["api_key_name"], values)
 
     if data.format(values.get("use_loop_as_key", False), values):
         data_dict = {}
+        method = values.get("method", "get")
 
         for idx, key in enumerate(values["steps_value"]):
             data.save_loop(values, idx, key)
+            header = values.get("header", None)
+            body = values.get("body", None)
+            if header is not None:
+                header = data.format_header(header, values["api_key_name"], values)
             url = data.format_api(values["url_pattern"], values["api_key_name"], values)
             data_dict[key] = _fetch(url, header, data.data["_conf"].get("testing", False), name)
         return data.init_data({"_req": data_dict})
@@ -46,6 +48,9 @@ def api_request_multiple(values: dict, data: StepData, name):
 
     for idx, value in enumerate(values["steps_value"]):
         data.save_loop(values, idx, value)
+        header = values.get("header", None)
+        if header is not None:
+            header = data.format_header(header, values["api_key_name"], values)
         url = data.format_api(values["url_pattern"], values["api_key_name"], values)
         data_array.append(_fetch(url, header, data.data["_conf"].get("testing", False), name))
 
@@ -64,7 +69,7 @@ def api_request_multiple_custom(values: dict, data: StepData, name):
         api(value, data)
 
 
-def _fetch(url, header, testing=False, name=""):
+def _fetch(url, header, body, method, testing=False, name=""):
     """Abfrage einer API und Umwandlung der API-Antwort in ein Dictionary.
 
     :param url: url der gewünschten API-Anfrage
@@ -76,10 +81,11 @@ def _fetch(url, header, testing=False, name=""):
 
         # TODO(max) Catch possible errors
 
-    if header is None:
-        response = requests.get(url)
+    if method.__eq__("get"):
+        response = requests.get(url, header=header, body=body)
     else:
-        response = requests.get(url, header=header)
+        response = requests.post(url, header=header, body=body)
+
     if response.status_code != 200:
         raise ValueError("Response-Code: " + str(response.status_code))
     return json.loads(response.content)
