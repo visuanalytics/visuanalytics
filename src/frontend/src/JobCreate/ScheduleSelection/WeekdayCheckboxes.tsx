@@ -34,6 +34,7 @@ export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
     const renderCheckBox = (day: Weekday) => {
         return (
             <FormControlLabel
+                key={day}
                 control={
                     <Checkbox
                         checked={props.schedule.weekdays.includes(day)}
