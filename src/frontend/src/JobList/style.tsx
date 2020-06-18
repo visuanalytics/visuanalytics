@@ -16,12 +16,29 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         heading: {
             fontSize: theme.typography.pxToRem(25),
-            flexBasis: '84%',
+            flexBasis: '77%',
             flexShrink: 0,
             margin: 'auto 20px',
         },
         expIcon: {
             margin: 'auto 20px'
+        },
+        backdrop: {
+            zIndex: theme.zIndex.drawer + 1,
+        },
+        inputButton: {
+            padding: 0,
+            width: '100%',
+            justifyContent: 'normal',
+            textTransform: 'none'
+        },
+        backdropContent: {
+            backgroundColor: 'white'
+        },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         },
     }),
 );
