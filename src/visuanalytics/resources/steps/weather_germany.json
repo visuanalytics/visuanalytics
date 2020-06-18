@@ -98,22 +98,6 @@
             {
               "type": "add_symbol",
               "keys": [
-                "_loop|max_temp",
-                "_loop|min_temp",
-                "_loop|app_max_temp",
-                "_loop|app_min_temp"
-              ],
-              "new_keys": [
-                "_loop|str_max_temp",
-                "_loop|str_min_temp",
-                "_loop|str_app_max_temp",
-                "_loop|str_app_min_temp"
-              ],
-              "pattern": "{_key} Grad"
-            },
-            {
-              "type": "add_symbol",
-              "keys": [
                 "_loop|wind_spd"
               ],
               "new_keys": [
