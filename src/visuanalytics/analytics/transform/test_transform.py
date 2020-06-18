@@ -16,12 +16,13 @@ def test_transform(x, config_name, data: dict):
     with resources.open_resource(config_name) as fp:
         values = json.loads(fp.read())
 
-    step_data = StepData(x, "1")
+    step_data = StepData(x, "0")
     step_data.init_data(data)
 
+    # api(values, step_data)
     transform(values, step_data)
     print(f"Data after Transform: {step_data.data}")
-    #  generate_audios(values, step_data)
+    generate_audios(values, step_data)
 
     visualization.generate_all_images(values, step_data)
     print(values["images"])
@@ -52,10 +53,10 @@ def test2():
     data = {"_req": api_data}
     print(f"Data: {data}")
     test_transform(
-        {"city_name": "Giessen", "output_path": "out", "h264_nvenc": "true"},
+        {"city_name": "Biebertal", "p_code": "35444", output_path": "out", "h264_nvenc": "true"},
         "steps/weather_single.json", data)
     print(time.time() - t1)
 
 
 if __name__ == "__main__":
-    test2()
+    test()
