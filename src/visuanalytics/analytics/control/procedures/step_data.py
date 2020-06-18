@@ -47,9 +47,12 @@ class StepData(object):
 
         return data_get_pattern(key_string, data)
 
-    def format_api(self, value_string: str, api_key_name: str, values: dict):
-        api_key_name = self.format(api_key_name, values)
-        data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+    def format_api(self, value_string: str, api_key_name, values: dict):
+        if api_key_name is not None:
+            api_key_name = self.format(api_key_name, values)
+            data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+        else:
+            data = {**self.__data, **values.get("_loop_states", {})}
         return self.__formatter.format(value_string, data)
 
     def format_json(self, json: dict, api_key_name: str, values: dict):

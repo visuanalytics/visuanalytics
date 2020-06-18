@@ -1,0 +1,111 @@
+{
+  "id": 0,
+  "name": "football",
+  "api": {
+    "type": "request_multiple_custom",
+    "use_loop_as_key": true,
+    "steps_value": [
+      "Spiele",
+      "Tabelle"
+    ],
+    "requests": [
+      {
+        "type": "request",
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+      },
+      {
+        "type": "request",
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "type": "append",
+      "key": "_req|Spiele|0|Group|GroupName",
+      "new_key": "_req|Spieltag"
+    },
+    {
+      "type": "append",
+      "key": "_req|Spiele|0|LeagueName",
+      "new_key": "_req|LeagueName"
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|Spiele",
+      "transform": [
+        {
+          "type": "select",
+          "relevant_keys": [
+            "Team1|TeamName",
+            "Team1|TeamId",
+            "Team2|TeamName",
+            "Team2|TeamId",
+            "MatchResults|0|PointsTeam1",
+            "MatchResults|0|PointsTeam2",
+            "MatchDateTime",
+            "MatchIsFinished"
+          ]
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "_loop|MatchResults|0"
+          ],
+          "new_keys": [
+            "_loop|MatchResults"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|Tabelle",
+      "transform": [
+        {
+          "type": "select",
+          "relevant_keys": [
+            "TeamName",
+            "TeamInfoId",
+            "Points",
+            "Won",
+            "Lost",
+            "GoalDiff"
+          ]
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "_loop|TeamInfoId"
+          ],
+          "new_keys": [
+            "_loop|TeamId"
+          ]
+        }
+      ]
+    }
+  ],
+  "images": {
+  },
+  "audio": {
+    "config": {
+      "lang": "de",
+      "format": "mp3"
+    },
+    "audios": {
+    }
+  },
+  "sequence": [
+  ],
+  "run_config": {
+    "testing": {
+      "default_value": false,
+      "possible_values": [
+        true,
+        false
+      ]
+    }
+  },
+  "presets": {
+  }
+}
