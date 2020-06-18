@@ -544,7 +544,8 @@
           "type": "choose_random",
           "keys": [
             "_loop|temp_highest_max_city_code",
-            "_loop|temp_lowest_max_city_code"
+            "_loop|temp_lowest_max_city_code",
+            "_loop|code"
           ],
           "dict": {
             "200": {
