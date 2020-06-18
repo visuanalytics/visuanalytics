@@ -20,7 +20,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     :param kwargs:
     :return:
     """
-    """
+
     return "hsl(38, 73%%, %d%%)" % random.randint(30, 80)
 
 
