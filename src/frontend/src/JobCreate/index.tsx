@@ -10,6 +10,7 @@ import { TopicSelection } from './TopicSelection';
 import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import { Param } from '../util/param';
+import { Fade } from '@material-ui/core';
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -60,13 +61,13 @@ export default function JobCreate() {
         // const topics: string[] = useFetch("/topics");
         const params: Param[] = [
             {
-                name: "Spieltag",
-                possibleValues: ["aktuell", "letzter", "vorletzter"],
+                name: "Ort",
+                possibleValues: [],
                 selected: ""
             },
             {
-                name: "Twitter-Wordcloud",
-                possibleValues: ["ja", "nein"],
+                name: "Postleitzahl",
+                possibleValues: [],
                 selected: ""
             }
         ]
@@ -84,7 +85,7 @@ export default function JobCreate() {
     // when a new parameter is selected, check if parameter selection is complete 
     useEffect(() => {
         if (activeStep === 1) {
-            const allSet = selectedParams.every(p => p.selected !== "");
+            const allSet = selectedParams.every(p => p.selected.trim() !== "");
             setSelectComplete(allSet ? true : false);
         }
     }, [selectedParams, activeStep])
@@ -239,9 +240,11 @@ export default function JobCreate() {
                         </div>
                     </div>
                     :
-                    <div className={classes.paddingSmall}>
-                        Der Job wurde erstellt!
-                    </div>
+                    <Fade in={true}>
+                        <div className={classes.paddingSmall}>
+                            Der Job wurde erstellt!
+                        </div>
+                    </Fade>
                 }
             </div>
         </div>

@@ -28,7 +28,7 @@ export const renderParamField = (param: Param,classes: any, state = false) => {
             label={name}
             defaultValue={param.selected}
             InputProps={{
-                readOnly: state,
+                disabled: state,
             }}
             select>
             {possibleValues.map((val) => (

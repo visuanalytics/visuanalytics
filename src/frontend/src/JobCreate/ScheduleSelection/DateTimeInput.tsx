@@ -19,7 +19,7 @@ export const DateInputField: React.FC<DateInputProps> = (props: DateInputProps) 
                     variant="inline"
                     format="dd/MM/yyyy"
                     margin="normal"
-                    label="an Datum"
+                    label="Datum auswählen"
                     value={props.date}
                     onChange={props.handler}
                 />

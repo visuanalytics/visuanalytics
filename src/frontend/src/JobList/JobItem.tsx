@@ -1,7 +1,7 @@
 import React from "react";
 import {Param} from "../util/param";
 import TextField from "@material-ui/core/TextField";
-import {Button, Fade, Modal} from "@material-ui/core";
+import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import {ExpansionPanelSummary, useStyles} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -19,7 +19,6 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
-
 
 
 export const JobItem: React.FC<Job> = (job) => {
@@ -43,27 +42,27 @@ export const JobItem: React.FC<Job> = (job) => {
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [],})
     }
     const handleSelectWeekly = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
     }
     const handleSelectOnDate = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
     }
     const handleAddWeekDay = (d: Weekday) => {
         const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
     }
     const handleRemoveWeekday = (d: Weekday) => {
         const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
     }
     const handleSelectDate = (date: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, date: date })
+        setSelectedSchedule({...selectedSchedule, date: date})
     }
     const handleSelectTime = (time: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, time: time })
+        setSelectedSchedule({...selectedSchedule, time: time})
     }
 
     const renderJobItem = (job: Job) => {
@@ -78,8 +77,9 @@ export const JobItem: React.FC<Job> = (job) => {
                             label="Thema"
                             defaultValue={job.topic}
                             InputProps={{
-                                readOnly: state.edit,
+                                disabled: true,
                             }}
+                            variant="outlined"
                         />
                     </div>
                     <div>
@@ -89,8 +89,10 @@ export const JobItem: React.FC<Job> = (job) => {
                                 label="Zeitplan"
                                 defaultValue={job.schedule}
                                 InputProps={{
-                                    readOnly: state.edit,
+                                    disabled: state.edit,
+                                    readOnly: true
                                 }}
+                                variant="outlined"
                             />
                         </Button>
 
@@ -101,8 +103,9 @@ export const JobItem: React.FC<Job> = (job) => {
                             label="nächstes Video"
                             defaultValue={job.next}
                             InputProps={{
-                                readOnly: true,
+                                disabled: true,
                             }}
+                            variant="outlined"
                         />
                     </div>
                 </div>
@@ -132,13 +135,13 @@ export const JobItem: React.FC<Job> = (job) => {
                         <Typography className={classes.heading}>#{job.id} {job.name}</Typography>
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton className={classes.button} onClick={handleEditClick}>
-                                <EditIcon style={{display: state.editIcon}} />
-                                <CheckCircleIcon style={{display: state.doneIcon}} />
+                                <EditIcon style={{display: state.editIcon}}/>
+                                <CheckCircleIcon style={{display: state.doneIcon}}/>
                             </IconButton>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton className={classes.button} >
-                                <DeleteIcon />
+                            <IconButton className={classes.button}>
+                                <DeleteIcon/>
                             </IconButton>
                         </div>
                     </ExpansionPanelSummary>
@@ -159,19 +162,21 @@ export const JobItem: React.FC<Job> = (job) => {
                             }}
                         >
                             <Fade in={open}>
-                                <div className={classes.backdropContent}>
-                                    <ScheduleSelection
-                                        schedule={selectedSchedule}
-                                        selectDailyHandler={handleSelectDaily}
-                                        selectWeeklyHandler={handleSelectWeekly}
-                                        selectOnDateHandler={handleSelectOnDate}
-                                        addWeekDayHandler={handleAddWeekDay}
-                                        removeWeekDayHandler={handleRemoveWeekday}
-                                        selectDateHandler={handleSelectDate}
-                                        selectTimeHandler={handleSelectTime}
-                                    />
-                                    <ContinueButton>SPEICHERN</ContinueButton>
-                                </div>
+                                <Container className={classes.backdropContent}>
+                                    <Paper variant="outlined" className={classes.paper}>
+                                        <ScheduleSelection
+                                            schedule={selectedSchedule}
+                                            selectDailyHandler={handleSelectDaily}
+                                            selectWeeklyHandler={handleSelectWeekly}
+                                            selectOnDateHandler={handleSelectOnDate}
+                                            addWeekDayHandler={handleAddWeekDay}
+                                            removeWeekDayHandler={handleRemoveWeekday}
+                                            selectDateHandler={handleSelectDate}
+                                            selectTimeHandler={handleSelectTime}
+                                        />
+                                        <ContinueButton>SPEICHERN</ContinueButton>
+                                    </Paper>
+                                </Container>
                             </Fade>
                         </Modal>
                         <Grid item md={6}>
