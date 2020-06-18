@@ -77,22 +77,10 @@ def _fetch(url, header, body, method, testing=False, name=""):
 
         # TODO(max) Catch possible errors
 
-    if header is None:
-        if body is None:
-            if method.__eq__("get"):
-                response = requests.get(url)
-            else:
-                response = requests.post(url)
-        else:
-            response = requests.post(url, json=body)
+    if method.__eq__("get"):
+        response = requests.get(url, headers=header, json=body)
     else:
-        if body is None:
-            if method.__eq__("get"):
-                response = requests.get(url, header=header)
-            else:
-                response = requests.post(url, header=header)
-        else:
-            response = requests.post(url, header=header, json=body)
+        response = requests.post(url, headers=header, json=body)
 
     if response.status_code != 200:
         raise ValueError("Response-Code: " + str(response.status_code))
