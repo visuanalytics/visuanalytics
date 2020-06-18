@@ -5,7 +5,7 @@
   },
   "_pipe_id": "0",
   "_req": {
-    "data0": [
+    "Spiele": [
       {
         "Team1": {
           "TeamName": "Borussia Mönchengladbach",
@@ -18,7 +18,9 @@
         "MatchResults": {
           "PointsTeam1": 3,
           "PointsTeam2": 0
-        }
+        },
+        "MatchDateTime": "2020-06-16T18:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -32,7 +34,9 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 1
-        }
+        },
+        "MatchDateTime": "2020-06-16T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -46,7 +50,9 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 1
-        }
+        },
+        "MatchDateTime": "2020-06-16T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -60,7 +66,9 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 0
-        }
+        },
+        "MatchDateTime": "2020-06-16T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -74,7 +82,9 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 1
-        }
+        },
+        "MatchDateTime": "2020-06-17T18:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -88,7 +98,9 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 2
-        }
+        },
+        "MatchDateTime": "2020-06-17T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -102,7 +114,9 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 2
-        }
+        },
+        "MatchDateTime": "2020-06-17T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -116,7 +130,9 @@
         "MatchResults": {
           "PointsTeam1": 3,
           "PointsTeam2": 1
-        }
+        },
+        "MatchDateTime": "2020-06-17T20:30:00",
+        "MatchIsFinished": true
       },
       {
         "Team1": {
@@ -130,10 +146,12 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 3
-        }
+        },
+        "MatchDateTime": "2020-06-17T20:30:00",
+        "MatchIsFinished": true
       }
     ],
-    "data1": [
+    "Tabelle": [
       {
         "TeamName": "FC Bayern",
         "Points": 76,
@@ -278,6 +296,12 @@
         "GoalDiff": -34,
         "TeamId": 31
       }
+    ],
+    "Spieltag": [
+      "32. Spieltag"
+    ],
+    "LeagueName": [
+      "1. Fußball-Bundesliga 2019/2020"
     ]
   }
 }

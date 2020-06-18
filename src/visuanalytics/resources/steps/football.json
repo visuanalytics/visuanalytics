@@ -21,6 +21,16 @@
   },
   "transform": [
     {
+      "type": "append",
+      "key": "_req|Spiele|0|Group|GroupName",
+      "new_key": "_req|Spieltag"
+    },
+    {
+      "type": "append",
+      "key": "_req|Spiele|0|LeagueName",
+      "new_key": "_req|LeagueName"
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
@@ -32,7 +42,9 @@
             "Team2|TeamName",
             "Team2|TeamId",
             "MatchResults|0|PointsTeam1",
-            "MatchResults|0|PointsTeam2"
+            "MatchResults|0|PointsTeam2",
+            "MatchDateTime",
+            "MatchIsFinished"
           ]
         },
         {
