@@ -1771,7 +1771,7 @@
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {_req|data|0|str_wind_spd} und kommt aus Richtung {_req|data|0|str_wind_cdir_full}. "
+            "pattern": "Der Wind erreicht heute Geschwindigkeiten von {_req|data|0|str_wind_spd} und kommt aus {_req|data|0|str_wind_cdir_full}. "
           },
           {
             "type": "text",
@@ -1799,7 +1799,7 @@
           },
           {
             "type": "text",
-            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {_req|data|1|str_wind_spd} und kommt aus Richtung {_req|data|1|str_wind_cdir_full}. "
+            "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {_req|data|1|str_wind_spd} und kommt aus {_req|data|1|str_wind_cdir_full}. "
           }
         ]
       },
