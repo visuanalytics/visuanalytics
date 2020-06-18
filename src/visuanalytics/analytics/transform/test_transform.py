@@ -3,6 +3,7 @@ import json
 import time
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image import visualization
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
@@ -53,10 +54,10 @@ def test2():
     data = {"_req": api_data}
     print(f"Data: {data}")
     test_transform(
-        {"city_name": "Biebertal", "p_code": "35444", output_path": "out", "h264_nvenc": "true"},
-        "steps/weather_single.json", data)
+        {"city_name": "Biebertal", "p_code": "35444", "output_path": "out", "h264_nvenc": "true"},
+        "steps/weather_single.json",
+        data)
     print(time.time() - t1)
 
-
-if __name__ == "__main__":
-    test()
+    if __name__ == "__main__":
+        test()
