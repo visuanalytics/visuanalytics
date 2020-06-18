@@ -438,6 +438,11 @@
               "pattern": "{_key}\u00B0"
             }
           ]
+        },
+        {
+          "type": "append",
+          "key": "_idx",
+          "new_key": "cities"
         }
       ]
     },
@@ -447,72 +452,94 @@
       "format": "%Y-%m-%d"
     },
     {
-      "type": "loop",
-      "values": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
+      "type": "transform_dict",
+      "dict_key": "summaries",
       "transform": [
         {
           "type": "calculate",
           "action": "mean",
           "keys": [
-            "summaries|{_loop}|max_temp"
+            "_loop|max_temp"
           ],
           "new_keys": [
-            "summaries|{_loop}|temp_avg"
+            "_loop|temp_avg"
           ]
         },
         {
           "type": "calculate",
           "action": "max",
           "keys": [
-            "summaries|{_loop}|max_temp"
+            "_loop|max_temp"
+          ],
+          "save_idx_to": [
+            "_loop|temp_max_city"
           ]
         },
         {
           "type": "calculate",
           "action": "min",
           "keys": [
-            "summaries|{_loop}|min_temp"
+            "_loop|min_temp"
+          ],
+          "save_idx_to": [
+            "_loop|temp_min_city"
+          ]
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "cities|{_loop|temp_max_city}",
+            "cities|{_loop|temp_min_city}"
+          ],
+          "new_keys": [
+            "_loop|temp_max_city",
+            "_loop|temp_min_city"
+          ],
+          "pattern": "{_key}"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_req|{_loop|temp_max_city}|data|{_idx}|weather|code"
+          ],
+          "new_keys": [
+            "_loop|temp_max_city_code"
+          ],
+          "pattern": "{_key}"
+        },
+        {
+          "type": "calculate",
+          "action": "mode",
+          "keys": [
+            "_loop|icon"
           ]
         },
         {
           "type": "calculate",
           "action": "mode",
           "keys": [
-            "summaries|{_loop}|icon"
-          ]
-        },
-        {
-          "type": "calculate",
-          "action": "mode",
-          "keys": [
-            "summaries|{_loop}|code"
+            "_loop|code"
           ]
         },
         {
           "type": "calculate",
           "action": "round",
           "keys": [
-            "summaries|{_loop}|temp_avg",
-            "summaries|{_loop}|max_temp",
-            "summaries|{_loop}|min_temp"
+            "_loop|temp_avg",
+            "_loop|max_temp",
+            "_loop|min_temp"
           ],
           "count": 0
         },
         {
           "type": "add_symbol",
           "keys": [
-            "summaries|{_loop}|max_temp",
-            "summaries|{_loop}|min_temp"
+            "_loop|max_temp",
+            "_loop|min_temp"
           ],
           "new_keys": [
-            "summaries|{_loop}|sym_max_temp",
-            "summaries|{_loop}|sym_min_temp"
+            "_loop|sym_max_temp",
+            "_loop|sym_min_temp"
           ],
           "pattern": "{_key}\u00B0"
         }
