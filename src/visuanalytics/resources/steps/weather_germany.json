@@ -1644,47 +1644,47 @@
   },
   "sequence": [
     {
-      "image": "wetter1",
+      "image": "weather1",
       "time_diff": 0,
       "audio_l": "a1"
     },
     {
-      "image": "wetter2",
+      "image": "weather2",
       "time_diff": 0,
       "audio_l": "a2"
     },
     {
-      "image": "wetter3",
+      "image": "weather3",
       "time_diff": 0,
       "audio_l": "a3"
     },
     {
-      "image": "wetter4",
+      "image": "weather4",
       "time_diff": 0,
       "audio_l": "a4"
     },
     {
-      "image": "wetter8",
+      "image": "weather8",
       "time_diff": 2,
       "audio_l": null
     },
     {
-      "image": "wetter5",
+      "image": "weather5",
       "time_diff": -2,
       "audio_l": "a5"
     },
     {
-      "image": "wetter6",
+      "image": "weather6",
       "time_diff": 0,
       "audio_l": "a6"
     },
     {
-      "image": "wetter7",
+      "image": "weather7",
       "time_diff": -3,
       "audio_l": "a7"
     },
     {
-      "image": "wetter8",
+      "image": "weather8",
       "time_diff": 3,
       "audio_l": null
     }
