@@ -7,7 +7,7 @@ from visuanalytics.analytics.util import resources
 
 
 def api(values: dict, data: StepData):
-    return data.init_data({"_req": _api(values["api"], data, values["name"])})
+    data.init_data({"_req": _api(values["api"], data, values["name"])})
 
 
 def _api(values: dict, data: StepData, name):
@@ -55,17 +55,22 @@ def api_request_multiple_custom(values: dict, data: StepData, name):
     :param data: Daten aus der API
     """
     dict = {}
+    if values.get("use_loop_as_key", False):
+        for idx, value in enumerate(values["steps_value"]):
+            dict[value] = _api(values["requests"][idx], data, name)
+        return dict
+    list = []
     for idx, value in enumerate(values["requests"]):
-        dict["data" + str(idx)] = _api(value, data, name)
-    return dict
+        list.append(_api(value, data, name))
+    return list
 
 
 def _create_query(values: dict, data: StepData):
     req_values = [values.get("header", None), values.get("body", None)]
     for idx, key in enumerate(req_values):
         if req_values[idx] is not None:
-            req_values[idx] = data.format_json(req_values[idx], values["api_key_name"], values)
-    url = data.format_api(values["url_pattern"], values["api_key_name"], values)
+            req_values[idx] = data.format_json(req_values[idx], values.get("api_key_name", None), values)
+    url = data.format_api(values["url_pattern"], values.get("api_key_name", None), values)
     return url, req_values[0], req_values[1]
 
 
