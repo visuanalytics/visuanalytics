@@ -119,7 +119,7 @@
               "new_keys": [
                 "_loop|str_wind_spd"
               ],
-              "pattern": "{_key} Metern pro Sekunde"
+              "pattern": "{_key} Kilometern pro Stunde"
             },
             {
               "type": "add_symbol",
@@ -471,28 +471,39 @@
           "keys": [
             "_loop|max_temp"
           ],
+          "new_keys": [
+            "_loop|temp_highest_max"
+          ],
           "save_idx_to": [
-            "_loop|temp_max_city"
+            "_loop|temp_highest_max_city"
           ]
         },
         {
           "type": "calculate",
           "action": "min",
           "keys": [
-            "_loop|min_temp"
+            "_loop|min_temp",
+            "_loop|max_temp"
+          ],
+          "new_keys": [
+            "_loop|min_temp",
+            "_loop|temp_lowest_max"
           ],
           "save_idx_to": [
-            "_loop|temp_min_city"
+            "_loop|temp_min_city",
+            "_loop|temp_lowest_max_city"
           ]
         },
         {
           "type": "add_symbol",
           "keys": [
-            "cities|{_loop|temp_max_city}",
+            "cities|{_loop|temp_highest_max_city}",
+            "cities|{_loop|temp_lowest_max_city}",
             "cities|{_loop|temp_min_city}"
           ],
           "new_keys": [
-            "_loop|temp_max_city",
+            "_loop|temp_highest_max_city",
+            "_loop|temp_lowest_max_city",
             "_loop|temp_min_city"
           ],
           "pattern": "{_key}"
@@ -500,10 +511,12 @@
         {
           "type": "add_symbol",
           "keys": [
-            "_req|{_loop|temp_max_city}|data|{_idx}|weather|code"
+            "_req|{_loop|temp_highest_max_city}|data|{_idx}|weather|code",
+            "_req|{_loop|temp_lowest_max_city}|data|{_idx}|weather|code"
           ],
           "new_keys": [
-            "_loop|temp_max_city_code"
+            "_loop|temp_highest_max_city_code",
+            "_loop|temp_lowest_max_city_code"
           ],
           "pattern": "{_key}"
         },
@@ -542,6 +555,171 @@
             "_loop|sym_min_temp"
           ],
           "pattern": "{_key}\u00B0"
+        },
+        {
+          "type": "choose_random",
+          "keys": [
+            "_loop|temp_highest_max_city_code",
+            "_loop|temp_lowest_max_city_code"
+          ],
+          "dict": {
+            "200": {
+              "0": "kommt es zu Gewittern mit leichtem Regen",
+              "1": "ist mit Gewitter und leichtem Regen zu rechnen"
+            },
+            "201": {
+              "0": "kommt es zu Gewittern mit Regen",
+              "1": "ist mit Gewitter und Regen zu rechnen"
+            },
+            "202": {
+              "0": "kommt es zu Gewittern mit starkem Regen",
+              "1": "ist mit Gewitter und starkem Regen zu rechnen"
+            },
+            "230": {
+              "0": "kommt es zu Gewittern mit leichtem Nieselregen",
+              "1": "ist mit Gewitter und leichtem Nieselregen zu rechnen"
+            },
+            "231": {
+              "0": "kommt es zu Gewittern mit Nieselregen",
+              "1": "ist mit Gewitter und Nieselregen zu rechnen"
+            },
+            "232": {
+              "0": "kommt es zu Gewittern mit starkem Nieselregen",
+              "1": "ist mit Gewitter und starkem Nieselregen zu rechnen"
+            },
+            "233": {
+              "0": "kommt es zu Gewittern mit Hagel",
+              "1": "ist mit Gewitter und Hagel zu rechnen"
+            },
+            "300": {
+              "0": "kommt es zu leichtem Nieselregen",
+              "1": "ist mit leichtem Nieselregen zu rechnen"
+            },
+            "301": {
+              "0": "kommt es zu Nieselregen",
+              "1": "ist mit Nieselregen zu rechnen"
+            },
+            "302": {
+              "0": "kommt es zu starkem Nieselregen",
+              "1": "ist mit starkem Nieselregen zu rechnen"
+            },
+            "500": {
+              "0": "kommt es zu leichtem Regen",
+              "1": "ist es leicht regnerisch"
+            },
+            "501": {
+              "0": "kommt es zu mäßigem Regen",
+              "1": "ist es regnerisch"
+            },
+            "502": {
+              "0": "kommt es zu starkem Regen",
+              "1": "ist es stark regnerisch"
+            },
+            "511": {
+              "0": "kommt es zu Eisregen",
+              "1": "ist mit Eisregen zu rechnen"
+            },
+            "520": {
+              "0": "kommt es zu leichtem Regenschauer",
+              "1": "ist mit leichten Regenschauern zu rechnen"
+            },
+            "521": {
+              "0": "kommt es zu Regenschauer",
+              "1": "ist mit Regenschauern zu rechnen"
+            },
+            "522": {
+              "0": "kommt es zu starkem Regenschauer",
+              "1": "ist mit starken Regenschauern zu rechnen"
+            },
+            "600": {
+              "0": "kommt es zu leichtem Schneefall",
+              "1": "ist mit leichtem Schneefall zu rechnen"
+            },
+            "601": {
+              "0": "kommt es zu Schnee",
+              "1": "ist mit Schnee zu rechnen"
+            },
+            "602": {
+              "0": "kommt es zu starkem Schneefall",
+              "1": "ist mit starkem Schneefall zu rechnen"
+            },
+            "610": {
+              "0": "kommt es zu einem Mix aus Schnee und Regen",
+              "1": "ist mit einem Mix aus Schnee und Regen zu rechnen"
+            },
+            "611": {
+              "0": "kommt es zu Schneeregen",
+              "1": "ist mit Schneeregen zu rechnen"
+            },
+            "612": {
+              "0": "kommt es zu starkem Schneeregen",
+              "1": "ist mit starkem Schneeregen zu rechnen"
+            },
+            "621": {
+              "0": "kommt es zu Schneeschauer",
+              "1": "ist mit Schneeschauern zu rechnen"
+            },
+            "622": {
+              "0": "kommt es zu starkem Schneeschauer",
+              "1": "ist mit starken Schneeschauern zu rechnen"
+            },
+            "623": {
+              "0": "kommt es zu Windböen",
+              "1": "ist mit Windböen zu rechnen"
+            },
+            "700": {
+              "0": "kommt es zu Nebel",
+              "1": "ist mit Nebel zu rechnen"
+            },
+            "711": {
+              "0": "kommt es zu Nebel",
+              "1": "ist mit Nebel zu rechnen"
+            },
+            "721": {
+              "0": "kommt es zu Dunst",
+              "1": "ist mit Nebel zu rechnen"
+            },
+            "731": {
+              "0": "kommt es zu Staub in der Luft",
+              "1": "ist mit Staub in der Luft zu rechnen"
+            },
+            "741": {
+              "0": "kommt es zu Nebel",
+              "1": "ist mit Nebel zu rechnen"
+            },
+            "751": {
+              "0": "kommt es zu Eisnebel",
+              "1": "ist mit Eisnebel zu rechnen"
+            },
+            "800": {
+              "0": "ist der Himmel klar",
+              "1": "wird es heiter mit klarem Himmel"
+            },
+            "801": {
+              "0": "sind nur wenige Wolken am Himmel",
+              "1": "ist es leicht bewölkt"
+            },
+            "802": {
+              "0": "sind vereinzelte Wolken am Himmel",
+              "1": "ist es vereinzelt bewölkt"
+            },
+            "803": {
+              "0": "ist es bewölkt, vereinzelt kommt die Sonne durch",
+              "1": "ist es bewölkt, vereinzelt kommt die Sonne durch"
+            },
+            "804": {
+              "0": "kommt es zu bedecktem Himmel",
+              "1": "ist es bewölkt"
+            },
+            "900": {
+              "0": "kommt es zu unbekanntem Niederschlag",
+              "1": "ist mit unbekanntem Niederschlag zu rechnen"
+            }
+          },
+          "choice": [
+            "0",
+            "1"
+          ]
         }
       ]
     }
@@ -1408,11 +1586,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am heutigen {_req||0|weekday} {_req|data|0|weather|code_highest_max} {_req|data|0|city_highest_max}. "
+            "pattern": "Am heutigen {_req|0|weekday} {summaries|0|temp_highest_max_city_code} in {summaries|0|temp_highest_max_city}. "
           },
           {
             "type": "text",
-            "pattern": "{_req|data|0|city_lowest_max} {_req|data|0|weather|code_lowest_max}. "
+            "pattern": "In {summaries|0|temp_lowest_max_city} {summaries|0|weather|temp_lowest_max_city_code}. "
           }
         ]
       },
@@ -1420,7 +1598,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {_req|data|0|temp_lowest_max} Grad {_req|data|0|city_lowest_max} und {_req|data|0|temp_highest_max} Grad {_req|data|0|city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {summaries|0|temp_lowest_max} Grad in {summaries|0|temp_lowest_max_city} und {summaries|0|temp_highest_max} Grad in {summaries|0|temp_highest_max_city}. "
           }
         ]
       },
@@ -1428,11 +1606,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|code_lowest_max} {_req|data|1|city_lowest_max}. "
+            "pattern": "Am morgigen {_req|data|1|weekday} {summaries|1|weather|temp_lowest_max_city_code} in {summaries|1|temp_lowest_max_city}. "
           },
           {
             "type": "text",
-            "pattern": "{_req|data|1|city_highest_max} {_req|data|1|weather|code_highest_max}. "
+            "pattern": "In {summaries|1|temp_highest_max_city} {summaries|1|weather|temp_highest_max_city_code}. "
           }
         ]
       },
@@ -1440,7 +1618,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {_req|data|1|temp_lowest_max} Grad {_req|data|1|city_lowest_max} und {_req|data|1|temp_highest_max} Grad {_req|data|1|city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {summaries|1|temp_lowest_max} Grad in {summaries|1|temp_lowest_max_city} und {summaries|1|temp_highest_max} Grad in {summaries|1|temp_highest_max_city}. "
           }
         ]
       },
@@ -1448,11 +1626,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|2|weekday} {summaries||2|common_code}.  "
+            "pattern": "Am {_req|data|2|weekday} {summaries|2|code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {summaries|2|min_temp} Grad {_req|data|2|city_min_temp} und {_req|data|2|temp_highest_max} Grad {_req|data|2|city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {summaries|2|min_temp} Grad in {summaries|2|temp_min_city} und {summaries|2|temp_highest_max} Grad in {summaries|2|temp_highest_max_city}. "
           }
         ]
       },
@@ -1460,11 +1638,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|3|weekday} {summaries||3|common_code}.  "
+            "pattern": "Am {_req|data|3|weekday} {summaries|3|code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {summaries||3|min_temp} Grad {_req|data|3|city_min_temp} und {_req|data|3|temp_highest_max} Grad {_req|data|3|city_highest_max}.  "
+            "pattern": "Die Temperaturen liegen zwischen {summaries|3|min_temp} Grad in {summaries|3|temp_min_city} und {summaries|3|temp_highest_max} Grad in {summaries|3|temp_highest_max_city}.  "
           }
         ]
       },
@@ -1472,11 +1650,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Am {_req|data|4|weekday} {summaries||4|common_code}.  "
+            "pattern": "Am {_req|data|4|weekday} {summaries|4|code}.  "
           },
           {
             "type": "text",
-            "pattern": "Die Temperaturen liegen zwischen {summaries|4|min_temp} Grad {_req|data|4|city_min_temp} und {_req|data|4|temp_highest_max} Grad {_req|data|4|city_highest_max}. "
+            "pattern": "Die Temperaturen liegen zwischen {summaries|4|min_temp} Grad in {summaries|4|temp_min_city} und {summaries|4|temp_highest_max} Grad in {summaries|4|temp_highest_max_city}. "
           }
         ]
       }
