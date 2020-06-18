@@ -52,12 +52,12 @@ class StepData(object):
         data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
         return self.__formatter.format(value_string, data)
 
-    def format_header(self, header: dict, api_key_name: str, values: dict):
+    def format_json(self, json: dict, api_key_name: str, values: dict):
         api_key_name = self.format(api_key_name, values)
         data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
-        for key in header:
-            header[key] = self.__formatter.format(header[key], data)
-        return header
+        for key in json:
+            json[key] = self.__formatter.format(json[key], data)
+        return json
 
     def format(self, value_string, values=None):
         # if value_string is int just return value

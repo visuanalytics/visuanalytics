@@ -26,11 +26,7 @@
       "Regensburg"
     ],
     "use_loop_as_key": true,
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}",
-    "header": {
-      "X-Authorization": "{_api_key}",
-      "Test": "Test123"
-    }
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}"
   },
   "transform": [
     {
