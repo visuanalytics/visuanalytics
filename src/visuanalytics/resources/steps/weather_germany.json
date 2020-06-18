@@ -451,19 +451,6 @@
         },
         {
           "type": "calculate",
-          "action": "max",
-          "keys": [
-            "_loop|max_temp"
-          ],
-          "new_keys": [
-            "_loop|temp_highest_max"
-          ],
-          "save_idx_to": [
-            "_loop|temp_highest_max_city"
-          ]
-        },
-        {
-          "type": "calculate",
           "action": "min",
           "keys": [
             "_loop|min_temp",
@@ -476,6 +463,16 @@
           "save_idx_to": [
             "_loop|temp_min_city",
             "_loop|temp_lowest_max_city"
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "max",
+          "keys": [
+            "_loop|max_temp"
+          ],
+          "save_idx_to": [
+            "_loop|temp_highest_max_city"
           ]
         },
         {
