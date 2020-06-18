@@ -24,10 +24,10 @@ def test_transform(x, config_name, data: dict):
     step_data = StepData(x, "0")
     step_data.init_data(data)
 
-    api(values, step_data)
+    # api(values, step_data)
     transform(values, step_data)
     print(f"Data after Transform: {step_data.data}")
-    #  generate_audios(values, step_data)
+    generate_audios(values, step_data)
 
     visualization.generate_all_images(values, step_data)
     print(values["images"])
