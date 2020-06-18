@@ -54,15 +54,18 @@ def api_request_multiple_custom(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    dict = {}
+
     if values.get("use_loop_as_key", False):
+        data_dict = {}
+
         for idx, value in enumerate(values["steps_value"]):
-            dict[value] = _api(values["requests"][idx], data, name)
-        return dict
-    list = []
+            data_dict[value] = _api(values["requests"][idx], data, name)
+        return data_dict
+
+    data_array = []
     for idx, value in enumerate(values["requests"]):
-        list.append(_api(value, data, name))
-    return list
+        data_array.append(_api(value, data, name))
+    return data_array
 
 
 def _create_query(values: dict, data: StepData):
