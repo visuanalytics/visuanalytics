@@ -32,15 +32,15 @@ def api_request_multiple(values: dict, data: StepData, name):
         data_dict = {}
         for idx, key in enumerate(values["steps_value"]):
             data.save_loop(values, idx, key)
-            url, x = _create_query(values, data)
-            data_dict[key] = _fetch(url, x[0], x[1], method, data.data["_conf"].get("testing", False), name)
+            url, header, body = _create_query(values, data)
+            data_dict[key] = _fetch(url, header, body, method, data.data["_conf"].get("testing", False), name)
         return data.init_data({"_req": data_dict})
 
     data_array = []
     for idx, value in enumerate(values["steps_value"]):
         data.save_loop(values, idx, value)
-        url, x = _create_query(values, data)
-        data_array.append(_fetch(url, x[0], x[1], method, data.data["_conf"].get("testing", False), name))
+        url, header, body = _create_query(values, data)
+        data_array.append(_fetch(url, header, body, method, data.data["_conf"].get("testing", False), name))
         return data.init_data({"_req": data_array})
 
 
@@ -62,7 +62,7 @@ def _create_query(values: dict, data: StepData):
         if x[idx] is not None:
             x[idx] = data.format_json(x[idx], values["api_key_name"], values)
     url = data.format_api(values["url_pattern"], values["api_key_name"], values)
-    return url, x
+    return url, x[0], x[1]
 
 
 def _fetch(url, header, body, method, testing=False, name=""):
