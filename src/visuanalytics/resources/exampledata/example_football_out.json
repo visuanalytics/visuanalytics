@@ -1,0 +1,283 @@
+{
+  "_conf": {
+    "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics",
+    "h264_nvenc": "true"
+  },
+  "_pipe_id": "0",
+  "_req": {
+    "data0": [
+      {
+        "Team1": {
+          "TeamName": "Borussia Mönchengladbach",
+          "TeamId": 87
+        },
+        "Team2": {
+          "TeamName": "VfL Wolfsburg",
+          "TeamId": 131
+        },
+        "MatchResults": {
+          "PointsTeam1": 3,
+          "PointsTeam2": 0
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "Werder Bremen",
+          "TeamId": 134
+        },
+        "Team2": {
+          "TeamName": "FC Bayern",
+          "TeamId": 40
+        },
+        "MatchResults": {
+          "PointsTeam1": 0,
+          "PointsTeam2": 1
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "SC Freiburg",
+          "TeamId": 112
+        },
+        "Team2": {
+          "TeamName": "Hertha BSC",
+          "TeamId": 54
+        },
+        "MatchResults": {
+          "PointsTeam1": 2,
+          "PointsTeam2": 1
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "1. FC Union Berlin",
+          "TeamId": 80
+        },
+        "Team2": {
+          "TeamName": "SC Paderborn 07",
+          "TeamId": 31
+        },
+        "MatchResults": {
+          "PointsTeam1": 1,
+          "PointsTeam2": 0
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "Eintracht Frankfurt",
+          "TeamId": 91
+        },
+        "Team2": {
+          "TeamName": "FC Schalke 04",
+          "TeamId": 9
+        },
+        "MatchResults": {
+          "PointsTeam1": 2,
+          "PointsTeam2": 1
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "Borussia Dortmund",
+          "TeamId": 7
+        },
+        "Team2": {
+          "TeamName": "1. FSV Mainz 05",
+          "TeamId": 81
+        },
+        "MatchResults": {
+          "PointsTeam1": 0,
+          "PointsTeam2": 2
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "RB Leipzig",
+          "TeamId": 1635
+        },
+        "Team2": {
+          "TeamName": "Fortuna Düsseldorf",
+          "TeamId": 185
+        },
+        "MatchResults": {
+          "PointsTeam1": 2,
+          "PointsTeam2": 2
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "Bayer Leverkusen",
+          "TeamId": 6
+        },
+        "Team2": {
+          "TeamName": "1. FC Köln",
+          "TeamId": 65
+        },
+        "MatchResults": {
+          "PointsTeam1": 3,
+          "PointsTeam2": 1
+        }
+      },
+      {
+        "Team1": {
+          "TeamName": "FC Augsburg",
+          "TeamId": 95
+        },
+        "Team2": {
+          "TeamName": "TSG 1899 Hoffenheim",
+          "TeamId": 123
+        },
+        "MatchResults": {
+          "PointsTeam1": 1,
+          "PointsTeam2": 3
+        }
+      }
+    ],
+    "data1": [
+      {
+        "TeamName": "FC Bayern",
+        "Points": 76,
+        "Won": 24,
+        "Lost": 4,
+        "GoalDiff": 62,
+        "TeamId": 40
+      },
+      {
+        "TeamName": "Borussia Dortmund",
+        "Points": 66,
+        "Won": 20,
+        "Lost": 6,
+        "GoalDiff": 45,
+        "TeamId": 7
+      },
+      {
+        "TeamName": "RB Leipzig",
+        "Points": 63,
+        "Won": 17,
+        "Lost": 3,
+        "GoalDiff": 45,
+        "TeamId": 1635
+      },
+      {
+        "TeamName": "Bayer Leverkusen",
+        "Points": 60,
+        "Won": 18,
+        "Lost": 8,
+        "GoalDiff": 18,
+        "TeamId": 6
+      },
+      {
+        "TeamName": "Borussia Mönchengladbach",
+        "Points": 59,
+        "Won": 18,
+        "Lost": 9,
+        "GoalDiff": 23,
+        "TeamId": 87
+      },
+      {
+        "TeamName": "VfL Wolfsburg",
+        "Points": 46,
+        "Won": 12,
+        "Lost": 10,
+        "GoalDiff": 3,
+        "TeamId": 131
+      },
+      {
+        "TeamName": "TSG 1899 Hoffenheim",
+        "Points": 46,
+        "Won": 13,
+        "Lost": 12,
+        "GoalDiff": -8,
+        "TeamId": 175
+      },
+      {
+        "TeamName": "SC Freiburg",
+        "Points": 45,
+        "Won": 12,
+        "Lost": 11,
+        "GoalDiff": -1,
+        "TeamId": 112
+      },
+      {
+        "TeamName": "Eintracht Frankfurt",
+        "Points": 41,
+        "Won": 12,
+        "Lost": 15,
+        "GoalDiff": -2,
+        "TeamId": 91
+      },
+      {
+        "TeamName": "FC Schalke 04",
+        "Points": 39,
+        "Won": 9,
+        "Lost": 11,
+        "GoalDiff": -13,
+        "TeamId": 9
+      },
+      {
+        "TeamName": "Hertha BSC",
+        "Points": 38,
+        "Won": 10,
+        "Lost": 14,
+        "GoalDiff": -12,
+        "TeamId": 54
+      },
+      {
+        "TeamName": "1. FC Union Berlin",
+        "Points": 38,
+        "Won": 11,
+        "Lost": 16,
+        "GoalDiff": -16,
+        "TeamId": 80
+      },
+      {
+        "TeamName": "1. FC Köln",
+        "Points": 35,
+        "Won": 10,
+        "Lost": 17,
+        "GoalDiff": -13,
+        "TeamId": 65
+      },
+      {
+        "TeamName": "FC Augsburg",
+        "Points": 35,
+        "Won": 9,
+        "Lost": 15,
+        "GoalDiff": -17,
+        "TeamId": 95
+      },
+      {
+        "TeamName": "1. FSV Mainz 05",
+        "Points": 34,
+        "Won": 10,
+        "Lost": 18,
+        "GoalDiff": -22,
+        "TeamId": 81
+      },
+      {
+        "TeamName": "Fortuna Düsseldorf",
+        "Points": 29,
+        "Won": 6,
+        "Lost": 15,
+        "GoalDiff": -28,
+        "TeamId": 185
+      },
+      {
+        "TeamName": "Werder Bremen",
+        "Points": 28,
+        "Won": 7,
+        "Lost": 18,
+        "GoalDiff": -30,
+        "TeamId": 134
+      },
+      {
+        "TeamName": "SC Paderborn 07",
+        "Points": 20,
+        "Won": 4,
+        "Lost": 20,
+        "GoalDiff": -34,
+        "TeamId": 31
+      }
+    ]
+  }
+}

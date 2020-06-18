@@ -1,0 +1,104 @@
+{
+  "id": 0,
+  "name": "football",
+  "api": {
+    "type": "request_multiple_custom",
+    "requests": [
+      {
+        "type": "request",
+        "api_key_name": null,
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+      },
+      {
+        "type": "request",
+        "api_key_name": null,
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "type": "select",
+      "relevant_keys": [
+        "_req"
+      ]
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|data0",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "_loop",
+          "relevant_keys": [
+            "Team1|TeamName",
+            "Team1|TeamId",
+            "Team2|TeamName",
+            "Team2|TeamId",
+            "MatchResults|0|PointsTeam1",
+            "MatchResults|0|PointsTeam2"
+          ]
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "_loop|MatchResults|0"
+          ],
+          "new_keys": [
+            "_loop|MatchResults"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|data1",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "_loop",
+          "relevant_keys": [
+            "TeamName",
+            "TeamInfoId",
+            "Points",
+            "Won",
+            "Lost",
+            "GoalDiff"
+          ]
+        },
+        {
+          "type": "alias",
+          "keys": [
+            "_loop|TeamInfoId"
+          ],
+          "new_keys": [
+            "_loop|TeamId"
+          ]
+        }
+      ]
+    }
+  ],
+  "images": {
+  },
+  "audio": {
+    "config": {
+      "lang": "de",
+      "format": "mp3"
+    },
+    "audios": {
+    }
+  },
+  "sequence": [
+  ],
+  "run_config": {
+    "testing": {
+      "default_value": false,
+      "possible_values": [
+        true,
+        false
+      ]
+    }
+  },
+  "presets": {
+  }
+}
