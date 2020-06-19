@@ -13,20 +13,20 @@ CITIES = ["Kiel", "Berlin", "Dresden", "Hannover", "Bremen", "Düsseldorf", "Fra
           "Regensburg"]
 
 
-def test_transform(x, config_name, data: dict):
+def test_transform(x, config_name, data):
     with resources.open_resource(config_name) as fp:
         values = json.loads(fp.read())
 
     step_data = StepData(x, "0")
-    step_data.init_data(data)
 
-    # api(values, step_data)
+    api(values, step_data)
+    print(step_data.data)
     transform(values, step_data)
+    print(step_data.data)
     print(f"Data after Transform: {step_data.data}")
-    generate_audios(values, step_data)
+    #  generate_audios(values, step_data)
 
     visualization.generate_all_images(values, step_data)
-    print(values["images"])
 
 
 def test():
@@ -59,5 +59,13 @@ def test2():
         data)
     print(time.time() - t1)
 
-    if __name__ == "__main__":
-        test()
+def test3():
+    t1 = time.time()
+    test_transform(
+        {"out_path": "/home/jannik-pc-linux/Videos-Data-Analytics", "h264_nvenc": "true"},
+        "steps/football.json", None)
+    print(time.time() - t1)
+
+
+if __name__ == "__main__":
+    test3()
