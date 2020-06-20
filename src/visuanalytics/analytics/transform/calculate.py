@@ -21,8 +21,7 @@ def calculate_mean(values: dict, data: StepData):
     :param data: Daten aus der API
     :return:
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         mean_value = float(np.mean(value))
@@ -40,8 +39,7 @@ def calculate_max(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         new_value = max(value)
@@ -58,8 +56,7 @@ def calculate_min(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         new_value = min(value)
@@ -76,9 +73,7 @@ def calculate_round(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
@@ -96,8 +91,7 @@ def calculate_mode(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         new_value = collections.Counter(value).most_common()[0][0]
@@ -111,8 +105,7 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         kmh = (value * 3.6)
