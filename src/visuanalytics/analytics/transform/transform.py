@@ -4,8 +4,11 @@ from datetime import datetime
 from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.transform.calculate import calculate
+from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
+from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
+
+TRANSFORM_TYPES = {}
 
 
 def transform(values: dict, data: StepData):
@@ -15,19 +18,33 @@ def transform(values: dict, data: StepData):
         TRANSFORM_TYPES[transformation["type"]](transformation, data)
 
 
+def register_transform(func):
+    TRANSFORM_TYPES[func.__name__] = func
+    return func
+
+
+@register_transform
 def transform_array(values: dict, data: StepData):
     for idx, entry in enumerate(data.get_data(values["array_key"], values)):
         data.save_loop(values, idx, entry)
         transform(values, data)
 
 
+@register_transform
 def transform_dict(values: dict, data: StepData):
     for entry in data.get_data(values["dict_key"], values).items():
         data.save_loop(values, entry[0], entry[1])
         transform(values, data)
 
 
-def transform_select(values: dict, data: StepData):
+@register_transform
+def calculate(values: dict, data: StepData):
+    action = data.format(values["action"], values)
+    CALCULATE_ACTIONS[action](values, data)
+
+
+@register_transform
+def select(values: dict, data: StepData):
     root = values.get("_loop_states", {}).get("_loop", None)
 
     if root is None:
@@ -43,7 +60,8 @@ def transform_select(values: dict, data: StepData):
         data_insert_pattern(key, root, data_get_pattern(key, old_root))
 
 
-def transform_select_range(values: dict, data: StepData):
+@register_transform
+def select_range(values: dict, data: StepData):
     value_array = data.get_data(values["array_key"], values)
     range_start = data.format(values.get("range_start", 0), values)
     range_end = data.format(values["range_end"], values)
@@ -51,7 +69,8 @@ def transform_select_range(values: dict, data: StepData):
     data.insert_data(values["array_key"], value_array[range_start:range_end], values)
 
 
-def transform_append(values: dict, data: StepData):
+@register_transform
+def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
@@ -64,7 +83,8 @@ def transform_append(values: dict, data: StepData):
     array.append(value)
 
 
-def transform_add_symbol(values: dict, data: StepData):
+@register_transform
+def add_symbol(values: dict, data: StepData):
     """Fügt ein Zeichen, Symbol, Wort oder einen Satz zu einem Wert hinzu.
 
     :param values: Werte aus der JSON-Datei
@@ -72,13 +92,14 @@ def transform_add_symbol(values: dict, data: StepData):
     """
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
 
         new_values = data.format(values['pattern'], values)
         data.insert_data(new_key, new_values, values)
 
 
-def transform_replace(values: dict, data: StepData):
+@register_transform
+def replace(values: dict, data: StepData):
     """Ersetzt ein Zeichen, Symbol, Wort oder einen Satz.
 
     :param values: Werte aus der JSON-Datei
@@ -88,7 +109,7 @@ def transform_replace(values: dict, data: StepData):
         data.save_loop_key(values, key)
 
         value = str(data.get_data(key, values))
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
 
         new_value = value.replace(data.format(values["old_value"], values),
                                   data.format(values["new_value"], values),
@@ -96,7 +117,8 @@ def transform_replace(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
-def transform_translate_key(values: dict, data: StepData):
+@register_transform
+def translate_key(values: dict, data: StepData):
     """Setzt den value zu einem key als neuen value für die JSON.
 
     :param values: Werte aus der JSON-Datei
@@ -106,13 +128,14 @@ def transform_translate_key(values: dict, data: StepData):
         data.save_loop_key(values, key)
 
         value = str(data.get_data(key, values))
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
 
         new_value = data.format(values["dict"][value], values)
         data.insert_data(new_key, new_value, values)
 
 
-def transform_alias(values: dict, data: StepData):
+@register_transform
+def alias(values: dict, data: StepData):
     for key, new_key in zip(values["keys"], values["new_keys"]):
         value = data.get_data(key, values)
         new_key = data.format(new_key, values)
@@ -122,12 +145,13 @@ def transform_alias(values: dict, data: StepData):
         data.remove_data(key, values)
 
 
-def transform_regex(values: dict, data: StepData):
+@register_transform
+def regex(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
 
         value = str(data.get_data(key, values))
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
 
         find = data.format(values["find"], values)
         replace_by = data.format(values["replace_by"], values)
@@ -135,7 +159,8 @@ def transform_regex(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
-def transform_date_format(values: dict, data: StepData):
+@register_transform
+def date_format(values: dict, data: StepData):
     """Ändert das Format des Datums bzw. der Uhrzeit.
 
     :param values: Werte aus der JSON-Datei
@@ -148,16 +173,17 @@ def transform_date_format(values: dict, data: StepData):
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
         new_value = date.strftime(data.format(values["format"], values))
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         data.insert_data(new_key, new_value, values)
 
 
-def transform_timestamp(values: dict, data: StepData):
+@register_transform
+def timestamp(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         if values.get("zeropaded_off", False):
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
             data.insert_data(new_key, new_value, values)
@@ -166,7 +192,8 @@ def transform_timestamp(values: dict, data: StepData):
             data.insert_data(new_key, new_value, values)
 
 
-def transform_date_weekday(values: dict, data: StepData):
+@register_transform
+def date_weekday(values: dict, data: StepData):
     """Wandelt das Datum in den Wochentag in.
 
     :param values: Werte aus der JSON-Datei
@@ -187,13 +214,14 @@ def transform_date_weekday(values: dict, data: StepData):
         value = data.get_data(values["keys"][idx], values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
 
         new_value = day_weekday[date.weekday()]
         data.insert_data(new_key, new_value, values)
 
 
-def transform_date_now(values: dict, data: StepData):
+@register_transform
+def date_now(values: dict, data: StepData):
     """Generiert das heutige Datum und gibt es im gewünschten Format aus.
 
     :param values: Werte aus der JSON-Datei
@@ -206,15 +234,15 @@ def transform_date_now(values: dict, data: StepData):
     data.insert_data(new_key, new_value, values)
 
 
-def transform_wind_direction(values: dict, data: StepData):
+@register_transform
+def wind_direction(values: dict, data: StepData):
     """Wandelt einen String von Windrichtungen um.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    key = values["key"]
     value = data.get_data(values["key"], values)
-    new_key = values["new_key"] if values.get("new_key", None) else key
+    new_key = get_new_key(values)
     if value.find(data.format(values["delimiter"], values)) != -1:
         wind = value.split("-")
         wind_1 = wind[0]
@@ -227,7 +255,8 @@ def transform_wind_direction(values: dict, data: StepData):
     data.insert_data(new_key, new_value, values)
 
 
-def transform_choose_random(values: dict, data: StepData):
+@register_transform
+def choose_random(values: dict, data: StepData):
     """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Value aus.
 
     :param values: Werte aus der JSON-Datei
@@ -241,12 +270,13 @@ def transform_choose_random(values: dict, data: StepData):
         for x in range(len(values["choice"])):
             choice_list.append(data.format(values["choice"][x], values))
         decision = str(random.choice(choice_list))
-        new_key = transform_get_new_keys(values, -1, key)
+        new_key = get_new_keys(values, idx)
         new_value = data.format(values["dict"][value][decision], values)
         data.insert_data(new_key, new_value, values)
 
 
-def transform_find_equal(values: dict, data: StepData):
+@register_transform
+def find_equal(values: dict, data: StepData):
     # TODO
     """innerhalb von loop
 
@@ -257,7 +287,7 @@ def transform_find_equal(values: dict, data: StepData):
         data.save_loop_key(values, key)
 
         value = data.get_data(key, values)
-        new_key = transform_get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         search_through = data.format(values["search_through"], values)
         replace_by = data.format(values["replace_by"], values)
         if value == search_through:
@@ -267,7 +297,8 @@ def transform_find_equal(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
-def transform_loop(values: dict, data: StepData):
+@register_transform
+def loop(values: dict, data: StepData):
     loop_values = values.get("values", None)
 
     # is Values is none use range
@@ -281,35 +312,11 @@ def transform_loop(values: dict, data: StepData):
         transform(values, data)
 
 
-def transform_add_data(values: dict, data: StepData):
+@register_transform
+def add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
     data.insert_data(new_key, value, values)
 
 
-def transform_get_new_keys(values: dict, idx, key):
-    return values["new_keys"][idx] if values.get("new_keys", None) else key
-
-
-TRANSFORM_TYPES = {
-    "transform_array": transform_array,
-    "transform_dict": transform_dict,
-    "select": transform_select,
-    "select_range": transform_select_range,
-    "append": transform_append,
-    "add_symbol": transform_add_symbol,
-    "replace": transform_replace,
-    "translate_key": transform_translate_key,
-    "alias": transform_alias,
-    "regex": transform_regex,
-    "date_format": transform_date_format,
-    "timestamp": transform_timestamp,
-    "date_weekday": transform_date_weekday,
-    "date_now": transform_date_now,
-    "find_equal": transform_find_equal,
-    "loop": transform_loop,
-    "wind_direction": transform_wind_direction,
-    "choose_random": transform_choose_random,
-    "add_data": transform_add_data,
-    "calculate": calculate
-}
+print(TRANSFORM_TYPES)
