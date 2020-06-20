@@ -4,7 +4,7 @@ import time
 import uuid
 from datetime import datetime, time as dt_time
 
-from visuanalytics.analytics.control.pipeline import Pipeline
+from visuanalytics.analytics.control.procedures.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 
