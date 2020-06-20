@@ -5,6 +5,8 @@ import requests
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
+API_TYPES = {}
+
 
 def api(values: dict, data: StepData):
     data.init_data({"_req": _api(values["api"], data, values["name"])})
@@ -14,7 +16,13 @@ def _api(values: dict, data: StepData, name):
     return API_TYPES[values["type"]](values, data, name)
 
 
-def api_request(values: dict, data: StepData, name):
+def register_api(func):
+    API_TYPES[func.__name__] = func
+    return func
+
+
+@register_api
+def request(values: dict, data: StepData, name):
     """Fragt einmal die gewünschten Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -25,7 +33,8 @@ def api_request(values: dict, data: StepData, name):
                   name)
 
 
-def api_request_multiple(values: dict, data: StepData, name):
+@register_api
+def request_multiple(values: dict, data: StepData, name):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -48,7 +57,8 @@ def api_request_multiple(values: dict, data: StepData, name):
         return data_array
 
 
-def api_request_multiple_custom(values: dict, data: StepData, name):
+@register_api
+def request_multiple_custom(values: dict, data: StepData, name):
     """Fragt unterschiedliche Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -97,10 +107,3 @@ def _fetch(url, header, body, method, testing=False, name=""):
     if response.status_code != 200:
         raise ValueError("Response-Code: " + str(response.status_code))
     return json.loads(response.content)
-
-
-API_TYPES = {
-    "request": api_request,
-    "request_multiple": api_request_multiple,
-    "request_multiple_custom": api_request_multiple_custom
-}
