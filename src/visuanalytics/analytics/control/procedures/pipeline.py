@@ -130,5 +130,5 @@ class Pipeline(object):
             self.__current_step = -2
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
-            # self.__cleanup() todo needs to be changed when everything is working
+            self.__cleanup()
             return False
