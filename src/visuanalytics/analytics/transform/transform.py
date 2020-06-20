@@ -313,8 +313,13 @@ def transform_result(values: dict, data: StepData):
         data.insert_data(new_key_2, new_value[1], values)
 
 
-def transform_sort(values: dict, data: StepData):
-    return
+def transform_copy(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = data.get_data(key, values)
+        new_key = transform_get_new_keys(values, idx, key)
+        new_value = value
+        data.insert_data(new_key, new_value, values)
 
 
 TRANSFORM_TYPES = {
@@ -338,6 +343,6 @@ TRANSFORM_TYPES = {
     "choose_random": transform_choose_random,
     "add_data": transform_add_data,
     "result": transform_result,
-    "sort": transform_sort,
+    "sort": transform_copy,
     "calculate": calculate
 }

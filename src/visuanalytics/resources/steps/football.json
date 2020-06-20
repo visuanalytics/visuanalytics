@@ -108,6 +108,52 @@
           "new_keys": [
             "_loop|TeamId"
           ]
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Result"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Points_before"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Won_before"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Lost_before"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "GoalDiff_before"
+        }
+      ]
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req",
+      "transform": [
+        {
+          "type": "copy",
+          "key": [
+            "Tabelle|_idx|Points",
+            "Tabelle|_idx|Won",
+            "Tabelle|_idx|Lost",
+            "Tabelle|_idx|GoalDiff"
+          ],
+          "new_key": [
+            "Tabelle|_idx|Points_before",
+            "Tabelle|_idx|Won_before",
+            "Tabelle|_idx|Lost_before",
+            "Tabelle|_idx|GoalDiff_before"
+          ]
         }
       ]
     }
