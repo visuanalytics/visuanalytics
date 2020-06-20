@@ -317,6 +317,3 @@ def add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
     data.insert_data(new_key, value, values)
-
-
-print(TRANSFORM_TYPES)
