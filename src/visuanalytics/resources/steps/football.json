@@ -11,7 +11,7 @@
     "requests": [
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1/2019/32"
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
       },
       {
         "type": "request",
@@ -26,11 +26,6 @@
       "new_key": "_req|Spieltag"
     },
     {
-      "type": "append",
-      "key": "_req|Spiele|0|LeagueName",
-      "new_key": "_req|LeagueName"
-    },
-    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
@@ -41,11 +36,12 @@
             "Team1|TeamId",
             "Team2|TeamName",
             "Team2|TeamId",
-            "MatchResults|0|PointsTeam1",
-            "MatchResults|0|PointsTeam2",
+            "MatchIsFinished",
             "MatchDateTime",
-            "MatchIsFinished"
-          ]
+            "MatchResults|0|PointsTeam1",
+            "MatchResults|0|PointsTeam2"
+          ],
+          "default_value": "KA"
         },
         {
           "type": "alias",

@@ -40,7 +40,11 @@ def transform_select(values: dict, data: StepData):
         root.clear()
 
     for key in values["relevant_keys"]:
-        data_insert_pattern(key, root, data_get_pattern(key, old_root))
+        try:
+            pattern = data_get_pattern(key, old_root)
+        except:
+            pattern = values["default_value"]
+        data_insert_pattern(key, root, pattern)
 
 
 def transform_select_range(values: dict, data: StepData):
