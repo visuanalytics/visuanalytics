@@ -2,50 +2,39 @@
 
 - src
     - visuanalytics
-        - run.py
         - requirements.txt
-        - config.py
+        - requirements-dev.txt
+        - config.json
         - instance
-            - config.py
+            - config.json
         - server
-            - views
-            - models
-            - static
+            - api
+            - db
             - templates
         - analytics
             - api
-              - weather.py
-              - twitter.py
-              - corona.py
-              - ...
-            - preprocessing
-              - weather.py
-              - twitter.py
-              - corona.py
-              - ...
+              - api.py
+            - transform
+              - transform.py
+              - calculate.py
             - processing
-              - weather
-                - speech.py
-                - video.py
-              - twitter
-                - wordcloud.py
-                - ...
-            - linking
-              - weather.py
-              - corona.py
-              - ... 
+              - images
+              - audio
+            - seqence
+              - seqence.py
            - control
-             - weather
-               - full_forecast.py
-             - corona
-               - ...
+             - procedures
+             - scheduler
+             - main.py
            - util
            resources
          - tests
             - ...
          - docs
-    - (wordpress) 
-
-  Angelehnt an: https://exploreflask.com/en/latest/organizing.html 
-  
-  Eventuell könnten unter 
+    - frontend
+      - public
+      - src
+        - index.tsx
+        - Home
+        - ...
+    - wordpress 
