@@ -27,7 +27,7 @@ class Pipeline(object):
                1: {"name": "Transform", "call": transform},
                2: {"name": "Images", "call": generate_all_images},
                3: {"name": "Audios", "call": generate_audios},
-               4: {"name": "Seqence", "call": link},
+               4: {"name": "Sequence", "call": link},
                5: {"name": "Ready"}}
     __steps_max = 5
 

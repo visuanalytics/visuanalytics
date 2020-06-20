@@ -1702,17 +1702,17 @@
     "weather_white_2": {
       "color": "white",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
       "color": "white",
       "font_size": 50,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_2": {
       "color": "#949994",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     }
   }
 }
