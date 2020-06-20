@@ -55,6 +55,33 @@
           "new_keys": [
             "_loop|MatchResults"
           ]
+        },
+        {
+          "type": "date_format",
+          "keys": [
+            "_loop|MatchDateTime"
+          ],
+          "new_keys": [
+            "_loop|Matchday"
+          ],
+          "given_format": "%Y-%m-%dT%H:%M:S",
+          "format": "%a., %d.%m.%Y %H:%M"
+        },
+        {
+          "type": "result",
+          "keys": [
+            "_loop|MatchResults|PointsTeam1",
+            "_loop|MatchResults|PointsTeam2"
+          ],
+          "new_keys": [
+            "_loop|Team1|Result",
+            "_loop|Team2|Result"
+          ],
+          "dict": {
+            "unentschieden": 1,
+            "gewonnen": 3,
+            "verloren": 0
+          }
         }
       ]
     },
@@ -93,6 +120,58 @@
       "format": "mp3"
     },
     "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          }
+        ]
+      },
+      "a2": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          },
+          {
+            "type": "text",
+            "pattern": " "
+          }
+        ]
+      }
     }
   },
   "sequence": [

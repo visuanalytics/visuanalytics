@@ -291,6 +291,32 @@ def transform_get_new_keys(values: dict, idx, key):
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 
 
+def transform_result(values: dict, data: StepData):
+    for key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value_1 = data.get_data(values["keys"][0], values)
+        value_2 = data.get_data(values["keys"][1], values)
+        new_key_1 = transform_get_new_keys(values, 0, key)
+        new_key_2 = transform_get_new_keys(values, 1, key)
+        new_value = []
+        if value_1 == value_2:
+            new_value[0] = data.get_data(values["dict"][0], values)
+            new_value[1] = data.get_data(values["dict"][0], values)
+        elif value_1 > value_2:
+            new_value[0] = data.get_data(values["dict"][1], values)
+            new_value[1] = data.get_data(values["dict"][2], values)
+        elif value_1 < value_2:
+            new_value[0] = data.get_data(values["dict"][2], values)
+            new_value[1] = data.get_data(values["dict"][1], values)
+
+        data.insert_data(new_key_1, new_value[0], values)
+        data.insert_data(new_key_2, new_value[1], values)
+
+
+def transform_sort(values: dict, data: StepData):
+    return
+
+
 TRANSFORM_TYPES = {
     "transform_array": transform_array,
     "transform_dict": transform_dict,
@@ -311,5 +337,7 @@ TRANSFORM_TYPES = {
     "wind_direction": transform_wind_direction,
     "choose_random": transform_choose_random,
     "add_data": transform_add_data,
+    "result": transform_result,
+    "sort": transform_sort,
     "calculate": calculate
 }

@@ -130,12 +130,17 @@ def calculate_get_new_keys(values: dict, idx, key):
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 
 
+def calculate_difference(values: dict, data: StepData):
+    return
+
+
 CALCULATE_ACTIONS = {
     "mean": calculate_mean,
     "max": calculate_max,
     "min": calculate_min,
     "round": calculate_round,
     "mode": calculate_mode,
-    "ms_to_kmh": calculate_ms_to_kmh
+    "ms_to_kmh": calculate_ms_to_kmh,
+    "difference": calculate_difference
 
 }
