@@ -292,22 +292,24 @@ def transform_get_new_keys(values: dict, idx, key):
 
 
 def transform_result(values: dict, data: StepData):
-    for key in enumerate(values["keys"]):
+    for idx, key in zip(values["keys"][0], values["keys"][1]):
         data.save_loop_key(values, key)
-        value_1 = data.get_data(values["keys"][0], values)
-        value_2 = data.get_data(values["keys"][1], values)
-        new_key_1 = transform_get_new_keys(values, 0, key)
-        new_key_2 = transform_get_new_keys(values, 1, key)
+        key1 = key[0]
+        key2 = key[1]
+        value_1 = data.get_data(key1, values)
+        value_2 = data.get_data(key2, values)
+        new_key_1 = transform_get_new_keys(values, 0, key1)
+        new_key_2 = transform_get_new_keys(values, 1, key2)
         new_value = []
         if value_1 == value_2:
-            new_value[0] = data.get_data(values["dict"][0], values)
-            new_value[1] = data.get_data(values["dict"][0], values)
+            new_value[0] = data.get_data(values["points"][0], values)
+            new_value[1] = data.get_data(values["points"][0], values)
         elif value_1 > value_2:
-            new_value[0] = data.get_data(values["dict"][1], values)
-            new_value[1] = data.get_data(values["dict"][2], values)
+            new_value[0] = data.get_data(values["points"][1], values)
+            new_value[1] = data.get_data(values["points"][2], values)
         elif value_1 < value_2:
-            new_value[0] = data.get_data(values["dict"][2], values)
-            new_value[1] = data.get_data(values["dict"][1], values)
+            new_value[0] = data.get_data(values["points"][2], values)
+            new_value[1] = data.get_data(values["points"][1], values)
 
         data.insert_data(new_key_1, new_value[0], values)
         data.insert_data(new_key_2, new_value[1], values)
@@ -320,6 +322,22 @@ def transform_copy(values: dict, data: StepData):
         new_key = transform_get_new_keys(values, idx, key)
         new_value = value
         data.insert_data(new_key, new_value, values)
+
+
+def transform_compare_and_copy(values: dict, data: StepData):
+    for idx1, key_1 in enumerate(values["keys_1"]):
+        data.save_loop_key(values, key_1)
+        value_1 = data.get_data(key_1, values)
+        for idx2, key_2 in enumerate(values["keys_2"]):
+            data.save_loop_key(values, key_2)
+            value_2 = data.get_data(key_2, values)
+            for idx, key in enumerate(values["keys"]):
+                data.save_loop_key(values, key)
+                value = data.get_data[key]
+                if value_1 == value_2:
+                    new_value = value
+                    new_key = transform_get_new_keys(values, idx1, key_1)
+                    data.insert_data(new_key, new_value, values)
 
 
 TRANSFORM_TYPES = {
@@ -343,6 +361,7 @@ TRANSFORM_TYPES = {
     "choose_random": transform_choose_random,
     "add_data": transform_add_data,
     "result": transform_result,
-    "sort": transform_copy,
+    "copy": transform_copy,
+    "compare_and_copy": transform_compare_and_copy,
     "calculate": calculate
 }

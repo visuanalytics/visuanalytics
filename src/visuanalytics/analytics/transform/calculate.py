@@ -130,8 +130,14 @@ def calculate_get_new_keys(values: dict, idx, key):
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 
 
-def calculate_difference(values: dict, data: StepData):
-    return
+def calculate_subtract(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = int(data.get_data(key, values))
+        subtract = int(data.get_data(values["subtract"][idx], values))
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = value - subtract
+        data.insert_data(new_key, new_value, values)
 
 
 CALCULATE_ACTIONS = {
@@ -141,6 +147,6 @@ CALCULATE_ACTIONS = {
     "round": calculate_round,
     "mode": calculate_mode,
     "ms_to_kmh": calculate_ms_to_kmh,
-    "difference": calculate_difference
+    "subtract": calculate_subtract
 
 }

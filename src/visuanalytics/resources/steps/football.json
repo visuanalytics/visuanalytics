@@ -57,6 +57,21 @@
           ]
         },
         {
+          "type": "copy",
+          "keys": [
+            "_loop|MatchResults|PointsTeam1",
+            "_loop|MatchResults|PointsTeam1",
+            "_loop|MatchResults|PointsTeam2",
+            "_loop|MatchResults|PointsTeam2"
+          ],
+          "new_keys": [
+            "_loop|Team1|Won",
+            "_loop|Team2|Lost",
+            "_loop|Team2|Won",
+            "_loop|Team1|Lost"
+          ]
+        },
+        {
           "type": "date_format",
           "keys": [
             "_loop|MatchDateTime"
@@ -64,7 +79,7 @@
           "new_keys": [
             "_loop|Matchday"
           ],
-          "given_format": "%Y-%m-%dT%H:%M:S",
+          "given_format": "%Y-%m-%dT%H:%M:%S",
           "format": "%a., %d.%m.%Y %H:%M"
         },
         {
@@ -77,11 +92,31 @@
             "_loop|Team1|Result",
             "_loop|Team2|Result"
           ],
-          "dict": {
-            "unentschieden": 1,
-            "gewonnen": 3,
-            "verloren": 0
-          }
+          "points": [
+            "1",
+            "3",
+            "0"
+          ]
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx|Team1",
+          "pattern": "Won"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx|Team1",
+          "pattern": "Lost"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx|Team2",
+          "pattern": "Won"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx|Team2",
+          "pattern": "Lost"
         }
       ]
     },
@@ -133,6 +168,31 @@
           "type": "add_data",
           "new_key": "_idx",
           "pattern": "GoalDiff_before"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Goals_Won"
+        },
+        {
+          "type": "add_data",
+          "new_key": "_idx",
+          "pattern": "Goals_Lost"
+        },
+        {
+          "type": "copy",
+          "key": [
+            "_idx|Points",
+            "_idx|Won",
+            "_idx|Lost",
+            "_idx|GoalDiff"
+          ],
+          "new_key": [
+            "_idx|Points_before",
+            "_idx|Won_before",
+            "_idx|Lost_before",
+            "_idx|GoalDiff_before"
+          ]
         }
       ]
     },
@@ -141,19 +201,77 @@
       "array_key": "_req",
       "transform": [
         {
-          "type": "copy",
-          "key": [
-            "Tabelle|_idx|Points",
-            "Tabelle|_idx|Won",
-            "Tabelle|_idx|Lost",
-            "Tabelle|_idx|GoalDiff"
-          ],
-          "new_key": [
-            "Tabelle|_idx|Points_before",
-            "Tabelle|_idx|Won_before",
-            "Tabelle|_idx|Lost_before",
-            "Tabelle|_idx|GoalDiff_before"
-          ]
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team1|TeamId",
+          "keys": "Spiele|_idx|Team1|Result",
+          "new_keys": "Tabelle|_idx|Result"
+        },
+        {
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team2|TeamId",
+          "keys": "Spiele|_idx|Team2|Result",
+          "new_keys": "Tabelle|_idx|Result"
+        },
+        {
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team1|TeamId",
+          "keys": "Spiele|_idx|Team1|Won",
+          "new_keys": "Tabelle|_idx|Goals_Won"
+        },
+        {
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team2|TeamId",
+          "keys": "Spiele|_idx|Team2|Won",
+          "new_keys": "Tabelle|_idx|Goals_Won"
+        },
+        {
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team1|TeamId",
+          "keys": "Spiele|_idx|Team1|Lost",
+          "new_keys": "Tabelle|_idx|Goals_Lost"
+        },
+        {
+          "type": "compare_and_copy",
+          "keys_1": "Tabelle|_idx|TeamId",
+          "keys_2": "Spiele|_idx|Team2|TeamId",
+          "keys": "Spiele|_idx|Team2|Lost",
+          "new_keys": "Tabelle|_idx|Goals_Lost"
+        }
+      ]
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|Tabelle",
+      "transform": [
+        {
+          "type": "calculate",
+          "action": "subtract",
+          "keys": "_idx|Points_before",
+          "subtract": "_idx|Result"
+        },
+        {
+          "type": "calculate",
+          "action": "subtract",
+          "keys": "_idx|Won_before",
+          "subtract": "_idx|Goals_Won"
+        },
+        {
+          "type": "calculate",
+          "action": "subtract",
+          "keys": "_idx|Lost_before",
+          "subtract": "_idx|Goals_Lost"
+        },
+        {
+          "type": "calculate",
+          "action": "subtract",
+          "keys": "_idx|Won_before",
+          "new_keys": "_idx|GoalDiff_before",
+          "subtract": "_idx|Lost_before"
         }
       ]
     }
