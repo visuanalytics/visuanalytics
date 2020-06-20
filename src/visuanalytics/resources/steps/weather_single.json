@@ -4,7 +4,7 @@
   "api": {
     "type": "request",
     "api_key_name": "weatherbit",
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}&country=DE"
   },
   "transform": [
     {
@@ -506,8 +506,8 @@
             "weather_brown_3"
           ],
           "pattern": [
-            "{_req|data|0|weather|str_code}",
-            "{_req|data|1|weather|str_code}"
+            "{_req|data|0|weather|str_code_short}",
+            "{_req|data|1|weather|str_code_short}"
           ]
         },
         {
@@ -721,8 +721,8 @@
             "weather_white_3"
           ],
           "pattern": [
-            "{_req|data|0|weather|str_code}",
-            "{_req|data|1|weather|str_code}"
+            "{_req|data|0|weather|str_code_short}",
+            "{_req|data|1|weather|str_code_short}"
           ]
         },
         {
@@ -936,8 +936,8 @@
             "weather_white_3"
           ],
           "pattern": [
-            "{_req|data|0|weather|str_code}",
-            "{_req|data|1|weather|str_code}"
+            "{_req|data|0|weather|str_code_short}",
+            "{_req|data|1|weather|str_code_short}"
           ]
         },
         {
@@ -1087,30 +1087,30 @@
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 50,
+          "pos_x": 70,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 690,
+          "pos_x": 710,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 1300,
+          "pos_x": 1320,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
         },
@@ -1253,30 +1253,30 @@
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 50,
+          "pos_x": 70,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 690,
+          "pos_x": 710,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 1300,
+          "pos_x": 1320,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
         },
@@ -1419,30 +1419,30 @@
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 50,
+          "pos_x": 70,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 690,
+          "pos_x": 710,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "L",
           "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 1300,
+          "pos_x": 1320,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
         },
@@ -1585,30 +1585,30 @@
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 50,
+          "pos_x": 70,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 690,
+          "pos_x": 710,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
           "type": "image",
-          "pos_x": 1300,
+          "pos_x": 1320,
           "pos_y": 420,
-          "size_x": 350,
-          "size_y": 350,
+          "size_x": 300,
+          "size_y": 300,
           "colour": "RGBA",
           "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
         },
@@ -1843,47 +1843,47 @@
   },
   "sequence": [
     {
-      "image": "wetter3",
+      "image": "weather3",
       "time_diff": 3,
       "audio_l": null
     },
     {
-      "image": "wetter1",
+      "image": "weather1",
       "time_diff": -3,
       "audio_l": "a1"
     },
     {
-      "image": "wetter2",
+      "image": "weather2",
       "time_diff": -4,
       "audio_l": "a2"
     },
     {
-      "image": "wetter3",
+      "image": "weather3",
       "time_diff": 4,
       "audio_l": null
     },
     {
-      "image": "wetter7",
+      "image": "weather7",
       "time_diff": 3,
       "audio_l": null
     },
     {
-      "image": "wetter4",
+      "image": "weather4",
       "time_diff": -3,
       "audio_l": "a3"
     },
     {
-      "image": "wetter5",
+      "image": "weather5",
       "time_diff": 0,
       "audio_l": "a4"
     },
     {
-      "image": "wetter6",
+      "image": "weather6",
       "time_diff": -5,
       "audio_l": "a5"
     },
     {
-      "image": "wetter7",
+      "image": "weather7",
       "time_diff": 5,
       "audio_l": null
     }
@@ -1901,57 +1901,57 @@
     "weather_white_1": {
       "color": "white",
       "font_size": 120,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_2": {
       "color": "white",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
       "color": "white",
       "font_size": 70,
-      "font": "weather/Dosis-Medium.ttf"
+      "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_white_4": {
       "color": "white",
       "font_size": 110,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_5": {
       "color": "white",
       "font_size": 80,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_6": {
       "color": "white",
       "font_size": 45,
-      "font": "weather/Dosis-Regular.ttf"
+      "font": "fonts/Dosis-Regular.ttf"
     },
     "weather_brown_2": {
       "color": "#949994",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_3": {
       "color": "#949994",
       "font_size": 70,
-      "font": "weather/Dosis-Medium.ttf"
+      "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_brown_4": {
       "color": "#949994",
       "font_size": 110,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_5": {
       "color": "#949994",
       "font_size": 80,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_6": {
       "color": "#949994",
       "font_size": 45,
-      "font": "weather/Dosis-Regular.ttf"
+      "font": "fonts/Dosis-Regular.ttf"
     }
   }
 }

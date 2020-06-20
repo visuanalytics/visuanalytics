@@ -1,7 +1,7 @@
 import numpy as np
+import collections
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import statistical
 
 
 def calculate(values: dict, data: StepData):
@@ -91,7 +91,7 @@ def calculate_mode(values: dict, data: StepData):
         data.save_loop_key(values, key)
         value = data.get_data(key, values)
         new_key = calculate_get_new_keys(values, idx, key)
-        new_value = statistical.mode(value)
+        new_value = collections.Counter(value).most_common()[0][0]
         data.insert_data(new_key, new_value, values)
 
 
@@ -125,7 +125,7 @@ def calculate_get_new_keys(values: dict, idx, key):
     :return: Inhalt von values["new_keys"] bzw. Inhalt von values["new_key"]
     """
     if idx < 0:
-        return values["new_keys"] if values.get("new_keys", None) else key
+        return values["new_key"] if values.get("new_key", None) else key
 
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 

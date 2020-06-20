@@ -26,7 +26,7 @@
       "Regensburg"
     ],
     "use_loop_as_key": true,
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}&country=DE"
   },
   "transform": [
     {
@@ -1644,47 +1644,47 @@
   },
   "sequence": [
     {
-      "image": "wetter1",
+      "image": "weather1",
       "time_diff": 0,
       "audio_l": "a1"
     },
     {
-      "image": "wetter2",
+      "image": "weather2",
       "time_diff": 0,
       "audio_l": "a2"
     },
     {
-      "image": "wetter3",
+      "image": "weather3",
       "time_diff": 0,
       "audio_l": "a3"
     },
     {
-      "image": "wetter4",
+      "image": "weather4",
       "time_diff": 0,
       "audio_l": "a4"
     },
     {
-      "image": "wetter8",
+      "image": "weather8",
       "time_diff": 2,
       "audio_l": null
     },
     {
-      "image": "wetter5",
+      "image": "weather5",
       "time_diff": -2,
       "audio_l": "a5"
     },
     {
-      "image": "wetter6",
+      "image": "weather6",
       "time_diff": 0,
       "audio_l": "a6"
     },
     {
-      "image": "wetter7",
+      "image": "weather7",
       "time_diff": -3,
       "audio_l": "a7"
     },
     {
-      "image": "wetter8",
+      "image": "weather8",
       "time_diff": 3,
       "audio_l": null
     }
@@ -1702,17 +1702,17 @@
     "weather_white_2": {
       "color": "white",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
       "color": "white",
       "font_size": 50,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_2": {
       "color": "#949994",
       "font_size": 70,
-      "font": "weather/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf"
     }
   }
 }

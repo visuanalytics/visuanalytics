@@ -4,6 +4,7 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video
 
 import os
 import subprocess
+
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -22,7 +23,7 @@ def link(values: dict, step_data: StepData):
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
     return _link(step_data.data["_pipe_id"], out_images, out_audios, out_audio_l,
                  step_data.data["_conf"].get("h264_nvenc", False),
-                 step_data.data["_conf"]["out_path"], values["name"])
+                 step_data.data["_conf"]["output_path"], values["name"])
 
 
 def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):
