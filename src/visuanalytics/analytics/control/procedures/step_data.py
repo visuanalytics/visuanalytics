@@ -18,10 +18,21 @@ class StepData(object):
     @staticmethod
     def save_loop(values: dict, idx, current):
         values["_loop_states"] = {**values.get("_loop_states", {}), **{"_idx": idx, "_loop": current}}
+        return idx, current
 
     def save_loop_key(self, values: dict, key):
         values["_loop_states"] = {**values.get("_loop_states", {}),
                                   **{"_key": self.get_data(key, values)}}
+        return key
+
+    def loop_array(self, loop_root: list, values: dict):
+        return map(lambda value: self.save_loop(values, value[0], value[1]), enumerate(loop_root))
+
+    def loop_dict(self, loop_root: dict, values: dict):
+        return map(lambda value: self.save_loop(values, value[0], value[1]), loop_root.items())
+
+    def loop_key(self, keys: list, values: dict):
+        return map(lambda value: (self.save_loop_key(values, value[1]), value[0]), enumerate(keys))
 
     @property
     def data(self):
