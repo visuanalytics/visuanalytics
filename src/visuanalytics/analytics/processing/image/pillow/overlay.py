@@ -34,6 +34,14 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
         add_text(new_overlay, source_img, draw, presets, step_data)
 
 
+def decision(values: dict, source_img, draw, presets: dict, step_data: StepData):
+    chosen_text = "in_case_false"
+    if step_data.format(values["decision_value"]):
+        chosen_text = "in_case_true"
+    for overlay in values[chosen_text]:
+        OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
+
+
 def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     path = step_data.format(overlay["pattern"])
     icon = Image.open(
@@ -71,6 +79,7 @@ def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: S
 OVERLAY_TYPES = {
     "text": add_text,
     "text_array": add_text_array,
+    "decision": decision,
     "image": add_image,
     "image_array": add_image_array
 }
