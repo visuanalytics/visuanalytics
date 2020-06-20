@@ -11,7 +11,7 @@
     "requests": [
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1/2019/32"
       },
       {
         "type": "request",
@@ -86,6 +86,36 @@
     }
   ],
   "images": {
+    "football1": {
+      "type": "pillow",
+      "path": "football/Spieltag.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "Test"
+        }
+      ]
+    },
+    "football2": {
+      "type": "pillow",
+      "edit-prev-image": true,
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 480,
+          "preset": "weather_white_2",
+          "pattern": "Test2"
+        }
+      ]
+    }
   },
   "audio": {
     "config": {
@@ -107,5 +137,10 @@
     }
   },
   "presets": {
+    "weather_white_2": {
+      "color": "white",
+      "font_size": 70,
+      "font": "fonts/Dosis-Bold.ttf"
+    }
   }
 }

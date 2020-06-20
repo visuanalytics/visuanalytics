@@ -18,6 +18,16 @@
         "city_name": "Biebertal",
         "p_code": "35444"
       }
+    },
+    {
+      "name": "Fußballbericht",
+      "id": 1,
+      "steps": "football",
+      "time": "11:38",
+      "daily": true,
+      "config": {
+        "liga-name": "1. Fußball Bundesliga"
+      }
     }
   ]
 }

@@ -9,10 +9,11 @@ IMAGE_TYPES = {
 
 
 def generate_all_images(values: dict, step_data: StepData):
+    path = None
     for key, item in enumerate(values["images"]):
-        path = _generate_image(values["images"][item], values["presets"], step_data)
+        path = _generate_image(values["images"][item], path, values["presets"], step_data)
         values["images"][item] = path
 
 
-def _generate_image(image: dict, presets: dict, step_data: StepData):
-    return IMAGE_TYPES[image["type"]](image, presets, step_data)
+def _generate_image(image: dict, prev_path, presets: dict, step_data: StepData):
+    return IMAGE_TYPES[image["type"]](image, prev_path, presets, step_data)
