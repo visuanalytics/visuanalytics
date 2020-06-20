@@ -1,106 +1,25 @@
 {
   "_conf": {
-    "out_path": "/home/jannik-pc-linux/Videos-Data-Analytics",
-    "h264_nvenc": "true"
+    "output_path": "out",
+    "testing": false,
+    "h264_nvenc": True,
+    "liga-name": "1. Fußball Bundesliga"
   },
-  "_pipe_id": "0",
+  "_pipe_id": "194f9d8612e14192b2671220a5d01484",
   "_req": {
     "Spiele": [
       {
         "Team1": {
-          "TeamName": "Borussia Mönchengladbach",
-          "TeamId": 87
-        },
-        "Team2": {
-          "TeamName": "VfL Wolfsburg",
-          "TeamId": 131
-        },
-        "MatchResults": {
-          "PointsTeam1": 3,
-          "PointsTeam2": 0
-        },
-        "MatchDateTime": "2020-06-16T18:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
-          "TeamName": "Werder Bremen",
-          "TeamId": 134
-        },
-        "Team2": {
           "TeamName": "FC Bayern",
           "TeamId": 40
         },
-        "MatchResults": {
-          "PointsTeam1": 0,
-          "PointsTeam2": 1
-        },
-        "MatchDateTime": "2020-06-16T20:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
+        "Team2": {
           "TeamName": "SC Freiburg",
           "TeamId": 112
         },
-        "Team2": {
-          "TeamName": "Hertha BSC",
-          "TeamId": 54
-        },
-        "MatchResults": {
-          "PointsTeam1": 2,
-          "PointsTeam2": 1
-        },
-        "MatchDateTime": "2020-06-16T20:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
-          "TeamName": "1. FC Union Berlin",
-          "TeamId": 80
-        },
-        "Team2": {
-          "TeamName": "SC Paderborn 07",
-          "TeamId": 31
-        },
-        "MatchResults": {
-          "PointsTeam1": 1,
-          "PointsTeam2": 0
-        },
-        "MatchDateTime": "2020-06-16T20:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
-          "TeamName": "Eintracht Frankfurt",
-          "TeamId": 91
-        },
-        "Team2": {
-          "TeamName": "FC Schalke 04",
-          "TeamId": 9
-        },
-        "MatchResults": {
-          "PointsTeam1": 2,
-          "PointsTeam2": 1
-        },
-        "MatchDateTime": "2020-06-17T18:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
-          "TeamName": "Borussia Dortmund",
-          "TeamId": 7
-        },
-        "Team2": {
-          "TeamName": "1. FSV Mainz 05",
-          "TeamId": 81
-        },
-        "MatchResults": {
-          "PointsTeam1": 0,
-          "PointsTeam2": 2
-        },
-        "MatchDateTime": "2020-06-17T20:30:00",
-        "MatchIsFinished": true
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
       },
       {
         "Team1": {
@@ -108,47 +27,103 @@
           "TeamId": 1635
         },
         "Team2": {
-          "TeamName": "Fortuna Düsseldorf",
-          "TeamId": 185
+          "TeamName": "Borussia Dortmund",
+          "TeamId": 7
         },
-        "MatchResults": {
-          "PointsTeam1": 2,
-          "PointsTeam2": 2
-        },
-        "MatchDateTime": "2020-06-17T20:30:00",
-        "MatchIsFinished": true
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
       },
       {
         "Team1": {
-          "TeamName": "Bayer Leverkusen",
-          "TeamId": 6
-        },
-        "Team2": {
-          "TeamName": "1. FC Köln",
-          "TeamId": 65
-        },
-        "MatchResults": {
-          "PointsTeam1": 3,
-          "PointsTeam2": 1
-        },
-        "MatchDateTime": "2020-06-17T20:30:00",
-        "MatchIsFinished": true
-      },
-      {
-        "Team1": {
-          "TeamName": "FC Augsburg",
-          "TeamId": 95
-        },
-        "Team2": {
           "TeamName": "TSG 1899 Hoffenheim",
           "TeamId": 123
         },
-        "MatchResults": {
-          "PointsTeam1": 1,
-          "PointsTeam2": 3
+        "Team2": {
+          "TeamName": "1. FC Union Berlin",
+          "TeamId": 80
         },
-        "MatchDateTime": "2020-06-17T20:30:00",
-        "MatchIsFinished": true
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "Fortuna Düsseldorf",
+          "TeamId": 185
+        },
+        "Team2": {
+          "TeamName": "FC Augsburg",
+          "TeamId": 95
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "Hertha BSC",
+          "TeamId": 54
+        },
+        "Team2": {
+          "TeamName": "Bayer Leverkusen",
+          "TeamId": 6
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "1. FSV Mainz 05",
+          "TeamId": 81
+        },
+        "Team2": {
+          "TeamName": "Werder Bremen",
+          "TeamId": 134
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "FC Schalke 04",
+          "TeamId": 9
+        },
+        "Team2": {
+          "TeamName": "VfL Wolfsburg",
+          "TeamId": 131
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "1. FC Köln",
+          "TeamId": 65
+        },
+        "Team2": {
+          "TeamName": "Eintracht Frankfurt",
+          "TeamId": 91
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "SC Paderborn 07",
+          "TeamId": 31
+        },
+        "Team2": {
+          "TeamName": "Borussia Mönchengladbach",
+          "TeamId": 87
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-20T15:30:00",
+        "weekday": "Samstag"
       }
     ],
     "Tabelle": [
@@ -298,10 +273,7 @@
       }
     ],
     "Spieltag": [
-      "32. Spieltag"
-    ],
-    "LeagueName": [
-      "1. Fußball-Bundesliga 2019/2020"
+      "33. Spieltag"
     ]
   }
 }
