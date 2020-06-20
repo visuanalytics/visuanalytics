@@ -25,15 +25,13 @@ def register_transform(func):
 
 @register_transform
 def transform_array(values: dict, data: StepData):
-    for idx, entry in enumerate(data.get_data(values["array_key"], values)):
-        data.save_loop(values, idx, entry)
+    for _ in data.loop_array(data.get_data(values["array_key"], values), values):
         transform(values, data)
 
 
 @register_transform
 def transform_dict(values: dict, data: StepData):
-    for entry in data.get_data(values["dict_key"], values).items():
-        data.save_loop(values, entry[0], entry[1])
+    for _ in data.loop_dict(data.get_data(values["dict_key"], values), values):
         transform(values, data)
 
 
@@ -90,8 +88,7 @@ def add_symbol(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
 
         new_values = data.format(values['pattern'], values)
@@ -105,9 +102,7 @@ def replace(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
 
@@ -124,9 +119,7 @@ def translate_key(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
 
@@ -147,9 +140,7 @@ def alias(values: dict, data: StepData):
 
 @register_transform
 def regex(values: dict, data: StepData):
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
 
@@ -166,9 +157,7 @@ def date_format(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
@@ -179,8 +168,7 @@ def date_format(values: dict, data: StepData):
 
 @register_transform
 def timestamp(values: dict, data: StepData):
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
@@ -208,9 +196,7 @@ def date_weekday(values: dict, data: StepData):
         5: "Samstag",
         6: "Sonntag"
     }
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(values["keys"][idx], values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
@@ -262,9 +248,7 @@ def choose_random(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         choice_list = []
         for x in range(len(values["choice"])):
@@ -283,9 +267,7 @@ def find_equal(values: dict, data: StepData):
     :param values:
     :param data:
     """
-    for idx, key in enumerate(values["keys"]):
-        data.save_loop_key(values, key)
-
+    for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         search_through = data.format(values["search_through"], values)
@@ -307,8 +289,7 @@ def loop(values: dict, data: StepData):
         stop = data.format(values["range_stop"], values)
         loop_values = range(start, stop)
 
-    for idx, value in enumerate(loop_values):
-        data.save_loop(values, idx, value)
+    for _ in data.loop_array(loop_values, values):
         transform(values, data)
 
 
