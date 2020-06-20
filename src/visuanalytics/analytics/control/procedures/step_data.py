@@ -64,6 +64,7 @@ class StepData(object):
             data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
         else:
             data = {**self.__data, **values.get("_loop_states", {})}
+
         return self.__formatter.format(value_string, data)
 
     def format_json(self, json: dict, api_key_name: str, values: dict):
@@ -71,14 +72,16 @@ class StepData(object):
         data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
         for key in json:
             json[key] = self.__formatter.format(json[key], data)
+
         return json
 
     def format(self, value_string, values=None):
         # if value_string is int just return value
-        if values is None:
-            values = {}
         if isinstance(value_string, numbers.Number):
             return value_string
+        
+        if values is None:
+            values = {}
 
         data = {**self.__data, **values.get("_loop_states", {})}
         return self.__formatter.format(value_string, data)
