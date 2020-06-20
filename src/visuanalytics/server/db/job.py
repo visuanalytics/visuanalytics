@@ -14,7 +14,7 @@ def create_job(steps_id: int):
         con.commit()
 
 
-def get_job_config(job_id: int):
+def get_job_run_infos(job_id: int):
     """Gibt die configuration eines Jobs zurück.
 
     :param job_id: id des jobs.
@@ -23,7 +23,8 @@ def get_job_config(job_id: int):
 
     with db.connect() as con:
         config = con.execute("select key, value from job_config where job_id = ?", [job_id]).fetchall()
-        return {c["key"]: c["value"] for c in config}
+        steps_name = con.execute("select name from job as j, steps as s where j.steps == s.id")
+        return steps_name, {c["key"]: c["value"] for c in config}
 
 
 def add_job_config(job_id: int, key, value):

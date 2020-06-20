@@ -125,7 +125,7 @@ def calculate_get_new_keys(values: dict, idx, key):
     :return: Inhalt von values["new_keys"] bzw. Inhalt von values["new_key"]
     """
     if idx < 0:
-        return values["new_keys"] if values.get("new_keys", None) else key
+        return values["new_key"] if values.get("new_key", None) else key
 
     return values["new_keys"][idx] if values.get("new_keys", None) else key
 

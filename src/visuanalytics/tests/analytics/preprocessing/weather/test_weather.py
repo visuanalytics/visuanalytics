@@ -64,7 +64,7 @@ class PreprocessSingleTest(unittest.TestCase):
 
 
 class PreprocessTest(unittest.TestCase):
-    with resources.open_resource("exampledata/example_weather.json") as file_handle:
+    with resources.open_resource("exampledata/weather_germany.json") as file_handle:
         input = json.loads(file_handle.read())
         output = transform.preprocess_weather_data(input)
 

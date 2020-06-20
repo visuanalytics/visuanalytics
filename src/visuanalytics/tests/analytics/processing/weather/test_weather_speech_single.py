@@ -3,15 +3,15 @@ import os
 import shutil
 import unittest
 
-from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.preprocessing.weather import speech as pre_speech
+from visuanalytics.analytics.preprocessing.weather import transform
 from visuanalytics.analytics.processing.weather import speech_single as pro_speech_single
 from visuanalytics.analytics.util import date_time
 from visuanalytics.analytics.util import resources
 
 
 class ProcessTest(unittest.TestCase):
-    with resources.open_resource("exampledata/example_weather.json") as file_handle:
+    with resources.open_resource("exampledata/weather_germany.json") as file_handle:
         input = json.loads(file_handle.read())
         city_name = "Kiel"
         output = transform.preprocess_weather_data(input, city_name, True)

@@ -10,7 +10,7 @@ from visuanalytics.analytics.util import resources
 
 
 class ProcessTest(unittest.TestCase):
-    with resources.open_resource("exampledata/example_history.json") as file_handle:
+    with resources.open_resource("exampledata/history.json") as file_handle:
         input = json.loads(file_handle.read())
         output = transform_his.preprocess_history_data(input)
         date = transform_his.get_date(output[0])
