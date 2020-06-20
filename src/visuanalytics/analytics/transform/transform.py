@@ -40,11 +40,13 @@ def transform_select(values: dict, data: StepData):
         root.clear()
 
     for key in values["relevant_keys"]:
-        try:
-            pattern = data_get_pattern(key, old_root)
-        except:
-            pattern = values["default_value"]
-        data_insert_pattern(key, root, pattern)
+        if values.get("skip_when_not_exists", False):
+            try:
+                data_insert_pattern(key, root, data_get_pattern(key, old_root))
+            except:
+                pass
+        else:
+            data_insert_pattern(key, root, data_get_pattern(key, old_root))
 
 
 def transform_select_range(values: dict, data: StepData):
@@ -118,12 +120,22 @@ def transform_translate_key(values: dict, data: StepData):
 
 def transform_alias(values: dict, data: StepData):
     for key, new_key in zip(values["keys"], values["new_keys"]):
-        value = data.get_data(key, values)
-        new_key = data.format(new_key, values)
+        if values.get("skip_when_not_exists", False):
+            try:
+                _transform_alias(values, data, key, new_key)
+            except:
+                pass
+        else:
+            _transform_alias(values, data, key, new_key)
 
-        # TODO(max) maybe just replace key not insert and delete
-        data.insert_data(new_key, value, values)
-        data.remove_data(key, values)
+
+def _transform_alias(values: dict, data: StepData, key, new_key):
+    value = data.get_data(key, values)
+    new_key = data.format(new_key, values)
+
+    # TODO(max) maybe just replace key not insert and delete
+    data.insert_data(new_key, value, values)
+    data.remove_data(key, values)
 
 
 def transform_regex(values: dict, data: StepData):

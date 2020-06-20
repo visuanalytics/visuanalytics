@@ -41,7 +41,7 @@
             "MatchResults|0|PointsTeam1",
             "MatchResults|0|PointsTeam2"
           ],
-          "default_value": "KA"
+          "skip_when_not_exists": true
         },
         {
           "type": "alias",
@@ -50,7 +50,8 @@
           ],
           "new_keys": [
             "_loop|MatchResults"
-          ]
+          ],
+          "skip_when_not_exists": true
         }
       ]
     },
