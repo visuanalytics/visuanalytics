@@ -43,14 +43,13 @@ def request_multiple(values: dict, data: StepData, name):
     method = values.get("method", "get")
     if data.format(values.get("use_loop_as_key", False), values):
         data_dict = {}
-        for idx, key in enumerate(values["steps_value"]):
-            data.save_loop(values, idx, key)
+        for idx, key in data.loop_array(values["steps_value"], values):
             url, header, body = _create_query(values, data)
             data_dict[key] = _fetch(url, header, body, method, data.data["_conf"].get("testing", False), name)
         return data_dict
 
     data_array = []
-    for idx, value in enumerate(values["steps_value"]):
+    for idx, value in data.loop_array(values["steps_value"], values):
         data.save_loop(values, idx, value)
         url, header, body = _create_query(values, data)
         data_array.append(_fetch(url, header, body, method, data.data["_conf"].get("testing", False), name))
@@ -68,7 +67,7 @@ def request_multiple_custom(values: dict, data: StepData, name):
     if values.get("use_loop_as_key", False):
         data_dict = {}
 
-        for idx, value in enumerate(values["steps_value"]):
+        for idx, value in enumerate(values["requests"]):
             data_dict[value] = _api(values["requests"][idx], data, name)
         return data_dict
 
