@@ -1,5 +1,15 @@
 # Konzept für ein Mock-up
 
+## Aktuelles Mock-up
+
+Die Neuste Version des Mockups befindet sich [hier](https://www.figma.com/file/4ZkDbbRvreZIEsmfoFva4Z/Untitled?node-id=18%3A148).
+
+## Zweites Mockup
+
+Die Zeite Version des Mockups befindet sich [hier](https://www.figma.com/file/aJrrTdzc64I7agqmEFyE49/Untitled).
+
+## Erste Version des Mockups
+
 Skizzen zum User-Interface für ein kleines Mock-up. Überschriften, Texte und Details im Allgemeinen müssen noch ausgearbeitet werden.
 
 1. Der Nutzer befindet sich auf der Übersichts-Seite und hat die Auswahl zwischen verschiedenen Themen, zu denen er sich informative Videos anschauen kann. Zu jedem Thema kann er einen kurzen Erklärungstext lesen. Er entscheidet sich für das Thema Wetter und klickt auf den "WEITER"-Button im "Wetter"-Panel. 
