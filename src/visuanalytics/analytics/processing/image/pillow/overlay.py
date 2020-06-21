@@ -48,15 +48,15 @@ def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepDat
         resources.get_resource_path(path)).convert("RGBA")
     if step_data.format(overlay.get("colour", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["colour"]))
-    if overlay["size_x"] is not None:
+    if overlay.get("size_x", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
     if overlay.get("transparency", False):
-        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
-                                step_data.format(overlay["pos_y"])), icon)
-    else:
         source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
                                           step_data.format(overlay["pos_y"])))
+    else:
+        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
+                                step_data.format(overlay["pos_y"])), icon)
 
 
 def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
