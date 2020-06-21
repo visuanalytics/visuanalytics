@@ -136,7 +136,7 @@ def calculate_subtract(values: dict, data: StepData):
         value = int(data.get_data(key, values))
         subtract = int(data.get_data(values["subtract"][idx], values))
         new_key = calculate_get_new_keys(values, idx, key)
-        new_value = value - subtract
+        new_value = str(value - subtract)
         data.insert_data(new_key, new_value, values)
 
 

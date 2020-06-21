@@ -322,7 +322,8 @@ def transform_result(values: dict, data: StepData):
             new_value = data.format(values["points"]["2"], values)
         elif value[compare_1] < value[compare_2]:
             new_value = data.format(values["points"]["3"], values)
-
+        else:
+            new_value = ""
         data.insert_data(new_key, new_value, values)
 
 
