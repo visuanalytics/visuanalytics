@@ -292,35 +292,26 @@ def transform_get_new_keys(values: dict, idx, key):
 
 
 def transform_result(values: dict, data: StepData):
-    for idx, key in zip(values["keys"][0], values["keys"][1]):
-        data.save_loop_key(values, key)
-        key1 = key[0]
-        key2 = key[1]
-        value_1 = data.get_data(key1, values)
-        value_2 = data.get_data(key2, values)
-        new_key_1 = transform_get_new_keys(values, 0, key1)
-        new_key_2 = transform_get_new_keys(values, 1, key2)
-        new_value = []
-        if value_1 == value_2:
-            new_value[0] = data.get_data(values["points"][0], values)
-            new_value[1] = data.get_data(values["points"][0], values)
-        elif value_1 > value_2:
-            new_value[0] = data.get_data(values["points"][1], values)
-            new_value[1] = data.get_data(values["points"][2], values)
-        elif value_1 < value_2:
-            new_value[0] = data.get_data(values["points"][2], values)
-            new_value[1] = data.get_data(values["points"][1], values)
+    for idx, key in enumerate(values["keys"]):
+        value = data.get_data(key, values)
+        compare_1 = data.format(values["compare_1"], values)
+        compare_2 = data.format(values["compare_2"], values)
+        new_key = transform_get_new_keys(values, idx, key)
+        if value[compare_1] == value[compare_2]:
+            new_value = data.format(values["points"]["1"], values)
+        elif value[compare_1] > value[compare_2]:
+            new_value = data.format(values["points"]["2"], values)
+        elif value[compare_1] < value[compare_2]:
+            new_value = data.format(values["points"]["3"], values)
 
-        data.insert_data(new_key_1, new_value[0], values)
-        data.insert_data(new_key_2, new_value[1], values)
+        data.insert_data(new_key, new_value, values)
 
 
 def transform_copy(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
-        value = data.get_data(key, values)
         new_key = transform_get_new_keys(values, idx, key)
-        new_value = value
+        new_value = str(data.get_data(key, values))
         data.insert_data(new_key, new_value, values)
 
 
