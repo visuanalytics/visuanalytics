@@ -50,7 +50,6 @@ def request_multiple(values: dict, data: StepData, name):
 
     data_array = []
     for idx, value in data.loop_array(values["steps_value"], values):
-        data.save_loop(values, idx, value)
         url, header, body = _create_query(values, data)
         data_array.append(_fetch(url, header, body, method, data.data["_conf"].get("testing", False), name))
         return data_array
