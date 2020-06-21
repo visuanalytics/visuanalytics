@@ -149,6 +149,60 @@
           ]
         }
       ]
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team1",
+      "pattern": "Result",
+      "new_key": "_loop|Result"
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team2",
+      "pattern": "Result",
+      "new_key": "_loop|Result"
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team1",
+      "pattern": "Won",
+      "new_key": "_loop|Goals_Won"
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team2",
+      "pattern": "Won",
+      "new_key": "_loop|Goals_Won"
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team1",
+      "pattern": "Lost",
+      "new_key": "_loop|Goals_Lost"
+    },
+    {
+      "type": "transform_compare_arrays",
+      "array_key_1": "_req|Tabelle",
+      "array_key_2": "_req|Spiele",
+      "compare": "TeamId",
+      "where": "Team2",
+      "pattern": "Lost",
+      "new_key": "_loop|Goals_Lost"
     }
   ],
   "images": {
