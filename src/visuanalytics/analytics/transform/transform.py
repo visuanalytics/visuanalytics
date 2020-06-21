@@ -120,13 +120,11 @@ def transform_translate_key(values: dict, data: StepData):
 
 def transform_alias(values: dict, data: StepData):
     for key, new_key in zip(values["keys"], values["new_keys"]):
-        if values.get("skip_when_not_exists", False):
-            try:
-                _transform_alias(values, data, key, new_key)
-            except:
-                pass
-        else:
+        try:
             _transform_alias(values, data, key, new_key)
+        except:
+            if values.get("throw_errors", True):
+                raise
 
 
 def _transform_alias(values: dict, data: StepData, key, new_key):

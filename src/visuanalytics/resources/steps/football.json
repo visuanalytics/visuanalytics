@@ -41,7 +41,7 @@
             "MatchResults|0|PointsTeam1",
             "MatchResults|0|PointsTeam2"
           ],
-          "skip_when_not_exists": true
+          "throw_errors": false
         },
         {
           "type": "alias",
@@ -110,7 +110,7 @@
     },
     "football2": {
       "type": "pillow",
-      "already-created": true,
+      "already_created": true,
       "path": "football1",
       "overlay": [
         {

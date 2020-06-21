@@ -6,7 +6,7 @@ from PIL import ImageDraw
 
 
 def generate_image_pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
-    if values.get("already-created", False):
+    if values.get("already_created", False):
         source_img = Image.open(resources.get_resource_path(prev_paths[values["path"]]))
     else:
         source_img = Image.open(resources.get_resource_path(values["path"]))
