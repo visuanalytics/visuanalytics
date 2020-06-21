@@ -34,11 +34,11 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
         add_text(new_overlay, source_img, draw, presets, step_data)
 
 
-def decision(values: dict, source_img, draw, presets: dict, step_data: StepData):
+def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
     chosen_text = "on_false"
     if step_data.format(values["decision_value"]):
         chosen_text = "on_true"
-    for overlay in values[chosen_text]:
+    for overlay in values[check]:
         OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
 
 
@@ -79,7 +79,7 @@ def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: S
 OVERLAY_TYPES = {
     "text": add_text,
     "text_array": add_text_array,
-    "decision": decision,
+    "option": option,
     "image": add_image,
     "image_array": add_image_array
 }
