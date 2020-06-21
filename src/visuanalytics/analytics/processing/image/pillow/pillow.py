@@ -5,8 +5,11 @@ from PIL import Image
 from PIL import ImageDraw
 
 
-def generate_image_pillow(values: dict, presets: dict, step_data: StepData):
-    source_img = Image.open(resources.get_resource_path(values["path"]))
+def generate_image_pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
+    if values.get("already_created", False):
+        source_img = Image.open(resources.get_resource_path(prev_paths[values["path"]]))
+    else:
+        source_img = Image.open(resources.get_resource_path(values["path"]))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
     for overlay in values["overlay"]:

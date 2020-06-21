@@ -4,7 +4,7 @@ Enthält die Startkonfiguration für den Flask-Server.
 """
 import mimetypes
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from visuanalytics.server.api import api
 
@@ -36,10 +36,10 @@ def create_app():
     mimetypes.add_type("text/javascript", ".js")
 
     # Register the Blueprints
-    api.register_all(app)
+    app.register_blueprint(api.api)
 
     # Serve index.html
-    @app.route('/')
+    @app.route("/", methods=["GET"])
     def index():
         return render_template("index.html")
 

@@ -28,9 +28,11 @@ def request(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+    if data.data["_conf"].get("testing", False):
+        return _load_test_data(name)
+
     url, header, body = _create_query(values, data)
-    return _fetch(url, header, body, values.get("method", "get"), data.data["_conf"].get("testing", False),
-                  name)
+    return _fetch(url, header, body, values.get("method", "get"))
 
 
 @register_api
@@ -40,18 +42,22 @@ def request_multiple(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+
+    if data.data["_conf"].get("testing", False):
+        return _load_test_data(name)
+
     method = values.get("method", "get")
     if data.format(values.get("use_loop_as_key", False), values):
         data_dict = {}
         for idx, key in data.loop_array(values["steps_value"], values):
             url, header, body = _create_query(values, data)
-            data_dict[key] = _fetch(url, header, body, method, data.data["_conf"].get("testing", False), name)
+            data_dict[key] = _fetch(url, header, body, method)
         return data_dict
 
     data_array = []
     for idx, value in data.loop_array(values["steps_value"], values):
         url, header, body = _create_query(values, data)
-        data_array.append(_fetch(url, header, body, method, data.data["_conf"].get("testing", False), name))
+        data_array.append(_fetch(url, header, body, method))
         return data_array
 
 
@@ -62,6 +68,9 @@ def request_multiple_custom(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+
+    if data.data["_conf"].get("testing", False):
+        return _load_test_data(name)
 
     if values.get("use_loop_as_key", False):
         data_dict = {}
@@ -85,18 +94,19 @@ def _create_query(values: dict, data: StepData):
     return url, req_values[0], req_values[1]
 
 
-def _fetch(url, header, body, method, testing=False, name=""):
+def _load_test_data(name):
+    with resources.open_resource(f"exampledata/{name}.json") as fp:
+        return json.loads(fp.read())
+
+    # TODO(max) Catch possible errors
+
+
+def _fetch(url, header, body, method):
     """Abfrage einer API und Umwandlung der API-Antwort in ein Dictionary.
 
     :param url: url der gewünschten API-Anfrage
     :return: Antwort der API als Dictionary
     """
-    if testing:
-        with resources.open_resource(f"exampledata/{name}.json") as fp:
-            return json.loads(fp.read())
-
-        # TODO(max) Catch possible errors
-
     if method.__eq__("get"):
         response = requests.get(url, headers=header, json=body)
     else:

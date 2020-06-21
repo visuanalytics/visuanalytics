@@ -75,7 +75,11 @@ def select(values: dict, data: StepData):
         root.clear()
 
     for key in values["relevant_keys"]:
-        data_insert_pattern(key, root, data_get_pattern(key, old_root))
+        try:
+            data_insert_pattern(key, root, data_get_pattern(key, old_root))
+        except:
+            if values.get("throw_errors", True):
+                raise
 
 
 @register_transform
@@ -165,12 +169,16 @@ def alias(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for key, new_key in zip(values["keys"], values["new_keys"]):
-        value = data.get_data(key, values)
-        new_key = data.format(new_key, values)
+        try:
+            value = data.get_data(key, values)
+            new_key = data.format(new_key, values)
 
-        # TODO(max) maybe just replace key not insert and delete
-        data.insert_data(new_key, value, values)
-        data.remove_data(key, values)
+            # TODO(max) maybe just replace key not insert and delete
+            data.insert_data(new_key, value, values)
+            data.remove_data(key, values)
+        except:
+            if values.get("throw_errors", True):
+                raise
 
 
 @register_transform
