@@ -2,7 +2,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.transform import transform
 
 
-def prepare_test(values: list, data: dict, expected_data: dict, config=None):
+def prepare_test(values: list, data, expected_data: dict, config=None):
     if config is None:
         config = {}
 
