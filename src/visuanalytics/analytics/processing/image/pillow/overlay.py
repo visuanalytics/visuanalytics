@@ -71,10 +71,11 @@ def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: S
             pattern = overlay["pattern"]
         new_overlay = {
             "description": overlay["description"],
-            "size_x": overlay["size_x"],
-            "size_y": overlay["size_y"],
+            "size_x": overlay.get("size_x", None),
+            "size_y": overlay.get("size_y", None),
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
+            "transparency": overlay.get("transparency", False),
             "pattern": pattern,
             "colour": colour}
         add_image(new_overlay, source_img, draw, presets, step_data)

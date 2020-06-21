@@ -105,6 +105,26 @@
           "pos_y": 48,
           "preset": "weather_white_2",
           "pattern": "Test"
+        },
+        {
+          "description": "icon",
+          "type": "image_array",
+          "pos_x": [
+            110,
+            735
+          ],
+          "pos_y": [
+            504,
+            504
+          ],
+          "colour": [
+            "RGBA",
+            "RGBA"
+          ],
+          "pattern": [
+            "football/Spieltag_Balken.png",
+            "football/Spieltag_Balken.png"
+          ]
         }
       ]
     },
