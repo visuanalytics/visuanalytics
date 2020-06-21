@@ -116,17 +116,6 @@
           ],
           "given_format": "%Y-%m-%dT%H:%M:%S",
           "format": "%a., %d.%m.%Y %H:%M"
-        },
-        {
-          "type": "date_format",
-          "keys": [
-            "_loop|MatchDateTime"
-          ],
-          "new_keys": [
-            "_loop|Matchday"
-          ],
-          "given_format": "%Y-%m-%dT%H:%M:%S",
-          "format": "%a., %d.%m.%Y %H:%M"
         }
       ]
     },
