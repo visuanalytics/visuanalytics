@@ -35,9 +35,9 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
 
 
 def decision(values: dict, source_img, draw, presets: dict, step_data: StepData):
-    chosen_text = "in_case_false"
+    chosen_text = "on_false"
     if step_data.format(values["decision_value"]):
-        chosen_text = "in_case_true"
+        chosen_text = "on_true"
     for overlay in values[chosen_text]:
         OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
 
