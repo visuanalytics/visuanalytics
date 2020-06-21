@@ -39,7 +39,7 @@ class StepData(object):
         return self.__data
 
     def init_data(self, data: dict):
-        self.__data.update(data)
+        self.__data["_req"] = data
 
     def clear_data(self):
         # Save Config and Pipe id

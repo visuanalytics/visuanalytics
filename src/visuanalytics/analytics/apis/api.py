@@ -9,7 +9,7 @@ API_TYPES = {}
 
 
 def api(values: dict, data: StepData):
-    data.init_data({"_req": _api(values["api"], data, values["name"])})
+    data.init_data(_api(values["api"], data, values["name"]))
 
 
 def _api(values: dict, data: StepData, name):
