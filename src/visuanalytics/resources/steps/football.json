@@ -110,7 +110,8 @@
     },
     "football2": {
       "type": "pillow",
-      "edit-prev-image": true,
+      "already-created": true,
+      "path": "football1",
       "overlay": [
         {
           "description": "Liga-Name",
