@@ -51,7 +51,7 @@
           "new_keys": [
             "_loop|MatchResults"
           ],
-          "skip_when_not_exists": true
+          "throw_errors": false
         },
         {
           "type": "date_weekday",
