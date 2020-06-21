@@ -36,9 +36,9 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
 
 def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
     chosen_text = "on_false"
-    if step_data.format(values["decision_value"]):
+    if step_data.format(values["check"]):
         chosen_text = "on_true"
-    for overlay in values[check]:
+    for overlay in values[chosen_text]:
         OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
 
 
@@ -56,7 +56,7 @@ def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepDat
                                 step_data.format(overlay["pos_y"])), icon)
     else:
         source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
-                                step_data.format(overlay["pos_y"])))
+                                          step_data.format(overlay["pos_y"])))
 
 
 def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
