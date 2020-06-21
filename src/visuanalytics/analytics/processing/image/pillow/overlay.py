@@ -1,11 +1,19 @@
-from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.processing.image.pillow.draw import DRAW_TYPES
 from PIL import Image
 
+from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.image.pillow.draw import DRAW_TYPES
 from visuanalytics.analytics.util import resources
 
+OVERLAY_TYPES = {}
 
-def add_text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+
+def register_overlay(func):
+    OVERLAY_TYPES[func.__name__] = func
+    return func
+
+
+@register_overlay
+def text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     content = step_data.format(overlay["pattern"])
     DRAW_TYPES[overlay["anchor_point"]](draw, (
         step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])), content,
@@ -14,7 +22,8 @@ def add_text(overlay: dict, source_img, draw, presets: dict, step_data: StepData
                                         step_data.format(presets[overlay["preset"]]["font"]))
 
 
-def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+@register_overlay
+def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["preset"], list):
             preset = overlay["preset"][idx]
@@ -31,10 +40,11 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
             "pos_y": overlay["pos_y"][idx],
             "pattern": pattern,
             "preset": preset}
-        add_text(new_overlay, source_img, draw, presets, step_data)
+        text(new_overlay, source_img, draw, presets, step_data)
 
 
-def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+@register_overlay
+def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     path = step_data.format(overlay["pattern"])
     icon = Image.open(
         resources.get_resource_path(path)).convert("RGBA")
@@ -47,7 +57,8 @@ def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepDat
                             step_data.format(overlay["pos_y"])), icon)
 
 
-def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+@register_overlay
+def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["colour"], list):
             colour = overlay["colour"][idx]
@@ -65,12 +76,4 @@ def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: S
             "pos_y": overlay["pos_y"][idx],
             "pattern": pattern,
             "colour": colour}
-        add_image(new_overlay, source_img, draw, presets, step_data)
-
-
-OVERLAY_TYPES = {
-    "text": add_text,
-    "text_array": add_text_array,
-    "image": add_image,
-    "image_array": add_image_array
-}
+        image(new_overlay, source_img, draw, presets, step_data)

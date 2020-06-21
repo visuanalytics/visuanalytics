@@ -2,8 +2,16 @@ from PIL import ImageFont
 
 from visuanalytics.analytics.util import resources
 
+DRAW_TYPES = {}
 
-def draw_text(draw, position, content, font_size, font_colour, font_path):
+
+def register_draw(func):
+    DRAW_TYPES[func.__name__] = func
+    return func
+
+
+@register_draw
+def center(draw, position, content, font_size, font_colour, font_path):
     """
     Methode zum Text in ein Bild schreiben an einem Fixem Punkt
 
@@ -28,7 +36,8 @@ def draw_text(draw, position, content, font_size, font_colour, font_path):
               fill=font_colour)
 
 
-def draw_text_fix(draw, position, content, font_size, font_colour, font_path):
+@register_draw
+def left(draw, position, content, font_size, font_colour, font_path):
     """
         Methode zum Text in ein Bild schreiben, Ort an dem geschrieben wird ist variable an der Größe des
         zu schreibenden Textes
@@ -50,9 +59,3 @@ def draw_text_fix(draw, position, content, font_size, font_colour, font_path):
     draw.text(position, content,
               font=ImageFont.truetype(resources.get_resource_path(font_path), font_size),
               fill=font_colour)
-
-
-DRAW_TYPES = {
-    "center": draw_text,
-    "left": draw_text_fix
-}
