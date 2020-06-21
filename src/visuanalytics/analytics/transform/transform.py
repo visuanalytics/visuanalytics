@@ -40,15 +40,13 @@ def transform_select(values: dict, data: StepData):
         root.clear()
 
     for key in values["relevant_keys"]:
-        if values.get("skip_when_not_exists", False):
-            try:
-                data_insert_pattern(key, root, data_get_pattern(key, old_root))
-            except:
-                pass
-        else:
+        try:
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
+        except:
+            if values.get("throw_errors", True):
+                raise     
 
-
+                
 def transform_select_range(values: dict, data: StepData):
     value_array = data.get_data(values["array_key"], values)
     range_start = data.format(values.get("range_start", 0), values)
