@@ -26,11 +26,6 @@
       "new_key": "_req|Spieltag"
     },
     {
-      "type": "append",
-      "key": "_req|Spiele|0|LeagueName",
-      "new_key": "_req|LeagueName"
-    },
-    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
@@ -41,11 +36,12 @@
             "Team1|TeamId",
             "Team2|TeamName",
             "Team2|TeamId",
-            "MatchResults|0|PointsTeam1",
-            "MatchResults|0|PointsTeam2",
+            "MatchIsFinished",
             "MatchDateTime",
-            "MatchIsFinished"
-          ]
+            "MatchResults|0|PointsTeam1",
+            "MatchResults|0|PointsTeam2"
+          ],
+          "throw_errors": false
         },
         {
           "type": "alias",
@@ -54,7 +50,18 @@
           ],
           "new_keys": [
             "_loop|MatchResults"
-          ]
+          ],
+          "throw_errors": false
+        },
+        {
+          "type": "date_weekday",
+          "keys": [
+            "_loop|MatchDateTime"
+          ],
+          "new_keys": [
+            "_loop|weekday"
+          ],
+          "given_format": "%Y-%m-%dT%H:%M:%S"
         }
       ]
     },
@@ -86,6 +93,37 @@
     }
   ],
   "images": {
+    "football1": {
+      "type": "pillow",
+      "path": "football/Spieltag.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 48,
+          "preset": "weather_white_2",
+          "pattern": "Test"
+        }
+      ]
+    },
+    "football2": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football1",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 305,
+          "pos_y": 480,
+          "preset": "weather_white_2",
+          "pattern": "Test2"
+        }
+      ]
+    }
   },
   "audio": {
     "config": {
@@ -107,5 +145,10 @@
     }
   },
   "presets": {
+    "weather_white_2": {
+      "color": "white",
+      "font_size": 70,
+      "font": "fonts/Dosis-Bold.ttf"
+    }
   }
 }
