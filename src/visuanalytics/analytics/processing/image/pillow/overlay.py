@@ -34,6 +34,14 @@ def add_text_array(overlay: dict, source_img, draw, presets: dict, step_data: St
         add_text(new_overlay, source_img, draw, presets, step_data)
 
 
+def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
+    chosen_text = "on_false"
+    if step_data.format(values["decision_value"]):
+        chosen_text = "on_true"
+    for overlay in values[check]:
+        OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
+
+
 def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     path = step_data.format(overlay["pattern"])
     icon = Image.open(
@@ -43,8 +51,12 @@ def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepDat
     if overlay["size_x"] is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
-    source_img.paste(icon, (step_data.format(overlay["pos_x"]),
-                            step_data.format(overlay["pos_y"])), icon)
+    if overlay.get("transparency", False):
+        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
+                                step_data.format(overlay["pos_y"])), icon)
+    else:
+        source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
+                                step_data.format(overlay["pos_y"])))
 
 
 def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
@@ -71,6 +83,7 @@ def add_image_array(overlay: dict, source_img, draw, presets: dict, step_data: S
 OVERLAY_TYPES = {
     "text": add_text,
     "text_array": add_text_array,
+    "option": option,
     "image": add_image,
     "image_array": add_image_array
 }
