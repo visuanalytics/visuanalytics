@@ -107,7 +107,7 @@
           "type": "text",
           "anchor_point": "center",
           "pos_x": 960,
-          "pos_y": -5,
+          "pos_y": 0,
           "preset": "football_1",
           "pattern": "{_req|Spieltag}"
         },
@@ -123,7 +123,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 192,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -134,7 +134,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -202,7 +202,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 282,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -213,7 +213,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -240,8 +240,8 @@
                 1014
               ],
               "pos_y": [
-                280,
-                280
+                282,
+                282
               ],
               "preset": "football_4",
               "pattern": [
@@ -281,7 +281,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 372,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -292,7 +292,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -360,7 +360,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 462,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -371,7 +371,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -439,7 +439,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 552,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -450,7 +450,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -518,7 +518,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 642,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -529,7 +529,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -597,7 +597,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 732,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -608,7 +608,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -676,7 +676,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 822,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -687,7 +687,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -755,7 +755,7 @@
         {
           "description": "Weißes-bild",
           "type": "image",
-          "pos_x": 266,
+          "pos_x": 187,
           "pos_y": 912,
           "colour": "RGBA",
           "pattern": "football/Spieltag_Balken.png",
@@ -766,7 +766,7 @@
           "type": "text_array",
           "anchor_point": "left",
           "pos_x": [
-            365,
+            282,
             1108
           ],
           "pos_y": [
@@ -849,7 +849,7 @@
   "presets": {
     "football_1": {
       "color": "black",
-      "font_size": 80,
+      "font_size": 74,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_2": {
