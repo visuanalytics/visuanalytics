@@ -10,7 +10,7 @@ class TestTransformReplace(unittest.TestCase):
             "test2": "2.4.6.2.5"
         }
 
-    def test_transform_replace_all(self):
+    def test_replace_all(self):
         values = [
             {
                 "type": "replace",
@@ -30,7 +30,7 @@ class TestTransformReplace(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "Replace all Failed")
 
-    def test_transform_replace_one(self):
+    def test_replace_one(self):
         values = [
             {
                 "type": "replace",

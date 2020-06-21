@@ -13,7 +13,7 @@ class TestTransformSelectRange(unittest.TestCase):
             ]
         }
 
-    def test_select_range_one(self):
+    def test_select_one(self):
         values = [
             {
                 "type": "select_range",
@@ -34,7 +34,7 @@ class TestTransformSelectRange(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "Select Range One Failed")
 
-    def test_select_range_all(self):
+    def test_select_all(self):
         values = [
             {
                 "type": "select_range",
