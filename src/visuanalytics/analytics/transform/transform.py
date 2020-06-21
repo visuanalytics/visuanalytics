@@ -25,24 +25,44 @@ def register_transform(func):
 
 @register_transform
 def transform_array(values: dict, data: StepData):
+    """Führt alle angegebenen `transform` funktionen für alle werte eines Arrays aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for _ in data.loop_array(data.get_data(values["array_key"], values), values):
         transform(values, data)
 
 
 @register_transform
 def transform_dict(values: dict, data: StepData):
+    """Fürt alle angegebenen `transform` funktionen für alle werte eines Dictionaries aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for _ in data.loop_dict(data.get_data(values["dict_key"], values), values):
         transform(values, data)
 
 
 @register_transform
 def calculate(values: dict, data: StepData):
+    """Berechnet die angegebene Action.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     action = data.format(values["action"], values)
     CALCULATE_ACTIONS[action](values, data)
 
 
 @register_transform
 def select(values: dict, data: StepData):
+    """Löscht alle keys die nicht in `"relevant_keys"` stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     root = values.get("_loop_states", {}).get("_loop", None)
 
     if root is None:
@@ -60,6 +80,11 @@ def select(values: dict, data: StepData):
 
 @register_transform
 def select_range(values: dict, data: StepData):
+    """Löscht alle werte aus `"array_key"` die nicht in der range sind.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     value_array = data.get_data(values["array_key"], values)
     range_start = data.format(values.get("range_start", 0), values)
     range_end = data.format(values["range_end"], values)
@@ -69,6 +94,11 @@ def select_range(values: dict, data: StepData):
 
 @register_transform
 def append(values: dict, data: StepData):
+    """Speichert den wert unter `"key"` in einem array.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
@@ -129,6 +159,11 @@ def translate_key(values: dict, data: StepData):
 
 @register_transform
 def alias(values: dict, data: StepData):
+    """Erstzt einen Key durch einen Neuen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for key, new_key in zip(values["keys"], values["new_keys"]):
         value = data.get_data(key, values)
         new_key = data.format(new_key, values)
@@ -140,6 +175,11 @@ def alias(values: dict, data: StepData):
 
 @register_transform
 def regex(values: dict, data: StepData):
+    """Führt `re.sub` für die definierten felder aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
@@ -168,6 +208,11 @@ def date_format(values: dict, data: StepData):
 
 @register_transform
 def timestamp(values: dict, data: StepData):
+    """Übersetzt einen Zeitstempel in das angegebene Datums Format.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
@@ -264,8 +309,8 @@ def find_equal(values: dict, data: StepData):
     # TODO
     """innerhalb von loop
 
-    :param values:
-    :param data:
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
@@ -281,6 +326,11 @@ def find_equal(values: dict, data: StepData):
 
 @register_transform
 def loop(values: dict, data: StepData):
+    """Durchläuft das angegebene array und führt für jedes ellement die angegebenen `transform funktionen` aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     loop_values = values.get("values", None)
 
     # is Values is none use range
@@ -295,6 +345,11 @@ def loop(values: dict, data: StepData):
 
 @register_transform
 def add_data(values: dict, data: StepData):
+    """Fügt daten ein.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
     data.insert_data(new_key, value, values)
