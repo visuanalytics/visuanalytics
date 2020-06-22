@@ -22,11 +22,27 @@ class StepError(Exception):
         return f"On Type '{self.type}', \"{type(self.__cause__).__name__}: {self.__cause__}\" was raised"
 
 
+class StepTypeError(Exception):
+    def __init__(self, type):
+        if type is None:
+            super().__init__(f"Entry 'type' is missing")
+        else:
+            super().__init__(f"Type '{type}' does not Exists")
+
+
 class APIError(StepError):
     pass
 
 
+class APITypeError(StepTypeError):
+    pass
+
+
 class TransformError(StepError):
+    pass
+
+
+class TransformTypeError(StepTypeError):
     pass
 
 
@@ -42,8 +58,9 @@ class SeqenceError(StepError):
     pass
 
 
-class StepTypeError(Exception):
-    pass
+class APIKeyError(Exception):
+    def __init__(self, api_key_name):
+        super().__init__(f"Api key '{api_key_name}' not Found.")
 
 
 class StepKeyError(Exception):
