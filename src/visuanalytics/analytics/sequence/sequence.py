@@ -13,14 +13,21 @@ from visuanalytics.analytics.util import resources
 
 def link(values: dict, step_data: StepData):
     out_images, out_audios, out_audio_l = [], [], []
-    for s in values["sequence"]:
-        out_images.append(values["images"][step_data.format(s["image"])])
-        if s["audio_l"] is None:
-            out_audio_l.append(step_data.format(s["time_diff"]))
-        else:
-            out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
-            out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
-                values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
+    if values["sequence"].get("successively", False):
+        for image in values["images"]:
+            out_images.append(values["images"][image])
+        for audio in values["audio"]["audios"]:
+            out_audios.append(values["audio"]["audios"][audio])
+            out_audio_l.append(MP3(values["audio"]["audios"][audio]).info.length)
+    else:
+        for s in values["sequence"]["disordered_order"]:
+            out_images.append(values["images"][step_data.format(s["image"])])
+            if s.get("audio_l", None) is None:
+                out_audio_l.append(step_data.format(s.get("time_diff", 0)))
+            else:
+                out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
+                out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
+                    values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
     return _link(step_data.data["_pipe_id"], out_images, out_audios, out_audio_l,
                  step_data.data["_conf"].get("h264_nvenc", False),
                  step_data.data["_conf"]["output_path"], values["name"])

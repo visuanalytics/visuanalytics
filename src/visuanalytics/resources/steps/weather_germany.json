@@ -1642,53 +1642,48 @@
       }
     }
   },
-  "sequence": [
-    {
-      "image": "weather1",
-      "time_diff": 0,
-      "audio_l": "a1"
-    },
-    {
-      "image": "weather2",
-      "time_diff": 0,
-      "audio_l": "a2"
-    },
-    {
-      "image": "weather3",
-      "time_diff": 0,
-      "audio_l": "a3"
-    },
-    {
-      "image": "weather4",
-      "time_diff": 0,
-      "audio_l": "a4"
-    },
-    {
-      "image": "weather8",
-      "time_diff": 2,
-      "audio_l": null
-    },
-    {
-      "image": "weather5",
-      "time_diff": -2,
-      "audio_l": "a5"
-    },
-    {
-      "image": "weather6",
-      "time_diff": 0,
-      "audio_l": "a6"
-    },
-    {
-      "image": "weather7",
-      "time_diff": -3,
-      "audio_l": "a7"
-    },
-    {
-      "image": "weather8",
-      "time_diff": 3,
-      "audio_l": null
-    }
-  ],
+  "sequence": {
+    "disordered_order": [
+      {
+        "image": "weather1",
+        "audio_l": "a1"
+      },
+      {
+        "image": "weather2",
+        "audio_l": "a2"
+      },
+      {
+        "image": "weather3",
+        "audio_l": "a3"
+      },
+      {
+        "image": "weather4",
+        "audio_l": "a4"
+      },
+      {
+        "image": "weather8",
+        "time_diff": 2
+      },
+      {
+        "image": "weather5",
+        "time_diff": -2,
+        "audio_l": "a5"
+      },
+      {
+        "image": "weather6",
+        "audio_l": "a6"
+      },
+      {
+        "image": "weather7",
+        "time_diff": -3,
+        "audio_l": "a7"
+      },
+      {
+        "image": "weather8",
+        "time_diff": 3
+      }
+    ]
+  },
   "run_config": {
     "testing": {
       "default_value": false,

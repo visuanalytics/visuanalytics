@@ -1871,52 +1871,9 @@
       }
     }
   },
-  "sequence": [
-    {
-      "image": "football1",
-      "audio_l": "a1"
-    },
-    {
-      "image": "football2",
-      "audio_l": "a2"
-    },
-    {
-      "image": "football3",
-      "audio_l": "a3"
-    },
-    {
-      "image": "football4",
-      "audio_l": "a4"
-    },
-    {
-      "image": "football5",
-      "audio_l": "a5"
-    },
-    {
-      "image": "football6",
-      "audio_l": "a6"
-    },
-    {
-      "image": "football7",
-      "audio_l": "a7"
-    },
-    {
-      "image": "football8",
-      "audio_l": "a8"
-    },
-    {
-      "image": "football9",
-      "audio_l": "a9"
-    },
-    {
-      "image": "football10",
-      "audio_l": "a10"
-    },
-    {
-      "image": "football11",
-      "audio_l": "a11"
-    }
-  ],
+  "sequence": {
+    "successively": true
+  },
   "run_config": {
     "testing": {
       "default_value": false,
