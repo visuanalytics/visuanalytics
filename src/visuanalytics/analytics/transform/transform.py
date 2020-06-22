@@ -5,6 +5,7 @@ from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import calculate
+from visuanalytics.analytics.util.step_errors import StepTypeError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 
 
@@ -12,7 +13,12 @@ def transform(values: dict, data: StepData):
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 
-        TRANSFORM_TYPES[transformation["type"]](transformation, data)
+        ttype = transformation["type"]
+
+        if TRANSFORM_TYPES.get(ttype, None) is None:
+            raise StepTypeError(ttype)
+
+        TRANSFORM_TYPES[ttype](transformation, data)
 
 
 def transform_array(values: dict, data: StepData):
@@ -44,9 +50,9 @@ def transform_select(values: dict, data: StepData):
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
             if values.get("throw_errors", True):
-                raise     
+                raise
 
-                
+
 def transform_select_range(values: dict, data: StepData):
     value_array = data.get_data(values["array_key"], values)
     range_start = data.format(values.get("range_start", 0), values)
