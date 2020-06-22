@@ -4,6 +4,7 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 import numbers
 
 from visuanalytics.analytics.util import config_manager
+from visuanalytics.analytics.util.step_errors import APIKeyError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
 
@@ -34,7 +35,12 @@ class StepData(object):
         :raises: FileNotFoundError, KeyError
         """
 
-        return config_manager.get_private()["api_keys"][api_key_name]
+        api_key = config_manager.get_private()["api_keys"].get(api_key_name, None)
+
+        if api_key is None:
+            raise APIKeyError(api_key_name)
+
+        return api_key
 
     @staticmethod
     def __save_loop(idx, current, values: dict):
