@@ -21,9 +21,14 @@
   },
   "transform": [
     {
-      "type": "append",
-      "key": "_req|Spiele|0|Group|GroupName",
-      "new_key": "_req|Spieltag"
+      "type": "add_symbol",
+      "keys": [
+        "_req|Spiele|0|Group|GroupName"
+      ],
+      "new_keys": [
+        "_req|Spieltag"
+      ],
+      "pattern": "{_key}"
     },
     {
       "type": "transform_array",
@@ -229,13 +234,94 @@
       "path": "football/Spieltag.png",
       "overlay": [
         {
+          "description": "Spieltag",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 0,
+          "preset": "football_1",
+          "pattern": "{_req|Spieltag}"
+        },
+        {
           "description": "Liga-Name",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 305,
-          "pos_y": 48,
-          "preset": "weather_white_2",
-          "pattern": "Test"
+          "pos_x": 960,
+          "pos_y": 100,
+          "preset": "football_2",
+          "pattern": "{_conf|liga-name}"
+        },
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 192,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            202,
+            202
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|0|Team1|TeamName}",
+            "{_req|Spiele|0|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|0|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                190,
+                190
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|0|MatchResults|PointsTeam1}",
+                "{_req|Spiele|0|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 180,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 180,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|0|weekday}"
+            }
+          ]
         }
       ]
     },
@@ -245,13 +331,629 @@
       "path": "football1",
       "overlay": [
         {
-          "description": "Liga-Name",
-          "type": "text",
-          "anchor_point": "center",
-          "pos_x": 305,
-          "pos_y": 480,
-          "preset": "weather_white_2",
-          "pattern": "Test2"
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 282,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            292,
+            292
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|1|Team1|TeamName}",
+            "{_req|Spiele|1|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|1|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                282,
+                282
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|1|MatchResults|PointsTeam1}",
+                "{_req|Spiele|1|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 270,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 270,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|1|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football3": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football2",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 372,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            382,
+            382
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|2|Team1|TeamName}",
+            "{_req|Spiele|2|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|2|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                370,
+                370
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|2|MatchResults|PointsTeam1}",
+                "{_req|Spiele|2|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 360,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 360,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|2|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football4": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football3",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 462,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            472,
+            472
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|3|Team1|TeamName}",
+            "{_req|Spiele|3|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|3|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                460,
+                460
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|3|MatchResults|PointsTeam1}",
+                "{_req|Spiele|3|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 450,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 450,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|3|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football5": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football4",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 552,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            562,
+            562
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|4|Team1|TeamName}",
+            "{_req|Spiele|4|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|4|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                550,
+                550
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|4|MatchResults|PointsTeam1}",
+                "{_req|Spiele|4|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 540,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 540,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|4|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football6": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football5",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 642,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            652,
+            652
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|5|Team1|TeamName}",
+            "{_req|Spiele|5|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|5|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                640,
+                640
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|5|MatchResults|PointsTeam1}",
+                "{_req|Spiele|5|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 630,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 630,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|5|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football7": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football6",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 732,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            742,
+            742
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|6|Team1|TeamName}",
+            "{_req|Spiele|6|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|6|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                730,
+                730
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|6|MatchResults|PointsTeam1}",
+                "{_req|Spiele|6|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 720,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 720,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|6|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football8": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football7",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 822,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            832,
+            832
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|7|Team1|TeamName}",
+            "{_req|Spiele|7|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|7|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                820,
+                820
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|7|MatchResults|PointsTeam1}",
+                "{_req|Spiele|7|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 810,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 810,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|7|weekday}"
+            }
+          ]
+        }
+      ]
+    },
+    "football9": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football8",
+      "overlay": [
+        {
+          "description": "Weißes-bild",
+          "type": "image",
+          "pos_x": 187,
+          "pos_y": 912,
+          "colour": "RGBA",
+          "pattern": "football/Spieltag_Balken.png",
+          "transparency": true
+        },
+        {
+          "description": "TeamNamen",
+          "type": "text_array",
+          "anchor_point": "left",
+          "pos_x": [
+            282,
+            1108
+          ],
+          "pos_y": [
+            922,
+            922
+          ],
+          "preset": "football_3",
+          "pattern": [
+            "{_req|Spiele|8|Team1|TeamName}",
+            "{_req|Spiele|8|Team2|TeamName}"
+          ]
+        },
+        {
+          "description": "TeamErgebnisse",
+          "type": "option",
+          "check": "{_req|Spiele|8|MatchIsFinished}",
+          "on_true": [
+            {
+              "description": "TeamErgebnisse",
+              "type": "text_array",
+              "anchor_point": "center",
+              "pos_x": [
+                900,
+                1014
+              ],
+              "pos_y": [
+                910,
+                910
+              ],
+              "preset": "football_4",
+              "pattern": [
+                "{_req|Spiele|8|MatchResults|PointsTeam1}",
+                "{_req|Spiele|8|MatchResults|PointsTeam2}"
+              ]
+            },
+            {
+              "description": ":",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 900,
+              "preset": "football_4",
+              "pattern": ":"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wochentag",
+              "type": "text",
+              "anchor_point": "center",
+              "pos_x": 960,
+              "pos_y": 900,
+              "preset": "football_4",
+              "pattern": "{_req|Spiele|8|weekday}"
+            }
+          ]
         }
       ]
     }
@@ -328,9 +1030,24 @@
     }
   },
   "presets": {
-    "weather_white_2": {
+    "football_1": {
+      "color": "black",
+      "font_size": 74,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_2": {
       "color": "white",
-      "font_size": 70,
+      "font_size": 35,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_3": {
+      "color": "black",
+      "font_size": 42,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_4": {
+      "color": "black",
+      "font_size": 65,
       "font": "fonts/Dosis-Bold.ttf"
     }
   }
