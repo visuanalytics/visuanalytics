@@ -37,11 +37,11 @@ class StepData(object):
         return config_manager.get_private()["api_keys"][api_key_name]
 
     @staticmethod
-    def __save_loop(idx, current, values: dict):
+    def save_loop(idx, current, values: dict):
         values["_loop_states"] = {**values.get("_loop_states", {}), **{"_idx": idx, "_loop": current}}
         return idx, current
 
-    def __save_loop_key(self, key, values: dict, ):
+    def save_loop_key(self, key, values: dict, ):
         values["_loop_states"] = {**values.get("_loop_states", {}),
                                   **{"_key": self.get_data(key, values)}}
         return key

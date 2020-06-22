@@ -99,6 +99,7 @@ def select(values: dict, data: StepData):
             if values.get("throw_errors", True):
                 raise
 
+
 @register_transform
 def select_range(values: dict, data: StepData):
     """Löscht alle werte aus `"array_key"` die nicht in der range sind.
@@ -386,7 +387,7 @@ def result(values: dict, data: StepData):
         value = data.get_data(key, values)
         compare_1 = data.format(values["compare_1"], values)
         compare_2 = data.format(values["compare_2"], values)
-        new_key = get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         if value[compare_1] == value[compare_2]:
             new_value = int(data.format(values["points"]["1"], values))
         elif value[compare_1] > value[compare_2]:
@@ -401,6 +402,6 @@ def result(values: dict, data: StepData):
 @register_transform
 def copy(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
-        new_key = get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         new_value = int(data.get_data(key, values))
         data.insert_data(new_key, new_value, values)

@@ -121,7 +121,7 @@ def calculate_subtract(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         subtract = int(data.get_data(values["subtract"][idx], values))
-        new_key = get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         new_value = value - subtract
         data.insert_data(new_key, new_value, values)
 
@@ -131,6 +131,6 @@ def calculate_add(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         add = int(data.get_data(values["add"][idx], values))
-        new_key = get_new_keys(values, idx, key)
+        new_key = get_new_keys(values, idx)
         new_value = value + add
         data.insert_data(new_key, new_value, values)
