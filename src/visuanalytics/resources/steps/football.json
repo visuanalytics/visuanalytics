@@ -80,9 +80,10 @@
             "TeamName",
             "TeamInfoId",
             "Points",
-            "Won",
-            "Lost",
-            "GoalDiff"
+            "Goals",
+            "OpponentGoals",
+            "GoalDiff",
+            "Matches"
           ]
         },
         {
@@ -825,6 +826,792 @@
           ]
         }
       ]
+    },
+    "football10": {
+      "type": "pillow",
+      "path": "football/Tabelle_1.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 100,
+          "preset": "football_2",
+          "pattern": "{_conf|liga-name}"
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 250,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|0|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 250,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|0|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            250,
+            250,
+            250,
+            250
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|0|Matches}",
+            "{_req|Tabelle|0|Goals}",
+            "{_req|Tabelle|0|OpponentGoals}",
+            "{_req|Tabelle|0|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 338,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|1|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 338,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|1|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            338,
+            338,
+            338,
+            338
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|1|Matches}",
+            "{_req|Tabelle|1|Goals}",
+            "{_req|Tabelle|1|OpponentGoals}",
+            "{_req|Tabelle|1|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 426,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|2|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 426,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|2|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            426,
+            426,
+            426,
+            426
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|2|Matches}",
+            "{_req|Tabelle|2|Goals}",
+            "{_req|Tabelle|2|OpponentGoals}",
+            "{_req|Tabelle|2|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 514,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|3|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 514,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|3|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            514,
+            514,
+            514,
+            514
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|3|Matches}",
+            "{_req|Tabelle|3|Goals}",
+            "{_req|Tabelle|3|OpponentGoals}",
+            "{_req|Tabelle|3|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 602,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|4|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 602,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|4|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            602,
+            602,
+            602,
+            602
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|4|Matches}",
+            "{_req|Tabelle|4|Goals}",
+            "{_req|Tabelle|4|OpponentGoals}",
+            "{_req|Tabelle|4|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 690,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|5|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 690,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|5|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            690,
+            690,
+            690,
+            690
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|5|Matches}",
+            "{_req|Tabelle|5|Goals}",
+            "{_req|Tabelle|5|OpponentGoals}",
+            "{_req|Tabelle|5|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 778,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|6|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 778,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|6|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            778,
+            778,
+            778,
+            778
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|6|Matches}",
+            "{_req|Tabelle|6|Goals}",
+            "{_req|Tabelle|6|OpponentGoals}",
+            "{_req|Tabelle|6|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 866,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|7|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 866,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|7|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            866,
+            866,
+            866,
+            866
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|7|Matches}",
+            "{_req|Tabelle|7|Goals}",
+            "{_req|Tabelle|7|OpponentGoals}",
+            "{_req|Tabelle|7|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 954,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|8|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 954,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|8|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            954,
+            954,
+            954,
+            954
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|8|Matches}",
+            "{_req|Tabelle|8|Goals}",
+            "{_req|Tabelle|8|OpponentGoals}",
+            "{_req|Tabelle|8|GoalDiff}"
+          ]
+        }
+      ]
+    },
+    "football11": {
+      "type": "pillow",
+      "path": "football/Tabelle_2.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 100,
+          "preset": "football_2",
+          "pattern": "{_conf|liga-name}"
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 250,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|9|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 250,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|9|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            250,
+            250,
+            250,
+            250
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|9|Matches}",
+            "{_req|Tabelle|9|Goals}",
+            "{_req|Tabelle|9|OpponentGoals}",
+            "{_req|Tabelle|9|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 338,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|10|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 338,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|10|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            338,
+            338,
+            338,
+            338
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|10|Matches}",
+            "{_req|Tabelle|10|Goals}",
+            "{_req|Tabelle|10|OpponentGoals}",
+            "{_req|Tabelle|10|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 426,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|11|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 426,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|11|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            426,
+            426,
+            426,
+            426
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|11|Matches}",
+            "{_req|Tabelle|11|Goals}",
+            "{_req|Tabelle|11|OpponentGoals}",
+            "{_req|Tabelle|11|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 514,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|12|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 514,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|12|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            514,
+            514,
+            514,
+            514
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|12|Matches}",
+            "{_req|Tabelle|12|Goals}",
+            "{_req|Tabelle|12|OpponentGoals}",
+            "{_req|Tabelle|12|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 602,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|13|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 602,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|13|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            602,
+            602,
+            602,
+            602
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|13|Matches}",
+            "{_req|Tabelle|13|Goals}",
+            "{_req|Tabelle|13|OpponentGoals}",
+            "{_req|Tabelle|13|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 690,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|14|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 690,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|14|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            690,
+            690,
+            690,
+            690
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|14|Matches}",
+            "{_req|Tabelle|14|Goals}",
+            "{_req|Tabelle|14|OpponentGoals}",
+            "{_req|Tabelle|14|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 778,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|15|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 778,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|15|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            778,
+            778,
+            778,
+            778
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|15|Matches}",
+            "{_req|Tabelle|15|Goals}",
+            "{_req|Tabelle|15|OpponentGoals}",
+            "{_req|Tabelle|15|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 866,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|16|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 866,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|16|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            866,
+            866,
+            866,
+            866
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|16|Matches}",
+            "{_req|Tabelle|16|Goals}",
+            "{_req|Tabelle|16|OpponentGoals}",
+            "{_req|Tabelle|16|GoalDiff}"
+          ]
+        },
+        {
+          "description": "Team-Name",
+          "type": "text",
+          "anchor_point": "left",
+          "pos_x": 374,
+          "pos_y": 954,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|17|TeamName}"
+        },
+        {
+          "description": "Team-Punkte",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1612,
+          "pos_y": 954,
+          "preset": "football_5",
+          "pattern": "{_req|Tabelle|17|Points}"
+        },
+        {
+          "description": "Teamtoordiff",
+          "type": "text_array",
+          "anchor_point": "center",
+          "pos_x": [
+            1253,
+            1333,
+            1417,
+            1513
+          ],
+          "pos_y": [
+            954,
+            954,
+            954,
+            954
+          ],
+          "preset": "football_6",
+          "pattern": [
+            "{_req|Tabelle|17|Matches}",
+            "{_req|Tabelle|17|Goals}",
+            "{_req|Tabelle|17|OpponentGoals}",
+            "{_req|Tabelle|17|GoalDiff}"
+          ]
+        }
+      ]
     }
   },
   "audio": {
@@ -865,6 +1652,16 @@
     "football_4": {
       "color": "black",
       "font_size": 65,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_5": {
+      "color": "black",
+      "font_size": 60,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_6": {
+      "color": "#858582",
+      "font_size": 60,
       "font": "fonts/Dosis-Bold.ttf"
     }
   }
