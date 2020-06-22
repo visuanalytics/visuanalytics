@@ -48,7 +48,7 @@ def add_image(overlay: dict, source_img, draw, presets: dict, step_data: StepDat
         resources.get_resource_path(path)).convert("RGBA")
     if step_data.format(overlay.get("colour", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["colour"]))
-    if overlay.get("size_x", None) is not None:
+    if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
     if overlay.get("transparency", False):
