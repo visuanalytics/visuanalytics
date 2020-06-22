@@ -59,7 +59,7 @@ def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
         resources.get_resource_path(path)).convert("RGBA")
     if step_data.format(overlay.get("colour", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["colour"]))
-    if overlay["size_x"] is not None:
+    if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
     if overlay.get("transparency", False):
@@ -70,7 +70,7 @@ def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
                                 step_data.format(overlay["pos_y"])), icon)
 
 
-@register_overlay   
+@register_overlay
 def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["colour"], list):
@@ -83,10 +83,11 @@ def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepD
             pattern = overlay["pattern"]
         new_overlay = {
             "description": overlay["description"],
-            "size_x": overlay["size_x"],
-            "size_y": overlay["size_y"],
+            "size_x": overlay.get("size_x", None),
+            "size_y": overlay.get("size_y", None),
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
+            "transparency": overlay.get("transparency", False),
             "pattern": pattern,
             "colour": colour}
         image(new_overlay, source_img, draw, presets, step_data)
