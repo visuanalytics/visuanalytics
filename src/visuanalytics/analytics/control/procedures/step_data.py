@@ -37,11 +37,11 @@ class StepData(object):
         return config_manager.get_private()["api_keys"][api_key_name]
 
     @staticmethod
-    def __save_loop(idx, current, values: dict):
+    def save_loop(idx, current, values: dict):
         values["_loop_states"] = {**values.get("_loop_states", {}), **{"_idx": idx, "_loop": current}}
         return idx, current
 
-    def __save_loop_key(self, key, values: dict, ):
+    def save_loop_key(self, key, values: dict, ):
         values["_loop_states"] = {**values.get("_loop_states", {}),
                                   **{"_key": self.get_data(key, values)}}
         return key
@@ -58,7 +58,7 @@ class StepData(object):
         :return: Iterator über das array welcher seiteneffekte besitzt, mit (idx, value).
         :rtype: map
         """
-        return map(lambda value: self.__save_loop(value[0], value[1], values), enumerate(loop_root))
+        return map(lambda value: self.save_loop(value[0], value[1], values), enumerate(loop_root))
 
     def loop_dict(self, loop_root: dict, values: dict):
         """
@@ -72,7 +72,7 @@ class StepData(object):
         :return: Iterator über das Dictionary welcher seiteneffekte besitzt, mit (idx, value).
         :rtype: map
         """
-        return map(lambda value: self.__save_loop(value[0], value[1], values), loop_root.items())
+        return map(lambda value: self.save_loop(value[0], value[1], values), loop_root.items())
 
     def loop_key(self, keys: list, values: dict):
         """
@@ -86,7 +86,7 @@ class StepData(object):
         :return: Iterator über das Dictionary welcher seiteneffekte besitzt, mit (idx, key).
         :rtype: map
         """
-        return map(lambda value: (value[0], self.__save_loop_key(value[1], values)), enumerate(keys))
+        return map(lambda value: (value[0], self.save_loop_key(value[1], values)), enumerate(keys))
 
     @property
     def data(self):
