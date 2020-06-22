@@ -23,7 +23,7 @@
       "name": "Fußballbericht",
       "id": 1,
       "steps": "football",
-      "time": "08:42",
+      "time": "10:42",
       "daily": true,
       "config": {
         "liga-name": "1. Fußball Bundesliga"
