@@ -26,11 +26,6 @@
       "new_key": "_req|Spieltag"
     },
     {
-      "type": "append",
-      "key": "_req|Spiele|0|LeagueName",
-      "new_key": "_req|LeagueName"
-    },
-    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
