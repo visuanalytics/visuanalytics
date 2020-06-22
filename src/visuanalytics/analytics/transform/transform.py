@@ -48,7 +48,7 @@ def transform_compare_arrays(values: dict, data: StepData):
             if value_1 == value_2:
                 new_value = int(entry2[where][pattern])
                 new_key = values["new_key"]
-        data.save_loop(values, idx1, entry1)
+        data.save_loop(idx1, entry1, values)
         data.insert_data(new_key, new_value, values)
 
 
