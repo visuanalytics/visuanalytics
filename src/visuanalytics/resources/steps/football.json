@@ -223,7 +223,7 @@
             "_loop|Result",
             "_loop|Goals_Won",
             "_loop|Goals_Lost",
-            "_loop|Goals_Lost"
+            "_loop|Goals_Won"
           ]
         },
         {
@@ -233,7 +233,7 @@
             "_loop|GoalDiff_before"
           ],
           "add": [
-            "_loop|Goals_Won"
+            "_loop|Goals_Lost"
           ]
         }
       ]
