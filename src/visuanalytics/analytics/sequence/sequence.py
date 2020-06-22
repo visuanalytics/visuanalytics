@@ -19,7 +19,7 @@ def link(values: dict, step_data: StepData):
             out_audio_l.append(step_data.format(s["time_diff"]))
         else:
             out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
-            out_audio_l.append(step_data.format(s["time_diff"]) + MP3(
+            out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
     return _link(step_data.data["_pipe_id"], out_images, out_audios, out_audio_l,
                  step_data.data["_conf"].get("h264_nvenc", False),
