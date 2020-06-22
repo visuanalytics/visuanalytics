@@ -1,9 +1,11 @@
+import functools
 import json
 
 import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.step_errors import APIError, APITypeError
 
 API_TYPES = {}
 
@@ -13,12 +15,29 @@ def api(values: dict, data: StepData):
 
 
 def _api(values: dict, data: StepData, name):
-    return API_TYPES[values["type"]](values, data, name)
+    api_func = API_TYPES.get(values.get("type"), None)
+
+    if api_func is None:
+        raise APITypeError(values.get("type"))
+
+    return api_func(values, data, name)
 
 
 def register_api(func):
     API_TYPES[func.__name__] = func
-    return func
+
+    @functools.wraps(func)
+    def new_func(values: dict, data: StepData, name):
+        try:
+            func(values, data, name)
+        # Not raise APIError Twice
+        except APIError:
+            raise
+        except BaseException as e:
+            raise APIError(values) from e
+
+    API_TYPES[func.__name__] = new_func
+    return new_func
 
 
 @register_api

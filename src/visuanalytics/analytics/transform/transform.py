@@ -1,13 +1,13 @@
+import functools
 import re
 from datetime import datetime
 
 from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.transform.calculate import calculate
-from visuanalytics.analytics.util.step_errors import StepTypeError
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
+from visuanalytics.analytics.util.step_errors import TransformTypeError, TransformError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 
 TRANSFORM_TYPES = {}
@@ -17,17 +17,34 @@ def transform(values: dict, data: StepData):
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 
-        ttype = transformation["type"]
+        trans_func = TRANSFORM_TYPES.get(transformation.get("type", None), None)
 
-        if TRANSFORM_TYPES.get(ttype, None) is None:
-            raise StepTypeError(ttype)
+        if trans_func is None:
+            raise TransformTypeError(transformation.get("type", None))
 
-        TRANSFORM_TYPES[ttype](transformation, data)
+        trans_func(transformation, data)
 
 
 def register_transform(func):
-    TRANSFORM_TYPES[func.__name__] = func
-    return func
+    """ Registriert die Übergebene Funktion,
+    und versieht sie mit einem try except block
+
+    :param func: Zu registrierende Funktion
+    :return: funktion mit try, catch block
+    """
+
+    @functools.wraps(func)
+    def new_func(values: dict, data: StepData):
+        try:
+            func(values, data)
+        # Not raise TransformError Twice
+        except TransformError:
+            raise
+        except BaseException as e:
+            raise TransformError(values) from e
+
+    TRANSFORM_TYPES[func.__name__] = new_func
+    return new_func
 
 
 @register_transform
@@ -87,6 +104,7 @@ def select(values: dict, data: StepData):
         except:
             if values.get("throw_errors", True):
                 raise
+
 
 @register_transform
 def select_range(values: dict, data: StepData):
