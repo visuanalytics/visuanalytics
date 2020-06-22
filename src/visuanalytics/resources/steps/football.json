@@ -1861,7 +1861,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Danach {_req|Tabelle|2|TeamName} mit {2|Points}, gefolgt von {_req|Tabelle|3|TeamName} auf Platz 4. "
+            "pattern": "Danach {_req|Tabelle|2|TeamName} mit {_req|Tabelle|2|Points}, gefolgt von {_req|Tabelle|3|TeamName} auf Platz 4. "
           }
         ]
       },
