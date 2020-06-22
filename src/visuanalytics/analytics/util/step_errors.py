@@ -1,19 +1,13 @@
 class StepError(Exception):
 
-    def __init__(self, values, message="test"):
-        self.message = message
+    def __init__(self, values):
         self.type = values.get("type", None)
-
         self.values = values
-        # super().__init__(message)
 
     def __str__(self):
-        if isinstance(self.__cause__, StepKeyError):
+        if isinstance(self.__cause__, (StepKeyError, StepTypeError)):
             # Invalid Key
             return f"On Type '{self.type}', {self.__cause__}"
-        elif isinstance(self.__cause__, StepTypeError):
-            # Invalid Type
-            return f"Type '{self.__cause__}' does not Exists"
         elif isinstance(self.__cause__, KeyError):
             # Field for type is missing
             return f"On Type '{self.type}', Entry {self.__cause__} is missing."
