@@ -1,5 +1,5 @@
 {
-  "id": 0,
+  "id": 1,
   "name": "football",
   "api": {
     "type": "request_multiple_custom",
@@ -120,9 +120,10 @@
             "TeamName",
             "TeamInfoId",
             "Points",
-            "Won",
-            "Lost",
-            "GoalDiff"
+            "Goals",
+            "OpponentGoals",
+            "GoalDiff",
+            "Matches"
           ]
         },
         {
@@ -138,14 +139,14 @@
           "type": "copy",
           "keys": [
             "_loop|Points",
-            "_loop|Won",
-            "_loop|Lost",
+            "_loop|Goals",
+            "_loop|OpponentGoals",
             "_loop|GoalDiff"
           ],
           "new_keys": [
             "_loop|Points_before",
-            "_loop|Won_before",
-            "_loop|Lost_before",
+            "_loop|Goals_before",
+            "_loop|OpponentGoals_before",
             "_loop|GoalDiff_before"
           ]
         }
@@ -214,15 +215,25 @@
           "action": "subtract",
           "keys": [
             "_loop|Points_before",
-            "_loop|Won_before",
-            "_loop|Lost_before",
+            "_loop|Goals_before",
+            "_loop|OpponentGoals_before",
             "_loop|GoalDiff_before"
           ],
           "subtract": [
             "_loop|Result",
             "_loop|Goals_Won",
             "_loop|Goals_Lost",
-            "_loop|Lost_before"
+            "_loop|Goals_Lost"
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "add",
+          "keys": [
+            "_loop|GoalDiff_before"
+          ],
+          "add": [
+            "_loop|Goals_Won"
           ]
         }
       ]

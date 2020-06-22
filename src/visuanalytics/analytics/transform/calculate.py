@@ -1,5 +1,6 @@
-import numpy as np
 import collections
+
+import numpy as np
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 
@@ -136,7 +137,17 @@ def calculate_subtract(values: dict, data: StepData):
         value = int(data.get_data(key, values))
         subtract = int(data.get_data(values["subtract"][idx], values))
         new_key = calculate_get_new_keys(values, idx, key)
-        new_value = str(value - subtract)
+        new_value = value - subtract
+        data.insert_data(new_key, new_value, values)
+
+
+def calculate_add(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        data.save_loop_key(values, key)
+        value = int(data.get_data(key, values))
+        add = int(data.get_data(values["add"][idx], values))
+        new_key = calculate_get_new_keys(values, idx, key)
+        new_value = value + add
         data.insert_data(new_key, new_value, values)
 
 
@@ -147,6 +158,7 @@ CALCULATE_ACTIONS = {
     "round": calculate_round,
     "mode": calculate_mode,
     "ms_to_kmh": calculate_ms_to_kmh,
-    "subtract": calculate_subtract
+    "subtract": calculate_subtract,
+    "add": calculate_add
 
 }

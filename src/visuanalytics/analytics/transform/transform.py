@@ -34,7 +34,7 @@ def transform_compare_arrays(values: dict, data: StepData):
             where = data.format(values["where"], values)
             value_2 = entry2[where][compare]
             if value_1 == value_2:
-                new_value = entry2[where][pattern]
+                new_value = int(entry2[where][pattern])
                 new_key = values["new_key"]
         data.save_loop(values, idx1, entry1)
         data.insert_data(new_key, new_value, values)
@@ -63,9 +63,9 @@ def transform_select(values: dict, data: StepData):
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
             if values.get("throw_errors", True):
-                raise     
+                raise
 
-                
+
 def transform_select_range(values: dict, data: StepData):
     value_array = data.get_data(values["array_key"], values)
     range_start = data.format(values.get("range_start", 0), values)
@@ -329,13 +329,13 @@ def transform_result(values: dict, data: StepData):
         compare_2 = data.format(values["compare_2"], values)
         new_key = transform_get_new_keys(values, idx, key)
         if value[compare_1] == value[compare_2]:
-            new_value = data.format(values["points"]["1"], values)
+            new_value = int(data.format(values["points"]["1"], values))
         elif value[compare_1] > value[compare_2]:
-            new_value = data.format(values["points"]["2"], values)
+            new_value = int(data.format(values["points"]["2"], values))
         elif value[compare_1] < value[compare_2]:
-            new_value = data.format(values["points"]["3"], values)
+            new_value = int(data.format(values["points"]["3"], values))
         else:
-            new_value = ""
+            new_value = 0
         data.insert_data(new_key, new_value, values)
 
 
@@ -343,24 +343,8 @@ def transform_copy(values: dict, data: StepData):
     for idx, key in enumerate(values["keys"]):
         data.save_loop_key(values, key)
         new_key = transform_get_new_keys(values, idx, key)
-        new_value = str(data.get_data(key, values))
+        new_value = int(data.get_data(key, values))
         data.insert_data(new_key, new_value, values)
-
-
-def transform_compare_and_copy(values: dict, data: StepData):
-    for idx1, key_1 in enumerate(values["array_keys_1"]):
-        data.save_loop_key(values, key_1)
-        value_1 = data.get_data(key_1, values)
-        for idx2, key_2 in enumerate(values["array_keys_2"]):
-            data.save_loop_key(values, key_2)
-            value_2 = data.get_data(key_2, values)
-            for idx, key in enumerate(values["keys"]):
-                data.save_loop_key(values, key)
-                value = data.get_data[key]
-                if value_1 == value_2:
-                    new_value = value
-                    new_key = transform_get_new_keys(values, idx1, key_1)
-                    data.insert_data(new_key, new_value, values)
 
 
 TRANSFORM_TYPES = {
@@ -386,6 +370,5 @@ TRANSFORM_TYPES = {
     "add_data": transform_add_data,
     "result": transform_result,
     "copy": transform_copy,
-    "compare_and_copy": transform_compare_and_copy,
     "calculate": calculate
 }
