@@ -1872,7 +1872,7 @@
     }
   },
   "sequence": {
-    "successively": true
+    "type": "successively"
   },
   "run_config": {
     "testing": {

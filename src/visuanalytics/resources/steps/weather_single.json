@@ -1842,7 +1842,8 @@
     }
   },
   "sequence": {
-    "disordered_order": [
+    "type": "custom",
+    "pattern": [
       {
         "image": "weather3",
         "time_diff": 3

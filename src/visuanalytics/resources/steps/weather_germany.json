@@ -1643,7 +1643,8 @@
     }
   },
   "sequence": {
-    "disordered_order": [
+    "type": "custom",
+    "pattern": [
       {
         "image": "weather1",
         "audio_l": "a1"

@@ -10,30 +10,45 @@ from mutagen.mp3 import MP3
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
+SEQUENCE_TYPES = {}
+
 
 def link(values: dict, step_data: StepData):
+    return SEQUENCE_TYPES[values["sequence"]["type"]](values, step_data)
+
+
+def register_sequence(func):
+    SEQUENCE_TYPES[func.__name__] = func
+    return func
+
+
+@register_sequence
+def successively(values: dict, step_data: StepData):
     out_images, out_audios, out_audio_l = [], [], []
-    if values["sequence"].get("successively", False):
-        for image in values["images"]:
-            out_images.append(values["images"][image])
-        for audio in values["audio"]["audios"]:
-            out_audios.append(values["audio"]["audios"][audio])
-            out_audio_l.append(MP3(values["audio"]["audios"][audio]).info.length)
-    else:
-        for s in values["sequence"]["disordered_order"]:
-            out_images.append(values["images"][step_data.format(s["image"])])
-            if s.get("audio_l", None) is None:
-                out_audio_l.append(step_data.format(s.get("time_diff", 0)))
-            else:
-                out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
-                out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
-                    values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
-    return _link(step_data.data["_pipe_id"], out_images, out_audios, out_audio_l,
-                 step_data.data["_conf"].get("h264_nvenc", False),
-                 step_data.data["_conf"]["output_path"], values["name"])
+    for image in values["images"]:
+        out_images.append(values["images"][image])
+    for audio in values["audio"]["audios"]:
+        out_audios.append(values["audio"]["audios"][audio])
+        out_audio_l.append(MP3(values["audio"]["audios"][audio]).info.length)
+    return _link(out_images, out_audios, out_audio_l, step_data, values)
 
 
-def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):
+@register_sequence
+def custom(values: dict, step_data: StepData):
+    out_images, out_audios, out_audio_l = [], [], []
+    for s in values["sequence"]["pattern"]:
+        out_images.append(values["images"][step_data.format(s["image"])])
+        if s.get("audio_l", None) is None:
+            out_audio_l.append(step_data.format(s.get("time_diff", 0)))
+        else:
+            out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
+            out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
+                values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
+
+    return _link(out_images, out_audios, out_audio_l, step_data, values)
+
+
+def _link(images, audios, audio_l, step_data: StepData, values: dict):
     """
     Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
     Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
@@ -58,20 +73,21 @@ def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):
     :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
     """
 
-    if h264_nvenc:
+    if step_data.data["_conf"].get("h264_nvenc", False):
         os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
-    with open(resources.get_temp_resource_path("input.txt", pipeline_id), "w") as file:
+    with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
         for i in audios:
             file.write("file 'file:" + i + "'\n")
-    output = resources.new_temp_resource_path(pipeline_id, "mp3")
-    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i", resources.get_temp_resource_path("input.txt", pipeline_id),
+    output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
+    args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i",
+             resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
              "-c", "copy",
              output]
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_out_path(out_path, job_name)
+    output2 = resources.get_out_path(step_data.data["_conf"]["output_path"], values["name"])
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
@@ -93,7 +109,7 @@ def _link(pipeline_id, images, audios, audio_l, h264_nvenc, out_path, job_name):
 
     args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
 
-    if h264_nvenc:
+    if step_data.data["_conf"].get("h264_nvenc", False):
         args2.extend(("-c:v", "h264_nvenc"))
 
     args2.extend(("-shortest", "-s", "1920x1080", output2))
