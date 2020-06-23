@@ -20,6 +20,8 @@ def link(values: dict, step_data: StepData):
 
 
 def register_sequence(func):
+    func = raise_step_error(SeqenceError)(func)
+
     SEQUENCE_TYPES[func.__name__] = func
     return func
 
