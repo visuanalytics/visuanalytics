@@ -1,43 +1,34 @@
-import functools
 import json
 
 import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.step_errors import APIError, APITypeError
+from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, StepTypeError
 
 API_TYPES = {}
 
 
+@raise_step_error(APIError)
 def api(values: dict, data: StepData):
     data.init_data(_api(values["api"], data, values["name"]))
 
 
+@raise_step_error(APIError)
 def _api(values: dict, data: StepData, name):
     api_func = API_TYPES.get(values.get("type"), None)
 
     if api_func is None:
-        raise APITypeError(values.get("type"))
+        raise StepTypeError(values.get("type"))
 
     return api_func(values, data, name)
 
 
 def register_api(func):
+    func = raise_step_error(APIError)(func)
+
     API_TYPES[func.__name__] = func
-
-    @functools.wraps(func)
-    def new_func(values: dict, data: StepData, name):
-        try:
-            func(values, data, name)
-        # Not raise APIError Twice
-        except APIError:
-            raise
-        except BaseException as e:
-            raise APIError(values) from e
-
-    API_TYPES[func.__name__] = new_func
-    return new_func
+    return func
 
 
 @register_api
