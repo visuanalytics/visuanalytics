@@ -1765,11 +1765,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "In der 1. Fußball-Bundesliga ist der 33. Spieltag.  Die Ergebnisse lauten: "
+            "pattern": "In der Ersten Fußball-Bundesliga ist der 33 Spieltag.  Die Ergebnisse lauten: "
           },
           {
             "type": "text",
-            "pattern": "{_req|Spiele|0|Team1|TeamName} spielte gegen {_req|Spiele|0|Team1|TeamName} {_req|Spiele|0|MatchResults|PointsTeam1} zu {_req|Spiele|0|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|0|Team1|TeamName} spielte gegen {_req|Spiele|0|Team2|TeamName} {_req|Spiele|0|MatchResults|PointsTeam1} zu {_req|Spiele|0|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1777,7 +1777,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|1|Team1|TeamName} spielte gegen {_req|Spiele|1|Team1|TeamName} {_req|Spiele|1|MatchResults|PointsTeam1} zu {_req|Spiele|1|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|1|Team1|TeamName} spielte gegen {_req|Spiele|1|Team2|TeamName} {_req|Spiele|1|MatchResults|PointsTeam1} zu {_req|Spiele|1|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1785,7 +1785,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|2|Team1|TeamName} spielte gegen {_req|Spiele|2|Team1|TeamName} {_req|Spiele|2|MatchResults|PointsTeam1} zu {_req|Spiele|2|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|2|Team1|TeamName} spielte gegen {_req|Spiele|2|Team2|TeamName} {_req|Spiele|2|MatchResults|PointsTeam1} zu {_req|Spiele|2|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1793,7 +1793,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|3|Team1|TeamName} spielte gegen {_req|Spiele|3|Team1|TeamName} {_req|Spiele|3|MatchResults|PointsTeam1} zu {_req|Spiele|3|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|3|Team1|TeamName} spielte gegen {_req|Spiele|3|Team2|TeamName} {_req|Spiele|3|MatchResults|PointsTeam1} zu {_req|Spiele|3|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1801,7 +1801,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|4|Team1|TeamName} spielte gegen {_req|Spiele|4|Team1|TeamName} {_req|Spiele|4|MatchResults|PointsTeam1} zu {_req|Spiele|4|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|4|Team1|TeamName} spielte gegen {_req|Spiele|4|Team2|TeamName} {_req|Spiele|4|MatchResults|PointsTeam1} zu {_req|Spiele|4|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1809,7 +1809,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|5|Team1|TeamName} spielte gegen {_req|Spiele|5|Team1|TeamName} {_req|Spiele|5|MatchResults|PointsTeam1} zu {_req|Spiele|5|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|5|Team1|TeamName} spielte gegen {_req|Spiele|5|Team2|TeamName} {_req|Spiele|5|MatchResults|PointsTeam1} zu {_req|Spiele|5|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1817,7 +1817,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|6|Team1|TeamName} spielte gegen {_req|Spiele|6|Team1|TeamName} {_req|Spiele|6|MatchResults|PointsTeam1} zu {_req|Spiele|6|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|6|Team1|TeamName} spielte gegen {_req|Spiele|6|Team2|TeamName} {_req|Spiele|6|MatchResults|PointsTeam1} zu {_req|Spiele|6|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1825,7 +1825,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|7|Team1|TeamName} spielte gegen {_req|Spiele|7|Team1|TeamName} {_req|Spiele|7|MatchResults|PointsTeam1} zu {_req|Spiele|7|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|7|Team1|TeamName} spielte gegen {_req|Spiele|7|Team2|TeamName} {_req|Spiele|7|MatchResults|PointsTeam1} zu {_req|Spiele|7|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1833,7 +1833,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|8|Team1|TeamName} spielte gegen {_req|Spiele|8|Team1|TeamName} {_req|Spiele|8|MatchResults|PointsTeam1} zu {_req|Spiele|8|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|8|Team1|TeamName} spielte gegen {_req|Spiele|8|Team2|TeamName} {_req|Spiele|8|MatchResults|PointsTeam1} zu {_req|Spiele|8|MatchResults|PointsTeam2}. "
           }
         ]
       },
@@ -1841,39 +1841,27 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem 33. Spieltag der 1. Fußball-Bundesliga sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem 33 Spieltag der Ersten Fußball-Bundesliga sieht wie folgt aus: "
           },
           {
             "type": "text",
             "pattern": "{_req|Tabelle|0|TeamName} ist aktuell Tabellenführer mit {_req|Tabelle|0|Points} Punkten. "
-          }
-        ]
-      },
-      "a11": {
-        "parts": [
+          },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|1|TeamName} auf dem 2. Platz mit {_req|Tabelle|1|Points} Punkten. "
-          }
-        ]
-      },
-      "a12": {
-        "parts": [
+            "pattern": "{_req|Tabelle|1|TeamName} auf dem zweitem Platz mit {_req|Tabelle|1|Points} Punkten. "
+          },
           {
             "type": "text",
             "pattern": "Danach {_req|Tabelle|2|TeamName} mit {_req|Tabelle|2|Points}, gefolgt von {_req|Tabelle|3|TeamName} auf Platz 4. "
-          }
-        ]
-      },
-      "a13": {
-        "parts": [
+          },
           {
             "type": "text",
             "pattern": "Auf Platz 5 und 6 sind {_req|Tabelle|4|TeamName} und {_req|Tabelle|5|TeamName}. "
           }
         ]
       },
-      "a14": {
+      "a11": {
         "parts": [
           {
             "type": "text",
@@ -1883,8 +1871,9 @@
       }
     }
   },
-  "sequence": [
-  ],
+  "sequence": {
+    "type": "successively"
+  },
   "run_config": {
     "testing": {
       "default_value": false,
