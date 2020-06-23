@@ -1841,53 +1841,51 @@
       }
     }
   },
-  "sequence": [
-    {
-      "image": "weather3",
-      "time_diff": 3,
-      "audio_l": null
-    },
-    {
-      "image": "weather1",
-      "time_diff": -3,
-      "audio_l": "a1"
-    },
-    {
-      "image": "weather2",
-      "time_diff": -4,
-      "audio_l": "a2"
-    },
-    {
-      "image": "weather3",
-      "time_diff": 4,
-      "audio_l": null
-    },
-    {
-      "image": "weather7",
-      "time_diff": 3,
-      "audio_l": null
-    },
-    {
-      "image": "weather4",
-      "time_diff": -3,
-      "audio_l": "a3"
-    },
-    {
-      "image": "weather5",
-      "time_diff": 0,
-      "audio_l": "a4"
-    },
-    {
-      "image": "weather6",
-      "time_diff": -5,
-      "audio_l": "a5"
-    },
-    {
-      "image": "weather7",
-      "time_diff": 5,
-      "audio_l": null
-    }
-  ],
+  "sequence": {
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "weather3",
+        "time_diff": 3
+      },
+      {
+        "image": "weather1",
+        "time_diff": -3,
+        "audio_l": "a1"
+      },
+      {
+        "image": "weather2",
+        "time_diff": -4,
+        "audio_l": "a2"
+      },
+      {
+        "image": "weather3",
+        "time_diff": 4
+      },
+      {
+        "image": "weather7",
+        "time_diff": 3
+      },
+      {
+        "image": "weather4",
+        "time_diff": -3,
+        "audio_l": "a3"
+      },
+      {
+        "image": "weather5",
+        "audio_l": "a4"
+      },
+      {
+        "image": "weather6",
+        "time_diff": -5,
+        "audio_l": "a5"
+      },
+      {
+        "image": "weather7",
+        "time_diff": 5
+      }
+    ]
+  },
   "run_config": {
     "testing": {
       "default_value": false,

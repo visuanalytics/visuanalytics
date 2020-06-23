@@ -51,6 +51,24 @@ def transform_array(values: dict, data: StepData):
 
 
 @register_transform
+def transform_compare_arrays(values: dict, data: StepData):
+    pattern = data.format(values["pattern"], values)
+    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_1"], values), values):
+        compare = data.format(values["compare"], values)
+        value_1 = entry1[compare]
+        new_key = ""
+        new_value = ""
+        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_2"], values), values):
+            where = data.format(values["where"], values)
+            value_2 = entry2[where][compare]
+            if value_1 == value_2:
+                new_value = int(entry2[where][pattern])
+                new_key = values["new_key"]
+        data.save_loop(idx1, entry1, values)
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
 def transform_dict(values: dict, data: StepData):
     """Fürt alle angegebenen `transform` funktionen für alle werte eines Dictionaries aus.
 
@@ -377,3 +395,29 @@ def add_data(values: dict, data: StepData):
     new_key = data.format(values["new_key"], values)
     value = data.format(values["pattern"], values)
     data.insert_data(new_key, value, values)
+
+
+@register_transform
+def result(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        compare_1 = data.format(values["compare_1"], values)
+        compare_2 = data.format(values["compare_2"], values)
+        new_key = get_new_keys(values, idx)
+        if value[compare_1] == value[compare_2]:
+            new_value = int(data.format(values["points"]["1"], values))
+        elif value[compare_1] > value[compare_2]:
+            new_value = int(data.format(values["points"]["2"], values))
+        elif value[compare_1] < value[compare_2]:
+            new_value = int(data.format(values["points"]["3"], values))
+        else:
+            new_value = 0
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def copy(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        new_value = int(data.get_data(key, values))
+        data.insert_data(new_key, new_value, values)
