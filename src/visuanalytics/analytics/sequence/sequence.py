@@ -9,8 +9,10 @@ from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 
 
+@raise_step_error(SeqenceError)
 def link(values: dict, step_data: StepData):
     out_images, out_audios, out_audio_l = [], [], []
     for s in values["sequence"]:
