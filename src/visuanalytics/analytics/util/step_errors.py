@@ -1,3 +1,6 @@
+import functools
+
+
 class StepError(Exception):
 
     def __init__(self, values):
@@ -28,15 +31,7 @@ class APIError(StepError):
     pass
 
 
-class APITypeError(StepTypeError):
-    pass
-
-
 class TransformError(StepError):
-    pass
-
-
-class TransformTypeError(StepTypeError):
     pass
 
 
@@ -60,3 +55,29 @@ class APIKeyError(Exception):
 class StepKeyError(Exception):
     def __init__(self, func_name, key):
         super().__init__(f"{func_name}: Invalid Data Key: {key}")
+
+
+def raise_step_error(error):
+    """
+    Gitbt einen Decorator zurück der die Orginal Funktion
+    mit einem `try`, `expect` block umschießt. Die in `error` übergebene Exception
+    wird dann Anstadt der Erwarteten Exception geworfen.
+
+    :param error: Neue Fehler Klasse
+    :return: Decorator
+    """
+
+    def raise_error(func):
+        @functools.wraps(func)
+        def new_func(values, data, *args, **kwargs):
+            try:
+                return func(values, data, *args, **kwargs)
+            # Not raise TransformError Twice
+            except error:
+                raise
+            except BaseException as e:
+                raise error(values) from e
+
+        return new_func
+
+    return raise_error
