@@ -1,4 +1,3 @@
-import functools
 import re
 from datetime import datetime
 
@@ -7,12 +6,14 @@ from numpy import random
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
-from visuanalytics.analytics.util.step_errors import TransformTypeError, TransformError
+from visuanalytics.analytics.util.step_errors import TransformError, \
+    raise_step_error, StepTypeError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 
 TRANSFORM_TYPES = {}
 
 
+@raise_step_error(TransformError)
 def transform(values: dict, data: StepData):
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
@@ -20,7 +21,7 @@ def transform(values: dict, data: StepData):
         trans_func = TRANSFORM_TYPES.get(transformation.get("type", None), None)
 
         if trans_func is None:
-            raise TransformTypeError(transformation.get("type", None))
+            raise StepTypeError(transformation.get("type", None))
 
         trans_func(transformation, data)
 
@@ -32,19 +33,10 @@ def register_transform(func):
     :param func: Zu registrierende Funktion
     :return: funktion mit try, catch block
     """
+    func = raise_step_error(TransformError)(func)
 
-    @functools.wraps(func)
-    def new_func(values: dict, data: StepData):
-        try:
-            func(values, data)
-        # Not raise TransformError Twice
-        except TransformError:
-            raise
-        except BaseException as e:
-            raise TransformError(values) from e
-
-    TRANSFORM_TYPES[func.__name__] = new_func
-    return new_func
+    TRANSFORM_TYPES[func.__name__] = func
+    return func
 
 
 @register_transform
