@@ -4,7 +4,6 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video
 
 import os
 import subprocess
-
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -19,7 +18,7 @@ def register_sequence(func):
     Fügt eine Typ-Funktion dem Dictionary SEQUENCE_TYPES hinzu
 
     :param func: Eine Funktion
-    :return:
+    :return: Die übergebene Funktion
     """
     SEQUENCE_TYPES[func.__name__] = func
     return func

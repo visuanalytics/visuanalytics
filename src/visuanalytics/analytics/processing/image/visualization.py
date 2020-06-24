@@ -19,7 +19,7 @@ def register_image(func):
     Fügt eine Typ-Funktion dem Dictionary IMAGE_TYPES hinzu
 
     :param func: Eine Funktion
-    :return:
+    :return: Die übergebene Funktion
     """
     IMAGE_TYPES[func.__name__] = func
     return func
