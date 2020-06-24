@@ -1,5 +1,5 @@
 """
-Modul welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeihaltet
+Modul welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeihaltet.
 """
 
 from PIL import Image
@@ -11,12 +11,12 @@ from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPE
 from visuanalytics.analytics.util import resources
 
 IMAGE_TYPES = {}
-"""Ein Dictionary bestehende aus allen Image Typ Methoden  """
+"""Ein Dictionary bestehende aus allen Image Typ Methoden."""
 
 
 def register_image(func):
     """
-    Fügt eine Typ-Funktion dem Dictionary IMAGE_TYPES hinzu
+    Fügt eine Typ-Funktion dem Dictionary IMAGE_TYPES hinzu.
 
     :param func: Eine Funktion
     :return: Die übergebene Funktion
@@ -27,8 +27,8 @@ def register_image(func):
 
 def generate_all_images(values: dict, step_data: StepData):
     """
-    Durchlüft jedes Image in values (also in der JSON), überprüft welcher Typ des Bildes vorliegt und ruft die
-    passende Typ Methode auf, nach der Erstellung des Bilder wird der bauplan des Bilder (in values) mit dem Bildpfad ersetzt
+    Durchläuft jedes Bild in values (also in der JSON), überprüft welcher Typ des Bildes vorliegt und ruft die
+    passende Typ Methode auf, nach der Erstellung der Bilder wird der Bauplan des Bilder (in values) mit dem Bildpfad ersetzt.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
@@ -41,9 +41,10 @@ def generate_all_images(values: dict, step_data: StepData):
 @register_image
 def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
     """
-    Erstellt ein Bild mit Hilfe von Pillow, dazu wird ein neues Bild geöffnet oder ein bisher erstelltest Bild
-    weiter bearbeitet, in der JSON können beliebige viele Overlays angegeben werden welche diese Methode alle
-    ausführt und auf das Bild packt
+    Erstellt ein Bild mit Hilfe von Pillow.
+    Dazu wird ein neues Bild geöffnet oder ein bisher erstelltest Bild weiter bearbeitet.
+    In der JSON können beliebige viele Overlays angegeben werden, welche diese Methode alle
+    ausführt und schlussendlich auf das Bild packt.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
@@ -68,7 +69,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 @register_image
 def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     """
-    Erstellt ein Wordcloud Bild  --- TODO
+    Erstellt ein Wordcloud Bild  --- TODO.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern

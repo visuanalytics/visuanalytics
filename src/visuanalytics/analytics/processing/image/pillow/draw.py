@@ -23,7 +23,7 @@ def register_draw(func):
 @register_draw
 def center(draw, position, content, font_size, font_colour, font_path):
     """
-    Methode um Text in ein Bild zu schreiben, an einem fixem Punkt
+    Methode um Text an einem fixem Punkt in ein Bild zu schreiben
 
     :param draw: Draw Object auf welches geschrieben werden soll
     :type draw: PIL.ImageDraw.Draw()
@@ -49,8 +49,9 @@ def center(draw, position, content, font_size, font_colour, font_path):
 @register_draw
 def left(draw, position, content, font_size, font_colour, font_path):
     """
-    Methode um Text in ein Bild zu schreiben, Ort an dem angefangen wird zu schreiben ist variable und wird berechnet
-    an der Größe des zu schreibenden Textes
+    Methode um Text in ein Bild mittig zu schreiben.
+    Ort an dem angefangen wird zu schreiben ist variable und wird berechnet
+    an der Größe des zu schreibenden Textes.
 
     :param draw: Draw Object auf welches geschrieben werden soll
     :type draw: PIL.ImageDraw.Draw()

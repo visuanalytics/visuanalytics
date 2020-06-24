@@ -1,5 +1,5 @@
 """
-Modul welches Bilder und Audios kombiniert zu einem fertigem Video
+Modul welches Bilder und Audios kombiniert zu einem fertigem Video.
 """
 
 import os
@@ -10,12 +10,12 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 SEQUENCE_TYPES = {}
-"""Ein Dictionary bestehende aus allen Sequence Typ Methoden  """
+"""Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
 
 
 def register_sequence(func):
     """
-    Fügt eine Typ-Funktion dem Dictionary SEQUENCE_TYPES hinzu
+    Fügt eine Typ-Funktion dem Dictionary SEQUENCE_TYPES hinzu.
 
     :param func: Eine Funktion
     :return: Die übergebene Funktion
@@ -26,7 +26,7 @@ def register_sequence(func):
 
 def link(values: dict, step_data: StepData):
     """
-    Überprüft welcher Typ der Video generierung vorliegt und ruft die passende Typ Methode auf
+    Überprüft welcher Typ der Video generierung vorliegt und ruft die passende Typ Methode auf.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
@@ -40,7 +40,7 @@ def link(values: dict, step_data: StepData):
 def successively(values: dict, step_data: StepData):
     """
     Generiert das Output Video, dazu werden dediglich alle Bilder und alle Video Datein in der
-    Reihenfolge wie sie in values(also in der JSON) vorliegen aneinander gereiht
+    Reihenfolge wie sie in values(also in der JSON) vorliegen aneinander gereiht.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
@@ -60,7 +60,7 @@ def successively(values: dict, step_data: StepData):
 def custom(values: dict, step_data: StepData):
     """
     Generiert das Output Video, in values(also in der JSON) muss angegeben sein in welcher Reihenfolge und wie lange jedes Bild
-    und die passenden Audio Datei aneinander gereiht werden sollen
+    und die passenden Audio Datei aneinander gereiht werden sollen.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
