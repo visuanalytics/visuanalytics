@@ -9,15 +9,6 @@ logger = logging.getLogger(__name__)
 DATABASE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../instance/visuanalytics.db"))
 
 
-def connect():
-    con = sqlite3.connect(
-        DATABASE_LOCATION,
-        detect_types=sqlite3.PARSE_DECLTYPES,
-    )
-    con.row_factory = sqlite3.Row
-    return con
-
-
 def open_con():
     if 'db' not in flask.g:
         flask.g.db = sqlite3.connect(
@@ -44,10 +35,7 @@ def init_db():
 
         # create database
         db = open_con()
-
         with open(os.path.join(os.path.abspath(__file__), 'schema.sql')) as f:
             db.executescript(f.read())
-
-        close_con()
 
         logger.info("Database Initialisation Done!")
