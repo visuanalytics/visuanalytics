@@ -33,9 +33,6 @@ def create_app():
 
     # TODO start control main
 
-    app.before_request(db.open_con)
-    app.after_request(db.close_con)
-
     # add js as mmetype to ensure that the content-type is correct for js files
     mimetypes.add_type("text/javascript", ".js")
 
