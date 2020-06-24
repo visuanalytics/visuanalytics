@@ -1,6 +1,41 @@
 # Steps Config
 
-<!-- TODO TOC -->
+- [Api](#api)
+  - [Types](#types)
+    - [request](#request)
+    - [request Multiple](#request-multiple)
+    - [request Multiple Custom](#request-multiple-custom)
+- [Transform](#transform)
+  - [Typen](#typen)
+    - [Transform Array](#transform-array)
+    - [Transform Dict](#transform-dict)
+    - [Transform Compare Arrays](#transform-compare-arrays)
+    - [Calculate](#calculate)
+    - [Select](#select)
+    - [Select Range](#select-range)
+    - [Append](#append)
+    - [Add Symbol](#add-symbol)
+    - [Replace](#replace)
+    - [Translate Key](#translate-key)
+    - [Alias](#alias)
+    - [Regex](#regex)
+    - [Date Format](#date-format)
+    - [Timestamp](#timestamp)
+    - [Date Weekday](#date-weekday)
+    - [Date Now](#date-now)
+    - [Wind Direction](#wind-direction)
+    - [Choose Random](#choose-random)
+    - [Find Equal](#find-equal)
+    - [Loop](#loop)
+    - [Add Data](#add-data)
+    - [Result](#result)
+    - [Copy](#copy)
+- [Images](#images)
+- [Audios](#audios)
+- [Seqence](#seqence)
+- [Run Config](#run-config)
+- [Presets](#presets)
+  
 <!-- TODO Description-->
 
 # Api
