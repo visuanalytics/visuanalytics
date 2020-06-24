@@ -10,6 +10,7 @@ from mutagen.mp3 import MP3
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
+from visuanalytics.analytics.util.type_utils import register_type_func
 
 SEQUENCE_TYPES = {}
 
@@ -20,10 +21,7 @@ def link(values: dict, step_data: StepData):
 
 
 def register_sequence(func):
-    func = raise_step_error(SeqenceError)(func)
-
-    SEQUENCE_TYPES[func.__name__] = func
-    return func
+    return register_type_func(SEQUENCE_TYPES, SeqenceError, func)
 
 
 @register_sequence
