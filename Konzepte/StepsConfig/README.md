@@ -1,4 +1,4 @@
-# Steps Config
+# Steps Config <!-- omit in toc -->
 
 - [Api](#api)
   - [Types](#types)
@@ -90,7 +90,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
     ],
     "url_pattern": "url",
     "use_loop_as_key": true,
-  }
+}
 ```
 
 **`url_pattern`**:
@@ -114,6 +114,246 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!--TODO-->
 
 # Transform
+
+<!-- TODO Description-->
+
+## Typen
+
+### Transform Array
+
+<!-- TODO Description-->
+
+```JSON
+{
+  "type": "transform_array",
+  "array_key": "key",
+  "transform": []
+}
+```
+
+<!--TODO-->
+
+### Transform Dict
+
+<!-- TODO Description-->
+
+```JSON
+{
+  "type": "transform_array",
+  "dict_key": "key",
+  "transform": []
+}
+```
+
+<!--TODO-->
+
+### Transform Compare Arrays
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Calculate
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Select
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Select Range
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Append
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Add Symbol
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Replace
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Translate Key
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Alias
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Regex
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Date Format
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Timestamp
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Date Weekday
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Date Now
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Wind Direction
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Choose Random
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Find Equal
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Loop
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Add Data
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Result
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+<!--TODO-->
+
+### Copy
+
+<!-- TODO Description-->
+
+```JSON
+
+```
 
 <!--TODO-->
 
