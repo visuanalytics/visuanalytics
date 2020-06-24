@@ -18,7 +18,7 @@ def register_type_func(types: dict, error: Type[Exception], func):
     return func
 
 
-def get_type_func(values: dict, types: dict):
+def get_type_func(values: dict, types: dict, key="type"):
     """
     Hilfsfunktion um die Typefunktion aus einem Dictonary zu bekommen.
 
@@ -26,12 +26,13 @@ def get_type_func(values: dict, types: dict):
 
     :param values: Werte aus der JSON-Datei.
     :param types: Dictionary mit `type: func`
+    :param key: Key des Typen in values
     :return: gesuchte funktion
     :raises: StepTypeError
     """
-    func = types.get(values.get("type", ""), None)
+    func = types.get(values.get(key, ""), None)
 
     if func is None:
-        StepTypeError(values.get("type", None))
+        StepTypeError(values.get(key, None))
 
     return func
