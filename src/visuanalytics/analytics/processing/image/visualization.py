@@ -6,6 +6,10 @@ from PIL import Image
 from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.image.pillow.pillow import generate_image_pillow
+from visuanalytics.analytics.processing.image.wordcloud.wordcloud import generate_image_wordcloud
+from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
+from visuanalytics.analytics.util.type_utils import get_type_func
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 
 from visuanalytics.analytics.util import resources
@@ -25,6 +29,7 @@ def register_image(func):
     return func
 
 
+@raise_step_error(ImageError)
 def generate_all_images(values: dict, step_data: StepData):
     """
     Durchläuft jedes Bild in values (also in der JSON), überprüft welcher Typ des Bildes vorliegt und ruft die
