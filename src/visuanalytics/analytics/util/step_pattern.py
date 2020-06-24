@@ -33,7 +33,8 @@ def data_get_pattern(keys, data, split_key="|"):
 
         return data[keys]
     except BaseException as e:
-        raise StepKeyError("get_data", e.__str__(), keys) from e
+        print(e)
+        raise StepKeyError("get_data", keys) from e
 
 
 def data_insert_pattern(keys, data, value, split_key="|"):
@@ -47,7 +48,7 @@ def data_insert_pattern(keys, data, value, split_key="|"):
         else:
             data[keys] = value
     except BaseException as e:
-        raise StepKeyError("insert_data", e.__str__(), keys) from e
+        raise StepKeyError("insert_data", keys) from e
 
 
 # TODO(max) maybe move
@@ -62,4 +63,4 @@ def data_remove_pattern(keys, data, split_key="|"):
         else:
             data.pop(keys, None)
     except BaseException as e:
-        raise StepKeyError("remove_data", e.__str__(), keys) from e
+        raise StepKeyError("remove_data", keys) from e
