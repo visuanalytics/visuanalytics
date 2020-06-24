@@ -11,19 +11,43 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 SEQUENCE_TYPES = {}
-
-
-def link(values: dict, step_data: StepData):
-    return SEQUENCE_TYPES[values["sequence"]["type"]](values, step_data)
+"""Ein Dictionary bestehende aus allen Sequence Typ Methoden  """
 
 
 def register_sequence(func):
+    """
+    Fügt eine Typ-Funktion dem Dictionary SEQUENCE_TYPES hinzu
+
+    :param func: Eine Funktion
+    :return:
+    """
     SEQUENCE_TYPES[func.__name__] = func
     return func
 
 
+def link(values: dict, step_data: StepData):
+    """
+    Überprüft welcher Typ der Video generierung vorliegt und ruft die passende Typ Methode auf
+
+    :param values: Werte aus der JSON-Datei
+    :param step_data: Daten aus der API
+    :return: Den Pfad zum OutputVideo
+    :rtype: str
+    """
+    return SEQUENCE_TYPES[values["sequence"]["type"]](values, step_data)
+
+
 @register_sequence
 def successively(values: dict, step_data: StepData):
+    """
+    Generiert das Output Video, dazu werden dediglich alle Bilder und alle Video Datein in der
+    Reihenfolge wie sie in values(also in der JSON) vorliegen aneinander gereiht
+
+    :param values: Werte aus der JSON-Datei
+    :param step_data: Daten aus der API
+    :return: Den Pfad zum OutputVideo
+    :rtype: str
+    """
     out_images, out_audios, out_audio_l = [], [], []
     for image in values["images"]:
         out_images.append(values["images"][image])
@@ -35,6 +59,15 @@ def successively(values: dict, step_data: StepData):
 
 @register_sequence
 def custom(values: dict, step_data: StepData):
+    """
+    Generiert das Output Video, in values(also in der JSON) muss angegeben sein in welcher Reihenfolge und wie lange jedes Bild
+    und die passenden Audio Datei aneinander gereiht werden sollen
+
+    :param values: Werte aus der JSON-Datei
+    :param step_data: Daten aus der API
+    :return: Den Pfad zum OutputVideo
+    :rtype: str
+    """
     out_images, out_audios, out_audio_l = [], [], []
     for s in values["sequence"]["pattern"]:
         out_images.append(values["images"][step_data.format(s["image"])])
@@ -49,30 +82,6 @@ def custom(values: dict, step_data: StepData):
 
 
 def _link(images, audios, audio_l, step_data: StepData, values: dict):
-    """
-    Methode zum Erstellen des Deutschland 1-5 Tages Video aus den Bildern+Audios.
-    Hinweiß: Alle 3 Listen müssen in der selben Reihenfolge sein und alle Listen
-    müssen die selbe Anzahl an Elementen beeihalten.
-
-    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
-    :type pipeline_id: str
-    :param images: Eine Liste aus Strings Elementen mit den Dateinamen zu den Bildern
-    :type images: list
-    :param audios: Eine Liste aus String Elementen mit den Dateinamen zu den Audios
-    :type audios: list
-    :param audio_l: Eine Liste aus Strings Elementen mit den Audiolängen der Audios
-    :type audio_l: list
-    :param h264_nvenc: Nvidia Hardwarebeschleunigung aktiv oder nicht
-    :type h264_nvenc: bool
-    :param out_path: Path an dem das Video abgelegt werden soll
-    :type out_path: str
-    :param job_name: Eine Beschreibung des Jobs der gerade ausgeführt wird ( wird für den dateinamen benötigt)
-    :type job_name: str
-    :return: Pfad des erstellten Videos
-    :rtype: str
-    :raises: CalledProcessError: Wenn ein ffmpeg-Command nicht mit Return-Code 0 terminiert.
-    """
-
     if step_data.data["_conf"].get("h264_nvenc", False):
         os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
