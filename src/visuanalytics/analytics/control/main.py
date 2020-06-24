@@ -5,12 +5,16 @@ from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
 from visuanalytics.analytics.util import resources, external_programms, config_manager
 from visuanalytics.server.db import db
+from visuanalytics.server import server
 
 
 def main():
     config = config_manager.get_config()
 
     init(config)
+
+    app = server.create_app()
+    app.run()
 
     # If db is in use Start DbScheduler else run JsonScheduler
     if config["db"]["use"]:
