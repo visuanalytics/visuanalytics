@@ -4,12 +4,13 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video.
 
 import os
 import subprocess
+
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
-from visuanalytics.analytics.util.type_utils import register_type_func
+from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
@@ -35,7 +36,9 @@ def link(values: dict, step_data: StepData):
     :return: Den Pfad zum OutputVideo
     :rtype: str
     """
-    return SEQUENCE_TYPES[values["sequence"]["type"]](values, step_data)
+    seq_func = get_type_func(values["sequence"], SEQUENCE_TYPES)
+    
+    return seq_func(values, step_data)
 
 
 @register_sequence

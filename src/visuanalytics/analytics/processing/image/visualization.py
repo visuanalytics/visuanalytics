@@ -6,13 +6,10 @@ from PIL import Image
 from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.processing.image.pillow.pillow import generate_image_pillow
-from visuanalytics.analytics.processing.image.wordcloud.wordcloud import generate_image_wordcloud
-from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
-from visuanalytics.analytics.util.type_utils import get_type_func
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
-
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
+from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 IMAGE_TYPES = {}
 """Ein Dictionary bestehende aus allen Image Typ Methoden."""
@@ -25,8 +22,7 @@ def register_image(func):
     :param func: Eine Funktion
     :return: Die übergebene Funktion
     """
-    IMAGE_TYPES[func.__name__] = func
-    return func
+    return register_type_func(IMAGE_TYPES, ImageError, func)
 
 
 @raise_step_error(ImageError)
@@ -39,8 +35,9 @@ def generate_all_images(values: dict, step_data: StepData):
     :param step_data: Daten aus der API
     """
     for key, item in enumerate(values["images"]):
-        values["images"][item] = IMAGE_TYPES[values["images"][item]["type"]](values["images"][item], values["images"],
-                                                                             values["presets"], step_data)
+        image_func = get_type_func(values["images"][item], IMAGE_TYPES)
+
+        values["images"][item] = image_func(values["images"][item], values["images"], values["presets"], step_data)
 
 
 @register_image
@@ -64,8 +61,11 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
         source_img = Image.open(resources.get_resource_path(values["path"]))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
+
     for overlay in values["overlay"]:
-        OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
+        over_func = get_type_func(overlay, OVERLAY_TYPES)
+        over_func(overlay, source_img, draw, presets, step_data)
+
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     Image.composite(img1, source_img, img1).save(file)
     return file

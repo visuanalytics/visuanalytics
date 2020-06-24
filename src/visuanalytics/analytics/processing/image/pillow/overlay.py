@@ -7,7 +7,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.draw import DRAW_TYPES
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import ImageError
-from visuanalytics.analytics.util.type_utils import register_type_func
+from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 
 OVERLAY_TYPES = {}
 """Ein Dictionary bestehende aus allen Overlay Typ Methoden  """
@@ -35,11 +35,13 @@ def text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     :param step_data: Daten aus der API
     """
     content = step_data.format(overlay["pattern"])
-    DRAW_TYPES[overlay["anchor_point"]](draw, (
-        step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])), content,
-                                        step_data.format(presets[overlay["preset"]]["font_size"]),
-                                        step_data.format(presets[overlay["preset"]]["color"]),
-                                        step_data.format(presets[overlay["preset"]]["font"]))
+    draw_func = get_type_func(overlay, DRAW_TYPES, "anchor_point")
+    draw_func(draw,
+              (step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])),
+              content,
+              step_data.format(presets[overlay["preset"]]["font_size"]),
+              step_data.format(presets[overlay["preset"]]["color"]),
+              step_data.format(presets[overlay["preset"]]["font"]))
 
 
 @register_overlay
@@ -91,7 +93,8 @@ def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
     if step_data.format(values["check"]):
         chosen_text = "on_true"
     for overlay in values[chosen_text]:
-        OVERLAY_TYPES[overlay["type"]](overlay, source_img, draw, presets, step_data)
+        over_func = get_type_func(overlay, OVERLAY_TYPES)
+        over_func(overlay, source_img, draw, presets, step_data)
 
 
 @register_overlay
