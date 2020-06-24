@@ -425,10 +425,11 @@ def option(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    # TODO
-    for idx, key in data.loop_key(values["check"], values):
-        check = data.get_data(key, values)
-        if check == True:
-            transform(values["on_true"], data)
-        elif check == False:
-            transform(values["on_false"], data)
+    condition = values["check"]
+
+    if condition:
+        values["transform"] = values["on_true"]
+    else:
+        values["transform"] = values["on_true"]
+
+    transform(values, data)

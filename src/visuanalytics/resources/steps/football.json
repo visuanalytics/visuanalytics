@@ -49,35 +49,28 @@
         },
         {
           "type": "option",
-          "check": [
-            "_loop|MatchIsFinished"
+          "check": "_loop|MatchIsFinished",
+          "on_true": [
+            {
+              "type": "alias",
+              "keys": [
+                "_loop|MatchResults|0"
+              ],
+              "new_keys": [
+                "_loop|MatchResults"
+              ]
+            }
           ],
-          "on_true": {
-            "transform": [
-              {
-                "type": "alias",
-                "keys": [
-                  "_loop|MatchResults|0"
-                ],
-                "new_keys": [
-                  "_loop|MatchResults"
-                ],
-                "throw_errors": false
-              }
-            ]
-          },
-          "on_false": {
-            "transform": [
-              {
-                "type": "add_data",
-                "new_keys": [
-                  "_loop|MatchResults|PointsTeam1",
-                  "_loop|MatchResults|PointsTeam2"
-                ],
-                "pattern": 0
-              }
-            ]
-          }
+          "on_false": [
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_loop|MatchResults|PointsTeam1",
+                "_loop|MatchResults|PointsTeam2"
+              ],
+              "pattern": 0
+            }
+          ]
         },
         {
           "type": "date_weekday",
