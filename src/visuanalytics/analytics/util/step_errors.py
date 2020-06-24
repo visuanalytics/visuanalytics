@@ -69,9 +69,9 @@ def raise_step_error(error):
 
     def raise_error(func):
         @functools.wraps(func)
-        def new_func(values, data, *args, **kwargs):
+        def new_func(values, *args, **kwargs):
             try:
-                return func(values, data, *args, **kwargs)
+                return func(values, *args, **kwargs)
             # Not raise TransformError Twice
             except error:
                 raise
