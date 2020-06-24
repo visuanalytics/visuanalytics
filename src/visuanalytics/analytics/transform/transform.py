@@ -425,7 +425,7 @@ def option(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    condition = values["check"]
+    condition = data.get_data(values["check"], values)
 
     if condition:
         values["transform"] = values.get("on_true", [])
