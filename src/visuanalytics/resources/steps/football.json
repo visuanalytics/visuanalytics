@@ -43,20 +43,31 @@
             "Team2|TeamId",
             "MatchIsFinished",
             "MatchDateTime",
-            "MatchResults|0|PointsTeam1",
-            "MatchResults|0|PointsTeam2"
+            "MatchResults"
           ],
           "throw_errors": false
         },
         {
-          "type": "alias",
+          "type": "add_data_optional",
           "keys": [
-            "_loop|MatchResults|0"
+            "_loop|MatchIsFinished"
           ],
+          "on_true": "{_loop|MatchResults|0|PointsTeam1}",
+          "on_false": 0,
           "new_keys": [
-            "_loop|MatchResults"
+            "_loop|MatchResults|PointsTeam1"
+          ]
+        },
+        {
+          "type": "add_data_optional",
+          "keys": [
+            "_loop|MatchIsFinished"
           ],
-          "throw_errors": false
+          "on_true": "{_loop|MatchResults|0|PointsTeam2}",
+          "on_false": 0,
+          "new_keys": [
+            "_loop|MatchResults|PointsTeam2"
+          ]
         },
         {
           "type": "date_weekday",
@@ -107,6 +118,17 @@
             "2": "3",
             "3": "0"
           }
+        },
+        {
+          "type": "add_data_optional",
+          "keys": [
+            "_loop|MatchIsFinished"
+          ],
+          "on_true": "{_loop|Team1|TeamName} {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} {_loop|MatchResults|PointsTeam2}. ",
+          "on_false": "{_loop|Team1|TeamName} spielt am {_loop|weekday} gegen {_loop|Team2|TeamName}. ",
+          "new_keys": [
+            "_loop|MatchResult|Text"
+          ]
         }
       ]
     },
@@ -1765,11 +1787,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "In der Ersten Fußball-Bundesliga ist der 33 Spieltag.  Die Ergebnisse lauten: "
+            "pattern": "In der Ersten Fußball-Bundesliga ist der vierunddreißigste Spieltag.  Die Ergebnisse lauten: "
           },
           {
             "type": "text",
-            "pattern": "{_req|Spiele|0|Team1|TeamName} spielte gegen {_req|Spiele|0|Team2|TeamName} {_req|Spiele|0|MatchResults|PointsTeam1} zu {_req|Spiele|0|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|0|Text}"
           }
         ]
       },
@@ -1777,7 +1799,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|1|Team1|TeamName} spielte gegen {_req|Spiele|1|Team2|TeamName} {_req|Spiele|1|MatchResults|PointsTeam1} zu {_req|Spiele|1|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|1|Text}"
           }
         ]
       },
@@ -1785,7 +1807,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|2|Team1|TeamName} spielte gegen {_req|Spiele|2|Team2|TeamName} {_req|Spiele|2|MatchResults|PointsTeam1} zu {_req|Spiele|2|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|2|Text}"
           }
         ]
       },
@@ -1793,7 +1815,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|3|Team1|TeamName} spielte gegen {_req|Spiele|3|Team2|TeamName} {_req|Spiele|3|MatchResults|PointsTeam1} zu {_req|Spiele|3|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|3|Text}"
           }
         ]
       },
@@ -1801,7 +1823,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|4|Team1|TeamName} spielte gegen {_req|Spiele|4|Team2|TeamName} {_req|Spiele|4|MatchResults|PointsTeam1} zu {_req|Spiele|4|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|4|Text}"
           }
         ]
       },
@@ -1809,7 +1831,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|5|Team1|TeamName} spielte gegen {_req|Spiele|5|Team2|TeamName} {_req|Spiele|5|MatchResults|PointsTeam1} zu {_req|Spiele|5|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|5|Text}"
           }
         ]
       },
@@ -1817,7 +1839,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|6|Team1|TeamName} spielte gegen {_req|Spiele|6|Team2|TeamName} {_req|Spiele|6|MatchResults|PointsTeam1} zu {_req|Spiele|6|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|6|Text}"
           }
         ]
       },
@@ -1825,7 +1847,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|7|Team1|TeamName} spielte gegen {_req|Spiele|7|Team2|TeamName} {_req|Spiele|7|MatchResults|PointsTeam1} zu {_req|Spiele|7|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|7|Text}"
           }
         ]
       },
@@ -1833,7 +1855,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|8|Team1|TeamName} spielte gegen {_req|Spiele|8|Team2|TeamName} {_req|Spiele|8|MatchResults|PointsTeam1} zu {_req|Spiele|8|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|8|Text}"
           }
         ]
       },
@@ -1841,7 +1863,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem 33 Spieltag der Ersten Fußball-Bundesliga sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem dreiunddreißigsten Spieltag der Ersten Fußball-Bundesliga sieht wie folgt aus: "
           },
           {
             "type": "text",

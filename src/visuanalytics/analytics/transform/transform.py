@@ -405,3 +405,22 @@ def copy(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         new_value = int(data.get_data(key, values))
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def add_data_optional(values: dict, data: StepData):
+    """Fügt daten ein.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    # TODO
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        check = data.get_data(key, values)
+        if check == True:
+            new_value = data.format(values["on_true"], values)
+            data.insert_data(new_key, new_value, values)
+        elif check == False:
+            new_value = data.format(values["on_false"], values)
+            data.insert_data(new_key, new_value, values)
