@@ -4,7 +4,8 @@ import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, StepTypeError
+from visuanalytics.analytics.util.step_errors import APIError, raise_step_error
+from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 API_TYPES = {}
 
@@ -16,19 +17,13 @@ def api(values: dict, data: StepData):
 
 @raise_step_error(APIError)
 def _api(values: dict, data: StepData, name):
-    api_func = API_TYPES.get(values.get("type"), None)
-
-    if api_func is None:
-        raise StepTypeError(values.get("type"))
+    api_func = get_type_func(values, API_TYPES)
 
     return api_func(values, data, name)
 
 
 def register_api(func):
-    func = raise_step_error(APIError)(func)
-
-    API_TYPES[func.__name__] = func
-    return func
+    return register_type_func(API_TYPES, APIError, func)
 
 
 @register_api
