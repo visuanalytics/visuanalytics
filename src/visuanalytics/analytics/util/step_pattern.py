@@ -33,7 +33,6 @@ def data_get_pattern(keys, data, split_key="|"):
 
         return data[keys]
     except BaseException as e:
-        print(e)
         raise StepKeyError("get_data", keys) from e
 
 
