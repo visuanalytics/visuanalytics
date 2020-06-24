@@ -35,7 +35,7 @@ def init_db():
 
         # create database
         db = open_con()
-        with open(os.path.join(os.path.abspath(__file__), 'schema.sql')) as f:
+        with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema.sql')) as f:
             db.executescript(f.read())
 
         logger.info("Database Initialisation Done!")
