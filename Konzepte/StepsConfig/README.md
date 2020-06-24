@@ -58,19 +58,19 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   }
 ```
 
-`url_pattern`:
+**`url_pattern`**:
 
 <!--TODO-->
 
-`steps_value`:
+**`steps_value`**:
 
 <!--TODO-->
 
-`api_key_name` _(Optional)_:
+**`api_key_name`** _(Optional)_:
 
 <!--TODO-->
 
-`use_loop_as_key` _(Optional)_:
+**`use_loop_as_key`** _(Optional)_:
 
 <!--TODO-->
 
