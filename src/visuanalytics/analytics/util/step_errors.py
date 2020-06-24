@@ -2,6 +2,12 @@ import functools
 
 
 class StepError(Exception):
+    """
+    Fehlerklasse für eine Fehler der in einem der Schritte auftritt.
+
+    Verwendet self.__cause__ um an Informationen eines Vorherigen Fehlers zu Kommen.
+    Sollte deshalb nur mit eines raises StepError(values) from Excepiton verwendet werden.
+    """
 
     def __init__(self, values):
         self.type = values.get("type", None)
@@ -20,6 +26,11 @@ class StepError(Exception):
 
 
 class StepTypeError(Exception):
+    """
+    Fehlerklasse für einen Typen Fehler
+    der innerhalb eines Schrittes auftritt.
+    """
+
     def __init__(self, type):
         if type is None:
             super().__init__(f"Entry 'type' is missing")
@@ -48,11 +59,20 @@ class SeqenceError(StepError):
 
 
 class APIKeyError(Exception):
+    """
+    Fehlerklasse für einen Nicht
+    gefundenen API key Name.
+    """
+
     def __init__(self, api_key_name):
         super().__init__(f"Api key '{api_key_name}' not Found.")
 
 
 class StepKeyError(Exception):
+    """
+    Fehlerklasse für eine Fehlerhaften Data key.
+    """
+
     def __init__(self, func_name, key):
         super().__init__(f"{func_name}: Invalid Data Key: {key}")
 
