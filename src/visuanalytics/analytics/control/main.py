@@ -11,9 +11,11 @@ from visuanalytics.server import server
 def main():
     config = config_manager.get_config()
 
-    init(config)
-
     app = server.create_app()
+
+    with app.app_context():
+        init(config)
+
     app.run()
 
     # If db is in use Start DbScheduler else run JsonScheduler
