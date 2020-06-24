@@ -1,35 +1,33 @@
 # Steps Config <!-- omit in toc -->
 
 - [Api](#api)
-  - [Types](#types)
-    - [request](#request)
-    - [request Multiple](#request-multiple)
-    - [request Multiple Custom](#request-multiple-custom)
+  - [request](#request)
+  - [request Multiple](#request-multiple)
+  - [request Multiple Custom](#request-multiple-custom)
 - [Transform](#transform)
-  - [Typen](#typen)
-    - [Transform Array](#transform-array)
-    - [Transform Dict](#transform-dict)
-    - [Transform Compare Arrays](#transform-compare-arrays)
-    - [Calculate](#calculate)
-    - [Select](#select)
-    - [Select Range](#select-range)
-    - [Append](#append)
-    - [Add Symbol](#add-symbol)
-    - [Replace](#replace)
-    - [Translate Key](#translate-key)
-    - [Alias](#alias)
-    - [Regex](#regex)
-    - [Date Format](#date-format)
-    - [Timestamp](#timestamp)
-    - [Date Weekday](#date-weekday)
-    - [Date Now](#date-now)
-    - [Wind Direction](#wind-direction)
-    - [Choose Random](#choose-random)
-    - [Find Equal](#find-equal)
-    - [Loop](#loop)
-    - [Add Data](#add-data)
-    - [Result](#result)
-    - [Copy](#copy)
+  - [Transform Array](#transform-array)
+  - [Transform Dict](#transform-dict)
+  - [Transform Compare Arrays](#transform-compare-arrays)
+  - [Calculate](#calculate)
+  - [Select](#select)
+  - [Select Range](#select-range)
+  - [Append](#append)
+  - [Add Symbol](#add-symbol)
+  - [Replace](#replace)
+  - [Translate Key](#translate-key)
+  - [Alias](#alias)
+  - [Regex](#regex)
+  - [Date Format](#date-format)
+  - [Timestamp](#timestamp)
+  - [Date Weekday](#date-weekday)
+  - [Date Now](#date-now)
+  - [Wind Direction](#wind-direction)
+  - [Choose Random](#choose-random)
+  - [Find Equal](#find-equal)
+  - [Loop](#loop)
+  - [Add Data](#add-data)
+  - [Result](#result)
+  - [Copy](#copy)
 - [Images](#images)
 - [Audios](#audios)
 - [Seqence](#seqence)
@@ -42,9 +40,7 @@
 
 <!-- TODO Description-->
 
-## Types
-
-### request
+## request
 
 Führt einen **Https** request durch.
 
@@ -76,7 +72,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### request Multiple
+## request Multiple
 
 <!-- TODO Description-->
 
@@ -109,7 +105,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### request Multiple Custom
+## request Multiple Custom
 
 <!--TODO-->
 
@@ -117,9 +113,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!-- TODO Description-->
 
-## Typen
-
-### Transform Array
+## Transform Array
 
 <!-- TODO Description-->
 
@@ -133,7 +127,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Transform Dict
+## Transform Dict
 
 <!-- TODO Description-->
 
@@ -147,7 +141,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Transform Compare Arrays
+## Transform Compare Arrays
 
 <!-- TODO Description-->
 
@@ -157,7 +151,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Calculate
+## Calculate
 
 <!-- TODO Description-->
 
@@ -167,7 +161,20 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Select
+## Select
+
+<!-- TODO Description-->
+
+```JSON
+{
+  "type": "select",
+  ""
+}
+```
+
+<!--TODO-->
+
+## Select Range
 
 <!-- TODO Description-->
 
@@ -177,7 +184,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Select Range
+## Append
 
 <!-- TODO Description-->
 
@@ -187,7 +194,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Append
+## Add Symbol
 
 <!-- TODO Description-->
 
@@ -197,7 +204,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Add Symbol
+## Replace
 
 <!-- TODO Description-->
 
@@ -207,7 +214,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Replace
+## Translate Key
 
 <!-- TODO Description-->
 
@@ -217,7 +224,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Translate Key
+## Alias
 
 <!-- TODO Description-->
 
@@ -227,7 +234,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Alias
+## Regex
 
 <!-- TODO Description-->
 
@@ -237,7 +244,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Regex
+## Date Format
 
 <!-- TODO Description-->
 
@@ -247,7 +254,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Date Format
+## Timestamp
 
 <!-- TODO Description-->
 
@@ -257,7 +264,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Timestamp
+## Date Weekday
 
 <!-- TODO Description-->
 
@@ -267,7 +274,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Date Weekday
+## Date Now
 
 <!-- TODO Description-->
 
@@ -277,7 +284,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Date Now
+## Wind Direction
 
 <!-- TODO Description-->
 
@@ -287,7 +294,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Wind Direction
+## Choose Random
 
 <!-- TODO Description-->
 
@@ -297,7 +304,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Choose Random
+## Find Equal
 
 <!-- TODO Description-->
 
@@ -307,7 +314,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Find Equal
+## Loop
 
 <!-- TODO Description-->
 
@@ -317,7 +324,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Loop
+## Add Data
 
 <!-- TODO Description-->
 
@@ -327,7 +334,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Add Data
+## Result
 
 <!-- TODO Description-->
 
@@ -337,17 +344,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 
 <!--TODO-->
 
-### Result
-
-<!-- TODO Description-->
-
-```JSON
-
-```
-
-<!--TODO-->
-
-### Copy
+## Copy
 
 <!-- TODO Description-->
 
