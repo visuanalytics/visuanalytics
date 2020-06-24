@@ -376,9 +376,9 @@ def add_data(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    new_key = data.format(values["new_key"], values)
-    value = data.format(values["pattern"], values)
-    data.insert_data(new_key, value, values)
+    for new_key in values["new_keys"]:
+        value = data.format(values["pattern"], values)
+        data.insert_data(new_key, value, values)
 
 
 @register_transform
@@ -408,19 +408,16 @@ def copy(values: dict, data: StepData):
 
 
 @register_transform
-def add_data_optional(values: dict, data: StepData):
-    """Fügt daten ein.
+def option(values: dict, data: StepData):
+    """Führt Funktionen aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     # TODO
-    for idx, key in data.loop_key(values["keys"], values):
-        new_key = get_new_keys(values, idx)
+    for idx, key in data.loop_key(values["check"], values):
         check = data.get_data(key, values)
         if check == True:
-            new_value = data.format(values["on_true"], values)
-            data.insert_data(new_key, new_value, values)
+            transform(values["on_true"], data)
         elif check == False:
-            new_value = data.format(values["on_false"], values)
-            data.insert_data(new_key, new_value, values)
+            transform(values["on_false"], data)

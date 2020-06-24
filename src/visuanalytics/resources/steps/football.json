@@ -48,26 +48,36 @@
           "throw_errors": false
         },
         {
-          "type": "add_data_optional",
-          "keys": [
+          "type": "option",
+          "check": [
             "_loop|MatchIsFinished"
           ],
-          "on_true": "{_loop|MatchResults|0|PointsTeam1}",
-          "on_false": 0,
-          "new_keys": [
-            "_loop|MatchResults|PointsTeam1"
-          ]
-        },
-        {
-          "type": "add_data_optional",
-          "keys": [
-            "_loop|MatchIsFinished"
-          ],
-          "on_true": "{_loop|MatchResults|0|PointsTeam2}",
-          "on_false": 0,
-          "new_keys": [
-            "_loop|MatchResults|PointsTeam2"
-          ]
+          "on_true": {
+            "transform": [
+              {
+                "type": "alias",
+                "keys": [
+                  "_loop|MatchResults|0"
+                ],
+                "new_keys": [
+                  "_loop|MatchResults"
+                ],
+                "throw_errors": false
+              }
+            ]
+          },
+          "on_false": {
+            "transform": [
+              {
+                "type": "add_data",
+                "new_keys": [
+                  "_loop|MatchResults|PointsTeam1",
+                  "_loop|MatchResults|PointsTeam2"
+                ],
+                "pattern": 0
+              }
+            ]
+          }
         },
         {
           "type": "date_weekday",
@@ -118,17 +128,6 @@
             "2": "3",
             "3": "0"
           }
-        },
-        {
-          "type": "add_data_optional",
-          "keys": [
-            "_loop|MatchIsFinished"
-          ],
-          "on_true": "{_loop|Team1|TeamName} {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} {_loop|MatchResults|PointsTeam2}. ",
-          "on_false": "{_loop|Team1|TeamName} spielt am {_loop|weekday} gegen {_loop|Team2|TeamName}. ",
-          "new_keys": [
-            "_loop|MatchResult|Text"
-          ]
         }
       ]
     },
