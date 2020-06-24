@@ -28,28 +28,26 @@ def _get_or_create(d, k):
 def data_get_pattern(keys, data, split_key="|"):
     try:
         if isinstance(keys, str):
-            keys = map(_to_int, keys.split(split_key))
-            return reduce(operator.getitem, keys, data)
+            keys_map = map(_to_int, keys.split(split_key))
+            return reduce(operator.getitem, keys_map, data)
 
         return data[keys]
-    except KeyError as e:
-        # TODO(max) may catch other error
-        raise StepKeyError("get_data", e.__str__()) from e
+    except BaseException as e:
+        raise StepKeyError("get_data", e.__str__(), keys) from e
 
 
 def data_insert_pattern(keys, data, value, split_key="|"):
     try:
         if isinstance(keys, str) and '|' in keys:
             key_array = keys.split(split_key)
-            keys = map(_to_int, key_array[:-1])
+            keys_map = map(_to_int, key_array[:-1])
             last = _to_int(key_array[-1])
 
-            reduce(_get_or_create, keys, data)[last] = value
+            reduce(_get_or_create, keys_map, data)[last] = value
         else:
             data[keys] = value
-    except KeyError as e:
-        # TODO(max) may catch other error
-        raise StepKeyError("insert_data", e.__str__()) from e
+    except BaseException as e:
+        raise StepKeyError("insert_data", e.__str__(), keys) from e
 
 
 # TODO(max) maybe move
@@ -57,12 +55,11 @@ def data_remove_pattern(keys, data, split_key="|"):
     try:
         if isinstance(keys, str) and '|' in keys:
             key_array = keys.split(split_key)
-            keys = map(_to_int, key_array[:-1])
+            keys_map = map(_to_int, key_array[:-1])
             last = _to_int(key_array[-1])
 
-            reduce(operator.getitem, keys, data).pop(last, None)
+            reduce(operator.getitem, keys_map, data).pop(last, None)
         else:
             data.pop(keys, None)
-    except KeyError as e:
-        # TODO(max) may catch other error
-        raise StepKeyError("remove_data", e.__str__()) from e
+    except BaseException as e:
+        raise StepKeyError("remove_data", e.__str__(), keys) from e
