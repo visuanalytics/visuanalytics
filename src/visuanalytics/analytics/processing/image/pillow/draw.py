@@ -1,13 +1,14 @@
 from PIL import ImageFont
 
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.step_errors import ImageError
+from visuanalytics.analytics.util.type_utils import register_type_func
 
 DRAW_TYPES = {}
 
 
 def register_draw(func):
-    DRAW_TYPES[func.__name__] = func
-    return func
+    return register_type_func(DRAW_TYPES, ImageError, func)
 
 
 @register_draw

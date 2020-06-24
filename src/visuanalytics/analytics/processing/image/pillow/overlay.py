@@ -3,13 +3,14 @@ from PIL import Image
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.draw import DRAW_TYPES
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.step_errors import ImageError
+from visuanalytics.analytics.util.type_utils import register_type_func
 
 OVERLAY_TYPES = {}
 
 
 def register_overlay(func):
-    OVERLAY_TYPES[func.__name__] = func
-    return func
+    return register_type_func(OVERLAY_TYPES, ImageError, func)
 
 
 @register_overlay

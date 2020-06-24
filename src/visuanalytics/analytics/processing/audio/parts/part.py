@@ -1,13 +1,17 @@
+from visuanalytics.analytics.util.step_errors import AudioError, raise_step_error
+from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+
 AUDIO_PARTS_TYPES = {}
 
 
+@raise_step_error(AudioError)
 def audio_parts(values, data):
-    return "".join([f"{AUDIO_PARTS_TYPES[value['type']](value, data)} " for value in values])
+    # TODO raise TypeError
+    return "".join([f"{get_type_func(value, AUDIO_PARTS_TYPES)(value, data)} " for value in values])
 
 
 def register_audio_parts(func):
-    AUDIO_PARTS_TYPES[func.__name__] = func
-    return func
+    return register_type_func(AUDIO_PARTS_TYPES, AudioError, func)
 
 
 @register_audio_parts
