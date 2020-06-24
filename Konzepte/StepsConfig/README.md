@@ -228,7 +228,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "keys": ["key"],
   "new_keys": ["new_key"],
   "pattern": "{_key} test"
-},
+}
 ```
 
 <!--TODO-->
@@ -245,7 +245,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "old_value": ".",
   "new_value": ",",
   "count": 1
-},
+}
 ```
 
 <!--TODO-->
@@ -269,7 +269,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "type": "alias",
   "keys": ["key"],
   "new_keys": ["new_key"]
-},
+}
 ```
 
 <!--TODO-->
@@ -294,7 +294,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "keys": ["key"],
   "new_keys": ["new_key"],
   "format": "%Y-%m-%d"
-},
+}
 ```
 
 <!--TODO-->
@@ -310,7 +310,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "new_keys": ["new_key"],
   "format": "%H Uhr %M",
   "zeropaded_off": true
-},
+}
 ```
 
 <!--TODO-->
