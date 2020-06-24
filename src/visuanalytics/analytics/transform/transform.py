@@ -7,8 +7,9 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
 from visuanalytics.analytics.util.step_errors import TransformError, \
-    raise_step_error, StepTypeError
+    raise_step_error
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
+from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 TRANSFORM_TYPES = {}
 
@@ -18,10 +19,7 @@ def transform(values: dict, data: StepData):
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 
-        trans_func = TRANSFORM_TYPES.get(transformation.get("type", None), None)
-
-        if trans_func is None:
-            raise StepTypeError(transformation.get("type", None))
+        trans_func = get_type_func(transformation, TRANSFORM_TYPES)
 
         trans_func(transformation, data)
 
@@ -33,10 +31,7 @@ def register_transform(func):
     :param func: Zu registrierende Funktion
     :return: funktion mit try, catch block
     """
-    func = raise_step_error(TransformError)(func)
-
-    TRANSFORM_TYPES[func.__name__] = func
-    return func
+    return register_type_func(TRANSFORM_TYPES, TransformError, func)
 
 
 @register_transform
