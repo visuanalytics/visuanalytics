@@ -428,8 +428,8 @@ def option(values: dict, data: StepData):
     condition = values["check"]
 
     if condition:
-        values["transform"] = values["on_true"]
+        values["transform"] = values.get("on_true", [])
     else:
-        values["transform"] = values["on_true"]
+        values["transform"] = values.get("on_false", [])
 
     transform(values, data)
