@@ -7,6 +7,7 @@ import mimetypes
 from flask import Flask, render_template, request
 
 from visuanalytics.server.api import api
+from visuanalytics.server.db import db
 
 
 def create_app():
@@ -31,6 +32,9 @@ def create_app():
     app.config.from_pyfile('config.py', silent=True)
 
     # TODO start control main
+
+    app.before_request(db.open_con)
+    app.after_request(db.close_con)
 
     # add js as mmetype to ensure that the content-type is correct for js files
     mimetypes.add_type("text/javascript", ".js")
