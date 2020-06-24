@@ -3,8 +3,14 @@ Enthält die API-Endpunkte.
 """
 
 from flask import (Blueprint, request)
+from visuanalytics.server.db import db
 
 api = Blueprint('api', __name__)
+
+
+@api.teardown_app_request
+def close_db_con(exception):
+    db.close_con()
 
 
 @api.route("/topics", methods=["GET"])
