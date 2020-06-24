@@ -1,5 +1,8 @@
 # Steps Config <!-- omit in toc -->
 
+- [Daten Zugriffe](#daten-zugriffe)
+  - [Pfade](#pfade)
+  - [Key/New Key](#keynew-key)
 - [Api](#api)
   - [request](#request)
   - [request Multiple](#request-multiple)
@@ -35,6 +38,18 @@
 - [Presets](#presets)
   
 <!-- TODO Description-->
+
+# Daten Zugriffe
+
+<!--TODO-->
+
+## Pfade
+
+<!--TODO-->
+
+## Key/New Key
+
+<!--TODO-->
 
 # Api
 
@@ -168,7 +183,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ```JSON
 {
   "type": "select",
-  ""
+  "relevant_keys": []
 }
 ```
 
@@ -179,7 +194,12 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "select_range",
+  "sub_key": "key",
+  "range_start": 0,
+  "range_end": 7
+}
 ```
 
 <!--TODO-->
@@ -189,7 +209,11 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "append",
+  "key": "key",
+  "new_key": "new_key"
+}
 ```
 
 <!--TODO-->
@@ -199,7 +223,12 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "add_symbole",
+  "keys": ["key"],
+  "new_keys": ["new_key"],
+  "pattern": "{_key} test"
+},
 ```
 
 <!--TODO-->
@@ -209,7 +238,14 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "replace",
+  "keys": ["key"],
+  "new_keys": ["new_key"],
+  "old_value": ".",
+  "new_value": ",",
+  "count": 1
+},
 ```
 
 <!--TODO-->
@@ -229,7 +265,11 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "alias",
+  "keys": ["key"],
+  "new_keys": ["new_key"]
+},
 ```
 
 <!--TODO-->
@@ -249,7 +289,12 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "date_format",
+  "keys": ["key"],
+  "new_keys": ["new_key"],
+  "format": "%Y-%m-%d"
+},
 ```
 
 <!--TODO-->
@@ -259,7 +304,13 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "timestamp",
+  "keys": ["key"],
+  "new_keys": ["new_key"],
+  "format": "%H Uhr %M",
+  "zeropaded_off": true
+},
 ```
 
 <!--TODO-->
@@ -269,7 +320,12 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "date_weekday",
+  "keys": ["key"],
+  "new_keys": ["new_key"],
+  "given_format": "%Y-%m-%d"
+}
 ```
 
 <!--TODO-->
@@ -279,7 +335,11 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "date_now",
+  "new_key": "new_key",
+  "format": "%Y-%m-%d"
+}
 ```
 
 <!--TODO-->
@@ -319,7 +379,20 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
+{
+  "type": "loop",
+  "values": [1, 2, 3],
+  "transform": []
+}
+```
 
+```JSON
+{
+  "type": "loop",
+  "range_start": 0,
+  "range_stop": 10,
+  "transform": []
+}
 ```
 
 <!--TODO-->
@@ -329,7 +402,11 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 <!-- TODO Description-->
 
 ```JSON
-
+{
+  "type": "add_data",
+  "new_key": "key",
+  "pattern": "data"
+}
 ```
 
 <!--TODO-->
