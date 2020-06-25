@@ -73,8 +73,15 @@ class StepKeyError(Exception):
     Fehlerklasse für eine Fehlerhaften Data key.
     """
 
-    def __init__(self, func_name, key):
-        super().__init__(f"{func_name}: Invalid Data Key: {key}")
+    def __init__(self, func_name, keys):
+        self.func_name = func_name
+        self.keys = keys
+
+    def __str__(self):
+        if isinstance(self.__cause__, KeyError):
+            return f"{self.func_name}: Invalid Data Key {self.__cause__} in '{self.keys}'"
+
+        return f"{self.func_name}: Could not Access data '{self.keys}': {self.__cause__}"
 
 
 def raise_step_error(error):
