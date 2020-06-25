@@ -2,8 +2,29 @@ import os
 import shutil
 import unittest
 
+from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.util import resources
-from visuanalytics.tests.analytics.processing.image import image_test_helper
+
+
+def prepare_overlay_test(values, data, config=None):
+    if config is None:
+        config = {}
+
+    step_data = StepData(config, "0")
+    step_data.init_data({"_test": data})
+    values = {"images": {"testbild": {"type": "pillow",
+                                      "path": "Test_Bild_1.png",
+                                      "overlay": [values]}},
+              "presets": {"test_preset": {
+                  "color": "black",
+                  "font_size": 20,
+                  "font": "Test_Font.ttf"
+              }, }}
+    step_data.data["_pipe_id"] = "100"
+    generate_all_images(values, step_data, True)
+
+    return values["images"]["testbild"]
 
 
 class PreprocessTest(unittest.TestCase):
@@ -21,7 +42,7 @@ class PreprocessTest(unittest.TestCase):
         data = {
             "test_1": "Test text"
         }
-        expected = image_test_helper.prepare_overlay_test(values, data)
+        expected = prepare_overlay_test(values, data)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_text_array(self):
@@ -46,7 +67,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text",
             "test_2": "Test text 2"
         }
-        expected = image_test_helper.prepare_overlay_test(values, data)
+        expected = prepare_overlay_test(values, data)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_image(self):
@@ -61,7 +82,7 @@ class PreprocessTest(unittest.TestCase):
             "transparency": False
         }
         data = {}
-        expected = image_test_helper.prepare_overlay_test(values, data)
+        expected = prepare_overlay_test(values, data)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_image_array(self):
@@ -76,7 +97,7 @@ class PreprocessTest(unittest.TestCase):
             "transparency": False
         }
         data = {}
-        expected = image_test_helper.prepare_overlay_test(values, data)
+        expected = prepare_overlay_test(values, data)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     def test_option(self):
@@ -117,7 +138,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text",
             "checker": False
         }
-        expected = image_test_helper.prepare_overlay_test(values, data)
+        expected = prepare_overlay_test(values, data)
         assert os.path.exists(resources.get_resource_path(expected)) == 1
 
     @classmethod
