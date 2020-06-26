@@ -13,21 +13,31 @@ def prepare_draw_test(values, data, config=None):
 
     step_data = StepData(config, "0")
     step_data.init_data({"_test": data})
-    values = {"images": {"testbild": {"type": "pillow",
-                                      "path": "Test_Bild_1.png",
-                                      "overlay": [{
-                                          "type": "text",
-                                          "anchor_point": values,
-                                          "pos_x": 100,
-                                          "pos_y": 50,
-                                          "preset": "test_preset",
-                                          "pattern": "Test"
-                                      }, ]}},
-              "presets": {"test_preset": {
-                  "color": "black",
-                  "font_size": 20,
-                  "font": "Test_Font.ttf"
-              }, }}
+    values = {
+        "images": {
+            "testbild": {
+                "type": "pillow",
+                "path": "Test_Bild_1.png",
+                "overlay": [
+                    {
+                        "type": "text",
+                        "anchor_point": values,
+                        "pos_x": 100,
+                        "pos_y": 50,
+                        "preset": "test_preset",
+                        "pattern": "Test"
+                    },
+                ]
+            }
+        },
+        "presets": {
+            "test_preset": {
+                "color": "black",
+                "font_size": 20,
+                "font": "Test_Font.ttf"
+            },
+        }
+    }
     step_data.data["_pipe_id"] = "101"
     generate_all_images(values, step_data, True)
 

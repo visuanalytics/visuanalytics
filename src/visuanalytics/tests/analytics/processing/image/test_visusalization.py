@@ -13,13 +13,16 @@ def prepare_image_test(values, data, config=None):
 
     step_data = StepData(config, "1")
     step_data.init_data({"_test": data})
-    values = {"images": values,
-              "presets": {
-                  "test_preset": {
-                      "color": "black",
-                      "font_size": 20,
-                      "font": "Test_Font.ttf"
-                  }}}
+    values = {
+        "images": values,
+        "presets": {
+            "test_preset": {
+                "color": "black",
+                "font_size": 20,
+                "font": "Test_Font.ttf"
+            }
+        }
+    }
     step_data.data["_pipe_id"] = "102"
     generate_all_images(values, step_data, True)
 
