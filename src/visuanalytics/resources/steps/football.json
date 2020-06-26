@@ -6,7 +6,8 @@
     "use_loop_as_key": true,
     "steps_value": [
       "Spiele",
-      "Tabelle"
+      "Tabelle",
+      "Alt_Werte"
     ],
     "requests": [
       {
@@ -16,6 +17,10 @@
       {
         "type": "request",
         "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+      },
+      {
+        "type": "request_memory",
+        "timedelta": -2
       }
     ]
   },

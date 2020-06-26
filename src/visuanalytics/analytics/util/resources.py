@@ -1,7 +1,7 @@
 """Module, dass Funktionen zur Benutzung von Ressourcen bereitstellt."""
 import contextlib
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 RESOURCES_LOCATION = "../../resources"
 """
@@ -108,6 +108,20 @@ def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
 
     """
     return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
+
+
+def open_memory_resource(time_delta, job_name: str, mode: str = "rt"):
+    """Öffnet die übergebene Temp Ressource.
+
+    Verwendet :func:`get_temp_resource_path`
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :param path: Pfad zur Resource, Relativ zum `resources` Ordner.
+    :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
+
+    """
+    date = (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
+    return open_resource(os.path.join(MEMORY_LOCATION, job_name, date), mode)
 
 
 def delete_resource(path: str):

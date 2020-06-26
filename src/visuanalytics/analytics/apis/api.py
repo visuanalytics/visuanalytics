@@ -41,6 +41,15 @@ def request(values: dict, data: StepData, name):
 
 
 @register_api
+def request_memory(values: dict, data: StepData, name):
+    try:
+        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}")) as fp:
+            return json.loads(fp.read())
+    except:
+        return {"No_memory_found": True}
+
+
+@register_api
 def request_multiple(values: dict, data: StepData, name):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 
