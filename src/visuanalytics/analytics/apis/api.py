@@ -42,6 +42,11 @@ def request(values: dict, data: StepData, name):
 
 @register_api
 def request_memory(values: dict, data: StepData, name):
+    """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     try:
         with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}")) as fp:
             return json.loads(fp.read())
