@@ -51,7 +51,7 @@ def new_temp_resource_path(pipeline_id: str, extension):
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 
 
-def open_resource(path: str, mode: str = "rt", tests=False):
+def open_resource(path: str, mode: str = "rt"):
     """Öffnet die übergebene Ressource.
 
     Verwendet :func:`get_resource_path` um den Pfad der Ressource zu bekommen.
@@ -59,6 +59,7 @@ def open_resource(path: str, mode: str = "rt", tests=False):
 
     :param path: Pfad zur Resource, Relativ zum `resources` Ordner.
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
+
     :return: Die geöffnete Datei (siehe :func:`open`)
 
     :raises: OSError

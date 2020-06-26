@@ -39,7 +39,6 @@ def center(draw, position, content, font_size, font_colour, font_path):
     :param font_path: Pfad zur Schriftart in welches geschrieben werden soll
     :type font_path: str
 
-
     """
     ttype = ImageFont.truetype(resources.get_resource_path(font_path), font_size)
     w, h = ttype.getsize(content)
