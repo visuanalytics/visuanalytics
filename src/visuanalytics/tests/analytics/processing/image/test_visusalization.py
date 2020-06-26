@@ -24,13 +24,16 @@ def prepare_image_test(values, data, config=None):
         }
     }
     step_data.data["_pipe_id"] = "102"
-    generate_all_images(values, step_data, True)
+    generate_all_images(values, step_data)
 
     return values["images"]
 
 
 class PreprocessTest(unittest.TestCase):
-    os.makedirs(resources.get_temp_resource_path("", "102", True), exist_ok=True)
+    def setUp(self):
+        resources.RESOURCES_LOCATION = "../../tests/resources"
+        os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
+        os.makedirs(resources.get_temp_resource_path("", "102"), exist_ok=True)
 
     def test_single_image(self):
         values = {
@@ -53,7 +56,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_image_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected["test_1"])) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected["test_1"])), 1)
 
     def test_multiple_images(self):
         values = {
@@ -91,8 +94,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_image_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected["test_2"])) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected["test_2"])), 1)
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(resources.get_temp_resource_path("", "102", True), ignore_errors=True)
+    def tearDown(self):
+        shutil.rmtree(resources.get_temp_resource_path("", "102"), ignore_errors=True)

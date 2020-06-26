@@ -8,11 +8,6 @@ RESOURCES_LOCATION = "../../resources"
 Relativer Pfad zu dem resources Ordner.
 """
 
-TEST_RESOURCES_LOCATION = "../../tests/resources"
-"""
-Relativer Pfad zu dem Test resources Ordner.
-"""
-
 ROOT_LOCATION = "../../"
 """
 Relativer Pfad zur root location.
@@ -21,32 +16,28 @@ Relativer Pfad zur root location.
 TEMP_LOCATION = "temp"
 
 
-def get_resource_path(path: str, tests=False):
+def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
 
     Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
 
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
     :return: Absoluter Pfad zur übergebener Ressource.
     """
-    if tests:
-        return os.path.normpath(os.path.join(os.path.dirname(__file__), TEST_RESOURCES_LOCATION, path))
     return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
 
 
-def get_temp_resource_path(path: str, pipeline_id: str, tests=False):
+def get_temp_resource_path(path: str, pipeline_id: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource im Temp Ordner.
 
     :param path: Pfad zur Ressource, relativ zum `resources/temp` Ordner.
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
     :type pipeline_id: str
     """
-    return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path), tests)
+    return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
-def new_temp_resource_path(pipeline_id: str, extension, tests=False):
+def new_temp_resource_path(pipeline_id: str, extension):
     """Erstellt einen Absoluten Pfad für eine neue resource.
 
     Generiert einen neuen Namen mit Aktuellem zeitsteppel.
@@ -55,10 +46,9 @@ def new_temp_resource_path(pipeline_id: str, extension, tests=False):
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :type pipeline_id: str
     :param extension: Dateierweiterung ohne `.`.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
     :type extension: str
     """
-    return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id, tests)
+    return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 
 
 def open_resource(path: str, mode: str = "rt", tests=False):
@@ -69,19 +59,17 @@ def open_resource(path: str, mode: str = "rt", tests=False):
 
     :param path: Pfad zur Resource, Relativ zum `resources` Ordner.
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
-
     :return: Die geöffnete Datei (siehe :func:`open`)
 
     :raises: OSError
     """
-    res_path = get_resource_path(path, tests)
+    res_path = get_resource_path(path)
     os.makedirs(os.path.dirname(res_path), exist_ok=True)
 
     return open(res_path, mode, encoding='utf-8')
 
 
-def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt", tests=False):
+def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
     """Öffnet die übergebene Temp Ressource.
 
     Verwendet :func:`get_temp_resource_path`
@@ -89,13 +77,12 @@ def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt", tests=Fals
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
     :param path: Pfad zur Resource, Relativ zum `resources` Ordner.
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
 
     """
-    return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode, tests)
+    return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
 
 
-def delete_resource(path: str, tests=False):
+def delete_resource(path: str):
     """Löscht die übergebene Ressource.
 
     Verwendet :func:`get_resource_path` um den Pfad der Ressource zu bekommen.
@@ -103,12 +90,11 @@ def delete_resource(path: str, tests=False):
     Ist der angegebene Pfad allerdings ein Ordner wird ein Fehler geworfen.
 
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
-    :param tests: Angabe ob es sich um den Test ressource folder handelt
 
     :raises: OSError
     """
     with contextlib.suppress(FileNotFoundError):
-        os.remove(get_resource_path(path, tests))
+        os.remove(get_resource_path(path))
 
 
 def path_from_root(path):

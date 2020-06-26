@@ -30,13 +30,16 @@ def prepare_overlay_test(values, data, config=None):
         }
     }
     step_data.data["_pipe_id"] = "100"
-    generate_all_images(values, step_data, True)
+    generate_all_images(values, step_data)
 
     return values["images"]["testbild"]
 
 
 class PreprocessTest(unittest.TestCase):
-    os.makedirs(resources.get_temp_resource_path("", "100", True), exist_ok=True)
+    def setUp(self):
+        resources.RESOURCES_LOCATION = "../../tests/resources"
+        os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
+        os.makedirs(resources.get_temp_resource_path("", "100"), exist_ok=True)
 
     def test_text(self):
         values = {
@@ -51,7 +54,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_overlay_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_text_array(self):
         values = {
@@ -76,7 +79,7 @@ class PreprocessTest(unittest.TestCase):
             "test_2": "Test text 2"
         }
         expected = prepare_overlay_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image(self):
         values = {
@@ -91,7 +94,7 @@ class PreprocessTest(unittest.TestCase):
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image_array(self):
         values = {
@@ -106,7 +109,7 @@ class PreprocessTest(unittest.TestCase):
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_option(self):
         values = {
@@ -147,8 +150,7 @@ class PreprocessTest(unittest.TestCase):
             "checker": False
         }
         expected = prepare_overlay_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(resources.get_temp_resource_path("", "100", True), ignore_errors=True)
+    def tearDown(self):
+        shutil.rmtree(resources.get_temp_resource_path("", "100"), ignore_errors=True)

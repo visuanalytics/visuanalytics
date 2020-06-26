@@ -39,26 +39,28 @@ def prepare_draw_test(values, data, config=None):
         }
     }
     step_data.data["_pipe_id"] = "101"
-    generate_all_images(values, step_data, True)
+    generate_all_images(values, step_data)
 
     return values["images"]["testbild"]
 
 
 class PreprocessTest(unittest.TestCase):
-    os.makedirs(resources.get_temp_resource_path("", "101", True), exist_ok=True)
+    def setUp(self):
+        resources.RESOURCES_LOCATION = "../../tests/resources"
+        os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
+        os.makedirs(resources.get_temp_resource_path("", "101"), exist_ok=True)
 
     def test_left(self):
         values = "left"
         data = {}
         expected = prepare_draw_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_center(self):
         values = "center"
         data = {}
         expected = prepare_draw_test(values, data)
-        assert os.path.exists(resources.get_resource_path(expected)) == 1
+        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
 
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(resources.get_temp_resource_path("", "101", True), ignore_errors=True)
+    def tearDown(self):
+        shutil.rmtree(resources.get_temp_resource_path("", "101"), ignore_errors=True)
