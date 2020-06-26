@@ -67,7 +67,7 @@ def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepDa
         else:
             pattern = overlay["pattern"]
         new_overlay = {
-            "description": overlay["description"],
+            "description": overlay.get("description", None),
             "anchor_point": overlay["anchor_point"],
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
@@ -148,7 +148,7 @@ def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepD
         else:
             pattern = overlay["pattern"]
         new_overlay = {
-            "description": overlay["description"],
+            "description": overlay.get("description", None),
             "size_x": overlay.get("size_x", None),
             "size_y": overlay.get("size_y", None),
             "pos_x": overlay["pos_x"][idx],
