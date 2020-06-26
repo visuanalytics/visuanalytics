@@ -15,6 +15,8 @@ Relativer Pfad zur root location.
 
 TEMP_LOCATION = "temp"
 
+MEMORY_LOCATION = "memory"
+
 
 def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
@@ -37,6 +39,16 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
+def get_memory_path(path: str, job_name: str):
+    """Erstellt einen Absoluten Pfad zu der übergebene Ressource im Temp Ordner.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/temp` Ordner.
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
+    """
+    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, path))
+
+
 def new_temp_resource_path(pipeline_id: str, extension):
     """Erstellt einen Absoluten Pfad für eine neue resource.
 
@@ -49,6 +61,21 @@ def new_temp_resource_path(pipeline_id: str, extension):
     :type extension: str
     """
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
+
+
+def new_memory_resource_path(job_name: str):
+    """Erstellt einen Absoluten Pfad für eine neue resource.
+
+    Generiert einen neuen Namen mit Aktuellem zeitsteppel.
+    Verwendet um den pfad zu generieren :func:`get_temp_resource_path` mit dem ordner der `pipeline_id`.
+
+    :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
+    :param extension: Dateierweiterung ohne `.`.
+    :type extension: str
+    """
+    os.makedirs(get_memory_path("", job_name), exist_ok=True)
+    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d')}.json", job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):

@@ -239,6 +239,7 @@
       ]
     }
   ],
+  "storing": true,
   "images": {
     "football1": {
       "type": "pillow",

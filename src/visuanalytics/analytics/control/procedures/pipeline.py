@@ -11,6 +11,7 @@ from visuanalytics.analytics.processing.image.visualization import generate_all_
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.storing import storing
 
 logger = logging.getLogger(__name__)
 
@@ -25,11 +26,12 @@ class Pipeline(object):
                -1: {"name": "Not Started"},
                0: {"name": "Apis", "call": api},
                1: {"name": "Transform", "call": transform},
-               2: {"name": "Images", "call": generate_all_images},
-               3: {"name": "Audios", "call": generate_audios},
-               4: {"name": "Sequence", "call": link},
-               5: {"name": "Ready"}}
-    __steps_max = 5
+               2: {"name": "Storing", "call": storing},
+               3: {"name": "Images", "call": generate_all_images},
+               4: {"name": "Audios", "call": generate_audios},
+               5: {"name": "Sequence", "call": link},
+               6: {"name": "Ready"}}
+    __steps_max = 6
 
     def __init__(self, pipeline_id: str, step_name: str, steps_config=None):
         if steps_config is None:
