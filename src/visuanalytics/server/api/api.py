@@ -32,9 +32,11 @@ def params():
     GET-Parameter: "topic".
     Die Response enthält die Parameterinformationen für das übergebene Thema.
     """
-    topic = request.args.get("topic")
-    return "params for topic: " + topic
-    # TODO: retrieve actual parameter list
+    topic_id = request.args.get("topic")
+    params = job.get_params(topic_id)
+    if (params == None):
+        return "Unknown topic", 400
+    return json.dumps(job.get_params(topic_id))
 
 
 @api.route("/jobs", methods=["GET"])
