@@ -90,7 +90,7 @@ def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
     :param step_data: Daten aus der API
     """
     chosen_text = "on_false"
-    if step_data.format(values["check"]):
+    if step_data.format(values["check"]) is True:
         chosen_text = "on_true"
     for overlay in values[chosen_text]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
