@@ -48,6 +48,16 @@
           "throw_errors": false
         },
         {
+          "type": "date_weekday",
+          "keys": [
+            "_loop|MatchDateTime"
+          ],
+          "new_keys": [
+            "_loop|weekday"
+          ],
+          "given_format": "%Y-%m-%dT%H:%M:%S"
+        },
+        {
           "type": "option",
           "check": "_loop|MatchIsFinished",
           "on_true": [
@@ -59,68 +69,106 @@
               "new_keys": [
                 "_loop|MatchResults"
               ]
+            },
+            {
+              "type": "copy",
+              "keys": [
+                "_loop|MatchResults|PointsTeam1",
+                "_loop|MatchResults|PointsTeam1"
+              ],
+              "new_keys": [
+                "_loop|Team1|Won",
+                "_loop|Team2|Lost"
+              ]
+            },
+            {
+              "type": "copy",
+              "keys": [
+                "_loop|MatchResults|PointsTeam2",
+                "_loop|MatchResults|PointsTeam2"
+              ],
+              "new_keys": [
+                "_loop|Team2|Won",
+                "_loop|Team1|Lost"
+              ]
+            },
+            {
+              "type": "result",
+              "keys": [
+                "_loop|Team1",
+                "_loop|Team2"
+              ],
+              "new_keys": [
+                "_loop|Team1|Result",
+                "_loop|Team2|Result"
+              ],
+              "compare_1": "Won",
+              "compare_2": "Lost",
+              "points": {
+                "1": "1",
+                "2": "3",
+                "3": "0"
+              }
+            },
+            {
+              "type": "compare_and_random_text",
+              "keys": [
+                "_loop"
+              ],
+              "compare_1": "MatchResults|PointsTeam1",
+              "compare_2": "MatchResults|PointsTeam2",
+              "pattern": {
+                "1": [
+                  "{_loop|Team1|TeamName} und {_loop|Team2|TeamName} trennten sich mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "Zwischen {_loop|MTeam1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "Ein Unentschieden zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
+                ],
+                "2": [
+                  "{_loop|Team1|TeamName} gewann gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "{_loop|Team1|TeamName} gewann Zuhause gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
+                ],
+                "3": [
+                  "{_loop|MatchResults|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "{_loop|MatchResults|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
+                ]
+              },
+              "new_keys": [
+                "_loop|MatchResults|Text"
+              ]
             }
           ],
           "on_false": [
             {
               "type": "add_data",
               "new_keys": [
-                "_loop|MatchResults|PointsTeam1",
-                "_loop|MatchResults|PointsTeam2"
+                "_loop|Team1|Won",
+                "_loop|Team2|Won",
+                "_loop|Team1|Lost",
+                "_loop|Team2|Lost",
+                "_loop|Team1|Result",
+                "_loop|Team2|Result"
               ],
               "pattern": 0
+            },
+            {
+              "type": "random_text",
+              "keys": [
+                "_loop"
+              ],
+              "pattern": [
+                [
+                  "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                  "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                  "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                  "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                  "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
+                ]
+              ],
+              "new_keys": [
+                "_loop|MatchText"
+              ]
             }
           ]
-        },
-        {
-          "type": "date_weekday",
-          "keys": [
-            "_loop|MatchDateTime"
-          ],
-          "new_keys": [
-            "_loop|weekday"
-          ],
-          "given_format": "%Y-%m-%dT%H:%M:%S"
-        },
-        {
-          "type": "copy",
-          "keys": [
-            "_loop|MatchResults|PointsTeam1",
-            "_loop|MatchResults|PointsTeam1"
-          ],
-          "new_keys": [
-            "_loop|Team1|Won",
-            "_loop|Team2|Lost"
-          ]
-        },
-        {
-          "type": "copy",
-          "keys": [
-            "_loop|MatchResults|PointsTeam2",
-            "_loop|MatchResults|PointsTeam2"
-          ],
-          "new_keys": [
-            "_loop|Team2|Won",
-            "_loop|Team1|Lost"
-          ]
-        },
-        {
-          "type": "result",
-          "keys": [
-            "_loop|Team1",
-            "_loop|Team2"
-          ],
-          "new_keys": [
-            "_loop|Team1|Result",
-            "_loop|Team2|Result"
-          ],
-          "compare_1": "Won",
-          "compare_2": "Lost",
-          "points": {
-            "1": "1",
-            "2": "3",
-            "3": "0"
-          }
         }
       ]
     },
@@ -251,6 +299,14 @@
           ]
         }
       ]
+    },
+    {
+      "type": "transform_values_diff",
+      "array_key_1": "_req|VorherigeTabelle",
+      "array_key_2": "_req|Tabelle",
+      "compare": "Rank",
+      "pattern": "TeamId",
+      "new_key": "_loop|Rank_diff"
     }
   ],
   "images": {
@@ -1779,11 +1835,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "In der Ersten Fußball-Bundesliga ist der vierunddreißigste Spieltag.  Die Ergebnisse lauten: "
+            "pattern": "In der {_conf|liga-name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
           },
           {
             "type": "text",
-            "pattern": "{_req|Spiele|0|Text}"
+            "pattern": "{_req|Spiele|0|MatchText}"
           }
         ]
       },
@@ -1791,7 +1847,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|1|Text}"
+            "pattern": "{_req|Spiele|1|MatchText}"
           }
         ]
       },
@@ -1799,7 +1855,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|2|Text}"
+            "pattern": "{_req|Spiele|2|MatchText}"
           }
         ]
       },
@@ -1807,7 +1863,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|3|Text}"
+            "pattern": "{_req|Spiele|3|MatchText}"
           }
         ]
       },
@@ -1815,7 +1871,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|4|Text}"
+            "pattern": "{_req|Spiele|4|MatchText}"
           }
         ]
       },
@@ -1823,7 +1879,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|5|Text}"
+            "pattern": "{_req|Spiele|5|MatchText}"
           }
         ]
       },
@@ -1831,7 +1887,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|6|Text}"
+            "pattern": "{_req|Spiele|6|MatchText}"
           }
         ]
       },
@@ -1839,7 +1895,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|7|Text}"
+            "pattern": "{_req|Spiele|7|MatchText}"
           }
         ]
       },
@@ -1847,7 +1903,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|8|Text}"
+            "pattern": "{_req|Spiele|8|MatchText}"
           }
         ]
       },
@@ -1855,7 +1911,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem dreiunddreißigsten Spieltag der Ersten Fußball-Bundesliga sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {_conf|liga-name} sieht wie folgt aus: "
           },
           {
             "type": "text",

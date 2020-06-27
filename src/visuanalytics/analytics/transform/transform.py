@@ -64,6 +64,23 @@ def transform_compare_arrays(values: dict, data: StepData):
 
 
 @register_transform
+def transform_values_diff(values: dict, data: StepData):
+    pattern = data.format(values["pattern"], values)
+    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_1"], values), values):
+        compare = data.format(values["compare"], values)
+        value_1 = entry1[compare]
+        new_key = ""
+        new_value = ""
+        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_2"], values), values):
+            value_2 = entry2[compare]
+            if value_1 == value_2:
+                new_value = int(entry1[pattern] - entry2[pattern])
+                new_key = values["new_key"]
+        data.save_loop(idx1, entry1, values)
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
 def transform_dict(values: dict, data: StepData):
     """Fürt alle angegebenen `transform` funktionen für alle werte eines Dictionaries aus.
 
@@ -433,3 +450,68 @@ def option(values: dict, data: StepData):
         values["transform"] = values.get("on_false", [])
 
     transform(values, data)
+
+
+@register_transform
+def option_for(values: dict, data: StepData):
+    """Führt Funktionen aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["check"], values):
+        value = data.get_data(key, values)
+        condition = data.get_data(values["condition"], values)
+        
+        if condition == value:
+            values["transform"] = values.get("on_true", [])
+        else:
+            values["transform"] = values.get("on_false", [])
+
+        transform(values, data)
+
+
+@register_transform
+def compare_and_random_text(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        compare_1 = data.format(values["compare_1"], values)
+        compare_2 = data.format(values["compare_2"], values)
+        new_key = get_new_keys(values, idx)
+        choice = []
+        if value[compare_1] == value[compare_2]:
+            len_pattern = len(values["pattern"]["1"])
+            for i in range(len_pattern):
+                choice.append(i)
+            rand = random.choice(choice)
+            new_value = data.format(values["pattern"]["1"][rand], values)
+        elif value[compare_1] > value[compare_2]:
+            len_pattern = len(values["pattern"]["2"])
+            for i in range(len_pattern):
+                choice.append(i)
+            rand = random.choice(choice)
+            new_value = data.format(values["pattern"]["2"][rand], values)
+        elif value[compare_1] < value[compare_2]:
+            len_pattern = len(values["pattern"]["3"])
+            for i in range(len_pattern):
+                choice.append(i)
+            rand = random.choice(choice)
+            new_value = data.format(values["pattern"]["3"][rand], values)
+        else:
+            new_value = 0
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def random_text(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        len_pattern = len(values["pattern"])
+        choice = []
+        for i in range(len_pattern):
+            len_choice = len(values["pattern"][i])
+            for j in range(len_choice):
+                choice.append(j)
+            rand = random.choice(choice)
+            new_key = get_new_keys(values, idx)
+            new_value = data.format(values["pattern"][i][rand], values)
+            data.insert_data(new_key, new_value, values)
