@@ -2,6 +2,9 @@ from datetime import time, date
 
 from visuanalytics.server.db import db
 import json
+import os
+
+STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 
 
 def create_job(steps_id: int):
@@ -134,7 +137,9 @@ def get_topic_names():
 def get_params(topic_id):
     con = db.open_con()
     res = con.execute("SELECT json_file_name FROM steps WHERE id = ?", topic_id).fetchone()
+    if (res == None):
+        return None
     json_file_name = res["json_file_name"]
-    path_to_json = NotImplemented  # TODO
+    path_to_json = os.path.join(STEPS_LOCATION, json_file_name)
     steps_json = json.loads(open(path_to_json).read())
-    return json.dumps(steps_json.params)
+    return steps_json.params
