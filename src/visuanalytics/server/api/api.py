@@ -2,8 +2,9 @@
 Enthält die API-Endpunkte.
 """
 
+import json
 from flask import (Blueprint, request)
-from visuanalytics.server.db import db
+from visuanalytics.server.db import db, job
 
 api = Blueprint('api', __name__)
 
@@ -20,8 +21,7 @@ def topics():
 
     Die Response enthält die Liste der zur Videogenerierung verfügbaren Themen.
     """
-    return "topic list"
-    # TODO retrieve actual topic list
+    return json.dumps(job.get_topic_names())
 
 
 @api.route("/params", methods=["GET"])
