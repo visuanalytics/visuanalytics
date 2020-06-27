@@ -1,6 +1,7 @@
 from datetime import time, date
 
 from visuanalytics.server.db import db
+import json
 
 
 def create_job(steps_id: int):
@@ -119,3 +120,21 @@ def get_steps(job_id: int):
     with db.connect() as con:
         return con.execute("select name from job as j, steps as s where j.id = ?and j.steps == s.id",
                            [job_id]).fetchone()
+
+
+def get_topic_names():
+    topic_names = []
+    con = db.open_con()
+    res = con.execute("SELECT NAME FROM steps")
+    for row in res:
+        topic_names.append(row["name"])
+    return topic_names
+
+
+def get_params(topic_id):
+    con = db.open_con()
+    res = con.execute("SELECT json_file_name FROM steps WHERE id = ?", topic_id).fetchone()
+    json_file_name = res["json_file_name"]
+    path_to_json = NotImplemented  # TODO
+    steps_json = json.loads(open(path_to_json).read())
+    return json.dumps(steps_json.params)
