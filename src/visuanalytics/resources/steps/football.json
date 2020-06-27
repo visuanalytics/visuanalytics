@@ -630,7 +630,7 @@
               ],
               "pattern": [
                 [
-                  "Auf dem Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
+                  "Auf den Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
                 ]
               ],
               "new_keys": [
@@ -646,7 +646,7 @@
               ],
               "pattern": [
                 [
-                  "Auf dem Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
+                  "Auf den Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
                 ]
               ],
               "new_keys": [
@@ -662,7 +662,7 @@
               ],
               "pattern": [
                 [
-                  "Auf dem Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
+                  "Auf den Abstiegsplätzen liegen {16|TeamName} und {17|TeamName} mit jeweils {16|Points} und {17|Points} Punkten. "
                 ]
               ],
               "new_keys": [
