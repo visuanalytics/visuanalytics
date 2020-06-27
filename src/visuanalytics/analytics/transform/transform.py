@@ -462,11 +462,13 @@ def option_for(values: dict, data: StepData):
     for idx, key in data.loop_key(values["check"], values):
         value = data.get_data(key, values)
         condition = data.get_data(values["condition"], values)
-        
+
         if condition == value:
-            values["transform"] = values.get("on_true", [])
-        else:
-            values["transform"] = values.get("on_false", [])
+            values["transform"] = values.get("on_equal", [])
+        elif condition > value:
+            values["transform"] = values.get("on_higher", [])
+        elif condition < value:
+            values["transform"] = values.get("on_lower", [])
 
         transform(values, data)
 
