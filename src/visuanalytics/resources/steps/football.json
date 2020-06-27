@@ -7,7 +7,7 @@
     "steps_value": [
       "Spiele",
       "Tabelle",
-      "Alt_Werte"
+      "Vorherige-Tabelle"
     ],
     "requests": [
       {
@@ -20,6 +20,7 @@
       },
       {
         "type": "request_memory",
+        "name": "table",
         "timedelta": -2
       }
     ]
@@ -244,7 +245,12 @@
       ]
     }
   ],
-  "storing": true,
+  "storing": [
+    {
+      "name": "table",
+      "pattern": "Tabelle"
+    }
+  ],
   "images": {
     "football1": {
       "type": "pillow",

@@ -19,6 +19,7 @@ def storing(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    if values.get("storing", False) is not False:
-        with open(new_memory_resource_path(data.format("{_conf|job_name}")), 'w') as fp:
-            json.dump(data.data["_req"], fp)
+    if values.get("storing", None) is not None:
+        for value in values["storing"]:
+            with open(new_memory_resource_path(data.format("{_conf|job_name}"), value["name"]), 'w') as fp:
+                json.dump(data.data["_req"][value["pattern"]], fp)

@@ -68,16 +68,17 @@ def new_temp_resource_path(pipeline_id: str, extension):
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
 
 
-def new_memory_resource_path(job_name: str):
+def new_memory_resource_path(job_name: str, name: str):
     """Erstellt einen Absoluten Pfad für eine neue memory resource.
 
     Generiert einen neuen Namen mit aktuellem Zeitstempel.
     Verwendet um den pfad zu generieren :func:`get_memory_path` mit dem ordner des `job_name`.
 
    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+   :param name: Name der Datei (ohne datum)
     """
     os.makedirs(get_memory_path("", job_name), exist_ok=True)
-    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d')}.json", job_name)
+    return get_memory_path(f"{name}_{datetime.now().strftime('%Y-%m-%d')}.json", job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):
@@ -112,16 +113,17 @@ def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
     return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
 
 
-def open_memory_resource(time_delta, job_name: str, mode: str = "rt"):
+def open_memory_resource(time_delta, job_name: str, name: str, mode: str = "rt"):
     """Öffnet die übergebene Memory Ressource.
 
     :param time_delta: Tage die abgezogen werden sollen vom heutigem Tage zum öffnen der richtigen Ressource
     :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    :param name: Name der Datei (ohne datum)
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
 
     """
-    date = (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
-    return open_resource(os.path.join(MEMORY_LOCATION, job_name, date), mode)
+    res_name = name + "_" + (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
+    return open_resource(os.path.join(MEMORY_LOCATION, job_name, res_name), mode)
 
 
 def delete_resource(path: str):
