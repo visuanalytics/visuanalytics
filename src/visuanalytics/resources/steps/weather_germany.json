@@ -96,6 +96,15 @@
               "new_key": "summaries|{_idx}|code"
             },
             {
+              "type": "calculate",
+              "keys": [
+                "_loop|wind_spd"
+              ],
+              "action": "multiply",
+              "multiply_by": 3.6,
+              "decimal": 2
+            },
+            {
               "type": "add_symbol",
               "keys": [
                 "_loop|wind_spd"

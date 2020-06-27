@@ -99,7 +99,7 @@ def calculate_mode(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_ms_to_kmh(values: dict, data: StepData):
+def calculate_multiply(values: dict, data: StepData):
     """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
 
     :param values: Werte aus der JSON-Datei
@@ -108,11 +108,31 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        kmh = (value * 3.6)
+        multiply_by = data.format(values["multiply_by"], values)
+        new_value = (value * multiply_by)
         if values.get("decimal", None):
-            new_value = round(kmh, data.format(values["decimal"], values))
+            new_value = round(new_value, data.format(values["decimal"], values))
         else:
-            new_value = round(kmh)
+            new_value = round(new_value)
+        data.insert_data(new_key, new_value, values)
+
+
+@register_calculate
+def calculate_divide(values: dict, data: StepData):
+    """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        divide_by = data.format(values["divide_by"], values)
+        new_value = (value / divide_by)
+        if values.get("decimal", None):
+            new_value = round(new_value, data.format(values["decimal"], values))
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
 
