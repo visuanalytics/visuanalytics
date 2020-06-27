@@ -177,6 +177,7 @@ def replace(values: dict, data: StepData):
 
 @register_transform
 def get_equivalent_key(values: dict, data: StepData):
+    # Todo Max oder tanja in json sprache einbinden
     """Ersetzt ein Zeichen, Symbol, Wort oder einen Satz.
 
     :param values: Werte aus der JSON-Datei
