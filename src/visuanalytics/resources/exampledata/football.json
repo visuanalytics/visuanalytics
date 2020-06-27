@@ -300,20 +300,6 @@
   ],
   "Tabelle": [
     {
-      "TeamInfoId": 40,
-      "TeamName": "FC Bayern",
-      "ShortName": "FC Bayern",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
-      "Points": 79,
-      "OpponentGoals": 32,
-      "Goals": 96,
-      "Matches": 33,
-      "Won": 25,
-      "Lost": 4,
-      "Draw": 4,
-      "GoalDiff": 64
-    },
-    {
       "TeamInfoId": 7,
       "TeamName": "Borussia Dortmund",
       "ShortName": "Dortmund",
@@ -326,6 +312,20 @@
       "Lost": 6,
       "Draw": 6,
       "GoalDiff": 47
+    },
+    {
+      "TeamInfoId": 40,
+      "TeamName": "FC Bayern",
+      "ShortName": "FC Bayern",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
+      "Points": 79,
+      "OpponentGoals": 32,
+      "Goals": 96,
+      "Matches": 33,
+      "Won": 25,
+      "Lost": 4,
+      "Draw": 4,
+      "GoalDiff": 64
     },
     {
       "TeamInfoId": 1635,
@@ -560,7 +560,8 @@
       "OpponentGoals": 32,
       "GoalDiff": 64,
       "Matches": 33,
-      "TeamId": 40
+      "TeamId": 40,
+      "Rank": "0"
     },
     {
       "TeamName": "Borussia Dortmund",
@@ -569,7 +570,8 @@
       "OpponentGoals": 37,
       "GoalDiff": 47,
       "Matches": 33,
-      "TeamId": 7
+      "TeamId": 7,
+      "Rank": "1"
     },
     {
       "TeamName": "RB Leipzig",
@@ -578,7 +580,8 @@
       "OpponentGoals": 36,
       "GoalDiff": 43,
       "Matches": 33,
-      "TeamId": 1635
+      "TeamId": 1635,
+      "Rank": "2"
     },
     {
       "TeamName": "Borussia Mönchengladbach",
@@ -587,7 +590,8 @@
       "OpponentGoals": 39,
       "GoalDiff": 25,
       "Matches": 33,
-      "TeamId": 87
+      "TeamId": 87,
+      "Rank": "3"
     },
     {
       "TeamName": "Bayer Leverkusen",
@@ -596,7 +600,8 @@
       "OpponentGoals": 44,
       "GoalDiff": 16,
       "Matches": 33,
-      "TeamId": 6
+      "TeamId": 6,
+      "Rank": "4"
     },
     {
       "TeamName": "VfL Wolfsburg",
@@ -605,7 +610,8 @@
       "OpponentGoals": 42,
       "GoalDiff": 6,
       "Matches": 33,
-      "TeamId": 131
+      "TeamId": 131,
+      "Rank": "5"
     },
     {
       "TeamName": "TSG 1899 Hoffenheim",
@@ -614,7 +620,8 @@
       "OpponentGoals": 53,
       "GoalDiff": -4,
       "Matches": 33,
-      "TeamId": 175
+      "TeamId": 175,
+      "Rank": "6"
     },
     {
       "TeamName": "SC Freiburg",
@@ -623,7 +630,8 @@
       "OpponentGoals": 47,
       "GoalDiff": -3,
       "Matches": 33,
-      "TeamId": 112
+      "TeamId": 112,
+      "Rank": "7"
     },
     {
       "TeamName": "Eintracht Frankfurt",
@@ -632,7 +640,8 @@
       "OpponentGoals": 58,
       "GoalDiff": -2,
       "Matches": 33,
-      "TeamId": 91
+      "TeamId": 91,
+      "Rank": "8"
     },
     {
       "TeamName": "Hertha BSC",
@@ -641,7 +650,8 @@
       "OpponentGoals": 57,
       "GoalDiff": -10,
       "Matches": 33,
-      "TeamId": 54
+      "TeamId": 54,
+      "Rank": "9"
     },
     {
       "TeamName": "FC Schalke 04",
@@ -650,7 +660,8 @@
       "OpponentGoals": 54,
       "GoalDiff": -16,
       "Matches": 33,
-      "TeamId": 9
+      "TeamId": 9,
+      "Rank": "10"
     },
     {
       "TeamName": "1. FC Union Berlin",
@@ -659,7 +670,8 @@
       "OpponentGoals": 58,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamId": 80
+      "TeamId": 80,
+      "Rank": "11"
     },
     {
       "TeamName": "1. FSV Mainz 05",
@@ -668,7 +680,8 @@
       "OpponentGoals": 64,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamId": 81
+      "TeamId": 81,
+      "Rank": "12"
     },
     {
       "TeamName": "1. FC Köln",
@@ -677,7 +690,8 @@
       "OpponentGoals": 63,
       "GoalDiff": -13,
       "Matches": 33,
-      "TeamId": 65
+      "TeamId": 65,
+      "Rank": "13"
     },
     {
       "TeamName": "FC Augsburg",
@@ -686,7 +700,8 @@
       "OpponentGoals": 61,
       "GoalDiff": -17,
       "Matches": 33,
-      "TeamId": 95
+      "TeamId": 95,
+      "Rank": "14"
     },
     {
       "TeamName": "Fortuna Düsseldorf",
@@ -695,7 +710,8 @@
       "OpponentGoals": 64,
       "GoalDiff": -28,
       "Matches": 33,
-      "TeamId": 185
+      "TeamId": 185,
+      "Rank": "15"
     },
     {
       "TeamName": "Werder Bremen",
@@ -704,7 +720,8 @@
       "OpponentGoals": 68,
       "GoalDiff": -32,
       "Matches": 33,
-      "TeamId": 134
+      "TeamId": 134,
+      "Rank": "16"
     },
     {
       "TeamName": "SC Paderborn 07",
@@ -713,7 +730,8 @@
       "OpponentGoals": 71,
       "GoalDiff": -36,
       "Matches": 33,
-      "TeamId": 31
+      "TeamId": 31,
+      "Rank": "17"
     }
   ]
 }

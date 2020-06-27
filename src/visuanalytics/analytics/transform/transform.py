@@ -176,6 +176,26 @@ def replace(values: dict, data: StepData):
 
 
 @register_transform
+def get_equivalent_key(values: dict, data: StepData):
+    """Ersetzt ein Zeichen, Symbol, Wort oder einen Satz.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        new_values = ""
+        new_key = get_new_keys(values, idx)
+        index = data.format("{_idx}", values)
+        name = data.data["_req"]["Tabelle"][int(index)]["TeamId"]
+        rank = data.data["_req"]["Tabelle"][int(index)]["Rank"]
+        for item in data.data["_req"]["Vorherige-Tabelle"]:
+            if item["TeamId"] == name:
+                new_values = int(item["Rank"]) - int(rank)
+                break
+        data.insert_data(new_key, int(new_values), values)
+
+
+@register_transform
 def translate_key(values: dict, data: StepData):
     """Setzt den value zu einem key als neuen value für die JSON.
 

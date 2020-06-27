@@ -100,6 +100,25 @@
           "new_keys": [
             "_loop|TeamId"
           ]
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|TeamId"
+          ],
+          "new_keys": [
+            "_loop|Rank"
+          ],
+          "pattern": "{_idx}"
+        },
+        {
+          "type": "get_equivalent_key",
+          "keys": [
+            "_loop|TeamId"
+          ],
+          "new_keys": [
+            "_loop|Rank_Dif"
+          ]
         }
       ]
     }
