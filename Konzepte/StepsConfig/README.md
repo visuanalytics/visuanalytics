@@ -12,6 +12,14 @@
   - [Transform Dict](#transform-dict)
   - [Transform Compare Arrays](#transform-compare-arrays)
   - [Calculate](#calculate)
+    - [mean](#mean)
+    - [max](#max)
+    - [min](#min)
+    - [round](#round)
+    - [mode](#mode)
+    - [ms_to_kmh](#ms_to_kmh)
+    - [subtract](#subtract)
+    - [add](#add)
   - [Select](#select)
   - [Select Range](#select-range)
   - [Append](#append)
@@ -100,7 +108,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
       "value2"
     ],
     "url_pattern": "url",
-    "use_loop_as_key": true,
+    "use_loop_as_key": true
 }
 ```
 
@@ -169,6 +177,60 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Calculate
 
 <!-- TODO Description-->
+calculate stellt Methoden für Berechnungen zur Verfügung.
+
+### mean
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### max
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### min
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### round
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### mode
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### ms_to_kmh
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### subtract
+<!-- TODO Description-->
+```JSON
+
+```
+
+<!--TODO-->
+### add
+<!-- TODO Description-->
+
 
 ```JSON
 
@@ -179,6 +241,8 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Select
 
 <!-- TODO Description-->
+Mit select kann man sich die Keys aus der API-Antwort heraussuchen, die für das zu erstellende Video relevant sind. 
+Die Keys stehen in relevant_keys.
 
 ```JSON
 {
@@ -221,10 +285,12 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Add Symbol
 
 <!-- TODO Description-->
+add_symbol setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Value von dem Key, welcher 
+unter key steht. Man kann damit auch einen Value vom alten Key unter keys in einen neuen Key unter new_keys kopieren.
 
 ```JSON
 {
-  "type": "add_symbole",
+  "type": "add_symbol",
   "keys": ["key"],
   "new_keys": ["new_key"],
   "pattern": "{_key} test"
@@ -236,7 +302,11 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Replace
 
 <!-- TODO Description-->
+replace ersetzt einen String, der in old_value angegeben ist mit einem String, der in new_value angegeben ist. 
+Der Value, der unter keys gespeichert ist, wird verändert und in einem neuen Key (angegeben unter new_keys) gespeichert.
+count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt werden soll. 
 
+Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden.
 ```JSON
 {
   "type": "replace",
@@ -287,12 +357,17 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Date Format
 
 <!-- TODO Description-->
+date_format wandelt das Format von Datumsangaben um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
+stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format 
+wird angegeben in welchem Format das Datum in den Daten vorliegt, damit das Format in das Format umgewandelt werden kann, 
+welches in format angegeben ist. 
 
 ```JSON
 {
   "type": "date_format",
   "keys": ["key"],
   "new_keys": ["new_key"],
+  "given_format": "%Y-%m-%dT%H:%M:%S",
   "format": "%Y-%m-%d"
 }
 ```
@@ -302,7 +377,10 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Timestamp
 
 <!-- TODO Description-->
-
+timestamp wandelt Datumsangaben, welche im UNIX-Timestamp-Format angegeben sind, in das unter format spezifizierte Format
+um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben im UNIX-Timestamo-Format stehen. Unter 
+new_keys werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Value gespeichert wird. 
+zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 ```JSON
 {
   "type": "timestamp",
@@ -318,6 +396,9 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Date Weekday
 
 <!-- TODO Description-->
+date_weekday wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
+stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format 
+wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus der Wochentag bestimmt werden kann. 
 
 ```JSON
 {
@@ -333,6 +414,8 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Date Now
 
 <!-- TODO Description-->
+date_now gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
+Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 ```JSON
 {
@@ -347,10 +430,51 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Wind Direction
 
 <!-- TODO Description-->
+wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird. 
 
 ```JSON
-
+{
+          "type": "wind_direction",
+          "key": "_loop|wind_cdir_full",
+          "new_key": "_loop|str_wind_cdir_full",
+          "dict": { 
+            "west": {
+              "0": "West",
+              "1": "Westen"
+            },
+            "southwest": {
+              "0": "Südwest",
+              "1": "Südwesten"
+            },
+            "northwest": {
+              "0": "Nordwest",
+              "1": "Nordwesten"
+            },
+            "south": {
+              "0": "Süd",
+              "1": "Süden"
+            },
+            "east": {
+              "0": "Ost",
+              "1": "Osten"
+            },
+            "southeast": {
+              "0": "Südost",
+              "1": "Südosten"
+            },
+            "northeast": {
+              "0": "Nordost",
+              "1": "Nordosten"
+            },
+            "north": {
+              "0": "Nord",
+              "1": "Norden"
+            }
+          },
+          "delimiter": "-"
+        }
 ```
+
 
 <!--TODO-->
 
@@ -400,6 +524,8 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Add Data
 
 <!-- TODO Description-->
+add_data fügt den Daten ein neues Key-Value-Paar hinzu. Der Value wird unter pattern eingetragen und an die Stelle 
+new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
 ```JSON
 {
@@ -408,6 +534,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
   "pattern": "data"
 }
 ```
+
 
 <!--TODO-->
 
@@ -424,7 +551,7 @@ Der Name des Api Keys. Dieser **Name** muss mit einem **Key** in der Configurati
 ## Copy
 
 <!-- TODO Description-->
-
+Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt. 
 ```JSON
 
 ```
