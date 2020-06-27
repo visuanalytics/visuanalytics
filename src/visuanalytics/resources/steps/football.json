@@ -875,7 +875,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|0|TeamName}"
@@ -884,7 +884,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|0|Points}"
@@ -894,10 +894,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             250,
@@ -917,7 +917,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|1|TeamName}"
@@ -926,7 +926,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|1|Points}"
@@ -936,10 +936,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             338,
@@ -959,7 +959,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|2|TeamName}"
@@ -968,7 +968,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|2|Points}"
@@ -978,10 +978,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             426,
@@ -1001,7 +1001,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|3|TeamName}"
@@ -1010,7 +1010,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|3|Points}"
@@ -1020,10 +1020,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             514,
@@ -1043,7 +1043,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|4|TeamName}"
@@ -1052,7 +1052,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|4|Points}"
@@ -1062,10 +1062,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             602,
@@ -1085,7 +1085,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|5|TeamName}"
@@ -1094,7 +1094,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|5|Points}"
@@ -1104,10 +1104,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             690,
@@ -1127,7 +1127,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|6|TeamName}"
@@ -1136,7 +1136,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|6|Points}"
@@ -1146,10 +1146,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             778,
@@ -1169,7 +1169,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|7|TeamName}"
@@ -1178,7 +1178,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|7|Points}"
@@ -1188,10 +1188,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             866,
@@ -1211,7 +1211,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|8|TeamName}"
@@ -1220,7 +1220,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|8|Points}"
@@ -1230,10 +1230,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             954,
@@ -1268,7 +1268,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|9|TeamName}"
@@ -1277,7 +1277,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|9|Points}"
@@ -1287,10 +1287,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             250,
@@ -1310,7 +1310,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|10|TeamName}"
@@ -1319,7 +1319,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|10|Points}"
@@ -1329,10 +1329,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             338,
@@ -1352,7 +1352,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|11|TeamName}"
@@ -1361,7 +1361,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|11|Points}"
@@ -1371,10 +1371,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             426,
@@ -1394,7 +1394,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|12|TeamName}"
@@ -1403,7 +1403,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|12|Points}"
@@ -1413,10 +1413,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             514,
@@ -1436,7 +1436,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|13|TeamName}"
@@ -1445,7 +1445,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|13|Points}"
@@ -1455,10 +1455,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             602,
@@ -1478,7 +1478,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|14|TeamName}"
@@ -1487,7 +1487,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|14|Points}"
@@ -1497,10 +1497,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             690,
@@ -1520,7 +1520,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|15|TeamName}"
@@ -1529,7 +1529,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|15|Points}"
@@ -1539,10 +1539,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             778,
@@ -1562,7 +1562,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|16|TeamName}"
@@ -1571,7 +1571,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|16|Points}"
@@ -1581,10 +1581,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             866,
@@ -1604,7 +1604,7 @@
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|17|TeamName}"
@@ -1613,7 +1613,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|17|Points}"
@@ -1623,10 +1623,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             954,
