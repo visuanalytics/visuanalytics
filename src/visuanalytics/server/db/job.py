@@ -125,7 +125,7 @@ def get_steps(job_id: int):
                            [job_id]).fetchone()
 
 
-def query_topic_names():
+def get_topic_names():
     topic_names = []
     con = db.open_con()
     res = con.execute("SELECT NAME FROM steps")
@@ -134,7 +134,7 @@ def query_topic_names():
     return topic_names
 
 
-def query_params(topic_id):
+def get_params(topic_id):
     con = db.open_con()
     res = con.execute("SELECT json_file_name FROM steps WHERE id = ?", topic_id).fetchone()
     if (res == None):
