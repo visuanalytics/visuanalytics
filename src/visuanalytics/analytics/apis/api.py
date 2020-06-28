@@ -51,7 +51,7 @@ def request_memory(values: dict, data: StepData, name):
         with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
             return json.loads(fp.read())
     except:
-        return {"No_memory_found": True}
+        return _api(values["alternative"], data, name)
 
 
 @register_api
