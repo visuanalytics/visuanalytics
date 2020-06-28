@@ -90,8 +90,31 @@ def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
     :param step_data: Daten aus der API
     """
     chosen_text = "on_false"
-    if step_data.format(values["check"]) is True:
+    if bool(step_data.format(values["check"])):
         chosen_text = "on_true"
+    for overlay in values[chosen_text]:
+        over_func = get_type_func(overlay, OVERLAY_TYPES)
+        over_func(overlay, source_img, draw, presets, step_data)
+
+
+@register_overlay
+def int_option(values: dict, source_img, draw, presets: dict, step_data: StepData):
+    """
+    Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
+    wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
+    true oder false ist wird entweder Bauplan A oder Bauplan B ausgeführt.
+
+    :param values: Baupläne des zu schreibenden Overlays
+    :param source_img: Bild auf welches geschrieben werden soll
+    :param draw: Draw Objekt
+    :param presets: Preset Part aus der JSON
+    :param step_data: Daten aus der API
+    """
+    chosen_text = "on_equals"
+    if int(step_data.format(values["check"])) > 0:
+        chosen_text = "on_higher"
+    if int(step_data.format(values["check"])) < 0:
+        chosen_text = "on_lower"
     for overlay in values[chosen_text]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
         over_func(overlay, source_img, draw, presets, step_data)
