@@ -293,7 +293,7 @@
         },
         {
           "type": "calculate",
-          "action": "subtract_1",
+          "action": "subtract_specific",
           "keys": [
             "_loop|Points"
           ],

@@ -117,7 +117,7 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_multiply_1(values: dict, data: StepData):
+def calculate_multiply_specific(values: dict, data: StepData):
     multiply_by = int(data.format(values["multiply_by"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
@@ -127,7 +127,7 @@ def calculate_multiply_1(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_divide_1(values: dict, data: StepData):
+def calculate_divide_specific(values: dict, data: StepData):
     divide_by = int(data.format(values["divide_by"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
@@ -147,7 +147,7 @@ def calculate_subtract(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_subtract_1(values: dict, data: StepData):
+def calculate_subtract_specific(values: dict, data: StepData):
     subtract = int(data.format(values["subtract"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
@@ -167,7 +167,7 @@ def calculate_add(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_add_1(values: dict, data: StepData):
+def calculate_add_specific(values: dict, data: StepData):
     add = int(data.format(values["add"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
