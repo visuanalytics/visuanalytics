@@ -117,6 +117,26 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
 
 
 @register_calculate
+def calculate_multiply_1(values: dict, data: StepData):
+    multiply_by = int(data.format(values["multiply_by"], values))
+    for idx, key in data.loop_key(values["keys"], values):
+        value = int(data.get_data(key, values))
+        new_key = get_new_keys(values, idx)
+        new_value = value * multiply_by
+        data.insert_data(new_key, new_value, values)
+
+
+@register_calculate
+def calculate_divide_1(values: dict, data: StepData):
+    divide_by = int(data.format(values["divide_by"], values))
+    for idx, key in data.loop_key(values["keys"], values):
+        value = int(data.get_data(key, values))
+        new_key = get_new_keys(values, idx)
+        new_value = value / divide_by
+        data.insert_data(new_key, new_value, values)
+
+
+@register_calculate
 def calculate_subtract(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
@@ -127,10 +147,30 @@ def calculate_subtract(values: dict, data: StepData):
 
 
 @register_calculate
+def calculate_subtract_1(values: dict, data: StepData):
+    subtract = int(data.format(values["subtract"], values))
+    for idx, key in data.loop_key(values["keys"], values):
+        value = int(data.get_data(key, values))
+        new_key = get_new_keys(values, idx)
+        new_value = value - subtract
+        data.insert_data(new_key, new_value, values)
+
+
+@register_calculate
 def calculate_add(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         add = int(data.get_data(values["add"][idx], values))
+        new_key = get_new_keys(values, idx)
+        new_value = value + add
+        data.insert_data(new_key, new_value, values)
+
+
+@register_calculate
+def calculate_add_1(values: dict, data: StepData):
+    add = int(data.format(values["add"], values))
+    for idx, key in data.loop_key(values["keys"], values):
+        value = int(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
         new_value = value + add
         data.insert_data(new_key, new_value, values)

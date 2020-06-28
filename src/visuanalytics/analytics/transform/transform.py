@@ -328,8 +328,9 @@ def wind_direction(values: dict, data: StepData):
     """
     value = data.get_data(values["key"], values)
     new_key = get_new_key(values)
-    if value.find(data.format(values["delimiter"], values)) != -1:
-        wind = value.split("-")
+    delimiter = data.format(values["delimiter"], values)
+    if value.find(delimiter) != -1:
+        wind = value.split(delimiter)
         wind_1 = wind[0]
         wind_2 = wind[1]
         wind_dir_1 = data.format(values["dict"][wind_1]["0"], values)
