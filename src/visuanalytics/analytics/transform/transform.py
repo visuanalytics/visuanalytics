@@ -543,6 +543,15 @@ def option_for(values: dict, data: StepData):
 
 @register_transform
 def compare_and_random_text(values: dict, data: StepData):
+    """Wählt random einen Text aus bestimmtem `"pattern"`-Arrays aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
+
+    Wenn `"compare_1"`-Wert gleich `"compare_2"`-Wert, dann wird ein Text aus dem ersten Array aus `"pattern"` random ausgewählt.
+    Wenn `"compare_1"`-Wert größer `"compare_2"`-Wert, dann wird ein Text aus dem zweiten Array aus `"pattern"` random ausgewählt.
+    Wenn `"compare_1"`-Wert kleiner `"compare_2"`-Wert, dann wird ein Text aus dem dritten Array aus `"pattern"` random ausgewählt.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         where = data.format(values["where"], values)
@@ -577,6 +586,11 @@ def compare_and_random_text(values: dict, data: StepData):
 
 @register_transform
 def random_text(values: dict, data: StepData):
+    """Wählt random einen Text aus einem `"pattern"`-Array aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         len_pattern = len(values["pattern"])
         choice = []
