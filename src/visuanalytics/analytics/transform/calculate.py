@@ -34,7 +34,7 @@ def calculate_mean(values: dict, data: StepData):
 
 @register_calculate
 def calculate_max(values: dict, data: StepData):
-    """Sucht den Maximalwert von Werten, die in einem Array stehen.
+    """Findet den Maximalwert von Werten, die in einem Array stehen.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -51,7 +51,7 @@ def calculate_max(values: dict, data: StepData):
 
 @register_calculate
 def calculate_min(values: dict, data: StepData):
-    """Sucht den Minimalwert von Werten, die in einem Array stehen.
+    """Findet den Minimalwert von Werten, die in einem Array stehen.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -68,7 +68,7 @@ def calculate_min(values: dict, data: StepData):
 
 @register_calculate
 def calculate_round(values: dict, data: StepData):
-    """Rundet gegebene Werte auf eine gewünschte Nachkommastelle ab.
+    """Rundet gegebene Werte auf eine gewünschte Nachkommastelle.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -86,7 +86,7 @@ def calculate_round(values: dict, data: StepData):
 
 @register_calculate
 def calculate_mode(values: dict, data: StepData):
-    """Bestimmt den am häufigsten in einem Array vorkommenden Value.
+    """Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -100,7 +100,8 @@ def calculate_mode(values: dict, data: StepData):
 
 @register_calculate
 def calculate_ms_to_kmh(values: dict, data: StepData):
-    """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
+    """Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
+    die unter decimal angegeben wird.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -118,26 +119,53 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
 
 @register_calculate
 def calculate_multiply_specific(values: dict, data: StepData):
+    """Multipliziert die gegebenen Werte jeweils mit dem Wert, der in multiply_by steht. Anschließend wird das
+    jeweilige Ergebnis auf die gewünschte Nachkommastelle gerundet, die unter decimal angegeben wird.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     multiply_by = int(data.format(values["multiply_by"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
+        decimal = data.format(values["decimal"], values)
         new_value = value * multiply_by
+        if values.get("decimal", None):
+            new_value = round(new_value, decimal)
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
 def calculate_divide_specific(values: dict, data: StepData):
+    """Dividiert die angegebenen Werte durch den Wert, der in divide_by steht. Anschließend wird das
+    jeweilige Ergebnis auf die gewünschte Nachkommastelle gerundet, die unter decimal angegeben wird.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     divide_by = int(data.format(values["divide_by"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
+        decimal = data.format(values["decimal"], values)
         new_value = value / divide_by
+        if values.get("decimal", None):
+            new_value = round(new_value, decimal)
+        else:
+            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
 def calculate_subtract(values: dict, data: StepData):
+    """Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         subtract = int(data.get_data(values["subtract"][idx], values))
@@ -148,6 +176,11 @@ def calculate_subtract(values: dict, data: StepData):
 
 @register_calculate
 def calculate_subtract_specific(values: dict, data: StepData):
+    """Der Wert, der in subtract steht, wird jeweils von den Werten, die in key stehen, subtrahiert.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     subtract = int(data.format(values["subtract"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
@@ -158,6 +191,11 @@ def calculate_subtract_specific(values: dict, data: StepData):
 
 @register_calculate
 def calculate_add(values: dict, data: StepData):
+    """Die jeweiligen Werte, die in add stehen, werden zu den Werten, die in key stehen, hinzuaddiert.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         add = int(data.get_data(values["add"][idx], values))
@@ -168,6 +206,11 @@ def calculate_add(values: dict, data: StepData):
 
 @register_calculate
 def calculate_add_specific(values: dict, data: StepData):
+    """Der Wert, der in add steht, wird jeweils zu den Werten, die in key stehen, hinzuaddiert.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     add = int(data.format(values["add"], values))
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
