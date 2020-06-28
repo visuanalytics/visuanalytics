@@ -477,28 +477,31 @@ def option_for(values: dict, data: StepData):
 def compare_and_random_text(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
+        where = data.format(values["where"], values)
         compare_1 = data.format(values["compare_1"], values)
         compare_2 = data.format(values["compare_2"], values)
         new_key = get_new_keys(values, idx)
+        value_1 = value[where][compare_1]
+        value_2 = value[where][compare_2]
         choice = []
-        if value[compare_1] == value[compare_2]:
-            len_pattern = len(values["pattern"]["1"])
+        if value_1 == value_2:
+            len_pattern = len(values["pattern"][0])
             for i in range(len_pattern):
                 choice.append(i)
             rand = random.choice(choice)
-            new_value = data.format(values["pattern"]["1"][rand], values)
-        elif value[compare_1] > value[compare_2]:
-            len_pattern = len(values["pattern"]["2"])
+            new_value = data.format(values["pattern"][0][rand], values)
+        elif value_1 > value_2:
+            len_pattern = len(values["pattern"][1])
             for i in range(len_pattern):
                 choice.append(i)
             rand = random.choice(choice)
-            new_value = data.format(values["pattern"]["2"][rand], values)
-        elif value[compare_1] < value[compare_2]:
-            len_pattern = len(values["pattern"]["3"])
+            new_value = data.format(values["pattern"][1][rand], values)
+        elif value_1 < value_2:
+            len_pattern = len(values["pattern"][2])
             for i in range(len_pattern):
                 choice.append(i)
             rand = random.choice(choice)
-            new_value = data.format(values["pattern"]["3"][rand], values)
+            new_value = data.format(values["pattern"][2][rand], values)
         else:
             new_value = 0
         data.insert_data(new_key, new_value, values)

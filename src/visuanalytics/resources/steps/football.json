@@ -115,23 +115,24 @@
               "keys": [
                 "_loop"
               ],
-              "compare_1": "MatchResults|PointsTeam1",
-              "compare_2": "MatchResults|PointsTeam2",
-              "pattern": {
-                "1": [
+              "compare_1": "PointsTeam1",
+              "compare_2": "PointsTeam2",
+              "where": "MatchResults",
+              "pattern": [
+                [
                   "{_loop|Team1|TeamName} und {_loop|Team2|TeamName} trennten sich mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "Zwischen {_loop|MTeam1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "Zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
                   "Ein Unentschieden zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
                 ],
-                "2": [
+                [
                   "{_loop|Team1|TeamName} gewann gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
                   "{_loop|Team1|TeamName} gewann Zuhause gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
                 ],
-                "3": [
-                  "{_loop|MatchResults|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "{_loop|MatchResults|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
+                [
+                  "{_loop|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
+                  "{_loop|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
                 ]
-              },
+              ],
               "new_keys": [
                 "_loop|MatchResults|Text"
               ]
