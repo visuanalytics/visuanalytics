@@ -333,9 +333,10 @@ def choose_random(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         choice_list = []
-        for x in range(len(values["choice"])):
-            choice_list.append(data.format(values["choice"][x], values))
-        decision = str(random.choice(choice_list))
+        length_dict_array = len(values["dict"][value])
+        for x in range(length_dict_array):
+            choice_list.append(x)
+        decision = random.choice(choice_list)
         new_key = get_new_keys(values, idx)
         new_value = data.format(values["dict"][value][decision], values)
         data.insert_data(new_key, new_value, values)
