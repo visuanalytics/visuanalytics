@@ -501,11 +501,19 @@ def option(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     check = data.get_data(values["check"], values)
-
-    if check:
-        values["transform"] = values.get("on_true", [])
+    condition = values.get("condition", None)
+    if condition is not None:
+        if condition == check:
+            values["transform"] = values.get("on_equal", [])
+        elif condition > check:
+            values["transform"] = values.get("on_higher", [])
+        elif condition < check:
+            values["transform"] = values.get("on_lower", [])
     else:
-        values["transform"] = values.get("on_false", [])
+        if check:
+            values["transform"] = values.get("on_true", [])
+        else:
+            values["transform"] = values.get("on_false", [])
 
     transform(values, data)
 
@@ -582,9 +590,8 @@ def random_text(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         len_pattern = len(values["pattern"])
-        for i in range(len_pattern):
-            len_choice = len(values["pattern"][i])
-            rand = randint(0, len_choice - 1)
-            new_key = get_new_keys(values, idx)
-            new_value = data.format(values["pattern"][i][rand], values)
-            data.insert_data(new_key, new_value, values)
+        rand = randint(0, len_pattern - 1)
+        new_key = get_new_keys(values, idx)
+        print(new_key)
+        new_value = data.format(values["pattern"][rand], values)
+        data.insert_data(new_key, new_value, values)
