@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from random import randint
+from numpy import random
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS

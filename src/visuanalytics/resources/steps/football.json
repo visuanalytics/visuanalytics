@@ -83,55 +83,6 @@
           "check": "_loop|MatchIsFinished",
           "on_true": [
             {
-              "type": "alias",
-              "keys": [
-                "_loop|MatchResults|0"
-              ],
-              "new_keys": [
-                "_loop|MatchResults"
-              ]
-            },
-            {
-              "type": "copy",
-              "keys": [
-                "_loop|MatchResults|PointsTeam1",
-                "_loop|MatchResults|PointsTeam1"
-              ],
-              "new_keys": [
-                "_loop|Team1|Won",
-                "_loop|Team2|Lost"
-              ]
-            },
-            {
-              "type": "copy",
-              "keys": [
-                "_loop|MatchResults|PointsTeam2",
-                "_loop|MatchResults|PointsTeam2"
-              ],
-              "new_keys": [
-                "_loop|Team2|Won",
-                "_loop|Team1|Lost"
-              ]
-            },
-            {
-              "type": "result",
-              "keys": [
-                "_loop|Team1",
-                "_loop|Team2"
-              ],
-              "new_keys": [
-                "_loop|Team1|Result",
-                "_loop|Team2|Result"
-              ],
-              "compare_1": "Won",
-              "compare_2": "Lost",
-              "points": {
-                "1": "1",
-                "2": "3",
-                "3": "0"
-              }
-            },
-            {
               "type": "compare_and_random_text",
               "keys": [
                 "_loop"
@@ -160,18 +111,6 @@
             }
           ],
           "on_false": [
-            {
-              "type": "add_data",
-              "new_keys": [
-                "_loop|Team1|Won",
-                "_loop|Team2|Won",
-                "_loop|Team1|Lost",
-                "_loop|Team2|Lost",
-                "_loop|Team1|Result",
-                "_loop|Team2|Result"
-              ],
-              "pattern": 0
-            },
             {
               "type": "random_text",
               "keys": [
@@ -211,137 +150,15 @@
           ]
         },
         {
-          "type": "alias",
+          "type": "get_equivalent_key",
           "keys": [
             "_loop|TeamInfoId"
           ],
           "new_keys": [
-            "_loop|TeamId"
-          ]
-        },
-        {
-          "type": "copy",
-          "keys": [
-            "_loop|Points",
-            "_loop|Goals",
-            "_loop|OpponentGoals",
-            "_loop|GoalDiff"
-          ],
-          "new_keys": [
-            "_loop|Points_before",
-            "_loop|Goals_before",
-            "_loop|OpponentGoals_before",
-            "_loop|GoalDiff_before"
+            "_loop|Rank_diff"
           ]
         }
       ]
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Result",
-      "new_key": "_loop|Result"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Result",
-      "new_key": "_loop|Result"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Won",
-      "new_key": "_loop|Goals_Won"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Won",
-      "new_key": "_loop|Goals_Won"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Lost",
-      "new_key": "_loop|Goals_Lost"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Lost",
-      "new_key": "_loop|Goals_Lost"
-    },
-    {
-      "type": "transform_array",
-      "array_key": "_req|Tabelle",
-      "transform": [
-        {
-          "type": "calculate",
-          "action": "subtract",
-          "keys": [
-            "_loop|Points_before",
-            "_loop|Goals_before",
-            "_loop|OpponentGoals_before",
-            "_loop|GoalDiff_before",
-            "_loop|Points"
-          ],
-          "subtract": [
-            "_loop|Result",
-            "_loop|Goals_Won",
-            "_loop|Goals_Lost",
-            "_loop|Goals_Won",
-            "_loop|Points"
-          ]
-        },
-        {
-          "type": "calculate",
-          "action": "subtract_specific",
-          "keys": [
-            "_loop|Points"
-          ],
-          "subtract": "{_req|Tabelle|0|Points}",
-          "new_keys": [
-            "_loop|PointsDiffToFirstPlace"
-          ]
-        },
-        {
-          "type": "calculate",
-          "action": "add",
-          "keys": [
-            "_loop|GoalDiff_before"
-          ],
-          "add": [
-            "_loop|Goals_Lost"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "transform_values_diff",
-      "array_key_1": "_req|VorherigeTabelle",
-      "array_key_2": "_req|Tabelle",
-      "compare": "Rank",
-      "pattern": "TeamId",
-      "new_key": "_loop|Rank_diff"
     },
     {
       "type": "transform_array",
