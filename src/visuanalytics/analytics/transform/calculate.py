@@ -99,25 +99,6 @@ def calculate_mode(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_multiply_keys(values: dict, data: StepData):
-    """Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
-    die unter decimal angegeben wird.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        new_key = get_new_keys(values, idx)
-        multiply_by = data.format(values["multiply_by"], values)
-        new_value = (value * multiply_by)
-        if values.get("decimal") is not None:
-            decimal = data.format(values["decimal"], values)
-            new_value = round(new_value, decimal)
-        data.insert_data(new_key, new_value, values)
-
-
-@register_calculate
 def calculate_multiply(values: dict, data: StepData):
     """Multipliziert die gegebenen Werte jeweils mit dem Wert, der in multiply_by steht. Anschließend wird das
     jeweilige Ergebnis auf die gewünschte Nachkommastelle gerundet, die unter decimal angegeben wird.

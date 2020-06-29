@@ -1,4 +1,4 @@
-from numpy import random
+from random import randint
 
 from visuanalytics.analytics.util.step_errors import AudioError, raise_step_error
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
@@ -64,8 +64,5 @@ def random_text(values, data):
     :param data: Daten aus der API
     """
     len_pattern = len(values["pattern"])
-    choice = []
-    for i in range(len_pattern):
-        choice.append(i)
-    rand = random.choice(choice)
+    rand = randint(0, len_pattern - 1)
     return data.format(values["pattern"][rand], values)
