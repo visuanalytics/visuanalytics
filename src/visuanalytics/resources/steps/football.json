@@ -216,7 +216,7 @@
           "pattern": [
             "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 1. Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
             "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
           "new_keys": [
@@ -233,7 +233,7 @@
           "pattern": [
             "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 1. Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
             "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
           "new_keys": [
@@ -250,7 +250,7 @@
           "pattern": [
             "{_key|TeamName} übernimmt die Führung. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 1. Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
             "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
           "new_keys": [
@@ -273,7 +273,7 @@
             "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
             "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 2. Platz mit {_key|Points} Punkten. "
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -287,12 +287,12 @@
             "_req|Tabelle|1"
           ],
           "pattern": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
             "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 2. Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} übernimmt den 2. Platz mit {_key|Points} Punkten.",
-            "{_key|TeamName} nun auf dem 2. Platz mit {_key|Points} Punkten."
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} übernimmt den zweiten Platz mit {_key|Points} Punkten.",
+            "{_key|TeamName} nun auf dem zweiten Platz mit {_key|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -306,11 +306,11 @@
             "_req|Tabelle|1"
           ],
           "pattern": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
             "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 2. Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} ist vom _key. Platz auf den 2. Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} ist auf den zweiten Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -331,7 +331,7 @@
           "pattern": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 4. Platz mit {_key|Points} Punkten. "
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|3|Text"
@@ -347,7 +347,7 @@
           "pattern": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 4. Platz mit {_key|Points} Punkten. "
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|3|Text"
@@ -363,7 +363,7 @@
           "pattern": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 4. Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. ",
             "Auf den 4. Platz abgestiegen ist {_key|TeamName} mit {_key|Points}. "
           ],
           "new_keys": [
