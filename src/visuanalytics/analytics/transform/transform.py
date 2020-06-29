@@ -1,13 +1,12 @@
 import re
 from datetime import datetime
-
-from numpy import random
+from random import randint
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
 from visuanalytics.analytics.util.step_errors import TransformError, \
-    raise_step_error
+    raise_step_error, StepKeyError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
@@ -135,7 +134,7 @@ def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
-    except KeyError:
+    except StepKeyError:
         data.insert_data(values["new_key"], [], values)
         array = data.get_data(values["new_key"], values)
 
@@ -173,6 +172,26 @@ def replace(values: dict, data: StepData):
                                   data.format(values["new_value"], values),
                                   data.format(values.get("count", -1), values))
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def get_equivalent_key(values: dict, data: StepData):
+    # Todo Max oder tanja in json sprache einbinden
+    """Berechnet die Differenz zwischen zwei werten, angegeben anhand einer id.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        new_values = ""
+        new_key = get_new_keys(values, idx)
+        index = data.format("{_idx}", values)
+        name = data.data["_req"]["Tabelle"][int(index)]["TeamInfoId"]
+        for item in data.data["_req"]["Vorherige-Tabelle"]:
+            if item["TeamInfoId"] == name:
+                new_values = int(data.format("{_idx}", values)) - int(index)
+                break
+        data.insert_data(new_key, int(new_values), values)
 
 
 @register_transform
@@ -332,10 +351,8 @@ def choose_random(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
-        choice_list = []
-        for x in range(len(values["choice"])):
-            choice_list.append(data.format(values["choice"][x], values))
-        decision = str(random.choice(choice_list))
+        length_dict_array = len(values["dict"][value])
+        decision = randint(0, length_dict_array - 1)
         new_key = get_new_keys(values, idx)
         new_value = data.format(values["dict"][value][decision], values)
         data.insert_data(new_key, new_value, values)
