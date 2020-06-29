@@ -108,20 +108,20 @@ def _bi_calculate(values: dict, data: StepData, op):
 
     # TODO (max) May solve loop two key arrays better to support key, key1
     for idx, key in data.loop_key(values["keys"], values):
-        key = int(data.get_data(key, values))
+        key = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
         if keys_right is not None:
             # If keys_right is present use that key
-            right = int(data.get_data(keys_right[idx], values))
+            right = data.get_data(keys_right[idx], values)
             res = op(key, right)
         elif value_right is not None:
             # If value_right is present use that value
-            right = int(data.format(value_right, values))
+            right = data.get_data(value_right, values)
             res = op(key, right)
         else:
             # If value_left is present use taht value
-            left = int(data.format(value_left, values))
+            left = data.get_data(value_left, values)
             res = op(left, key)
 
         if decimal is not None:
