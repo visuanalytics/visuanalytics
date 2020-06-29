@@ -98,7 +98,7 @@ def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
 
 
 @register_overlay
-def int_option(values: dict, source_img, draw, presets: dict, step_data: StepData):
+def number_comparison(values: dict, source_img, draw, presets: dict, step_data: StepData):
     """
     Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
     wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
@@ -110,11 +110,11 @@ def int_option(values: dict, source_img, draw, presets: dict, step_data: StepDat
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
     """
-    chosen_text = "on_equals"
+    chosen_text = "on_zero"
     if int(step_data.format(values["check"])) > 0:
-        chosen_text = "on_higher"
+        chosen_text = "on_positive"
     if int(step_data.format(values["check"])) < 0:
-        chosen_text = "on_lower"
+        chosen_text = "on_negative"
     for overlay in values[chosen_text]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
         over_func(overlay, source_img, draw, presets, step_data)
