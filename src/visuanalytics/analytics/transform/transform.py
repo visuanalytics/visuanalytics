@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from pydoc import locate
 from random import randint
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -548,3 +549,13 @@ def random_text(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         new_value = data.format(values["pattern"][rand], values)
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def convert(values: dict, data: StepData):
+    new_type = locate(values["to"])
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        value = new_type(data.get_data(key, values))
+
+        data.insert_data(new_key, value, values)
