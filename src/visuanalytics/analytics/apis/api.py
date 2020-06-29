@@ -41,6 +41,21 @@ def request(values: dict, data: StepData, name):
 
 
 @register_api
+def request_memory(values: dict, data: StepData, name):
+    """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    # todo (jannik) möglichekit einbauen Daten aus letzem run zu nutzen
+    try:
+        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
+            return json.loads(fp.read())
+    except FileNotFoundError:
+        return _api(values["alternative"], data, name)
+
+
+@register_api
 def request_multiple(values: dict, data: StepData, name):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 

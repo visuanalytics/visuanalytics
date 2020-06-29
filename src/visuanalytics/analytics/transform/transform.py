@@ -175,6 +175,26 @@ def replace(values: dict, data: StepData):
 
 
 @register_transform
+def get_equivalent_key(values: dict, data: StepData):
+    # Todo Max oder tanja in json sprache einbinden
+    """Berechnet die Differenz zwischen zwei werten, angegeben anhand einer id.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        new_values = ""
+        new_key = get_new_keys(values, idx)
+        index = data.format("{_idx}", values)
+        name = data.data["_req"]["Tabelle"][int(index)]["TeamInfoId"]
+        for item in data.data["_req"]["Vorherige-Tabelle"]:
+            if item["TeamInfoId"] == name:
+                new_values = int(data.format("{_idx}", values)) - int(index)
+                break
+        data.insert_data(new_key, int(new_values), values)
+
+
+@register_transform
 def translate_key(values: dict, data: StepData):
     """Setzt den value zu einem key als neuen value für die JSON.
 
