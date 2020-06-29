@@ -150,15 +150,24 @@
           ]
         },
         {
-          "type": "get_equivalent_key",
+          "type": "add_symbol",
           "keys": [
             "_loop|TeamInfoId"
           ],
           "new_keys": [
-            "_loop|Rank_diff"
-          ]
+            "_loop|Rank"
+          ],
+          "pattern": "{_idx}"
         }
       ]
+    },
+    {
+      "type": "transform_values_diff",
+      "array_key_1": "_req|Vorherige-Tabelle",
+      "array_key_2": "_req|Tabelle",
+      "compare": "Rank",
+      "pattern": "TeamInfoId",
+      "new_key": "_loop|Rank_diff"
     },
     {
       "type": "transform_array",

@@ -229,10 +229,11 @@ def get_equivalent_key(values: dict, data: StepData):
         new_values = ""
         new_key = get_new_keys(values, idx)
         index = data.format("{_idx}", values)
+        rank = data.data["_req"]["Tabelle"][int(index)]["Rank"]
         name = data.data["_req"]["Tabelle"][int(index)]["TeamInfoId"]
         for item in data.data["_req"]["Vorherige-Tabelle"]:
             if item["TeamInfoId"] == name:
-                new_values = int(data.format("{_idx}", values)) - int(index)
+                new_values = int(data.format("{_idx}", values)) - int(rank)
                 break
         data.insert_data(new_key, int(new_values), values)
 
