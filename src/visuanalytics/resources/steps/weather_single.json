@@ -77,7 +77,8 @@
           "keys": [
             "_loop|wind_spd"
           ],
-          "action": "ms_to_kmh",
+          "action": "multiply",
+          "multiply_by": 3.6,
           "decimal": 2
         },
         {
