@@ -99,7 +99,7 @@ def calculate_mode(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_ms_to_kmh(values: dict, data: StepData):
+def calculate_multiply_keys(values: dict, data: StepData):
     """Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
     die unter decimal angegeben wird.
 
@@ -109,16 +109,16 @@ def calculate_ms_to_kmh(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        kmh = (value * 3.6)
-        if values.get("decimal", None):
-            new_value = round(kmh, data.format(values["decimal"], values))
-        else:
-            new_value = round(kmh)
+        multiply_by = data.format(values["multiply_by"], values)
+        new_value = (value * multiply_by)
+        if values.get("decimal") is not None:
+            decimal = data.format(values["decimal"], values)
+            new_value = round(new_value, decimal)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
-def calculate_multiply_specific(values: dict, data: StepData):
+def calculate_multiply(values: dict, data: StepData):
     """Multipliziert die gegebenen Werte jeweils mit dem Wert, der in multiply_by steht. Anschließend wird das
     jeweilige Ergebnis auf die gewünschte Nachkommastelle gerundet, die unter decimal angegeben wird.
 
@@ -129,17 +129,15 @@ def calculate_multiply_specific(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
-        decimal = data.format(values["decimal"], values)
         new_value = value * multiply_by
-        if values.get("decimal", None):
+        if values.get("decimal") is not None:
+            decimal = data.format(values["decimal"], values)
             new_value = round(new_value, decimal)
-        else:
-            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
-def calculate_divide_specific(values: dict, data: StepData):
+def calculate_divide(values: dict, data: StepData):
     """Dividiert die angegebenen Werte durch den Wert, der in divide_by steht. Anschließend wird das
     jeweilige Ergebnis auf die gewünschte Nachkommastelle gerundet, die unter decimal angegeben wird.
 
@@ -150,17 +148,15 @@ def calculate_divide_specific(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
-        decimal = data.format(values["decimal"], values)
         new_value = value / divide_by
-        if values.get("decimal", None):
+        if values.get("decimal") is not None:
+            decimal = data.format(values["decimal"], values)
             new_value = round(new_value, decimal)
-        else:
-            new_value = round(new_value)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
-def calculate_subtract(values: dict, data: StepData):
+def calculate_subtract_keys(values: dict, data: StepData):
     """Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.
 
     :param values: Werte aus der JSON-Datei
@@ -175,7 +171,7 @@ def calculate_subtract(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_subtract_specific(values: dict, data: StepData):
+def calculate_subtract(values: dict, data: StepData):
     """Der Wert, der in subtract steht, wird jeweils von den Werten, die in key stehen, subtrahiert.
 
     :param values: Werte aus der JSON-Datei
@@ -190,7 +186,7 @@ def calculate_subtract_specific(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_add(values: dict, data: StepData):
+def calculate_add_keys(values: dict, data: StepData):
     """Die jeweiligen Werte, die in add stehen, werden zu den Werten, die in key stehen, hinzuaddiert.
 
     :param values: Werte aus der JSON-Datei
@@ -205,7 +201,7 @@ def calculate_add(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_add_specific(values: dict, data: StepData):
+def calculate_add(values: dict, data: StepData):
     """Der Wert, der in add steht, wird jeweils zu den Werten, die in key stehen, hinzuaddiert.
 
     :param values: Werte aus der JSON-Datei
