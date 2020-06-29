@@ -197,10 +197,8 @@
       "array_key": "_req|Tabelle",
       "transform": [
         {
-          "type": "option_for",
-          "check": [
-            "0|Rank_diff"
-          ],
+          "type": "option",
+          "check": "_loop|Rank_diff",
           "condition": 0,
           "on_equal": [
             {
@@ -217,7 +215,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|0|Text"
+                "Text"
               ]
             }
           ],
@@ -236,7 +234,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|0|Text"
+                "Text"
               ]
             }
           ],
@@ -255,16 +253,14 @@
                 ]
               ],
               "new_keys": [
-                "Text|0|Text"
+                "Text"
               ]
             }
           ]
         },
         {
-          "type": "option_for",
-          "check": [
-            "1|Rank_diff"
-          ],
+          "type": "option",
+          "check": "_loop|Rank_diff",
           "condition": 0,
           "on_equal": [
             {
@@ -281,7 +277,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|1|Text"
+                "Text"
               ]
             }
           ],
@@ -302,7 +298,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|1|Text"
+                "Text"
               ]
             }
           ],
@@ -322,16 +318,14 @@
                 ]
               ],
               "new_keys": [
-                "Text|1|Text"
+                "Text"
               ]
             }
           ]
         },
         {
-          "type": "option_for",
-          "check": [
-            "3|Rank_diff"
-          ],
+          "type": "option",
+          "check": "_loop|Rank_diff",
           "condition": 0,
           "on_equal": [
             {
@@ -347,7 +341,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|2|Text"
+                "Text"
               ]
             }
           ],
@@ -365,7 +359,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|2|Text"
+                "Text"
               ]
             }
           ],
@@ -384,16 +378,14 @@
                 ]
               ],
               "new_keys": [
-                "Text|2|Text"
+                "Text"
               ]
             }
           ]
         },
         {
-          "type": "option_for",
-          "check": [
-            "15|Rank_diff"
-          ],
+          "type": "option",
+          "check": "_loop|Rank_diff",
           "condition": 0,
           "on_equal": [
             {
@@ -409,7 +401,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|4|Text"
+                "Text"
               ]
             }
           ],
@@ -428,7 +420,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|4|Text"
+                "Text"
               ]
             }
           ],
@@ -447,16 +439,14 @@
                 ]
               ],
               "new_keys": [
-                "Text|4|Text"
+                "Text"
               ]
             }
           ]
         },
         {
-          "type": "option_for",
-          "check": [
-            "16|Rank_diff"
-          ],
+          "type": "option",
+          "check": "_loop|Rank_diff",
           "condition": 0,
           "on_equal": [
             {
@@ -472,7 +462,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|6|Text"
+                "Text"
               ]
             }
           ],
@@ -490,7 +480,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|6|Text"
+                "Text"
               ]
             }
           ],
@@ -509,7 +499,7 @@
                 ]
               ],
               "new_keys": [
-                "Text|6|Text"
+                "Text"
               ]
             }
           ]
@@ -1310,7 +1300,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|0|Rank_Dif}",
+          "check": "{_req|Tabelle|0|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1384,7 +1374,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|1|Rank_Dif}",
+          "check": "{_req|Tabelle|1|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1458,7 +1448,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|2|Rank_Dif}",
+          "check": "{_req|Tabelle|2|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1532,7 +1522,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|3|Rank_Dif}",
+          "check": "{_req|Tabelle|3|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1606,7 +1596,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|4|Rank_Dif}",
+          "check": "{_req|Tabelle|4|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1680,7 +1670,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|5|Rank_Dif}",
+          "check": "{_req|Tabelle|5|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1754,7 +1744,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|6|Rank_Dif}",
+          "check": "{_req|Tabelle|6|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1828,7 +1818,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|7|Rank_Dif}",
+          "check": "{_req|Tabelle|7|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1902,7 +1892,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|8|Rank_Dif}",
+          "check": "{_req|Tabelle|8|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -1991,7 +1981,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|9|Rank_Dif}",
+          "check": "{_req|Tabelle|9|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2065,7 +2055,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|10|Rank_Dif}",
+          "check": "{_req|Tabelle|10|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2139,7 +2129,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|11|Rank_Dif}",
+          "check": "{_req|Tabelle|11|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2213,7 +2203,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|12|Rank_Dif}",
+          "check": "{_req|Tabelle|12|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2287,7 +2277,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|13|Rank_Dif}",
+          "check": "{_req|Tabelle|13|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2361,7 +2351,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|14|Rank_Dif}",
+          "check": "{_req|Tabelle|14|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2435,7 +2425,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|15|Rank_Dif}",
+          "check": "{_req|Tabelle|15|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2509,7 +2499,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|16|Rank_Dif}",
+          "check": "{_req|Tabelle|16|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2583,7 +2573,7 @@
         {
           "description": "up/down/equals",
           "type": "number_comparison",
-          "check": "{_req|Tabelle|17|Rank_Dif}",
+          "check": "{_req|Tabelle|17|Rank_diff}",
           "on_positive": [
             {
               "type": "image",
@@ -2629,7 +2619,7 @@
           },
           {
             "type": "text",
-            "pattern": "{_req|Spiele|0|MatchText}"
+            "pattern": "{_req|Spiele|0|MatchResults|Text}"
           }
         ]
       },
@@ -2637,7 +2627,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|1|MatchText}"
+            "pattern": "{_req|Spiele|1|MatchResults|Text}"
           }
         ]
       },
@@ -2645,7 +2635,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|2|MatchText}"
+            "pattern": "{_req|Spiele|2|MatchResults|Text}"
           }
         ]
       },
@@ -2653,7 +2643,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|3|MatchText}"
+            "pattern": "{_req|Spiele|3|MatchResults|Text}"
           }
         ]
       },
@@ -2661,7 +2651,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|4|MatchText}"
+            "pattern": "{_req|Spiele|4|MatchResults|Text}"
           }
         ]
       },
@@ -2669,7 +2659,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|5|MatchText}"
+            "pattern": "{_req|Spiele|5|MatchResults|Text}"
           }
         ]
       },
@@ -2677,7 +2667,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|6|MatchText}"
+            "pattern": "{_req|Spiele|6|MatchResults|Text}"
           }
         ]
       },
@@ -2685,7 +2675,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|7|MatchText}"
+            "pattern": "{_req|Spiele|7|MatchResults|Text}"
           }
         ]
       },
@@ -2693,7 +2683,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|8|MatchText}"
+            "pattern": "{_req|Spiele|8|MatchResults|Text}"
           }
         ]
       },
@@ -2705,19 +2695,19 @@
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|Text|0|Text} "
+            "pattern": "Test "
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|Text|1|Text} "
+            "pattern": "Test "
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|Text|2|Text} "
+            "pattern": "Test "
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|Text|3|Text} "
+            "pattern": "Test "
           },
           {
             "type": "text",
@@ -2733,7 +2723,7 @@
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|Text|6|Text} "
+            "pattern": "Test "
           }
         ]
       }

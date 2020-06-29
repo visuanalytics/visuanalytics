@@ -6,7 +6,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
 from visuanalytics.analytics.util.step_errors import TransformError, \
-    raise_step_error, StepKeyError
+    raise_step_error
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
@@ -500,9 +500,9 @@ def option(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    condition = data.get_data(values["check"], values)
+    check = data.get_data(values["check"], values)
 
-    if condition:
+    if check:
         values["transform"] = values.get("on_true", [])
     else:
         values["transform"] = values.get("on_false", [])
@@ -524,18 +524,17 @@ def option_for(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in data.loop_key(values["check"], values):
-        value = data.get_data(key, values)
-        condition = data.get_data(values["condition"], values)
+    check = data.get_data(values["check"], values)
+    condition = data.get_data(values["condition"], values)
 
-        if condition == value:
-            values["transform"] = values.get("on_equal", [])
-        elif condition > value:
-            values["transform"] = values.get("on_higher", [])
-        elif condition < value:
-            values["transform"] = values.get("on_lower", [])
+    if condition == check:
+        values["transform"] = values.get("on_equal", [])
+    elif condition > check:
+        values["transform"] = values.get("on_higher", [])
+    elif condition < check:
+        values["transform"] = values.get("on_lower", [])
 
-        transform(values, data)
+    transform(values, data)
 
 
 @register_transform
