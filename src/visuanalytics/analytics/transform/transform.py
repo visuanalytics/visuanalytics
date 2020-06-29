@@ -397,26 +397,6 @@ def choose_random(values: dict, data: StepData):
 
 
 @register_transform
-def find_equal(values: dict, data: StepData):
-    # TODO
-    """innerhalb von loop
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        new_key = get_new_keys(values, idx)
-        search_through = data.format(values["search_through"], values)
-        replace_by = data.format(values["replace_by"], values)
-        if value == search_through:
-            new_value = replace_by
-        else:
-            new_value = value
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def loop(values: dict, data: StepData):
     """Durchläuft das angegebene Array und führt für jedes Element die angegebenen `"transform"`-Funktionen aus.
 
