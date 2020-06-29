@@ -119,8 +119,9 @@ def calculate(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    action = data.format(values["action"], values)
-    CALCULATE_ACTIONS[action](values, data)
+    action_func = get_type_func(values, CALCULATE_ACTIONS, "action")
+
+    action_func(values, data)
 
 
 @register_transform
