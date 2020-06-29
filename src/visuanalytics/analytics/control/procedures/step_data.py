@@ -126,6 +126,22 @@ class StepData(object):
         self.__data["_conf"] = _conf
         self.__data["_pipe_id"] = _pipe_id
 
+    def get_data_num(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der ausnahme das,
+        fals der übergebene key eine Zahl ist, wird diese direkt zurückgegeben.
+
+        :param key: fad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder eine Zahl.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder die Übergebene Zahl.
+        :raises: KeyError
+        """
+        if isinstance(key, numbers.Number):
+            return key
+
+        return self.get_data(key, values)
+
     def get_data(self, key_string: str, values: dict):
         """
         Gibt die daten zurück, die hinter `key_string` stehen.
