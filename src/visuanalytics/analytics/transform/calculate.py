@@ -137,7 +137,7 @@ def calculate_divide_keys(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_subtract(values: dict, data: StepData):
+def calculate_subtract_keys(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         subtract = int(data.get_data(values["subtract"][idx], values))
@@ -147,7 +147,7 @@ def calculate_subtract(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_add(values: dict, data: StepData):
+def calculate_add_keys(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = int(data.get_data(key, values))
         add = int(data.get_data(values["add"][idx], values))
