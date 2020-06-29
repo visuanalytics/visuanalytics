@@ -7,7 +7,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
 from visuanalytics.analytics.util.step_errors import TransformError, \
-    raise_step_error
+    raise_step_error, StepKeyError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
@@ -135,7 +135,7 @@ def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
-    except KeyError:
+    except StepKeyError:
         data.insert_data(values["new_key"], [], values)
         array = data.get_data(values["new_key"], values)
 
