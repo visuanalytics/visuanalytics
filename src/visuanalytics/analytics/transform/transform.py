@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from random import randint
 
 from numpy import random
 
@@ -560,24 +561,17 @@ def compare_and_random_text(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         value_1 = value[where][compare_1]
         value_2 = value[where][compare_2]
-        choice = []
         if value_1 == value_2:
             len_pattern = len(values["pattern"][0])
-            for i in range(len_pattern):
-                choice.append(i)
-            rand = random.choice(choice)
+            rand = randint(0, len_pattern - 1)
             new_value = data.format(values["pattern"][0][rand], values)
         elif value_1 > value_2:
             len_pattern = len(values["pattern"][1])
-            for i in range(len_pattern):
-                choice.append(i)
-            rand = random.choice(choice)
+            rand = randint(0, len_pattern - 1)
             new_value = data.format(values["pattern"][1][rand], values)
         elif value_1 < value_2:
             len_pattern = len(values["pattern"][2])
-            for i in range(len_pattern):
-                choice.append(i)
-            rand = random.choice(choice)
+            rand = randint(0, len_pattern - 1)
             new_value = data.format(values["pattern"][2][rand], values)
         else:
             new_value = 0
@@ -593,12 +587,9 @@ def random_text(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         len_pattern = len(values["pattern"])
-        choice = []
         for i in range(len_pattern):
             len_choice = len(values["pattern"][i])
-            for j in range(len_choice):
-                choice.append(j)
-            rand = random.choice(choice)
+            rand = randint(0, len_choice - 1)
             new_key = get_new_keys(values, idx)
             new_value = data.format(values["pattern"][i][rand], values)
             data.insert_data(new_key, new_value, values)
