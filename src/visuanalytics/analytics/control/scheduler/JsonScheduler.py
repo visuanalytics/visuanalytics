@@ -42,5 +42,5 @@ class JsonScheduler(Scheduler):
                 continue
 
             # If Step id is valid run
-            logger.info(f"Job {job['id']} started")
-            self._start_job(job["steps"], job.get("config", {}))
+            logger.info(f"Job {job['id']}:'{job['name']}' started")
+            self._start_job(job['name'], job["steps"], job.get("config", {}))

@@ -32,9 +32,10 @@ class Scheduler(object):
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
-    def _start_job(self, steps_name: str, config: dict):
+    def _start_job(self, job_name: str, steps_name: str, config: dict):
         # Add base_config if exists
         config = {**self._base_config, **config}
+        config["job_name"] = job_name
 
         t = threading.Thread(
             target=Pipeline(uuid.uuid4().hex,

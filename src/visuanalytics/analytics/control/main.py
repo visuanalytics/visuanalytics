@@ -34,6 +34,7 @@ def init(config: dict):
 
     # create temp dir
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
+    os.makedirs(resources.get_resource_path("memory"), exist_ok=True)
 
     # create out und instance dir
     out_dir = config.get("steps_base_config", {}).get("output_path", "out")
