@@ -163,7 +163,7 @@
           "keys": [
             "_loop|Points"
           ],
-          "subtract": "{_req|Tabelle|0|Points}",
+          "value_right": "{_req|Tabelle|0|Points}",
           "new_keys": [
             "_loop|PointsDiffToFirstPlace"
           ]

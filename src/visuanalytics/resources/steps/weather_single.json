@@ -78,7 +78,7 @@
             "_loop|wind_spd"
           ],
           "action": "multiply",
-          "multiply_by": 3.6,
+          "value_right": 3.6,
           "decimal": 2
         },
         {
