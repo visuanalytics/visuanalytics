@@ -165,8 +165,8 @@
       "type": "transform_values_diff",
       "array_key_1": "_req|Vorherige-Tabelle",
       "array_key_2": "_req|Tabelle",
-      "compare": "Rank",
-      "pattern": "TeamInfoId",
+      "compare": "TeamInfoId",
+      "pattern": "Rank",
       "new_key": "_loop|Rank_diff"
     },
     {

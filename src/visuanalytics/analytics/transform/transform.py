@@ -87,15 +87,15 @@ def transform_values_diff(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     pattern = data.format(values["pattern"], values)
-    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_1"], values), values):
+    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_2"], values), values):
         compare = data.format(values["compare"], values)
         value_1 = entry1[compare]
         new_key = ""
         new_value = ""
-        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_2"], values), values):
+        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_1"], values), values):
             value_2 = entry2[compare]
             if value_1 == value_2:
-                new_value = int(entry1[pattern] - entry2[pattern])
+                new_value = int(entry2[pattern]) - int(entry1[pattern])
                 new_key = values["new_key"]
         data.save_loop(idx1, entry1, values)
         data.insert_data(new_key, new_value, values)
