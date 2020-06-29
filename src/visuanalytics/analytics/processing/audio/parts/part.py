@@ -47,11 +47,11 @@ def option_for(values, data):
     condition = data.get_data(values["condition"], values)
 
     if condition == value:
-        values["transform"] = values.get("on_equal", [])
+        values["pattern"] = values.get("on_equal", [])
     elif condition > value:
-        values["transform"] = values.get("on_higher", [])
+        values["pattern"] = values.get("on_higher", [])
     elif condition < value:
-        values["transform"] = values.get("on_lower", [])
+        values["pattern"] = values.get("on_lower", [])
 
     return random_text(values, data)
 
