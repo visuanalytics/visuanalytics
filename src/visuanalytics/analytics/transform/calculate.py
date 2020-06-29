@@ -99,8 +99,9 @@ def calculate_mode(values: dict, data: StepData):
 
 
 @register_calculate
-def calculate_multiply(values: dict, data: StepData):
-    """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
+def calculate_multiply_keys(values: dict, data: StepData):
+    """Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
+    die unter decimal angegeben wird.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -110,16 +111,16 @@ def calculate_multiply(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         multiply_by = data.format(values["multiply_by"], values)
         new_value = (value * multiply_by)
-        if values.get("decimal", None):
-            new_value = round(new_value, data.format(values["decimal"], values))
-        else:
-            new_value = round(new_value)
+        if values.get("decimal") is not None:
+            decimal = data.format(values["decimal"], values)
+            new_value = round(new_value, decimal)
         data.insert_data(new_key, new_value, values)
 
 
 @register_calculate
-def calculate_divide(values: dict, data: StepData):
-    """Wandelt den angegebenen Wert von m/s in km/h um und rundet auf die 2. Nachkommastelle.
+def calculate_divide_keys(values: dict, data: StepData):
+    """Dividiert gegebene Werte durch Werte, die in divide_by stehen und rundet auf die gewünschte Nachkommastelle,
+    die unter decimal angegeben wird.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -129,10 +130,9 @@ def calculate_divide(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         divide_by = data.format(values["divide_by"], values)
         new_value = (value / divide_by)
-        if values.get("decimal", None):
-            new_value = round(new_value, data.format(values["decimal"], values))
-        else:
-            new_value = round(new_value)
+        if values.get("decimal") is not None:
+            decimal = data.format(values["decimal"], values)
+            new_value = round(new_value, decimal)
         data.insert_data(new_key, new_value, values)
 
 

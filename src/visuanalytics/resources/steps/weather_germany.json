@@ -100,7 +100,7 @@
               "keys": [
                 "_loop|wind_spd"
               ],
-              "action": "multiply_specific",
+              "action": "multiply",
               "multiply_by": 3.6,
               "decimal": 2
             },
