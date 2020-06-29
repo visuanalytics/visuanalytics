@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
-
-from numpy import random
+from random import randint
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
@@ -332,10 +331,8 @@ def choose_random(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
-        choice_list = []
-        for x in range(len(values["choice"])):
-            choice_list.append(data.format(values["choice"][x], values))
-        decision = str(random.choice(choice_list))
+        length_dict_array = len(values["dict"][value])
+        decision = randint(0, length_dict_array - 1)
         new_key = get_new_keys(values, idx)
         new_value = data.format(values["dict"][value][decision], values)
         data.insert_data(new_key, new_value, values)
