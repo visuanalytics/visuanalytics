@@ -104,8 +104,9 @@ def get_all_schedules_steps(schedule_id: int):
     :rtype: row[]
     """
     with db.connect() as con:
-        return con.execute("select j.id as 'job_id', j.steps as 'step_id' from job_schedule as js, job as j "
-                           "where js.schedule_id = ? and js.job_id = j.id and j.steps", [schedule_id]).fetchall()
+        return con.execute(
+            "select j.job_name as 'job_name', j.id as 'job_id', j.steps as 'step_id' from job_schedule as js, job as j "
+            "where js.schedule_id = ? and js.job_id = j.id and j.steps", [schedule_id]).fetchall()
 
 
 def get_steps(job_id: int):
