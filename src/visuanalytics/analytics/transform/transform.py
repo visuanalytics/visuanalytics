@@ -519,33 +519,6 @@ def option(values: dict, data: StepData):
 
 
 @register_transform
-def option_for(values: dict, data: StepData):
-    """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
-
-    Wenn `"condition"`-Wert gleich `"check"`-Wert, dann werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_equal"` stehen.
-    Wenn `"condition"`-Wert größer `"check"`-Wert, dann werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_higher"` stehen.
-    Wenn `"condition"`-Wert kleiner `"check"`-Wert, dann werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_lower"` stehen.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    check = data.get_data(values["check"], values)
-    condition = data.get_data(values["condition"], values)
-
-    if condition == check:
-        values["transform"] = values.get("on_equal", [])
-    elif condition > check:
-        values["transform"] = values.get("on_higher", [])
-    elif condition < check:
-        values["transform"] = values.get("on_lower", [])
-
-    transform(values, data)
-
-
-@register_transform
 def compare_and_random_text(values: dict, data: StepData):
     """Wählt random einen Text aus bestimmtem `"pattern"`-Arrays aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
 
