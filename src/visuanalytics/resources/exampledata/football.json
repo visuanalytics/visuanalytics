@@ -26,10 +26,78 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:29:48.193",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:22:40.53",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91963,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 0,
+          "PointsTeam2": 4,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91964,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 0,
+          "PointsTeam2": 2,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84278,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 1,
+          "MatchMinute": 8,
+          "GoalGetterID": 16104,
+          "GoalGetterName": "Andrej Kramaric",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84293,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 2,
+          "MatchMinute": 30,
+          "GoalGetterID": 16104,
+          "GoalGetterName": "Andrej Kramaric",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84298,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 3,
+          "MatchMinute": 48,
+          "GoalGetterID": 16104,
+          "GoalGetterName": "Andrej Kramaric",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84299,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 4,
+          "MatchMinute": 50,
+          "GoalGetterID": 16104,
+          "GoalGetterName": "Andrej Kramaric",
+          "IsPenalty": true,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -59,10 +127,42 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:29:54.71",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:22:34.047",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91965,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 1,
+          "PointsTeam2": 0,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91966,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 1,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84271,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 2,
+          "GoalGetterID": 16260,
+          "GoalGetterName": "Kevin Volland\r\n",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -92,10 +192,66 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:01.21",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:22:46.187",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91967,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 2,
+          "PointsTeam2": 1,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91968,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 1,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84276,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 7,
+          "GoalGetterID": 14569,
+          "GoalGetterName": "Hofmann, Jonas",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84312,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 0,
+          "MatchMinute": 78,
+          "GoalGetterID": 16135,
+          "GoalGetterName": "Breel Embolo",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84316,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 1,
+          "MatchMinute": 91,
+          "GoalGetterID": 3346,
+          "GoalGetterName": "Ibisevic",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -125,10 +281,78 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:16.35",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:21:33.277",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91979,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 0,
+          "PointsTeam2": 4,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91980,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 0,
+          "PointsTeam2": 2,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84275,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 1,
+          "MatchMinute": 4,
+          "GoalGetterID": 15425,
+          "GoalGetterName": "Kingsley Coman",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84295,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 2,
+          "MatchMinute": 37,
+          "GoalGetterID": 17815,
+          "GoalGetterName": "Cuisance",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84310,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 3,
+          "MatchMinute": 72,
+          "GoalGetterID": 15316,
+          "GoalGetterName": "Lewandowski, Robert",
+          "IsPenalty": true,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84313,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 4,
+          "MatchMinute": 79,
+          "GoalGetterID": 15523,
+          "GoalGetterName": " T. Müller",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -158,10 +382,90 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:22.883",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:24:57.573",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91969,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 3,
+          "PointsTeam2": 2,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91970,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 2,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84279,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 9,
+          "GoalGetterID": 16082,
+          "GoalGetterName": "Sebastian Rode",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84294,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 0,
+          "MatchMinute": 33,
+          "GoalGetterID": 17816,
+          "GoalGetterName": "Andre Silva",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84300,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 0,
+          "MatchMinute": 52,
+          "GoalGetterID": 14795,
+          "GoalGetterName": "Bas Dost",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84303,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 1,
+          "MatchMinute": 55,
+          "GoalGetterID": 17833,
+          "GoalGetterName": "M.Dräger",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84311,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 2,
+          "MatchMinute": 75,
+          "GoalGetterID": 14997,
+          "GoalGetterName": "S. Michel",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -191,10 +495,114 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:29.647",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:23:06.707",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91971,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 6,
+          "PointsTeam2": 1,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91972,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 3,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84285,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 22,
+          "GoalGetterID": 14205,
+          "GoalGetterName": "Osako",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84289,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 0,
+          "MatchMinute": 27,
+          "GoalGetterID": 16434,
+          "GoalGetterName": "Rashica",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84292,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 0,
+          "MatchMinute": 30,
+          "GoalGetterID": 6809,
+          "GoalGetterName": " Füllkrug",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84302,
+          "ScoreTeam1": 4,
+          "ScoreTeam2": 0,
+          "MatchMinute": 55,
+          "GoalGetterID": 14769,
+          "GoalGetterName": "Klaassen",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84304,
+          "ScoreTeam1": 5,
+          "ScoreTeam2": 0,
+          "MatchMinute": 58,
+          "GoalGetterID": 14205,
+          "GoalGetterName": "Osako",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84306,
+          "ScoreTeam1": 5,
+          "ScoreTeam2": 1,
+          "MatchMinute": 62,
+          "GoalGetterID": 7337,
+          "GoalGetterName": "Drexler",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84308,
+          "ScoreTeam1": 6,
+          "ScoreTeam2": 1,
+          "MatchMinute": 68,
+          "GoalGetterID": 16991,
+          "GoalGetterName": "Sargent,J.",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -224,10 +632,78 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:36.24",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:23:12.253",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91977,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 4,
+          "PointsTeam2": 0,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91978,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 2,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84284,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 20,
+          "GoalGetterID": 15274,
+          "GoalGetterName": "Waldschmidt",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84296,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 0,
+          "MatchMinute": 39,
+          "GoalGetterID": 449,
+          "GoalGetterName": "J. Schmid",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84297,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 0,
+          "MatchMinute": 47,
+          "GoalGetterID": 14393,
+          "GoalGetterName": "Höler",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84305,
+          "ScoreTeam1": 4,
+          "ScoreTeam2": 0,
+          "MatchMinute": 57,
+          "GoalGetterID": 15274,
+          "GoalGetterName": "Waldschmidt",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -257,10 +733,66 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:43.023",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:24:36.33",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91973,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 1,
+          "PointsTeam2": 2,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91974,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 0,
+          "PointsTeam2": 1,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84290,
+          "ScoreTeam1": 0,
+          "ScoreTeam2": 1,
+          "MatchMinute": 28,
+          "GoalGetterID": 16080,
+          "GoalGetterName": "Timo Werner",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84309,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 1,
+          "MatchMinute": 72,
+          "GoalGetterID": 17613,
+          "GoalGetterName": "Ruben Vargas",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84314,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 2,
+          "MatchMinute": 81,
+          "GoalGetterID": 16080,
+          "GoalGetterName": "Timo Werner",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     },
@@ -290,84 +822,154 @@
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
         "TeamGroupName": null
       },
-      "LastUpdateDateTime": "2020-05-07T15:30:53.093",
-      "MatchIsFinished": false,
-      "MatchResults": [],
-      "Goals": [],
+      "LastUpdateDateTime": "2020-06-27T17:21:22.76",
+      "MatchIsFinished": true,
+      "MatchResults": [
+        {
+          "ResultID": 91975,
+          "ResultName": "Endergebnis",
+          "PointsTeam1": 3,
+          "PointsTeam2": 0,
+          "ResultOrderID": 2,
+          "ResultTypeID": 2,
+          "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+        },
+        {
+          "ResultID": 91976,
+          "ResultName": "Halbzeit",
+          "PointsTeam1": 1,
+          "PointsTeam2": 0,
+          "ResultOrderID": 1,
+          "ResultTypeID": 1,
+          "ResultDescription": "Zwischenstand zur Halbzeit"
+        }
+      ],
+      "Goals": [
+        {
+          "GoalID": 84291,
+          "ScoreTeam1": 1,
+          "ScoreTeam2": 0,
+          "MatchMinute": 27,
+          "GoalGetterID": 11319,
+          "GoalGetterName": "Anthony Ujah",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84301,
+          "ScoreTeam1": 2,
+          "ScoreTeam2": 0,
+          "MatchMinute": 55,
+          "GoalGetterID": 3586,
+          "GoalGetterName": "Gentner",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        },
+        {
+          "GoalID": 84315,
+          "ScoreTeam1": 3,
+          "ScoreTeam2": 0,
+          "MatchMinute": 90,
+          "GoalGetterID": 16397,
+          "GoalGetterName": "Abdullahi",
+          "IsPenalty": false,
+          "IsOwnGoal": false,
+          "IsOvertime": false,
+          "Comment": null
+        }
+      ],
       "Location": null,
       "NumberOfViewers": null
     }
   ],
   "Tabelle": [
     {
+      "TeamInfoId": 40,
+      "TeamName": "FC Bayern",
+      "ShortName": "FC Bayern",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
+      "Points": 82,
+      "OpponentGoals": 32,
+      "Goals": 100,
+      "Matches": 34,
+      "Won": 26,
+      "Lost": 4,
+      "Draw": 4,
+      "GoalDiff": 68
+    },
+    {
       "TeamInfoId": 7,
       "TeamName": "Borussia Dortmund",
       "ShortName": "Dortmund",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
       "Points": 69,
-      "OpponentGoals": 37,
+      "OpponentGoals": 41,
       "Goals": 84,
-      "Matches": 33,
+      "Matches": 34,
       "Won": 21,
-      "Lost": 6,
+      "Lost": 7,
       "Draw": 6,
-      "GoalDiff": 47
-    },
-    {
-      "TeamInfoId": 40,
-      "TeamName": "FC Bayern",
-      "ShortName": "FC Bayern",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
-      "Points": 79,
-      "OpponentGoals": 32,
-      "Goals": 96,
-      "Matches": 33,
-      "Won": 25,
-      "Lost": 4,
-      "Draw": 4,
-      "GoalDiff": 64
+      "GoalDiff": 43
     },
     {
       "TeamInfoId": 1635,
       "TeamName": "RB Leipzig",
       "ShortName": "RBL Leipzig",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
-      "Points": 63,
-      "OpponentGoals": 36,
-      "Goals": 79,
-      "Matches": 33,
-      "Won": 17,
+      "Points": 66,
+      "OpponentGoals": 37,
+      "Goals": 81,
+      "Matches": 34,
+      "Won": 18,
       "Lost": 4,
       "Draw": 12,
-      "GoalDiff": 43
+      "GoalDiff": 44
     },
     {
       "TeamInfoId": 87,
       "TeamName": "Borussia Mönchengladbach",
       "ShortName": "Gladbach",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
-      "Points": 62,
-      "OpponentGoals": 39,
-      "Goals": 64,
-      "Matches": 33,
-      "Won": 19,
+      "Points": 65,
+      "OpponentGoals": 40,
+      "Goals": 66,
+      "Matches": 34,
+      "Won": 20,
       "Lost": 9,
       "Draw": 5,
-      "GoalDiff": 25
+      "GoalDiff": 26
     },
     {
       "TeamInfoId": 6,
       "TeamName": "Bayer Leverkusen",
       "ShortName": "Leverkusen",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
-      "Points": 60,
+      "Points": 63,
       "OpponentGoals": 44,
-      "Goals": 60,
-      "Matches": 33,
-      "Won": 18,
+      "Goals": 61,
+      "Matches": 34,
+      "Won": 19,
       "Lost": 9,
       "Draw": 6,
-      "GoalDiff": 16
+      "GoalDiff": 17
+    },
+    {
+      "TeamInfoId": 175,
+      "TeamName": "TSG 1899 Hoffenheim",
+      "ShortName": "Hoffenheim",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
+      "Points": 52,
+      "OpponentGoals": 53,
+      "Goals": 53,
+      "Matches": 34,
+      "Won": 15,
+      "Lost": 12,
+      "Draw": 7,
+      "GoalDiff": 0
     },
     {
       "TeamInfoId": 131,
@@ -375,55 +977,41 @@
       "ShortName": "Wolfsburg",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
       "Points": 49,
-      "OpponentGoals": 42,
+      "OpponentGoals": 46,
       "Goals": 48,
-      "Matches": 33,
+      "Matches": 34,
       "Won": 13,
-      "Lost": 10,
+      "Lost": 11,
       "Draw": 10,
-      "GoalDiff": 6
-    },
-    {
-      "TeamInfoId": 175,
-      "TeamName": "TSG 1899 Hoffenheim",
-      "ShortName": "Hoffenheim",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
-      "Points": 49,
-      "OpponentGoals": 53,
-      "Goals": 49,
-      "Matches": 33,
-      "Won": 14,
-      "Lost": 12,
-      "Draw": 7,
-      "GoalDiff": -4
+      "GoalDiff": 2
     },
     {
       "TeamInfoId": 112,
       "TeamName": "SC Freiburg",
       "ShortName": "SC Freiburg",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
-      "Points": 45,
+      "Points": 48,
       "OpponentGoals": 47,
-      "Goals": 44,
-      "Matches": 33,
-      "Won": 12,
+      "Goals": 48,
+      "Matches": 34,
+      "Won": 13,
       "Lost": 12,
       "Draw": 9,
-      "GoalDiff": -3
+      "GoalDiff": 1
     },
     {
       "TeamInfoId": 91,
       "TeamName": "Eintracht Frankfurt",
       "ShortName": "Frankfurt",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
-      "Points": 42,
-      "OpponentGoals": 58,
-      "Goals": 56,
-      "Matches": 33,
-      "Won": 12,
+      "Points": 45,
+      "OpponentGoals": 60,
+      "Goals": 59,
+      "Matches": 34,
+      "Won": 13,
       "Lost": 15,
       "Draw": 6,
-      "GoalDiff": -2
+      "GoalDiff": -1
     },
     {
       "TeamInfoId": 54,
@@ -431,13 +1019,27 @@
       "ShortName": "Hertha BSC",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
       "Points": 41,
-      "OpponentGoals": 57,
-      "Goals": 47,
-      "Matches": 33,
+      "OpponentGoals": 59,
+      "Goals": 48,
+      "Matches": 34,
       "Won": 11,
-      "Lost": 14,
+      "Lost": 15,
       "Draw": 8,
-      "GoalDiff": -10
+      "GoalDiff": -11
+    },
+    {
+      "TeamInfoId": 80,
+      "TeamName": "1. FC Union Berlin",
+      "ShortName": "Union Berlin",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
+      "Points": 41,
+      "OpponentGoals": 58,
+      "Goals": 41,
+      "Matches": 34,
+      "Won": 12,
+      "Lost": 17,
+      "Draw": 5,
+      "GoalDiff": -17
     },
     {
       "TeamInfoId": 9,
@@ -445,26 +1047,12 @@
       "ShortName": "Schalke 04",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
       "Points": 39,
-      "OpponentGoals": 54,
-      "Goals": 38,
-      "Matches": 33,
-      "Won": 9,
-      "Lost": 12,
-      "Draw": 12,
-      "GoalDiff": -16
-    },
-    {
-      "TeamInfoId": 80,
-      "TeamName": "1. FC Union Berlin",
-      "ShortName": "Union Berlin",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
-      "Points": 38,
       "OpponentGoals": 58,
       "Goals": 38,
-      "Matches": 33,
-      "Won": 11,
-      "Lost": 17,
-      "Draw": 5,
+      "Matches": 34,
+      "Won": 9,
+      "Lost": 13,
+      "Draw": 12,
       "GoalDiff": -20
     },
     {
@@ -473,13 +1061,13 @@
       "ShortName": "FSV Mainz",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
       "Points": 37,
-      "OpponentGoals": 64,
+      "OpponentGoals": 65,
       "Goals": 44,
-      "Matches": 33,
+      "Matches": 34,
       "Won": 11,
-      "Lost": 18,
+      "Lost": 19,
       "Draw": 4,
-      "GoalDiff": -20
+      "GoalDiff": -21
     },
     {
       "TeamInfoId": 65,
@@ -487,13 +1075,13 @@
       "ShortName": "1. FC Köln",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
       "Points": 36,
-      "OpponentGoals": 63,
-      "Goals": 50,
-      "Matches": 33,
+      "OpponentGoals": 69,
+      "Goals": 51,
+      "Matches": 34,
       "Won": 10,
-      "Lost": 17,
+      "Lost": 18,
       "Draw": 6,
-      "GoalDiff": -13
+      "GoalDiff": -18
     },
     {
       "TeamInfoId": 95,
@@ -501,13 +1089,27 @@
       "ShortName": "Augsburg",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
       "Points": 36,
-      "OpponentGoals": 61,
-      "Goals": 44,
-      "Matches": 33,
+      "OpponentGoals": 63,
+      "Goals": 45,
+      "Matches": 34,
       "Won": 9,
-      "Lost": 15,
+      "Lost": 16,
       "Draw": 9,
-      "GoalDiff": -17
+      "GoalDiff": -18
+    },
+    {
+      "TeamInfoId": 134,
+      "TeamName": "Werder Bremen",
+      "ShortName": "Bremen",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
+      "Points": 31,
+      "OpponentGoals": 69,
+      "Goals": 42,
+      "Matches": 34,
+      "Won": 8,
+      "Lost": 19,
+      "Draw": 7,
+      "GoalDiff": -27
     },
     {
       "TeamInfoId": 185,
@@ -515,27 +1117,13 @@
       "ShortName": "Düsseldorf",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
       "Points": 30,
-      "OpponentGoals": 64,
+      "OpponentGoals": 67,
       "Goals": 36,
-      "Matches": 33,
+      "Matches": 34,
       "Won": 6,
-      "Lost": 15,
+      "Lost": 16,
       "Draw": 12,
-      "GoalDiff": -28
-    },
-    {
-      "TeamInfoId": 134,
-      "TeamName": "Werder Bremen",
-      "ShortName": "Bremen",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
-      "Points": 28,
-      "OpponentGoals": 68,
-      "Goals": 36,
-      "Matches": 33,
-      "Won": 7,
-      "Lost": 19,
-      "Draw": 7,
-      "GoalDiff": -32
+      "GoalDiff": -31
     },
     {
       "TeamInfoId": 31,
@@ -543,195 +1131,267 @@
       "ShortName": "Paderborn",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
       "Points": 20,
-      "OpponentGoals": 71,
-      "Goals": 35,
-      "Matches": 33,
+      "OpponentGoals": 74,
+      "Goals": 37,
+      "Matches": 34,
       "Won": 4,
-      "Lost": 21,
+      "Lost": 22,
       "Draw": 8,
-      "GoalDiff": -36
+      "GoalDiff": -37
     }
   ],
   "Vorherige-Tabelle": [
     {
+      "TeamInfoId": 40,
       "TeamName": "FC Bayern",
-      "Points": 79,
-      "Goals": 96,
+      "ShortName": "FC Bayern",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
+      "Points": 82,
       "OpponentGoals": 32,
-      "GoalDiff": 64,
-      "Matches": 33,
-      "TeamId": 40,
-      "Rank": "0"
+      "Goals": 100,
+      "Matches": 34,
+      "Won": 26,
+      "Lost": 4,
+      "Draw": 4,
+      "GoalDiff": 68
     },
     {
+      "TeamInfoId": 7,
       "TeamName": "Borussia Dortmund",
+      "ShortName": "Dortmund",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
       "Points": 69,
+      "OpponentGoals": 41,
       "Goals": 84,
-      "OpponentGoals": 37,
-      "GoalDiff": 47,
-      "Matches": 33,
-      "TeamId": 7,
-      "Rank": "1"
+      "Matches": 34,
+      "Won": 21,
+      "Lost": 7,
+      "Draw": 6,
+      "GoalDiff": 43
     },
     {
+      "TeamInfoId": 1635,
       "TeamName": "RB Leipzig",
-      "Points": 63,
-      "Goals": 79,
-      "OpponentGoals": 36,
-      "GoalDiff": 43,
-      "Matches": 33,
-      "TeamId": 1635,
-      "Rank": "2"
+      "ShortName": "RBL Leipzig",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
+      "Points": 66,
+      "OpponentGoals": 37,
+      "Goals": 81,
+      "Matches": 34,
+      "Won": 18,
+      "Lost": 4,
+      "Draw": 12,
+      "GoalDiff": 44
     },
     {
+      "TeamInfoId": 87,
       "TeamName": "Borussia Mönchengladbach",
-      "Points": 62,
-      "Goals": 64,
-      "OpponentGoals": 39,
-      "GoalDiff": 25,
-      "Matches": 33,
-      "TeamId": 87,
-      "Rank": "3"
+      "ShortName": "Gladbach",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
+      "Points": 65,
+      "OpponentGoals": 40,
+      "Goals": 66,
+      "Matches": 34,
+      "Won": 20,
+      "Lost": 9,
+      "Draw": 5,
+      "GoalDiff": 26
     },
     {
+      "TeamInfoId": 6,
       "TeamName": "Bayer Leverkusen",
-      "Points": 60,
-      "Goals": 60,
+      "ShortName": "Leverkusen",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
+      "Points": 63,
       "OpponentGoals": 44,
-      "GoalDiff": 16,
-      "Matches": 33,
-      "TeamId": 6,
-      "Rank": "4"
+      "Goals": 61,
+      "Matches": 34,
+      "Won": 19,
+      "Lost": 9,
+      "Draw": 6,
+      "GoalDiff": 17
     },
     {
-      "TeamName": "VfL Wolfsburg",
-      "Points": 49,
-      "Goals": 48,
-      "OpponentGoals": 42,
-      "GoalDiff": 6,
-      "Matches": 33,
-      "TeamId": 131,
-      "Rank": "5"
-    },
-    {
+      "TeamInfoId": 175,
       "TeamName": "TSG 1899 Hoffenheim",
-      "Points": 49,
-      "Goals": 49,
+      "ShortName": "Hoffenheim",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
+      "Points": 52,
       "OpponentGoals": 53,
-      "GoalDiff": -4,
-      "Matches": 33,
-      "TeamId": 175,
-      "Rank": "6"
+      "Goals": 53,
+      "Matches": 34,
+      "Won": 15,
+      "Lost": 12,
+      "Draw": 7,
+      "GoalDiff": 0
     },
     {
+      "TeamInfoId": 131,
+      "TeamName": "VfL Wolfsburg",
+      "ShortName": "Wolfsburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
+      "Points": 49,
+      "OpponentGoals": 46,
+      "Goals": 48,
+      "Matches": 34,
+      "Won": 13,
+      "Lost": 11,
+      "Draw": 10,
+      "GoalDiff": 2
+    },
+    {
+      "TeamInfoId": 112,
       "TeamName": "SC Freiburg",
-      "Points": 45,
-      "Goals": 44,
+      "ShortName": "SC Freiburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
+      "Points": 48,
       "OpponentGoals": 47,
-      "GoalDiff": -3,
-      "Matches": 33,
-      "TeamId": 112,
-      "Rank": "7"
+      "Goals": 48,
+      "Matches": 34,
+      "Won": 13,
+      "Lost": 12,
+      "Draw": 9,
+      "GoalDiff": 1
     },
     {
+      "TeamInfoId": 91,
       "TeamName": "Eintracht Frankfurt",
-      "Points": 42,
-      "Goals": 56,
-      "OpponentGoals": 58,
-      "GoalDiff": -2,
-      "Matches": 33,
-      "TeamId": 91,
-      "Rank": "8"
+      "ShortName": "Frankfurt",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
+      "Points": 45,
+      "OpponentGoals": 60,
+      "Goals": 59,
+      "Matches": 34,
+      "Won": 13,
+      "Lost": 15,
+      "Draw": 6,
+      "GoalDiff": -1
     },
     {
+      "TeamInfoId": 54,
       "TeamName": "Hertha BSC",
+      "ShortName": "Hertha BSC",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
       "Points": 41,
-      "Goals": 47,
-      "OpponentGoals": 57,
-      "GoalDiff": -10,
-      "Matches": 33,
-      "TeamId": 54,
-      "Rank": "9"
+      "OpponentGoals": 59,
+      "Goals": 48,
+      "Matches": 34,
+      "Won": 11,
+      "Lost": 15,
+      "Draw": 8,
+      "GoalDiff": -11
     },
     {
-      "TeamName": "FC Schalke 04",
-      "Points": 39,
-      "Goals": 38,
-      "OpponentGoals": 54,
-      "GoalDiff": -16,
-      "Matches": 33,
-      "TeamId": 9,
-      "Rank": "10"
-    },
-    {
+      "TeamInfoId": 80,
       "TeamName": "1. FC Union Berlin",
-      "Points": 38,
-      "Goals": 38,
+      "ShortName": "Union Berlin",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
+      "Points": 41,
       "OpponentGoals": 58,
-      "GoalDiff": -20,
-      "Matches": 33,
-      "TeamId": 80,
-      "Rank": "11"
+      "Goals": 41,
+      "Matches": 34,
+      "Won": 12,
+      "Lost": 17,
+      "Draw": 5,
+      "GoalDiff": -17
     },
     {
+      "TeamInfoId": 9,
+      "TeamName": "FC Schalke 04",
+      "ShortName": "Schalke 04",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
+      "Points": 39,
+      "OpponentGoals": 58,
+      "Goals": 38,
+      "Matches": 34,
+      "Won": 9,
+      "Lost": 13,
+      "Draw": 12,
+      "GoalDiff": -20
+    },
+    {
+      "TeamInfoId": 81,
       "TeamName": "1. FSV Mainz 05",
+      "ShortName": "FSV Mainz",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
       "Points": 37,
+      "OpponentGoals": 65,
       "Goals": 44,
-      "OpponentGoals": 64,
-      "GoalDiff": -20,
-      "Matches": 33,
-      "TeamId": 81,
-      "Rank": "12"
+      "Matches": 34,
+      "Won": 11,
+      "Lost": 19,
+      "Draw": 4,
+      "GoalDiff": -21
     },
     {
+      "TeamInfoId": 65,
       "TeamName": "1. FC Köln",
+      "ShortName": "1. FC Köln",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
       "Points": 36,
-      "Goals": 50,
-      "OpponentGoals": 63,
-      "GoalDiff": -13,
-      "Matches": 33,
-      "TeamId": 65,
-      "Rank": "13"
+      "OpponentGoals": 69,
+      "Goals": 51,
+      "Matches": 34,
+      "Won": 10,
+      "Lost": 18,
+      "Draw": 6,
+      "GoalDiff": -18
     },
     {
+      "TeamInfoId": 95,
       "TeamName": "FC Augsburg",
+      "ShortName": "Augsburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
       "Points": 36,
-      "Goals": 44,
-      "OpponentGoals": 61,
-      "GoalDiff": -17,
-      "Matches": 33,
-      "TeamId": 95,
-      "Rank": "14"
+      "OpponentGoals": 63,
+      "Goals": 45,
+      "Matches": 34,
+      "Won": 9,
+      "Lost": 16,
+      "Draw": 9,
+      "GoalDiff": -18
     },
     {
-      "TeamName": "Fortuna Düsseldorf",
-      "Points": 30,
-      "Goals": 36,
-      "OpponentGoals": 64,
-      "GoalDiff": -28,
-      "Matches": 33,
-      "TeamId": 185,
-      "Rank": "15"
-    },
-    {
+      "TeamInfoId": 134,
       "TeamName": "Werder Bremen",
-      "Points": 28,
-      "Goals": 36,
-      "OpponentGoals": 68,
-      "GoalDiff": -32,
-      "Matches": 33,
-      "TeamId": 134,
-      "Rank": "16"
+      "ShortName": "Bremen",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
+      "Points": 31,
+      "OpponentGoals": 69,
+      "Goals": 42,
+      "Matches": 34,
+      "Won": 8,
+      "Lost": 19,
+      "Draw": 7,
+      "GoalDiff": -27
     },
     {
+      "TeamInfoId": 185,
+      "TeamName": "Fortuna Düsseldorf",
+      "ShortName": "Düsseldorf",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
+      "Points": 30,
+      "OpponentGoals": 67,
+      "Goals": 36,
+      "Matches": 34,
+      "Won": 6,
+      "Lost": 16,
+      "Draw": 12,
+      "GoalDiff": -31
+    },
+    {
+      "TeamInfoId": 31,
       "TeamName": "SC Paderborn 07",
+      "ShortName": "Paderborn",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
       "Points": 20,
-      "Goals": 35,
-      "OpponentGoals": 71,
-      "GoalDiff": -36,
-      "Matches": 33,
-      "TeamId": 31,
-      "Rank": "17"
+      "OpponentGoals": 74,
+      "Goals": 37,
+      "Matches": 34,
+      "Won": 4,
+      "Lost": 22,
+      "Draw": 8,
+      "GoalDiff": -37
     }
   ]
 }
