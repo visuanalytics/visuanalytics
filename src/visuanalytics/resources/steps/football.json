@@ -117,13 +117,11 @@
                 "_loop"
               ],
               "pattern": [
-                [
-                  "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
-                  "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
-                  "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
-                  "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
-                  "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
-                ]
+                "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
               ],
               "new_keys": [
                 "_loop|MatchText"
