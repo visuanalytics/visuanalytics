@@ -37,7 +37,7 @@ def link(values: dict, step_data: StepData):
     :rtype: str
     """
     seq_func = get_type_func(values["sequence"], SEQUENCE_TYPES)
-    
+
     return seq_func(values, step_data)
 
 
@@ -100,7 +100,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_out_path(step_data.data["_conf"]["output_path"], values["name"])
+    output2 = resources.get_out_path(step_data.data["_conf"]["output_path"], step_data.data["_conf"]["job_name"])
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
