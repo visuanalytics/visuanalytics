@@ -592,6 +592,5 @@ def random_text(values: dict, data: StepData):
         len_pattern = len(values["pattern"])
         rand = randint(0, len_pattern - 1)
         new_key = get_new_keys(values, idx)
-        print(new_key)
         new_value = data.format(values["pattern"][rand], values)
         data.insert_data(new_key, new_value, values)
