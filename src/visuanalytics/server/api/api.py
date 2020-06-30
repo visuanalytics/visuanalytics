@@ -3,8 +3,10 @@ Enthält die API-Endpunkte.
 """
 
 import json
+
+import flask
 from flask import (Blueprint, request)
-from visuanalytics.server.db import db, job
+from visuanalytics.server.db import db, job, queries
 
 api = Blueprint('api', __name__)
 
@@ -21,7 +23,7 @@ def topics():
 
     Die Response enthält die Liste der zur Videogenerierung verfügbaren Themen.
     """
-    return json.dumps(job.get_topic_names())
+    return flask.jsonify(queries.get_topic_names())
 
 
 @api.route("/params", methods=["GET"])
@@ -33,10 +35,10 @@ def params():
     Die Response enthält die Parameterinformationen für das übergebene Thema.
     """
     topic_id = request.args.get("topic")
-    params = job.get_params(topic_id)
+    params = queries.get_params(topic_id)
     if (params == None):
         return "Unknown topic", 400
-    return json.dumps(job.get_params(topic_id))
+    return flask.jsonify(params)
 
 
 @api.route("/jobs", methods=["GET"])
@@ -46,8 +48,7 @@ def jobs():
 
     Die Response enthält die in der Datenbank angelegten Jobs.
     """
-    return "jobs"
-    # TODO: retrieve actual job list
+    return flask.jsonify(queries.get_job_list())
 
 
 @api.route("/add", methods=["POST"])
