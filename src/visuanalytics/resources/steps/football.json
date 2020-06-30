@@ -31,14 +31,13 @@
   },
   "transform": [
     {
-      "type": "add_symbol",
+      "type": "alias",
       "keys": [
         "_req|Spiele|0|Group|GroupName"
       ],
       "new_keys": [
         "_req|Spieltag"
-      ],
-      "pattern": "{_key}"
+      ]
     },
     {
       "type": "transform_array",
@@ -83,30 +82,54 @@
           "check": "_loop|MatchIsFinished",
           "on_true": [
             {
-              "type": "compare_and_random_text",
-              "keys": [
-                "_loop"
+              "type": "compare",
+              "value_left": "_loop|MatchResults|PointsTeam1",
+              "value_right": "_loop|MatchResults|PointsTeam2",
+              "on_equal": [
+                {
+                  "type": "random_text",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "pattern": [
+                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
               ],
-              "compare_1": "PointsTeam1",
-              "compare_2": "PointsTeam2",
-              "where": "MatchResults",
-              "pattern": [
-                [
-                  "{_loop|Team1|TeamName} und {_loop|Team2|TeamName} trennten sich mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "Zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "Ein Unentschieden zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
-                ],
-                [
-                  "{_loop|Team1|TeamName} gewann gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "{_loop|Team1|TeamName} gewann Zuhause gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
-                ],
-                [
-                  "{_loop|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. ",
-                  "{_loop|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2}. "
-                ]
+              "on_higher": [
+                {
+                  "type": "random_text",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "pattern": [
+                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
               ],
-              "new_keys": [
-                "_loop|MatchResults|Text"
+              "on_lower": [
+                {
+                  "type": "random_text",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "pattern": [
+                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
               ]
             }
           ],
@@ -117,11 +140,11 @@
                 "_loop"
               ],
               "pattern": [
-                "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
-                "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
-                "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
-                "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
-                "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
+                "Am {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
+                "Am {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
+                "Am kommenden {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
+                "Am kommenden {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
+                "{_key|Team1|TeamName} gegen {_key|Team2|TeamName} am {_key|weekday}. "
               ],
               "new_keys": [
                 "_loop|MatchText"
@@ -202,9 +225,9 @@
       "new_key": "_loop|Rank_diff"
     },
     {
-      "type": "option",
-      "check": "_req|Tabelle|0|Rank_diff",
-      "condition": 0,
+      "type": "compare",
+      "value_left": "_req|Tabelle|0|Rank_diff",
+      "value_right": 0,
       "on_equal": [
         {
           "type": "random_text",
@@ -258,9 +281,9 @@
       ]
     },
     {
-      "type": "option",
-      "check": "_req|Tabelle|1|Rank_diff",
-      "condition": 0,
+      "type": "compare",
+      "value_left": "_req|Tabelle|1|Rank_diff",
+      "value_right": 0,
       "on_equal": [
         {
           "type": "random_text",
@@ -317,9 +340,9 @@
       ]
     },
     {
-      "type": "option",
-      "check": "_req|Tabelle|3|Rank_diff",
-      "condition": 0,
+      "type": "compare",
+      "value_left": "_req|Tabelle|3|Rank_diff",
+      "value_right": 0,
       "on_equal": [
         {
           "type": "random_text",
@@ -371,9 +394,9 @@
       ]
     },
     {
-      "type": "option",
-      "check": "_req|Tabelle|15|Rank_diff",
-      "condition": 0,
+      "type": "compare",
+      "value_left": "_req|Tabelle|15|Rank_diff",
+      "value_right": 0,
       "on_equal": [
         {
           "type": "random_text",
@@ -426,9 +449,9 @@
       ]
     },
     {
-      "type": "option",
-      "check": "_req|Tabelle|17|Rank_diff",
-      "condition": 0,
+      "type": "compare",
+      "value_left": "_req|Tabelle|17|Rank_diff",
+      "value_right": 0,
       "on_equal": [
         {
           "type": "random_text",

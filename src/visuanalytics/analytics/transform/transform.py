@@ -483,57 +483,28 @@ def option(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     check = data.get_data(values["check"], values)
-    condition = values.get("condition", None)
-    if condition is not None:
-        if condition == check:
-            values["transform"] = values.get("on_equal", [])
-        elif condition > check:
-            values["transform"] = values.get("on_higher", [])
-        elif condition < check:
-            values["transform"] = values.get("on_lower", [])
+
+    if bool(check):
+        values["transform"] = values.get("on_true", [])
     else:
-        if check:
-            values["transform"] = values.get("on_true", [])
-        else:
-            values["transform"] = values.get("on_false", [])
+        values["transform"] = values.get("on_false", [])
 
     transform(values, data)
 
 
 @register_transform
-def compare_and_random_text(values: dict, data: StepData):
-    """Wählt random einen Text aus bestimmtem `"pattern"`-Arrays aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
+def compare(values: dict, data: StepData):
+    value_left = data.get_data_num(values["value_left"], values)
+    value_right = data.get_data_num(values["value_right"], values)
 
-    Wenn `"compare_1"`-Wert gleich `"compare_2"`-Wert, dann wird ein Text aus dem ersten Array aus `"pattern"` random ausgewählt.
-    Wenn `"compare_1"`-Wert größer `"compare_2"`-Wert, dann wird ein Text aus dem zweiten Array aus `"pattern"` random ausgewählt.
-    Wenn `"compare_1"`-Wert kleiner `"compare_2"`-Wert, dann wird ein Text aus dem dritten Array aus `"pattern"` random ausgewählt.
+    if value_left == value_right:
+        values["transform"] = values.get("on_equal", [])
+    elif value_left > value_right:
+        values["transform"] = values.get("on_higher", [])
+    elif value_left < value_right:
+        values["transform"] = values.get("on_lower", [])
 
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        where = data.format(values["where"], values)
-        compare_1 = data.format(values["compare_1"], values)
-        compare_2 = data.format(values["compare_2"], values)
-        new_key = get_new_keys(values, idx)
-        value_1 = value[where][compare_1]
-        value_2 = value[where][compare_2]
-        if value_1 == value_2:
-            len_pattern = len(values["pattern"][0])
-            rand = randint(0, len_pattern - 1)
-            new_value = data.format(values["pattern"][0][rand], values)
-        elif value_1 > value_2:
-            len_pattern = len(values["pattern"][1])
-            rand = randint(0, len_pattern - 1)
-            new_value = data.format(values["pattern"][1][rand], values)
-        elif value_1 < value_2:
-            len_pattern = len(values["pattern"][2])
-            rand = randint(0, len_pattern - 1)
-            new_value = data.format(values["pattern"][2][rand], values)
-        else:
-            new_value = 0
-        data.insert_data(new_key, new_value, values)
+    transform(values, data)
 
 
 @register_transform
