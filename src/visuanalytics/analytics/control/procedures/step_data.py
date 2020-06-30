@@ -135,7 +135,7 @@ class StepData(object):
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder eine Zahl.
         :param values: Werte aus der JSON-Datei.
         :return: Daten hinter `key_string` oder die Übergebene Zahl.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         if isinstance(key, numbers.Number):
             return key
@@ -150,7 +150,7 @@ class StepData(object):
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param values: Werte aus der JSON-Datei.
         :return: Daten hinter `key_string`.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         data = {**self.__data, **values.get("_loop_states", {})}
         key_string = self.__formatter.format(key_string, data)
@@ -167,7 +167,7 @@ class StepData(object):
         :param api_key_name: Name des Config-Eintrages für den Api key.
         :param values: Werte aus der JSON-Datei.
         :return: Formattierter `value_string`.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         if api_key_name is not None:
             api_key_name = self.format(api_key_name, values)
@@ -203,7 +203,7 @@ class StepData(object):
         :param value_string: Zu formatierender String
         :param values: Werte aus der JSON-Datei.
         :return: Formattierter `value_string`.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         # if value_string is int just return value
         if isinstance(value_string, numbers.Number):
@@ -225,7 +225,7 @@ class StepData(object):
             besteht aus den Keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param value: Wert der eingefügt werden soll.
         :param values: Werte aus der JSON-Datei.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         key_string = self.__prepare_data_manipulation(key_string, values)
 
@@ -242,7 +242,7 @@ class StepData(object):
         :param key_string: Pfad zu den Daten in self.data,
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param values: Werte aus der JSON-Datei.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         key_string = self.__prepare_data_manipulation(key_string, values)
 
