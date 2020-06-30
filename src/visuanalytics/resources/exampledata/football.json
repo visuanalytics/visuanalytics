@@ -13,14 +13,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 7,
+        "TeamInfoId": 7,
         "TeamName": "Borussia Dortmund",
         "ShortName": "Dortmund",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 123,
+        "TeamInfoId": 123,
         "TeamName": "TSG 1899 Hoffenheim",
         "ShortName": "Hoffenheim",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
@@ -46,14 +46,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 6,
+        "TeamInfoId": 6,
         "TeamName": "Bayer Leverkusen",
         "ShortName": "Leverkusen",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 81,
+        "TeamInfoId": 81,
         "TeamName": "1. FSV Mainz 05",
         "ShortName": "FSV Mainz",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
@@ -79,14 +79,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 87,
+        "TeamInfoId": 87,
         "TeamName": "Borussia Mönchengladbach",
         "ShortName": "Gladbach",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 54,
+        "TeamInfoId": 54,
         "TeamName": "Hertha BSC",
         "ShortName": "Hertha BSC",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
@@ -112,14 +112,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 131,
+        "TeamInfoId": 131,
         "TeamName": "VfL Wolfsburg",
         "ShortName": "Wolfsburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 40,
+        "TeamInfoId": 40,
         "TeamName": "FC Bayern",
         "ShortName": "FC Bayern",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
@@ -145,14 +145,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 91,
+        "TeamInfoId": 91,
         "TeamName": "Eintracht Frankfurt",
         "ShortName": "Frankfurt",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 31,
+        "TeamInfoId": 31,
         "TeamName": "SC Paderborn 07",
         "ShortName": "Paderborn",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
@@ -178,14 +178,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 134,
+        "TeamInfoId": 134,
         "TeamName": "Werder Bremen",
         "ShortName": "Bremen",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 65,
+        "TeamInfoId": 65,
         "TeamName": "1. FC Köln",
         "ShortName": "1. FC Köln",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
@@ -211,14 +211,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 112,
+        "TeamInfoId": 112,
         "TeamName": "SC Freiburg",
         "ShortName": "SC Freiburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 9,
+        "TeamInfoId": 9,
         "TeamName": "FC Schalke 04",
         "ShortName": "Schalke 04",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
@@ -244,14 +244,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 95,
+        "TeamInfoId": 95,
         "TeamName": "FC Augsburg",
         "ShortName": "Augsburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 1635,
+        "TeamInfoId": 1635,
         "TeamName": "RB Leipzig",
         "ShortName": "RBL Leipzig",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
@@ -277,14 +277,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamId": 80,
+        "TeamInfoId": 80,
         "TeamName": "1. FC Union Berlin",
         "ShortName": "Union Berlin",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamId": 185,
+        "TeamInfoId": 185,
         "TeamName": "Fortuna Düsseldorf",
         "ShortName": "Düsseldorf",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
@@ -560,7 +560,7 @@
       "OpponentGoals": 32,
       "GoalDiff": 64,
       "Matches": 33,
-      "TeamId": 40,
+      "TeamInfoId": 40,
       "Rank": "0"
     },
     {
@@ -570,7 +570,7 @@
       "OpponentGoals": 37,
       "GoalDiff": 47,
       "Matches": 33,
-      "TeamId": 7,
+      "TeamInfoId": 7,
       "Rank": "1"
     },
     {
@@ -580,7 +580,7 @@
       "OpponentGoals": 36,
       "GoalDiff": 43,
       "Matches": 33,
-      "TeamId": 1635,
+      "TeamInfoId": 1635,
       "Rank": "2"
     },
     {
@@ -590,7 +590,7 @@
       "OpponentGoals": 39,
       "GoalDiff": 25,
       "Matches": 33,
-      "TeamId": 87,
+      "TeamInfoId": 87,
       "Rank": "3"
     },
     {
@@ -600,7 +600,7 @@
       "OpponentGoals": 44,
       "GoalDiff": 16,
       "Matches": 33,
-      "TeamId": 6,
+      "TeamInfoId": 6,
       "Rank": "4"
     },
     {
@@ -610,7 +610,7 @@
       "OpponentGoals": 42,
       "GoalDiff": 6,
       "Matches": 33,
-      "TeamId": 131,
+      "TeamInfoId": 131,
       "Rank": "5"
     },
     {
@@ -620,7 +620,7 @@
       "OpponentGoals": 53,
       "GoalDiff": -4,
       "Matches": 33,
-      "TeamId": 175,
+      "TeamInfoId": 175,
       "Rank": "6"
     },
     {
@@ -630,7 +630,7 @@
       "OpponentGoals": 47,
       "GoalDiff": -3,
       "Matches": 33,
-      "TeamId": 112,
+      "TeamInfoId": 112,
       "Rank": "7"
     },
     {
@@ -640,7 +640,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -2,
       "Matches": 33,
-      "TeamId": 91,
+      "TeamInfoId": 91,
       "Rank": "8"
     },
     {
@@ -650,7 +650,7 @@
       "OpponentGoals": 57,
       "GoalDiff": -10,
       "Matches": 33,
-      "TeamId": 54,
+      "TeamInfoId": 54,
       "Rank": "9"
     },
     {
@@ -660,7 +660,7 @@
       "OpponentGoals": 54,
       "GoalDiff": -16,
       "Matches": 33,
-      "TeamId": 9,
+      "TeamInfoId": 9,
       "Rank": "10"
     },
     {
@@ -670,7 +670,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamId": 80,
+      "TeamInfoId": 80,
       "Rank": "11"
     },
     {
@@ -680,7 +680,7 @@
       "OpponentGoals": 64,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamId": 81,
+      "TeamInfoId": 81,
       "Rank": "12"
     },
     {
@@ -690,7 +690,7 @@
       "OpponentGoals": 63,
       "GoalDiff": -13,
       "Matches": 33,
-      "TeamId": 65,
+      "TeamInfoId": 65,
       "Rank": "13"
     },
     {
@@ -700,7 +700,7 @@
       "OpponentGoals": 61,
       "GoalDiff": -17,
       "Matches": 33,
-      "TeamId": 95,
+      "TeamInfoId": 95,
       "Rank": "14"
     },
     {
@@ -710,7 +710,7 @@
       "OpponentGoals": 64,
       "GoalDiff": -28,
       "Matches": 33,
-      "TeamId": 185,
+      "TeamInfoId": 185,
       "Rank": "15"
     },
     {
@@ -720,7 +720,7 @@
       "OpponentGoals": 68,
       "GoalDiff": -32,
       "Matches": 33,
-      "TeamId": 134,
+      "TeamInfoId": 134,
       "Rank": "16"
     },
     {
@@ -730,7 +730,7 @@
       "OpponentGoals": 71,
       "GoalDiff": -36,
       "Matches": 33,
-      "TeamId": 31,
+      "TeamInfoId": 31,
       "Rank": "17"
     }
   ]

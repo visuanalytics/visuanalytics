@@ -21,7 +21,7 @@
       {
         "type": "request_memory",
         "name": "table",
-        "timedelta": -7,
+        "use_last": 1,
         "alternative": {
           "type": "request",
           "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
@@ -510,7 +510,8 @@
   "storing": [
     {
       "name": "table",
-      "pattern": "Tabelle"
+      "pattern": "Tabelle",
+      "safe_on_change": true
     }
   ],
   "images": {
