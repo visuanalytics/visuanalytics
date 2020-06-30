@@ -51,33 +51,6 @@ def transform_array(values: dict, data: StepData):
 
 
 @register_transform
-def transform_compare_arrays(values: dict, data: StepData):
-    """Vergleicht zwei Werte verschiedener Arrays aus unterschiedlich tiefen Ebenen der Datenstruktur miteinander.
-
-    Vergleicht zwei Werte verschiedener Arrays aus unterschiedlich tiefen Ebenen der Datenstruktur miteinander.
-    Neue Values sind Integer-Werte.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-
-    pattern = data.format(values["pattern"], values)
-    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_1"], values), values):
-        compare = data.format(values["compare"], values)
-        value_1 = entry1[compare]
-        new_key = ""
-        new_value = ""
-        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_2"], values), values):
-            where = data.format(values["where"], values)
-            value_2 = entry2[where][compare]
-            if value_1 == value_2:
-                new_value = int(entry2[where][pattern])
-                new_key = values["new_key"]
-        data.save_loop(idx1, entry1, values)
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def transform_values_diff(values: dict, data: StepData):
     """Vergleicht zwei Werte verschiedener Arrays aus gleich tiefen Ebenen der Datenstruktur miteinander.
 
