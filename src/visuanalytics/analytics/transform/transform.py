@@ -125,6 +125,18 @@ def select(values: dict, data: StepData):
 
 
 @register_transform
+def delete(values: dict, data: StepData):
+    """
+    Löscht die angegebenen Keys aus den daten
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        data.remove_data(key, values)
+
+
+@register_transform
 def select_range(values: dict, data: StepData):
     """Entfernt alle Werte aus `"array_key"`, die nicht in `"range"` sind.
 
