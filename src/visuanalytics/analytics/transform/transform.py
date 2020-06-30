@@ -399,7 +399,7 @@ def copy(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
-        new_value = int(data.get_data(key, values))
+        new_value = data.get_data(key, values)
         data.insert_data(new_key, new_value, values)
 
 
