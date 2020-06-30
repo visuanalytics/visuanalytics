@@ -391,33 +391,6 @@ def add_data(values: dict, data: StepData):
 
 
 @register_transform
-def result(values: dict, data: StepData):
-    """Gibt das Ergebnis von drei möglichen Ergebnissen aus und weist diese einem Key zu.
-
-    Gibt das Ergebnis von drei möglichen Ergebnissen aus und weist diese einem Key zu.
-    Die drei möglichen Ergebnisse kommen durch den Vergleich von zwei Werten zustande. Diese Werte sind entweder
-    gleich, größer oder kleiner als der jeweils andere Wert. Der zurückgegebene Wert ist ein Integer.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        compare_1 = data.format(values["compare_1"], values)
-        compare_2 = data.format(values["compare_2"], values)
-        new_key = get_new_keys(values, idx)
-        if value[compare_1] == value[compare_2]:
-            new_value = int(data.format(values["points"]["1"], values))
-        elif value[compare_1] > value[compare_2]:
-            new_value = int(data.format(values["points"]["2"], values))
-        elif value[compare_1] < value[compare_2]:
-            new_value = int(data.format(values["points"]["3"], values))
-        else:
-            new_value = 0
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def copy(values: dict, data: StepData):
     """Kopiert einen Wert zu einem neuen Key.
 
