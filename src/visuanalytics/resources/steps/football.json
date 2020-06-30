@@ -171,16 +171,6 @@
           ]
         },
         {
-          "type": "add_symbol",
-          "keys": [
-            "_loop|TeamInfoId"
-          ],
-          "new_keys": [
-            "_loop|Rank"
-          ],
-          "pattern": "{_idx}"
-        },
-        {
           "type": "calculate",
           "action": "subtract",
           "keys": [
@@ -190,39 +180,65 @@
           "new_keys": [
             "_loop|PointsDiffToFirstPlace"
           ]
-        }
-      ]
-    },
-    {
-      "type": "transform_array",
-      "array_key": "_req|Vorherige-Tabelle",
-      "transform": [
-        {
-          "type": "select",
-          "relevant_keys": [
-            "TeamName",
-            "TeamInfoId"
-          ]
         },
         {
-          "type": "add_symbol",
+          "type": "copy",
           "keys": [
             "_loop|TeamInfoId"
           ],
           "new_keys": [
-            "_loop|Rank"
+            "_temp|TeamInfoId"
+          ]
+        },
+        {
+          "type": "copy",
+          "keys": [
+            "_idx"
           ],
-          "pattern": "{_idx}"
+          "new_keys": [
+            "_temp|TeamPos"
+          ]
+        },
+        {
+          "type": "transform_array",
+          "array_key": "_req|Vorherige-Tabelle",
+          "transform": [
+            {
+              "type": "select",
+              "relevant_keys": [
+                "TeamInfoId"
+              ]
+            },
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "calculate",
+                  "action": "subtract",
+                  "keys": [
+                    "_idx"
+                  ],
+                  "keys_right": [
+                    "_temp|TeamPos"
+                  ],
+                  "new_keys": [
+                    "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     {
-      "type": "transform_values_diff",
-      "array_key_1": "_req|Vorherige-Tabelle",
-      "array_key_2": "_req|Tabelle",
-      "compare": "TeamInfoId",
-      "pattern": "Rank",
-      "new_key": "_loop|Rank_diff"
+      "type": "delete",
+      "keys": [
+        "_temp",
+        "_req|Vorherige-Tabelle"
+      ]
     },
     {
       "type": "compare",
