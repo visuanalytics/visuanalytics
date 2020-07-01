@@ -26,7 +26,7 @@ def get_job_list():
     con = db.open_con()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, daily, weekly, on_date, date, time, steps_name,
+    job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name,
     group_concat(weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
@@ -50,6 +50,7 @@ def row_to_job(row):
         "jobId": row["Job_id"],
         "jobName": row["job_name"],
         "topicName": row["steps_name"],
+        "topicId": row("steps_id"),
         "params": params,
         "schedule": {
             "daily": row["daily"],
