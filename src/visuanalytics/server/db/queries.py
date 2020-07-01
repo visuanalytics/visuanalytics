@@ -27,7 +27,7 @@ def get_job_list():
     res = con.execute("""
     SELECT DISTINCT 
     job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name,
-    group_concat(weekday) AS weekdays,
+    group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
     INNER JOIN steps USING (steps_id)
@@ -45,7 +45,10 @@ def row_to_job(row):
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [{"name": kv[0], "selected": kv[1], "possibleValues": []} for kv in
               key_values]  # TODO (David): possibleValues
-    weekdays = str(row["weekdays"]).split(",")
+
+    if (row["weekdays"] is None):
+        print("Hey")
+    weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["Job_id"],
         "jobName": row["job_name"],
