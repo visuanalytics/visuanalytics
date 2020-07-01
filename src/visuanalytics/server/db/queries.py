@@ -50,7 +50,7 @@ def row_to_job(row):
         "jobId": row["Job_id"],
         "jobName": row["job_name"],
         "topicName": row["steps_name"],
-        "topicId": row("steps_id"),
+        "topicId": row["steps_id"],
         "params": params,
         "schedule": {
             "daily": row["daily"],
