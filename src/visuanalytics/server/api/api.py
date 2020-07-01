@@ -58,9 +58,9 @@ def add():
 
     Der Request-Body enthält die Informationen für den neuen Job im JSON-Format.
     """
-    job_data = request.json
-    return "add"
-    # TODO: add data base entry for the new job
+    job = request.json
+    queries.insert_job(job)
+    return "ok"
 
 
 @api.route("/edit/<id>", methods=["PUT"])

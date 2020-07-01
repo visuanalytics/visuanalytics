@@ -45,9 +45,6 @@ def row_to_job(row):
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [{"name": kv[0], "selected": kv[1], "possibleValues": []} for kv in
               key_values]  # TODO (David): possibleValues
-
-    if (row["weekdays"] is None):
-        print("Hey")
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["Job_id"],
@@ -64,3 +61,18 @@ def row_to_job(row):
             "weekdays": weekdays
         }
     }
+
+
+def insert_job(job):
+    schedule = job["schedule"]
+    con = db.open_con()
+    schedule_id = con.execute("INSERT INTO schedule(daily, weekly, on_date, date, time) VALUES(?, ?, ?, ?, ?)",
+                              (schedule["daily"], schedule["weekly"], schedule["onDate"], schedule["date"],
+                               schedule["time"])).lastrowid
+    if schedule["weekly"]:
+        id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
+        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+    con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
+                (job["jobName"], job["topicId"], schedule_id))
+    # TODO(David): Parameter
+    con.commit()
