@@ -128,8 +128,8 @@ class StepData(object):
 
     def get_data_num(self, key, values: dict):
         """
-        Macht das gleiche wie :func:`get_data` mit der ausnahme das,
-        fals der übergebene key eine Zahl ist, wird diese direkt zurückgegeben.
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key eine Zahl ist, diese direkt zurückgegeben wird.
 
         :param key: fad zu den Daten in self.data,
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder eine Zahl.
