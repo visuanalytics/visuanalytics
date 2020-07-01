@@ -1,6 +1,24 @@
 {
   "id": 0,
   "name": "name",
+  "params": [
+    {
+      "name": "Wochentag",
+      "possibleValues": [
+        "Mo",
+        "Di",
+        "Mi",
+        "Do",
+        "Fr",
+        "Sa",
+        "So"
+      ]
+    },
+    {
+      "name": "Ort",
+      "possibleValues": []
+    }
+  ],
   "api": [
     {
       "type": "request",
@@ -10,7 +28,11 @@
     {
       "type": "request_multiple",
       "api_key_name": "test",
-      "steps_value": ["Hallo", "Test", "Hallo2"],
+      "steps_value": [
+        "Hallo",
+        "Test",
+        "Hallo2"
+      ],
       "use_loop_as_key": true,
       "url_pattern": "https://www.test.de?test={_loop}&test1={config|test}&key={_api_key}&city={config|city}"
     },
@@ -37,7 +59,9 @@
       "transform": [
         {
           "type": "select",
-          "relevant_keys": ["_loop|data"]
+          "relevant_keys": [
+            "_loop|data"
+          ]
         },
         {
           "type": "select_range",
@@ -70,25 +94,42 @@
         },
         {
           "type": "add_symbole",
-          "keys": ["_loop|test"],
+          "keys": [
+            "_loop|test"
+          ],
           "pattern": "{_key} test"
         },
         {
           "type": "replace",
-          "keys": ["_loop|pressure", "_loop|dec"],
-          "new_keys": ["_loop|new_pres", "_loop|new_dec"],
+          "keys": [
+            "_loop|pressure",
+            "_loop|dec"
+          ],
+          "new_keys": [
+            "_loop|new_pres",
+            "_loop|new_dec"
+          ],
           "old_value": ".",
           "new_value": ",",
           "count": 1
         },
         {
           "type": "alias",
-          "keys": ["_loop|hallo", "_loop|test"],
-          "new_keys": ["_loop|abc", "_loop|def"]
+          "keys": [
+            "_loop|hallo",
+            "_loop|test"
+          ],
+          "new_keys": [
+            "_loop|abc",
+            "_loop|def"
+          ]
         },
         {
           "type": "date_format",
-          "keys": ["_loop|date", "_loop|tommorow"],
+          "keys": [
+            "_loop|date",
+            "_loop|tommorow"
+          ],
           "format": "%Y-%m-%d"
         },
         {
@@ -108,7 +149,14 @@
     },
     {
       "type": "loop",
-      "values": [0, 1, 2, 3, 4, 5],
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
       "transform": [
         {
           "type": "calculate",
@@ -148,8 +196,16 @@
         },
         {
           "type": "text_array",
-          "pos_x": [10, 20, 30],
-          "pos_y": [1, 2, 7],
+          "pos_x": [
+            10,
+            20,
+            30
+          ],
+          "pos_y": [
+            1,
+            2,
+            7
+          ],
           "preset": "wetter1",
           "anchor_point": "config",
           "array_key": "",
@@ -200,7 +256,10 @@
   "run_config": {
     "testing": {
       "defalt_value": false,
-      "possible_values": [true, false]
+      "possible_values": [
+        true,
+        false
+      ]
     }
   },
   "presets": {
