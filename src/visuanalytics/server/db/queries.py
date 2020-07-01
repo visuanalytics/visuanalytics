@@ -7,8 +7,8 @@ STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 
 def get_topic_names():
     con = db.open_con()
-    res = con.execute("SELECT steps_name FROM steps")
-    return [row["steps_name"] for row in res]
+    res = con.execute("SELECT steps_id, steps_name FROM steps")
+    return [{"topicId": row["steps_id"], "topicName": row["steps_name"]} for row in res]
 
 
 def get_params(topic_id):
