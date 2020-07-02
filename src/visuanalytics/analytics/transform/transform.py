@@ -135,7 +135,7 @@ def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
-    except KeyError:
+    except StepKeyError:
         data.insert_data(values["new_key"], [], values)
         array = data.get_data(values["new_key"], values)
 
