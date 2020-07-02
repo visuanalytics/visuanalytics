@@ -489,28 +489,6 @@ def copy(values: dict, data: StepData):
 
 
 @register_transform
-def option(values: dict, data: StepData):
-    """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
-
-    Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_true"` stehen.
-    Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_false"` stehen.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    check = data.get_data(values["check"], values)
-
-    if check:
-        values["transform"] = values.get("on_true", [])
-    else:
-        values["transform"] = values.get("on_false", [])
-
-    transform(values, data)
-
-
-@register_transform
 def compare(values: dict, data: StepData):
     value_left: str = data.get_data(values["value_left"], values)
     value_right: str = data.get_data(values["value_right"], values)
@@ -532,7 +510,7 @@ def compare(values: dict, data: StepData):
 
 
 @register_transform
-def option_for(values: dict, data: StepData):
+def option(values: dict, data: StepData):
     """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
 
     Wenn `"condition"`-Wert gleich `"check"`-Wert, dann werden die `"transform"`-Funktionen ausgeführt,
@@ -546,14 +524,6 @@ def option_for(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     check = data.get_data(values["check"], values)
-    condition = data.get_data(values["condition"], values)
-
-    if condition == check:
-        values["transform"] = values.get("on_equal", [])
-    elif condition > check:
-        values["transform"] = values.get("on_higher", [])
-    elif condition < check:
-        values["transform"] = values.get("on_lower", [])
     condition = values.get("condition", None)
     if condition is not None:
         if condition == check:
