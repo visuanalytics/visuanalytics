@@ -216,17 +216,20 @@ def alias(values: dict, data: StepData):
 
 @register_transform
 def regex(values: dict, data: StepData):
-    # TODO ggf. entfernen, da es wie replace funktioniert
     """Führt `"re.sub"` für die angegebenen Felder aus.
+    regex (suche nach dieser Expression, replace_by (ersetze Expression durch), value (String in dem ersetzt werden soll)
+
+    Geht nur für regex ohne backslash \
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
+        value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        find = data.format(values["find"], values)
+        regex = data.format(values["regex"], values)
+        find = fr"{regex}"
         replace_by = data.format(values["replace_by"], values)
         new_value = re.sub(find, replace_by, value)
         data.insert_data(new_key, new_value, values)
