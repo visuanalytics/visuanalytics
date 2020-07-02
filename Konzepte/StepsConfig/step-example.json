@@ -1,22 +1,47 @@
 {
   "id": 0,
   "name": "name",
-  "params": [
+  "steps_config": [
     {
-      "name": "Wochentag",
+      "name": "weekday",
+      "display_name": "wochentag",
       "possibleValues": [
-        "Mo",
-        "Di",
-        "Mi",
-        "Do",
-        "Fr",
-        "Sa",
-        "So"
-      ]
+        {
+          "value": 0,
+          "display_value": "Mo"
+        },
+        {
+          "value": 1,
+          "display_value": "Di"
+        },
+        {
+          "value": 2,
+          "display_value": "Mi"
+        },
+        {
+          "value": 3,
+          "display_value": "Do"
+        },
+        {
+          "value": 4,
+          "display_value": "Fr"
+        },
+        {
+          "value": 5,
+          "display_value": "Sa"
+        },
+        {
+          "value": 6,
+          "display_value": "So"
+        }
+      ],
+      "default_value": 0
     },
     {
-      "name": "Ort",
-      "possibleValues": []
+      "name": "location",
+      "display_name": "Ort",
+      "possibleValues": [],
+      "default_value": "Gießen"
     }
   ],
   "api": [
