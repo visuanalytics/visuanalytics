@@ -19,7 +19,8 @@ def _to_int(x):
 
 
 def _get_or_create(d, k):
-    if not operator.contains(d, k):
+    # TODO (max) may handle to large array idx (add elm)
+    if not isinstance(d, list) and not operator.contains(d, k):
         operator.setitem(d, k, {})
 
     return operator.getitem(d, k)

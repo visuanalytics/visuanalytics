@@ -178,6 +178,17 @@
             "_loop|Rank"
           ],
           "pattern": "{_idx}"
+        },
+        {
+          "type": "calculate",
+          "action": "subtract",
+          "keys": [
+            "_loop|Points"
+          ],
+          "subtract": "{_req|Tabelle|0|Points}",
+          "new_keys": [
+            "_loop|PointsDiffToFirstPlace"
+          ]
         }
       ]
     },
@@ -253,315 +264,279 @@
       ]
     },
     {
-      "type": "transform_array",
-      "array_key": "_req|Tabelle",
-      "transform": [
+      "type": "option",
+      "check": "_req|Tabelle|0|Rank_diff",
+      "condition": 0,
+      "on_equal": [
         {
-          "type": "option",
-          "check": "_loop|Rank_diff",
-          "condition": 0,
-          "on_equal": [
-            {
-              "type": "random_text",
-              "keys": [
-                "0"
-              ],
-              "pattern": [
-                [
-                  "{0|TeamName} ist weiterhin an der Tabellenspitze. ",
-                  "Auf Platz 1 liegt {0|TeamName} mit {0|Points} Punkten. ",
-                  "{0|TeamName} liegt auf dem 1. Platz mit {0|Points} Punkten. ",
-                  "Tabellenführer ist aktuell {0|TeamName} mit {0|Points} Punkten."
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|0"
           ],
-          "on_higher": [
-            {
-              "type": "random_text",
-              "keys": [
-                "0"
-              ],
-              "pattern": [
-                [
-                  "{0|TeamName} ist weiterhin an der Tabellenspitze. ",
-                  "Auf Platz 1 liegt {0|TeamName} mit {0|Points} Punkten. ",
-                  "{0|TeamName} liegt auf dem 1. Platz mit {0|Points} Punkten. ",
-                  "Tabellenführer ist aktuell {0|TeamName} mit {0|Points} Punkten."
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "pattern": [
+            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
-          "on_lower": [
-            {
-              "type": "random_text",
-              "keys": [
-                "0"
-              ],
-              "pattern": [
-                [
-                  "{0|TeamName} übernimmt die Führung. ",
-                  "Auf Platz 1 liegt {0|TeamName} mit {0|Points} Punkten. ",
-                  "{0|TeamName} liegt auf dem 1. Platz mit {0|Points} Punkten. ",
-                  "Tabellenführer ist aktuell {0|TeamName} mit {0|Points} Punkten."
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "new_keys": [
+            "_req|Tabelle|0|Text"
           ]
-        },
+        }
+      ],
+      "on_higher": [
         {
-          "type": "option",
-          "check": "_loop|Rank_diff",
-          "condition": 0,
-          "on_equal": [
-            {
-              "type": "random_text",
-              "keys": [
-                "1"
-              ],
-              "pattern": [
-                [
-                  "{1|TeamName} liegt mit {1|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
-                  "Gefolgt von {1|TeamName} auf dem zweiten Platz. ",
-                  "Auf Platz 2 liegt {1|TeamName} mit {1|Points} Punkten. ",
-                  "{1|TeamName} liegt auf dem 2. Platz mit {1|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|0"
           ],
-          "on_higher": [
-            {
-              "type": "random_text",
-              "keys": [
-                "1"
-              ],
-              "pattern": [
-                [
-                  "{1|TeamName} liegt mit {1|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
-                  "Gefolgt von {1|TeamName} auf dem zweiten Platz. ",
-                  "Auf Platz 2 liegt {1|TeamName} mit {1|Points} Punkten. ",
-                  "{1|TeamName} liegt auf dem 2. Platz mit {1|Points} Punkten. ",
-                  "{1|TeamName} übernimmt den 2. Platz mit {1|Points} Punkten.",
-                  "{1|TeamName} nun auf dem 2. Platz mit {1|Points} Punkten."
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "pattern": [
+            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
-          "on_lower": [
-            {
-              "type": "random_text",
-              "keys": [
-                "1"
-              ],
-              "pattern": [
-                [
-                  "{1|TeamName} liegt mit {1|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
-                  "Gefolgt von {1|TeamName} auf dem zweiten Platz. ",
-                  "Auf Platz 2 liegt {1|TeamName} mit {1|Points} Punkten. ",
-                  "{1|TeamName} liegt auf dem 2. Platz mit {1|Points} Punkten. ",
-                  "{1|TeamName} ist vom 1. Platz auf den 2. Platz abgestiegen mit {1|PointsDiffToFirstPlace} Punkten Rückstand. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "new_keys": [
+            "_req|Tabelle|0|Text"
           ]
-        },
+        }
+      ],
+      "on_lower": [
         {
-          "type": "option",
-          "check": "_loop|Rank_diff",
-          "condition": 0,
-          "on_equal": [
-            {
-              "type": "random_text",
-              "keys": [
-                "3"
-              ],
-              "pattern": [
-                [
-                  "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {3|TeamName}. ",
-                  "Auf Platz 4 liegt {3|TeamName} mit {3|Points} Punkten. ",
-                  "{3|TeamName} liegt auf dem 4. Platz mit {3|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|0"
           ],
-          "on_higher": [
-            {
-              "type": "random_text",
-              "keys": [
-                "3"
-              ],
-              "pattern": [
-                [
-                  "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {3|TeamName}. ",
-                  "Auf Platz 4 liegt {3|TeamName} mit {3|Points} Punkten. ",
-                  "{3|TeamName} liegt auf dem 4. Platz mit {3|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "pattern": [
+            "{_key|TeamName} übernimmt die Führung. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
           ],
-          "on_lower": [
-            {
-              "type": "random_text",
-              "keys": [
-                "3"
-              ],
-              "pattern": [
-                [
-                  "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {3|TeamName}. ",
-                  "Auf Platz 4 liegt {3|TeamName} mit {3|Points} Punkten. ",
-                  "{3|TeamName} liegt auf dem 4. Platz mit {3|Points} Punkten. ",
-                  "Auf den 4. Platz abgestiegen ist {3|TeamName} mit {3|Points}. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "new_keys": [
+            "_req|Tabelle|0|Text"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "type": "option",
+      "check": "_req|Tabelle|1|Rank_diff",
+      "condition": 0,
+      "on_equal": [
         {
-          "type": "option",
-          "check": "_loop|Rank_diff",
-          "condition": 0,
-          "on_equal": [
-            {
-              "type": "random_text",
-              "keys": [
-                "15"
-              ],
-              "pattern": [
-                [
-                  "Auf dem Relegationsplatz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "Auf dem 16. Platz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "{15|TeamName} liegt auf dem 16. Platz mit {15|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|1"
           ],
-          "on_higher": [
-            {
-              "type": "random_text",
-              "keys": [
-                "15"
-              ],
-              "pattern": [
-                [
-                  "Auf dem Relegationsplatz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "Auf dem 16. Platz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "{15|TeamName} liegt auf dem 16. Platz mit {15|Points} Punkten. ",
-                  "{15|TeamName} steigt auf auf Relegationsplatz mit {15|Points}. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "pattern": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. "
           ],
-          "on_lower": [
-            {
-              "type": "random_text",
-              "keys": [
-                "15"
-              ],
-              "pattern": [
-                [
-                  "Auf dem Relegationsplatz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "Auf dem 16. Platz liegt {15|TeamName} mit {15|Points} Punkten. ",
-                  "{15|TeamName} liegt auf dem 16. Platz mit {15|Points} Punkten. ",
-                  "{15|TeamName} steigt auf den Relegationsplatz ab. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "new_keys": [
+            "_req|Tabelle|1|Text"
           ]
-        },
+        }
+      ],
+      "on_higher": [
         {
-          "type": "option",
-          "check": "_loop|Rank_diff",
-          "condition": 0,
-          "on_equal": [
-            {
-              "type": "random_text",
-              "keys": [
-                "17"
-              ],
-              "pattern": [
-                [
-                  "Tabellenschlusslicht ist {17|TeamName} mit {17|Points} Punkten. ",
-                  "Auf dem letzten Platz liegt {17|TeamName} mit {17|Points} Punkten. ",
-                  "{17|TeamName} liegt auf dem letzten Platz mit {17|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|1"
           ],
-          "on_higher": [
-            {
-              "type": "random_text",
-              "keys": [
-                "17"
-              ],
-              "pattern": [
-                [
-                  "Tabellenschlusslicht ist {17|TeamName} mit {17|Points} Punkten. ",
-                  "Auf dem letzten Platz liegt {17|TeamName} mit {17|Points} Punkten. ",
-                  "{17|TeamName} liegt auf dem letzten Platz mit {17|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "pattern": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} übernimmt den zweiten Platz mit {_key|Points} Punkten.",
+            "{_key|TeamName} nun auf dem zweiten Platz mit {_key|Points} Punkten."
           ],
-          "on_lower": [
-            {
-              "type": "random_text",
-              "keys": [
-                "17"
-              ],
-              "pattern": [
-                [
-                  "Tabellenschlusslicht ist {17|TeamName} mit {17|Points} Punkten. ",
-                  "Auf dem letzten Platz liegt {17|TeamName} mit {17|Points} Punkten. ",
-                  "{17|TeamName} liegt auf dem letzten Platz mit {17|Points} Punkten. ",
-                  "{17|TeamName} ist abgestiegen auf den letzten Platz mit {17|Points} Punkten. "
-                ]
-              ],
-              "new_keys": [
-                "Text"
-              ]
-            }
+          "new_keys": [
+            "_req|Tabelle|1|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|1"
+          ],
+          "pattern": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} ist auf den zweiten Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|1|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "option",
+      "check": "_req|Tabelle|3|Rank_diff",
+      "condition": 0,
+      "on_equal": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "pattern": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "pattern": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "pattern": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. ",
+            "Auf den 4. Platz abgestiegen ist {_key|TeamName} mit {_key|Points}. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "option",
+      "check": "_req|Tabelle|15|Rank_diff",
+      "condition": 0,
+      "on_equal": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "pattern": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "pattern": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points}. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "pattern": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} steigt auf den Relegationsplatz ab. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "option",
+      "check": "_req|Tabelle|17|Rank_diff",
+      "condition": 0,
+      "on_equal": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|17"
+          ],
+          "pattern": [
+            "Tabellenschlusslicht ist {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem letzten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem letzten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|17|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|17"
+          ],
+          "pattern": [
+            "Tabellenschlusslicht ist {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem letzten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem letzten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|17|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_text",
+          "keys": [
+            "_req|Tabelle|17"
+          ],
+          "pattern": [
+            "Tabellenschlusslicht ist {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem letzten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem letzten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} ist abgestiegen auf den letzten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|17|Text"
           ]
         }
       ]
@@ -2761,19 +2736,15 @@
           },
           {
             "type": "text",
-            "pattern": "Test "
+            "pattern": "{_req|Tabelle|0|Text} "
           },
           {
             "type": "text",
-            "pattern": "Test "
+            "pattern": "{_req|Tabelle|1|Text} "
           },
           {
             "type": "text",
-            "pattern": "Test "
-          },
-          {
-            "type": "text",
-            "pattern": "Test "
+            "pattern": "{_req|Tabelle|3|Text} "
           },
           {
             "type": "text",
@@ -2785,11 +2756,15 @@
         "parts": [
           {
             "type": "text",
+            "pattern": "{_req|Tabelle|15|Text} "
+          },
+          {
+            "type": "text",
             "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} und {_req|Tabelle|17|TeamName} mit jeweils {_req|Tabelle|16|Points} und {_req|Tabelle|17|Points} Punkten. "
           },
           {
             "type": "text",
-            "pattern": "Test "
+            "pattern": "{_req|Tabelle|17|Text} "
           }
         ]
       }
