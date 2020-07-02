@@ -511,6 +511,27 @@ def option(values: dict, data: StepData):
 
 
 @register_transform
+def compare(values: dict, data: StepData):
+    value_left: str = data.get_data(values["value_left"], values)
+    value_right: str = data.get_data(values["value_right"], values)
+
+    if values.get("on_different", []):
+        if value_left.__eq__(value_right):
+            values["transform"] = values.get("on_equal", [])
+        else:
+            values["transform"] = values.get("on_different", [])
+    else:
+        if value_left == value_right:
+            values["transform"] = values.get("on_equal", [])
+        elif value_left > value_right:
+            values["transform"] = values.get("on_higher", [])
+        elif value_left < value_right:
+            values["transform"] = values.get("on_lower", [])
+
+    transform(values, data)
+
+
+@register_transform
 def option_for(values: dict, data: StepData):
     """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob zwei bestimmte Werte =, < oder > sind.
 

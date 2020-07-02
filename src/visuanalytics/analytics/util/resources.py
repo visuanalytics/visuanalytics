@@ -66,7 +66,7 @@ def get_specific_memory_path(job_name: str, name: str, number: int):
     files = os.listdir()
     files.sort(reverse=True)
     os.chdir(current)
-    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number - 1]))
+    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number]))
 
 
 def new_temp_resource_path(pipeline_id: str, extension):
@@ -137,7 +137,7 @@ def open_memory_resource(job_name: str, name: str, time_delta, mode: str = "rt")
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
 
     """
-    res_name = (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
+    res_name = (datetime.now() - timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
     return open_resource(os.path.join(MEMORY_LOCATION, job_name, name, res_name), mode)
 
 
@@ -150,7 +150,7 @@ def open_specific_memory_resource(job_name: str, name: str, number: int = 1, mod
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
 
     """
-    return open_resource(get_specific_memory_path(job_name, name, number), mode)
+    return open_resource(get_specific_memory_path(job_name, name, number - 1), mode)
 
 
 def delete_resource(path: str):

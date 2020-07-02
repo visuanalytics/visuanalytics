@@ -7,7 +7,9 @@
     "steps_value": [
       "Spiele",
       "Tabelle",
-      "Vorherige-Tabelle"
+      "Vorherige-Tabelle",
+      "Vorheriger-Spieltag",
+      "Vorherige-Vorherige-Tabelle"
     ],
     "requests": [
       {
@@ -22,6 +24,24 @@
         "type": "request_memory",
         "name": "table",
         "use_last": 1,
+        "alternative": {
+          "type": "request",
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "spieltag",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "input": "-1. Spieltag"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "table",
+        "use_last": 2,
         "alternative": {
           "type": "request",
           "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
@@ -162,35 +182,75 @@
       ]
     },
     {
-      "type": "transform_array",
-      "array_key": "_req|Vorherige-Tabelle",
-      "transform": [
+      "type": "compare",
+      "value_left": "_req|Spieltag",
+      "value_right": "_req|Vorheriger-Spieltag",
+      "on_different": [
         {
-          "type": "select",
-          "relevant_keys": [
-            "TeamName",
-            "TeamInfoId"
+          "type": "transform_array",
+          "array_key": "_req|Vorherige-Tabelle",
+          "transform": [
+            {
+              "type": "select",
+              "relevant_keys": [
+                "TeamName",
+                "TeamInfoId"
+              ]
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|TeamInfoId"
+              ],
+              "new_keys": [
+                "_loop|Rank"
+              ],
+              "pattern": "{_idx}"
+            }
           ]
         },
         {
-          "type": "add_symbol",
-          "keys": [
-            "_loop|TeamInfoId"
-          ],
-          "new_keys": [
-            "_loop|Rank"
-          ],
-          "pattern": "{_idx}"
+          "type": "transform_values_diff",
+          "array_key_1": "_req|Vorherige-Tabelle",
+          "array_key_2": "_req|Tabelle",
+          "compare": "TeamInfoId",
+          "pattern": "Rank",
+          "new_key": "_loop|Rank_diff"
+        }
+      ],
+      "on_equal": [
+        {
+          "type": "transform_array",
+          "array_key": "_req|Vorherige-Vorherige-Tabelle",
+          "transform": [
+            {
+              "type": "select",
+              "relevant_keys": [
+                "TeamName",
+                "TeamInfoId"
+              ]
+            },
+            {
+              "type": "add_symbol",
+              "keys": [
+                "_loop|TeamInfoId"
+              ],
+              "new_keys": [
+                "_loop|Rank"
+              ],
+              "pattern": "{_idx}"
+            }
+          ]
+        },
+        {
+          "type": "transform_values_diff",
+          "array_key_1": "_req|Vorherige-Vorherige-Tabelle",
+          "array_key_2": "_req|Tabelle",
+          "compare": "TeamInfoId",
+          "pattern": "Rank",
+          "new_key": "_loop|Rank_diff"
         }
       ]
-    },
-    {
-      "type": "transform_values_diff",
-      "array_key_1": "_req|Vorherige-Tabelle",
-      "array_key_2": "_req|Tabelle",
-      "compare": "TeamInfoId",
-      "pattern": "Rank",
-      "new_key": "_loop|Rank_diff"
     },
     {
       "type": "transform_array",
@@ -510,7 +570,12 @@
   "storing": [
     {
       "name": "table",
-      "pattern": "Tabelle",
+      "pattern": "_req|Tabelle",
+      "safe_on_change": true
+    },
+    {
+      "name": "spieltag",
+      "pattern": "_req|Spieltag",
       "safe_on_change": true
     }
   ],

@@ -41,6 +41,11 @@ def request(values: dict, data: StepData, name):
 
 
 @register_api
+def input(values: dict, data: StepData, name):
+    return values["input"]
+
+
+@register_api
 def request_memory(values: dict, data: StepData, name):
     """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
 
@@ -56,7 +61,7 @@ def request_memory(values: dict, data: StepData, name):
             with resources.open_memory_resource(data.format("{_conf|job_name}"),
                                                 values["name"], values["timedelta"]) as fp:
                 return json.loads(fp.read())
-    except FileNotFoundError:
+    except (FileNotFoundError, IndexError):
         return _api(values["alternative"], data, name)
 
 

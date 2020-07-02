@@ -11,7 +11,7 @@ from visuanalytics.analytics.processing.image.visualization import generate_all_
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.storing import storing
+from visuanalytics.analytics.storing.storing import storing
 
 logger = logging.getLogger(__name__)
 
