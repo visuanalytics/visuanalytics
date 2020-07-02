@@ -246,8 +246,12 @@ def date_format(values: dict, data: StepData):
         value = data.get_data(key, values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
-        new_value = date.strftime(data.format(values["format"], values))
         new_key = get_new_keys(values, idx)
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
         data.insert_data(new_key, new_value, values)
 
 
@@ -265,12 +269,12 @@ def timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
-        if values.get("zeropaded_off", False):
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
-            data.insert_data(new_key, new_value, values)
         else:
             new_value = date.strftime(data.format(values["format"], values))
-            data.insert_data(new_key, new_value, values)
+        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
@@ -311,9 +315,12 @@ def date_now(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     new_key = values["new_key"]
-    date_format = data.format(values["format"], values)
     value = datetime.now()
-    new_value = value.strftime(date_format)
+    zeropaded_off = values.get("zeropaded_off", None)
+    if (zeropaded_off is not None) and (zeropaded_off == True):
+        new_value = value.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+    else:
+        new_value = value.strftime(data.format(values["format"], values))
     data.insert_data(new_key, new_value, values)
 
 
