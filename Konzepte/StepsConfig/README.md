@@ -10,17 +10,19 @@
 - [Transform](#transform)
   - [Transform Array](#transform-array)
   - [Transform Dict](#transform-dict)
-  - [Transform Compare Arrays](#transform-compare-arrays)
   - [Calculate](#calculate)
     - [mean](#mean)
     - [max](#max)
     - [min](#min)
     - [round](#round)
     - [mode](#mode)
-    - [ms_to_kmh](#ms_to_kmh)
+    - [_bi_calculate](#_bi_calculate)
+    - [multiply](#multiply)
+    - [divide](#divide)
     - [subtract](#subtract)
     - [add](#add)
   - [Select](#select)
+  - [Delete](#delete)
   - [Select Range](#select-range)
   - [Append](#append)
   - [Add Symbol](#add-symbol)
@@ -34,11 +36,13 @@
   - [Date Now](#date-now)
   - [Wind Direction](#wind-direction)
   - [Choose Random](#choose-random)
-  - [Find Equal](#find-equal)
   - [Loop](#loop)
   - [Add Data](#add-data)
-  - [Result](#result)
   - [Copy](#copy)
+  - [Option](#option)
+  - [Compare](#compare)
+  - [Random Text](#random-text)
+  - [Convert](#convert)
 - [Images](#images)
 - [Audios](#audios)
 - [Seqence](#seqence)
@@ -185,12 +189,26 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 ```
 
+`keys`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+
 <!--TODO-->
 ### max
 <!-- TODO Description-->
 ```JSON
 
 ```
+
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`save_idx_to`:
+<!--TODO-->
 
 <!--TODO-->
 ### min
@@ -199,6 +217,13 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 ```
 
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`save_idx_to`:
+<!--TODO-->
+
 <!--TODO-->
 ### round
 <!-- TODO Description-->
@@ -206,19 +231,64 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 ```
 
+`keys`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+
 <!--TODO-->
 ### mode
 <!-- TODO Description-->
 ```JSON
 
 ```
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
 
 <!--TODO-->
-### ms_to_kmh
+### _bi_calculate
+<!-- TODO Description-->
+
+Wird aufgerufen von den untenstehenden Methoden zum Multiplizieren, Dividieren, Subtrahieren und Addieren von mehreren
+Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem Wert.
+```JSON
+
+```
+
+<!--TODO-->
+### multiply
 <!-- TODO Description-->
 ```JSON
 
 ```
+`keys_right`:
+<!--TODO-->
+`value_right`:
+<!--TODO-->
+`value_left`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
+
+<!--TODO-->
+
+### divide
+<!-- TODO Description-->
+```JSON
+
+```
+`keys_right`:
+<!--TODO-->
+`value_right`:
+<!--TODO-->
+`value_left`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
 
 <!--TODO-->
 ### subtract
@@ -226,6 +296,14 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 ```JSON
 
 ```
+`keys_right`:
+<!--TODO-->
+`value_right`:
+<!--TODO-->
+`value_left`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
 
 <!--TODO-->
 ### add
@@ -235,6 +313,14 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 ```JSON
 
 ```
+`keys_right`:
+<!--TODO-->
+`value_right`:
+<!--TODO-->
+`value_left`:
+<!--TODO-->
+`decimal`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -251,6 +337,20 @@ Die Keys stehen in relevant_keys.
 }
 ```
 
+`relevant_keys`:
+
+<!--TODO-->
+
+## Delete
+
+```JSON
+{
+  "type": "delete",
+  "keys": []
+}
+```
+
+`keys`:
 <!--TODO-->
 
 ## Select Range
@@ -259,12 +359,19 @@ Die Keys stehen in relevant_keys.
 
 ```JSON
 {
-  "type": "select_range",
-  "sub_key": "key",
-  "range_start": 0,
-  "range_end": 7
+          "type": "select_range",
+          "array_key": "_loop|data",
+          "range_start": 0,
+          "range_end": 5
 }
 ```
+
+`array_key`:
+<!--TODO-->
+`range_start`:
+<!--TODO-->
+`range_end`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -279,6 +386,11 @@ Die Keys stehen in relevant_keys.
   "new_key": "new_key"
 }
 ```
+
+`key`:
+<!--TODO-->
+`new_key`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -296,6 +408,13 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
   "pattern": "{_key} test"
 }
 ```
+
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`pattern`: 
+<!--TODO-->
 
 <!--TODO-->
 
@@ -318,6 +437,17 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 }
 ```
 
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`old_value`:
+<!--TODO-->
+`new_value`:
+<!--TODO-->
+`count`:
+<!--TODO-->
+
 <!--TODO-->
 
 ## Translate Key
@@ -327,6 +457,13 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 ```JSON
 
 ```
+
+`keys`:
+<!--TODO-->
+`dict`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -341,6 +478,11 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
   "new_keys": ["new_key"]
 }
 ```
+
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -372,6 +514,17 @@ welches in format angegeben ist.
 }
 ```
 
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`given_format`:
+<!--TODO-->
+`format`:
+<!--TODO-->
+`zeropaded_off`:
+<!--TODO-->
+
 <!--TODO-->
 
 ## Timestamp
@@ -390,6 +543,14 @@ zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
   "zeropaded_off": true
 }
 ```
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`format`:
+<!--TODO-->
+`zeropaded_off`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -409,6 +570,13 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 }
 ```
 
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+`given_format`:
+<!--TODO-->
+
 <!--TODO-->
 
 ## Date Now
@@ -424,6 +592,14 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
   "format": "%Y-%m-%d"
 }
 ```
+
+`new_key`:
+<!--TODO-->
+`format`:
+<!--TODO-->
+`zeropaded_off`:
+<!--TODO-->
+
 
 <!--TODO-->
 
@@ -474,7 +650,14 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
           "delimiter": "-"
         }
 ```
-
+`key`:
+<!--TODO-->
+`new_key`:
+<!--TODO-->
+`dict`:
+<!--TODO-->
+`delimiter`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -486,17 +669,15 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 ```
 
+`keys`:
+<!--TODO-->
+`dict`:
+<!--TODO-->
+`new_keys`:
 <!--TODO-->
 
-## Find Equal
-
-<!-- TODO Description-->
-
-```JSON
-
-```
-
 <!--TODO-->
+
 
 ## Loop
 
@@ -510,6 +691,11 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 }
 ```
 
+`values`:
+<!--TODO-->
+`transform`:
+<!--TODO-->
+
 ```JSON
 {
   "type": "loop",
@@ -518,6 +704,13 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
   "transform": []
 }
 ```
+
+`range_start`:
+<!--TODO-->
+`range_stop`:
+<!--TODO-->
+`transform`:
+<!--TODO-->
 
 <!--TODO-->
 
@@ -535,27 +728,93 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 }
 ```
 
+`new_key`:
+<!--TODO-->
+`patter`n:
+<!--TODO-->
 
 <!--TODO-->
 
-## Result
-
-<!-- TODO Description-->
-
-```JSON
-
-```
-
-<!--TODO-->
 
 ## Copy
 
 <!-- TODO Description-->
 Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt. 
+
 ```JSON
 
 ```
 
+`keys`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+
+<!--TODO-->
+
+## option
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+`check`:
+<!--TODO-->
+`on_true`:
+<!--TODO-->
+`on_false`:
+<!--TODO-->
+
+<!--TODO-->
+
+## compare
+
+<!-- TODO Description-->
+
+```JSON
+
+```
+
+`value_left`:
+<!--TODO-->
+`value_right`:
+<!--TODO-->
+`on_equal`:
+<!--TODO-->
+`on_higher`:
+<!--TODO-->
+`on_lower`:
+<!--TODO-->
+
+<!--TODO-->
+
+## Random Text
+<!-- TODO Description-->
+
+```JSON
+
+```
+`keys`:
+<!--TODO-->
+`pattern`:
+<!--TODO-->
+`new_keys`:
+<!--TODO-->
+
+
+## Convert
+<!-- TODO Description-->
+
+```JSON
+
+```
+`keys`:
+<!--TODO-->
+`to`:
+<!--TODO-->
+`new_keys`:
 <!--TODO-->
 
 # Images
