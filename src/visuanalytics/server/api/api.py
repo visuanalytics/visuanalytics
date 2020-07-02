@@ -89,5 +89,5 @@ def remove(id):
     :param id: URL-Parameter <id>
     :type id: str
     """
-    return "remove"
-    # TODO: remove job from data base
+    queries.delete_job(id)
+    return "ok"

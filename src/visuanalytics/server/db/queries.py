@@ -76,3 +76,13 @@ def insert_job(job):
                 (job["jobName"], job["topicId"], schedule_id))
     # TODO(David): Parameter
     con.commit()
+
+
+def delete_job(job_id):
+    con = db.open_con()
+    job = con.execute("SELECT schedule_id FROM job where job_id=?", job_id).fetchone()
+    schedule_id = job["schedule_id"]
+    print(schedule_id)
+    con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
+    con.execute("DELETE FROM job WHERE job_id=?", job_id).fetchone()
+    con.commit()
