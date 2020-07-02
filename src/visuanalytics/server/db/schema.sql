@@ -68,7 +68,6 @@ CREATE TABLE schedule_weekday
                weekday <= 6),
     schedule_id REFERENCES schedule (schedule_id) ON DELETE CASCADE
         ON UPDATE CASCADE
-        UNIQUE
                                    NOT NULL
 );
 
