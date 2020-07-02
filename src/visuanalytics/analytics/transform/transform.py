@@ -352,22 +352,6 @@ def wind_direction(values: dict, data: StepData):
 
 
 @register_transform
-def choose_random(values: dict, data: StepData):
-    """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Wert aus.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
-        length_dict_array = len(values["dict"][value])
-        decision = randint(0, length_dict_array - 1)
-        new_key = get_new_keys(values, idx)
-        new_value = data.format(values["dict"][value][decision], values)
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def loop(values: dict, data: StepData):
     """Durchläuft das angegebene Array und führt für jedes Element die angegebenen `"transform"`-Funktionen aus.
 
@@ -451,17 +435,26 @@ def compare(values: dict, data: StepData):
 
 
 @register_transform
-def random_text(values: dict, data: StepData):
-    """Wählt random einen Text aus einem `"pattern"`-Array aus.
+def random_string(values: dict, data: StepData):
+    """Wählt random einen Text aus einem Array oder einem Dictionary (zu einem bestimmten Key) aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+    array = values.get("array", None)
+    dict = values.get("dict", None)
     for idx, key in data.loop_key(values["keys"], values):
-        len_pattern = len(values["pattern"])
-        rand = randint(0, len_pattern - 1)
         new_key = get_new_keys(values, idx)
-        new_value = data.format(values["pattern"][rand], values)
+        new_value = ""
+        if array is not None:
+            length = len(values["array"])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["array"][rand], values)
+        elif dict is not None:
+            value = str(data.get_data(key, values))
+            length = len(values["dict"][value])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["dict"][value][rand], values)
         data.insert_data(new_key, new_value, values)
 
 

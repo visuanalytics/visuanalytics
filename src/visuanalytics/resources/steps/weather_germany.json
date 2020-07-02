@@ -254,7 +254,7 @@
               }
             },
             {
-              "type": "choose_random",
+              "type": "random_string",
               "keys": [
                 "_loop|weather|code"
               ],
@@ -542,7 +542,7 @@
           "pattern": "{_key}\u00B0"
         },
         {
-          "type": "choose_random",
+          "type": "random_string",
           "keys": [
             "_loop|temp_highest_max_city_code",
             "_loop|temp_lowest_max_city_code",
