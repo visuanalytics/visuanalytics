@@ -435,8 +435,8 @@ def compare(values: dict, data: StepData):
 
 
 @register_transform
-def random_string(values: dict, data: StepData):
-    """Wählt random einen Text aus einem Array oder einem Dictionary (zu einem bestimmten Key) aus.
+def random_value(values: dict, data: StepData):
+    """Wählt random einen Wert aus einem Array oder einem Dictionary (zu einem bestimmten Key) aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

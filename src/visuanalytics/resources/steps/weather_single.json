@@ -225,7 +225,7 @@
           }
         },
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_loop|weather|code"
           ],

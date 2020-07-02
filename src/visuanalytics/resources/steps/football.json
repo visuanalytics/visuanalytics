@@ -87,7 +87,7 @@
               "value_right": "_loop|MatchResults|PointsTeam2",
               "on_equal": [
                 {
-                  "type": "random_string",
+                  "type": "random_value",
                   "keys": [
                     "_loop"
                   ],
@@ -103,7 +103,7 @@
               ],
               "on_higher": [
                 {
-                  "type": "random_string",
+                  "type": "random_value",
                   "keys": [
                     "_loop"
                   ],
@@ -118,7 +118,7 @@
               ],
               "on_lower": [
                 {
-                  "type": "random_string",
+                  "type": "random_value",
                   "keys": [
                     "_loop"
                   ],
@@ -135,7 +135,7 @@
           ],
           "on_false": [
             {
-              "type": "random_string",
+              "type": "random_value",
               "keys": [
                 "_loop"
               ],
@@ -246,7 +246,7 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|0"
           ],
@@ -263,7 +263,7 @@
       ],
       "on_higher": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|0"
           ],
@@ -280,7 +280,7 @@
       ],
       "on_lower": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|0"
           ],
@@ -302,7 +302,7 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|1"
           ],
@@ -319,7 +319,7 @@
       ],
       "on_higher": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|1"
           ],
@@ -338,7 +338,7 @@
       ],
       "on_lower": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|1"
           ],
@@ -361,7 +361,7 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|3"
           ],
@@ -377,7 +377,7 @@
       ],
       "on_higher": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|3"
           ],
@@ -393,7 +393,7 @@
       ],
       "on_lower": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|3"
           ],
@@ -415,7 +415,7 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|15"
           ],
@@ -431,7 +431,7 @@
       ],
       "on_higher": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|15"
           ],
@@ -448,7 +448,7 @@
       ],
       "on_lower": [
         {
-          "type": "random_string",
+          "type": "random_value",
           "keys": [
             "_req|Tabelle|15"
           ],
