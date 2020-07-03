@@ -65,6 +65,10 @@ def default(values: dict, data: StepData, config: dict):
 def custom(values: dict, data: StepData, config: dict):
     logger.info("Generate Audio with Custom Audio Config")
 
+    # Set Testing to False (To generate Audio)
+    testing = data.data["_conf"].get("testing", False)
+    data.data["_conf"]["testing"] = False
+
     _prepare_custom(config.get("prepare", None), data, config)
 
     for key in values:
@@ -77,6 +81,9 @@ def custom(values: dict, data: StepData, config: dict):
         response = api_request(generate, data, "audio")
 
         values[key] = _save_audio(response, data, config)
+
+    # Reset Testing
+    data.data["_conf"]["testing"] = testing
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
