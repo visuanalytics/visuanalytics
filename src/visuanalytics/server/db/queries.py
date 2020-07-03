@@ -75,18 +75,11 @@ def _find(list, key, value):
 
 
 def insert_job(job):
-    schedule = job["schedule"]
     con = db.open_con()
-    schedule_id = con.execute("INSERT INTO schedule(daily, weekly, on_date, date, time) VALUES(?, ?, ?, ?, ?)",
-                              (schedule["daily"], schedule["weekly"], schedule["onDate"], schedule["date"],
-                               schedule["time"])).lastrowid
-    if schedule["weekly"]:
-        id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
-        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+    schedule_id = _insert_schedule(con, job["schedule"])
     job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
                          (job["jobName"], job["topicId"], schedule_id)).lastrowid
-    id_key_values = [(job_id, p["name"], p["selected"]) for p in job["params"]]
-    con.executemany("INSERT INTO job_config(job_id, key, value) VALUES(?, ?, ?)", id_key_values)
+    _insert_params(job_id, job["params"])
     con.commit()
 
 
@@ -94,7 +87,39 @@ def delete_job(job_id):
     con = db.open_con()
     job = con.execute("SELECT schedule_id FROM job where job_id=?", job_id).fetchone()
     schedule_id = job["schedule_id"]
-    print(schedule_id)
     con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
+    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", str(schedule_id))
     con.execute("DELETE FROM job WHERE job_id=?", job_id).fetchone()
     con.commit()
+
+
+def update_job(job_id, updated_data):
+    con = db.open_con()
+    for key, value in updated_data.items():
+        if key == "jobName":
+            con.execute("UPDATE job SET job_name=? WHERE job_id =?", (value, job_id))
+        if key == "schedule":
+            schedule_id = con.execute("SELECT schedule_id FROM job where job_id=?", job_id).fetchone()["schedule_id"]
+            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", str(schedule_id))
+            con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
+            new_schedule_id = _insert_schedule(con, value)
+            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", (str(new_schedule_id), job_id))
+        if key == "params":
+            con.execute("DELETE FROM job_config WHERE job_id=?", job_id)
+            _insert_params(con, job_id, value)
+    con.commit()
+
+
+def _insert_schedule(con, schedule):
+    schedule_id = con.execute("INSERT INTO schedule(daily, weekly, on_date, date, time) VALUES(?, ?, ?, ?, ?)",
+                              (schedule["daily"], schedule["weekly"], schedule["onDate"], schedule["date"],
+                               schedule["time"])).lastrowid
+    if schedule["weekly"]:
+        id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
+        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
+
+
+def _insert_params(con, job_id, params):
+    id_key_values = [(job_id, p["name"], p["selected"]) for p in params]
+    con.executemany("INSERT INTO job_config(job_id, key, value) VALUES(?, ?, ?)", id_key_values)

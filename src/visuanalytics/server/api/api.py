@@ -62,8 +62,8 @@ def add():
     return "ok"
 
 
-@api.route("/edit/<id>", methods=["PUT"])
-def edit(id):
+@api.route("/edit/<job_id>", methods=["PUT"])
+def edit(job_id):
     """
     Endpunkt `/edit`.
 
@@ -74,6 +74,7 @@ def edit(id):
     :type id: str
     """
     updated_job_data = request.json
+    queries.update_job(job_id, updated_job_data)
     return "edit"
     # TODO: update data base entry with the given job id
 
