@@ -26,15 +26,14 @@ def topics():
     return flask.jsonify(queries.get_topic_names())
 
 
-@api.route("/params", methods=["GET"])
-def params():
+@api.route("/params/<topic_id>", methods=["GET"])
+def params(topic_id):
     """
     Endpunkt `/params`.
 
     GET-Parameter: "topic".
     Die Response enthält die Parameterinformationen für das übergebene Thema.
     """
-    topic_id = request.args.get("topic")
     params = queries.get_params(topic_id)
     if (params == None):
         return "Unknown topic", 400
@@ -79,8 +78,8 @@ def edit(id):
     # TODO: update data base entry with the given job id
 
 
-@api.route("/remove/<id>", methods=["DELETE"])
-def remove(id):
+@api.route("/remove/<job_id>", methods=["DELETE"])
+def remove(job_id):
     """
     Endpunkt `/remove`.
 
@@ -89,5 +88,5 @@ def remove(id):
     :param id: URL-Parameter <id>
     :type id: str
     """
-    queries.delete_job(id)
+    queries.delete_job(job_id)
     return "ok"
