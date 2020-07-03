@@ -200,43 +200,122 @@
           "new_keys": [
             "_loop|PointsDiffToFirstPlace"
           ]
-        }
-      ]
-    },
-    {
-     "type": "compare",
-      "value_left": "_req|Spieltag",
-      "value_right": "_req|Vorheriger-Spieltag",
-      "on_different": [
+        },
         {
-      "type": "transform_array",
-      "array_key": "_req|Vorherige-Tabelle",
-      "transform": [
-        {
-          "type": "select",
-          "relevant_keys": [
-            "TeamName",
-            "TeamInfoId"
+          "type": "copy",
+          "keys": [
+            "_loop|TeamInfoId"
+          ],
+          "new_keys": [
+            "_temp|TeamInfoId"
           ]
         },
-         {
+        {
           "type": "copy",
           "keys": [
             "_idx"
           ],
           "new_keys": [
-            "_temp|Rank"
+            "_temp|TeamPos"
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_req|Spieltag",
+          "value_right": "_req|Vorheriger-Spieltag",
+          "on_equal": [
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "on_different": [
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
-      "type": "transform_values_diff",
-      "array_key_1": "_req|Vorherige-Tabelle",
-      "array_key_2": "_req|Tabelle",
-      "compare": "TeamInfoId",
-      "pattern": "Rank",
-      "new_key": "_loop|Rank_diff"
+      "type": "delete",
+      "keys": [
+        "_temp",
+        "_req|Vorherige-Tabelle",
+        "_req|Vorherige-Vorherige-Tabelle",
+        "_req|Vorheriger-Spieltag"
+      ]
     },
     {
       "type": "compare",
@@ -466,7 +545,11 @@
   "storing": [
     {
       "name": "table",
-      "pattern": "Tabelle"
+      "pattern": "_req|Tabelle"
+    },
+    {
+      "name": "spieltag",
+      "pattern": "_req|Spieltag"
     }
   ],
   "images": {

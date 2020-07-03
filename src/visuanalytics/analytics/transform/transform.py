@@ -401,6 +401,7 @@ def copy(values: dict, data: StepData):
 @register_transform
 def option(values: dict, data: StepData):
     """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
+
      Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
      die unter `"on_true"` stehen.
      Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
