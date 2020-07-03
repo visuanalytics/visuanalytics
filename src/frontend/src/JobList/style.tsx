@@ -1,6 +1,6 @@
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import {withStyles} from '@material-ui/core/styles';
-import MuiExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 
 export const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -50,7 +50,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export const ExpansionPanelSummary = withStyles({
+export const AccordionSummary = withStyles({
     root: {
         borderTop: '6px solid #C4C4C4',
         backgroundColor: '#2E97C5',
@@ -67,4 +67,4 @@ export const ExpansionPanelSummary = withStyles({
         },
     },
     expanded: {},
-})(MuiExpansionPanelSummary);
+})(MuiAccordionSummary);

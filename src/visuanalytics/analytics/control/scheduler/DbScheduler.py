@@ -13,11 +13,11 @@ class DbScheduler(Scheduler):
 
     def __run_jobs(self, schedule_id):
         for job_step in job.get_all_schedules_steps(schedule_id):
-            logger.info(f"Job {job_step['job_id']} started")
+            logger.info(f"Job {job_step['job_id']}:'{job_step['job_name']}' started")
 
             steps_name, config = job.get_job_run_infos(job_step['job_id'])
 
-            self._start_job(steps_name, config)
+            self._start_job(job_step["job_name"], steps_name, config)
 
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")

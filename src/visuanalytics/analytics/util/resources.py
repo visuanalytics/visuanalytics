@@ -1,7 +1,7 @@
 """Module, dass Funktionen zur Benutzung von Ressourcen bereitstellt."""
 import contextlib
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 RESOURCES_LOCATION = "../../resources"
 """
@@ -14,6 +14,14 @@ Relativer Pfad zur root location.
 """
 
 TEMP_LOCATION = "temp"
+""" 
+Temporärer Datei Ordner Name
+"""
+
+MEMORY_LOCATION = "memory"
+"""
+Memory Datei Ordner Name, zum abspeichern von vorherigen berechnungen
+"""
 
 
 def get_resource_path(path: str):
@@ -37,10 +45,19 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
+def get_memory_path(path: str, job_name: str):
+    """Erstellt einen Absoluten Pfad zu der übergebene Ressource in den Memory Ordner.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/memory` Ordner.
+    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    """
+    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, path))
+
+
 def new_temp_resource_path(pipeline_id: str, extension):
     """Erstellt einen Absoluten Pfad für eine neue resource.
 
-    Generiert einen neuen Namen mit Aktuellem zeitsteppel.
+    Generiert einen neuen Namen mit Aktuellem Zeitstempel.
     Verwendet um den pfad zu generieren :func:`get_temp_resource_path` mit dem ordner der `pipeline_id`.
 
     :param pipeline_id: id der Pipeline, von der die Funktion aufgerufen wurde.
@@ -49,6 +66,19 @@ def new_temp_resource_path(pipeline_id: str, extension):
     :type extension: str
     """
     return get_temp_resource_path(f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}.{extension}", pipeline_id)
+
+
+def new_memory_resource_path(job_name: str, name: str):
+    """Erstellt einen Absoluten Pfad für eine neue memory resource.
+
+    Generiert einen neuen Namen mit aktuellem Zeitstempel.
+    Verwendet um den pfad zu generieren :func:`get_memory_path` mit dem ordner des `job_name`.
+
+   :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+   :param name: Name der Datei (ohne datum)
+    """
+    os.makedirs(get_memory_path("", job_name), exist_ok=True)
+    return get_memory_path(f"{name}_{datetime.now().strftime('%Y-%m-%d')}.json", job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):
@@ -81,6 +111,19 @@ def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
 
     """
     return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
+
+
+def open_memory_resource(time_delta, job_name: str, name: str, mode: str = "rt"):
+    """Öffnet die übergebene Memory Ressource.
+
+    :param time_delta: Tage die abgezogen werden sollen vom heutigem Tage zum öffnen der richtigen Ressource
+    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    :param name: Name der Datei (ohne datum)
+    :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
+
+    """
+    res_name = name + "_" + (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
+    return open_resource(os.path.join(MEMORY_LOCATION, job_name, res_name), mode)
 
 
 def delete_resource(path: str):
