@@ -114,7 +114,7 @@ class PreprocessTest(unittest.TestCase):
     def test_option(self):
         values = {
             "type": "option",
-            "check": "{_req|_test|checker}",
+            "check": "_req|_test|checker",
             "on_true": [
                 {
                     "type": "text_array",

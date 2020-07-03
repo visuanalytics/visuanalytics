@@ -78,7 +78,7 @@
             "_loop|wind_spd"
           ],
           "action": "multiply",
-          "multiply_by": 3.6,
+          "value_right": 3.6,
           "decimal": 2
         },
         {
@@ -225,7 +225,7 @@
           }
         },
         {
-          "type": "choose_random",
+          "type": "random_value",
           "keys": [
             "_loop|weather|code"
           ],

@@ -1,6 +1,7 @@
 from random import randint
 
 from visuanalytics.analytics.util.step_errors import AudioError, raise_step_error
+from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 AUDIO_PARTS_TYPES = {}
@@ -29,7 +30,7 @@ def text(values, data):
 
 
 @register_audio_parts
-def option_for(values, data):
+def compare(values, data):
     """Vergleicht zwei Werte miteinander und führt je nachdem ob =, < oder > random_text mit angegebenen Werten durch.
 
     Vergleicht zwei Werte miteinander und führt random_text mit den jeweils unter on_equal, on_higher oder on_lower
@@ -43,17 +44,26 @@ def option_for(values, data):
     :param data: Daten aus der API
     """
 
-    value = data.get_data(values["check"], values)
-    condition = data.get_data(values["condition"], values)
+    values["pattern"] = values["transform"] = execute_type_compare(values, data)
 
-    if condition == value:
-        values["pattern"] = values.get("on_equal", [])
-    elif condition > value:
-        values["pattern"] = values.get("on_higher", [])
-    elif condition < value:
-        values["pattern"] = values.get("on_lower", [])
+    random_text(values, data)
 
-    return random_text(values, data)
+
+@register_audio_parts
+def option(values, data):
+    """Führt die `"random_text"` aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
+
+    Wenn der Wert, der in `"check"` steht `"true"` ist, wird `"random_text"` ausgeführt mit den pattern,
+    die unter `"on_true"` stehen.
+    Wenn der Wert, der in `"check"` steht `"false"` ist, wird `"random_text"` ausgeführt mit den pattern,
+    die unter `"on_false"` stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    values["pattern"] = execute_type_option(values, data)
+
+    random_text(values, data)
 
 
 @register_audio_parts
