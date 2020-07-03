@@ -170,10 +170,11 @@ class StepData(object):
         :param values: Werte aus der JSON-Datei.
         :return: Formatiertes input Dictionary
         """
-        api_key_name = self.format(api_key_name, values)
-        data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+        if json is None:
+            return json
+        
         for key in json:
-            json[key] = self.__formatter.format(json[key], data)
+            json[key] = self.format_api(key, api_key_name, values)
 
         return json
 
