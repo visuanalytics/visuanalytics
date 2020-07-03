@@ -36,7 +36,7 @@ def request(values: dict, data: StepData, name):
     if data.data["_conf"].get("testing", False):
         return _load_test_data(name)
 
-    return _fetch(_create_query(values, data))
+    return _fetch(values, data)
 
 
 @register_api
@@ -65,17 +65,15 @@ def request_multiple(values: dict, data: StepData, name):
     if data.data["_conf"].get("testing", False):
         return _load_test_data(name)
 
-    req = _create_query(values, data)
-
     if data.format(values.get("use_loop_as_key", False), values):
         data_dict = {}
         for _, key in data.loop_array(values["steps_value"], values):
-            data_dict[key] = _fetch(req)
+            data_dict[key] = _fetch(values, data)
         return data_dict
 
     data_array = []
     for _ in data.loop_array(values["steps_value"], values):
-        data_array.append(_fetch(req))
+        data_array.append(_fetch(values, data))
         return data_array
 
 
@@ -110,28 +108,29 @@ def _load_test_data(name):
     # TODO(max) Catch possible errors
 
 
-def _fetch(req: dict):
+def _fetch(values: dict, data: StepData):
     """Abfrage einer API und Umwandlung der API-Antwort ein Angegebenes Format.
 
-    :param req: Dictionary das alle informationen für den request enthält.
+    :param req_data: Dictionary das alle informationen für den request enthält.
     :return: Antwort der API im Angegebenen Format
     """
+    # Build Http request
+    req_data = _create_query(values, data)
 
+    req = requests.Request(req_data["method"], req_data["url"], headers=req_data["headers"],
+                           json=req_data.get("json", None),
+                           data=req_data.get("other", None), params=req_data["params"])
     # Make the Http request
-    if req["method"].__eq__("get"):
-        response = requests.get(req["url"], headers=req["headers"], json=req.get("json", None),
-                                text=req.get("text", None), data=req.get("other", None), params=req["params"])
-    else:
-        response = requests.post(req["url"], headers=req["headers"], json=req.get("json", None),
-                                 text=req.get("text", None), data=req.get("other", None), params=req["params"])
+    s = requests.session()
+    response = s.send(req.prepare())
 
     if response.status_code != 200:
         raise APiRequestError(response)
 
     # Get the Right Return Format
-    if req["res_format"].__eq__("json"):
+    if req_data["res_format"].__eq__("json"):
         return response.json()
-    elif req["res_format"].__eq__("text"):
+    elif req_data["res_format"].__eq__("text"):
         return response.text
     else:
         return response.content
