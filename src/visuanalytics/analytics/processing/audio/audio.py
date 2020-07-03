@@ -10,6 +10,19 @@ from visuanalytics.analytics.util.type_utils import get_type_func, register_type
 GENERATE_AUDIO_TYPES = {}
 
 
+def get_audio_config(values: dict, data: StepData):
+    config = get_config().get("audio", None)
+    custom_config = values["audio"].get("config", {})
+
+    if config is None:
+        config = {"type": "default", "lang": "de", "format": "mp3"}
+
+    # If Config in Step Json is pressent use That config
+    config.update(custom_config)
+
+    return config
+
+
 @raise_step_error(AudioError)
 def generate_audios(values: dict, data: StepData):
     audios = values["audio"]["audios"]
