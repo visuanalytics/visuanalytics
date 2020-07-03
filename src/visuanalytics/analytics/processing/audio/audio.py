@@ -20,11 +20,8 @@ GENERATE_AUDIO_TYPES = {}
 
 
 def get_audio_config(values: dict, data: StepData):
-    config = get_config().get("audio", None)
+    config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
-
-    if config is None:
-        config = {"type": "default", "lang": "de", "format": "mp3"}
 
     # If Config in Step Json is pressent use That config
     config.update(custom_config)
