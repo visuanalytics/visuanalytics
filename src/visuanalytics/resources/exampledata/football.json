@@ -13,14 +13,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 7,
+        "TeamId": 7,
         "TeamName": "Borussia Dortmund",
         "ShortName": "Dortmund",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 123,
+        "TeamId": 123,
         "TeamName": "TSG 1899 Hoffenheim",
         "ShortName": "Hoffenheim",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
@@ -114,14 +114,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 6,
+        "TeamId": 6,
         "TeamName": "Bayer Leverkusen",
         "ShortName": "Leverkusen",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 81,
+        "TeamId": 81,
         "TeamName": "1. FSV Mainz 05",
         "ShortName": "FSV Mainz",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
@@ -179,14 +179,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 87,
+        "TeamId": 87,
         "TeamName": "Borussia Mönchengladbach",
         "ShortName": "Gladbach",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 54,
+        "TeamId": 54,
         "TeamName": "Hertha BSC",
         "ShortName": "Hertha BSC",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
@@ -268,14 +268,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 131,
+        "TeamId": 131,
         "TeamName": "VfL Wolfsburg",
         "ShortName": "Wolfsburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 40,
+        "TeamId": 40,
         "TeamName": "FC Bayern",
         "ShortName": "FC Bayern",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
@@ -369,14 +369,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 91,
+        "TeamId": 91,
         "TeamName": "Eintracht Frankfurt",
         "ShortName": "Frankfurt",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 31,
+        "TeamId": 31,
         "TeamName": "SC Paderborn 07",
         "ShortName": "Paderborn",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
@@ -482,14 +482,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 134,
+        "TeamId": 134,
         "TeamName": "Werder Bremen",
         "ShortName": "Bremen",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 65,
+        "TeamId": 65,
         "TeamName": "1. FC Köln",
         "ShortName": "1. FC Köln",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
@@ -619,14 +619,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 112,
+        "TeamId": 112,
         "TeamName": "SC Freiburg",
         "ShortName": "SC Freiburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 9,
+        "TeamId": 9,
         "TeamName": "FC Schalke 04",
         "ShortName": "Schalke 04",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
@@ -720,14 +720,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 95,
+        "TeamId": 95,
         "TeamName": "FC Augsburg",
         "ShortName": "Augsburg",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 1635,
+        "TeamId": 1635,
         "TeamName": "RB Leipzig",
         "ShortName": "RBL Leipzig",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
@@ -809,14 +809,14 @@
         "GroupID": 34233
       },
       "Team1": {
-        "TeamInfoId": 80,
+        "TeamId": 80,
         "TeamName": "1. FC Union Berlin",
         "ShortName": "Union Berlin",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
         "TeamGroupName": null
       },
       "Team2": {
-        "TeamInfoId": 185,
+        "TeamId": 185,
         "TeamName": "Fortuna Düsseldorf",
         "ShortName": "Düsseldorf",
         "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
@@ -1143,13 +1143,219 @@
   "Vorherige-Tabelle": [
     {
       "TeamName": "FC Bayern",
+      "TeamInfoId": 40,
+      "Points": 82,
+      "Goals": 100,
+      "OpponentGoals": 32,
+      "GoalDiff": 68,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 0,
+      "Rank_diff": 0,
+      "Text": "Tabellenführer ist aktuell FC Bayern mit 82 Punkten."
+    },
+    {
+      "TeamName": "Borussia Dortmund",
+      "TeamInfoId": 7,
+      "Points": 69,
+      "Goals": 84,
+      "OpponentGoals": 41,
+      "GoalDiff": 43,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 13,
+      "Rank_diff": 0,
+      "Text": "Borussia Dortmund liegt mit 13 Punkten Rückstand auf dem 2. Platz."
+    },
+    {
+      "TeamName": "RB Leipzig",
+      "TeamInfoId": 1635,
+      "Points": 66,
+      "Goals": 81,
+      "OpponentGoals": 37,
+      "GoalDiff": 44,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 16,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "Borussia Mönchengladbach",
+      "TeamInfoId": 87,
+      "Points": 65,
+      "Goals": 66,
+      "OpponentGoals": 40,
+      "GoalDiff": 26,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 17,
+      "Rank_diff": 0,
+      "Text": "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt Borussia Mönchengladbach. "
+    },
+    {
+      "TeamName": "Bayer Leverkusen",
+      "TeamInfoId": 6,
+      "Points": 63,
+      "Goals": 61,
+      "OpponentGoals": 44,
+      "GoalDiff": 17,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 19,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "TSG 1899 Hoffenheim",
+      "TeamInfoId": 175,
+      "Points": 52,
+      "Goals": 53,
+      "OpponentGoals": 53,
+      "GoalDiff": 0,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 30,
+      "Rank_diff": 1
+    },
+    {
+      "TeamName": "VfL Wolfsburg",
+      "TeamInfoId": 131,
+      "Points": 49,
+      "Goals": 48,
+      "OpponentGoals": 46,
+      "GoalDiff": 2,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 33,
+      "Rank_diff": -1
+    },
+    {
+      "TeamName": "SC Freiburg",
+      "TeamInfoId": 112,
+      "Points": 48,
+      "Goals": 48,
+      "OpponentGoals": 47,
+      "GoalDiff": 1,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 34,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "Eintracht Frankfurt",
+      "TeamInfoId": 91,
+      "Points": 45,
+      "Goals": 59,
+      "OpponentGoals": 60,
+      "GoalDiff": -1,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 37,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "Hertha BSC",
+      "TeamInfoId": 54,
+      "Points": 41,
+      "Goals": 48,
+      "OpponentGoals": 59,
+      "GoalDiff": -11,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 41,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "1. FC Union Berlin",
+      "TeamInfoId": 80,
+      "Points": 41,
+      "Goals": 41,
+      "OpponentGoals": 58,
+      "GoalDiff": -17,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 41,
+      "Rank_diff": 1
+    },
+    {
+      "TeamName": "FC Schalke 04",
+      "TeamInfoId": 9,
+      "Points": 39,
+      "Goals": 38,
+      "OpponentGoals": 58,
+      "GoalDiff": -20,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 43,
+      "Rank_diff": -1
+    },
+    {
+      "TeamName": "1. FSV Mainz 05",
+      "TeamInfoId": 81,
+      "Points": 37,
+      "Goals": 44,
+      "OpponentGoals": 65,
+      "GoalDiff": -21,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 45,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "1. FC Köln",
+      "TeamInfoId": 65,
+      "Points": 36,
+      "Goals": 51,
+      "OpponentGoals": 69,
+      "GoalDiff": -18,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 46,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "FC Augsburg",
+      "TeamInfoId": 95,
+      "Points": 36,
+      "Goals": 45,
+      "OpponentGoals": 63,
+      "GoalDiff": -18,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 46,
+      "Rank_diff": 0
+    },
+    {
+      "TeamName": "Werder Bremen",
+      "TeamInfoId": 134,
+      "Points": 31,
+      "Goals": 42,
+      "OpponentGoals": 69,
+      "GoalDiff": -27,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 51,
+      "Rank_diff": 1,
+      "Text": "Werder Bremen liegt auf dem 16ten Platz mit 31 Punkten. "
+    },
+    {
+      "TeamName": "Fortuna Düsseldorf",
+      "TeamInfoId": 185,
+      "Points": 30,
+      "Goals": 36,
+      "OpponentGoals": 67,
+      "GoalDiff": -31,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 52,
+      "Rank_diff": -1
+    },
+    {
+      "TeamName": "SC Paderborn 07",
+      "TeamInfoId": 31,
+      "Points": 20,
+      "Goals": 37,
+      "OpponentGoals": 74,
+      "GoalDiff": -37,
+      "Matches": 34,
+      "PointsDiffToFirstPlace": 62,
+      "Rank_diff": 0
+    }
+  ],
+  "Vorheriger-Spieltag": "34. Spieltag",
+  "Vorherige-Vorherige-Tabelle": [
+    {
+      "TeamName": "FC Bayern",
       "Points": 79,
       "Goals": 96,
       "OpponentGoals": 32,
       "GoalDiff": 64,
       "Matches": 33,
       "TeamInfoId": 40,
-      "Rank": "0"
+      "Rank": "0",
+      "Rank_Dif": 0
     },
     {
       "TeamName": "Borussia Dortmund",
@@ -1159,10 +1365,10 @@
       "GoalDiff": 47,
       "Matches": 33,
       "TeamInfoId": 7,
-      "Rank": "1"
+      "Rank": "1",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 1635,
       "TeamName": "RB Leipzig",
       "Points": 63,
       "Goals": 79,
@@ -1170,10 +1376,10 @@
       "GoalDiff": 43,
       "Matches": 33,
       "TeamInfoId": 1635,
-      "Rank": "2"
+      "Rank": "2",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 87,
       "TeamName": "Borussia Mönchengladbach",
       "Points": 62,
       "Goals": 64,
@@ -1181,33 +1387,30 @@
       "GoalDiff": 25,
       "Matches": 33,
       "TeamInfoId": 87,
-      "Rank": "3"
+      "Rank": "3",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 6,
       "TeamName": "Bayer Leverkusen",
-      "ShortName": "Leverkusen",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
-      "Points": 63,
+      "Points": 60,
+      "Goals": 60,
       "OpponentGoals": 44,
       "GoalDiff": 16,
       "Matches": 33,
       "TeamInfoId": 6,
-      "Rank": "4"
+      "Rank": "4",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 131,
       "TeamName": "VfL Wolfsburg",
-      "ShortName": "Wolfsburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
       "Points": 49,
-      "OpponentGoals": 46,
       "Goals": 48,
       "OpponentGoals": 42,
       "GoalDiff": 6,
       "Matches": 33,
       "TeamInfoId": 131,
-      "Rank": "5"
+      "Rank": "5",
+      "Rank_Dif": 0
     },
     {
       "TeamName": "TSG 1899 Hoffenheim",
@@ -1217,22 +1420,21 @@
       "GoalDiff": -4,
       "Matches": 33,
       "TeamInfoId": 175,
-      "Rank": "6"
+      "Rank": "6",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 112,
       "TeamName": "SC Freiburg",
-      "ShortName": "SC Freiburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
-      "Points": 48,
+      "Points": 45,
+      "Goals": 44,
       "OpponentGoals": 47,
       "GoalDiff": -3,
       "Matches": 33,
       "TeamInfoId": 112,
-      "Rank": "7"
+      "Rank": "7",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 91,
       "TeamName": "Eintracht Frankfurt",
       "Points": 42,
       "Goals": 56,
@@ -1240,34 +1442,30 @@
       "GoalDiff": -2,
       "Matches": 33,
       "TeamInfoId": 91,
-      "Rank": "8"
+      "Rank": "8",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 54,
       "TeamName": "Hertha BSC",
-      "ShortName": "Hertha BSC",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
       "Points": 41,
       "Goals": 47,
       "OpponentGoals": 57,
       "GoalDiff": -10,
       "Matches": 33,
       "TeamInfoId": 54,
-      "Rank": "9"
+      "Rank": "9",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 9,
       "TeamName": "FC Schalke 04",
-      "ShortName": "Schalke 04",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
       "Points": 39,
-      "OpponentGoals": 58,
       "Goals": 38,
       "OpponentGoals": 54,
       "GoalDiff": -16,
       "Matches": 33,
       "TeamInfoId": 9,
-      "Rank": "10"
+      "Rank": "10",
+      "Rank_Dif": 0
     },
     {
       "TeamName": "1. FC Union Berlin",
@@ -1277,61 +1475,52 @@
       "GoalDiff": -20,
       "Matches": 33,
       "TeamInfoId": 80,
-      "Rank": "11"
+      "Rank": "11",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 81,
       "TeamName": "1. FSV Mainz 05",
-      "ShortName": "FSV Mainz",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
       "Points": 37,
-      "OpponentGoals": 65,
       "Goals": 44,
       "OpponentGoals": 64,
       "GoalDiff": -20,
       "Matches": 33,
       "TeamInfoId": 81,
-      "Rank": "12"
+      "Rank": "12",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 65,
       "TeamName": "1. FC Köln",
-      "ShortName": "1. FC Köln",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
       "Points": 36,
       "Goals": 50,
       "OpponentGoals": 63,
       "GoalDiff": -13,
       "Matches": 33,
       "TeamInfoId": 65,
-      "Rank": "13"
+      "Rank": "13",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 95,
       "TeamName": "FC Augsburg",
-      "ShortName": "Augsburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
       "Points": 36,
       "Goals": 44,
       "OpponentGoals": 61,
       "GoalDiff": -17,
       "Matches": 33,
       "TeamInfoId": 95,
-      "Rank": "14"
+      "Rank": "14",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 185,
       "TeamName": "Fortuna Düsseldorf",
-      "ShortName": "Düsseldorf",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
       "Points": 30,
-      "OpponentGoals": 67,
       "Goals": 36,
       "OpponentGoals": 64,
       "GoalDiff": -28,
       "Matches": 33,
       "TeamInfoId": 185,
-      "Rank": "15"
+      "Rank": "15",
+      "Rank_Dif": 0
     },
     {
       "TeamName": "Werder Bremen",
@@ -1341,20 +1530,19 @@
       "GoalDiff": -32,
       "Matches": 33,
       "TeamInfoId": 134,
-      "Rank": "16"
+      "Rank": "16",
+      "Rank_Dif": 0
     },
     {
-      "TeamInfoId": 31,
       "TeamName": "SC Paderborn 07",
-      "ShortName": "Paderborn",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
       "Points": 20,
       "Goals": 35,
       "OpponentGoals": 71,
       "GoalDiff": -36,
       "Matches": 33,
       "TeamInfoId": 31,
-      "Rank": "17"
+      "Rank": "17",
+      "Rank_Dif": 0
     }
   ]
 }
