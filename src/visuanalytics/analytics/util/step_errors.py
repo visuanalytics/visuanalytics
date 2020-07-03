@@ -1,5 +1,7 @@
 import functools
 
+from requests import Response
+
 
 class StepError(Exception):
     """
@@ -82,6 +84,12 @@ class StepKeyError(Exception):
             return f"{self.func_name}: Invalid Data Key {self.__cause__} in '{self.keys}'"
 
         return f"{self.func_name}: Could not Access data '{self.keys}': {self.__cause__}"
+
+
+class APiRequestError(Exception):
+    def __init__(self, response: Response):
+        super().__init__(
+            f"Response-Code: {response.status_code}, Response-Headers: {response.headers}, Response-Body: {response.content}")
 
 
 def raise_step_error(error):
