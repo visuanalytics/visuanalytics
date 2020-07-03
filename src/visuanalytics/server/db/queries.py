@@ -13,13 +13,13 @@ def get_topic_names():
 
 def get_params(topic_id):
     con = db.open_con()
-    res = con.execute("SELECT json_file_name FROM steps WHERE id = ?", topic_id).fetchone()
+    res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", topic_id).fetchone()
     if (res == None):
         return None
     json_file_name = res["json_file_name"]
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name)
     steps_json = json.loads(open(path_to_json).read())
-    return steps_json.params
+    return steps_json["run_config"]["params"]
 
 
 def get_job_list():
@@ -36,7 +36,6 @@ def get_job_list():
     LEFT JOIN schedule_weekday USING (schedule_id) 
     GROUP BY (job_id);
     """)
-
     return [_row_to_job(row) for row in res]
 
 
@@ -84,9 +83,10 @@ def insert_job(job):
     if schedule["weekly"]:
         id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
         con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
-    con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
-                (job["jobName"], job["topicId"], schedule_id))
-    # TODO(David): Parameter
+    job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
+                         (job["jobName"], job["topicId"], schedule_id)).lastrowid
+    id_key_values = [(job_id, p["name"], p["selected"]) for p in job["params"]]
+    con.executemany("INSERT INTO job_config(job_id, key, value) VALUES(?, ?, ?)", id_key_values)
     con.commit()
 
 
