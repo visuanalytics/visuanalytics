@@ -1,4 +1,5 @@
 import base64
+import logging
 import mimetypes
 
 import gtts.tokenizer.symbols
@@ -12,6 +13,8 @@ from visuanalytics.analytics.util.config_manager import get_config
 from visuanalytics.analytics.util.step_errors import raise_step_error, AudioError, InvalidContentTypeError
 from visuanalytics.analytics.util.step_pattern import data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+
+logger = logging.getLogger(__name__)
 
 GENERATE_AUDIO_TYPES = {}
 
@@ -65,6 +68,8 @@ def default(values: dict, data: StepData, config: dict):
 
 @register_generate_audio
 def custom(values: dict, data: StepData, config: dict):
+    logger.info("Generate Audio with Custom Audio Config")
+
     _prepare_custom(config.get("prepare", None), data, config)
 
     audios = values["audio"]["audios"]
