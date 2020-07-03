@@ -4,7 +4,12 @@
   "api": {
     "type": "request",
     "api_key_name": "weatherbit",
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}&country=DE"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
+    "params": {
+      "postal_code": "{_conf|p_code}",
+      "key": "{_api_key}",
+      "country": "DE"
+    }
   },
   "transform": [
     {
