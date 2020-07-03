@@ -26,7 +26,7 @@ def get_job_list():
     con = db.open_con()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name,
+    job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name, json_file_name,
     group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
@@ -42,12 +42,15 @@ def get_job_list():
 
 def row_to_job(row):
     params_string = str(row["params"])
+    path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"])
+    run_config = json.loads(open(path_to_json).read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
-    params = [{"name": kv[0], "selected": kv[1], "possibleValues": []} for kv in
+    params = [{"name": kv[0], "selected": kv[1], "possibleValues": find(run_config, "name", kv[0])["possible_values"]}
+              for kv in
               key_values]  # TODO (David): possibleValues
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
-        "jobId": row["Job_id"],
+        "jobId": row["job_id"],
         "jobName": row["job_name"],
         "topicName": row["steps_name"],
         "topicId": row["steps_id"],
@@ -61,6 +64,13 @@ def row_to_job(row):
             "weekdays": weekdays
         }
     }
+
+
+def find(list, key, value):
+    print(list)
+    for e in list:
+        if e[key] == value:
+            return e
 
 
 def insert_job(job):
