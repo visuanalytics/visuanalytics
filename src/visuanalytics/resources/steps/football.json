@@ -55,7 +55,7 @@
             "MatchResults|0|PointsTeam1",
             "MatchResults|0|PointsTeam2"
           ],
-          "throw_errors": false
+          "ignore_errors": true
         },
         {
           "type": "alias",
@@ -65,7 +65,7 @@
           "new_keys": [
             "_loop|MatchResults"
           ],
-          "throw_errors": false
+          "ignore_errors": true
         },
         {
           "type": "date_weekday",

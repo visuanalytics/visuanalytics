@@ -95,7 +95,7 @@ def select(values: dict, data: StepData):
         try:
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
-            if values.get("throw_errors", True):
+            if values.get("ignore_errors", False):
                 raise
 
 
@@ -210,7 +210,7 @@ def alias(values: dict, data: StepData):
             data.insert_data(new_key, value, values)
             data.remove_data(key, values)
         except:
-            if values.get("throw_errors", True):
+            if values.get("ignore_errors", False):
                 raise
 
 
