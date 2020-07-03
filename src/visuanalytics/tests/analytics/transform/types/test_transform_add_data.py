@@ -13,7 +13,7 @@ class TestTransformAddData(unittest.TestCase):
         values = [
             {
                 "type": "add_data",
-                "new_key": "_req|test1",
+                "new_keys": ["_req|test1"],
                 "pattern": "1"
             }
         ]
@@ -32,7 +32,7 @@ class TestTransformAddData(unittest.TestCase):
         values = [
             {
                 "type": "add_data",
-                "new_key": "_req|test1",
+                "new_keys": ["_req|test1"],
                 "pattern": "{_req|test}: 1"
             }
         ]
