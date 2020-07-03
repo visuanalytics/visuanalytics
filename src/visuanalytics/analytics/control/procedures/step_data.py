@@ -172,9 +172,9 @@ class StepData(object):
         """
         if json is None:
             return json
-        
+
         for key in json:
-            json[key] = self.format_api(key, api_key_name, values)
+            json[key] = self.format_api(json[key], api_key_name, values)
 
         return json
 
