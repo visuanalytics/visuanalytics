@@ -178,7 +178,7 @@ class StepData(object):
 
         return self.__formatter.format(value_string, data)
 
-    def format_json(self, json: dict, api_key_name: str, values: dict):
+    def format_json(self, json: dict, api_key_name, values: dict):
         """
         Wendet :func:`format_api` auf alle Elemente eines Dictionaries an.
 
