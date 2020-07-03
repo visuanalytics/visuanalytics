@@ -94,7 +94,7 @@ class APiRequestError(Exception):
 
 def raise_step_error(error):
     """
-    Gitbt einen Decorator zurück der die Orginal Funktion
+    Gibt einen Decorator zurück der die Orginal Funktion
     mit einem `try`, `expect` block umschießt. Die in `error` übergebene Exception
     wird dann Anstadt der Erwarteten Exception geworfen.
 
