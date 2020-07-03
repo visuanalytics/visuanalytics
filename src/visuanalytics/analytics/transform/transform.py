@@ -9,6 +9,7 @@ from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_n
 from visuanalytics.analytics.util.step_errors import TransformError, \
     raise_step_error
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
+from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 TRANSFORM_TYPES = {}
@@ -409,27 +410,14 @@ def option(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    check = data.get_data(values["check"], values)
-
-    if bool(check):
-        values["transform"] = values.get("on_true", [])
-    else:
-        values["transform"] = values.get("on_false", [])
+    values["transform"] = execute_type_option(values, data)
 
     transform(values, data)
 
 
 @register_transform
 def compare(values: dict, data: StepData):
-    value_left = data.get_data_num(values["value_left"], values)
-    value_right = data.get_data_num(values["value_right"], values)
-
-    if value_left == value_right:
-        values["transform"] = values.get("on_equal", [])
-    elif value_left > value_right:
-        values["transform"] = values.get("on_higher", [])
-    elif value_left < value_right:
-        values["transform"] = values.get("on_lower", [])
+    values["transform"] = execute_type_compare(values, data)
 
     transform(values, data)
 
