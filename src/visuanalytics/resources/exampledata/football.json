@@ -1,779 +1,737 @@
-[
-  {
-    "MatchID": 55559,
-    "MatchDateTime": "2020-06-16T18:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-16T16:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 87,
-      "TeamName": "Borussia Mönchengladbach",
-      "ShortName": "Gladbach",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 131,
-      "TeamName": "VfL Wolfsburg",
-      "ShortName": "Wolfsburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
-      "TeamGroupName": null
-    },
-    "LastUpdateDateTime": "2020-06-16T20:20:17.197",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91804,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 3,
-        "PointsTeam2": 0,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+{
+  "Spiele": [
+    {
+      "MatchID": 55574,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
       },
-      {
-        "ResultID": 91805,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 2,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84035,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 11,
-        "GoalGetterID": 14569,
-        "GoalGetterName": "Hofmann, Jonas",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
+      "Team1": {
+        "TeamId": 7,
+        "TeamName": "Borussia Dortmund",
+        "ShortName": "Dortmund",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
+        "TeamGroupName": null
       },
-      {
-        "GoalID": 84036,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 0,
-        "MatchMinute": 30,
-        "GoalGetterID": 14569,
-        "GoalGetterName": "Hofmann, Jonas",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
+      "Team2": {
+        "TeamId": 123,
+        "TeamName": "TSG 1899 Hoffenheim",
+        "ShortName": "Hoffenheim",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
+        "TeamGroupName": null
       },
-      {
-        "GoalID": 84043,
-        "ScoreTeam1": 3,
-        "ScoreTeam2": 0,
-        "MatchMinute": 65,
-        "GoalGetterID": 15386,
-        "GoalGetterName": "Stindl, Lars",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55561,
-    "MatchDateTime": "2020-06-16T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-16T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
+      "LastUpdateDateTime": "2020-05-07T15:29:48.193",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
     },
-    "Team1": {
-      "TeamId": 134,
-      "TeamName": "Werder Bremen",
-      "ShortName": "Bremen",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 40,
-      "TeamName": "FC Bayern",
-      "ShortName": "FC Bayern",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
-      "TeamGroupName": null
-    },
-    "LastUpdateDateTime": "2020-06-16T22:25:02.95",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91812,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 0,
-        "PointsTeam2": 1,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+    {
+      "MatchID": 55575,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
       },
-      {
-        "ResultID": 91813,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 0,
-        "PointsTeam2": 1,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84049,
-        "ScoreTeam1": 0,
-        "ScoreTeam2": 1,
-        "MatchMinute": 43,
-        "GoalGetterID": 15316,
-        "GoalGetterName": "Lewandowski, Robert",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55562,
-    "MatchDateTime": "2020-06-16T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-16T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 112,
-      "TeamName": "SC Freiburg",
-      "ShortName": "SC Freiburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 54,
-      "TeamName": "Hertha BSC",
-      "ShortName": "Hertha BSC",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
-      "TeamGroupName": null
-    },
-    "LastUpdateDateTime": "2020-06-16T22:25:31.387",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91816,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 2,
-        "PointsTeam2": 1,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+      "Team1": {
+        "TeamId": 6,
+        "TeamName": "Bayer Leverkusen",
+        "ShortName": "Leverkusen",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
+        "TeamGroupName": null
       },
-      {
-        "ResultID": 91817,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 0,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84052,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 61,
-        "GoalGetterID": 16133,
-        "GoalGetterName": "Vincenzo Grifo",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
+      "Team2": {
+        "TeamId": 81,
+        "TeamName": "1. FSV Mainz 05",
+        "ShortName": "FSV Mainz",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
+        "TeamGroupName": null
       },
-      {
-        "GoalID": 84053,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 1,
-        "MatchMinute": 66,
-        "GoalGetterID": 11542,
-        "GoalGetterName": "Ibisevic, Vedad",
-        "IsPenalty": true,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
+      "LastUpdateDateTime": "2020-05-07T15:29:54.71",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55576,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
       },
-      {
-        "GoalID": 84054,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 1,
-        "MatchMinute": 71,
-        "GoalGetterID": 16053,
-        "GoalGetterName": "Nils Petersen",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55564,
-    "MatchDateTime": "2020-06-16T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-16T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 80,
-      "TeamName": "1. FC Union Berlin",
-      "ShortName": "Union Berlin",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 31,
-      "TeamName": "SC Paderborn 07",
-      "ShortName": "Paderborn",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
-      "TeamGroupName": null
-    },
-    "LastUpdateDateTime": "2020-06-16T22:25:30.117",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91814,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 1,
-        "PointsTeam2": 0,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+      "Team1": {
+        "TeamId": 87,
+        "TeamName": "Borussia Mönchengladbach",
+        "ShortName": "Gladbach",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
+        "TeamGroupName": null
       },
-      {
-        "ResultID": 91815,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 1,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84047,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 27,
-        "GoalGetterID": 16048,
-        "GoalGetterName": "Zolinski",
-        "IsPenalty": false,
-        "IsOwnGoal": true,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55560,
-    "MatchDateTime": "2020-06-17T18:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-17T16:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 91,
-      "TeamName": "Eintracht Frankfurt",
-      "ShortName": "Frankfurt",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 9,
-      "TeamName": "FC Schalke 04",
-      "ShortName": "Schalke 04",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
-      "TeamGroupName": null
-    },
-    "LastUpdateDateTime": "2020-06-17T20:22:42.197",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91828,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 2,
-        "PointsTeam2": 1,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
+      "Team2": {
+        "TeamId": 54,
+        "TeamName": "Hertha BSC",
+        "ShortName": "Hertha BSC",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
+        "TeamGroupName": null
       },
-      {
-        "ResultID": 91829,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 1,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84060,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 28,
-        "GoalGetterID": 17816,
-        "GoalGetterName": "Andre Silva",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84061,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 0,
-        "MatchMinute": 50,
-        "GoalGetterID": 1277,
-        "GoalGetterName": "David Abraham",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84062,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 1,
-        "MatchMinute": 59,
-        "GoalGetterID": 16952,
-        "GoalGetterName": "McKennie",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55556,
-    "MatchDateTime": "2020-06-17T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-17T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
+      "LastUpdateDateTime": "2020-05-07T15:30:01.21",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
     },
-    "Team1": {
-      "TeamId": 7,
+    {
+      "MatchID": 55577,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 131,
+        "TeamName": "VfL Wolfsburg",
+        "ShortName": "Wolfsburg",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 40,
+        "TeamName": "FC Bayern",
+        "ShortName": "FC Bayern",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:16.35",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55578,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 91,
+        "TeamName": "Eintracht Frankfurt",
+        "ShortName": "Frankfurt",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 31,
+        "TeamName": "SC Paderborn 07",
+        "ShortName": "Paderborn",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:22.883",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55579,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 134,
+        "TeamName": "Werder Bremen",
+        "ShortName": "Bremen",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 65,
+        "TeamName": "1. FC Köln",
+        "ShortName": "1. FC Köln",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:29.647",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55580,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 112,
+        "TeamName": "SC Freiburg",
+        "ShortName": "SC Freiburg",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 9,
+        "TeamName": "FC Schalke 04",
+        "ShortName": "Schalke 04",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:36.24",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55581,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 95,
+        "TeamName": "FC Augsburg",
+        "ShortName": "Augsburg",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 1635,
+        "TeamName": "RB Leipzig",
+        "ShortName": "RBL Leipzig",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:43.023",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    },
+    {
+      "MatchID": 55582,
+      "MatchDateTime": "2020-06-27T15:30:00",
+      "TimeZoneID": "W. Europe Standard Time",
+      "LeagueId": 4362,
+      "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+      "MatchDateTimeUTC": "2020-06-27T13:30:00Z",
+      "Group": {
+        "GroupName": "34. Spieltag",
+        "GroupOrderID": 34,
+        "GroupID": 34233
+      },
+      "Team1": {
+        "TeamId": 80,
+        "TeamName": "1. FC Union Berlin",
+        "ShortName": "Union Berlin",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
+        "TeamGroupName": null
+      },
+      "Team2": {
+        "TeamId": 185,
+        "TeamName": "Fortuna Düsseldorf",
+        "ShortName": "Düsseldorf",
+        "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
+        "TeamGroupName": null
+      },
+      "LastUpdateDateTime": "2020-05-07T15:30:53.093",
+      "MatchIsFinished": false,
+      "MatchResults": [],
+      "Goals": [],
+      "Location": null,
+      "NumberOfViewers": null
+    }
+  ],
+  "Tabelle": [
+    {
+      "TeamInfoId": 7,
       "TeamName": "Borussia Dortmund",
       "ShortName": "Dortmund",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Borussia_Dortmund_logo.svg/240px-Borussia_Dortmund_logo.svg.png",
-      "TeamGroupName": null
+      "Points": 69,
+      "OpponentGoals": 37,
+      "Goals": 84,
+      "Matches": 33,
+      "Won": 21,
+      "Lost": 6,
+      "Draw": 6,
+      "GoalDiff": 47
     },
-    "Team2": {
-      "TeamId": 81,
-      "TeamName": "1. FSV Mainz 05",
-      "ShortName": "FSV Mainz",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
-      "TeamGroupName": null
+    {
+      "TeamInfoId": 40,
+      "TeamName": "FC Bayern",
+      "ShortName": "FC Bayern",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg/240px-Logo_FC_Bayern_M%C3%BCnchen_%282002%E2%80%932017%29.svg.png",
+      "Points": 79,
+      "OpponentGoals": 32,
+      "Goals": 96,
+      "Matches": 33,
+      "Won": 25,
+      "Lost": 4,
+      "Draw": 4,
+      "GoalDiff": 64
     },
-    "LastUpdateDateTime": "2020-06-17T22:23:16.253",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91844,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 0,
-        "PointsTeam2": 2,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
-      },
-      {
-        "ResultID": 91845,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 0,
-        "PointsTeam2": 1,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84079,
-        "ScoreTeam1": 0,
-        "ScoreTeam2": 1,
-        "MatchMinute": 33,
-        "GoalGetterID": 18063,
-        "GoalGetterName": "Burkardt, J.",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84090,
-        "ScoreTeam1": 0,
-        "ScoreTeam2": 2,
-        "MatchMinute": 49,
-        "GoalGetterID": 16904,
-        "GoalGetterName": "J.-P.Mateta",
-        "IsPenalty": true,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55557,
-    "MatchDateTime": "2020-06-17T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-17T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 1635,
+    {
+      "TeamInfoId": 1635,
       "TeamName": "RB Leipzig",
       "ShortName": "RBL Leipzig",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/RB_Leipzig_2014_logo.svg/800px-RB_Leipzig_2014_logo.svg.png",
-      "TeamGroupName": null
+      "Points": 63,
+      "OpponentGoals": 36,
+      "Goals": 79,
+      "Matches": 33,
+      "Won": 17,
+      "Lost": 4,
+      "Draw": 12,
+      "GoalDiff": 43
     },
-    "Team2": {
-      "TeamId": 185,
-      "TeamName": "Fortuna Düsseldorf",
-      "ShortName": "Düsseldorf",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
-      "TeamGroupName": null
+    {
+      "TeamInfoId": 87,
+      "TeamName": "Borussia Mönchengladbach",
+      "ShortName": "Gladbach",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/8/81/Borussia_Mönchengladbach_logo.svg",
+      "Points": 62,
+      "OpponentGoals": 39,
+      "Goals": 64,
+      "Matches": 33,
+      "Won": 19,
+      "Lost": 9,
+      "Draw": 5,
+      "GoalDiff": 25
     },
-    "LastUpdateDateTime": "2020-06-17T22:42:56.783",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91840,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 2,
-        "PointsTeam2": 2,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
-      },
-      {
-        "ResultID": 91841,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 0,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84093,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 60,
-        "GoalGetterID": 2275,
-        "GoalGetterName": "Kampl",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84094,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 0,
-        "MatchMinute": 63,
-        "GoalGetterID": 16080,
-        "GoalGetterName": "Timo Werner",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84099,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 1,
-        "MatchMinute": 87,
-        "GoalGetterID": 14936,
-        "GoalGetterName": " Skrzybski",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84101,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 2,
-        "MatchMinute": 92,
-        "GoalGetterID": 18065,
-        "GoalGetterName": "André Hoffmann",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55558,
-    "MatchDateTime": "2020-06-17T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-17T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 6,
+    {
+      "TeamInfoId": 6,
       "TeamName": "Bayer Leverkusen",
       "ShortName": "Leverkusen",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f7/Bayer_Leverkusen_Logo.svg/1280px-Bayer_Leverkusen_Logo.svg.png",
-      "TeamGroupName": null
+      "Points": 60,
+      "OpponentGoals": 44,
+      "Goals": 60,
+      "Matches": 33,
+      "Won": 18,
+      "Lost": 9,
+      "Draw": 6,
+      "GoalDiff": 16
     },
-    "Team2": {
-      "TeamId": 65,
-      "TeamName": "1. FC Köln",
-      "ShortName": "1. FC Köln",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
-      "TeamGroupName": null
+    {
+      "TeamInfoId": 131,
+      "TeamName": "VfL Wolfsburg",
+      "ShortName": "Wolfsburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Logo-VfL-Wolfsburg.svg/1024px-Logo-VfL-Wolfsburg.svg.png",
+      "Points": 49,
+      "OpponentGoals": 42,
+      "Goals": 48,
+      "Matches": 33,
+      "Won": 13,
+      "Lost": 10,
+      "Draw": 10,
+      "GoalDiff": 6
     },
-    "LastUpdateDateTime": "2020-06-17T22:23:18.52",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91842,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 3,
-        "PointsTeam2": 1,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
-      },
-      {
-        "ResultID": 91843,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 2,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84077,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 0,
-        "MatchMinute": 7,
-        "GoalGetterID": 13511,
-        "GoalGetterName": "Bender, Sven",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84080,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 0,
-        "MatchMinute": 40,
-        "GoalGetterID": 16261,
-        "GoalGetterName": "Kai Havertz\r\n",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84091,
-        "ScoreTeam1": 2,
-        "ScoreTeam2": 1,
-        "MatchMinute": 59,
-        "GoalGetterID": 17841,
-        "GoalGetterName": "Bornauw, S.",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84097,
-        "ScoreTeam1": 3,
-        "ScoreTeam2": 1,
-        "MatchMinute": 83,
-        "GoalGetterID": 392,
-        "GoalGetterName": "Diaby",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  },
-  {
-    "MatchID": 55563,
-    "MatchDateTime": "2020-06-17T20:30:00",
-    "TimeZoneID": "W. Europe Standard Time",
-    "LeagueId": 4362,
-    "LeagueName": "1. Fußball-Bundesliga 2019/2020",
-    "MatchDateTimeUTC": "2020-06-17T18:30:00Z",
-    "Group": {
-      "GroupName": "32. Spieltag",
-      "GroupOrderID": 32,
-      "GroupID": 34231
-    },
-    "Team1": {
-      "TeamId": 95,
-      "TeamName": "FC Augsburg",
-      "ShortName": "Augsburg",
-      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
-      "TeamGroupName": null
-    },
-    "Team2": {
-      "TeamId": 123,
+    {
+      "TeamInfoId": 175,
       "TeamName": "TSG 1899 Hoffenheim",
       "ShortName": "Hoffenheim",
       "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/64/TSG_Logo-Standard_4c.png",
-      "TeamGroupName": null
+      "Points": 49,
+      "OpponentGoals": 53,
+      "Goals": 49,
+      "Matches": 33,
+      "Won": 14,
+      "Lost": 12,
+      "Draw": 7,
+      "GoalDiff": -4
     },
-    "LastUpdateDateTime": "2020-06-17T22:30:10.893",
-    "MatchIsFinished": true,
-    "MatchResults": [
-      {
-        "ResultID": 91838,
-        "ResultName": "Endergebnis",
-        "PointsTeam1": 1,
-        "PointsTeam2": 3,
-        "ResultOrderID": 2,
-        "ResultTypeID": 2,
-        "ResultDescription": "Ergebnis nach Ende der offiziellen Spielzeit"
-      },
-      {
-        "ResultID": 91839,
-        "ResultName": "Halbzeit",
-        "PointsTeam1": 0,
-        "PointsTeam2": 0,
-        "ResultOrderID": 1,
-        "ResultTypeID": 1,
-        "ResultDescription": "Zwischenstand zur Halbzeit"
-      }
-    ],
-    "Goals": [
-      {
-        "GoalID": 84092,
-        "ScoreTeam1": 0,
-        "ScoreTeam2": 1,
-        "MatchMinute": 59,
-        "GoalGetterID": 14372,
-        "GoalGetterName": "Dabbur",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84095,
-        "ScoreTeam1": 0,
-        "ScoreTeam2": 2,
-        "MatchMinute": 62,
-        "GoalGetterID": 14372,
-        "GoalGetterName": "Dabbur",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84096,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 2,
-        "MatchMinute": 69,
-        "GoalGetterID": 17613,
-        "GoalGetterName": "Ruben Vargas",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      },
-      {
-        "GoalID": 84100,
-        "ScoreTeam1": 1,
-        "ScoreTeam2": 3,
-        "MatchMinute": 89,
-        "GoalGetterID": 15011,
-        "GoalGetterName": "Bebou",
-        "IsPenalty": false,
-        "IsOwnGoal": false,
-        "IsOvertime": false,
-        "Comment": null
-      }
-    ],
-    "Location": null,
-    "NumberOfViewers": null
-  }
-]
+    {
+      "TeamInfoId": 112,
+      "TeamName": "SC Freiburg",
+      "ShortName": "SC Freiburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/thumb/f/f1/SC-Freiburg_Logo-neu.svg/739px-SC-Freiburg_Logo-neu.svg.png",
+      "Points": 45,
+      "OpponentGoals": 47,
+      "Goals": 44,
+      "Matches": 33,
+      "Won": 12,
+      "Lost": 12,
+      "Draw": 9,
+      "GoalDiff": -3
+    },
+    {
+      "TeamInfoId": 91,
+      "TeamName": "Eintracht Frankfurt",
+      "ShortName": "Frankfurt",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Eintracht_Frankfurt_Logo.svg/1024px-Eintracht_Frankfurt_Logo.svg.png",
+      "Points": 42,
+      "OpponentGoals": 58,
+      "Goals": 56,
+      "Matches": 33,
+      "Won": 12,
+      "Lost": 15,
+      "Draw": 6,
+      "GoalDiff": -2
+    },
+    {
+      "TeamInfoId": 54,
+      "TeamName": "Hertha BSC",
+      "ShortName": "Hertha BSC",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Hertha_BSC_Logo_2012.svg/2858px-Hertha_BSC_Logo_2012.svg.png",
+      "Points": 41,
+      "OpponentGoals": 57,
+      "Goals": 47,
+      "Matches": 33,
+      "Won": 11,
+      "Lost": 14,
+      "Draw": 8,
+      "GoalDiff": -10
+    },
+    {
+      "TeamInfoId": 9,
+      "TeamName": "FC Schalke 04",
+      "ShortName": "Schalke 04",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6d/FC_Schalke_04_Logo.svg",
+      "Points": 39,
+      "OpponentGoals": 54,
+      "Goals": 38,
+      "Matches": 33,
+      "Won": 9,
+      "Lost": 12,
+      "Draw": 12,
+      "GoalDiff": -16
+    },
+    {
+      "TeamInfoId": 80,
+      "TeamName": "1. FC Union Berlin",
+      "ShortName": "Union Berlin",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/1._FC_Union_Berlin_1966_-_1990.gif/320px-1._FC_Union_Berlin_1966_-_1990.gif",
+      "Points": 38,
+      "OpponentGoals": 58,
+      "Goals": 38,
+      "Matches": 33,
+      "Won": 11,
+      "Lost": 17,
+      "Draw": 5,
+      "GoalDiff": -20
+    },
+    {
+      "TeamInfoId": 81,
+      "TeamName": "1. FSV Mainz 05",
+      "ShortName": "FSV Mainz",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Logo_Mainz_05.svg/1099px-Logo_Mainz_05.svg.png",
+      "Points": 37,
+      "OpponentGoals": 64,
+      "Goals": 44,
+      "Matches": 33,
+      "Won": 11,
+      "Lost": 18,
+      "Draw": 4,
+      "GoalDiff": -20
+    },
+    {
+      "TeamInfoId": 65,
+      "TeamName": "1. FC Köln",
+      "ShortName": "1. FC Köln",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/FC_Cologne_logo.svg/901px-FC_Cologne_logo.svg.png",
+      "Points": 36,
+      "OpponentGoals": 63,
+      "Goals": 50,
+      "Matches": 33,
+      "Won": 10,
+      "Lost": 17,
+      "Draw": 6,
+      "GoalDiff": -13
+    },
+    {
+      "TeamInfoId": 95,
+      "TeamName": "FC Augsburg",
+      "ShortName": "Augsburg",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/de/b/b5/Logo_FC_Augsburg.svg",
+      "Points": 36,
+      "OpponentGoals": 61,
+      "Goals": 44,
+      "Matches": 33,
+      "Won": 9,
+      "Lost": 15,
+      "Draw": 9,
+      "GoalDiff": -17
+    },
+    {
+      "TeamInfoId": 185,
+      "TeamName": "Fortuna Düsseldorf",
+      "ShortName": "Düsseldorf",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Fortuna_D%C3%BCsseldorf.svg/150px-Fortuna_D%C3%BCsseldorf.svg.png",
+      "Points": 30,
+      "OpponentGoals": 64,
+      "Goals": 36,
+      "Matches": 33,
+      "Won": 6,
+      "Lost": 15,
+      "Draw": 12,
+      "GoalDiff": -28
+    },
+    {
+      "TeamInfoId": 134,
+      "TeamName": "Werder Bremen",
+      "ShortName": "Bremen",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/SV-Werder-Bremen-Logo.svg/681px-SV-Werder-Bremen-Logo.svg.png",
+      "Points": 28,
+      "OpponentGoals": 68,
+      "Goals": 36,
+      "Matches": 33,
+      "Won": 7,
+      "Lost": 19,
+      "Draw": 7,
+      "GoalDiff": -32
+    },
+    {
+      "TeamInfoId": 31,
+      "TeamName": "SC Paderborn 07",
+      "ShortName": "Paderborn",
+      "TeamIconUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e3/SC_Paderborn_07_Logo.svg",
+      "Points": 20,
+      "OpponentGoals": 71,
+      "Goals": 35,
+      "Matches": 33,
+      "Won": 4,
+      "Lost": 21,
+      "Draw": 8,
+      "GoalDiff": -36
+    }
+  ],
+  "Vorherige-Tabelle": [
+    {
+      "TeamName": "FC Bayern",
+      "Points": 79,
+      "Goals": 96,
+      "OpponentGoals": 32,
+      "GoalDiff": 64,
+      "Matches": 33,
+      "TeamId": 40,
+      "Rank": "0"
+    },
+    {
+      "TeamName": "Borussia Dortmund",
+      "Points": 69,
+      "Goals": 84,
+      "OpponentGoals": 37,
+      "GoalDiff": 47,
+      "Matches": 33,
+      "TeamId": 7,
+      "Rank": "1"
+    },
+    {
+      "TeamName": "RB Leipzig",
+      "Points": 63,
+      "Goals": 79,
+      "OpponentGoals": 36,
+      "GoalDiff": 43,
+      "Matches": 33,
+      "TeamId": 1635,
+      "Rank": "2"
+    },
+    {
+      "TeamName": "Borussia Mönchengladbach",
+      "Points": 62,
+      "Goals": 64,
+      "OpponentGoals": 39,
+      "GoalDiff": 25,
+      "Matches": 33,
+      "TeamId": 87,
+      "Rank": "3"
+    },
+    {
+      "TeamName": "Bayer Leverkusen",
+      "Points": 60,
+      "Goals": 60,
+      "OpponentGoals": 44,
+      "GoalDiff": 16,
+      "Matches": 33,
+      "TeamId": 6,
+      "Rank": "4"
+    },
+    {
+      "TeamName": "VfL Wolfsburg",
+      "Points": 49,
+      "Goals": 48,
+      "OpponentGoals": 42,
+      "GoalDiff": 6,
+      "Matches": 33,
+      "TeamId": 131,
+      "Rank": "5"
+    },
+    {
+      "TeamName": "TSG 1899 Hoffenheim",
+      "Points": 49,
+      "Goals": 49,
+      "OpponentGoals": 53,
+      "GoalDiff": -4,
+      "Matches": 33,
+      "TeamId": 175,
+      "Rank": "6"
+    },
+    {
+      "TeamName": "SC Freiburg",
+      "Points": 45,
+      "Goals": 44,
+      "OpponentGoals": 47,
+      "GoalDiff": -3,
+      "Matches": 33,
+      "TeamId": 112,
+      "Rank": "7"
+    },
+    {
+      "TeamName": "Eintracht Frankfurt",
+      "Points": 42,
+      "Goals": 56,
+      "OpponentGoals": 58,
+      "GoalDiff": -2,
+      "Matches": 33,
+      "TeamId": 91,
+      "Rank": "8"
+    },
+    {
+      "TeamName": "Hertha BSC",
+      "Points": 41,
+      "Goals": 47,
+      "OpponentGoals": 57,
+      "GoalDiff": -10,
+      "Matches": 33,
+      "TeamId": 54,
+      "Rank": "9"
+    },
+    {
+      "TeamName": "FC Schalke 04",
+      "Points": 39,
+      "Goals": 38,
+      "OpponentGoals": 54,
+      "GoalDiff": -16,
+      "Matches": 33,
+      "TeamId": 9,
+      "Rank": "10"
+    },
+    {
+      "TeamName": "1. FC Union Berlin",
+      "Points": 38,
+      "Goals": 38,
+      "OpponentGoals": 58,
+      "GoalDiff": -20,
+      "Matches": 33,
+      "TeamId": 80,
+      "Rank": "11"
+    },
+    {
+      "TeamName": "1. FSV Mainz 05",
+      "Points": 37,
+      "Goals": 44,
+      "OpponentGoals": 64,
+      "GoalDiff": -20,
+      "Matches": 33,
+      "TeamId": 81,
+      "Rank": "12"
+    },
+    {
+      "TeamName": "1. FC Köln",
+      "Points": 36,
+      "Goals": 50,
+      "OpponentGoals": 63,
+      "GoalDiff": -13,
+      "Matches": 33,
+      "TeamId": 65,
+      "Rank": "13"
+    },
+    {
+      "TeamName": "FC Augsburg",
+      "Points": 36,
+      "Goals": 44,
+      "OpponentGoals": 61,
+      "GoalDiff": -17,
+      "Matches": 33,
+      "TeamId": 95,
+      "Rank": "14"
+    },
+    {
+      "TeamName": "Fortuna Düsseldorf",
+      "Points": 30,
+      "Goals": 36,
+      "OpponentGoals": 64,
+      "GoalDiff": -28,
+      "Matches": 33,
+      "TeamId": 185,
+      "Rank": "15"
+    },
+    {
+      "TeamName": "Werder Bremen",
+      "Points": 28,
+      "Goals": 36,
+      "OpponentGoals": 68,
+      "GoalDiff": -32,
+      "Matches": 33,
+      "TeamId": 134,
+      "Rank": "16"
+    },
+    {
+      "TeamName": "SC Paderborn 07",
+      "Points": 20,
+      "Goals": 35,
+      "OpponentGoals": 71,
+      "GoalDiff": -36,
+      "Matches": 33,
+      "TeamId": 31,
+      "Rank": "17"
+    }
+  ]
+}

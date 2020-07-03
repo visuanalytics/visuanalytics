@@ -2,278 +2,459 @@
   "_conf": {
     "output_path": "out",
     "testing": false,
-    "h264_nvenc": True,
-    "liga-name": "1. Fußball Bundesliga"
+    "h264_nvenc": true,
+    "liga-name": "1. Fußball Bundesliga",
+    "job_name": "Jobname123Todo@max"
   },
-  "_pipe_id": "194f9d8612e14192b2671220a5d01484",
+  "_pipe_id": "8073299345d24f65822ebedb6ae5cd80",
   "_req": {
     "Spiele": [
       {
         "Team1": {
-          "TeamName": "FC Bayern",
-          "TeamId": 40
-        },
-        "Team2": {
-          "TeamName": "SC Freiburg",
-          "TeamId": 112
-        },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
-          "TeamName": "RB Leipzig",
-          "TeamId": 1635
-        },
-        "Team2": {
           "TeamName": "Borussia Dortmund",
           "TeamId": 7
         },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
+        "Team2": {
           "TeamName": "TSG 1899 Hoffenheim",
           "TeamId": 123
         },
-        "Team2": {
-          "TeamName": "1. FC Union Berlin",
-          "TeamId": 80
-        },
         "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
+        "MatchDateTime": "2020-06-27T15:30:00",
         "weekday": "Samstag"
       },
       {
         "Team1": {
-          "TeamName": "Fortuna Düsseldorf",
-          "TeamId": 185
-        },
-        "Team2": {
-          "TeamName": "FC Augsburg",
-          "TeamId": 95
-        },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
-          "TeamName": "Hertha BSC",
-          "TeamId": 54
-        },
-        "Team2": {
           "TeamName": "Bayer Leverkusen",
           "TeamId": 6
         },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
+        "Team2": {
           "TeamName": "1. FSV Mainz 05",
           "TeamId": 81
         },
-        "Team2": {
-          "TeamName": "Werder Bremen",
-          "TeamId": 134
-        },
         "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
+        "MatchDateTime": "2020-06-27T15:30:00",
         "weekday": "Samstag"
       },
       {
         "Team1": {
-          "TeamName": "FC Schalke 04",
-          "TeamId": 9
-        },
-        "Team2": {
-          "TeamName": "VfL Wolfsburg",
-          "TeamId": 131
-        },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
-          "TeamName": "1. FC Köln",
-          "TeamId": 65
-        },
-        "Team2": {
-          "TeamName": "Eintracht Frankfurt",
-          "TeamId": 91
-        },
-        "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
-        "weekday": "Samstag"
-      },
-      {
-        "Team1": {
-          "TeamName": "SC Paderborn 07",
-          "TeamId": 31
-        },
-        "Team2": {
           "TeamName": "Borussia Mönchengladbach",
           "TeamId": 87
         },
+        "Team2": {
+          "TeamName": "Hertha BSC",
+          "TeamId": 54
+        },
         "MatchIsFinished": false,
-        "MatchDateTime": "2020-06-20T15:30:00",
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "VfL Wolfsburg",
+          "TeamId": 131
+        },
+        "Team2": {
+          "TeamName": "FC Bayern",
+          "TeamId": 40
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "Eintracht Frankfurt",
+          "TeamId": 91
+        },
+        "Team2": {
+          "TeamName": "SC Paderborn 07",
+          "TeamId": 31
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "Werder Bremen",
+          "TeamId": 134
+        },
+        "Team2": {
+          "TeamName": "1. FC Köln",
+          "TeamId": 65
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "SC Freiburg",
+          "TeamId": 112
+        },
+        "Team2": {
+          "TeamName": "FC Schalke 04",
+          "TeamId": 9
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "FC Augsburg",
+          "TeamId": 95
+        },
+        "Team2": {
+          "TeamName": "RB Leipzig",
+          "TeamId": 1635
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "weekday": "Samstag"
+      },
+      {
+        "Team1": {
+          "TeamName": "1. FC Union Berlin",
+          "TeamId": 80
+        },
+        "Team2": {
+          "TeamName": "Fortuna Düsseldorf",
+          "TeamId": 185
+        },
+        "MatchIsFinished": false,
+        "MatchDateTime": "2020-06-27T15:30:00",
         "weekday": "Samstag"
       }
     ],
     "Tabelle": [
       {
         "TeamName": "FC Bayern",
-        "Points": 76,
-        "Won": 24,
-        "Lost": 4,
-        "GoalDiff": 62,
+        "Points": 79,
+        "Goals": 96,
+        "OpponentGoals": 32,
+        "GoalDiff": 64,
+        "Matches": 33,
         "TeamId": 40
       },
       {
         "TeamName": "Borussia Dortmund",
-        "Points": 66,
-        "Won": 20,
-        "Lost": 6,
-        "GoalDiff": 45,
+        "Points": 69,
+        "Goals": 84,
+        "OpponentGoals": 37,
+        "GoalDiff": 47,
+        "Matches": 33,
         "TeamId": 7
       },
       {
         "TeamName": "RB Leipzig",
         "Points": 63,
-        "Won": 17,
-        "Lost": 3,
-        "GoalDiff": 45,
+        "Goals": 79,
+        "OpponentGoals": 36,
+        "GoalDiff": 43,
+        "Matches": 33,
         "TeamId": 1635
+      },
+      {
+        "TeamName": "Borussia Mönchengladbach",
+        "Points": 62,
+        "Goals": 64,
+        "OpponentGoals": 39,
+        "GoalDiff": 25,
+        "Matches": 33,
+        "TeamId": 87
       },
       {
         "TeamName": "Bayer Leverkusen",
         "Points": 60,
-        "Won": 18,
-        "Lost": 8,
-        "GoalDiff": 18,
+        "Goals": 60,
+        "OpponentGoals": 44,
+        "GoalDiff": 16,
+        "Matches": 33,
         "TeamId": 6
       },
       {
-        "TeamName": "Borussia Mönchengladbach",
-        "Points": 59,
-        "Won": 18,
-        "Lost": 9,
-        "GoalDiff": 23,
-        "TeamId": 87
-      },
-      {
         "TeamName": "VfL Wolfsburg",
-        "Points": 46,
-        "Won": 12,
-        "Lost": 10,
-        "GoalDiff": 3,
+        "Points": 49,
+        "Goals": 48,
+        "OpponentGoals": 42,
+        "GoalDiff": 6,
+        "Matches": 33,
         "TeamId": 131
       },
       {
         "TeamName": "TSG 1899 Hoffenheim",
-        "Points": 46,
-        "Won": 13,
-        "Lost": 12,
-        "GoalDiff": -8,
+        "Points": 49,
+        "Goals": 49,
+        "OpponentGoals": 53,
+        "GoalDiff": -4,
+        "Matches": 33,
         "TeamId": 175
       },
       {
         "TeamName": "SC Freiburg",
         "Points": 45,
-        "Won": 12,
-        "Lost": 11,
-        "GoalDiff": -1,
+        "Goals": 44,
+        "OpponentGoals": 47,
+        "GoalDiff": -3,
+        "Matches": 33,
         "TeamId": 112
       },
       {
         "TeamName": "Eintracht Frankfurt",
-        "Points": 41,
-        "Won": 12,
-        "Lost": 15,
+        "Points": 42,
+        "Goals": 56,
+        "OpponentGoals": 58,
         "GoalDiff": -2,
+        "Matches": 33,
         "TeamId": 91
+      },
+      {
+        "TeamName": "Hertha BSC",
+        "Points": 41,
+        "Goals": 47,
+        "OpponentGoals": 57,
+        "GoalDiff": -10,
+        "Matches": 33,
+        "TeamId": 54
       },
       {
         "TeamName": "FC Schalke 04",
         "Points": 39,
-        "Won": 9,
-        "Lost": 11,
-        "GoalDiff": -13,
+        "Goals": 38,
+        "OpponentGoals": 54,
+        "GoalDiff": -16,
+        "Matches": 33,
         "TeamId": 9
-      },
-      {
-        "TeamName": "Hertha BSC",
-        "Points": 38,
-        "Won": 10,
-        "Lost": 14,
-        "GoalDiff": -12,
-        "TeamId": 54
       },
       {
         "TeamName": "1. FC Union Berlin",
         "Points": 38,
-        "Won": 11,
-        "Lost": 16,
-        "GoalDiff": -16,
+        "Goals": 38,
+        "OpponentGoals": 58,
+        "GoalDiff": -20,
+        "Matches": 33,
         "TeamId": 80
       },
       {
+        "TeamName": "1. FSV Mainz 05",
+        "Points": 37,
+        "Goals": 44,
+        "OpponentGoals": 64,
+        "GoalDiff": -20,
+        "Matches": 33,
+        "TeamId": 81
+      },
+      {
         "TeamName": "1. FC Köln",
-        "Points": 35,
-        "Won": 10,
-        "Lost": 17,
+        "Points": 36,
+        "Goals": 50,
+        "OpponentGoals": 63,
         "GoalDiff": -13,
+        "Matches": 33,
         "TeamId": 65
       },
       {
         "TeamName": "FC Augsburg",
-        "Points": 35,
-        "Won": 9,
-        "Lost": 15,
+        "Points": 36,
+        "Goals": 44,
+        "OpponentGoals": 61,
         "GoalDiff": -17,
+        "Matches": 33,
         "TeamId": 95
       },
       {
-        "TeamName": "1. FSV Mainz 05",
-        "Points": 34,
-        "Won": 10,
-        "Lost": 18,
-        "GoalDiff": -22,
-        "TeamId": 81
-      },
-      {
         "TeamName": "Fortuna Düsseldorf",
-        "Points": 29,
-        "Won": 6,
-        "Lost": 15,
+        "Points": 30,
+        "Goals": 36,
+        "OpponentGoals": 64,
         "GoalDiff": -28,
+        "Matches": 33,
         "TeamId": 185
       },
       {
         "TeamName": "Werder Bremen",
         "Points": 28,
-        "Won": 7,
-        "Lost": 18,
-        "GoalDiff": -30,
+        "Goals": 36,
+        "OpponentGoals": 68,
+        "GoalDiff": -32,
+        "Matches": 33,
         "TeamId": 134
       },
       {
         "TeamName": "SC Paderborn 07",
         "Points": 20,
-        "Won": 4,
-        "Lost": 20,
-        "GoalDiff": -34,
+        "Goals": 35,
+        "OpponentGoals": 71,
+        "GoalDiff": -36,
+        "Matches": 33,
         "TeamId": 31
       }
     ],
-    "Spieltag": [
-      "33. Spieltag"
-    ]
+    "Vorherige-Tabelle": [
+      {
+        "TeamName": "FC Bayern",
+        "Points": 79,
+        "Goals": 96,
+        "OpponentGoals": 32,
+        "GoalDiff": 64,
+        "Matches": 33,
+        "TeamId": 40
+      },
+      {
+        "TeamName": "Borussia Dortmund",
+        "Points": 69,
+        "Goals": 84,
+        "OpponentGoals": 37,
+        "GoalDiff": 47,
+        "Matches": 33,
+        "TeamId": 7
+      },
+      {
+        "TeamName": "RB Leipzig",
+        "Points": 63,
+        "Goals": 79,
+        "OpponentGoals": 36,
+        "GoalDiff": 43,
+        "Matches": 33,
+        "TeamId": 1635
+      },
+      {
+        "TeamName": "Borussia Mönchengladbach",
+        "Points": 62,
+        "Goals": 64,
+        "OpponentGoals": 39,
+        "GoalDiff": 25,
+        "Matches": 33,
+        "TeamId": 87
+      },
+      {
+        "TeamName": "Bayer Leverkusen",
+        "Points": 60,
+        "Goals": 60,
+        "OpponentGoals": 44,
+        "GoalDiff": 16,
+        "Matches": 33,
+        "TeamId": 6
+      },
+      {
+        "TeamName": "VfL Wolfsburg",
+        "Points": 49,
+        "Goals": 48,
+        "OpponentGoals": 42,
+        "GoalDiff": 6,
+        "Matches": 33,
+        "TeamId": 131
+      },
+      {
+        "TeamName": "TSG 1899 Hoffenheim",
+        "Points": 49,
+        "Goals": 49,
+        "OpponentGoals": 53,
+        "GoalDiff": -4,
+        "Matches": 33,
+        "TeamId": 175
+      },
+      {
+        "TeamName": "SC Freiburg",
+        "Points": 45,
+        "Goals": 44,
+        "OpponentGoals": 47,
+        "GoalDiff": -3,
+        "Matches": 33,
+        "TeamId": 112
+      },
+      {
+        "TeamName": "Eintracht Frankfurt",
+        "Points": 42,
+        "Goals": 56,
+        "OpponentGoals": 58,
+        "GoalDiff": -2,
+        "Matches": 33,
+        "TeamId": 91
+      },
+      {
+        "TeamName": "Hertha BSC",
+        "Points": 41,
+        "Goals": 47,
+        "OpponentGoals": 57,
+        "GoalDiff": -10,
+        "Matches": 33,
+        "TeamId": 54
+      },
+      {
+        "TeamName": "FC Schalke 04",
+        "Points": 39,
+        "Goals": 38,
+        "OpponentGoals": 54,
+        "GoalDiff": -16,
+        "Matches": 33,
+        "TeamId": 9
+      },
+      {
+        "TeamName": "1. FC Union Berlin",
+        "Points": 38,
+        "Goals": 38,
+        "OpponentGoals": 58,
+        "GoalDiff": -20,
+        "Matches": 33,
+        "TeamId": 80
+      },
+      {
+        "TeamName": "1. FSV Mainz 05",
+        "Points": 37,
+        "Goals": 44,
+        "OpponentGoals": 64,
+        "GoalDiff": -20,
+        "Matches": 33,
+        "TeamId": 81
+      },
+      {
+        "TeamName": "1. FC Köln",
+        "Points": 36,
+        "Goals": 50,
+        "OpponentGoals": 63,
+        "GoalDiff": -13,
+        "Matches": 33,
+        "TeamId": 65
+      },
+      {
+        "TeamName": "FC Augsburg",
+        "Points": 36,
+        "Goals": 44,
+        "OpponentGoals": 61,
+        "GoalDiff": -17,
+        "Matches": 33,
+        "TeamId": 95
+      },
+      {
+        "TeamName": "Fortuna Düsseldorf",
+        "Points": 30,
+        "Goals": 36,
+        "OpponentGoals": 64,
+        "GoalDiff": -28,
+        "Matches": 33,
+        "TeamId": 185
+      },
+      {
+        "TeamName": "Werder Bremen",
+        "Points": 28,
+        "Goals": 36,
+        "OpponentGoals": 68,
+        "GoalDiff": -32,
+        "Matches": 33,
+        "TeamId": 134
+      },
+      {
+        "TeamName": "SC Paderborn 07",
+        "Points": 20,
+        "Goals": 35,
+        "OpponentGoals": 71,
+        "GoalDiff": -36,
+        "Matches": 33,
+        "TeamId": 31
+      }
+    ],
+    "Spieltag": "34. Spieltag"
   }
 }
