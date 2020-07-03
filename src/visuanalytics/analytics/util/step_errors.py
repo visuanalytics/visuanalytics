@@ -27,19 +27,6 @@ class StepError(Exception):
         return f"On Type '{self.type}', \"{type(self.__cause__).__name__}: {self.__cause__}\" was raised"
 
 
-class StepTypeError(Exception):
-    """
-    Fehlerklasse für einen Typen Fehler
-    der innerhalb eines Schrittes auftritt.
-    """
-
-    def __init__(self, type):
-        if type is None:
-            super().__init__(f"Entry 'type' is missing")
-        else:
-            super().__init__(f"Type '{type}' does not Exists")
-
-
 class APIError(StepError):
     pass
 
@@ -60,14 +47,17 @@ class SeqenceError(StepError):
     pass
 
 
-class APIKeyError(Exception):
+class StepTypeError(Exception):
     """
-    Fehlerklasse für einen Nicht
-    gefundenen API key Name.
+    Fehlerklasse für einen Typen Fehler
+    der innerhalb eines Schrittes auftritt.
     """
 
-    def __init__(self, api_key_name):
-        super().__init__(f"Api key '{api_key_name}' not Found.")
+    def __init__(self, type):
+        if type is None:
+            super().__init__(f"Entry 'type' is missing")
+        else:
+            super().__init__(f"Type '{type}' does not Exists")
 
 
 class StepKeyError(Exception):
@@ -84,6 +74,16 @@ class StepKeyError(Exception):
             return f"{self.func_name}: Invalid Data Key {self.__cause__} in '{self.keys}'"
 
         return f"{self.func_name}: Could not Access data '{self.keys}': {self.__cause__}"
+
+
+class APIKeyError(Exception):
+    """
+    Fehlerklasse für einen Nicht
+    gefundenen API key Name.
+    """
+
+    def __init__(self, api_key_name):
+        super().__init__(f"Api key '{api_key_name}' not Found.")
 
 
 class APiRequestError(Exception):
