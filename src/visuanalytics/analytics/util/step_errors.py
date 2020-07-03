@@ -84,6 +84,15 @@ class StepKeyError(Exception):
         return f"{self.func_name}: Could not Access data '{self.keys}': {self.__cause__}"
 
 
+class InvalidContentTypeError(Exception):
+    def __init__(self, url, content_type: str, expected_type="'application/json'"):
+        if url is None:
+            super().__init__(f"Generate Audio: Invalid Content Type '{content_type}' only {expected_type} is Suported")
+        else:
+            super().__init__(
+                f"Error on respone from '{url}': Invalid Content Type '{content_type}' only {expected_type} is Suported")
+
+
 def raise_step_error(error):
     """
     Gitbt einen Decorator zurück der die Orginal Funktion
