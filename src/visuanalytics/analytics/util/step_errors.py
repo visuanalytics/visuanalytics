@@ -89,7 +89,7 @@ class APIKeyError(Exception):
 class APiRequestError(Exception):
     def __init__(self, response: Response):
         super().__init__(
-            f"Response-Code: {response.status_code}, Response-Headers: {response.headers}, Response-Body: {response.content}")
+            f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
 
 
 class InvalidContentTypeError(Exception):
