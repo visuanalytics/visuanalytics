@@ -1894,7 +1894,15 @@
         true,
         false
       ]
-    }
+    },
+    "params": [
+      {
+        "name": "city_name",
+        "display_name": "Ort",
+        "possible_values": [],
+        "default_value": "Gießen"
+      }
+    ]
   },
   "presets": {
     "weather_white_1": {

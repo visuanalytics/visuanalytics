@@ -37,17 +37,17 @@ def get_job_list():
     GROUP BY (job_id);
     """)
 
-    return [row_to_job(row) for row in res]
+    return [_row_to_job(row) for row in res]
 
 
-def row_to_job(row):
+def _row_to_job(row):
     params_string = str(row["params"])
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"])
-    run_config = json.loads(open(path_to_json).read())["run_config"]
+    steps_params = json.loads(open(path_to_json).read())["run_config"]["params"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
-    params = [{"name": kv[0], "selected": kv[1], "possibleValues": find(run_config, "name", kv[0])["possible_values"]}
-              for kv in
-              key_values]  # TODO (David): possibleValues
+    params = [
+        {"name": kv[0], "selected": kv[1], "possibleValues": _find(steps_params, "name", kv[0])["possible_values"]}
+        for kv in key_values]  # TODO (David): possibleValues
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["job_id"],
@@ -66,9 +66,11 @@ def row_to_job(row):
     }
 
 
-def find(list, key, value):
+def _find(list, key, value):
     print(list)
     for e in list:
+        print(e)
+        print(value)
         if e[key] == value:
             return e
 

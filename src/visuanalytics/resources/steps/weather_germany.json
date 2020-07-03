@@ -1696,7 +1696,8 @@
         true,
         false
       ]
-    }
+    },
+    "params": []
   },
   "presets": {
     "weather_white_2": {
