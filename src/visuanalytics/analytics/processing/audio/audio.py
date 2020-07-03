@@ -34,7 +34,7 @@ def generate_audios(values: dict, data: StepData):
     config: dict = get_audio_config(values, data)
 
     audio_func = get_type_func(config, GENERATE_AUDIO_TYPES)
-    audio_func(values, data, config)
+    audio_func(values["audio"]["audios"], data, config)
 
 
 def register_generate_audio(func):
@@ -43,10 +43,8 @@ def register_generate_audio(func):
 
 @register_generate_audio
 def default(values: dict, data: StepData, config: dict):
-    audios = values["audio"]["audios"]
-
-    for key in audios:
-        text = part.audio_parts(audios[key]["parts"], data)
+    for key in values:
+        text = part.audio_parts(values[key]["parts"], data)
 
         sub_pairs = data.format_json(config.get("sub_pairs", None), None, values)
 
@@ -60,7 +58,7 @@ def default(values: dict, data: StepData, config: dict):
         file_path = resources.new_temp_resource_path(data.data["_pipe_id"], data.format(config["format"]))
         tts.save(file_path)
 
-        audios[key] = file_path
+        values[key] = file_path
 
 
 @register_generate_audio
@@ -69,10 +67,8 @@ def custom(values: dict, data: StepData, config: dict):
 
     _prepare_custom(config.get("prepare", None), data, config)
 
-    audios = values["audio"]["audios"]
-
-    for key in audios:
-        text = part.audio_parts(audios[key]["parts"], data)
+    for key in values:
+        text = part.audio_parts(values[key]["parts"], data)
 
         data.data["_audio"]["text"] = text
         # TODO set Testing to false
@@ -80,7 +76,7 @@ def custom(values: dict, data: StepData, config: dict):
         generate["include_headers"] = True
         response = api_request(generate, data, "audio")
 
-        audios[key] = _save_audio(response, data, config)
+        values[key] = _save_audio(response, data, config)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
