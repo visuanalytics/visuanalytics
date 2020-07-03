@@ -135,7 +135,7 @@ def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
-    except KeyError:
+    except StepKeyError:
         data.insert_data(values["new_key"], [], values)
         array = data.get_data(values["new_key"], values)
 
@@ -216,17 +216,20 @@ def alias(values: dict, data: StepData):
 
 @register_transform
 def regex(values: dict, data: StepData):
-    # TODO ggf. entfernen, da es wie replace funktioniert
     """Führt `"re.sub"` für die angegebenen Felder aus.
+    regex (suche nach dieser Expression, replace_by (ersetze Expression durch), value (String in dem ersetzt werden soll)
+
+    Geht nur für regex ohne backslash \
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
+        value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        find = data.format(values["find"], values)
+        regex = data.format(values["regex"], values)
+        find = fr"{regex}"
         replace_by = data.format(values["replace_by"], values)
         new_value = re.sub(find, replace_by, value)
         data.insert_data(new_key, new_value, values)
@@ -246,8 +249,12 @@ def date_format(values: dict, data: StepData):
         value = data.get_data(key, values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
-        new_value = date.strftime(data.format(values["format"], values))
         new_key = get_new_keys(values, idx)
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
         data.insert_data(new_key, new_value, values)
 
 
@@ -265,12 +272,12 @@ def timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
-        if values.get("zeropaded_off", False):
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
-            data.insert_data(new_key, new_value, values)
         else:
             new_value = date.strftime(data.format(values["format"], values))
-            data.insert_data(new_key, new_value, values)
+        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
@@ -311,9 +318,12 @@ def date_now(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     new_key = values["new_key"]
-    date_format = data.format(values["format"], values)
     value = datetime.now()
-    new_value = value.strftime(date_format)
+    zeropaded_off = values.get("zeropaded_off", None)
+    if (zeropaded_off is not None) and (zeropaded_off == True):
+        new_value = value.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+    else:
+        new_value = value.strftime(data.format(values["format"], values))
     data.insert_data(new_key, new_value, values)
 
 
@@ -339,22 +349,6 @@ def wind_direction(values: dict, data: StepData):
     else:
         new_value = data.format(values["dict"][value]["1"], values)
     data.insert_data(new_key, new_value, values)
-
-
-@register_transform
-def choose_random(values: dict, data: StepData):
-    """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Wert aus.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
-        length_dict_array = len(values["dict"][value])
-        decision = randint(0, length_dict_array - 1)
-        new_key = get_new_keys(values, idx)
-        new_value = data.format(values["dict"][value][decision], values)
-        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
@@ -441,17 +435,26 @@ def compare(values: dict, data: StepData):
 
 
 @register_transform
-def random_text(values: dict, data: StepData):
-    """Wählt random einen Text aus einem `"pattern"`-Array aus.
+def random_value(values: dict, data: StepData):
+    """Wählt random einen Wert aus einem Array oder einem Dictionary (zu einem bestimmten Key) aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+    array = values.get("array", None)
+    dict = values.get("dict", None)
     for idx, key in data.loop_key(values["keys"], values):
-        len_pattern = len(values["pattern"])
-        rand = randint(0, len_pattern - 1)
         new_key = get_new_keys(values, idx)
-        new_value = data.format(values["pattern"][rand], values)
+        new_value = ""
+        if array is not None:
+            length = len(values["array"])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["array"][rand], values)
+        elif dict is not None:
+            value = str(data.get_data(key, values))
+            length = len(values["dict"][value])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["dict"][value][rand], values)
         data.insert_data(new_key, new_value, values)
 
 

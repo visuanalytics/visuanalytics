@@ -29,7 +29,7 @@ def text(values, data):
 
 
 @register_audio_parts
-def option_for(values, data):
+def compare(values, data):
     """Vergleicht zwei Werte miteinander und führt je nachdem ob =, < oder > random_text mit angegebenen Werten durch.
 
     Vergleicht zwei Werte miteinander und führt random_text mit den jeweils unter on_equal, on_higher oder on_lower
@@ -43,17 +43,39 @@ def option_for(values, data):
     :param data: Daten aus der API
     """
 
-    value = data.get_data(values["check"], values)
-    condition = data.get_data(values["condition"], values)
+    value_left = data.get_data_num(values["value_left"], values)
+    value_right = data.get_data_num(values["value_right"], values)
 
-    if condition == value:
+    if value_left == value_right:
         values["pattern"] = values.get("on_equal", [])
-    elif condition > value:
+    elif value_left > value_right:
         values["pattern"] = values.get("on_higher", [])
-    elif condition < value:
+    elif value_left < value_right:
         values["pattern"] = values.get("on_lower", [])
 
-    return random_text(values, data)
+    random_text(values, data)
+
+
+@register_audio_parts
+def option(values, data):
+    """Führt die `"random_text"` aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
+
+    Wenn der Wert, der in `"check"` steht `"true"` ist, wird `"random_text"` ausgeführt mit den pattern,
+    die unter `"on_true"` stehen.
+    Wenn der Wert, der in `"check"` steht `"false"` ist, wird `"random_text"` ausgeführt mit den pattern,
+    die unter `"on_false"` stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    check = data.get_data(values["check"], values)
+
+    if bool(check):
+        values["pattern"] = values.get("on_true", [])
+    else:
+        values["pattern"] = values.get("on_false", [])
+
+    random_text(values, data)
 
 
 @register_audio_parts

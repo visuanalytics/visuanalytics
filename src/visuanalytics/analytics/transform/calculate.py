@@ -120,7 +120,7 @@ def _bi_calculate(values: dict, data: StepData, op):
             right = data.get_data_num(value_right, values)
             res = op(key, right)
         else:
-            # If value_left is present use taht value
+            # If value_left is present use that value
             left = data.get_data_num(value_left, values)
             res = op(left, key)
 
