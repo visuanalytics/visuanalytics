@@ -129,11 +129,16 @@ def _fetch(values: dict, data: StepData):
 
     # Get the Right Return Format
     if req_data["res_format"].__eq__("json"):
-        return response.json()
+        res = response.json()
     elif req_data["res_format"].__eq__("text"):
-        return response.text
+        res = response.text
     else:
-        return response.content
+        res = response.content
+
+    if req_data["include_headers"]:
+        return {"headers": response.headers, "content": res}
+
+    return res
 
 
 def _create_query(values: dict, data: StepData):
@@ -159,5 +164,6 @@ def _create_query(values: dict, data: StepData):
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
     req["params"] = data.format_json(values.get("params", None), api_key_name, values)
     req["res_format"] = data.format(values.get("response_format", "json"))
+    req["include_headers"] = values.get("include_headers", False)
 
     return req
