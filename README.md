@@ -59,9 +59,9 @@ Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert w
       "time": "19:41",
       "daily": true,
       "config": {
-		    "city_name": "Biebertal", 
-		    "p_code": "35444"
-	    }
+        "city_name": "Biebertal", 
+        "p_code": "35444"
+      }
     }
   ]
 }
