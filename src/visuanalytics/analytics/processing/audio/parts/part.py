@@ -1,6 +1,7 @@
 from random import randint
 
 from visuanalytics.analytics.util.step_errors import AudioError, raise_step_error
+from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 AUDIO_PARTS_TYPES = {}
@@ -43,15 +44,7 @@ def compare(values, data):
     :param data: Daten aus der API
     """
 
-    value_left = data.get_data_num(values["value_left"], values)
-    value_right = data.get_data_num(values["value_right"], values)
-
-    if value_left == value_right:
-        values["pattern"] = values.get("on_equal", [])
-    elif value_left > value_right:
-        values["pattern"] = values.get("on_higher", [])
-    elif value_left < value_right:
-        values["pattern"] = values.get("on_lower", [])
+    values["pattern"] = values["transform"] = execute_type_compare(values, data)
 
     random_text(values, data)
 
@@ -68,12 +61,7 @@ def option(values, data):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    check = data.get_data(values["check"], values)
-
-    if bool(check):
-        values["pattern"] = values.get("on_true", [])
-    else:
-        values["pattern"] = values.get("on_false", [])
+    values["pattern"] = execute_type_option(values, data)
 
     random_text(values, data)
 

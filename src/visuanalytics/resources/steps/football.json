@@ -524,7 +524,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|0|MatchIsFinished}",
+          "check": "_req|Spiele|0|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -603,7 +603,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|1|MatchIsFinished}",
+          "check": "_req|Spiele|1|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -682,7 +682,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|2|MatchIsFinished}",
+          "check": "_req|Spiele|2|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -761,7 +761,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|3|MatchIsFinished}",
+          "check": "_req|Spiele|3|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -840,7 +840,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|4|MatchIsFinished}",
+          "check": "_req|Spiele|4|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -919,7 +919,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|5|MatchIsFinished}",
+          "check": "_req|Spiele|5|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -998,7 +998,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|6|MatchIsFinished}",
+          "check": "_req|Spiele|6|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -1077,7 +1077,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|7|MatchIsFinished}",
+          "check": "_req|Spiele|7|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -1156,7 +1156,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|8|MatchIsFinished}",
+          "check": "_req|Spiele|8|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -1257,9 +1257,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|0|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|0|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1268,7 +1269,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1277,7 +1278,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1331,9 +1332,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|1|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|1|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1342,7 +1344,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1351,7 +1353,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1405,9 +1407,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|2|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|2|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1416,7 +1419,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1425,7 +1428,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1479,9 +1482,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|3|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|3|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1490,7 +1494,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1499,7 +1503,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1553,9 +1557,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|4|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|4|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1564,7 +1569,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1573,7 +1578,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1627,9 +1632,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|5|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|5|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1638,7 +1644,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1647,7 +1653,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1701,9 +1707,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|6|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|6|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1712,7 +1719,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1721,7 +1728,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1775,9 +1782,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|7|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|7|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1786,7 +1794,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1795,7 +1803,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1849,9 +1857,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|8|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|8|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1860,7 +1869,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1869,7 +1878,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1938,9 +1947,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|9|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|9|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1949,7 +1959,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -1958,7 +1968,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2012,9 +2022,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|10|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|10|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2023,7 +2034,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2032,7 +2043,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2086,9 +2097,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|11|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|11|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2097,7 +2109,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2106,7 +2118,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2160,9 +2172,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|12|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|12|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2171,7 +2184,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2180,7 +2193,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2234,9 +2247,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|13|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|13|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2245,7 +2259,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2254,7 +2268,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2308,9 +2322,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|14|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|14|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2319,7 +2334,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2328,7 +2343,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2382,9 +2397,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|15|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|15|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2393,7 +2409,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2402,7 +2418,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2456,9 +2472,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|16|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|16|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2467,7 +2484,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2476,7 +2493,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2530,9 +2547,10 @@
         },
         {
           "description": "up/down/equals",
-          "type": "number_comparison",
-          "check": "{_req|Tabelle|17|Rank_diff}",
-          "on_positive": [
+          "type": "compare",
+          "value_left": "_req|Tabelle|17|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2541,7 +2559,7 @@
               "pattern": "football/up.png"
             }
           ],
-          "on_negative": [
+          "on_lower": [
             {
               "type": "image",
               "pos_x": 218,
@@ -2550,7 +2568,7 @@
               "pattern": "football/down.png"
             }
           ],
-          "on_zero": [
+          "on_equal": [
             {
               "type": "image",
               "pos_x": 218,
