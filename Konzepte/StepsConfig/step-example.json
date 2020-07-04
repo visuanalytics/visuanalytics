@@ -5,7 +5,7 @@
     {
       "name": "weekday",
       "display_name": "wochentag",
-      "possibleValues": [
+      "possible_values": [
         {
           "value": 0,
           "display_value": "Mo"
@@ -40,7 +40,7 @@
     {
       "name": "location",
       "display_name": "Ort",
-      "possibleValues": [],
+      "possible_values": [],
       "default_value": "Gießen"
     }
   ],

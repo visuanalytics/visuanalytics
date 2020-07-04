@@ -4,7 +4,12 @@
   "api": {
     "type": "request",
     "api_key_name": "weatherbit",
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?postal_code={_conf|p_code}&key={_api_key}&country=DE"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
+    "params": {
+      "postal_code": "{_conf|p_code}",
+      "key": "{_api_key}",
+      "country": "DE"
+    }
   },
   "transform": [
     {
@@ -78,7 +83,7 @@
             "_loop|wind_spd"
           ],
           "action": "multiply",
-          "multiply_by": 3.6,
+          "value_right": 3.6,
           "decimal": 2
         },
         {
@@ -225,7 +230,7 @@
           }
         },
         {
-          "type": "choose_random",
+          "type": "random_value",
           "keys": [
             "_loop|weather|code"
           ],
