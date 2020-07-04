@@ -1,3 +1,7 @@
+"""
+Modul welches die erstellten Videos nach einem angegebenem zeitraum wieder entfernt
+"""
+
 from datetime import datetime, timedelta
 
 from visuanalytics.server.db.db import logger
@@ -7,6 +11,16 @@ import os
 
 
 def delete_videos(job, output_path, single=False):
+    """
+    Methode zum löschen alter erstellten Videos, sie hat 2 Funktionen:
+    1. In der config kann angegeben wie lange ein Video verfügbar sein soll, nach diesem zeitraum wird es entfernt
+    2. In der config kann aber auch ebenso eingestellt werden das ein Video gelöscht wird sobal ein neues der gleichen Art erstellt wurde
+
+    :param job: Ein String oder eine Liste aller Jobnamen
+    :param output_path: Der Pfad zum Output Ordner
+    :param single: Je nachdem ob single true oder false ist wird _delete_on_time oder _delete_old_videos aufgerufen
+    :return:
+    """
     logger.info("Checking if Videos needs to be deleted")
     current = os.curdir
     os.chdir(resources.path_from_root(output_path))
