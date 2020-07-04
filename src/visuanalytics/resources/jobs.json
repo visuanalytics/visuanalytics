@@ -4,8 +4,9 @@
       "name": "Wetter in Deutschland",
       "id": 0,
       "steps": "weather_germany",
-      "time": "12:00",
+      "time": "10:52",
       "daily": true,
+      "delete_old_on_new": true,
       "config": {}
     },
     {
@@ -14,6 +15,12 @@
       "steps": "weather_single",
       "time": "11:33",
       "daily": true,
+      "delete_old_on_new": true,
+      "removal_time": {
+        "days": 7,
+        "hours": 10,
+        "minutes": 2
+      },
       "config": {
         "city_name": "Biebertal",
         "p_code": "35444"
@@ -23,7 +30,7 @@
       "name": "Fußballbericht",
       "id": 1,
       "steps": "football",
-      "time": "15:33",
+      "time": "10:35",
       "daily": true,
       "config": {
         "liga-name": "1. Fußball Bundesliga"

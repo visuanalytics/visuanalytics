@@ -4,6 +4,7 @@ from datetime import datetime
 
 from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
 from visuanalytics.analytics.util import resources
+from visuanalytics.analytics.util.video_delete import delete_on_time
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,8 @@ class JsonScheduler(Scheduler):
         logger.info(f"Check if something needs to be done at: {now}")
 
         jobs = self.__get_jobs()
+
+        delete_on_time(jobs, self._get_base_config())
 
         for job in jobs.get("jobs", []):
             # if Time is not current continue

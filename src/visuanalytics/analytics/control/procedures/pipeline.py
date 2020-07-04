@@ -12,6 +12,7 @@ from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.storing import storing
+from visuanalytics.analytics.util.video_delete import delete_old_videos
 
 logger = logging.getLogger(__name__)
 
@@ -84,11 +85,14 @@ class Pipeline(object):
             self.__config = json.loads(fp.read())
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
+        print(self.steps_config)
 
     def __cleanup(self):
         # delete Directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
+        if self.steps_config.get("delete_old_on_new", False):
+            delete_old_videos(self.steps_config)
         logger.info("Finished cleanup!")
 
     def start(self):
