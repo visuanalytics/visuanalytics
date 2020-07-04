@@ -6,11 +6,21 @@ from visuanalytics.analytics.util import resources
 import os
 
 
-def delete_on_time(jobs, base_config):
+def delete_videos(job, output_path, single=False):
     logger.info("Checking if Videos needs to be deleted")
     current = os.curdir
-    os.chdir(resources.path_from_root(base_config["output_path"]))
-    for file in os.listdir():
+    os.chdir(resources.path_from_root(output_path))
+    files = os.listdir()
+    if single:
+        files.sort(reverse=True)
+        _delete_old_videos(job, files)
+    else:
+        _delete_on_time(job, files)
+    os.chdir(current)
+
+
+def _delete_on_time(jobs, files):
+    for file in files:
         for job in jobs["jobs"]:
             if file.startswith(job["name"]):
                 file_date = file[len(job["name"]) + 1:len(file) - 4]
@@ -24,17 +34,11 @@ def delete_on_time(jobs, base_config):
                     logger.info("removal time of file " + file + " exceed, file has been deleted")
 
 
-def delete_old_videos(steps_config):
-    logger.info("Checking if Videos needs to be deleted")
-    current = os.curdir
-    os.chdir(resources.path_from_root(steps_config["output_path"]))
+def _delete_old_videos(job_name, files):
     second = False
-    files = os.listdir()
-    files.sort(reverse=True)
     for file in files:
-        if file.startswith(steps_config["job_name"]):
+        if file.startswith(job_name):
             if second:
                 os.remove(file)
                 logger.info("old video " + file + " has been deleted")
             second = True
-    os.chdir(current)
