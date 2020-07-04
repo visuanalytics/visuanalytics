@@ -26,7 +26,12 @@
       "Regensburg"
     ],
     "use_loop_as_key": true,
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}&country=DE"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
+    "params": {
+      "city": "{_loop}",
+      "key": "{_api_key}",
+      "country": "DE"
+    }
   },
   "transform": [
     {
@@ -101,7 +106,7 @@
                 "_loop|wind_spd"
               ],
               "action": "multiply",
-              "multiply_by": 3.6,
+              "value_right": 3.6,
               "decimal": 2
             },
             {
@@ -254,7 +259,7 @@
               }
             },
             {
-              "type": "choose_random",
+              "type": "random_value",
               "keys": [
                 "_loop|weather|code"
               ],
@@ -542,7 +547,7 @@
           "pattern": "{_key}\u00B0"
         },
         {
-          "type": "choose_random",
+          "type": "random_value",
           "keys": [
             "_loop|temp_highest_max_city_code",
             "_loop|temp_lowest_max_city_code",
