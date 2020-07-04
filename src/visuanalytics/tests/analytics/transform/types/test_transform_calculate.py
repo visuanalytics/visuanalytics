@@ -10,7 +10,9 @@ class TestTransformCalculate(unittest.TestCase):
             "testvalue2": 3.7,
             "testarray1": [5, 4, 7, 1, 3, 6],
             "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-            "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+            "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+            "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+            "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
         }
 
     def test_transform_calculate_mean(self):
@@ -32,7 +34,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": 4.33,
                 "testarray2": 89.06,
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -57,7 +61,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": 7,
                 "testarray2": 500,
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -82,7 +88,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": 1,
                 "testarray2": 1.75,
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -107,7 +115,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 4,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -131,7 +141,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": "wie"
+                "icon": "wie",
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -160,7 +172,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -189,7 +203,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -219,7 +235,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -249,7 +267,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -279,7 +299,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -309,7 +331,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -339,7 +363,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "result": 8.6,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
@@ -369,7 +395,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testvalue2": 3.7,
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
-                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"]
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
             }
         }
 
