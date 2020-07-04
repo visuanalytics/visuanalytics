@@ -1747,10 +1747,6 @@
     }
   },
   "audio": {
-    "config": {
-      "lang": "de",
-      "format": "mp3"
-    },
     "audios": {
       "a1": {
         "parts": [

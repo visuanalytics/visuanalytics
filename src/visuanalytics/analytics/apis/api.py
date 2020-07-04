@@ -12,11 +12,11 @@ API_TYPES = {}
 
 @raise_step_error(APIError)
 def api(values: dict, data: StepData):
-    data.init_data(_api(values["api"], data, values["name"]))
+    data.init_data(api_request(values["api"], data, values["name"]))
 
 
 @raise_step_error(APIError)
-def _api(values: dict, data: StepData, name):
+def api_request(values: dict, data: StepData, name):
     api_func = get_type_func(values, API_TYPES)
 
     return api_func(values, data, name)
@@ -51,7 +51,7 @@ def request_memory(values: dict, data: StepData, name):
         with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
             return json.loads(fp.read())
     except FileNotFoundError:
-        return _api(values["alternative"], data, name)
+        return api_request(values["alternative"], data, name)
 
 
 @register_api
@@ -92,12 +92,12 @@ def request_multiple_custom(values: dict, data: StepData, name):
         data_dict = {}
 
         for idx, key in enumerate(values["steps_value"]):
-            data_dict[key] = _api(values["requests"][idx], data, name)
+            data_dict[key] = api_request(values["requests"][idx], data, name)
         return data_dict
 
     data_array = []
     for idx, value in enumerate(values["requests"]):
-        data_array.append(_api(value, data, name))
+        data_array.append(api_request(value, data, name))
     return data_array
 
 

@@ -89,7 +89,16 @@ class APIKeyError(Exception):
 class APiRequestError(Exception):
     def __init__(self, response: Response):
         super().__init__(
-            f"Response-Code: {response.status_code}, Response-Headers: {response.headers}, Response-Body: {response.content}")
+            f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+
+
+class InvalidContentTypeError(Exception):
+    def __init__(self, url, content_type: str, expected_type="'application/json'"):
+        if url is None:
+            super().__init__(f"Generate Audio: Invalid Content Type '{content_type}' only {expected_type} is Suported")
+        else:
+            super().__init__(
+                f"Error on respone from '{url}': Invalid Content Type '{content_type}' only {expected_type} is Suported")
 
 
 def raise_step_error(error):
