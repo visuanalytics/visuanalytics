@@ -213,6 +213,7 @@ class TestTransformCalculate(unittest.TestCase):
         self.assertDictEqual(exp, out, "calculate multiply data value Failed")
 
     def test_transform_calculate_multiply_array_value(self):
+        # TODO
         values = [
             {
                 "type": "calculate",
@@ -308,6 +309,7 @@ class TestTransformCalculate(unittest.TestCase):
         self.assertDictEqual(exp, out, "calculate divide data value Failed")
 
     def test_transform_calculate_divide_array_value(self):
+        # TODO
         values = [
             {
                 "type": "calculate",
@@ -404,6 +406,7 @@ class TestTransformCalculate(unittest.TestCase):
         self.assertDictEqual(exp, out, "calculate subtract data value Failed")
 
     def test_transform_calculate_subtract_array_value(self):
+        # TODO
         values = [
             {
                 "type": "calculate",
@@ -499,6 +502,7 @@ class TestTransformCalculate(unittest.TestCase):
         self.assertDictEqual(exp, out, "calculate add data value Failed")
 
     def test_transform_calculate_add_array_value(self):
+        # TODO
         values = [
             {
                 "type": "calculate",
