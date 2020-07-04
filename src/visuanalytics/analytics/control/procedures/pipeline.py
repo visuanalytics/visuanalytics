@@ -85,7 +85,6 @@ class Pipeline(object):
             self.__config = json.loads(fp.read())
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
-        print(self.steps_config)
 
     def __cleanup(self):
         # delete Directory

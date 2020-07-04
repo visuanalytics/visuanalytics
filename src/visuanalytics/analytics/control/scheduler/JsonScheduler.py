@@ -24,7 +24,8 @@ class JsonScheduler(Scheduler):
 
         jobs = self.__get_jobs()
 
-        delete_on_time(jobs, self._get_base_config())
+        if int(now.strftime("%M")) == 0:
+            delete_on_time(jobs, self._get_base_config())
 
         for job in jobs.get("jobs", []):
             # if Time is not current continue
@@ -46,4 +47,4 @@ class JsonScheduler(Scheduler):
 
             # If Step id is valid run
             logger.info(f"Job {job['id']}:'{job['name']}' started")
-            self._start_job(job['name'], job["steps"], job.get("config", {}))
+            self._start_job(job['name'], job["steps"], job.get("config", {}), job.get("delete_old_on_new", False))

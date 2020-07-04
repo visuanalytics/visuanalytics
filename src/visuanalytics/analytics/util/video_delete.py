@@ -32,7 +32,7 @@ def delete_old_videos(steps_config):
     files = os.listdir()
     files.sort(reverse=True)
     for file in files:
-        if file.startswith(steps_config["name"]):
+        if file.startswith(steps_config["job_name"]):
             if second:
                 os.remove(file)
                 logger.info("old video " + file + " has been deleted")

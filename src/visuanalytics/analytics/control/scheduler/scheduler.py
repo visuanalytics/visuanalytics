@@ -35,11 +35,11 @@ class Scheduler(object):
     def _get_base_config(self):
         return self._base_config
 
-    def _start_job(self, job_name: str, steps_name: str, config: dict):
+    def _start_job(self, job_name: str, steps_name: str, config: dict, delete: bool):
         # Add base_config if exists
         config = {**self._base_config, **config}
         config["job_name"] = job_name
-        config["delete_old_on_new"] = self._base_config.get("delete_old_on_new", False)
+        config["delete_old_on_new"] = delete
 
         t = threading.Thread(
             target=Pipeline(uuid.uuid4().hex,
