@@ -212,6 +212,37 @@ class TestTransformCalculate(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "calculate multiply data value Failed")
 
+    def test_transform_calculate_multiply_array_value(self):
+        values = [
+            {
+                "type": "calculate",
+                "keys": [
+                    "_req|array1|left"
+                ],
+                "action": "multiply",
+                "value_right": "_loop|array2|right",
+                "new_keys": [
+                    "_req|result|result"
+                ]
+            }
+        ]
+
+        expected_data = {
+            "_req": {
+                "testvalue1": 5,
+                "testvalue2": 3.7,
+                "testarray1": [5, 4, 7, 1, 3, 6],
+                "testarray2": [9, 4, 12, 7.6, 1.75, 500],
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "result": [{"result": 12.15}, {"result": 22.95}, {"result": 5.4}, {"result": -16.5}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+            }
+        }
+
+        exp, out = prepare_test(values, self.data, expected_data)
+        self.assertDictEqual(exp, out, "calculate multiply array value Failed")
+
     def test_transform_calculate_divide_value(self):
         values = [
             {
@@ -275,6 +306,38 @@ class TestTransformCalculate(unittest.TestCase):
 
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "calculate divide data value Failed")
+
+    def test_transform_calculate_divide_array_value(self):
+        values = [
+            {
+                "type": "calculate",
+                "keys": [
+                    "_req|array1|left"
+                ],
+                "action": "divide",
+                "value_right": "_loop|array2|right",
+                "new_keys": [
+                    "_req|result|result"
+                ],
+                "decimal": 2
+            }
+        ]
+
+        expected_data = {
+            "_req": {
+                "testvalue1": 5,
+                "testvalue2": 3.7,
+                "testarray1": [5, 4, 7, 1, 3, 6],
+                "testarray2": [9, 4, 12, 7.6, 1.75, 500],
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "result": [{"result": 1.67}, {"result": 0.32}, {"result": 0.6}, {"result": -0.66}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+            }
+        }
+
+        exp, out = prepare_test(values, self.data, expected_data)
+        self.assertDictEqual(exp, out, "calculate divide array value Failed")
 
     def test_transform_calculate_subtract_value(self):
         values = [
@@ -340,6 +403,37 @@ class TestTransformCalculate(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "calculate subtract data value Failed")
 
+    def test_transform_calculate_subtract_array_value(self):
+        values = [
+            {
+                "type": "calculate",
+                "keys": [
+                    "_req|array1|left"
+                ],
+                "action": "subtract",
+                "value_right": "_loop|array2|right",
+                "new_keys": [
+                    "_req|result|result"
+                ]
+            }
+        ]
+
+        expected_data = {
+            "_req": {
+                "testvalue1": 5,
+                "testvalue2": 3.7,
+                "testarray1": [5, 4, 7, 1, 3, 6],
+                "testarray2": [9, 4, 12, 7.6, 1.75, 500],
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "result": [{"result": 1.8}, {"result": -5.8}, {"result": -1.2}, {"result": 8.3}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+            }
+        }
+
+        exp, out = prepare_test(values, self.data, expected_data)
+        self.assertDictEqual(exp, out, "calculate subtract array value Failed")
+
     def test_transform_calculate_add_value(self):
         values = [
             {
@@ -403,3 +497,34 @@ class TestTransformCalculate(unittest.TestCase):
 
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "calculate add data value Failed")
+
+    def test_transform_calculate_add_array_value(self):
+        values = [
+            {
+                "type": "calculate",
+                "keys": [
+                    "_req|array1|left"
+                ],
+                "action": "add",
+                "value_right": "_loop|array2|right",
+                "new_keys": [
+                    "_req|result|result"
+                ]
+            }
+        ]
+
+        expected_data = {
+            "_req": {
+                "testvalue1": 5,
+                "testvalue2": 3.7,
+                "testarray1": [5, 4, 7, 1, 3, 6],
+                "testarray2": [9, 4, 12, 7.6, 1.75, 500],
+                "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
+                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
+                "result": [{"result": 7.2}, {"result": 11.2}, {"result": 4.8}, {"result": -5.2}],
+                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+            }
+        }
+
+        exp, out = prepare_test(values, self.data, expected_data)
+        self.assertDictEqual(exp, out, "calculate add array value Failed")
