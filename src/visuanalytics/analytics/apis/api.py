@@ -51,11 +51,16 @@ def request_memory(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    # todo (jannik) möglichekit einbauen Daten aus letzem run zu nutzen
     try:
-        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
-            return json.loads(fp.read())
-    except FileNotFoundError:
+        if values.get("timedelta", None) is None:
+            with resources.open_specific_memory_resource(data.format("{_conf|job_name}"), values["name"],
+                                                         values.get("use_last", 1)) as fp:
+                return json.loads(fp.read())
+        else:
+            with resources.open_memory_resource(data.format("{_conf|job_name}"),
+                                                values["name"], values["timedelta"]) as fp:
+                return json.loads(fp.read())
+    except (FileNotFoundError, IndexError):
         return api_request(values["alternative"], data, name)
 
 
