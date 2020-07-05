@@ -11,7 +11,7 @@ def create_job(steps_id: int):
     :param steps_id: id der vom job auszuführenden Schritte.
     :type steps_id: int
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         con.execute("insert into job(steps) values (?)", [steps_id])
         con.commit()
 
@@ -23,7 +23,7 @@ def get_job_run_infos(job_id: int):
     :type job_id: int
     """
 
-    with db.connect() as con:
+    with db.open_con() as con:
         config = con.execute("select key, value from job_config where job_id = ?", [job_id]).fetchall()
         steps_name = con.execute("select name from job as j, steps as s where j.steps == s.id")
         return steps_name, {c["key"]: c["value"] for c in config}
@@ -37,7 +37,7 @@ def add_job_config(job_id: int, key, value):
     :param key: Schlüssel für die Configuration.
     :param value: wert für die Configuration.
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         con.execute("insert into job_config(job_id, key, value) values (?, ?, ?)", [job_id, key, value])
         con.commit()
 
