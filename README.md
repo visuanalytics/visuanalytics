@@ -55,13 +55,13 @@ Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert w
     {
       "name": "Wetter in Biebertal",
       "id": 0,
-      "steps_id": 1,
+      "steps": "weather_single",
       "time": "19:41",
       "daily": true,
       "config": {
-		    "city_name": "Biebertal", 
-		    "p_code": "35444"
-	    }
+        "city_name": "Biebertal", 
+        "p_code": "35444"
+      }
     }
   ]
 }
@@ -71,12 +71,13 @@ Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert w
 
 `id`: Id des Jobs (sollte einzigartig sein)
 
-`steps_id`:
+`steps`:
 
-Id des Videos, welches generiert werden soll. 
+Name des Videos, welches generiert werden soll. 
 Aktuelle Optionen:
-- 0: Deutschlandweiter Wetterbericht
-- 1: Wetterbericht für einen Ort
+- `"weather_germany"`: Deutschlandweiter Wetterbericht
+- `"weather_single"`: Wetterbericht für einen Ort
+- `"football"`: Bericht des Spieltages der Fußball Bundesliga
 
 *Einstellen der Zeit*:
 
@@ -107,11 +108,11 @@ Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
 Hier kann man die Konfigurationen für die Jobs angeben.
 Mögliche Konfigurationen:
 
-*Wetterbericht Deutschland (id: 0)*:
+*Wetterbericht Deutschland (steps: `"weather_germany"`)*:
 
   - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
 
-*Wetterbericht für einen Ort (id: 1)*:
+*Wetterbericht für einen Ort (steps: `"weather_single"`)*:
 
   - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
   - `city_name`: Name des Ortes
@@ -120,6 +121,13 @@ Mögliche Konfigurationen:
   > Ist nur `city_name` angegeben wird versucht diese Stadt zu finden es kann aber sein das die name nicht gefunden wird, daher ist die zusätzliche angabge einer Postleitzahl mit `p_code` Ratsam. Der angegebene `city_name` wird dann inerhalb des Videos als Stadt namen Angezeigt.
 
   > Aktuell sind nur Städte in Deutschland möglich diese wird man aber später noch einstellen können.
+  
+ *Bericht des Spieltages der Fußball Bundesliga (steps: `"football"`)
+ 
+  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - `liga-name`: Name der Liga
+  
+  > Aktuell ist `liga-name` nur der Name der angezeigt wird nicht aber der name der für den Api-Request verwendet wird (Dies wird sich später noch ändern)
 
 ### Mit Docker
 

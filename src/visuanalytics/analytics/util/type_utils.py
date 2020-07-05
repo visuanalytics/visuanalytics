@@ -33,6 +33,6 @@ def get_type_func(values: dict, types: dict, key="type"):
     func = types.get(values.get(key, ""), None)
 
     if func is None:
-        StepTypeError(values.get(key, None))
+        raise StepTypeError(values.get(key, None))
 
     return func

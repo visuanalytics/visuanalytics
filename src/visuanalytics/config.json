@@ -9,5 +9,10 @@
   "steps_base_config": {
     "output_path": "out"
   },
+  "audio": {
+    "type": "default",
+    "lang": "de",
+    "format": "mp3"
+  },
   "testing": false
 } 

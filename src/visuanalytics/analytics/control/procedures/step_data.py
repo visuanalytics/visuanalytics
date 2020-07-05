@@ -101,16 +101,17 @@ class StepData(object):
         """
         return self.__data
 
-    def init_data(self, data: dict):
+    def init_data(self, data: dict, key: str = "_req"):
         """
         Initialisiert die Daten.
         
-        Die übergebenen Daten werden unter `_req` gespeichert.
+        Die übergebenen daten werden unter dem übergebenen `key` gespeichert.
         Ist zur Verwendung im Schritt `API` gedacht.
-        
+
         :param data: Daten die geschpeichert werden sollen.
+        :param key: Key unter dem die Daten geschpeichert werden sollen. Standart: `_req`.
         """
-        self.__data["_req"] = data
+        self.__data[key] = data
 
     def clear_data(self):
         """
@@ -177,7 +178,7 @@ class StepData(object):
 
         return self.__formatter.format(value_string, data)
 
-    def format_json(self, json: dict, api_key_name: str, values: dict):
+    def format_json(self, json: dict, api_key_name, values: dict):
         """
         Wendet :func:`format_api` auf alle Elemente eines Dictionaries an.
 
