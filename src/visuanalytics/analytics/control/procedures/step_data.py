@@ -94,6 +94,12 @@ class StepData(object):
         """
         return map(lambda value: (value[0], self.save_loop_key(value[1], values)), enumerate(keys))
 
+    def get_config(self, key, default_value=None):
+        """
+        Configuration des Jobs
+        """
+        return self.__data["_conf"].get(key, default_value)
+
     @property
     def data(self):
         """
