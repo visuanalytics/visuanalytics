@@ -1017,9 +1017,62 @@ Es gibt 4 verschiedene Overlay Arten:
 
 <!--TODO-->
 
-# Seqence
+# Sequence
 
 <!--TODO-->
+
+```JSON
+{
+ "sequence": {
+    "type": "successively"
+  }
+}
+```
+
+## successively
+
+<!--TODO-->
+
+```JSON
+{
+  "type": "successively"
+}
+```
+**`type`**:
+<!--TODO-->
+
+## custom
+
+<!--TODO-->
+
+```JSON
+
+{
+   "type": "custom",
+   "pattern": [
+      {
+        "image": "test2",
+        "time_diff": 10
+      },
+      {
+        "image": "test1",
+        "time_diff": -3,
+        "audio_l": "a1"
+      },
+      {
+        "image": "test5",
+        "time_diff": 4
+      }
+    ]
+}
+```
+**`image`**:
+<!--TODO-->
+**`time_diff`**_(Optional)_:
+<!--TODO-->
+**`audio_l`**_(Optional)_:
+<!--TODO-->
+
 
 # Run Config
 
@@ -1028,3 +1081,28 @@ Es gibt 4 verschiedene Overlay Arten:
 # Presets
 
 <!--TODO-->
+
+```JSON
+{
+ "presets": {
+    "test_preset_1": {
+      "colour": "black",
+      "font_size": 74,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "test_preset_2": {
+      "colour": "white",
+      "font_size": 35,
+      "font": "fonts/Dosis-Bold.ttf"
+    }
+  }
+}
+```
+**`colour`**:
+<!--TODO-->
+**`font_size`**:
+<!--TODO-->
+**`font`**:
+<!--TODO-->
+**`"test_preset_1"`, `"test_preset_2":`**   
+sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
