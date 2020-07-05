@@ -4,7 +4,7 @@ import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.step_errors import APIError, raise_step_error
+from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 API_TYPES = {}
@@ -12,11 +12,11 @@ API_TYPES = {}
 
 @raise_step_error(APIError)
 def api(values: dict, data: StepData):
-    data.init_data(_api(values["api"], data, values["name"]))
+    data.init_data(api_request(values["api"], data, values["name"]))
 
 
 @raise_step_error(APIError)
-def _api(values: dict, data: StepData, name):
+def api_request(values: dict, data: StepData, name):
     api_func = get_type_func(values, API_TYPES)
 
     return api_func(values, data, name)
@@ -36,8 +36,7 @@ def request(values: dict, data: StepData, name):
     if data.data["_conf"].get("testing", False):
         return _load_test_data(name)
 
-    url, header, body = _create_query(values, data)
-    return _fetch(url, header, body, values.get("method", "get"))
+    return _fetch(values, data)
 
 
 @register_api
@@ -52,17 +51,12 @@ def request_memory(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
+    # todo (jannik) möglichekit einbauen Daten aus letzem run zu nutzen
     try:
-        if values.get("timedelta", None) is None:
-            with resources.open_specific_memory_resource(data.format("{_conf|job_name}"), values["name"],
-                                                         values.get("use_last", 1)) as fp:
-                return json.loads(fp.read())
-        else:
-            with resources.open_memory_resource(data.format("{_conf|job_name}"),
-                                                values["name"], values["timedelta"]) as fp:
-                return json.loads(fp.read())
-    except (FileNotFoundError, IndexError):
-        return _api(values["alternative"], data, name)
+        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
+            return json.loads(fp.read())
+    except FileNotFoundError:
+        return api_request(values["alternative"], data, name)
 
 
 @register_api
@@ -76,18 +70,15 @@ def request_multiple(values: dict, data: StepData, name):
     if data.data["_conf"].get("testing", False):
         return _load_test_data(name)
 
-    method = values.get("method", "get")
     if data.format(values.get("use_loop_as_key", False), values):
         data_dict = {}
-        for idx, key in data.loop_array(values["steps_value"], values):
-            url, header, body = _create_query(values, data)
-            data_dict[key] = _fetch(url, header, body, method)
+        for _, key in data.loop_array(values["steps_value"], values):
+            data_dict[key] = _fetch(values, data)
         return data_dict
 
     data_array = []
-    for idx, value in data.loop_array(values["steps_value"], values):
-        url, header, body = _create_query(values, data)
-        data_array.append(_fetch(url, header, body, method))
+    for _ in data.loop_array(values["steps_value"], values):
+        data_array.append(_fetch(values, data))
         return data_array
 
 
@@ -106,22 +97,13 @@ def request_multiple_custom(values: dict, data: StepData, name):
         data_dict = {}
 
         for idx, key in enumerate(values["steps_value"]):
-            data_dict[key] = _api(values["requests"][idx], data, name)
+            data_dict[key] = api_request(values["requests"][idx], data, name)
         return data_dict
 
     data_array = []
     for idx, value in enumerate(values["requests"]):
-        data_array.append(_api(value, data, name))
+        data_array.append(api_request(value, data, name))
     return data_array
-
-
-def _create_query(values: dict, data: StepData):
-    req_values = [values.get("header", None), values.get("body", None)]
-    for idx, key in enumerate(req_values):
-        if req_values[idx] is not None:
-            req_values[idx] = data.format_json(req_values[idx], values.get("api_key_name", None), values)
-    url = data.format_api(values["url_pattern"], values.get("api_key_name", None), values)
-    return url, req_values[0], req_values[1]
 
 
 def _load_test_data(name):
@@ -131,17 +113,62 @@ def _load_test_data(name):
     # TODO(max) Catch possible errors
 
 
-def _fetch(url, header, body, method):
-    """Abfrage einer API und Umwandlung der API-Antwort in ein Dictionary.
+def _fetch(values: dict, data: StepData):
+    """Abfrage einer API und Umwandlung der API-Antwort ein Angegebenes Format.
 
-    :param url: url der gewünschten API-Anfrage
-    :return: Antwort der API als Dictionary
+    :param req_data: Dictionary das alle informationen für den request enthält.
+    :return: Antwort der API im Angegebenen Format
     """
-    if method.__eq__("get"):
-        response = requests.get(url, headers=header, json=body)
-    else:
-        response = requests.post(url, headers=header, json=body)
+    # Build Http request
+    req_data = _create_query(values, data)
+
+    req = requests.Request(req_data["method"], req_data["url"], headers=req_data["headers"],
+                           json=req_data.get("json", None),
+                           data=req_data.get("other", None), params=req_data["params"])
+    # Make the Http request
+    s = requests.session()
+    response = s.send(req.prepare())
 
     if response.status_code != 200:
-        raise ValueError("Response-Code: " + str(response.status_code))
-    return json.loads(response.content)
+        raise APiRequestError(response)
+
+    # Get the Right Return Format
+    if req_data["res_format"].__eq__("json"):
+        res = response.json()
+    elif req_data["res_format"].__eq__("text"):
+        res = response.text
+    else:
+        res = response.content
+
+    if req_data["include_headers"]:
+        return {"headers": response.headers, "content": res}
+
+    return res
+
+
+def _create_query(values: dict, data: StepData):
+    req = {}
+    api_key_name = values.get("api_key_name", None)
+
+    # Get/Format Method and Headers
+    req["method"] = data.format(values.get("method", "get"))
+    req["headers"] = data.format_json(values.get("headers", None), api_key_name, values)
+
+    # Get/Format Body Data
+    req["body_type"] = data.format(values.get("body_type", "json"), values)
+
+    if req["body_type"].__eq__("json"):
+        req[req["body_type"]] = data.format_json(values.get("body", None), api_key_name, values)
+    else:
+        req[req["body_type"]] = data.format(values.get("body", None))
+
+        if values.get("body_encoding", None) is not None:
+            req[req["body_type"]] = req[req["body_type"]].encode(values["body_encoding"])
+
+    # Get/Format Url, Params, Response Format
+    req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
+    req["params"] = data.format_json(values.get("params", None), api_key_name, values)
+    req["res_format"] = data.format(values.get("response_format", "json"))
+    req["include_headers"] = values.get("include_headers", False)
+
+    return req
