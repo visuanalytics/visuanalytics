@@ -12,13 +12,11 @@ from visuanalytics.server import server
 def main():
     config = config_manager.get_config()
 
+    init(config)
+
     app = server.create_app()
-
-    with app.app_context():
-        init(config)
-
-    app.run()
-
+    threading.Thread(target=app.run).start()
+    
     # if db is in use start DbScheduler else run JsonScheduler
     if config["db"]["use"]:
         DbScheduler(config["steps_base_config"]).start()
