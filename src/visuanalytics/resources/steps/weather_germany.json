@@ -1685,16 +1685,7 @@
       }
     ]
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
-      "possible_values": [
-        true,
-        false
-      ]
-    },
-    "params": []
-  },
+  "run_config": [],
   "presets": {
     "weather_white_2": {
       "color": "white",

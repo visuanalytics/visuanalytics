@@ -2700,35 +2700,26 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
+  "run_config": [
+    {
+      "name": "league",
+      "display_name": "Liga",
       "possible_values": [
-        true,
-        false
+        {
+          "value": 1,
+          "display_value": "1. Bundesliga"
+        },
+        {
+          "value": 2,
+          "display_value": "2. Bundesliga"
+        },
+        {
+          "value": 3,
+          "display_value": "3. Bundesliga"
+        }
       ]
-    },
-    "params": [
-      {
-        "name": "league",
-        "display_name": "Liga",
-        "possible_values": [
-          {
-            "value": 1,
-            "display_value": "1. Bundesliga"
-          },
-          {
-            "value": 2,
-            "display_value": "2. Bundesliga"
-          },
-          {
-            "value": 3,
-            "display_value": "3. Bundesliga"
-          }
-        ]
-      }
-    ]
-  },
+    }
+  ],
   "presets": {
     "football_1": {
       "color": "black",

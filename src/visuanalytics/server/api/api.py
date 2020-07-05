@@ -3,6 +3,7 @@ Enthält die API-Endpunkte.
 """
 
 import json
+import traceback
 
 import flask
 from flask import (Blueprint, request)
@@ -29,6 +30,7 @@ def topics():
     try:
         return flask.jsonify(queries.get_topic_names())
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while retrieving the list of topics", 400
 
 
@@ -46,6 +48,7 @@ def params(topic_id):
             return "Unknown topic", 400
         return flask.jsonify(params)
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while retrieving the parameters for Topic ID: " + topic_id, 400
 
 
@@ -59,6 +62,7 @@ def jobs():
     try:
         return flask.jsonify(queries.get_job_list())
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while retrieving the list of jobs", 400
 
 
@@ -74,6 +78,7 @@ def add():
         queries.insert_job(job)
         return "Job added"
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while adding the job", 400
 
 
@@ -93,6 +98,7 @@ def edit(job_id):
         queries.update_job(job_id, updated_job_data)
         return "Job updated"
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while updating job information", 400
 
 
@@ -110,4 +116,5 @@ def remove(job_id):
         queries.delete_job(job_id)
         return "Job removed"
     except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
         return "An error occured while deleting the job", 400

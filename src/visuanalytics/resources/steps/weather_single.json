@@ -1883,23 +1883,14 @@
       }
     ]
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
-      "possible_values": [
-        true,
-        false
-      ]
-    },
-    "params": [
-      {
-        "name": "city_name",
-        "display_name": "Ort",
-        "possible_values": [],
-        "default_value": "Gießen"
-      }
-    ]
-  },
+  "run_config": [
+    {
+      "name": "city_name",
+      "display_name": "Ort",
+      "possible_values": [],
+      "default_value": "Gießen"
+    }
+  ],
   "presets": {
     "weather_white_1": {
       "color": "white",
