@@ -11,6 +11,9 @@ from visuanalytics.server.db import db, job, queries
 api = Blueprint('api', __name__)
 
 
+# TODO (David): Besseres Error-Handling
+
+
 @api.teardown_app_request
 def close_db_con(exception):
     db.close_con()
@@ -23,7 +26,10 @@ def topics():
 
     Die Response enthält die Liste der zur Videogenerierung verfügbaren Themen.
     """
-    return flask.jsonify(queries.get_topic_names())
+    try:
+        return flask.jsonify(queries.get_topic_names())
+    except Exception:
+        return "An error occured while retrieving the list of topics", 400
 
 
 @api.route("/params/<topic_id>", methods=["GET"])
@@ -34,10 +40,13 @@ def params(topic_id):
     GET-Parameter: "topic".
     Die Response enthält die Parameterinformationen für das übergebene Thema.
     """
-    params = queries.get_params(topic_id)
-    if (params == None):
-        return "Unknown topic", 400
-    return flask.jsonify(params)
+    try:
+        params = queries.get_params(topic_id)
+        if (params == None):
+            return "Unknown topic", 400
+        return flask.jsonify(params)
+    except Exception:
+        return "An error occured while retrieving the parameters for Topic ID: " + topic_id, 400
 
 
 @api.route("/jobs", methods=["GET"])
@@ -47,7 +56,10 @@ def jobs():
 
     Die Response enthält die in der Datenbank angelegten Jobs.
     """
-    return flask.jsonify(queries.get_job_list())
+    try:
+        return flask.jsonify(queries.get_job_list())
+    except Exception:
+        return "An error occured while retrieving the list of jobs", 400
 
 
 @api.route("/add", methods=["POST"])
@@ -58,8 +70,11 @@ def add():
     Der Request-Body enthält die Informationen für den neuen Job im JSON-Format.
     """
     job = request.json
-    queries.insert_job(job)
-    return "ok"
+    try:
+        queries.insert_job(job)
+        return "Job added"
+    except Exception:
+        return "An error occured while adding the job", 400
 
 
 @api.route("/edit/<job_id>", methods=["PUT"])
@@ -74,9 +89,11 @@ def edit(job_id):
     :type id: str
     """
     updated_job_data = request.json
-    queries.update_job(job_id, updated_job_data)
-    return "edit"
-    # TODO: update data base entry with the given job id
+    try:
+        queries.update_job(job_id, updated_job_data)
+        return "Job updated"
+    except Exception:
+        return "An error occured while updating job information", 400
 
 
 @api.route("/remove/<job_id>", methods=["DELETE"])
@@ -89,5 +106,8 @@ def remove(job_id):
     :param id: URL-Parameter <id>
     :type id: str
     """
-    queries.delete_job(job_id)
-    return "ok"
+    try:
+        queries.delete_job(job_id)
+        return "Job removed"
+    except Exception:
+        return "An error occured while deleting the job", 400

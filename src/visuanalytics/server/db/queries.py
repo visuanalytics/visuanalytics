@@ -66,10 +66,7 @@ def _row_to_job(row):
 
 
 def _find(list, key, value):
-    print(list)
     for e in list:
-        print(e)
-        print(value)
         if e[key] == value:
             return e
 
@@ -105,6 +102,7 @@ def update_job(job_id, updated_data):
             new_schedule_id = _insert_schedule(con, value)
             con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", (str(new_schedule_id), job_id))
         if key == "params":
+            # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
             con.execute("DELETE FROM job_config WHERE job_id=?", job_id)
             _insert_params(con, job_id, value)
     con.commit()
