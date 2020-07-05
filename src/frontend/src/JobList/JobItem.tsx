@@ -37,7 +37,10 @@ export const JobItem: React.FC<Job> = (job) => {
         onDate: false,
         weekdays: [],
         date: new Date(),
-        time: new Date()
+        time: new Date(),
+        onTime: false,
+        delete_old_on_new: true,
+        removal_time: new Date()
     });
 
     // handler for schedule selection logic
