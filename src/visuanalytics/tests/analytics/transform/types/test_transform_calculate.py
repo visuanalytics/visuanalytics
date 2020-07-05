@@ -11,8 +11,8 @@ class TestTransformCalculate(unittest.TestCase):
             "testarray1": [5, 4, 7, 1, 3, 6],
             "testarray2": [9, 4, 12, 7.6, 1.75, 500],
             "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-            "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-            "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+            "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                      {"left": 3.3, "right": 3}]
         }
 
     def test_transform_calculate_mean(self):
@@ -35,8 +35,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": 4.33,
                 "testarray2": 89.06,
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -62,8 +62,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": 7,
                 "testarray2": 500,
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -89,8 +89,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": 1,
                 "testarray2": 1.75,
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -116,8 +116,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -142,8 +142,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": "wie",
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -173,8 +173,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -204,8 +204,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -235,9 +235,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
                 "result": [{"result": 12.15}, {"result": 22.95}, {"result": 5.4}, {"result": -16.5}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -268,8 +268,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -300,8 +300,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -332,9 +332,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
                 "result": [{"result": 1.67}, {"result": 0.32}, {"result": 0.6}, {"result": -0.66}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -365,8 +365,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -397,8 +397,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -428,9 +428,9 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
                 "result": [{"result": 1.8}, {"result": -5.8}, {"result": -1.2}, {"result": 8.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -461,8 +461,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -493,8 +493,8 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}]
             }
         }
 
@@ -502,17 +502,22 @@ class TestTransformCalculate(unittest.TestCase):
         self.assertDictEqual(exp, out, "calculate add data value Failed")
 
     def test_transform_calculate_add_array_value(self):
-        # TODO
         values = [
             {
-                "type": "calculate",
-                "keys": [
-                    "_req|array1|left"
-                ],
-                "action": "add",
-                "value_right": "_loop|array2|right",
-                "new_keys": [
-                    "_req|result|result"
+                "type": "transform_array",
+                "array_key": "_req|array",
+                "transform": [
+                    {
+                        "type": "calculate",
+                        "keys": [
+                            "_loop|left"
+                        ],
+                        "action": "add",
+                        "value_right": "_loop|right",
+                        "new_keys": [
+                            "_req|result|{_idx}|result"
+                        ]
+                    }
                 ]
             }
         ]
@@ -524,11 +529,12 @@ class TestTransformCalculate(unittest.TestCase):
                 "testarray1": [5, 4, 7, 1, 3, 6],
                 "testarray2": [9, 4, 12, 7.6, 1.75, 500],
                 "icon": ["und", "und", "wie", "viel", "wie", "wie", "wir"],
-                "array1": [{"left": 4.5}, {"left": 2.7}, {"left": 1.8}, {"left": 3.3}],
-                "result": [{"result": 7.2}, {"result": 11.2}, {"result": 4.8}, {"result": -5.2}],
-                "array2": [{"right": 2.7}, {"right": 8.5}, {"right": 3}, {"right": -5}]
+                "array": [{"left": 4.5, "right": 2.7}, {"left": 2.7, "right": 8.5}, {"left": 1.8, "right": 3},
+                          {"left": 3.3, "right": 3}],
+                "result": {0: {"result": 7.2}, 1: {"result": 11.2}, 2: {"result": 4.8}, 3: {"result": 6.3}}
             }
         }
 
         exp, out = prepare_test(values, self.data, expected_data)
+        print(exp, out)
         self.assertDictEqual(exp, out, "calculate add array value Failed")
