@@ -16,7 +16,7 @@ api = Blueprint('api', __name__)
 
 @api.teardown_app_request
 def close_db_con(exception):
-    db.close_con()
+    db.close_con_f()
 
 
 @api.route("/topics", methods=["GET"])

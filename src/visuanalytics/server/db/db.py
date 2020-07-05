@@ -9,7 +9,18 @@ logger = logging.getLogger(__name__)
 DATABASE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../instance/visuanalytics.db"))
 
 
+# öffnet DB-Verbindung außerhalb von Flask-Context
 def open_con():
+    con = sqlite3.connect(
+        DATABASE_LOCATION,
+        detect_types=sqlite3.PARSE_DECLTYPES,
+    )
+    con.row_factory = sqlite3.Row
+    return con
+
+
+# öffnet DB-Verbindung in Flask-Context
+def open_con_f():
     if 'db' not in flask.g:
         flask.g.db = sqlite3.connect(
             DATABASE_LOCATION,
@@ -19,7 +30,7 @@ def open_con():
     return flask.g.db
 
 
-def close_con(e=None):
+def close_con_f(e=None):
     db = flask.g.pop('db', None)
     if db is not None:
         db.close()

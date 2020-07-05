@@ -57,7 +57,7 @@ def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekda
     # TODO(max) check if just on from date, weekday or daily
     # TODO(max) check if exsits an just create entry to jbo_schedule
 
-    with db.connect() as con:
+    with db.open_con() as con:
         con.execute("insert into schedule(date, time, weekday, daily) values (?, ?, ?, ?)", (
             None if exec_date is None else exec_date.strftime("%Y-%m-%d"),
             exec_time.strftime("%H:%M"),
@@ -70,7 +70,7 @@ def create_schedule(job_id: int, exec_time: time, exec_date: date = None, weekda
 
 def create_steps(name: str):
     """Erstellt eine abfolge von schritten."""
-    with db.connect() as con:
+    with db.open_con() as con:
         con.execute("insert into steps(name) values (?)", [name])
         con.commit()
 
@@ -82,7 +82,7 @@ def get_schedule(job_id: int):
     :return: alle Zeitpläne für einen job
     :rtype: row[]
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         return con.execute(
             "select date, time, weekday, daily from schedule as s, job_schedule as js where js.job_id == ? "
             "and s.id == js.schedule_id",
@@ -95,7 +95,7 @@ def get_all_schedules():
     :return: alle Zeitpläne
     :rtype: row[]
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         return con.execute("select * from schedule").fetchall()
 
 
@@ -105,7 +105,7 @@ def get_all_schedules_steps(schedule_id: int):
     :return: alle Job and Step ids die zu der Scheduler id gehören.
     :rtype: row[]
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         return con.execute(
             "select j.job_name as 'job_name', j.id as 'job_id', j.steps as 'step_id' from job_schedule as js, job as j "
             "where js.schedule_id = ? and js.job_id = j.id and j.steps", [schedule_id]).fetchall()
@@ -119,6 +119,6 @@ def get_steps(job_id: int):
     :return: die id der zum Job gehörigen Schritten.
     :rtype: row
     """
-    with db.connect() as con:
+    with db.open_con() as con:
         return con.execute("select name from job as j, steps as s where j.id = ?and j.steps == s.id",
                            [job_id]).fetchone()

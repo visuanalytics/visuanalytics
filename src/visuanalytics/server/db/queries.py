@@ -6,13 +6,13 @@ STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 
 
 def get_topic_names():
-    con = db.open_con()
+    con = db.open_con_f()
     res = con.execute("SELECT steps_id, steps_name FROM steps")
     return [{"topicId": row["steps_id"], "topicName": row["steps_name"]} for row in res]
 
 
 def get_params(topic_id):
-    con = db.open_con()
+    con = db.open_con_f()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", topic_id).fetchone()
     if res is None:
         return None
@@ -24,7 +24,7 @@ def get_params(topic_id):
 
 
 def get_job_list():
-    con = db.open_con()
+    con = db.open_con_f()
     res = con.execute("""
     SELECT DISTINCT 
     job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name, json_file_name,
@@ -74,7 +74,7 @@ def _find(lst, key, value):
 
 
 def insert_job(job):
-    con = db.open_con()
+    con = db.open_con_f()
     schedule_id = _insert_schedule(con, job["schedule"])
     job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
                          (job["jobName"], job["topicId"], schedule_id)).lastrowid
@@ -83,7 +83,7 @@ def insert_job(job):
 
 
 def delete_job(job_id):
-    con = db.open_con()
+    con = db.open_con_f()
     job = con.execute("SELECT schedule_id FROM job where job_id=?", job_id).fetchone()
     schedule_id = job["schedule_id"]
     con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
@@ -93,7 +93,7 @@ def delete_job(job_id):
 
 
 def update_job(job_id, updated_data):
-    con = db.open_con()
+    con = db.open_con_f()
     for key, value in updated_data.items():
         if key == "jobName":
             con.execute("UPDATE job SET job_name=? WHERE job_id =?", (value, job_id))
