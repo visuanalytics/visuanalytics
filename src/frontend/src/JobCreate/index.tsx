@@ -11,6 +11,8 @@ import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import { Param } from '../util/param';
 import { Fade } from '@material-ui/core';
+import {DeleteSelection} from "./DeleteSelection";
+import {ComponentContext} from "../ComponentProvider";
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -22,11 +24,15 @@ export interface Schedule {
     onDate: boolean,
     weekdays: Weekday[],
     date: Date | null,
-    time: Date | null
+    time: Date | null,
+    onTime: boolean,
+    delete_old_on_new: boolean,
+    removal_time: Date | null
 }
 
 export default function JobCreate() {
     const classes = useStyles();
+    const components = React.useContext(ComponentContext);
 
     // states for stepper logic
     const [activeStep, setActiveStep] = React.useState(0);
@@ -47,11 +53,14 @@ export default function JobCreate() {
         onDate: false,
         weekdays: [],
         date: new Date(),
-        time: new Date()
+        time: new Date(),
+        delete_old_on_new: true,
+        onTime: false,
+        removal_time: new Date()
     });
 
     useEffect(() => {
-        if (activeStep === 3) {
+        if (activeStep === 4) {
             setFinished(true);
         }
     }, [activeStep])
@@ -105,9 +114,18 @@ export default function JobCreate() {
         }
     }, [selectedSchedule, activeStep])
 
+    const delay = () => {
+        setTimeout(() => {
+            components?.setCurrent("home");
+        }, 2000);
+    }
+
     // handlers for stepper logic
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        if (activeStep === 3) {
+            delay();
+        }
     };
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -156,17 +174,30 @@ export default function JobCreate() {
     const handleSelectTime = (time: Date | null) => {
         setSelectedSchedule({ ...selectedSchedule, time: time })
     }
+    const handleDeleteOldNew = () => {
+        setSelectedSchedule({...selectedSchedule, delete_old_on_new: true, onTime: false})
+    }
+
+    const handleDeleteOnTime = () => {
+        setSelectedSchedule({...selectedSchedule, delete_old_on_new: false, onTime: true})
+    }
+
+    const handleDeleteTime = (date: Date | null) => {
+        setSelectedSchedule({ ...selectedSchedule, removal_time: date })
+    }
 
     // stepper texts
     const steps = [
         "Thema auswählen",
         "Parameter festlegen",
-        "Zeitplan auswählen"
+        "Zeitplan auswählen",
+        "Löschen des Videos"
     ];
     const descriptions = [
         "Zu welchem Thema sollen Videos generiert werden?",
         "Parameter auswählen für: '" + selectedTopic + "'",
-        "Wann sollen neue Videos generiert werden?"
+        "Wann sollen neue Videos generiert werden?",
+        "Wann soll das generierte Video gelöscht werden"
     ];
 
     // based on active step, render specific selection panel
@@ -198,6 +229,15 @@ export default function JobCreate() {
                         removeWeekDayHandler={handleRemoveWeekday}
                         selectDateHandler={handleSelectDate}
                         selectTimeHandler={handleSelectTime}
+                    />
+                )
+            case 3:
+                return (
+                    <DeleteSelection
+                        schedule={selectedSchedule}
+                        deleteOldNewHandler={handleDeleteOldNew}
+                        deleteOnTimeHandler={handleDeleteOnTime}
+                        deleteTimeHandler={handleDeleteTime}
                     />
                 )
             default:
