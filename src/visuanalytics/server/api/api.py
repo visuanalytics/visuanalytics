@@ -2,7 +2,6 @@
 Enthält die API-Endpunkte.
 """
 
-import json
 import traceback
 
 import flask
@@ -31,7 +30,7 @@ def topics():
         return flask.jsonify(queries.get_topic_names())
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while retrieving the list of topics", 400
+        return "An error occurred while retrieving the list of topics", 400
 
 
 @api.route("/params/<topic_id>", methods=["GET"])
@@ -49,7 +48,7 @@ def params(topic_id):
         return flask.jsonify(params)
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while retrieving the parameters for Topic ID: " + topic_id, 400
+        return "An error occurred while retrieving the parameters for Topic ID: " + topic_id, 400
 
 
 @api.route("/jobs", methods=["GET"])
@@ -63,7 +62,7 @@ def jobs():
         return flask.jsonify(queries.get_job_list())
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while retrieving the list of jobs", 400
+        return "An error occurred while retrieving the list of jobs", 400
 
 
 @api.route("/add", methods=["POST"])
@@ -79,7 +78,7 @@ def add():
         return "Job added"
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while adding the job", 400
+        return "An error occurred while adding the job", 400
 
 
 @api.route("/edit/<job_id>", methods=["PUT"])
@@ -99,7 +98,7 @@ def edit(job_id):
         return "Job updated"
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while updating job information", 400
+        return "An error occurred while updating job information", 400
 
 
 @api.route("/remove/<job_id>", methods=["DELETE"])
@@ -117,4 +116,4 @@ def remove(job_id):
         return "Job removed"
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occured while deleting the job", 400
+        return "An error occurred while deleting the job", 400

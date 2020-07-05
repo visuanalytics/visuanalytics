@@ -14,7 +14,7 @@ def get_topic_names():
 def get_params(topic_id):
     con = db.open_con()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", topic_id).fetchone()
-    if (res == None):
+    if res is None:
         return None
     json_file_name = res["json_file_name"]
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name)
