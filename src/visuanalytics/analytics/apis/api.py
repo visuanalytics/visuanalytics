@@ -33,7 +33,7 @@ def request(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     return _fetch(values, data)
@@ -48,7 +48,7 @@ def request_memory(values: dict, data: StepData, name):
     """
     # todo (jannik) möglichekit einbauen Daten aus letzem run zu nutzen
     try:
-        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
+        with resources.open_memory_resource(values["timedelta"], data.get_config("job_name"), values["name"]) as fp:
             return json.loads(fp.read())
     except FileNotFoundError:
         return api_request(values["alternative"], data, name)
@@ -62,7 +62,7 @@ def request_multiple(values: dict, data: StepData, name):
     :param data: Daten aus der API
     """
 
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     if data.format(values.get("use_loop_as_key", False), values):
@@ -85,7 +85,7 @@ def request_multiple_custom(values: dict, data: StepData, name):
     :param data: Daten aus der API
     """
 
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     if values.get("use_loop_as_key", False):
