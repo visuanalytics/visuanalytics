@@ -18,7 +18,8 @@ def get_params(topic_id):
         return None
     json_file_name = res["json_file_name"]
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name)
-    steps_json = json.loads(open(path_to_json).read())
+    with open(path_to_json) as fh:
+        steps_json = json.loads(fh.read())
     return steps_json["run_config"]
 
 
@@ -42,7 +43,8 @@ def get_job_list():
 def _row_to_job(row):
     params_string = str(row["params"])
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"])
-    steps_params = json.loads(open(path_to_json).read())["run_config"]
+    with open(path_to_json) as fh:
+        steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [
         {"name": kv[0], "selected": kv[1], "possibleValues": _find(steps_params, "name", kv[0])["possible_values"]}
@@ -65,8 +67,8 @@ def _row_to_job(row):
     }
 
 
-def _find(list, key, value):
-    for e in list:
+def _find(lst, key, value):
+    for e in lst:
         if e[key] == value:
             return e
 
@@ -76,7 +78,7 @@ def insert_job(job):
     schedule_id = _insert_schedule(con, job["schedule"])
     job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
                          (job["jobName"], job["topicId"], schedule_id)).lastrowid
-    _insert_params(job_id, job["params"])
+    _insert_params(con, job_id, job["params"])
     con.commit()
 
 
