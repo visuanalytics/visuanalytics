@@ -402,14 +402,14 @@ def copy(values: dict, data: StepData):
 def option(values: dict, data: StepData):
     """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
 
-    Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_true"` stehen.
-    Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_false"` stehen.
+     Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_true"` stehen.
+     Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_false"` stehen.
 
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
+     :param values: Werte aus der JSON-Datei
+     :param data: Daten aus der API
+     """
     values["transform"] = execute_type_option(values, data)
 
     transform(values, data)

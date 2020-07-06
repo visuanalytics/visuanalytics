@@ -33,10 +33,15 @@ def request(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     return _fetch(values, data)
+
+
+@register_api
+def input(values: dict, data: StepData, name):
+    return data.format_api(values["input"], values.get("api_key_name", None), values)
 
 
 @register_api
@@ -46,11 +51,16 @@ def request_memory(values: dict, data: StepData, name):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    # todo (jannik) möglichekit einbauen Daten aus letzem run zu nutzen
     try:
-        with resources.open_memory_resource(values["timedelta"], data.format("{_conf|job_name}"), values["name"]) as fp:
-            return json.loads(fp.read())
-    except FileNotFoundError:
+        if values.get("timedelta", None) is None:
+            with resources.open_specific_memory_resource(data.get_config("job_name"), values["name"],
+                                                         values.get("use_last", 1)) as fp:
+                return json.loads(fp.read())
+        else:
+            with resources.open_memory_resource(data.get_config("job_name"),
+                                                values["name"], values["timedelta"]) as fp:
+                return json.loads(fp.read())
+    except (FileNotFoundError, IndexError):
         return api_request(values["alternative"], data, name)
 
 
@@ -62,7 +72,7 @@ def request_multiple(values: dict, data: StepData, name):
     :param data: Daten aus der API
     """
 
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     if data.format(values.get("use_loop_as_key", False), values):
@@ -85,7 +95,7 @@ def request_multiple_custom(values: dict, data: StepData, name):
     :param data: Daten aus der API
     """
 
-    if data.data["_conf"].get("testing", False):
+    if data.get_config("testing", False):
         return _load_test_data(name)
 
     if values.get("use_loop_as_key", False):
