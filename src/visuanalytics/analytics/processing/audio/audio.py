@@ -66,7 +66,7 @@ def custom(values: dict, data: StepData, config: dict):
     logger.info("Generate Audio with Custom Audio Config")
 
     # Set Testing to False (To generate Audio)
-    testing = data.data["_conf"].get("testing", False)
+    testing = data.get_config("testing", False)
     data.data["_conf"]["testing"] = False
 
     _prepare_custom(config.get("prepare", None), data, config)

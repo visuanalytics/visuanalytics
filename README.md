@@ -56,8 +56,10 @@ Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert w
       "name": "Wetter in Biebertal",
       "id": 0,
       "steps": "weather_single",
-      "time": "19:41",
-      "daily": true,
+      "schedule": {
+        "time": "12:00",
+        "daily": true
+      },
       "config": {
         "city_name": "Biebertal", 
         "p_code": "35444"
@@ -79,7 +81,9 @@ Aktuelle Optionen:
 - `"weather_single"`: Wetterbericht für einen Ort
 - `"football"`: Bericht des Spieltages der Fußball Bundesliga
 
-*Einstellen der Zeit*:
+`schedule`: 
+
+Hier kann man die Zeiteinstellungen angeben:
 
 Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
 

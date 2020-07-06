@@ -54,13 +54,13 @@ class PreprocessTest(unittest.TestCase):
         values = "left"
         data = {}
         expected = prepare_draw_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_center(self):
         values = "center"
         data = {}
         expected = prepare_draw_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
         shutil.rmtree(resources.get_temp_resource_path("", "101"), ignore_errors=True)

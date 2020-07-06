@@ -1889,6 +1889,12 @@
       "display_name": "Ort",
       "possible_values": [],
       "default_value": "Gießen"
+    },
+    {
+      "name": "p_code",
+      "display_name": "Postleitzahl",
+      "possible_values": [],
+      "default_value": "35394"
     }
   ],
   "presets": {

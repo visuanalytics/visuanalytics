@@ -151,7 +151,7 @@ def calculate_divide(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    _bi_calculate(values, data, operator.div)
+    _bi_calculate(values, data, operator.truediv)
 
 
 @register_calculate
