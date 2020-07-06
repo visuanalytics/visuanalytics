@@ -1,7 +1,6 @@
 """
 Modul welches die Pillow Image Funktionen zum erstellen und bearbeiten von Bildern beinhaltet.
 """
-import os
 
 from PIL import Image
 
