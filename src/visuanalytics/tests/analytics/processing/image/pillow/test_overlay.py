@@ -23,7 +23,7 @@ def prepare_overlay_test(values, data, config=None):
         },
         "presets": {
             "test_preset": {
-                "color": "black",
+                "colour": "black",
                 "font_size": 20,
                 "font": "Test_Font.ttf"
             },
@@ -38,6 +38,7 @@ def prepare_overlay_test(values, data, config=None):
 class PreprocessTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
+        resources.IMAGES_LOCATION = "../../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "100"), exist_ok=True)
 

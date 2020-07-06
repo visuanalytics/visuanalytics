@@ -1894,57 +1894,57 @@
   },
   "presets": {
     "weather_white_1": {
-      "color": "white",
+      "colour": "white",
       "font_size": 120,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_2": {
-      "color": "white",
+      "colour": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
-      "color": "white",
+      "colour": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_white_4": {
-      "color": "white",
+      "colour": "white",
       "font_size": 110,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_5": {
-      "color": "white",
+      "colour": "white",
       "font_size": 80,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_6": {
-      "color": "white",
+      "colour": "white",
       "font_size": 45,
       "font": "fonts/Dosis-Regular.ttf"
     },
     "weather_brown_2": {
-      "color": "#949994",
+      "colour": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_3": {
-      "color": "#949994",
+      "colour": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_brown_4": {
-      "color": "#949994",
+      "colour": "#949994",
       "font_size": 110,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_5": {
-      "color": "#949994",
+      "colour": "#949994",
       "font_size": 80,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_6": {
-      "color": "#949994",
+      "colour": "#949994",
       "font_size": 45,
       "font": "fonts/Dosis-Regular.ttf"
     }

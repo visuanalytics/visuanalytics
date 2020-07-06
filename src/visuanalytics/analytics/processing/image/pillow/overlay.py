@@ -1,6 +1,8 @@
 """
 Modul welches die Pillow Image Funktionen zum erstellen und bearbeiten von Bildern beinhaltet.
 """
+import os
+
 from PIL import Image
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -41,7 +43,7 @@ def text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
               (step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])),
               content,
               step_data.format(presets[overlay["preset"]]["font_size"]),
-              step_data.format(presets[overlay["preset"]]["color"]),
+              step_data.format(presets[overlay["preset"]]["colour"]),
               step_data.format(presets[overlay["preset"]]["font"]))
 
 
@@ -68,7 +70,6 @@ def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepDa
         else:
             pattern = overlay["pattern"]
         new_overlay = {
-            "description": overlay.get("description", None),
             "anchor_point": overlay["anchor_point"],
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
@@ -130,7 +131,7 @@ def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     """
     path = step_data.format(overlay["pattern"])
     icon = Image.open(
-        resources.get_resource_path(path)).convert("RGBA")
+        resources.get_image_path(path)).convert("RGBA")
     if step_data.format(overlay.get("colour", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["colour"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
@@ -168,7 +169,6 @@ def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepD
         else:
             pattern = overlay["pattern"]
         new_overlay = {
-            "description": overlay.get("description", None),
             "size_x": overlay.get("size_x", None),
             "size_y": overlay.get("size_y", None),
             "pos_x": overlay["pos_x"][idx],

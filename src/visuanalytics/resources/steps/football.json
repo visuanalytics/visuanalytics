@@ -553,9 +553,9 @@
     }
   ],
   "images": {
-    "football1": {
+    "football0": {
       "type": "pillow",
-      "path": "football/Spieltag.png",
+      "path": "football/Matchday.png",
       "overlay": [
         {
           "description": "Spieltag",
@@ -574,14 +574,21 @@
           "pos_y": 100,
           "preset": "football_2",
           "pattern": "{_conf|liga-name}"
-        },
+        }
+      ]
+    },
+    "football1": {
+      "type": "pillow",
+      "already_created": true,
+      "path": "football0",
+      "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 192,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -660,7 +667,7 @@
           "pos_x": 187,
           "pos_y": 282,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -739,7 +746,7 @@
           "pos_x": 187,
           "pos_y": 372,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -818,7 +825,7 @@
           "pos_x": 187,
           "pos_y": 462,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -897,7 +904,7 @@
           "pos_x": 187,
           "pos_y": 552,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -976,7 +983,7 @@
           "pos_x": 187,
           "pos_y": 642,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1055,7 +1062,7 @@
           "pos_x": 187,
           "pos_y": 732,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1134,7 +1141,7 @@
           "pos_x": 187,
           "pos_y": 822,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1213,7 +1220,7 @@
           "pos_x": 187,
           "pos_y": 912,
           "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "pattern": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1283,7 +1290,7 @@
     },
     "football10": {
       "type": "pillow",
-      "path": "football/Tabelle_1.png",
+      "path": "football/Table_1.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -1973,7 +1980,7 @@
     },
     "football11": {
       "type": "pillow",
-      "path": "football/Tabelle_2.png",
+      "path": "football/Table_2.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -2664,12 +2671,16 @@
   },
   "audio": {
     "audios": {
-      "a1": {
+      "a0": {
         "parts": [
           {
             "type": "text",
             "pattern": "In der {_conf|liga-name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
-          },
+          }
+        ]
+      },
+      "a1": {
+        "parts": [
           {
             "type": "text",
             "pattern": "{_req|Spiele|0|MatchResults|Text}"
@@ -2792,32 +2803,32 @@
   },
   "presets": {
     "football_1": {
-      "color": "black",
+      "colour": "black",
       "font_size": 74,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_2": {
-      "color": "white",
+      "colour": "white",
       "font_size": 35,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_3": {
-      "color": "black",
+      "colour": "black",
       "font_size": 42,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_4": {
-      "color": "black",
+      "colour": "black",
       "font_size": 65,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_5": {
-      "color": "black",
+      "colour": "black",
       "font_size": 60,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_6": {
-      "color": "#858582",
+      "colour": "#858582",
       "font_size": 60,
       "font": "fonts/Dosis-Bold.ttf"
     }
