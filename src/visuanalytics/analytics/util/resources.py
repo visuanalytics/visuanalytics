@@ -23,6 +23,11 @@ MEMORY_LOCATION = "memory"
 Memory Datei Ordner Name, zum abspeichern von vorherigen berechnungen
 """
 
+DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
+"""
+Date Format in welchem unsere Datein abgespeichert werden
+"""
+
 
 def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
@@ -189,4 +194,4 @@ def get_out_path(out_path, job_name, format=".mp4"):
     :return: Die aktuelle Uhrzeit für den Dateinamen zum erstellen des Videos
     :rtype: str
     """
-    return path_from_root(os.path.join(out_path, f"{job_name}-{datetime.now().strftime('%Y-%m-%d_%H-%M.%S')}{format}"))
+    return path_from_root(os.path.join(out_path, f"{job_name}-{datetime.now().strftime(DATE_FORMAT)}{format}"))

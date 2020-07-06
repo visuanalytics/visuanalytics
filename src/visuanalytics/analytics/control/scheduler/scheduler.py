@@ -32,6 +32,10 @@ class Scheduler(object):
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
+    @property
+    def base_config(self):
+        return self._base_config
+
     def _start_job(self, job_name: str, steps_name: str, config: dict):
         # Add base_config if exists
         config = {**self._base_config, **config}
