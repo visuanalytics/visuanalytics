@@ -67,5 +67,23 @@ class TestTransformTime(unittest.TestCase):
 
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "Select Range One Failed")
-        
+
     # TODO(Max) Test date_now
+    def test_date_now(self):
+        values = [
+            {
+                "type": "date_now",
+                "new_key": "_req|date",
+                "format": "%Y-%m-%d"
+            }
+        ]
+
+        expected_data = {
+            "_req": {
+                "timestamp": 1592758688.7606313,
+                "date": "2020-07-06"
+            }
+        }
+
+        exp, out = prepare_test(values, self.data, expected_data)
+        self.assertDictEqual(exp, out, "Select Range One Failed")
