@@ -819,15 +819,260 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 # Images
 
+In diesem Part der JSON werden Bilder spezifiziert, welche dann später in Sequence  
+verwendet werden können 
+Bilder lassen sich in der JSOn wie folgt darstellen:
+
+```JSON
+{
+  "images": {
+    "test1": {
+      "type": "pillow",
+    },
+    "test2": {
+      "type": "pillow",
+    }
+  }
+}
+```
+**`type`**:  
+Von welchem Typ die Bilder sind zb. Wordcloud oder Pillow (bisher gibt es nur Pillow)   
+**`"test1"`, `"test2":`**   
+sind die internen Bildnamen der erstellten Bilder
+
+
+## Pillow
+
 <!--TODO-->
+
+```JSON
+
+{
+  "test1": {
+    "type": "pillow",
+    "path": "test.png",
+    "overlay": []
+  },
+  "test2": {
+    "type": "pillow",
+    "already_created": true,
+    "path": "test1",
+    "overlay": []
+  }
+}
+```
+**`already_created`** _(Optional)_:
+<!--TODO-->
+**`path`**:
+<!--TODO-->
+**`overlay`**
+<!--TODO-->
+
+## Overlay
+
+Es gibt 4 verschiedene Overlay Arten:
+
+## image
+
+<!--TODO-->
+
+```JSON
+
+ {
+  "description": "icon",
+  "type": "image",   
+  "pos_x": 246,
+  "pos_y": 280,
+  "size_x": 350,
+  "size_y": 350,
+  "colour": "RGBA",
+  "pattern": "123.png"
+ }
+```
+**`description`** _(Optional)_:
+<!--TODO-->
+**`type`** :
+<!--TODO-->
+**`pos_x`** :
+<!--TODO-->
+**`pos_y`** :
+<!--TODO-->
+**`size_x`** _(Optional)_:
+<!--TODO-->
+**`size_y`** _(Optional)_:
+<!--TODO-->
+**`colour`**:
+<!--TODO-->
+**`pattern`**:
+<!--TODO-->
+## image_array
+
+<!--TODO-->
+
+```JSON
+
+{
+  "description": "icon",
+  "type": "image_array",
+  "pos_x": [860, 1040],
+  "pos_y": [865, 787],
+  "size_x": 160,
+   "size_y": 160,
+   "colour": "L",
+   "pattern": [
+      "{_req|test}.png",
+      "{_req|test}.png"
+   ]
+}
+```
+
+**`description`** _(Optional)_:
+<!--TODO-->
+**`type`** :
+<!--TODO-->
+**`pos_x`** :
+<!--TODO-->
+**`pos_y`** :
+<!--TODO-->
+**`size_x`** _(Optional)_:
+<!--TODO-->
+**`size_y`** _(Optional)_:
+<!--TODO-->
+**`colour`**:
+<!--TODO-->
+**`pattern`**:
+<!--TODO-->
+
+## text
+
+<!--TODO-->
+
+```JSON
+
+{
+   "description": "week_day",
+   "type": "text",
+   "anchor_point": "center",
+   "pos_x": 305,
+   "pos_y": 48,
+   "preset": "weather_white_2",
+   "pattern": "{_req|test_data}"
+}
+```
+
+**`description`** _(Optional)_:
+<!--TODO-->
+**`type`** :
+<!--TODO-->
+**`anchor_point`**:
+<!--TODO-->
+**`pos_x`** :
+<!--TODO-->
+**`pos_y`** :
+<!--TODO-->
+**`preset`**:
+<!--TODO-->
+**`pattern`**:
+<!--TODO-->
+
+## text_array
+
+<!--TODO-->
+
+```JSON
+
+{
+ "description": "min_temp",
+ "type": "text_array",
+ "anchor_point": "center",
+ "pos_x": [794, 1608],
+ "pos_y": [480, 480],
+ "preset": [
+    "weather_white_5",
+    "weather_brown_5"
+ ],
+ "pattern": [
+    "{_req|data|0|sym_min_temp}",
+    "{_req|data|1|sym_min_temp}"
+ ]
+}
+```
+**`description`** _(Optional)_:
+<!--TODO-->
+**`type`** :
+<!--TODO-->
+**`anchor_point`**:
+<!--TODO-->
+**`pos_x`** :
+<!--TODO-->
+**`pos_y`** :
+<!--TODO-->
+**`preset`**:
+<!--TODO-->
+**`pattern`**:
+<!--TODO-->
+
 
 # Audios
 
 <!--TODO-->
 
-# Seqence
+# Sequence
 
 <!--TODO-->
+
+```JSON
+{
+ "sequence": {
+    "type": "successively"
+  }
+}
+```
+
+## successively
+
+<!--TODO-->
+
+```JSON
+{
+  "type": "successively"
+}
+```
+**`type`**:
+<!--TODO-->
+
+## custom
+
+<!--TODO-->
+
+```JSON
+
+{
+   "type": "custom",
+   "pattern": [
+      {
+        "image": "test2",
+        "time_diff": 10
+      },
+      {
+        "image": "test1",
+        "time_diff": -3,
+        "audio_l": "a1"
+      },
+      {
+        "image": "test5",
+        "time_diff": 4
+      }
+    ]
+}
+```
+**`image`**:
+<!--TODO-->
+**`time_diff`**_(Optional)_:
+<!--TODO-->
+**`audio_l`**_(Optional)_:
+<!--TODO-->
+
 
 # Run Config
 
@@ -836,3 +1081,28 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 # Presets
 
 <!--TODO-->
+
+```JSON
+{
+ "presets": {
+    "test_preset_1": {
+      "colour": "black",
+      "font_size": 74,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "test_preset_2": {
+      "colour": "white",
+      "font_size": 35,
+      "font": "fonts/Dosis-Bold.ttf"
+    }
+  }
+}
+```
+**`colour`**:
+<!--TODO-->
+**`font_size`**:
+<!--TODO-->
+**`font`**:
+<!--TODO-->
+**`"test_preset_1"`, `"test_preset_2":`**   
+sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
