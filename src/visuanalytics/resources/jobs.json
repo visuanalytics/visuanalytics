@@ -12,7 +12,7 @@
       "name": "Wetter in Biebertal",
       "id": 1,
       "steps": "weather_single",
-      "time": "13:02",
+      "time": "11:33",
       "daily": true,
       "config": {
         "city_name": "Biebertal",
@@ -23,7 +23,7 @@
       "name": "Fußballbericht",
       "id": 1,
       "steps": "football",
-      "time": "13:01",
+      "time": "15:33",
       "daily": true,
       "config": {
         "liga-name": "1. Fußball Bundesliga"

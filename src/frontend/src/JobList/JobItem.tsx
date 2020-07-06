@@ -2,8 +2,8 @@ import React from "react";
 import {Param} from "../util/param";
 import TextField from "@material-ui/core/TextField";
 import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import {ExpansionPanelSummary, useStyles} from "./style";
+import Accordion from "@material-ui/core/Accordion";
+import {AccordionSummary, useStyles} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
 import {ContinueButton} from "../JobCreate/ContinueButton";
@@ -128,8 +128,8 @@ export const JobItem: React.FC<Job> = (job) => {
         }
         return (
             <div className={classes.root}>
-                <ExpansionPanel expanded={expanded === job.id} onChange={handleChange(job.id)}>
-                    <ExpansionPanelSummary>
+                <Accordion expanded={expanded === job.id} onChange={handleChange(job.id)}>
+                    <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
                         <Typography className={classes.heading}>#{job.id} {job.name}</Typography>
@@ -144,8 +144,8 @@ export const JobItem: React.FC<Job> = (job) => {
                                 <DeleteIcon/>
                             </IconButton>
                         </div>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
+                    </AccordionSummary>
+                    <AccordionDetails>
                         <Grid item md={6}>
                             {renderTextField()}
                         </Grid>
@@ -188,8 +188,8 @@ export const JobItem: React.FC<Job> = (job) => {
                                 }
                             </div>
                         </Grid>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                    </AccordionDetails>
+                </Accordion>
             </div>
         );
     }

@@ -4,17 +4,18 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 import numbers
 
 from visuanalytics.analytics.util import config_manager
+from visuanalytics.analytics.util.step_errors import APIKeyError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
 
 
 class StepData(object):
     """
-    Datenklasse zur speicherung und manipulation der Daten eins Jobs.
+    Datenklasse zur Speicherung und Manipulation der Daten eines Jobs.
 
-    Die daten werden in einem Dictionary gespeichert, der zugriff darauf erfolgt mit Strings die keys,
-    enthalten die durch ein `|` Symbol getrennt sind. Um diese umzuwandelt werden die Funktionen
-    aus dem module :py:mod:`step_pattern` verwendet.
+    Die Daten werden in einem Dictionary gespeichert, der Zugriff darauf erfolgt mit Strings, die Keys
+    enthalten, welche durch ein `|` Symbol getrennt sind. Um diese umzuwandeln, werden die Funktionen
+    aus dem Modul :py:mod:`step_pattern` verwendet.
     """
 
     def __init__(self, run_config, pipeline_id):
@@ -25,16 +26,21 @@ class StepData(object):
     @staticmethod
     def get_api_key(api_key_name):
         """
-        Funktion um einen API Key aus der Configurations datei zu laden.
+        Funktion um einen API Key aus der Konfigurationsdatei zu laden.
 
         Verwendet hierzu das Module :py:mod:`config_manager`
         
-        :param api_key_name: Name des Config eintrages für den Api key.
+        :param api_key_name: Name des Config-Eintrages für den Api key.
         :return: Api key.
         :raises: FileNotFoundError, KeyError
         """
 
-        return config_manager.get_private()["api_keys"][api_key_name]
+        api_key = config_manager.get_private()["api_keys"].get(api_key_name, None)
+
+        if api_key is None:
+            raise APIKeyError(api_key_name)
+
+        return api_key
 
     @staticmethod
     def save_loop(idx, current, values: dict):
@@ -48,14 +54,14 @@ class StepData(object):
 
     def loop_array(self, loop_root: list, values: dict):
         """
-        Zum durchlaufen eines arrays.
+        Zum durchlaufen eines Arrays.
 
         Setzt bei jedem Durchlauf die variablen `_loop` und `_idx`.
-        `_loop` entspricht dem aktuellen wert und `_idx` dem aktuellen Index.
+        `_loop` entspricht dem aktuellen Wert und `_idx` dem aktuellen Index.
 
-        :param loop_root: array das durchlaufen werden soll.
+        :param loop_root: Array das durchlaufen werden soll.
         :param values: Werte aus der JSON-Datei
-        :return: Iterator über das array welcher seiteneffekte besitzt, mit (idx, value).
+        :return: Iterator über das Array, welcher Seiteneffekte besitzt, mit (idx, value).
         :rtype: map
         """
         return map(lambda value: self.save_loop(value[0], value[1], values), enumerate(loop_root))
@@ -69,21 +75,21 @@ class StepData(object):
 
         :param loop_root: dict das durchlaufen werden soll.
         :param values: Werte aus der JSON-Datei
-        :return: Iterator über das Dictionary welcher seiteneffekte besitzt, mit (idx, value).
+        :return: Iterator über das Dictionary, welcher Seiteneffekte besitzt, mit (idx, value).
         :rtype: map
         """
         return map(lambda value: self.save_loop(value[0], value[1], values), loop_root.items())
 
     def loop_key(self, keys: list, values: dict):
         """
-        Zum durchlaufen eines key arrays.
+        Zum durchlaufen eines key Arrays.
 
         Setzt bei jedem Durchlauf die variable `_key`.
-        `_key` entspricht dem aktuellen wert des arrays.
+        `_key` entspricht dem aktuellen Wert des Arrays.
 
-        :param keys: array mit keys (Strings)
+        :param keys: Array mit keys (Strings)
         :param values: Werte aus der JSON-Datei
-        :return: Iterator über das Dictionary welcher seiteneffekte besitzt, mit (idx, key).
+        :return: Iterator über das Dictionary, welcher Seiteneffekte besitzt, mit (idx, key).
         :rtype: map
         """
         return map(lambda value: (value[0], self.save_loop_key(value[1], values)), enumerate(keys))
@@ -95,20 +101,21 @@ class StepData(object):
         """
         return self.__data
 
-    def init_data(self, data: dict):
+    def init_data(self, data: dict, key: str = "_req"):
         """
-        Inizalisiert die daten.
+        Initialisiert die Daten.
         
-        Die übergebenen daten werden unter `_req` gespeichert.
-        Ist zur verwendung im Schritt `API` gedacht.
-        
+        Die übergebenen daten werden unter dem übergebenen `key` gespeichert.
+        Ist zur Verwendung im Schritt `API` gedacht.
+
         :param data: Daten die geschpeichert werden sollen.
+        :param key: Key unter dem die Daten geschpeichert werden sollen. Standart: `_req`.
         """
-        self.__data["_req"] = data
+        self.__data[key] = data
 
     def clear_data(self):
         """
-        Löscht alle Daten mit ausnahme von `_conf` und `_pipe_id`.
+        Löscht alle Daten mit Ausnahme von `_conf` und `_pipe_id`.
         """
         # Save Config and Pipe id
         _conf = self.__data["_conf"]
@@ -120,15 +127,31 @@ class StepData(object):
         self.__data["_conf"] = _conf
         self.__data["_pipe_id"] = _pipe_id
 
+    def get_data_num(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key eine Zahl ist, diese direkt zurückgegeben wird.
+
+        :param key: fad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder eine Zahl.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder die Übergebene Zahl.
+        :raises: StepKeyError
+        """
+        if isinstance(key, numbers.Number):
+            return key
+
+        return self.get_data(key, values)
+
     def get_data(self, key_string: str, values: dict):
         """
-        Gibt die daten zurück die hinter `key_string` stehen.
+        Gibt die daten zurück, die hinter `key_string` stehen.
 
-        :param key_string: Pfad zu den daten in self.data,
-            besteht aus den keys zu den daten getrennt mit | (Pipe) Symbolen.
+        :param key_string: Pfad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param values: Werte aus der JSON-Datei.
-        :return: daten hinter `key_string`.
-        :raises: KeyError
+        :return: Daten hinter `key_string`.
+        :raises: StepKeyError
         """
         data = {**self.__data, **values.get("_loop_states", {})}
         key_string = self.__formatter.format(key_string, data)
@@ -137,15 +160,15 @@ class StepData(object):
 
     def format_api(self, value_string: str, api_key_name, values: dict):
         """
-        Funktioniert genauso wie :func:`format` mit der erweiterung das zusätzlich die variable `_api_key` verfügbar ist.
+        Funktioniert genauso wie :func:`format`, mit der Erweiterung, dass zusätzlich die variable `_api_key` verfügbar ist.
 
         Um den API Key zu bekommen wir :func:`StepData.get_api_key` verwendet.
 
-        :param value_string: Zu Formattierender String
-        :param api_key_name: Name des Config eintrages für den Api key.
+        :param value_string: Zu formatierender String
+        :param api_key_name: Name des Config-Eintrages für den Api key.
         :param values: Werte aus der JSON-Datei.
         :return: Formattierter `value_string`.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         if api_key_name is not None:
             api_key_name = self.format(api_key_name, values)
@@ -155,33 +178,34 @@ class StepData(object):
 
         return self.__formatter.format(value_string, data)
 
-    def format_json(self, json: dict, api_key_name: str, values: dict):
+    def format_json(self, json: dict, api_key_name, values: dict):
         """
-        Wendet :func:`format_api` auf alle element eines Dictionaries an.
+        Wendet :func:`format_api` auf alle Elemente eines Dictionaries an.
 
-        :param json: Dictionary das Formatiert werden soll.
-        :param api_key_name: Name des Config eintrages für den Api key.
+        :param json: Dictionary das formatiert werden soll.
+        :param api_key_name: Name des Config-Eintrages für den Api key.
         :param values: Werte aus der JSON-Datei.
         :return: Formatiertes input Dictionary
         """
-        api_key_name = self.format(api_key_name, values)
-        data = {**self.__data, **values.get("_loop_states", {}), "_api_key": self.get_api_key(api_key_name)}
+        if json is None:
+            return json
+
         for key in json:
-            json[key] = self.__formatter.format(json[key], data)
+            json[key] = self.format_api(json[key], api_key_name, values)
 
         return json
 
     def format(self, value_string, values=None):
         """
-        Ersetzt in einem String alle werte in `{}` durch den wert den man aus :func:`get_data` bekommt.
+        Ersetzt in einem String alle Werte in `{}` durch den Wert, den man aus :func:`get_data` bekommt.
 
-        Hierzu wird die Klasse :class:`StepPatternFormatter` zur umwandlung verwendet.
-        Ist der `value_string` ein Nummericher Wert wird dieser einfach wieder zurückgegeben.
+        Hierzu wird die Klasse :class:`StepPatternFormatter` zur Umwandlung verwendet.
+        Ist der `value_string` ein nummerischer Wert, wird dieser einfach wieder zurückgegeben.
 
-        :param value_string: Zu Formattierender String
+        :param value_string: Zu formatierender String
         :param values: Werte aus der JSON-Datei.
         :return: Formattierter `value_string`.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         # if value_string is int just return value
         if isinstance(value_string, numbers.Number):
@@ -195,15 +219,15 @@ class StepData(object):
 
     def insert_data(self, key_string: str, value, values: dict):
         """
-        Speichert daten unter `key_string`.
+        Speichert Daten unter `key_string`.
 
-        Verwendet :func:`data_insert_pattern` um daten einzufügen.
+        Verwendet :func:`data_insert_pattern` um Daten einzufügen.
 
-        :param key_string: Pfad zu den daten in self.data,
-            besteht aus den keys zu den daten getrennt mit | (Pipe) Symbolen.
+        :param key_string: Pfad zu den Daten in self.data,
+            besteht aus den Keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param value: Wert der eingefügt werden soll.
         :param values: Werte aus der JSON-Datei.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         key_string = self.__prepare_data_manipulation(key_string, values)
 
@@ -213,14 +237,14 @@ class StepData(object):
 
     def remove_data(self, key_string: str, values: dict):
         """
-        Entfernt daten unter `key_string`.
+        Entfernt Daten unter `key_string`.
 
-        Verwendet :func:`data_remove_pattern` um daten zu entfernen.
+        Verwendet :func:`data_remove_pattern` um Daten zu entfernen.
 
-        :param key_string: Pfad zu den daten in self.data,
-            besteht aus den keys zu den daten getrennt mit | (Pipe) Symbolen.
+        :param key_string: Pfad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen.
         :param values: Werte aus der JSON-Datei.
-        :raises: KeyError
+        :raises: StepKeyError
         """
         key_string = self.__prepare_data_manipulation(key_string, values)
 

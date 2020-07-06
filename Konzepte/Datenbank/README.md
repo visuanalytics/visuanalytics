@@ -2,7 +2,7 @@
 
 ## Diagramm
 
-![](db-diagram.png)
+![](db-diagramm.png)
 
 ## Erklärung
 
