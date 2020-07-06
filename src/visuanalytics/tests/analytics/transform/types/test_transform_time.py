@@ -22,7 +22,7 @@ class TestTransformTime(unittest.TestCase):
 
         expected_data = {
             "_req": {
-                "timestamp": "2020-06-21 18:58",
+                "timestamp": datetime.fromtimestamp(1592758688.7606313).strftime("%Y-%m-%d %H:%M"),
                 "date": "2020-06-21"
             }
         }
