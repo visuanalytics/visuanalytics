@@ -545,11 +545,11 @@
   "storing": [
     {
       "name": "table",
-      "pattern": "_req|Tabelle"
+      "key": "_req|Tabelle"
     },
     {
       "name": "spieltag",
-      "pattern": "_req|Spieltag"
+      "key": "_req|Spieltag"
     }
   ],
   "images": {

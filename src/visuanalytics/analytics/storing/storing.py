@@ -26,10 +26,10 @@ def storing(values: dict, data: StepData):
                     with resources.open_specific_memory_resource(data.get_data("_conf|job_name", values),
                                                                  value["name"]) as fp:
                         old_data = json.loads(fp.read())
-                    if old_data == data.get_data(value["pattern"], values):
+                    if old_data == data.get_data(value["key"], values):
                         continue
                 except (FileNotFoundError, IndexError):
                     pass
             with open(resources.new_memory_resource_path(data.get_data("_conf|job_name", values), value["name"]),
                       'w') as fp:
-                json.dump(data.get_data(value["pattern"], data.data), fp)
+                json.dump(data.get_data(value["key"], data.data), fp)
