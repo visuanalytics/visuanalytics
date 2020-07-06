@@ -61,11 +61,9 @@ def get_specific_memory_path(job_name: str, name: str, number: int):
     :param name: Name des dicts das exportiert wurde
     :param number: Angabe welche Datei ausgewählt werden soll 0= zuletz erstellt, 1 = Zweit zuletzt erstellt etc.
     """
-    current = os.curdir
-    os.chdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
-    files = os.listdir()
+    files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
+    print(files)
     files.sort(reverse=True)
-    os.chdir(current)
     return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number]))
 
 

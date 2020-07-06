@@ -41,7 +41,7 @@ def request(values: dict, data: StepData, name):
 
 @register_api
 def input(values: dict, data: StepData, name):
-    return values["input"]
+    return data.format_api(values["input"], values.get("api_key_name", None), values)
 
 
 @register_api
