@@ -18,6 +18,7 @@ class DbScheduler(Scheduler):
             steps_name, config = job.get_job_run_infos(job_step['job_id'])
 
             self._start_job(job_step["job_name"], steps_name, config)
+            # todo für db scheduler muss noch delete_old_on_new abgefragt werden (da wo jetzt false steht)
 
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
