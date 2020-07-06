@@ -45,7 +45,15 @@
   - [Convert](#convert)
 - [Images](#images)
 - [Audios](#audios)
-- [Seqence](#seqence)
+  - [Pillow](#pillow)
+    - [Overlay](#overlay)
+      - [image](#image)
+      - [image-array](#image-array)
+      - [text](#text)
+      - [text-array](text-array)
+- [Sequence](#seqence)
+  - [successively](#successivel)
+  - [custom](#custom)
 - [Run Config](#run-config)
 - [Presets](#presets)
   
@@ -878,7 +886,8 @@ Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
 Es gibt 4 verschiedene Overlay Arten:
 
-## image
+### image
+
 
 Typ Image setzt ein Bild in das vorher definierte source image
 
@@ -914,7 +923,7 @@ Farbe in welche das Bild konvertiert werden soll
 (RGBA = bunt, L = schwarz-weiß)  
 **`pattern`**:  
 Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
-## image_array
+### image_array
 
 Typ Image-Array setzt mehrere Bilder in das vorher definierte source image
 
@@ -962,7 +971,7 @@ Pfad der zu setzenden Bilder
 Kann ebenfalls wieder Liste oder String sein  
 (kann sich auch auf Daten aus der API beziehen)
 
-## text
+### text
 
 Typ Text setzt Text in das vorher definierte source image
 
@@ -995,7 +1004,7 @@ Presets sind weiter unten in der JSON spezifiziert
 **`pattern`**:  
 Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
-## text_array
+### text_array
 
 Typ Text-Array setzt mehrere Texte in das vorher definierte source image
 
