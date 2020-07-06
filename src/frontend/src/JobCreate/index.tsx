@@ -34,6 +34,7 @@ export default function JobCreate() {
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
+    const [counter, setCounter] = React.useState(5);
     // states for stepper logic
     const [activeStep, setActiveStep] = React.useState(0);
     const [selectComplete, setSelectComplete] = React.useState(false);
@@ -114,10 +115,15 @@ export default function JobCreate() {
         }
     }, [selectedSchedule, activeStep])
 
+    useEffect(() => {
+        counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    }, [counter]);
+
     const delay = () => {
+        setCounter(5);
         setTimeout(() => {
             components?.setCurrent("home");
-        }, 2000);
+        }, 5000);
     }
 
     // handlers for stepper logic
@@ -283,6 +289,10 @@ export default function JobCreate() {
                     <Fade in={true}>
                         <div className={classes.paddingSmall}>
                             Der Job wurde erstellt!
+                            <p>Sie werden in {counter} Sekunden zur Startseite weitergeleitet.</p>
+                            <ContinueButton onClick={() => components?.setCurrent("home")}>
+                                STARTSEITE
+                            </ContinueButton>
                         </div>
                     </Fade>
                 }
