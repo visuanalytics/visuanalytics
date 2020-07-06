@@ -6,7 +6,7 @@ import traceback
 
 import flask
 from flask import (Blueprint, request)
-from visuanalytics.server.db import db, job, queries
+from visuanalytics.server.db import db, queries
 
 api = Blueprint('api', __name__)
 
@@ -30,7 +30,8 @@ def topics():
         return flask.jsonify(queries.get_topic_names())
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while retrieving the list of topics", 400
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of topics"})
+        return err, 400
 
 
 @api.route("/params/<topic_id>", methods=["GET"])
@@ -44,11 +45,13 @@ def params(topic_id):
     try:
         params = queries.get_params(topic_id)
         if (params == None):
-            return "Unknown topic", 400
+            err = flask.jsonify({"err_msg": "Unknown topic"})
+            return err, 400
         return flask.jsonify(params)
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while retrieving the parameters for Topic ID: " + topic_id, 400
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the parameters for Topic ID: " + topic_id})
+        return flask.jsonify(err, 400)
 
 
 @api.route("/jobs", methods=["GET"])
@@ -62,7 +65,8 @@ def jobs():
         return flask.jsonify(queries.get_job_list())
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while retrieving the list of jobs", 400
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of jobs"})
+        return err, 400
 
 
 @api.route("/add", methods=["POST"])
@@ -75,10 +79,11 @@ def add():
     job = request.json
     try:
         queries.insert_job(job)
-        return "Job added"
+        return "", 204
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while adding the job", 400
+        err = flask.jsonify({"err_msg": "An error occurred while adding the job"})
+        return err, 400
 
 
 @api.route("/edit/<job_id>", methods=["PUT"])
@@ -95,10 +100,11 @@ def edit(job_id):
     updated_job_data = request.json
     try:
         queries.update_job(job_id, updated_job_data)
-        return "Job updated"
+        return "", 204
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while updating job information", 400
+        err = flask.jsonify({"err_msg": "An error occurred while updating job information"})
+        return err, 400
 
 
 @api.route("/remove/<job_id>", methods=["DELETE"])
@@ -113,7 +119,8 @@ def remove(job_id):
     """
     try:
         queries.delete_job(job_id)
-        return "Job removed"
+        return "", 204
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
-        return "An error occurred while deleting the job", 400
+        err = flask.jsonify({"err_msg": "An error occurred while deleting the job"})
+        return err, 400
