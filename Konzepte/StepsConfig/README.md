@@ -1042,7 +1042,7 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
 
 # Sequence
 
-<!--TODO-->
+Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 
 ```JSON
 {
@@ -1054,7 +1054,10 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
 
 ## successively
 
-<!--TODO-->
+Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
+und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
+definiert wurden. Jedes Bild wird so lange gezeigt wie die dazu geordnete Audio datei ist.
+Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Audios gibt
 
 ```JSON
 {
@@ -1062,11 +1065,19 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
 }
 ```
 **`type`**:
-<!--TODO-->
+Typangabe des Sequence (Hier successively)
 
 ## custom
 
-<!--TODO-->
+Custom ist ein etwas schwierigere sequeunce Typ, diese setzt nicht vorraus das es die selbe
+Anzahl an Bilder sowie Audios gibt. Das heißt mann kann bestimmte Bilder doppelt oder auch gar nicht verwenden  
+Custom funktioniert wie folgt:    
+Die audios werden in der Reihenfolge aneinander gehängt wie in "audio_l" vorgegeben,  
+Die Bilder werden ebenfalls in der Reihenfolge wie in "imnage" angeben aneinander gehängt.  
+jedes Bild wird solange gezeigt wie "time_diff" + Länge des Audios "audio_l".
+Sollte kein Audio angegeben werden wird dies als + 0 betrachtet.
+Das heißt alle time_diff Werte aufaddiert müssen 0 ergeben,
+ansosten passt die gesamte audio Länge nicht auf alle Bilder
 
 ```JSON
 
@@ -1084,17 +1095,17 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
       },
       {
         "image": "test5",
-        "time_diff": 4
+        "time_diff": -7
       }
     ]
 }
 ```
 **`image`**:
-<!--TODO-->
+Name des internen Bildes
 **`time_diff`**_(Optional)_:
-<!--TODO-->
+Zeit welches dieses Bild länger oder kürzer als die Audio datei angezeigt werden soll
 **`audio_l`**_(Optional)_:
-<!--TODO-->
+Name der internen Audio Datei
 
 
 # Run Config
