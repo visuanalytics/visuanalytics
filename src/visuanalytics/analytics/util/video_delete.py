@@ -10,49 +10,45 @@ from visuanalytics.analytics.util import resources
 import os
 
 
-def delete_videos(job, output_path, single=False):
+def delete_on_time(jobs: dict, output_path: str):
     """
-    Methode zum löschen alter erstellten Videos, sie hat 2 Funktionen:
-    1. In der config kann angegeben wie lange ein Video verfügbar sein soll, nach diesem zeitraum wird es entfernt
-    2. In der config kann aber auch ebenso eingestellt werden das ein Video gelöscht wird sobal ein neues der gleichen Art erstellt wurde
+    Methode zum löschen alter erstellten Videos, diese löscht Video nach einem vorgegebenem zeitraum
 
-    :param job: Ein String oder eine Liste aller Jobnamen
+    :param jobs: Eine Liste aller Jobs
     :param output_path: Der Pfad zum Output Ordner
-    :param single: Je nachdem ob single true oder false ist wird _delete_on_time oder _delete_old_videos aufgerufen
-    :return:
     """
     logger.info("Checking if Videos needs to be deleted")
-    current = os.curdir
-    os.chdir(resources.path_from_root(output_path))
-    files = os.listdir()
-    if single:
-        files.sort(reverse=True)
-        _delete_old_videos(job, files)
-    else:
-        _delete_on_time(job, files)
-    os.chdir(current)
-
-
-def _delete_on_time(jobs, files):
+    files = os.listdir(resources.path_from_root(output_path))
     for file in files:
         for job in jobs["jobs"]:
             if file.startswith(job["name"]):
                 file_date = file[len(job["name"]) + 1:len(file) - 4]
-                date_time_obj = datetime.strptime(file_date, '%Y-%m-%d_%H-%M.%S')
-                time = job.get("removal_time", {"days": 7})
-                date_time_obj = date_time_obj + timedelta(days=time.get("days", 7),
-                                                          hours=time.get("hours", 0),
-                                                          minutes=time.get("minutes", 0))
-                if datetime.now() > date_time_obj:
-                    os.remove(file)
-                    logger.info("removal time of file " + file + " exceed, file has been deleted")
+                date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
+                time = job["schedule"].get("removal_time", {})
+                if time != {}:
+                    date_time_obj = date_time_obj + timedelta(days=time.get("days", 0),
+                                                              hours=time.get("hours", 0))
+                    if datetime.now() > date_time_obj:
+                        os.remove(resources.path_from_root(os.path.join(output_path, file)))
+                        logger.info("removal time of file " + file + " exceed, file has been deleted")
 
 
-def _delete_old_videos(job_name, files):
-    second = False
-    for file in files:
+def delete_old_videos(job_name: str, output_path: str, count: int):
+    """
+    Methode zum löschen alter erstellten Videos, diese löscht alle Videos eines Jobs bis auf die vorgegebene Anzahl
+
+    :param job_name: Ein String des Job Namens
+    :param output_path: Der Pfad zum Output Ordner
+    :param count: Die Anzahl an Video die erhalten bleiben sollen
+    """
+    logger.info("Checking if Videos needs to be deleted")
+    files = os.listdir(resources.path_from_root(output_path))
+    files.sort(reverse=True)
+    delete = False
+    for idx, file in enumerate(files):
         if file.startswith(job_name):
-            if second:
-                os.remove(file)
+            if delete:
+                os.remove(resources.path_from_root(os.path.join(output_path, file)))
                 logger.info("old video " + file + " has been deleted")
-            second = True
+            if idx + 1 == count:
+                delete = True

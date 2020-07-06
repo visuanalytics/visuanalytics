@@ -4,7 +4,7 @@ from datetime import datetime
 
 from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.video_delete import delete_videos
+from visuanalytics.analytics.util.video_delete import delete_on_time
 
 logger = logging.getLogger(__name__)
 
@@ -24,27 +24,27 @@ class JsonScheduler(Scheduler):
 
         jobs = self.__get_jobs()
 
-        if int(now.strftime("%M")) == 29:
-            delete_videos(jobs, self._get_base_config()["output_path"])
+        if int(now.strftime("%M")) == 00:
+            delete_on_time(jobs, self.base_config["output_path"])
 
         for job in jobs.get("jobs", []):
             # if Time is not current continue
             # TODO error if time is not set
-            if not self._check_time(now, datetime.strptime(job["time"], "%H:%M").time()):
+            if not self._check_time(now, datetime.strptime(job["schedule"]["time"], "%H:%M").time()):
                 continue
             # if date is set and not today continue
-            if "date" in job and not datetime.strptime(job["date"], "%y-%m-%d").date() == now.date():
+            if "date" in job and not datetime.strptime(job["schedule"]["date"], "%y-%m-%d").date() == now.date():
                 # TODO Delete date schedule after run
                 continue
 
             # if weekday is set and not the same as today continue
-            if "weekday" in job and not now.weekday() in job["weekday"]:
+            if "weekday" in job and not now.weekday() in job["schedule"]["weekday"]:
                 continue
 
             # if daily is set and not True continue
-            if "daily" in job and not job["daily"]:
+            if "daily" in job and not job["schedule"]["daily"]:
                 continue
 
             # If Step id is valid run
             logger.info(f"Job {job['id']}:'{job['name']}' started")
-            self._start_job(job['name'], job["steps"], job.get("config", {}), job.get("delete_old_on_new", False))
+            self._start_job(job['name'], job["steps"], job.get("config", {}))
