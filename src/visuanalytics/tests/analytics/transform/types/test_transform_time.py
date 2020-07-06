@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 
 from visuanalytics.tests.analytics.transform.transform_test_helper import prepare_test
 
@@ -68,7 +69,6 @@ class TestTransformTime(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "Select Range One Failed")
 
-    # TODO(Max) Test date_now
     def test_date_now(self):
         values = [
             {
@@ -81,7 +81,7 @@ class TestTransformTime(unittest.TestCase):
         expected_data = {
             "_req": {
                 "timestamp": 1592758688.7606313,
-                "date": "2020-07-06"
+                "date": datetime.now().strftime("%Y-%m-%d")
             }
         }
 
