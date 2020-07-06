@@ -54,7 +54,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_text_array(self):
         values = {
@@ -79,7 +79,7 @@ class PreprocessTest(unittest.TestCase):
             "test_2": "Test text 2"
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image(self):
         values = {
@@ -94,7 +94,7 @@ class PreprocessTest(unittest.TestCase):
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image_array(self):
         values = {
@@ -109,7 +109,7 @@ class PreprocessTest(unittest.TestCase):
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_option(self):
         values = {
@@ -150,7 +150,7 @@ class PreprocessTest(unittest.TestCase):
             "checker": False
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
         shutil.rmtree(resources.get_temp_resource_path("", "100"), ignore_errors=True)
