@@ -35,6 +35,10 @@ class TransformError(StepError):
     pass
 
 
+class StoringError(StepError):
+    pass
+
+
 class ImageError(StepError):
     pass
 
