@@ -1103,7 +1103,7 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
 
 # Presets
 
-<!--TODO-->
+Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurden auf die Bilder zu schreiben
 
 ```JSON
 {
@@ -1122,10 +1122,10 @@ Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglic
 }
 ```
 **`colour`**:
-<!--TODO-->
+Farbe des Textes, kann ein name sein aber auch eine Hexzahl
 **`font_size`**:
-<!--TODO-->
+Größe des Textes
 **`font`**:
-<!--TODO-->
+Pfad relativ vom ressource Ordner zu der Font Datei
 **`"test_preset_1"`, `"test_preset_2":`**   
 sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
