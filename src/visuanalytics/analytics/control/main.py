@@ -5,8 +5,8 @@ import threading
 from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
 from visuanalytics.analytics.util import resources, external_programs, config_manager
-from visuanalytics.server.db import db
 from visuanalytics.server import server
+from visuanalytics.server.db import db
 
 
 def main():
@@ -14,14 +14,15 @@ def main():
 
     init(config)
 
-    app = server.create_app()
-    threading.Thread(target=app.run).start()
-    
-    # if db is in use start DbScheduler else run JsonScheduler
-    if config["db"]["use"]:
-        DbScheduler(config["steps_base_config"]).start()
-    else:
+    # if console_mode run JsonScheduler else Start Server and run db Scheduler
+    if config["console_mode"]:
         JsonScheduler("jobs.json", config["steps_base_config"]).start()
+    else:
+        # Start Flask Server
+        app = server.create_app()
+        threading.Thread(target=app.run).start()
+
+        DbScheduler(config["steps_base_config"]).start()
 
 
 def init(config: dict):
@@ -32,8 +33,8 @@ def init(config: dict):
     level = logging.INFO if config.get("testing", False) else logging.WARNING
     logging.basicConfig(format='%(module)s %(levelname)s: %(message)s', level=level)
 
-    # if db is in use initialize database
-    if config["db"]["use"]:
+    # if Graphic mode -> init db
+    if not config["console_mode"]:
         # init db
         db.init_db()
 
