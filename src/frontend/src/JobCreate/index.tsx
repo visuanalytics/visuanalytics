@@ -25,6 +25,7 @@ export interface Schedule {
     weekdays: Weekday[],
     date: Date | null,
     time: Date | null,
+    delete: boolean,
     onTime: boolean,
     delete_old_on_new: boolean,
     removal_time: Date | null
@@ -55,7 +56,8 @@ export default function JobCreate() {
         weekdays: [],
         date: new Date(),
         time: new Date(),
-        delete_old_on_new: true,
+        delete: false,
+        delete_old_on_new: false,
         onTime: false,
         removal_time: new Date()
     });
@@ -180,12 +182,15 @@ export default function JobCreate() {
     const handleSelectTime = (time: Date | null) => {
         setSelectedSchedule({ ...selectedSchedule, time: time })
     }
+    const handleDelete = () => {
+        setSelectedSchedule({...selectedSchedule, delete: false, delete_old_on_new: false, onTime: false})
+    }
     const handleDeleteOldNew = () => {
-        setSelectedSchedule({...selectedSchedule, delete_old_on_new: true, onTime: false})
+        setSelectedSchedule({...selectedSchedule, delete: true, delete_old_on_new: true, onTime: false})
     }
 
     const handleDeleteOnTime = () => {
-        setSelectedSchedule({...selectedSchedule, delete_old_on_new: false, onTime: true})
+        setSelectedSchedule({...selectedSchedule, delete: true, delete_old_on_new: false, onTime: true})
     }
 
     const handleDeleteTime = (date: Date | null) => {
@@ -241,6 +246,7 @@ export default function JobCreate() {
                 return (
                     <DeleteSelection
                         schedule={selectedSchedule}
+                        deleteHandler={handleDelete}
                         deleteOldNewHandler={handleDeleteOldNew}
                         deleteOnTimeHandler={handleDeleteOnTime}
                         deleteTimeHandler={handleDeleteTime}

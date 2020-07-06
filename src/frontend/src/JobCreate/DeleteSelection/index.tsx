@@ -5,6 +5,7 @@ import {Schedule} from "../index";
 
 interface DeleteSelectionProps {
     schedule: Schedule,
+    deleteHandler: () => void;
     deleteOldNewHandler: () => void;
     deleteOnTimeHandler: () => void;
     deleteTimeHandler: (date: Date | null) => void;
@@ -19,8 +20,8 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
                 <div className={classes.paddingSmall}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="nodelete" control={<Radio
-                            checked={props.schedule.delete_old_on_new}
-                            onChange={props.deleteOldNewHandler}
+                            checked={!props.schedule.delete}
+                            onChange={props.deleteHandler}
                             value="nodelete"
                         />} label="nicht löschen" />
                     </div>

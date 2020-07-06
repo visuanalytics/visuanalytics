@@ -38,6 +38,7 @@ export const JobItem: React.FC<Job> = (job) => {
         weekdays: [],
         date: new Date(),
         time: new Date(),
+        delete: false,
         onTime: false,
         delete_old_on_new: true,
         removal_time: new Date()
