@@ -4,17 +4,28 @@
       "name": "Wetter in Deutschland",
       "id": 0,
       "steps": "weather_germany",
-      "time": "12:00",
-      "daily": true,
-      "config": {}
+      "schedule": {
+        "time": "09:42",
+        "daily": true
+      },
+      "config": {
+        "keep_count": 1
+      }
     },
     {
       "name": "Wetter in Biebertal",
       "id": 1,
       "steps": "weather_single",
-      "time": "11:33",
-      "daily": true,
+      "schedule": {
+        "time": "09:33",
+        "daily": true,
+        "removal_time": {
+          "days": 7,
+          "hours": 10
+        }
+      },
       "config": {
+        "keep_count": 1,
         "city_name": "Biebertal",
         "p_code": "35444"
       }
@@ -23,10 +34,13 @@
       "name": "Fußballbericht",
       "id": 1,
       "steps": "football",
-      "time": "15:33",
-      "daily": true,
+      "schedule": {
+        "time": "09:40",
+        "daily": true
+      },
       "config": {
-        "liga-name": "1. Fußball Bundesliga"
+        "liga-name": "1. Fußball Bundesliga",
+        "keep_count": 3
       }
     }
   ]

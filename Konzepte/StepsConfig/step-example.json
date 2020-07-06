@@ -278,15 +278,6 @@
       "time": 10
     }
   ],
-  "run_config": {
-    "testing": {
-      "defalt_value": false,
-      "possible_values": [
-        true,
-        false
-      ]
-    }
-  },
   "presets": {
     "wetter1": {
       "color": "#08638",

@@ -56,7 +56,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_image_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected["test_1"])), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected["test_1"])), 1)
 
     def test_multiple_images(self):
         values = {
@@ -94,7 +94,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_image_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected["test_2"])), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected["test_2"])), 1)
 
     def tearDown(self):
         shutil.rmtree(resources.get_temp_resource_path("", "102"), ignore_errors=True)
