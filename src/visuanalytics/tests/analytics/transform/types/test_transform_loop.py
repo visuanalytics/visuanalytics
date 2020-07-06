@@ -6,72 +6,58 @@ from visuanalytics.tests.analytics.transform.transform_test_helper import prepar
 class TestTransformLoop(unittest.TestCase):
     # TODO
     def setUp(self):
-        self.data = [
-            {"hallo": 1},
-            {"hallo": 4},
-            {"hallo": 5},
-        ]
+        self.data = {
+            "value": 0,
+            "values": []
+        }
 
-    def test_looped_all(self):
+    def test_range(self):
         values = [
             {
-                "type": "transform_array",
-                "array_key": "_req|0",
+                "type": "loop",
+                "range_start": 0,
+                "range_stop": 3,
                 "transform": [
                     {
-                        "type": "loop",
-                        "range_start": 0,
-                        "range_stop": 2,
-                        "transform": [
-                            {
-                                "type": "add_symbol",
-                                "keys": ["_loop|0"],
-                                "pattern": "test"
-                            }
-                        ]
+                        "type": "calculate",
+                        "action": "add",
+                        "keys": ["_req|value"],
+                        "value_right": "_loop",
                     }
                 ]
             }
         ]
 
         expected_data = {
-            "_req": [
-                {"hallo": "test"},
-                {"hallo": "test"},
-                {"hallo": "test"},
-            ]
+            "_req": {
+                "value": 3,
+                "values": []
+            }
         }
 
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "loop_all Failed")
 
-    def test_loop_idx(self):
+    def test_values(self):
         values = [
             {
-                "type": "transform_array",
-                "array_key": "_req",
+                "type": "loop",
+                "values": ["a", "b", "c", "d"],
                 "transform": [
                     {
-                        "type": "loop",
-                        "values": "{_idx}",
-                        "transform": [
-                            {
-                                "type": "add_symbol",
-                                "keys": ["_loop|0"],
-                                "pattern": "{_key}"
-                            }
-                        ]
+                        "type": "append",
+                        "key": "_loop",
+                        "new_key": "_req|values"
                     }
                 ]
             }
         ]
 
         expected_data = {
-            "_req": [
-                {"hallo": 0},
-                {"hallo": 1},
-                {"hallo": 2},
-            ]
+            "_req": {
+                "value": 0,
+                "values": ["a", "b", "c", "d"]
+            }
         }
 
         exp, out = prepare_test(values, self.data, expected_data)
