@@ -35,11 +35,11 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "09:40",
+        "time": "22:29",
         "daily": true
       },
       "config": {
-        "liga-name": "1. Fußball Bundesliga",
+        "league": "1",
         "keep_count": 3
       }
     }
