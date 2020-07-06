@@ -2,10 +2,8 @@
   "external_programs": [
     "ffmpeg"
   ],
-  "db": {
-    "db_path": "instance/visuanalytics.db",
-    "use": true
-  },
+  "db_path": "instance/visuanalytics.db",
+  "console_mode": true,
   "steps_base_config": {
     "output_path": "out"
   },
