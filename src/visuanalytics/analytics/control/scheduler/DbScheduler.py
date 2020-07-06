@@ -24,15 +24,17 @@ class DbScheduler(Scheduler):
 
         for schedule in job.get_all_schedules():
             # Check if time is current Time
+            print(schedule["time"])
             if not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
                 continue
+
             # If date is not none check if date is today
-            if schedule["date"] and not schedule["date"] == now.date():
+            if schedule["on_date"] and not schedule["date"] == now.date():
                 # TODO Delete date schedule after run
                 continue
 
             # If weekday is not none check if weekday is same as today
-            if schedule["weekday"] and not schedule["weekday"] == now.weekday():
+            if schedule["weekdays"] and not schedule["weekdays"] == now.weekday():
                 continue
 
             # if daily is not none check if daily is true

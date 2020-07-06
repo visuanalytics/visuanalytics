@@ -19,6 +19,7 @@ CREATE TABLE job
             ON UPDATE CASCADE,
     job_name    VARCHAR NOT NULL,
     schedule_id INTEGER NOT NULL
+        UNIQUE
         REFERENCES schedule (schedule_id)
 );
 
