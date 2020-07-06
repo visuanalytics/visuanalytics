@@ -22,6 +22,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "(cd .. & python -m visuanalytics)",
+    "start:all": "concurrently \"npm run start\" \"npm run start:server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,5 +43,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
 }
