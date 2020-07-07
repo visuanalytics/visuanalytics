@@ -753,8 +753,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|0|weather|icon}.png",
             "weather/icons/{_req|München|data|0|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|0|weather|icon}.png",
@@ -811,8 +811,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/brown_bar.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -900,8 +900,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|1|weather|icon}.png",
             "weather/icons/{_req|München|data|1|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|1|weather|icon}.png",
@@ -958,8 +958,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/brown_bar.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -1067,7 +1067,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "RGBA",
             "L",
             "L",
@@ -1081,7 +1081,7 @@
             "L",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1210,7 +1210,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "RGBA",
             "L",
@@ -1224,7 +1224,7 @@
             "RGBA",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1353,7 +1353,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "L",
             "RGBA",
@@ -1367,7 +1367,7 @@
             "L",
             "RGBA"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1493,8 +1493,8 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1696,17 +1696,17 @@
   },
   "presets": {
     "weather_white_2": {
-      "colour": "white",
+      "color": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
-      "colour": "white",
+      "color": "white",
       "font_size": 50,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_2": {
-      "colour": "#949994",
+      "color": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     }
