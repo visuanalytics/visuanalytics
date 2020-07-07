@@ -32,7 +32,7 @@ def prepare_draw_test(values, data, config=None):
         },
         "presets": {
             "test_preset": {
-                "colour": "black",
+                "color": "black",
                 "font_size": 20,
                 "font": "Test_Font.ttf"
             },
@@ -44,7 +44,7 @@ def prepare_draw_test(values, data, config=None):
     return values["images"]["testbild"]
 
 
-class PreprocessTest(unittest.TestCase):
+class DrawTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
         resources.IMAGES_LOCATION = "../../tests/resources/images"

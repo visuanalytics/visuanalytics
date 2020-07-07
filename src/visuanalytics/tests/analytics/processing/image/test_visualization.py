@@ -17,7 +17,7 @@ def prepare_image_test(values, data, config=None):
         "images": values,
         "presets": {
             "test_preset": {
-                "colour": "black",
+                "color": "black",
                 "font_size": 20,
                 "font": "Test_Font.ttf"
             }
@@ -29,7 +29,7 @@ def prepare_image_test(values, data, config=None):
     return values["images"]
 
 
-class PreprocessTest(unittest.TestCase):
+class VisualizationTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
         resources.IMAGES_LOCATION = "../../tests/resources/images"
@@ -78,7 +78,7 @@ class PreprocessTest(unittest.TestCase):
             "test_2": {
                 "type": "pillow",
                 "already_created": True,
-                "path": "test_1",
+                "path": "Test_Bild_1.png",
                 "overlay": [
                     {
                         "type": "text",

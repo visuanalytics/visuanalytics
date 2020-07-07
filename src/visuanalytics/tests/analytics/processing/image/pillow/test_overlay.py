@@ -23,7 +23,7 @@ def prepare_overlay_test(values, data, config=None):
         },
         "presets": {
             "test_preset": {
-                "colour": "black",
+                "color": "black",
                 "font_size": 20,
                 "font": "Test_Font.ttf"
             },
@@ -35,7 +35,7 @@ def prepare_overlay_test(values, data, config=None):
     return values["images"]["testbild"]
 
 
-class PreprocessTest(unittest.TestCase):
+class OverlayTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
         resources.IMAGES_LOCATION = "../../tests/resources/images"
@@ -89,8 +89,8 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": 462,
             "size_x": 300,
             "size_y": 5,
-            "colour": "RGBA",
-            "pattern": "Test_Bild_2.png",
+            "color": "RGBA",
+            "path": "Test_Bild_2.png",
             "transparency": False
         }
         data = {}
@@ -104,8 +104,8 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": [462, 47, 145],
             "size_x": 300,
             "size_y": 5,
-            "colour": ["RGBA", "L", "RGBA"],
-            "pattern": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
+            "color": ["RGBA", "L", "RGBA"],
+            "path": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
             "transparency": False
         }
         data = {}
