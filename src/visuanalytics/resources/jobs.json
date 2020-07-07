@@ -39,7 +39,7 @@
         "daily": true
       },
       "config": {
-        "liga-name": "1. Fußball Bundesliga",
+        "league": "1",
         "keep_count": 3
       }
     }
