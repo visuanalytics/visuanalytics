@@ -55,10 +55,10 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    if values.get("already_created", False):
-        source_img = Image.open(resources.get_resource_path(prev_paths[values["path"]]))
+    if values.get("path", None) is None:
+        source_img = Image.open(resources.get_resource_path(prev_paths[values["image_name"]]))
     else:
-        source_img = Image.open(resources.get_resource_path(values["path"]))
+        source_img = Image.open(resources.get_image_path(values["path"]))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
 

@@ -5,11 +5,11 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "09:42",
+        "time": "14:50",
         "daily": true
       },
       "config": {
-        "keep_count": 1
+        "keep_count": 3
       }
     },
     {
@@ -17,7 +17,7 @@
       "id": 1,
       "steps": "weather_single",
       "schedule": {
-        "time": "09:33",
+        "time": "14:49",
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -25,7 +25,7 @@
         }
       },
       "config": {
-        "keep_count": 1,
+        "keep_count": 3,
         "city_name": "Biebertal",
         "p_code": "35444"
       }
@@ -35,7 +35,7 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "22:29",
+        "time": "14:46",
         "daily": true
       },
       "config": {

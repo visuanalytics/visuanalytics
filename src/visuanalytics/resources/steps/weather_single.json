@@ -447,8 +447,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|0|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -457,8 +457,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|1|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -662,8 +662,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|0|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -672,8 +672,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|1|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -877,8 +877,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|0|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -887,8 +887,8 @@
           "pos_y": 280,
           "size_x": 350,
           "size_y": 350,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|1|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -1092,8 +1092,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1102,8 +1102,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1112,8 +1112,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -1258,8 +1258,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1268,8 +1268,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1278,8 +1278,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -1424,8 +1424,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1434,8 +1434,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "L",
-          "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
+          "color": "L",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1444,8 +1444,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
         },
         {
           "description": "city_name",
@@ -1590,8 +1590,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|2|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1600,8 +1600,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|3|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
         },
         {
           "description": "icon",
@@ -1610,8 +1610,8 @@
           "pos_y": 420,
           "size_x": 300,
           "size_y": 300,
-          "colour": "RGBA",
-          "pattern": "weather/icons/{_req|data|4|weather|icon}.png"
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
         },
         {
           "description": "city_name",

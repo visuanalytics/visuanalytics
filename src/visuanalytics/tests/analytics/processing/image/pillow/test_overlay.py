@@ -35,9 +35,10 @@ def prepare_overlay_test(values, data, config=None):
     return values["images"]["testbild"]
 
 
-class PreprocessTest(unittest.TestCase):
+class OverlayTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
+        resources.IMAGES_LOCATION = "../../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "100"), exist_ok=True)
 
@@ -88,8 +89,8 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": 462,
             "size_x": 300,
             "size_y": 5,
-            "colour": "RGBA",
-            "pattern": "Test_Bild_2.png",
+            "color": "RGBA",
+            "path": "Test_Bild_2.png",
             "transparency": False
         }
         data = {}
@@ -103,8 +104,8 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": [462, 47, 145],
             "size_x": 300,
             "size_y": 5,
-            "colour": ["RGBA", "L", "RGBA"],
-            "pattern": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
+            "color": ["RGBA", "L", "RGBA"],
+            "path": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
             "transparency": False
         }
         data = {}
