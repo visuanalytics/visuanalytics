@@ -197,6 +197,8 @@ Führt mehrere Requests nach einander durch.
 
 Hier können mehrere [requests](#request) angegeben werden. Diese Werden dann nacheinander ausgeführt. Die Responses werden in einem Array an der jeweiligen position gespeichert. Diese Können dann später z.B. so verwendet werden: `_audio|pre|0`.
 
+> Bei den Requests die in `generate` ausgeführt werden, werden die daten entwas anderst gespeichert. Dort wird ein Json Objekt (In Python `Dictionoray`) mit zwei Keys Gespeichert. Einmal `headers` dieses Fehlt enthält alle response Headers und noch `content` welches die Response Body enthält.
+
 **`audio_key`** _(Bei Prepare Optional)_:
 
 Gibt an Welcher der Requests die Audio datei enthält.
