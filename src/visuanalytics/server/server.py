@@ -7,6 +7,7 @@ import mimetypes
 from flask import Flask, render_template, request
 
 from visuanalytics.server.api import api
+from visuanalytics.server.db import db
 
 
 def create_app():

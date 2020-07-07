@@ -2,9 +2,21 @@
 Enthält die API-Endpunkte.
 """
 
+import traceback
+
+import flask
 from flask import (Blueprint, request)
+from visuanalytics.server.db import db, queries
 
 api = Blueprint('api', __name__)
+
+
+# TODO (David): Besseres Error-Handling
+
+
+@api.teardown_app_request
+def close_db_con(exception):
+    db.close_con_f()
 
 
 @api.route("/topics", methods=["GET"])
@@ -14,21 +26,32 @@ def topics():
 
     Die Response enthält die Liste der zur Videogenerierung verfügbaren Themen.
     """
-    return "topic list"
-    # TODO retrieve actual topic list
+    try:
+        return flask.jsonify(queries.get_topic_names())
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of topics"})
+        return err, 400
 
 
-@api.route("/params", methods=["GET"])
-def params():
+@api.route("/params/<topic_id>", methods=["GET"])
+def params(topic_id):
     """
     Endpunkt `/params`.
 
     GET-Parameter: "topic".
     Die Response enthält die Parameterinformationen für das übergebene Thema.
     """
-    topic = request.args.get("topic")
-    return "params for topic: " + topic
-    # TODO: retrieve actual parameter list
+    try:
+        params = queries.get_params(topic_id)
+        if (params == None):
+            err = flask.jsonify({"err_msg": "Unknown topic"})
+            return err, 400
+        return flask.jsonify(params)
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the parameters for Topic ID: " + topic_id})
+        return flask.jsonify(err, 400)
 
 
 @api.route("/jobs", methods=["GET"])
@@ -38,8 +61,12 @@ def jobs():
 
     Die Response enthält die in der Datenbank angelegten Jobs.
     """
-    return "jobs"
-    # TODO: retrieve actual job list
+    try:
+        return flask.jsonify(queries.get_job_list())
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of jobs"})
+        return err, 400
 
 
 @api.route("/add", methods=["POST"])
@@ -49,13 +76,18 @@ def add():
 
     Der Request-Body enthält die Informationen für den neuen Job im JSON-Format.
     """
-    job_data = request.json
-    return "add"
-    # TODO: add data base entry for the new job
+    job = request.json
+    try:
+        queries.insert_job(job)
+        return "", 204
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while adding the job"})
+        return err, 400
 
 
-@api.route("/edit/<id>", methods=["PUT"])
-def edit(id):
+@api.route("/edit/<job_id>", methods=["PUT"])
+def edit(job_id):
     """
     Endpunkt `/edit`.
 
@@ -66,12 +98,17 @@ def edit(id):
     :type id: str
     """
     updated_job_data = request.json
-    return "edit"
-    # TODO: update data base entry with the given job id
+    try:
+        queries.update_job(job_id, updated_job_data)
+        return "", 204
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while updating job information"})
+        return err, 400
 
 
-@api.route("/remove/<id>", methods=["DELETE"])
-def remove(id):
+@api.route("/remove/<job_id>", methods=["DELETE"])
+def remove(job_id):
     """
     Endpunkt `/remove`.
 
@@ -80,5 +117,10 @@ def remove(id):
     :param id: URL-Parameter <id>
     :type id: str
     """
-    return "remove"
-    # TODO: remove job from data base
+    try:
+        queries.delete_job(job_id)
+        return "", 204
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred while deleting the job"})
+        return err, 400

@@ -14,11 +14,11 @@
     "requests": [
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
       },
       {
         "type": "request_memory",
@@ -58,6 +58,16 @@
       "new_keys": [
         "_req|Spieltag"
       ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_conf|league"
+      ],
+      "new_keys": [
+        "league_name"
+      ],
+      "pattern": "{_conf|league}. Fußball Bundesliga"
     },
     {
       "type": "transform_array",
@@ -573,7 +583,7 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Weißes-bild",
@@ -1292,7 +1302,7 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
@@ -1982,7 +1992,7 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
@@ -2668,7 +2678,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "In der {_conf|liga-name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
+            "pattern": "In der {league_name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
           },
           {
             "type": "text",
@@ -2744,7 +2754,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {_conf|liga-name} sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
           },
           {
             "type": "text",
@@ -2781,15 +2791,26 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
+  "run_config": [
+    {
+      "name": "league",
+      "display_name": "Liga",
       "possible_values": [
-        true,
-        false
+        {
+          "value": 1,
+          "display_value": "1. Bundesliga"
+        },
+        {
+          "value": 2,
+          "display_value": "2. Bundesliga"
+        },
+        {
+          "value": 3,
+          "display_value": "3. Bundesliga"
+        }
       ]
     }
-  },
+  ],
   "presets": {
     "football_1": {
       "color": "black",
