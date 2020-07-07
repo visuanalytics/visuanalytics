@@ -95,8 +95,15 @@ def _prepare_custom(values: dict, data: StepData, config: dict):
 
 
 def _save_audio(response, data: StepData, config: dict):
-    content_type = response["headers"]["content-type"]
     post_generate = config.get("post_generate", {})
+    extension = data.format(post_generate["file_extension"]) if post_generate.get("file_extension",
+                                                                                  None) is not None else None
+    # If Multiple request were Used, get just the Request with the audio file
+    if config["generate"]["type"].startswith("request_multiple"):
+        audio_idx = data.format(config["generate"]["audio_idx"], {})
+        response = response[audio_idx]
+
+    content_type = response["headers"]["content-type"]
     audio = response["content"]
 
     # If Content Type is json Try to decode json String with base64
@@ -105,16 +112,15 @@ def _save_audio(response, data: StepData, config: dict):
         audio = data_get_pattern(data.format(post_generate["audio_key"]), audio)
         # decode Audio Key with base64
         audio = base64.b64decode(audio)
-        audio_path = resources.new_temp_resource_path(data.data["_pipe_id"],
-                                                      data.format(post_generate["file_extension"]))
-    else:
+    elif extension is None:
         # Check if Content type is an audio Type
         if not content_type.startswith("audio"):
             raise InvalidContentTypeError(None, content_type, "'audio/*'")
 
         # Get File Extention from Mime Type:
-        extension = mimetypes.guess_all_extensions(content_type)
-        audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension[0].replace(".", ""))
+        extension = mimetypes.guess_all_extensions(content_type)[0].replace(".", "")
+
+    audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension)
 
     with open(audio_path, "wb") as fp:
         fp.write(audio)
