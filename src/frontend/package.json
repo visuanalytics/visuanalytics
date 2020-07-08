@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:server": "(cd .. & python -m visuanalytics)",
+    "start:server": "(cd .. ; . ../venv/bin/activate; python -m visuanalytics)",
     "start:all": "concurrently \"npm run start\" \"npm run start:server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
