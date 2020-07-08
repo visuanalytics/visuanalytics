@@ -75,7 +75,7 @@ export const JobItem: React.FC<Job> = (job) => {
                         <TextField
                             className={classes.inputFields}
                             label="Thema"
-                            defaultValue={job.topic}
+                            defaultValue={job.topicName}
                             InputProps={{
                                 disabled: true,
                             }}
@@ -101,7 +101,7 @@ export const JobItem: React.FC<Job> = (job) => {
                         <TextField
                             className={classes.inputFields}
                             label="nächstes Video"
-                            defaultValue={job.next}
+                            defaultValue=""
                             InputProps={{
                                 disabled: true,
                             }}
@@ -124,15 +124,15 @@ export const JobItem: React.FC<Job> = (job) => {
         };
         const handleEditClick = () => {
             setState(state.edit ? {edit: false, editIcon: 'none', doneIcon: 'block'} : {edit: true, editIcon: 'block', doneIcon: 'none'});
-            setExpanded(job.id);
+            setExpanded(String(job.jobId));
         }
         return (
             <div className={classes.root}>
-                <Accordion expanded={expanded === job.id} onChange={handleChange(job.id)}>
+                <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
-                        <Typography className={classes.heading}>#{job.id} {job.name}</Typography>
+                        <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton className={classes.button} onClick={handleEditClick}>
                                 <EditIcon style={{display: state.editIcon}}/>

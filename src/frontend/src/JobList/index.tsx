@@ -2,19 +2,22 @@ import React from 'react';
 import { Param } from "../util/param";
 import { JobItem } from "./JobItem";
 import { Fade } from '@material-ui/core';
+import { useFetch } from '../Hooks/useFetch';
+import {Schedule} from "../JobCreate";
 
 export interface Job {
-    id: string;
-    name: string;
-    topic: string;
-    schedule: string; //Datentyp?
-    next: string; //Datentyp?
+    jobId: number;
+    jobName: string;
     params: Param[];
+    schedule: Schedule;
+    topicId: number;
+    topicName: string;
 }
 
 export const JobList: React.FC = () => {
-    // const jobInfo: Job[] = useFetch("/jobs");
+    const jobInfo: Job[] = useFetch("/jobs");
 
+    /*
     const jobInfo: Job[] = [
         {
             "id": "1",
@@ -38,22 +41,22 @@ export const JobList: React.FC = () => {
             "next": "0d 3h 30min",
             "params": []
         },
-    ]
+    ]*/
 
 
 
     return (
         <Fade in={true}>
             <div>
-                {jobInfo.map(j =>
-                    <div key={j.id}>
+                {jobInfo?.map(j =>
+                    <div key={j.jobId}>
                         <JobItem
-                            id={j.id}
-                            name={j.name}
-                            topic={j.topic}
-                            schedule={j.schedule}
-                            next={j.next}
+                            jobId={j.jobId}
+                            jobName={j.jobName}
                             params={j.params}
+                            schedule={j.schedule}
+                            topicId={j.topicId}
+                            topicName={j.topicName}
                         />
                     </div>)
                 }
