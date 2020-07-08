@@ -70,8 +70,8 @@ Hier können noch einige einstellungen angegeben werden, die Nach der generierun
   
   Gibt die File extension der Audio datei an.
     
-  Diese angabe nur Notwendig wenn der Response body json daten enthält, 
-  kann aber immer angegeben Werden. Wurde die `file_extension` nicht angegeben und es handelt sich nicht um `audio` daten, Wird der daten Type automatisch anhand es `content-type` im Header Besstimt.
+  Diese angabe ist nur Notwendig wenn der Response body json daten enthält, 
+  kann aber immer angegeben Werden. Wurde die `file_extension` nicht angegeben und es handelt sich um `audio`-daten, wird der Datentype automatisch anhand des `content-type` im Header bestimmt.
 
 - `json_key`:
  
