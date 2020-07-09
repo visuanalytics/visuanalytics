@@ -48,7 +48,8 @@ def _row_to_job(row):
         steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [
-        {"name": kv[0], "selected": kv[1], "possibleValues": _find(steps_params, "name", kv[0])["possible_values"]}
+        {"name": kv[0], "selected": kv[1], "displayName": _find(steps_params, "name", kv[0])["display_name"],
+         "possibleValues": _find(steps_params, "name", kv[0])["possible_values"]}
         for kv in key_values]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {

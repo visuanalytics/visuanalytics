@@ -10,8 +10,8 @@ import {MenuItem} from '@material-ui/core';
  * @param classes (useStyles())
  * @param state (optional)
  */
-export const renderParamField = (param: Param,classes: any, state = false) => {
-    const name: string = param.name;
+export const renderParamField = (param: Param, classes: any, state = false) => {
+    const name: string = param.displayName;
     const possibleValues: any[] = param.possibleValues;
     if (possibleValues.length === 0) {
         return (
