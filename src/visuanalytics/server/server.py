@@ -4,10 +4,12 @@ Enthält die Startkonfiguration für den Flask-Server.
 """
 import mimetypes
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
+from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.server.api import api
-from visuanalytics.server.db import db
+from visuanalytics.util import config_manager
+from visuanalytics.util.init import init
 
 
 def create_app():
@@ -31,7 +33,7 @@ def create_app():
     # load the instance config, if it exists
     app.config.from_pyfile('config.py', silent=True)
 
-    # TODO start control main
+    start_scheduler()
 
     # add js as mmetype to ensure that the content-type is correct for js files
     mimetypes.add_type("text/javascript", ".js")
@@ -45,3 +47,12 @@ def create_app():
         return render_template("index.html")
 
     return app
+
+
+def start_scheduler():
+    # Start Scheduler and init Programm
+    config = config_manager.get_config()
+
+    init(config)
+
+    DbScheduler(config["steps_base_config"]).start()
