@@ -4,7 +4,7 @@ import unittest
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 
 def prepare_overlay_test(values, data, config=None):

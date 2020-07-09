@@ -3,8 +3,8 @@ import logging
 from datetime import datetime
 
 from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.video_delete import delete_on_time
+from visuanalytics.util import resources
 
 logger = logging.getLogger(__name__)
 

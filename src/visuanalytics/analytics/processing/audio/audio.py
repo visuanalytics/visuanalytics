@@ -8,10 +8,10 @@ from gtts import gTTS
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.parts import part
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, AudioError, InvalidContentTypeError
 from visuanalytics.analytics.util.step_pattern import data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
 from visuanalytics.util.config_manager import get_config
 
 logger = logging.getLogger(__name__)

@@ -7,9 +7,9 @@ from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
 
 IMAGE_TYPES = {}
 """Ein Dictionary bestehende aus allen Image Typ Methoden."""

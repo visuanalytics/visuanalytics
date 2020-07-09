@@ -2,12 +2,11 @@
 Modul welches die erstellten Videos nach einem angegebenem zeitraum wieder entfernt
 """
 
+import os
 from datetime import datetime, timedelta
 
 from visuanalytics.server.db.db import logger
-from visuanalytics.analytics.util import resources
-
-import os
+from visuanalytics.util import resources
 
 
 def delete_on_time(jobs: dict, output_path: str):

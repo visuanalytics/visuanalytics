@@ -8,9 +8,9 @@ import subprocess
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
+from visuanalytics.util import resources
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
