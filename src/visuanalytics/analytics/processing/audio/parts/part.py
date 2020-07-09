@@ -74,5 +74,8 @@ def random_text(values, data):
     :param data: Daten aus der API
     """
     len_pattern = len(values["pattern"])
-    rand = randint(0, len_pattern - 1)
-    return data.format(values["pattern"][rand], values)
+    if len_pattern == 1:
+        return data.format(values["pattern"][0], values)
+    else:
+        rand = randint(0, len_pattern - 1)
+        return data.format(values["pattern"][rand], values)
