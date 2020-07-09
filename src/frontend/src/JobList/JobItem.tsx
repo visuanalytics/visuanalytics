@@ -40,6 +40,18 @@ export const JobItem: React.FC<Job> = (job) => {
         time: new Date()
     });
 
+    const getLabel = (day: number) => {
+        switch (day) {
+            case Weekday.MONDAY: return "Mo";
+            case Weekday.TUESDAY: return "Di";
+            case Weekday.WEDNESDAY: return "Mi"
+            case Weekday.THURSDAY: return "Do";
+            case Weekday.FRIDAY: return "Fr";
+            case Weekday.SATURDAY: return "Sa";
+            case Weekday.SUNDAY: return "So"
+        }
+    }
+
     // handler for schedule selection logic
     const handleSelectDaily = () => {
         setSelectedSchedule({...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [],})
@@ -65,6 +77,20 @@ export const JobItem: React.FC<Job> = (job) => {
         setSelectedSchedule({...selectedSchedule, time: time})
     }
 
+    const showTime = () => {
+        if (job.schedule.daily) {
+            return "täglich, " + job.schedule.time + " Uhr";
+        } else if (job.schedule.onDate) {
+            return job.schedule.date +", " + job.schedule.time + " Uhr";
+        } else if (job.schedule.weekly) {
+            return "wöchentlich: " + job.schedule.weekdays.map(w => getLabel(Number(w))) + ", " + job.schedule.time + " Uhr";
+        }
+    }
+
+    const nextJob = () => {
+
+    }
+
     const renderJobItem = (job: Job) => {
         const paramInfo: Param[] = job.params;
 
@@ -87,7 +113,7 @@ export const JobItem: React.FC<Job> = (job) => {
                             <TextField
                                 className={classes.inputFields}
                                 label="Zeitplan"
-                                defaultValue={job.schedule}
+                                defaultValue={showTime()}
                                 InputProps={{
                                     disabled: state.edit,
                                     readOnly: true
@@ -101,7 +127,7 @@ export const JobItem: React.FC<Job> = (job) => {
                         <TextField
                             className={classes.inputFields}
                             label="nächstes Video"
-                            defaultValue=""
+                            defaultValue={nextJob()}
                             InputProps={{
                                 disabled: true,
                             }}
