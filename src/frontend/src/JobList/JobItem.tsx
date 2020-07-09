@@ -19,6 +19,8 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
+import { parse, formatDistanceToNow, isPast, addDays } from "date-fns";
+import de from "date-fns/esm/locale/de";
 
 
 export const JobItem: React.FC<Job> = (job) => {
@@ -87,8 +89,21 @@ export const JobItem: React.FC<Job> = (job) => {
         }
     }
 
-    const nextJob = () => {
+    // TODO May move to util component
+    const getNextDate = () => {
+        if(job.schedule.onDate) {
+            return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date())
+        } else if (job.schedule.daily) {
+            const time = parse(String(job.schedule.time), "H:m", new Date())
+            return  isPast(time) ? addDays(time, 1) : time
+        } else {
+            // TODO
+            return new Date();
+        }
+    }
 
+    const nextJob = () => {
+        return formatDistanceToNow(getNextDate(), {locale: de, includeSeconds: true, addSuffix: true});
     }
 
     const renderJobItem = (job: Job) => {
