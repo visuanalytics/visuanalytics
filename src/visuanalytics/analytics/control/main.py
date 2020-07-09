@@ -4,9 +4,10 @@ import threading
 
 from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.analytics.control.scheduler.JsonScheduler import JsonScheduler
-from visuanalytics.analytics.util import resources, external_programs, config_manager
+from visuanalytics.analytics.util import resources
 from visuanalytics.server import server
 from visuanalytics.server.db import db
+from visuanalytics.util import external_programs, config_manager
 
 
 def main():
