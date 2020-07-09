@@ -18,6 +18,10 @@ export const renderParamField = (param: Param,classes: any, state = false) => {
             <TextField
                 className={classes.inputFields}
                 variant="outlined"
+                defaultValue={param.selected}
+                InputProps={{
+                    disabled: state
+                }}
                 label={name}/>
         )
     }
