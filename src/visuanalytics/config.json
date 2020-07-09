@@ -3,7 +3,7 @@
     "ffmpeg"
   ],
   "db_path": "instance/visuanalytics.db",
-  "console_mode": true,
+  "console_mode": false,
   "steps_base_config": {
     "output_path": "out"
   },
