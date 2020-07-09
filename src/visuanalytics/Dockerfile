@@ -1,26 +1,8 @@
-FROM jrottenberg/ffmpeg:4.2-nvidia
-
-# Set Timezone
-ENV TZ="Europe/Berlin"
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends\
-    tzdata
-
-# install Python
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    python3.8 \
-    python3-setuptools\
-    python3-pip
+FROM python:3.8-slim-buster
 
 # install Requirements
 COPY requirements.txt /tmp/
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
-
-# create links to subfolders to make the names shorter when mouting
-RUN ln -s /home/appuser/visuanalytics/out /out; \
-    ln -s /home/appuser/visuanalytics/instance/config.json /config.json; \
-    ln -s /home/appuser/visuanalytics/resources/jobs.json /jobs.json
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Change User
 RUN useradd --create-home appuser
@@ -30,14 +12,4 @@ USER appuser
 # Copy src
 COPY --chown=appuser . ./visuanalytics
 
-# Flask Server Currently not used in Build mode
-# Set Env for flask
-#ENV FLASK_APP=visuanalytics.server.server:create_app
-
-# Expose Server Post
-# EXPOSE 5000
-
-# Reset Entry point from Base image
-ENTRYPOINT []
-
-CMD ["python3", "-m", "visuanalytics"]
+CMD ["python", "-m", "unittest discover visuanalytics"]
