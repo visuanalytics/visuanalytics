@@ -12,7 +12,7 @@ import {MenuItem} from '@material-ui/core';
  */
 export const renderParamField = (param: Param,classes: any, state = false) => {
     const name: string = param.name;
-    const possibleValues: string[] = param.possibleValues;
+    const possibleValues: any[] = param.possibleValues;
     if (possibleValues.length === 0) {
         return (
             <TextField
@@ -32,8 +32,8 @@ export const renderParamField = (param: Param,classes: any, state = false) => {
             }}
             select>
             {possibleValues.map((val) => (
-                <MenuItem key={val} value={val}>
-                    {val}
+                <MenuItem key={val.value} value={val.value}>
+                    {val.display_value}
                 </MenuItem>
             ))}
         </TextField>
