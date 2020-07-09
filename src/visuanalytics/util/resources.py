@@ -3,17 +3,17 @@ import contextlib
 import os
 from datetime import datetime, timedelta
 
-RESOURCES_LOCATION = "../../resources"
+RESOURCES_LOCATION = "../resources"
 """
 Relativer Pfad zu dem resources Ordner.
 """
 
-IMAGES_LOCATION = "../../resources/images"
+IMAGES_LOCATION = "../resources/images"
 """
 Relativer Pfad zu dem Image Ordner.
 """
 
-ROOT_LOCATION = "../../"
+ROOT_LOCATION = "../"
 """
 Relativer Pfad zur root location.
 """
