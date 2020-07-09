@@ -1,6 +1,7 @@
-from visuanalytics.server.db import db
-import os
 import json
+import os
+
+from visuanalytics.server.db import db
 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 
@@ -27,7 +28,7 @@ def get_job_list():
     con = db.open_con_f()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name, json_file_name,
+    job_id, job_name, daily, weekly, on_date, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
     group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
