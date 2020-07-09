@@ -1762,50 +1762,50 @@
             "type": "option",
             "check": "_conf|speech_app_temp_2",
             "on_true": [
-              "Die gefühlten Temperaturen liegen zwischen {_req|data|0|str_app_min_temp} und {_req|data|0|str_app_max_temp} Grad. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|0|str_app_min_temp} und {_req|data|0|str_app_max_temp} Grad. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_pop_2",
             "on_true": [
-              "Die Regenwahrscheinlichkeit liegt am {_req|data|0|weekday} bei {_req|data|0|str_pop}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|0|weekday} bei {_req|data|0|str_pop}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_rh_2",
             "on_true": [
-              "Die relative Luftfeuchtigkeit bei {_req|data|0|str_rh}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit bei {_req|data|0|str_rh}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_wind_2",
             "on_true": [
-              "Der Wind erreicht heute Geschwindigkeiten von {_req|data|0|str_wind_spd} und kommt aus {_req|data|0|str_wind_cdir_full}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht heute Geschwindigkeiten von {_req|data|0|str_wind_spd} und kommt aus {_req|data|0|str_wind_cdir_full}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_sun_2",
             "on_true": [
-              "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter und geht morgen um {_req|data|0|str_sunrise_ts} wieder auf. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter und geht morgen um {_req|data|0|str_sunrise_ts} wieder auf. "
+              }
             ]
           }
         ]
@@ -1824,50 +1824,50 @@
             "type": "option",
             "check": "_conf|speech_app_temp_2",
             "on_true": [
-              "Die gefühlten Temperaturen liegen zwischen {_req|data|1|str_app_min_temp} und {_req|data|1|str_app_max_temp} Grad. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|1|str_app_min_temp} und {_req|data|1|str_app_max_temp} Grad. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_pop_2",
             "on_true": [
-              "Die Regenwahrscheinlichkeit liegt am {_req|data|1|weekday} bei {_req|data|1|str_pop}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|1|weekday} bei {_req|data|1|str_pop}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_rh_2",
             "on_true": [
-              "Die relative Luftfeuchtigkeit bei {_req|data|1|str_rh}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit bei {_req|data|1|str_rh}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_wind_2",
             "on_true": [
-              "Der Wind erreicht morgen Geschwindigkeiten von {_req|data|1|str_wind_spd} und kommt aus {_req|data|1|str_wind_cdir_full}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {_req|data|1|str_wind_spd} und kommt aus {_req|data|1|str_wind_cdir_full}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_sun_2",
             "on_true": [
-              "Die Sonne geht morgen um {_req|data|1|str_sunset_ts} unter.  "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Sonne geht morgen um {_req|data|1|str_sunset_ts} unter.  "
+              }
             ]
           }
         ]
@@ -1878,10 +1878,10 @@
             "type": "option",
             "check": "_conf|speech_sun_2",
             "on_true": [
-              "und am {_req|data|2|weekday} um {_req|data|1|str_sunset_ts} wieder auf.  "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "und am {_req|data|2|weekday} um {_req|data|1|str_sunset_ts} wieder auf.  "
+              }
             ]
           },
           {
@@ -1892,50 +1892,50 @@
             "type": "option",
             "check": "_conf|speech_app_temp_3",
             "on_true": [
-              "Die gefühlten Temperaturen liegen zwischen {_req|data|2|str_app_min_temp} und {_req|data|2|str_app_max_temp} Grad. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|2|str_app_min_temp} und {_req|data|2|str_app_max_temp} Grad. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_pop_3",
             "on_true": [
-              "Die Regenwahrscheinlichkeit liegt am {_req|data|2|weekday} bei {_req|data|2|str_pop}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|2|weekday} bei {_req|data|2|str_pop}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_rh_3",
             "on_true": [
-              "Die relative Luftfeuchtigkeit liegt bei {_req|data|2|str_rh}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|2|str_rh}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_wind_3",
             "on_true": [
-              "Der Wind erreicht Geschwindigkeiten von {_req|data|2|str_wind_spd} und kommt aus {_req|data|2|str_wind_cdir_full}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|2|str_wind_spd} und kommt aus {_req|data|2|str_wind_cdir_full}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_sun_3",
             "on_true": [
-              "Die Sonne geht um {_req|data|2|str_sunset_ts} unter und geht am {_req|data|3|weekday} um {_req|data|2|str_sunrise_ts} wieder auf. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter und geht am {_req|data|3|weekday} um {_req|data|2|str_sunrise_ts} wieder auf. "
+              }
             ]
           }
         ]
@@ -1950,50 +1950,50 @@
             "type": "option",
             "check": "_conf|speech_app_temp_3",
             "on_true": [
-              "Die gefühlten Temperaturen liegen zwischen {_req|data|3|str_app_min_temp} und {_req|data|3|str_app_max_temp} Grad. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|3|str_app_min_temp} und {_req|data|3|str_app_max_temp} Grad. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_pop_3",
             "on_true": [
-              "Die Regenwahrscheinlichkeit liegt am {_req|data|3|weekday} bei {_req|data|3|str_pop}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|3|weekday} bei {_req|data|3|str_pop}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_rh_3",
             "on_true": [
-              "Die relative Luftfeuchtigkeit liegt bei {_req|data|3|str_rh}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|3|str_rh}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_wind_3",
             "on_true": [
-              "Der Wind erreicht Geschwindigkeiten von {_req|data|3|str_wind_spd} und kommt aus {_req|data|3|str_wind_cdir_full}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|3|str_wind_spd} und kommt aus {_req|data|3|str_wind_cdir_full}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_sun_3",
             "on_true": [
-              "Die Sonne geht um {_req|data|3|str_sunset_ts} unter und geht am {_req|data|4|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter und geht am {_req|data|4|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
+              }
             ]
           }
         ]
@@ -2008,50 +2008,50 @@
             "type": "option",
             "check": "_conf|speech_app_temp_3",
             "on_true": [
-              "Die gefühlten Temperaturen liegen zwischen {_req|data|4|str_app_min_temp} und {_req|data|4|str_app_max_temp} Grad. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|4|str_app_min_temp} und {_req|data|4|str_app_max_temp} Grad. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_pop_3",
             "on_true": [
-              "Die Regenwahrscheinlichkeit liegt am {_req|data|4|weekday} bei {_req|data|4|str_pop}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|4|weekday} bei {_req|data|4|str_pop}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_rh_3",
             "on_true": [
-              "Die relative Luftfeuchtigkeit liegt bei {_req|data|4|str_rh}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|4|str_rh}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_wind_3",
             "on_true": [
-              "Der Wind erreicht Geschwindigkeiten von {_req|data|4|str_wind_spd} und kommt aus {_req|data|4|str_wind_cdir_full}. "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|4|str_wind_spd} und kommt aus {_req|data|4|str_wind_cdir_full}. "
+              }
             ]
           },
           {
             "type": "option",
             "check": "_conf|speech_sun_3",
             "on_true": [
-              "Die Sonne geht um {_req|data|4|str_sunset_ts} unter.  "
-            ],
-            "on_false": [
-              " "
+              {
+                "type": "text",
+                "pattern": "Die Sonne geht um {_req|data|4|str_sunset_ts} unter.  "
+              }
             ]
           }
         ]
