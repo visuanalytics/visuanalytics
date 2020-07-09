@@ -33,7 +33,7 @@ def create_app():
     # load the instance config, if it exists
     app.config.from_pyfile('config.py', silent=True)
 
-    start_scheduler()
+    start_backend()
 
     # add js as mmetype to ensure that the content-type is correct for js files
     mimetypes.add_type("text/javascript", ".js")
@@ -49,10 +49,10 @@ def create_app():
     return app
 
 
-def start_scheduler():
+def start_backend():
     # Start Scheduler and init Programm
     config = config_manager.get_config()
 
     init(config)
 
-    DbScheduler(config["steps_base_config"]).start()
+    DbScheduler(config["steps_base_config"]).start_unblocking()
