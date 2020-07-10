@@ -1,15 +1,8 @@
+# This Docker Container is just for CI Testing
 FROM python:3.8-slim-buster
 
 # install Requirements
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
-
-# Change User
-RUN useradd --create-home appuser
-WORKDIR /home/appuser
-USER appuser
-
-# Copy src
-COPY --chown=appuser . ./visuanalytics
 
 CMD ["python", "-m", "unittest discover visuanalytics"]
