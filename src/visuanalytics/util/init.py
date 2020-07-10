@@ -2,6 +2,7 @@ import logging
 import os
 
 from visuanalytics.server.db import db
+from visuanalytics.server.db.db import init_topics
 from visuanalytics.util import external_programs, resources
 
 
@@ -17,6 +18,7 @@ def init(config: dict):
     if not config["console_mode"]:
         # init db
         db.init_db()
+        init_topics(config["db"].get("topics", []))
 
     # create temp dir
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)

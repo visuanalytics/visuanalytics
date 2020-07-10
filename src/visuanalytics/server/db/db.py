@@ -45,6 +45,18 @@ def close_con_f(e=None):
         db.close()
 
 
+def init_topics(topics: list):
+    """ Initialisiert Die Datenbank mit dem Möglichen Themen.
+
+    :param topics: Liste mit allen Themen
+    """
+    with open_con() as con:
+        for topic in topics:
+            con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
+                        [topic["name"], topic["file_name"]])
+        con.commit()
+
+
 def init_db():
     """ Initialisiert DB außerhalb von Flask-Kontext.
 
