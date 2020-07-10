@@ -1,11 +1,11 @@
 import React from "react";
-import {Fade} from "@material-ui/core";
-import {useStyles} from "../style";
-import {Param} from "../../util/param";
-import {renderParamField} from "../../util/renderParamFields";
+import { Fade } from "@material-ui/core";
+import { useStyles } from "../style";
+import { Param } from "../../util/param";
+import { renderParamField } from "../../util/renderParamFields";
 
 interface ParamSelectionProps {
-    topic: string;
+    topicId: number;
     params: Param[];
     selectParamHandler: (key: string, value: string) => void;
 }
