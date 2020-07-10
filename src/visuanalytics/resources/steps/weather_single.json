@@ -1804,7 +1804,7 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter und geht morgen um {_req|data|0|str_sunrise_ts} wieder auf. "
+                "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter und geht morgen um {_req|data|1|str_sunrise_ts} wieder auf. "
               }
             ]
           }
@@ -1880,7 +1880,7 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "und am {_req|data|2|weekday} um {_req|data|1|str_sunset_ts} wieder auf.  "
+                "pattern": "und am {_req|data|2|weekday} um {_req|data|2|str_sunset_ts} wieder auf.  "
               }
             ]
           },
@@ -1934,7 +1934,7 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter und geht am {_req|data|3|weekday} um {_req|data|2|str_sunrise_ts} wieder auf. "
+                "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter und geht am {_req|data|3|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
               }
             ]
           }
@@ -1992,7 +1992,7 @@
             "on_true": [
               {
                 "type": "text",
-                "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter und geht am {_req|data|4|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
+                "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter und geht am {_req|data|4|weekday} um {_req|data|4|str_sunrise_ts} wieder auf. "
               }
             ]
           }
