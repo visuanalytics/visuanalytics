@@ -46,7 +46,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                 </List>
                 <Divider />
                 <div className={classes.paddingSmall}>
-                    <TextField className={classes.inputField}
+                    <TextField className={classes.inputFields}
                         required
                         value={props.jobName}
                         variant="outlined"
