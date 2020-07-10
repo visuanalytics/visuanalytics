@@ -23,7 +23,13 @@ export const useFetch = (
     let isMounted = true;
 
     fetch(url, parms)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok)
+          throw new Error(`Network response was not ok, status: ${res.status}`);  
+
+        // TODO (Max) solve better?
+        return res.status === 204 ? {} : res.json();
+      })
       .then((data) => {
         if (isMounted) handleGetData(data);
       })
