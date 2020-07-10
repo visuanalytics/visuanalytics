@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Param} from "../util/param";
 import TextField from "@material-ui/core/TextField";
 import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
@@ -19,7 +19,7 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
-import { parse, formatDistanceToNow, isPast, addDays } from "date-fns";
+import {parse, formatDistanceToNow, isPast, addDays, setDay, formatDistanceToNowStrict} from "date-fns";
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 
@@ -96,20 +96,32 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     // TODO May move to util component
     const getNextDate = () => {
+        console.log(job.schedule.weekly);
         if(job.schedule.onDate) {
-            return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date())
+            return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date());
         } else if (job.schedule.daily) {
-            const time = parse(String(job.schedule.time), "H:m", new Date())
+            const time = parse(String(job.schedule.time), "H:m", new Date());
+            console.log(time);
             return  isPast(time) ? addDays(time, 1) : time
+        } else if (job.schedule.weekly) {
+            const time = parse(String(job.schedule.time), "H:m", setDay(new Date(),Number(job.schedule.weekdays[0])+1));
+            return  isPast(time) ? addDays(time, 7) : time;
         } else {
-            // TODO
             return new Date();
         }
     }
 
     const nextJob = () => {
-        return formatDistanceToNow(getNextDate(), {locale: de, includeSeconds: true, addSuffix: true});
+        return formatDistanceToNowStrict(getNextDate(), {locale: de, addSuffix: true});
     }
+
+    const [next, setNext] = React.useState(nextJob());
+
+    useEffect(() => {
+        setInterval(() => {
+            setNext(nextJob);
+        }, 60000);
+    })
 
     const renderJobItem = (job: Job) => {
         const paramInfo: Param[] = job.params;
@@ -147,7 +159,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         <TextField
                             className={classes.inputFields}
                             label="nächstes Video"
-                            defaultValue={nextJob()}
+                            defaultValue={next}
                             InputProps={{
                                 disabled: true,
                             }}
