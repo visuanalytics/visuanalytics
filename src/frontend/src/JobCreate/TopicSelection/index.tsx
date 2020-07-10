@@ -1,19 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ListItem, Divider, List, TextField, Fade } from "@material-ui/core";
 import { TopicPanel } from "./TopicPanel";
 import { useStyles } from "../style";
 import { useFetch } from "../../Hooks/useFetch";
-import { useCallFetch } from "../../Hooks/useCallFetch";
 
-interface Topic {
+export interface Topic {
     topicName: string;
-    topicId: Number;
+    topicId: number;
 }
 
 interface TopicSelectionProps {
-    selectedTopic: string;
+    selectedTopicId: number;
     jobName: string;
-    selectTopicHandler: (topicName: string) => void;
+    selectTopicHandler: (topicId: number) => void;
     enterJobNameHandler: (jobName: string) => void;
 }
 
@@ -30,8 +29,8 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
         return (
             <ListItem key={topic.topicName}>
                 <TopicPanel
-                    topic={topic.topicName}
-                    selectedTopic={props.selectedTopic}
+                    topic={topic}
+                    selectedTopicId={props.selectedTopicId}
                     selectTopicHandler={props.selectTopicHandler} />
                 <Divider />
             </ListItem>

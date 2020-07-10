@@ -1,10 +1,11 @@
 import React from "react";
-import {makeStyles, Button} from "@material-ui/core";
+import { makeStyles, Button } from "@material-ui/core";
+import { Topic } from "..";
 
 interface TopicPanelProps {
-    topic: string;
-    selectedTopic: string,
-    selectTopicHandler: (topicName: string) => void;
+    topic: Topic;
+    selectedTopicId: number;
+    selectTopicHandler: (topicId: number) => void;
 }
 
 const useStyles = makeStyles({
@@ -30,12 +31,12 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     return (
         <Button
             className={classes.panel}
-            style={props.topic === props.selectedTopic ? {border: "solid #00638D 7px"} : {border: ""}}
+            style={props.topic.topicId === props.selectedTopicId ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
-                props.selectTopicHandler(props.topic);
+                props.selectTopicHandler(props.topic.topicId);
             }
             }>
-            {props.topic}
+            {props.topic.topicName}
         </Button>
     )
 };
