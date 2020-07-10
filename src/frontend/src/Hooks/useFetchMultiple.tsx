@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
 
-/**
- * Funktion um Json daten beim laden eines React Components zu bekommen.
- * Wird das Component entladen befor der Response da ist, wird der Response ignoriert.
- *
- * @param url Request URL (siehe fetch)
- * @param parms Request parms (siehe fetch)
- * @param errorHandle Callback Funktion für den Fehler fall
- */
-export const useFetch = (
+// TODO Merge with useFetch (most code ist the same)
+export function useFetchMultiple<T>(
   url: RequestInfo,
   parms?: RequestInit,
   errorHandle?: (err: Error) => void
-) => {
-  const [data, setData] = useState<any>();
+): [T | undefined, () => void] {
+  const [data, setData] = useState<T | undefined>();
+  const [state, setState] = useState(false);
 
   const handleGetData = (data: any) => {
     setData(data);
+  };
+
+  const update = () => {
+    setState(!state);
   };
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export const useFetch = (
     fetch(url, parms)
       .then((res) => {
         if (!res.ok)
-          throw new Error(`Network response was not ok, status: ${res.status}`);  
+          throw new Error(`Network response was not ok, status: ${res.status}`);
 
         // TODO (Max) solve better?
         return res.status === 204 ? {} : res.json();
@@ -40,7 +38,7 @@ export const useFetch = (
     return () => {
       isMounted = false;
     };
-  }, [url, parms, errorHandle]);
+  }, [url, parms, errorHandle, state]);
 
-  return data;
-};
+  return [data, update];
+}
