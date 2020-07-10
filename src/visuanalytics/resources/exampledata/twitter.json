@@ -1,0 +1,1957 @@
+{
+  "statuses": [
+    {
+      "created_at": "Fri Jul 10 08:09:20 +0000 2020",
+      "id": 1281500741044232192,
+      "id_str": "1281500741044232192",
+      "text": "@Kroker Den letzten Grund daf\u00fcr h\u00e4tte es gegeben, als Bayer Uerdingen noch in der #Bundesliga spielte \ud83e\udd23",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Bundesliga",
+            "indices": [
+              82,
+              93
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [
+          {
+            "screen_name": "Kroker",
+            "name": "Michael Kroker",
+            "id": 61602390,
+            "id_str": "61602390",
+            "indices": [
+              0,
+              7
+            ]
+          }
+        ],
+        "urls": []
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/twitter.com\/#!\/download\/ipad\" rel=\"nofollow\"\u003eTwitter for iPad\u003c\/a\u003e",
+      "in_reply_to_status_id": 1281495203497607168,
+      "in_reply_to_status_id_str": "1281495203497607168",
+      "in_reply_to_user_id": 61602390,
+      "in_reply_to_user_id_str": "61602390",
+      "in_reply_to_screen_name": "Kroker",
+      "user": {
+        "id": 1030245290,
+        "id_str": "1030245290",
+        "name": "Key Pousttchi \ud83c\uddea\ud83c\uddfa",
+        "screen_name": "keypousttchi",
+        "location": "Neuer Garten, Potsdam",
+        "description": "Thought Leader #DigitalTransformation | #Keynote #Speaker | #Digitalisierung #Politik | ex Panzer Officer | 20y\/science, Prof. Dr. | proud non Digital Na(t)ive",
+        "url": "https:\/\/t.co\/hGAbkundv9",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/hGAbkundv9",
+                "expanded_url": "https:\/\/pousttchi.de",
+                "display_url": "pousttchi.de",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 1403,
+        "friends_count": 97,
+        "listed_count": 113,
+        "created_at": "Sun Dec 23 09:45:07 +0000 2012",
+        "favourites_count": 3860,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": false,
+        "statuses_count": 4959,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": true,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1003745168544227328\/RXp4lFbZ_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1003745168544227328\/RXp4lFbZ_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1030245290\/1574341067",
+        "profile_link_color": "FFCC4D",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": true,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 08:08:25 +0000 2020",
+      "id": 1281500510902726658,
+      "id_str": "1281500510902726658",
+      "text": "Ich habe mir die M\u00fche gemacht und die erste Mannschaft des VfB ein wenig analysiert und bewertet, ob diese in der 1\u2026 https:\/\/t.co\/prTQzXXBMl",
+      "truncated": true,
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/prTQzXXBMl",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281500510902726658",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 964996526606114816,
+        "id_str": "964996526606114816",
+        "name": "Josh",
+        "screen_name": "Josh_1893",
+        "location": "",
+        "description": "VfB Stuttgart",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 76,
+        "friends_count": 511,
+        "listed_count": 0,
+        "created_at": "Sat Feb 17 22:54:35 +0000 2018",
+        "favourites_count": 9973,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 937,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1267560648927522817\/SR3De3XN_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1267560648927522817\/SR3De3XN_normal.jpg",
+        "profile_link_color": "1B95E0",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": true,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 08:08:22 +0000 2020",
+      "id": 1281500497078374400,
+      "id_str": "1281500497078374400",
+      "text": "Vier minus f\u00fcr #Geisterspiele, ohne #Zuschauer keine Faszination: So bewerten Fans die #Bundesliga nach #Corona\n\n\u27a1\ufe0f\u2026 https:\/\/t.co\/uX5AOC97ue",
+      "truncated": true,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Geisterspiele",
+            "indices": [
+              15,
+              29
+            ]
+          },
+          {
+            "text": "Zuschauer",
+            "indices": [
+              36,
+              46
+            ]
+          },
+          {
+            "text": "Bundesliga",
+            "indices": [
+              87,
+              98
+            ]
+          },
+          {
+            "text": "Corona",
+            "indices": [
+              104,
+              111
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/uX5AOC97ue",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281500497078374400",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 1612693225,
+        "id_str": "1612693225",
+        "name": "Der SPORTBUZZER",
+        "screen_name": "Sportbuzzer",
+        "location": "",
+        "description": "Leidenschaft, Emotionen und ehrlicher Fu\u00dfball von der Kreisklasse bis zur K\u00f6nigsklasse. #GABFAF",
+        "url": "https:\/\/t.co\/i077EuVfXw",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/i077EuVfXw",
+                "expanded_url": "http:\/\/www.sportbuzzer.de",
+                "display_url": "sportbuzzer.de",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 5074,
+        "friends_count": 1684,
+        "listed_count": 211,
+        "created_at": "Mon Jul 22 11:50:54 +0000 2013",
+        "favourites_count": 4718,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": true,
+        "statuses_count": 42719,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/818856489494441987\/2r-_1psr_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/818856489494441987\/2r-_1psr_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1612693225\/1517692382",
+        "profile_link_color": "C40000",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 08:08:13 +0000 2020",
+      "id": 1281500459803578368,
+      "id_str": "1281500459803578368",
+      "text": "Debido a sus problemas de lesi\u00f3n sus 2 \u00faltimas temporadas las jug\u00f3 con la reserva del equipo hasta que anunci\u00f3 su r\u2026 https:\/\/t.co\/OtiDI1ra8a",
+      "truncated": true,
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/OtiDI1ra8a",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281500459803578368",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "es",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/twitter.com\/download\/android\" rel=\"nofollow\"\u003eTwitter for Android\u003c\/a\u003e",
+      "in_reply_to_status_id": 1281500458083921920,
+      "in_reply_to_status_id_str": "1281500458083921920",
+      "in_reply_to_user_id": 1916216641,
+      "in_reply_to_user_id_str": "1916216641",
+      "in_reply_to_screen_name": "BVB09ChileOf",
+      "user": {
+        "id": 1916216641,
+        "id_str": "1916216641",
+        "name": "Borussia Dortmund Chile Oficial",
+        "screen_name": "BVB09ChileOf",
+        "location": "Santiago ",
+        "description": "\u25a0 Fans Club Oficial del @BVB en Chile \ud83c\udde8\ud83c\uddf1",
+        "url": "https:\/\/t.co\/BvSJRTQdNy",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/BvSJRTQdNy",
+                "expanded_url": "https:\/\/m.facebook.com\/BVBchileoficial\/",
+                "display_url": "m.facebook.com\/BVBchileoficia\u2026",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 468,
+        "friends_count": 155,
+        "listed_count": 5,
+        "created_at": "Sun Sep 29 04:59:47 +0000 2013",
+        "favourites_count": 1903,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": false,
+        "statuses_count": 922,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "E6005C",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme18\/bg.gif",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme18\/bg.gif",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1165321792237559808\/ucBmV50M_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1165321792237559808\/ucBmV50M_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1916216641\/1569363664",
+        "profile_link_color": "12C7B8",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "F7C305",
+        "profile_text_color": "FF8B38",
+        "profile_use_background_image": true,
+        "has_extended_profile": true,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "es"
+    },
+    {
+      "created_at": "Fri Jul 10 08:08:11 +0000 2020",
+      "id": 1281500451133956097,
+      "id_str": "1281500451133956097",
+      "text": "\u25a0 FEL\u00cdZ CUMPLEA\u00d1OS LARS RICKEN \ud83c\udf81\ud83c\udf89\n\nHoy nuestro ex jugador cumple 44 a\u00f1os.\n\n\u26bd\ufe0f 49 goles en 302 partidos (#Bundesliga\u2026 https:\/\/t.co\/lUeZm9JJDa",
+      "truncated": true,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Bundesliga",
+            "indices": [
+              104,
+              115
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/lUeZm9JJDa",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281500451133956097",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "es",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/twitter.com\/download\/android\" rel=\"nofollow\"\u003eTwitter for Android\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 1916216641,
+        "id_str": "1916216641",
+        "name": "Borussia Dortmund Chile Oficial",
+        "screen_name": "BVB09ChileOf",
+        "location": "Santiago ",
+        "description": "\u25a0 Fans Club Oficial del @BVB en Chile \ud83c\udde8\ud83c\uddf1",
+        "url": "https:\/\/t.co\/BvSJRTQdNy",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/BvSJRTQdNy",
+                "expanded_url": "https:\/\/m.facebook.com\/BVBchileoficial\/",
+                "display_url": "m.facebook.com\/BVBchileoficia\u2026",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 468,
+        "friends_count": 155,
+        "listed_count": 5,
+        "created_at": "Sun Sep 29 04:59:47 +0000 2013",
+        "favourites_count": 1903,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": false,
+        "statuses_count": 922,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "E6005C",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme18\/bg.gif",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme18\/bg.gif",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1165321792237559808\/ucBmV50M_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1165321792237559808\/ucBmV50M_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1916216641\/1569363664",
+        "profile_link_color": "12C7B8",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "F7C305",
+        "profile_text_color": "FF8B38",
+        "profile_use_background_image": true,
+        "has_extended_profile": true,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "es"
+    },
+    {
+      "created_at": "Fri Jul 10 08:06:30 +0000 2020",
+      "id": 1281500026875904001,
+      "id_str": "1281500026875904001",
+      "text": "No money? No probelm for @s04_en. Send in the kids #S04 #Bundesliga @matburt74  https:\/\/t.co\/NJitIvxoS4",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "S04",
+            "indices": [
+              51,
+              55
+            ]
+          },
+          {
+            "text": "Bundesliga",
+            "indices": [
+              56,
+              67
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [
+          {
+            "screen_name": "s04_en",
+            "name": "FC Schalke 04 (\ud83c\udfe0)",
+            "id": 2483668285,
+            "id_str": "2483668285",
+            "indices": [
+              25,
+              32
+            ]
+          },
+          {
+            "screen_name": "matburt74",
+            "name": "Mathew Burt",
+            "id": 2841744095,
+            "id_str": "2841744095",
+            "indices": [
+              68,
+              78
+            ]
+          }
+        ],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/NJitIvxoS4",
+            "expanded_url": "https:\/\/bundesligafan.com\/2020\/07\/10\/schalke-forced-to-give-youth-a-chance\/",
+            "display_url": "bundesligafan.com\/2020\/07\/10\/sch\u2026",
+            "indices": [
+              80,
+              103
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "en",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 197191934,
+        "id_str": "197191934",
+        "name": "Bundesliga FANatic",
+        "screen_name": "Bundesliga4u",
+        "location": "Global",
+        "description": "The Bundesliga Fanatic is an English language Magazine on all things Bundesliga and everything related to German Football.",
+        "url": "https:\/\/t.co\/YlxdFAVW5o",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/YlxdFAVW5o",
+                "expanded_url": "http:\/\/BundesligaFan.com",
+                "display_url": "BundesligaFan.com",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 21959,
+        "friends_count": 2021,
+        "listed_count": 685,
+        "created_at": "Thu Sep 30 21:40:00 +0000 2010",
+        "favourites_count": 24337,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": false,
+        "statuses_count": 114227,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "E7E7E6",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/2121098856\/BF_TWITTER_AVATAR_normal.png",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/2121098856\/BF_TWITTER_AVATAR_normal.png",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/197191934\/1358400668",
+        "profile_link_color": "29B473",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "en"
+    },
+    {
+      "created_at": "Fri Jul 10 08:02:33 +0000 2020",
+      "id": 1281499034071506946,
+      "id_str": "1281499034071506946",
+      "text": "RT @UEFAcom_de: 2016-2020: 5x 20+ \u26bd in Europas \ud83d\udd1d5\u20e3 Ligen:\n\n\u2705 #LeoMessi | @FCBarcelona \n\u2705 @lewy_official | @FCBayern \n\u2705 @Aubameyang7 | @BVB\u2026",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "LeoMessi",
+            "indices": [
+              61,
+              70
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [
+          {
+            "screen_name": "UEFAcom_de",
+            "name": "UEFA.com DE",
+            "id": 74425157,
+            "id_str": "74425157",
+            "indices": [
+              3,
+              14
+            ]
+          },
+          {
+            "screen_name": "FCBarcelona",
+            "name": "FC Barcelona",
+            "id": 96951800,
+            "id_str": "96951800",
+            "indices": [
+              73,
+              85
+            ]
+          },
+          {
+            "screen_name": "lewy_official",
+            "name": "Robert Lewandowski",
+            "id": 2330223926,
+            "id_str": "2330223926",
+            "indices": [
+              89,
+              103
+            ]
+          },
+          {
+            "screen_name": "FCBayern",
+            "name": "FC Bayern M\u00fcnchen",
+            "id": 773069256,
+            "id_str": "773069256",
+            "indices": [
+              106,
+              115
+            ]
+          },
+          {
+            "screen_name": "Aubameyang7",
+            "name": "Aubameyang P-E",
+            "id": 847238528,
+            "id_str": "847238528",
+            "indices": [
+              119,
+              131
+            ]
+          },
+          {
+            "screen_name": "BVB",
+            "name": "Borussia Dortmund",
+            "id": 165699676,
+            "id_str": "165699676",
+            "indices": [
+              134,
+              138
+            ]
+          }
+        ],
+        "urls": []
+      },
+      "metadata": {
+        "iso_language_code": "en",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/twitter.com\/download\/android\" rel=\"nofollow\"\u003eTwitter for Android\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 1277224261078388739,
+        "id_str": "1277224261078388739",
+        "name": "Sahiti Fjolla",
+        "screen_name": "SahitiFjolla8",
+        "location": "",
+        "description": "",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 8,
+        "friends_count": 75,
+        "listed_count": 0,
+        "created_at": "Sun Jun 28 12:56:26 +0000 2020",
+        "favourites_count": 2782,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 1416,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1279184782455431168\/xuKx47dZ_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1279184782455431168\/xuKx47dZ_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1277224261078388739\/1593850674",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": true,
+        "default_profile": true,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "retweeted_status": {
+        "created_at": "Thu Jul 09 13:17:03 +0000 2020",
+        "id": 1281215793041223681,
+        "id_str": "1281215793041223681",
+        "text": "2016-2020: 5x 20+ \u26bd in Europas \ud83d\udd1d5\u20e3 Ligen:\n\n\u2705 #LeoMessi | @FCBarcelona \n\u2705 @lewy_official | @FCBayern \n\u2705 @Aubameyang7\u2026 https:\/\/t.co\/kjIrUSZDvr",
+        "truncated": true,
+        "entities": {
+          "hashtags": [
+            {
+              "text": "LeoMessi",
+              "indices": [
+                45,
+                54
+              ]
+            }
+          ],
+          "symbols": [],
+          "user_mentions": [
+            {
+              "screen_name": "FCBarcelona",
+              "name": "FC Barcelona",
+              "id": 96951800,
+              "id_str": "96951800",
+              "indices": [
+                57,
+                69
+              ]
+            },
+            {
+              "screen_name": "lewy_official",
+              "name": "Robert Lewandowski",
+              "id": 2330223926,
+              "id_str": "2330223926",
+              "indices": [
+                73,
+                87
+              ]
+            },
+            {
+              "screen_name": "FCBayern",
+              "name": "FC Bayern M\u00fcnchen",
+              "id": 773069256,
+              "id_str": "773069256",
+              "indices": [
+                90,
+                99
+              ]
+            },
+            {
+              "screen_name": "Aubameyang7",
+              "name": "Aubameyang P-E",
+              "id": 847238528,
+              "id_str": "847238528",
+              "indices": [
+                103,
+                115
+              ]
+            }
+          ],
+          "urls": [
+            {
+              "url": "https:\/\/t.co\/kjIrUSZDvr",
+              "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281215793041223681",
+              "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+              "indices": [
+                117,
+                140
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "iso_language_code": "en",
+          "result_type": "recent"
+        },
+        "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+          "id": 74425157,
+          "id_str": "74425157",
+          "name": "UEFA.com DE",
+          "screen_name": "UEFAcom_de",
+          "location": "",
+          "description": "https:\/\/t.co\/TYqM5TcRJd - Europas Fu\u00dfball-Website liefert aktuelle News zu UEFA Champions League, UEFA Europa League und vieles mehr.",
+          "url": null,
+          "entities": {
+            "description": {
+              "urls": [
+                {
+                  "url": "https:\/\/t.co\/TYqM5TcRJd",
+                  "expanded_url": "http:\/\/de.UEFA.com",
+                  "display_url": "de.UEFA.com",
+                  "indices": [
+                    0,
+                    23
+                  ]
+                }
+              ]
+            }
+          },
+          "protected": false,
+          "followers_count": 61967,
+          "friends_count": 744,
+          "listed_count": 372,
+          "created_at": "Tue Sep 15 11:35:42 +0000 2009",
+          "favourites_count": 7200,
+          "utc_offset": null,
+          "time_zone": null,
+          "geo_enabled": true,
+          "verified": true,
+          "statuses_count": 62700,
+          "lang": null,
+          "contributors_enabled": false,
+          "is_translator": false,
+          "is_translation_enabled": false,
+          "profile_background_color": "757575",
+          "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+          "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+          "profile_background_tile": false,
+          "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/613330889431482369\/yfATFePw_normal.png",
+          "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/613330889431482369\/yfATFePw_normal.png",
+          "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/74425157\/1567030488",
+          "profile_link_color": "0084B4",
+          "profile_sidebar_border_color": "000000",
+          "profile_sidebar_fill_color": "000000",
+          "profile_text_color": "6B6B6B",
+          "profile_use_background_image": true,
+          "has_extended_profile": true,
+          "default_profile": false,
+          "default_profile_image": false,
+          "following": null,
+          "follow_request_sent": null,
+          "notifications": null,
+          "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 82,
+        "favorite_count": 742,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+      },
+      "is_quote_status": false,
+      "retweet_count": 82,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "en"
+    },
+    {
+      "created_at": "Fri Jul 10 08:02:26 +0000 2020",
+      "id": 1281499005583794176,
+      "id_str": "1281499005583794176",
+      "text": "Noten, Paradenquote, zu null: Das Torh\u00fcter-Ranking der Bundesliga https:\/\/t.co\/H6Mgd9CcJ2 #scfreiburg #bundesliga",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "scfreiburg",
+            "indices": [
+              90,
+              101
+            ]
+          },
+          {
+            "text": "bundesliga",
+            "indices": [
+              102,
+              113
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/H6Mgd9CcJ2",
+            "expanded_url": "http:\/\/bit.ly\/1Etjj8W",
+            "display_url": "bit.ly\/1Etjj8W",
+            "indices": [
+              66,
+              89
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/ifttt.com\" rel=\"nofollow\"\u003eIFTTT\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 3199723329,
+        "id_str": "3199723329",
+        "name": "SC Freiburg",
+        "screen_name": "SCFreiburgFeed",
+        "location": "Freiburg im Breisgau",
+        "description": "Stay up to date with the latest SC Freiburg football news",
+        "url": "http:\/\/t.co\/PASaTmmbCV",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "http:\/\/t.co\/PASaTmmbCV",
+                "expanded_url": "http:\/\/footballdigger.co.uk\/bundesliga\/sc-freiburg",
+                "display_url": "footballdigger.co.uk\/bundesliga\/sc-\u2026",
+                "indices": [
+                  0,
+                  22
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 242,
+        "friends_count": 292,
+        "listed_count": 195,
+        "created_at": "Fri Apr 24 02:05:35 +0000 2015",
+        "favourites_count": 1,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 3234,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/593697254587965440\/pXWQgBv2_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/593697254587965440\/pXWQgBv2_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/3199723329\/1430383466",
+        "profile_link_color": "ABB8C2",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 08:00:02 +0000 2020",
+      "id": 1281498398856810496,
+      "id_str": "1281498398856810496",
+      "text": "\u201eHinten brennt es lichterloh\u201c #Bundesliga #Spr\u00fcche #Fussball",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Bundesliga",
+            "indices": [
+              30,
+              41
+            ]
+          },
+          {
+            "text": "Spr\u00fcche",
+            "indices": [
+              42,
+              50
+            ]
+          },
+          {
+            "text": "Fussball",
+            "indices": [
+              51,
+              60
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": []
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/hallofdxwg.de\" rel=\"nofollow\"\u003eTwitter MonschiKadai\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 1193449473973932038,
+        "id_str": "1193449473973932038",
+        "name": "MonschiKadai",
+        "screen_name": "monschi_k",
+        "location": "Im besten Teil von Augsburg",
+        "description": "Technik interessierter Mensch (VU+, Pi und iPhone)",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 66,
+        "friends_count": 4,
+        "listed_count": 0,
+        "created_at": "Sun Nov 10 08:45:23 +0000 2019",
+        "favourites_count": 2,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 24485,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "F5F8FA",
+        "profile_background_image_url": null,
+        "profile_background_image_url_https": null,
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1194649135535853568\/UI8oRC2C_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1194649135535853568\/UI8oRC2C_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/1193449473973932038\/1573517515",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": true,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 07:52:02 +0000 2020",
+      "id": 1281496387968999424,
+      "id_str": "1281496387968999424",
+      "text": "RT @bulinewsdotcom: In light of the corona crisis, Borussia M\u00f6nchengladbach will not be able to pay \u20ac10 million or more for a player during\u2026",
+      "truncated": false,
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "user_mentions": [
+          {
+            "screen_name": "bulinewsdotcom",
+            "name": "Bulinews",
+            "id": 869209474938130433,
+            "id_str": "869209474938130433",
+            "indices": [
+              3,
+              18
+            ]
+          }
+        ],
+        "urls": []
+      },
+      "metadata": {
+        "iso_language_code": "en",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/vy99.de\" rel=\"nofollow\"\u003egladbach_rt\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 144841202,
+        "id_str": "144841202",
+        "name": "gladbach_rt",
+        "screen_name": "gladbach_rt",
+        "location": "M\u00f6nchengladbach",
+        "description": "Wir sind noch in der Testphase, es k\u00f6nnen unvorhergesehene Dinge passieren :-) Ansprechpartner: @vy99",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 699,
+        "friends_count": 0,
+        "listed_count": 151,
+        "created_at": "Mon May 17 12:58:23 +0000 2010",
+        "favourites_count": 0,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 146270,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/907184957\/218px-Borussia_Moenchengladbach_Logo_svg_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/907184957\/218px-Borussia_Moenchengladbach_Logo_svg_normal.jpg",
+        "profile_link_color": "4A913C",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "retweeted_status": {
+        "created_at": "Fri Jul 10 07:51:47 +0000 2020",
+        "id": 1281496324467286021,
+        "id_str": "1281496324467286021",
+        "text": "In light of the corona crisis, Borussia M\u00f6nchengladbach will not be able to pay \u20ac10 million or more for a player du\u2026 https:\/\/t.co\/3ZaE8DW9Ko",
+        "truncated": true,
+        "entities": {
+          "hashtags": [],
+          "symbols": [],
+          "user_mentions": [],
+          "urls": [
+            {
+              "url": "https:\/\/t.co\/3ZaE8DW9Ko",
+              "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281496324467286021",
+              "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+              "indices": [
+                117,
+                140
+              ]
+            }
+          ]
+        },
+        "metadata": {
+          "iso_language_code": "en",
+          "result_type": "recent"
+        },
+        "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+          "id": 869209474938130433,
+          "id_str": "869209474938130433",
+          "name": "Bulinews",
+          "screen_name": "bulinewsdotcom",
+          "location": "Global",
+          "description": "Everything about the #Bundesliga and German football in English.",
+          "url": "https:\/\/t.co\/6WjznsOBS1",
+          "entities": {
+            "url": {
+              "urls": [
+                {
+                  "url": "https:\/\/t.co\/6WjznsOBS1",
+                  "expanded_url": "http:\/\/www.bulinews.com",
+                  "display_url": "bulinews.com",
+                  "indices": [
+                    0,
+                    23
+                  ]
+                }
+              ]
+            },
+            "description": {
+              "urls": []
+            }
+          },
+          "protected": false,
+          "followers_count": 2262,
+          "friends_count": 837,
+          "listed_count": 37,
+          "created_at": "Mon May 29 15:11:02 +0000 2017",
+          "favourites_count": 264,
+          "utc_offset": null,
+          "time_zone": null,
+          "geo_enabled": false,
+          "verified": false,
+          "statuses_count": 8155,
+          "lang": null,
+          "contributors_enabled": false,
+          "is_translator": false,
+          "is_translation_enabled": false,
+          "profile_background_color": "000000",
+          "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+          "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+          "profile_background_tile": false,
+          "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1060500631843233793\/EsHt_enC_normal.jpg",
+          "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1060500631843233793\/EsHt_enC_normal.jpg",
+          "profile_link_color": "C3232B",
+          "profile_sidebar_border_color": "000000",
+          "profile_sidebar_fill_color": "000000",
+          "profile_text_color": "000000",
+          "profile_use_background_image": false,
+          "has_extended_profile": false,
+          "default_profile": false,
+          "default_profile_image": false,
+          "following": null,
+          "follow_request_sent": null,
+          "notifications": null,
+          "translator_type": "none"
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 1,
+        "favorite_count": 0,
+        "favorited": false,
+        "retweeted": false,
+        "possibly_sensitive": false,
+        "lang": "en"
+      },
+      "is_quote_status": false,
+      "retweet_count": 1,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "en"
+    },
+    {
+      "created_at": "Fri Jul 10 07:51:47 +0000 2020",
+      "id": 1281496324467286021,
+      "id_str": "1281496324467286021",
+      "text": "In light of the corona crisis, Borussia M\u00f6nchengladbach will not be able to pay \u20ac10 million or more for a player du\u2026 https:\/\/t.co\/3ZaE8DW9Ko",
+      "truncated": true,
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/3ZaE8DW9Ko",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281496324467286021",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "en",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 869209474938130433,
+        "id_str": "869209474938130433",
+        "name": "Bulinews",
+        "screen_name": "bulinewsdotcom",
+        "location": "Global",
+        "description": "Everything about the #Bundesliga and German football in English.",
+        "url": "https:\/\/t.co\/6WjznsOBS1",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/6WjznsOBS1",
+                "expanded_url": "http:\/\/www.bulinews.com",
+                "display_url": "bulinews.com",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 2262,
+        "friends_count": 837,
+        "listed_count": 37,
+        "created_at": "Mon May 29 15:11:02 +0000 2017",
+        "favourites_count": 264,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 8155,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1060500631843233793\/EsHt_enC_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1060500631843233793\/EsHt_enC_normal.jpg",
+        "profile_link_color": "C3232B",
+        "profile_sidebar_border_color": "000000",
+        "profile_sidebar_fill_color": "000000",
+        "profile_text_color": "000000",
+        "profile_use_background_image": false,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 1,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "en"
+    },
+    {
+      "created_at": "Fri Jul 10 07:48:53 +0000 2020",
+      "id": 1281495593337204736,
+      "id_str": "1281495593337204736",
+      "text": "Manchester City could be ready to move for Bayern Munich defender David #Alaba.\n\nPep #Guardiola has identified left\u2026 https:\/\/t.co\/ddHhSxyhUm",
+      "truncated": true,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Alaba",
+            "indices": [
+              72,
+              78
+            ]
+          },
+          {
+            "text": "Guardiola",
+            "indices": [
+              85,
+              95
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/ddHhSxyhUm",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281495593337204736",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "en",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"http:\/\/twitter.com\/download\/iphone\" rel=\"nofollow\"\u003eTwitter for iPhone\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 528665855,
+        "id_str": "528665855",
+        "name": "Alex",
+        "screen_name": "AleeexLemaire",
+        "location": "Lille",
+        "description": "parieur sportif \/ Sport gambler. Instagram : neversoft_59",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 1230,
+        "friends_count": 616,
+        "listed_count": 187,
+        "created_at": "Sun Mar 18 16:55:44 +0000 2012",
+        "favourites_count": 22,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": true,
+        "verified": false,
+        "statuses_count": 90063,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "000000",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/758200831770525697\/YDumaE-u_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/758200831770525697\/YDumaE-u_normal.jpg",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/528665855\/1464191681",
+        "profile_link_color": "666666",
+        "profile_sidebar_border_color": "999999",
+        "profile_sidebar_fill_color": "121212",
+        "profile_text_color": "990000",
+        "profile_use_background_image": true,
+        "has_extended_profile": true,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "lang": "en"
+    },
+    {
+      "created_at": "Fri Jul 10 07:39:19 +0000 2020",
+      "id": 1281493187018850305,
+      "id_str": "1281493187018850305",
+      "text": "Salomon Kalou, der nach der Handy-Livestream-Aff\u00e4re aus der Kabine von Hertha BSC in der letzten Saison rausgefloge\u2026 https:\/\/t.co\/Nku9RixPdw",
+      "truncated": true,
+      "entities": {
+        "hashtags": [],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/Nku9RixPdw",
+            "expanded_url": "https:\/\/twitter.com\/i\/web\/status\/1281493187018850305",
+            "display_url": "twitter.com\/i\/web\/status\/1\u2026",
+            "indices": [
+              117,
+              140
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/mobile.twitter.com\" rel=\"nofollow\"\u003eTwitter Web App\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 2583622772,
+        "id_str": "2583622772",
+        "name": "FlashScore.de",
+        "screen_name": "FlashScoreDE",
+        "location": "",
+        "description": "Mehr als nur ein Ergebnisdienst! Ergebnisse, Statistiken, Tabellen, etc. in Echtzeit aus \u00fcber 30 Sportarten!",
+        "url": "https:\/\/t.co\/7WeIaMHRvf",
+        "entities": {
+          "url": {
+            "urls": [
+              {
+                "url": "https:\/\/t.co\/7WeIaMHRvf",
+                "expanded_url": "https:\/\/www.flashscore.de\/",
+                "display_url": "flashscore.de",
+                "indices": [
+                  0,
+                  23
+                ]
+              }
+            ]
+          },
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 619,
+        "friends_count": 233,
+        "listed_count": 21,
+        "created_at": "Mon Jun 23 08:30:36 +0000 2014",
+        "favourites_count": 44,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 5078,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "C0DEED",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png",
+        "profile_background_tile": false,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1129309281147346944\/X0u4s-ld_normal.png",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1129309281147346944\/X0u4s-ld_normal.png",
+        "profile_banner_url": "https:\/\/pbs.twimg.com\/profile_banners\/2583622772\/1558083298",
+        "profile_link_color": "1DA1F2",
+        "profile_sidebar_border_color": "C0DEED",
+        "profile_sidebar_fill_color": "DDEEF6",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": true,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 2,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 07:36:20 +0000 2020",
+      "id": 1281492437056327680,
+      "id_str": "1281492437056327680",
+      "text": "SPOX:\"Bundesliga: Pizarro denkt \u00fcber Bayern-R\u00fcckkehr nach https:\/\/t.co\/NAruKSlXtB\" #Bundesliga #SPOX",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Bundesliga",
+            "indices": [
+              83,
+              94
+            ]
+          },
+          {
+            "text": "SPOX",
+            "indices": [
+              95,
+              100
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/NAruKSlXtB",
+            "expanded_url": "https:\/\/ift.tt\/3egdGRE",
+            "display_url": "ift.tt\/3egdGRE",
+            "indices": [
+              58,
+              81
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/ifttt.com\" rel=\"nofollow\"\u003eIFTTT\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 376093785,
+        "id_str": "376093785",
+        "name": "Bundesliga Live",
+        "screen_name": "Bundesliga1Live",
+        "location": "",
+        "description": "Live: News & Ergebnisse zu den Vereinen der ersten Bundesliga!",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 2239,
+        "friends_count": 38,
+        "listed_count": 108,
+        "created_at": "Mon Sep 19 09:05:27 +0000 2011",
+        "favourites_count": 0,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 396875,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "282C2E",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_tile": true,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1549936034\/bundesliga1_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1549936034\/bundesliga1_normal.jpg",
+        "profile_link_color": "5E9400",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "FFFFFF",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    },
+    {
+      "created_at": "Fri Jul 10 07:36:19 +0000 2020",
+      "id": 1281492433432346624,
+      "id_str": "1281492433432346624",
+      "text": "SPOX:\"Bundesliga: Ex-Coach: Das hat Sane bei ManCity gelernt https:\/\/t.co\/KrRc0Hr2qT\" #Bundesliga #SPOX",
+      "truncated": false,
+      "entities": {
+        "hashtags": [
+          {
+            "text": "Bundesliga",
+            "indices": [
+              86,
+              97
+            ]
+          },
+          {
+            "text": "SPOX",
+            "indices": [
+              98,
+              103
+            ]
+          }
+        ],
+        "symbols": [],
+        "user_mentions": [],
+        "urls": [
+          {
+            "url": "https:\/\/t.co\/KrRc0Hr2qT",
+            "expanded_url": "https:\/\/ift.tt\/3ef0nkt",
+            "display_url": "ift.tt\/3ef0nkt",
+            "indices": [
+              61,
+              84
+            ]
+          }
+        ]
+      },
+      "metadata": {
+        "iso_language_code": "de",
+        "result_type": "recent"
+      },
+      "source": "\u003ca href=\"https:\/\/ifttt.com\" rel=\"nofollow\"\u003eIFTTT\u003c\/a\u003e",
+      "in_reply_to_status_id": null,
+      "in_reply_to_status_id_str": null,
+      "in_reply_to_user_id": null,
+      "in_reply_to_user_id_str": null,
+      "in_reply_to_screen_name": null,
+      "user": {
+        "id": 376093785,
+        "id_str": "376093785",
+        "name": "Bundesliga Live",
+        "screen_name": "Bundesliga1Live",
+        "location": "",
+        "description": "Live: News & Ergebnisse zu den Vereinen der ersten Bundesliga!",
+        "url": null,
+        "entities": {
+          "description": {
+            "urls": []
+          }
+        },
+        "protected": false,
+        "followers_count": 2239,
+        "friends_count": 38,
+        "listed_count": 108,
+        "created_at": "Mon Sep 19 09:05:27 +0000 2011",
+        "favourites_count": 0,
+        "utc_offset": null,
+        "time_zone": null,
+        "geo_enabled": false,
+        "verified": false,
+        "statuses_count": 396875,
+        "lang": null,
+        "contributors_enabled": false,
+        "is_translator": false,
+        "is_translation_enabled": false,
+        "profile_background_color": "282C2E",
+        "profile_background_image_url": "http:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_image_url_https": "https:\/\/abs.twimg.com\/images\/themes\/theme14\/bg.gif",
+        "profile_background_tile": true,
+        "profile_image_url": "http:\/\/pbs.twimg.com\/profile_images\/1549936034\/bundesliga1_normal.jpg",
+        "profile_image_url_https": "https:\/\/pbs.twimg.com\/profile_images\/1549936034\/bundesliga1_normal.jpg",
+        "profile_link_color": "5E9400",
+        "profile_sidebar_border_color": "FFFFFF",
+        "profile_sidebar_fill_color": "FFFFFF",
+        "profile_text_color": "333333",
+        "profile_use_background_image": true,
+        "has_extended_profile": false,
+        "default_profile": false,
+        "default_profile_image": false,
+        "following": null,
+        "follow_request_sent": null,
+        "notifications": null,
+        "translator_type": "none"
+      },
+      "geo": null,
+      "coordinates": null,
+      "place": null,
+      "contributors": null,
+      "is_quote_status": false,
+      "retweet_count": 0,
+      "favorite_count": 0,
+      "favorited": false,
+      "retweeted": false,
+      "possibly_sensitive": false,
+      "lang": "de"
+    }
+  ],
+  "search_metadata": {
+    "completed_in": 0.126,
+    "max_id": 1281500741044232192,
+    "max_id_str": "1281500741044232192",
+    "next_results": "?max_id=1281492433432346623&q=%23Bundesliga&include_entities=1",
+    "query": "%23Bundesliga",
+    "refresh_url": "?since_id=1281500741044232192&q=%23Bundesliga&include_entities=1",
+    "count": 15,
+    "since_id": 0,
+    "since_id_str": "0"
+  }
+}
