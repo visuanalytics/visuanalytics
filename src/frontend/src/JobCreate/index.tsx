@@ -38,7 +38,7 @@ export default function JobCreate() {
     const [jobName, setJobName] = React.useState("");
 
     // state for param selection logic
-    const [selectedParams, setSelectedParams] = React.useState<Param[]>([]);
+    const [selectedParams, setSelectedParams] = React.useState<Param[] | undefined>(undefined);
 
     // state for schedule selection logic
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
@@ -56,41 +56,20 @@ export default function JobCreate() {
         }
     }, [activeStep])
 
-    // when selected topic changes, fetch new parameter list
-    //  const cb = useCallFetch("/params/2", {}, (data) => console.log(data));
-    useEffect(() => {
-        // cb()
-        // const params2 = useCallFetch("localhost:5000/topics/1");
-        const params: Param[] = [
-            {
-                name: "city_name",
-                displayName: "Ort",
-                possibleValues: [],
-                selected: ""
-            },
-            {
-                name: "p_code",
-                "displayName": "Postleitzahl",
-                possibleValues: [],
-                selected: ""
-            }
-        ]
-        setSelectedParams(params);
-    }, [selectedTopicId])
-
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
         if (activeStep === 0) {
+            setSelectedParams(undefined);
             const allSet = selectedTopicId !== -1 && jobName.trim() !== "";
-            setSelectComplete(allSet ? true : false);
+            setSelectComplete(allSet);
         }
     }, [selectedTopicId, jobName, activeStep])
 
     // when a new parameter is selected, check if parameter selection is complete 
     useEffect(() => {
-        if (activeStep === 1) {
-            const allSet = selectedParams.every(p => p.selected.trim() !== "");
-            setSelectComplete(allSet ? true : false);
+        if (activeStep === 1 && selectedParams !== null) {
+            const allSet = selectedParams?.every(p => p.selected.trim() !== "");
+            setSelectComplete(allSet || false);
         }
     }, [selectedParams, activeStep])
 
@@ -118,6 +97,9 @@ export default function JobCreate() {
     };
 
     // handlers for topic selection logic
+    const handleFetchParams = (params: Param[]) => {
+        setSelectedParams(params);
+    }
     const handleSelectTopic = (topicId: number) => {
         setSelectedTopicId(topicId);
     }
@@ -127,7 +109,7 @@ export default function JobCreate() {
 
     // handler for param selection logic
     const handleSelectParam = (key: string, value: string) => {
-        const newList: Param[] = selectedParams.map((e: Param) => {
+        const newList = selectedParams?.map((e: Param) => {
             if (e.name === key) {
                 return {...e, selected: value};
             }
@@ -189,6 +171,7 @@ export default function JobCreate() {
                     <ParamSelection
                         topicId={selectedTopicId}
                         params={selectedParams}
+                        fetchParamHandler={handleFetchParams}
                         selectParamHandler={handleSelectParam}/>
                 )
             case 2:

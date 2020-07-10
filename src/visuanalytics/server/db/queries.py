@@ -21,7 +21,9 @@ def get_params(topic_id):
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
     with open(path_to_json) as fh:
         steps_json = json.loads(fh.read())
-    return steps_json["run_config"]
+    run_config = steps_json["run_config"]
+    params = [_with_selected(_to_camel_case(p), "") for p in run_config]
+    return params
 
 
 def get_job_list():
@@ -47,7 +49,7 @@ def _row_to_job(row):
     with open(path_to_json) as fh:
         steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
-    params = [_with_selected(_find(steps_params, "name", kv[0]), kv[1]) for kv in key_values]
+    params = [_with_selected(_to_camel_case(_find(steps_params, "name", kv[0])), kv[1]) for kv in key_values]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["job_id"],
@@ -73,6 +75,11 @@ def _find(lst, key, value):
 
 
 def _with_selected(param, selected):
+    param["selected"] = selected
+    return param
+
+
+def _to_camel_case(param):
     possible_values = [] if param["possible_values"] == [] else [{
         "value": pv["value"],
         "displayValue": pv["display_value"]
@@ -80,8 +87,7 @@ def _with_selected(param, selected):
     return {
         "name": param["name"],
         "displayName": param["display_name"],
-        "possibleValues": possible_values,
-        "selected": selected
+        "possibleValues": possible_values
     }
 
 
