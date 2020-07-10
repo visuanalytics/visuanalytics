@@ -34,7 +34,7 @@ RUN ln -s /home/appuser/visuanalytics/out /out; \
     ln -s /home/appuser/visuanalytics/instance/config.json /config.json; \
     ln -s /home/appuser/visuanalytics/resources/jobs.json /jobs.json
 
-# Change User
+# Add User
 RUN useradd --create-home appuser
 WORKDIR /home/appuser
 USER appuser
@@ -50,6 +50,9 @@ COPY --chown=appuser --from=build /app/build/index.html ./visuanalytics/server/t
 COPY --chown=appuser --from=build /app/build ./visuanalytics/server/static
 # Remove index.html from static files
 RUN rm ./visuanalytics/server/static/index.html
+
+# Create instance Folder
+RUN mkdir /home/appuser/visuanalytics/instance
 
 # Expose Server Post
 EXPOSE 8000
