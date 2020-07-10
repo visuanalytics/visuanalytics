@@ -45,22 +45,11 @@ def close_con_f(e=None):
         db.close()
 
 
-def init_topics(topics: list):
-    """ Initialisiert Die Datenbank mit dem Möglichen Themen.
-
-    :param topics: Liste mit allen Themen
-    """
-    with open_con() as con:
-        for topic in topics:
-            con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
-                        [topic["name"], topic["file_name"]])
-        con.commit()
-
-
-def init_db():
+def init_db(topics: list):
     """ Initialisiert DB außerhalb von Flask-Kontext.
 
     Nur, wenn noch keine Datenbank im "instance"-Ordner angelegt ist, wird eine neue erstellt.
+    :param topics: Liste mit allen Themen
     """
     if not os.path.exists(DATABASE_LOCATION):
         logger.info("Initialize Database ...")
@@ -72,4 +61,16 @@ def init_db():
                 con.executescript(f.read())
             con.commit()
 
+        _init_topics(topics)
+
         logger.info("Database Initialisation Done!")
+
+
+def _init_topics(topics: list):
+    logger.info("Initialize Topics ...")
+
+    with open_con() as con:
+        for topic in topics:
+            con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
+                        [topic["name"], topic["file_name"]])
+        con.commit()
