@@ -21,11 +21,16 @@ import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
 import { parse, formatDistanceToNow, isPast, addDays } from "date-fns";
 import de from "date-fns/esm/locale/de";
+import { useCallFetch } from "../Hooks/useCallFetch";
 
+interface Props {
+    job: Job,
+    getJobs: () => void;
+}
 
-export const JobItem: React.FC<Job> = (job) => {
-
+export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
+    const deleteJob = useCallFetch(`/remove/${job.jobId}`, {method: 'DELETE'}, getJobs);
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
         edit: true,
@@ -181,7 +186,7 @@ export const JobItem: React.FC<Job> = (job) => {
                             </IconButton>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton className={classes.button}>
+                            <IconButton onClick={deleteJob} className={classes.button}>
                                 <DeleteIcon/>
                             </IconButton>
                         </div>
