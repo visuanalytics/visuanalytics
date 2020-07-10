@@ -1,6 +1,7 @@
-from visuanalytics.server.db import db
-import os
 import json
+import os
+
+from visuanalytics.server.db import db
 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 
@@ -43,7 +44,7 @@ def get_job_list():
 def _row_to_job(row):
     params_string = str(row["params"])
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
-    with open(path_to_json) as fh:
+    with open(path_to_json, encoding="utf-8") as fh:
         steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [
