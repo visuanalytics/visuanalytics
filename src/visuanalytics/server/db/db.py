@@ -1,6 +1,7 @@
 import logging
 import os
 import sqlite3
+
 import flask
 
 logger = logging.getLogger(__name__)
@@ -57,5 +58,6 @@ def init_db():
         with open_con() as con:
             with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema.sql')) as f:
                 con.executescript(f.read())
+            con.commit()
 
         logger.info("Database Initialisation Done!")
