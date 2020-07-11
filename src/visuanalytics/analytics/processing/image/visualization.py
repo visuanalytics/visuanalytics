@@ -2,14 +2,12 @@
 Modul welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeihaltet.
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 from PIL import Image
 from PIL import ImageDraw
-from wordcloud import WordCloud, STOPWORDS
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
+from visuanalytics.analytics.processing.image.wordcloud.wordcloud import WORDCLOUD_TYPES
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
@@ -75,7 +73,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
 
 @register_image
-def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """
     Erstellt ein Wordcloud Bild  --- TODO.
 
@@ -87,88 +85,15 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     :rtype: str
     """
 
-    WORDCLOUD_DEFAULT_PARAMETER = {
-        "background_color": "white",
-        "width": 400,
-        "height": 200,
-        "collocations": True,
-        "max_font_size": None,
-        "max_words": 200,
-        "contour_width": 0,
-        "contour_color": "black",
-        "interpolation": "bilinear",
-        "bbox_inches": "tight",
-        "font_path": None,
-        "prefer_horizontal": 0.90,
-        "scale": 1,
-        "min_font_size": 4,
-        "font_step": 1,
-        "mode": "RGB",
-        "relative_scaling": 0.5,
-        "color_func": None,
-        "regexp": None,
-        "colormap": "viridis",
-        "normalize_plurals": True,
-        "stopwords": None
-    }
-    wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
-
-    for each in WORDCLOUD_DEFAULT_PARAMETER:
-        if each in image["parameter"]:
-            wordcloud_parameter[each] = step_data.format(image["parameter"][each])
-
-    if image["parameter"]["mask"] is not None:
-        x0 = step_data.format(image["parameter"]["mask"]["x"])
-        y0 = step_data.format(image["parameter"]["mask"]["y"])
-        x, y = np.ogrid[:x0, :y0]
-
-        mask = None
-        figure = image["parameter"]["mask"]["figure"]
-        if figure == "circle":
-            mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 400 ** 2
-        elif figure == "square":
-            mask = x * y
-        elif figure == "own_mask":
-            path = resources.get_image_path(image["parameter"]["mask"]["own_mask_path"])
-            mask = np.array(Image.open(path))
-
-        wordcloud_parameter["mask"] = 255 * mask.astype(int)
+    if values.get("path", None) is None:
+        source_img = Image.open(resources.get_resource_path(prev_paths[values["image_name"]]))
     else:
-        mask = None
-        wordcloud_parameter["mask"] = mask
+        source_img = Image.open(resources.get_image_path(values["path"]))
+    # img1 = Image.new("RGBA", source_img.size)
+    draw = ImageDraw.Draw(source_img)
 
-    stopwords = set(STOPWORDS)
-
-    dont_use = step_data.format(image["stopwords"])
-    stopwords.add(dont_use)
-    list_dont_use = dont_use.split()
-    STOPWORDS.update(list_dont_use)
-
-    wordcloud_image = WordCloud(background_color=wordcloud_parameter["background_color"],
-                                width=wordcloud_parameter["width"],
-                                height=wordcloud_parameter["height"],
-                                collocations=wordcloud_parameter["collocations"],
-                                max_font_size=wordcloud_parameter["max_font_size"],
-                                max_words=wordcloud_parameter["max_words"],
-                                contour_width=wordcloud_parameter["contour_width"],
-                                contour_color=wordcloud_parameter["contour_color"],
-                                font_path=wordcloud_parameter["font_path"],
-                                prefer_horizontal=wordcloud_parameter["prefer_horizontal"],
-                                scale=wordcloud_parameter["scale"],
-                                min_font_size=wordcloud_parameter["min_font_size"],
-                                font_step=wordcloud_parameter["font_step"],
-                                mode=wordcloud_parameter["mode"],
-                                relative_scaling=wordcloud_parameter["relative_scaling"],
-                                color_func=wordcloud_parameter["color_func"],
-                                regexp=wordcloud_parameter["regexp"],
-                                colormap=wordcloud_parameter["colormap"],
-                                normalize_plurals=wordcloud_parameter["normalize_plurals"],
-                                mask=wordcloud_parameter["mask"]).generate(step_data.get_data(image["text"], image))
-
-    plt.axis("off")
-    # plt.imshow(wordcloud_image, interpolation=step_data.format(image["parameter"]["interpolation"]))
-    image = wordcloud_image.to_image()
-    file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    image.save(file)
+    for wordcloud in values["wordcloud"]:
+        word_func = get_type_func(wordcloud, WORDCLOUD_TYPES)
+        file = word_func(wordcloud, source_img, draw, presets, step_data)
 
     return file

@@ -61,20 +61,21 @@
   ],
   "images": {
     "football_wordcloud": {
-      "type": "pillow",
+      "type": "wordcloud",
       "path": "football/Matchday.png",
-      "overlay": [
+      "wordcloud": [
         {
           "type": "wordcloud",
           "text": "_req|text",
-          "stopwords": "bundesliga",
+          "part_length": 7,
+          "stopwords": "und",
           "parameter": {
             "mask": {
               "x": 1000,
               "y": 1000,
               "figure": "circle"
             },
-            "background_color": "white",
+            "background_color": "black",
             "width": 1920,
             "height": 1080,
             "collocations": false,
@@ -94,7 +95,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Auf Twitter wurden folgende Hastags neben dem Bundesliga Hashtag verwendet. "
+            "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
           }
         ]
       }
