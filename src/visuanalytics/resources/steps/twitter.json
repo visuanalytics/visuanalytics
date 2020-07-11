@@ -86,17 +86,17 @@
           }
         }
       ]
-    },
-    "audio": {
-      "audios": {
-        "a0": {
-          "parts": [
-            {
-              "type": "text",
-              "pattern": "Auf Twitter wurden folgende Hastags neben dem Bundesliga Hashtag verwendet. "
-            }
-          ]
-        }
+    }
+  },
+  "audio": {
+    "audios": {
+      "a0": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Auf Twitter wurden folgende Hastags neben dem Bundesliga Hashtag verwendet. "
+          }
+        ]
       }
     }
   },
