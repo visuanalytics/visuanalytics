@@ -1,0 +1,42 @@
+{
+  // Hiervor steht im normalfall noch der Rest der Config (also api, transform, ...)
+  "run_config": [
+    {
+      "key": "testing", // key in db
+      "display_name": "Testing", // Name der im Frontend angezeigt wird
+      "description": "", // Beschreibung für den Wert (vtl. auch nicht nötig/sinnvoll)
+      "values": {
+        "type": "bool", // Frontend: Checkbox verwenden
+        "default": false
+      }
+    },
+    {
+      "key": "city_name",
+      "display_name": "Stadt Name",
+      "description": "",
+      "values": {
+        "type": "string", // Frontend: TextField
+        "default": "Biebertal"
+      }
+    },
+    {
+      "key": "liga",
+      "display_name": "Liga",
+      "description": "",
+      "values": {
+        "type": "select", // Frontend: Select Field
+        "default": 0, // Idex in values
+        "values": [
+          {
+            "display_text": "1. Bundesliega", // Wert der im Frontend angezeigt wird
+            "value": 1
+          },
+          {
+            "display_text": "2. Bundesliega",
+            "value": 2
+          }
+        ]
+      }
+    }
+  ]
+}

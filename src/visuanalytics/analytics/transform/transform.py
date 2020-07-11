@@ -1,31 +1,48 @@
 import re
 from datetime import datetime
-
-from numpy import random
+from pydoc import locate
+from random import randint
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.calculate import CALCULATE_ACTIONS
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys, get_new_key
+from visuanalytics.analytics.util.step_errors import TransformError, \
+    raise_step_error, StepKeyError
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
+from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
+from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 TRANSFORM_TYPES = {}
 
 
+@raise_step_error(TransformError)
 def transform(values: dict, data: StepData):
+    """Führt die unter `"type"` angegebene transform-Funktion als Schleife aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 
-        TRANSFORM_TYPES[transformation["type"]](transformation, data)
+        trans_func = get_type_func(transformation, TRANSFORM_TYPES)
+
+        trans_func(transformation, data)
 
 
 def register_transform(func):
-    TRANSFORM_TYPES[func.__name__] = func
-    return func
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try except"`-Block.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try catch Block
+    """
+    return register_type_func(TRANSFORM_TYPES, TransformError, func)
 
 
 @register_transform
 def transform_array(values: dict, data: StepData):
-    """Führt alle angegebenen `transform` funktionen für alle werte eines Arrays aus.
+    """Führt alle angegebenen `"transform"`-Funktionen für alle Werte eines Arrays aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -35,26 +52,8 @@ def transform_array(values: dict, data: StepData):
 
 
 @register_transform
-def transform_compare_arrays(values: dict, data: StepData):
-    pattern = data.format(values["pattern"], values)
-    for idx1, entry1 in data.loop_array(data.get_data(values["array_key_1"], values), values):
-        compare = data.format(values["compare"], values)
-        value_1 = entry1[compare]
-        new_key = ""
-        new_value = ""
-        for idx2, entry2 in data.loop_array(data.get_data(values["array_key_2"], values), values):
-            where = data.format(values["where"], values)
-            value_2 = entry2[where][compare]
-            if value_1 == value_2:
-                new_value = int(entry2[where][pattern])
-                new_key = values["new_key"]
-        data.save_loop(idx1, entry1, values)
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def transform_dict(values: dict, data: StepData):
-    """Fürt alle angegebenen `transform` funktionen für alle werte eines Dictionaries aus.
+    """Führt alle angegebenen `"transform"`-Funktionen für alle Werte eines Dictionaries aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -65,18 +64,19 @@ def transform_dict(values: dict, data: StepData):
 
 @register_transform
 def calculate(values: dict, data: StepData):
-    """Berechnet die angegebene Action.
+    """Berechnet die angegebene `"action"`.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    action = data.format(values["action"], values)
-    CALCULATE_ACTIONS[action](values, data)
+    action_func = get_type_func(values, CALCULATE_ACTIONS, "action")
+
+    action_func(values, data)
 
 
 @register_transform
 def select(values: dict, data: StepData):
-    """Löscht alle keys die nicht in `"relevant_keys"` stehen.
+    """Entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus dem Dictionary.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -96,13 +96,25 @@ def select(values: dict, data: StepData):
         try:
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
-            if values.get("throw_errors", True):
+            if values.get("ignore_errors", False):
                 raise
 
 
 @register_transform
+def delete(values: dict, data: StepData):
+    """
+    Löscht die angegebenen Keys aus den daten
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        data.remove_data(key, values)
+
+
+@register_transform
 def select_range(values: dict, data: StepData):
-    """Löscht alle werte aus `"array_key"` die nicht in der range sind.
+    """Entfernt alle Werte aus `"array_key"`, die nicht in `"range"` sind.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -116,7 +128,7 @@ def select_range(values: dict, data: StepData):
 
 @register_transform
 def append(values: dict, data: StepData):
-    """Speichert den wert unter `"key"` in einem array.
+    """Speichert den Wert unter `"key"` in einem Array.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -124,7 +136,7 @@ def append(values: dict, data: StepData):
     # TODO(Max) improve
     try:
         array = data.get_data(values["new_key"], values)
-    except KeyError:
+    except StepKeyError:
         data.insert_data(values["new_key"], [], values)
         array = data.get_data(values["new_key"], values)
 
@@ -136,6 +148,10 @@ def append(values: dict, data: StepData):
 @register_transform
 def add_symbol(values: dict, data: StepData):
     """Fügt ein Zeichen, Symbol, Wort oder einen Satz zu einem Wert hinzu.
+
+    Fügt ein Zeichen, Symbol, Wort oder einen Satz zu einem Wert hinzu. Dieses kann sowohl vor als auch hinter dem Wert
+    stehen, der mit `"{_key}"` eingefügt wird. Außerdem kann man so einen Wert kopieren und einem neuen Key zuweisen, wenn
+    man in unter `"pattern"` nur `"{_key}"` einsetzt.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -149,7 +165,7 @@ def add_symbol(values: dict, data: StepData):
 
 @register_transform
 def replace(values: dict, data: StepData):
-    """Ersetzt ein Zeichen, Symbol, Wort oder einen Satz.
+    """Ersetzt ein Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text in einem String.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -166,7 +182,7 @@ def replace(values: dict, data: StepData):
 
 @register_transform
 def translate_key(values: dict, data: StepData):
-    """Setzt den value zu einem key als neuen value für die JSON.
+    """Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -181,7 +197,7 @@ def translate_key(values: dict, data: StepData):
 
 @register_transform
 def alias(values: dict, data: StepData):
-    """Erstzt einen Key durch einen Neuen.
+    """Erstzt einen Key durch einen neuen Key.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -195,22 +211,26 @@ def alias(values: dict, data: StepData):
             data.insert_data(new_key, value, values)
             data.remove_data(key, values)
         except:
-            if values.get("throw_errors", True):
+            if values.get("ignore_errors", False):
                 raise
 
 
 @register_transform
 def regex(values: dict, data: StepData):
-    """Führt `re.sub` für die definierten felder aus.
+    """Führt `"re.sub"` für die angegebenen Felder aus.
+    regex (suche nach dieser Expression, replace_by (ersetze Expression durch), value (String in dem ersetzt werden soll)
+
+    Geht nur für regex ohne backslash \
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
+        value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        find = data.format(values["find"], values)
+        regex = data.format(values["regex"], values)
+        find = fr"{regex}"
         replace_by = data.format(values["replace_by"], values)
         new_value = re.sub(find, replace_by, value)
         data.insert_data(new_key, new_value, values)
@@ -218,7 +238,10 @@ def regex(values: dict, data: StepData):
 
 @register_transform
 def date_format(values: dict, data: StepData):
-    """Ändert das Format des Datums bzw. der Uhrzeit.
+    """Ändert das Format des Datums und der Uhrzeit.
+
+    Ändert das Format des Datums und der Uhrzeit, welches unter `"given_format"` angegeben wird, in ein gewünschtes
+    anderes Format, welches unter `"format"` angegeben wird.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -227,14 +250,21 @@ def date_format(values: dict, data: StepData):
         value = data.get_data(key, values)
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
-        new_value = date.strftime(data.format(values["format"], values))
         new_key = get_new_keys(values, idx)
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
+            new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+        else:
+            new_value = date.strftime(data.format(values["format"], values))
         data.insert_data(new_key, new_value, values)
 
 
 @register_transform
 def timestamp(values: dict, data: StepData):
-    """Übersetzt einen Zeitstempel in das angegebene Datums Format.
+    """Wandelt einen UNIX-Zeitstempel in ein anderes Format um.
+
+    Wandelt einen UNIX-Zeitstempel in ein anderes Format um, welches unter `"format"` angegeben wird. Ist zeropaded_off
+    true, so wird aus z.B. 05 eine 5.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -243,17 +273,19 @@ def timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
-        if values.get("zeropaded_off", False):
+        zeropaded_off = values.get("zeropaded_off", None)
+        if (zeropaded_off is not None) and (zeropaded_off == True):
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
-            data.insert_data(new_key, new_value, values)
         else:
             new_value = date.strftime(data.format(values["format"], values))
-            data.insert_data(new_key, new_value, values)
+        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
 def date_weekday(values: dict, data: StepData):
-    """Wandelt das Datum in den Wochentag in.
+    """Wandelt das angegebene Datum in den jeweiligen Wochentag um.
+
+    Wandelt das angegebene Datum, im unter `"given_format"` angegebenen Format, in den jeweiligen Wochentag um.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -281,13 +313,18 @@ def date_weekday(values: dict, data: StepData):
 def date_now(values: dict, data: StepData):
     """Generiert das heutige Datum und gibt es im gewünschten Format aus.
 
+    Generiert das heutige Datum und gibt es im unter `"format"` angegebenen Format aus.
+
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     new_key = values["new_key"]
-    date_format = data.format(values["format"], values)
     value = datetime.now()
-    new_value = value.strftime(date_format)
+    zeropaded_off = values.get("zeropaded_off", None)
+    if (zeropaded_off is not None) and (zeropaded_off == True):
+        new_value = value.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
+    else:
+        new_value = value.strftime(data.format(values["format"], values))
     data.insert_data(new_key, new_value, values)
 
 
@@ -295,13 +332,16 @@ def date_now(values: dict, data: StepData):
 def wind_direction(values: dict, data: StepData):
     """Wandelt einen String von Windrichtungen um.
 
+    Funktion nur mit den wind_cdir_full-Werten aus der Weatherbit-API ausführbar.
+
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     value = data.get_data(values["key"], values)
     new_key = get_new_key(values)
-    if value.find(data.format(values["delimiter"], values)) != -1:
-        wind = value.split("-")
+    delimiter = data.format(values["delimiter"], values)
+    if value.find(delimiter) != -1:
+        wind = value.split(delimiter)
         wind_1 = wind[0]
         wind_2 = wind[1]
         wind_dir_1 = data.format(values["dict"][wind_1]["0"], values)
@@ -313,46 +353,8 @@ def wind_direction(values: dict, data: StepData):
 
 
 @register_transform
-def choose_random(values: dict, data: StepData):
-    """Wählt aus einem gegebenen Dictionary mithilfe von gegebenen Wahlmöglichkeiten random einen Value aus.
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = str(data.get_data(key, values))
-        choice_list = []
-        for x in range(len(values["choice"])):
-            choice_list.append(data.format(values["choice"][x], values))
-        decision = str(random.choice(choice_list))
-        new_key = get_new_keys(values, idx)
-        new_value = data.format(values["dict"][value][decision], values)
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
-def find_equal(values: dict, data: StepData):
-    # TODO
-    """innerhalb von loop
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        new_key = get_new_keys(values, idx)
-        search_through = data.format(values["search_through"], values)
-        replace_by = data.format(values["replace_by"], values)
-        if value == search_through:
-            new_value = replace_by
-        else:
-            new_value = value
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
 def loop(values: dict, data: StepData):
-    """Durchläuft das angegebene array und führt für jedes ellement die angegebenen `transform funktionen` aus.
+    """Durchläuft das angegebene Array und führt für jedes Element die angegebenen `"transform"`-Funktionen aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -371,37 +373,84 @@ def loop(values: dict, data: StepData):
 
 @register_transform
 def add_data(values: dict, data: StepData):
-    """Fügt daten ein.
+    """Fügt Daten zu einem neuen Key hinzu.
+
+    Fügt die unter `"pattern"` angegebenen Daten zu einem neuen Key hinzu.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    new_key = data.format(values["new_key"], values)
-    value = data.format(values["pattern"], values)
-    data.insert_data(new_key, value, values)
-
-
-@register_transform
-def result(values: dict, data: StepData):
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        compare_1 = data.format(values["compare_1"], values)
-        compare_2 = data.format(values["compare_2"], values)
-        new_key = get_new_keys(values, idx)
-        if value[compare_1] == value[compare_2]:
-            new_value = int(data.format(values["points"]["1"], values))
-        elif value[compare_1] > value[compare_2]:
-            new_value = int(data.format(values["points"]["2"], values))
-        elif value[compare_1] < value[compare_2]:
-            new_value = int(data.format(values["points"]["3"], values))
-        else:
-            new_value = 0
-        data.insert_data(new_key, new_value, values)
+    for new_key in values["new_keys"]:
+        value = data.format(values["pattern"], values)
+        data.insert_data(new_key, value, values)
 
 
 @register_transform
 def copy(values: dict, data: StepData):
+    """Kopiert einen Wert zu einem neuen Key.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
-        new_value = int(data.get_data(key, values))
+        new_value = data.get_data(key, values)
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def option(values: dict, data: StepData):
+    """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
+
+     Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_true"` stehen.
+     Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_false"` stehen.
+
+     :param values: Werte aus der JSON-Datei
+     :param data: Daten aus der API
+     """
+    values["transform"] = execute_type_option(values, data)
+
+    transform(values, data)
+
+
+@register_transform
+def compare(values: dict, data: StepData):
+    values["transform"] = execute_type_compare(values, data)
+
+    transform(values, data)
+
+
+@register_transform
+def random_value(values: dict, data: StepData):
+    """Wählt random einen Wert aus einem Array oder einem Dictionary (zu einem bestimmten Key) aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    array = values.get("array", None)
+    dict = values.get("dict", None)
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        new_value = ""
+        if array is not None:
+            length = len(values["array"])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["array"][rand], values)
+        elif dict is not None:
+            value = str(data.get_data(key, values))
+            length = len(values["dict"][value])
+            rand = randint(0, length - 1)
+            new_value = data.format(values["dict"][value][rand], values)
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def convert(values: dict, data: StepData):
+    new_type = locate(values["to"])
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        value = new_type(data.get_data(key, values))
+
+        data.insert_data(new_key, value, values)

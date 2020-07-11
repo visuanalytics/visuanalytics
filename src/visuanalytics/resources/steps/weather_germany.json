@@ -26,7 +26,12 @@
       "Regensburg"
     ],
     "use_loop_as_key": true,
-    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily?city={_loop}&key={_api_key}&country=DE"
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
+    "params": {
+      "city": "{_loop}",
+      "key": "{_api_key}",
+      "country": "DE"
+    }
   },
   "transform": [
     {
@@ -94,6 +99,15 @@
               "type": "append",
               "key": "_loop|weather|code",
               "new_key": "summaries|{_idx}|code"
+            },
+            {
+              "type": "calculate",
+              "keys": [
+                "_loop|wind_spd"
+              ],
+              "action": "multiply",
+              "value_right": 3.6,
+              "decimal": 2
             },
             {
               "type": "add_symbol",
@@ -245,7 +259,7 @@
               }
             },
             {
-              "type": "choose_random",
+              "type": "random_value",
               "keys": [
                 "_loop|weather|code"
               ],
@@ -253,163 +267,158 @@
                 "_loop|weather|str_code"
               ],
               "dict": {
-                "200": {
-                  "0": "kommt es zu Gewittern mit leichtem Regen",
-                  "1": "ist mit Gewitter und leichtem Regen zu rechnen"
-                },
-                "201": {
-                  "0": "kommt es zu Gewittern mit Regen",
-                  "1": "ist mit Gewitter und Regen zu rechnen"
-                },
-                "202": {
-                  "0": "kommt es zu Gewittern mit starkem Regen",
-                  "1": "ist mit Gewitter und starkem Regen zu rechnen"
-                },
-                "230": {
-                  "0": "kommt es zu Gewittern mit leichtem Nieselregen",
-                  "1": "ist mit Gewitter und leichtem Nieselregen zu rechnen"
-                },
-                "231": {
-                  "0": "kommt es zu Gewittern mit Nieselregen",
-                  "1": "ist mit Gewitter und Nieselregen zu rechnen"
-                },
-                "232": {
-                  "0": "kommt es zu Gewittern mit starkem Nieselregen",
-                  "1": "ist mit Gewitter und starkem Nieselregen zu rechnen"
-                },
-                "233": {
-                  "0": "kommt es zu Gewittern mit Hagel",
-                  "1": "ist mit Gewitter und Hagel zu rechnen"
-                },
-                "300": {
-                  "0": "kommt es zu leichtem Nieselregen",
-                  "1": "ist mit leichtem Nieselregen zu rechnen"
-                },
-                "301": {
-                  "0": "kommt es zu Nieselregen",
-                  "1": "ist mit Nieselregen zu rechnen"
-                },
-                "302": {
-                  "0": "kommt es zu starkem Nieselregen",
-                  "1": "ist mit starkem Nieselregen zu rechnen"
-                },
-                "500": {
-                  "0": "kommt es zu leichtem Regen",
-                  "1": "ist es leicht regnerisch"
-                },
-                "501": {
-                  "0": "kommt es zu mäßigem Regen",
-                  "1": "ist es regnerisch"
-                },
-                "502": {
-                  "0": "kommt es zu starkem Regen",
-                  "1": "ist es stark regnerisch"
-                },
-                "511": {
-                  "0": "kommt es zu Eisregen",
-                  "1": "ist mit Eisregen zu rechnen"
-                },
-                "520": {
-                  "0": "kommt es zu leichtem Regenschauer",
-                  "1": "ist mit leichten Regenschauern zu rechnen"
-                },
-                "521": {
-                  "0": "kommt es zu Regenschauer",
-                  "1": "ist mit Regenschauern zu rechnen"
-                },
-                "522": {
-                  "0": "kommt es zu starkem Regenschauer",
-                  "1": "ist mit starken Regenschauern zu rechnen"
-                },
-                "600": {
-                  "0": "kommt es zu leichtem Schneefall",
-                  "1": "ist mit leichtem Schneefall zu rechnen"
-                },
-                "601": {
-                  "0": "kommt es zu Schnee",
-                  "1": "ist mit Schnee zu rechnen"
-                },
-                "602": {
-                  "0": "kommt es zu starkem Schneefall",
-                  "1": "ist mit starkem Schneefall zu rechnen"
-                },
-                "610": {
-                  "0": "kommt es zu einem Mix aus Schnee und Regen",
-                  "1": "ist mit einem Mix aus Schnee und Regen zu rechnen"
-                },
-                "611": {
-                  "0": "kommt es zu Schneeregen",
-                  "1": "ist mit Schneeregen zu rechnen"
-                },
-                "612": {
-                  "0": "kommt es zu starkem Schneeregen",
-                  "1": "ist mit starkem Schneeregen zu rechnen"
-                },
-                "621": {
-                  "0": "kommt es zu Schneeschauer",
-                  "1": "ist mit Schneeschauern zu rechnen"
-                },
-                "622": {
-                  "0": "kommt es zu starkem Schneeschauer",
-                  "1": "ist mit starken Schneeschauern zu rechnen"
-                },
-                "623": {
-                  "0": "kommt es zu Windböen",
-                  "1": "ist mit Windböen zu rechnen"
-                },
-                "700": {
-                  "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen"
-                },
-                "711": {
-                  "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen"
-                },
-                "721": {
-                  "0": "kommt es zu Dunst",
-                  "1": "ist mit Nebel zu rechnen"
-                },
-                "731": {
-                  "0": "kommt es zu Staub in der Luft",
-                  "1": "ist mit Staub in der Luft zu rechnen"
-                },
-                "741": {
-                  "0": "kommt es zu Nebel",
-                  "1": "ist mit Nebel zu rechnen"
-                },
-                "751": {
-                  "0": "kommt es zu Eisnebel",
-                  "1": "ist mit Eisnebel zu rechnen"
-                },
-                "800": {
-                  "0": "ist der Himmel klar",
-                  "1": "wird es heiter mit klarem Himmel"
-                },
-                "801": {
-                  "0": "sind nur wenige Wolken am Himmel",
-                  "1": "ist es leicht bewölkt"
-                },
-                "802": {
-                  "0": "sind vereinzelte Wolken am Himmel",
-                  "1": "ist es vereinzelt bewölkt"
-                },
-                "803": {
-                  "0": "ist es bewölkt, vereinzelt kommt die Sonne durch",
-                  "1": "ist es bewölkt, vereinzelt kommt die Sonne durch"
-                },
-                "804": {
-                  "0": "kommt es zu bedecktem Himmel",
-                  "1": "ist es bewölkt"
-                },
-                "900": {
-                  "0": "kommt es zu unbekanntem Niederschlag",
-                  "1": "ist mit unbekanntem Niederschlag zu rechnen"
-                }
-              },
-              "choice": [
-                "0",
-                "1"
-              ]
+                "200": [
+                  "kommt es zu Gewittern mit leichtem Regen",
+                  "ist mit Gewitter und leichtem Regen zu rechnen"
+                ],
+                "201": [
+                  "kommt es zu Gewittern mit Regen",
+                  "ist mit Gewitter und Regen zu rechnen"
+                ],
+                "202": [
+                  "kommt es zu Gewittern mit starkem Regen",
+                  "ist mit Gewitter und starkem Regen zu rechnen"
+                ],
+                "230": [
+                  "kommt es zu Gewittern mit leichtem Nieselregen",
+                  "ist mit Gewitter und leichtem Nieselregen zu rechnen"
+                ],
+                "231": [
+                  "kommt es zu Gewittern mit Nieselregen",
+                  "ist mit Gewitter und Nieselregen zu rechnen"
+                ],
+                "232": [
+                  "kommt es zu Gewittern mit starkem Nieselregen",
+                  "ist mit Gewitter und starkem Nieselregen zu rechnen"
+                ],
+                "233": [
+                  "kommt es zu Gewittern mit Hagel",
+                  "ist mit Gewitter und Hagel zu rechnen"
+                ],
+                "300": [
+                  "kommt es zu leichtem Nieselregen",
+                  "ist mit leichtem Nieselregen zu rechnen"
+                ],
+                "301": [
+                  "kommt es zu Nieselregen",
+                  "ist mit Nieselregen zu rechnen"
+                ],
+                "302": [
+                  "kommt es zu starkem Nieselregen",
+                  "ist mit starkem Nieselregen zu rechnen"
+                ],
+                "500": [
+                  "kommt es zu leichtem Regen",
+                  "ist es leicht regnerisch"
+                ],
+                "501": [
+                  "kommt es zu mäßigem Regen",
+                  "ist es regnerisch"
+                ],
+                "502": [
+                  "kommt es zu starkem Regen",
+                  "ist es stark regnerisch"
+                ],
+                "511": [
+                  "kommt es zu Eisregen",
+                  "ist mit Eisregen zu rechnen"
+                ],
+                "520": [
+                  "kommt es zu leichtem Regenschauer",
+                  "ist mit leichten Regenschauern zu rechnen"
+                ],
+                "521": [
+                  "kommt es zu Regenschauer",
+                  "ist mit Regenschauern zu rechnen"
+                ],
+                "522": [
+                  "kommt es zu starkem Regenschauer",
+                  "ist mit starken Regenschauern zu rechnen"
+                ],
+                "600": [
+                  "kommt es zu leichtem Schneefall",
+                  "ist mit leichtem Schneefall zu rechnen"
+                ],
+                "601": [
+                  "kommt es zu Schnee",
+                  "ist mit Schnee zu rechnen"
+                ],
+                "602": [
+                  "kommt es zu starkem Schneefall",
+                  "ist mit starkem Schneefall zu rechnen"
+                ],
+                "610": [
+                  "kommt es zu einem Mix aus Schnee und Regen",
+                  "ist mit einem Mix aus Schnee und Regen zu rechnen"
+                ],
+                "611": [
+                  "kommt es zu Schneeregen",
+                  "ist mit Schneeregen zu rechnen"
+                ],
+                "612": [
+                  "kommt es zu starkem Schneeregen",
+                  "ist mit starkem Schneeregen zu rechnen"
+                ],
+                "621": [
+                  "kommt es zu Schneeschauer",
+                  "ist mit Schneeschauern zu rechnen"
+                ],
+                "622": [
+                  "kommt es zu starkem Schneeschauer",
+                  "ist mit starken Schneeschauern zu rechnen"
+                ],
+                "623": [
+                  "kommt es zu Windböen",
+                  "ist mit Windböen zu rechnen"
+                ],
+                "700": [
+                  "kommt es zu Nebel",
+                  "ist mit Nebel zu rechnen"
+                ],
+                "711": [
+                  "kommt es zu Nebel",
+                  "ist mit Nebel zu rechnen"
+                ],
+                "721": [
+                  "kommt es zu Dunst",
+                  "ist mit Nebel zu rechnen"
+                ],
+                "731": [
+                  "kommt es zu Staub in der Luft",
+                  "ist mit Staub in der Luft zu rechnen"
+                ],
+                "741": [
+                  "kommt es zu Nebel",
+                  "ist mit Nebel zu rechnen"
+                ],
+                "751": [
+                  "kommt es zu Eisnebel",
+                  "ist mit Eisnebel zu rechnen"
+                ],
+                "800": [
+                  "ist der Himmel klar",
+                  "wird es heiter mit klarem Himmel"
+                ],
+                "801": [
+                  "sind nur wenige Wolken am Himmel",
+                  "ist es leicht bewölkt"
+                ],
+                "802": [
+                  "sind vereinzelte Wolken am Himmel",
+                  "ist es vereinzelt bewölkt"
+                ],
+                "803": [
+                  "ist es bewölkt, vereinzelt kommt die Sonne durch"
+                ],
+                "804": [
+                  "kommt es zu bedecktem Himmel",
+                  "ist es bewölkt"
+                ],
+                "900": [
+                  "kommt es zu unbekanntem Niederschlag",
+                  "ist mit unbekanntem Niederschlag zu rechnen"
+                ]
+              }
             },
             {
               "type": "add_symbol",
@@ -538,170 +547,165 @@
           "pattern": "{_key}\u00B0"
         },
         {
-          "type": "choose_random",
+          "type": "random_value",
           "keys": [
             "_loop|temp_highest_max_city_code",
             "_loop|temp_lowest_max_city_code",
             "_loop|code"
           ],
           "dict": {
-            "200": {
-              "0": "kommt es zu Gewittern mit leichtem Regen",
-              "1": "ist mit Gewitter und leichtem Regen zu rechnen"
-            },
-            "201": {
-              "0": "kommt es zu Gewittern mit Regen",
-              "1": "ist mit Gewitter und Regen zu rechnen"
-            },
-            "202": {
-              "0": "kommt es zu Gewittern mit starkem Regen",
-              "1": "ist mit Gewitter und starkem Regen zu rechnen"
-            },
-            "230": {
-              "0": "kommt es zu Gewittern mit leichtem Nieselregen",
-              "1": "ist mit Gewitter und leichtem Nieselregen zu rechnen"
-            },
-            "231": {
-              "0": "kommt es zu Gewittern mit Nieselregen",
-              "1": "ist mit Gewitter und Nieselregen zu rechnen"
-            },
-            "232": {
-              "0": "kommt es zu Gewittern mit starkem Nieselregen",
-              "1": "ist mit Gewitter und starkem Nieselregen zu rechnen"
-            },
-            "233": {
-              "0": "kommt es zu Gewittern mit Hagel",
-              "1": "ist mit Gewitter und Hagel zu rechnen"
-            },
-            "300": {
-              "0": "kommt es zu leichtem Nieselregen",
-              "1": "ist mit leichtem Nieselregen zu rechnen"
-            },
-            "301": {
-              "0": "kommt es zu Nieselregen",
-              "1": "ist mit Nieselregen zu rechnen"
-            },
-            "302": {
-              "0": "kommt es zu starkem Nieselregen",
-              "1": "ist mit starkem Nieselregen zu rechnen"
-            },
-            "500": {
-              "0": "kommt es zu leichtem Regen",
-              "1": "ist es leicht regnerisch"
-            },
-            "501": {
-              "0": "kommt es zu mäßigem Regen",
-              "1": "ist es regnerisch"
-            },
-            "502": {
-              "0": "kommt es zu starkem Regen",
-              "1": "ist es stark regnerisch"
-            },
-            "511": {
-              "0": "kommt es zu Eisregen",
-              "1": "ist mit Eisregen zu rechnen"
-            },
-            "520": {
-              "0": "kommt es zu leichtem Regenschauer",
-              "1": "ist mit leichten Regenschauern zu rechnen"
-            },
-            "521": {
-              "0": "kommt es zu Regenschauer",
-              "1": "ist mit Regenschauern zu rechnen"
-            },
-            "522": {
-              "0": "kommt es zu starkem Regenschauer",
-              "1": "ist mit starken Regenschauern zu rechnen"
-            },
-            "600": {
-              "0": "kommt es zu leichtem Schneefall",
-              "1": "ist mit leichtem Schneefall zu rechnen"
-            },
-            "601": {
-              "0": "kommt es zu Schnee",
-              "1": "ist mit Schnee zu rechnen"
-            },
-            "602": {
-              "0": "kommt es zu starkem Schneefall",
-              "1": "ist mit starkem Schneefall zu rechnen"
-            },
-            "610": {
-              "0": "kommt es zu einem Mix aus Schnee und Regen",
-              "1": "ist mit einem Mix aus Schnee und Regen zu rechnen"
-            },
-            "611": {
-              "0": "kommt es zu Schneeregen",
-              "1": "ist mit Schneeregen zu rechnen"
-            },
-            "612": {
-              "0": "kommt es zu starkem Schneeregen",
-              "1": "ist mit starkem Schneeregen zu rechnen"
-            },
-            "621": {
-              "0": "kommt es zu Schneeschauer",
-              "1": "ist mit Schneeschauern zu rechnen"
-            },
-            "622": {
-              "0": "kommt es zu starkem Schneeschauer",
-              "1": "ist mit starken Schneeschauern zu rechnen"
-            },
-            "623": {
-              "0": "kommt es zu Windböen",
-              "1": "ist mit Windböen zu rechnen"
-            },
-            "700": {
-              "0": "kommt es zu Nebel",
-              "1": "ist mit Nebel zu rechnen"
-            },
-            "711": {
-              "0": "kommt es zu Nebel",
-              "1": "ist mit Nebel zu rechnen"
-            },
-            "721": {
-              "0": "kommt es zu Dunst",
-              "1": "ist mit Nebel zu rechnen"
-            },
-            "731": {
-              "0": "kommt es zu Staub in der Luft",
-              "1": "ist mit Staub in der Luft zu rechnen"
-            },
-            "741": {
-              "0": "kommt es zu Nebel",
-              "1": "ist mit Nebel zu rechnen"
-            },
-            "751": {
-              "0": "kommt es zu Eisnebel",
-              "1": "ist mit Eisnebel zu rechnen"
-            },
-            "800": {
-              "0": "ist der Himmel klar",
-              "1": "wird es heiter mit klarem Himmel"
-            },
-            "801": {
-              "0": "sind nur wenige Wolken am Himmel",
-              "1": "ist es leicht bewölkt"
-            },
-            "802": {
-              "0": "sind vereinzelte Wolken am Himmel",
-              "1": "ist es vereinzelt bewölkt"
-            },
-            "803": {
-              "0": "ist es bewölkt, vereinzelt kommt die Sonne durch",
-              "1": "ist es bewölkt, vereinzelt kommt die Sonne durch"
-            },
-            "804": {
-              "0": "kommt es zu bedecktem Himmel",
-              "1": "ist es bewölkt"
-            },
-            "900": {
-              "0": "kommt es zu unbekanntem Niederschlag",
-              "1": "ist mit unbekanntem Niederschlag zu rechnen"
-            }
-          },
-          "choice": [
-            "0",
-            "1"
-          ]
+            "200": [
+              "kommt es zu Gewittern mit leichtem Regen",
+              "ist mit Gewitter und leichtem Regen zu rechnen"
+            ],
+            "201": [
+              "kommt es zu Gewittern mit Regen",
+              "ist mit Gewitter und Regen zu rechnen"
+            ],
+            "202": [
+              "kommt es zu Gewittern mit starkem Regen",
+              "ist mit Gewitter und starkem Regen zu rechnen"
+            ],
+            "230": [
+              "kommt es zu Gewittern mit leichtem Nieselregen",
+              "ist mit Gewitter und leichtem Nieselregen zu rechnen"
+            ],
+            "231": [
+              "kommt es zu Gewittern mit Nieselregen",
+              "ist mit Gewitter und Nieselregen zu rechnen"
+            ],
+            "232": [
+              "kommt es zu Gewittern mit starkem Nieselregen",
+              "ist mit Gewitter und starkem Nieselregen zu rechnen"
+            ],
+            "233": [
+              "kommt es zu Gewittern mit Hagel",
+              "ist mit Gewitter und Hagel zu rechnen"
+            ],
+            "300": [
+              "kommt es zu leichtem Nieselregen",
+              "ist mit leichtem Nieselregen zu rechnen"
+            ],
+            "301": [
+              "kommt es zu Nieselregen",
+              "ist mit Nieselregen zu rechnen"
+            ],
+            "302": [
+              "kommt es zu starkem Nieselregen",
+              "ist mit starkem Nieselregen zu rechnen"
+            ],
+            "500": [
+              "kommt es zu leichtem Regen",
+              "ist es leicht regnerisch"
+            ],
+            "501": [
+              "kommt es zu mäßigem Regen",
+              "ist es regnerisch"
+            ],
+            "502": [
+              "kommt es zu starkem Regen",
+              "ist es stark regnerisch"
+            ],
+            "511": [
+              "kommt es zu Eisregen",
+              "ist mit Eisregen zu rechnen"
+            ],
+            "520": [
+              "kommt es zu leichtem Regenschauer",
+              "ist mit leichten Regenschauern zu rechnen"
+            ],
+            "521": [
+              "kommt es zu Regenschauer",
+              "ist mit Regenschauern zu rechnen"
+            ],
+            "522": [
+              "kommt es zu starkem Regenschauer",
+              "ist mit starken Regenschauern zu rechnen"
+            ],
+            "600": [
+              "kommt es zu leichtem Schneefall",
+              "ist mit leichtem Schneefall zu rechnen"
+            ],
+            "601": [
+              "kommt es zu Schnee",
+              "ist mit Schnee zu rechnen"
+            ],
+            "602": [
+              "kommt es zu starkem Schneefall",
+              "ist mit starkem Schneefall zu rechnen"
+            ],
+            "610": [
+              "kommt es zu einem Mix aus Schnee und Regen",
+              "ist mit einem Mix aus Schnee und Regen zu rechnen"
+            ],
+            "611": [
+              "kommt es zu Schneeregen",
+              "ist mit Schneeregen zu rechnen"
+            ],
+            "612": [
+              "kommt es zu starkem Schneeregen",
+              "ist mit starkem Schneeregen zu rechnen"
+            ],
+            "621": [
+              "kommt es zu Schneeschauer",
+              "ist mit Schneeschauern zu rechnen"
+            ],
+            "622": [
+              "kommt es zu starkem Schneeschauer",
+              "ist mit starken Schneeschauern zu rechnen"
+            ],
+            "623": [
+              "kommt es zu Windböen",
+              "ist mit Windböen zu rechnen"
+            ],
+            "700": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "711": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "721": [
+              "kommt es zu Dunst",
+              "ist mit Nebel zu rechnen"
+            ],
+            "731": [
+              "kommt es zu Staub in der Luft",
+              "ist mit Staub in der Luft zu rechnen"
+            ],
+            "741": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "751": [
+              "kommt es zu Eisnebel",
+              "ist mit Eisnebel zu rechnen"
+            ],
+            "800": [
+              "ist der Himmel klar",
+              "wird es heiter mit klarem Himmel"
+            ],
+            "801": [
+              "sind nur wenige Wolken am Himmel",
+              "ist es leicht bewölkt"
+            ],
+            "802": [
+              "sind vereinzelte Wolken am Himmel",
+              "ist es vereinzelt bewölkt"
+            ],
+            "803": [
+              "ist es bewölkt, vereinzelt kommt die Sonne durch"
+            ],
+            "804": [
+              "kommt es zu bedecktem Himmel",
+              "ist es bewölkt"
+            ],
+            "900": [
+              "kommt es zu unbekanntem Niederschlag",
+              "ist mit unbekanntem Niederschlag zu rechnen"
+            ]
+          }
         }
       ]
     }
@@ -709,14 +713,14 @@
   "images": {
     "weather1": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|0|today}"
         },
@@ -749,8 +753,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|0|weather|icon}.png",
             "weather/icons/{_req|München|data|0|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|0|weather|icon}.png",
@@ -767,19 +771,19 @@
     },
     "weather2": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|0|today}"
         },
         {
-          "description": "kachel",
+          "description": "brown_bar",
           "type": "image_array",
           "pos_x": [
             897,
@@ -807,8 +811,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/kachel.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -856,14 +860,14 @@
     },
     "weather3": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|1|today}"
         },
@@ -896,8 +900,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|1|weather|icon}.png",
             "weather/icons/{_req|München|data|1|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|1|weather|icon}.png",
@@ -914,19 +918,19 @@
     },
     "weather4": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|1|today}"
         },
         {
-          "description": "kachel",
+          "description": "brown_bar",
           "type": "image_array",
           "pos_x": [
             897,
@@ -954,8 +958,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/kachel.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -1063,7 +1067,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "RGBA",
             "L",
             "L",
@@ -1077,7 +1081,7 @@
             "L",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1206,7 +1210,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "RGBA",
             "L",
@@ -1220,7 +1224,7 @@
             "RGBA",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1349,7 +1353,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "L",
             "RGBA",
@@ -1363,7 +1367,7 @@
             "L",
             "RGBA"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1489,8 +1493,8 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1559,10 +1563,6 @@
     }
   },
   "audio": {
-    "config": {
-      "lang": "de",
-      "format": "mp3"
-    },
     "audios": {
       "a1": {
         "parts": [
@@ -1685,15 +1685,7 @@
       }
     ]
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
-      "possible_values": [
-        true,
-        false
-      ]
-    }
-  },
+  "run_config": [],
   "presets": {
     "weather_white_2": {
       "color": "white",
