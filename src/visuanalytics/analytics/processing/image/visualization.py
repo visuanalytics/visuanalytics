@@ -122,6 +122,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         y0 = step_data.format(image["parameter"]["mask"]["y"])
         x, y = np.ogrid[:x0, :y0]
 
+        mask = None
         figure = image["parameter"]["mask"]["figure"]
         if figure == "circle":
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 400 ** 2
@@ -163,14 +164,11 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
                                 colormap=wordcloud_parameter["colormap"],
                                 normalize_plurals=wordcloud_parameter["normalize_plurals"],
                                 mask=wordcloud_parameter["mask"]).generate(step_data.get_data(image["text"], image))
-    # TODO Tanja
-    # wordcloud_image.recolor(color_func=WORDCLOUD_TYPES.color_func)
+
     plt.axis("off")
-    plt.imshow(wordcloud_image, interpolation=step_data.format(image["parameter"]["interpolation"]))
+    # plt.imshow(wordcloud_image, interpolation=step_data.format(image["parameter"]["interpolation"]))
     image = wordcloud_image.to_image()
-    image.show()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    # plt.savefig(file, step_data.format(image["parameter"]["bbox_inches"]))
     image.save(file)
 
     return file

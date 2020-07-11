@@ -60,40 +60,43 @@
   "storing": [
   ],
   "images": {
-    "wordcloud": {
-      "type": "wordcloud",
-      "path": "football/wordcloud.png",
-      "text": "_req|text",
-      "stopwords": "bundesliga",
-      "parameter": {
-        "mask": {
-          "x": 1000,
-          "y": 1000,
-          "figure": "own_mask",
-          "own_mask_path": "football/down.png"
-        },
-        "background_color": "black",
-        "width": 1920,
-        "height": 1080,
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 2000,
-        "contour_width": 3,
-        "contour_color": "black",
-        "interpolation": "bilinear",
-        "bbox_inches": "tight"
-      }
-    }
-  },
-  "audio": {
-    "audios": {
-      "a0": {
-        "parts": [
-          {
-            "type": "text",
-            "pattern": "Auf Twitter wurden folgende Hastags neben dem Bundesliga Hashtag verwendet. "
+    "football_wordcloud": {
+      "type": "pillow",
+      "path": "football/Matchday.png",
+      "overlay": [
+        {
+          "type": "wordcloud",
+          "text": "_req|text",
+          "stopwords": "bundesliga",
+          "parameter": {
+            "mask": {
+              "x": 1000,
+              "y": 1000,
+              "figure": "circle"
+            },
+            "background_color": "white",
+            "width": 1920,
+            "height": 1080,
+            "collocations": false,
+            "max_font_size": 400,
+            "max_words": 2000,
+            "contour_width": 3,
+            "contour_color": "black",
+            "interpolation": "bilinear"
           }
-        ]
+        }
+      ]
+    },
+    "audio": {
+      "audios": {
+        "a0": {
+          "parts": [
+            {
+              "type": "text",
+              "pattern": "Auf Twitter wurden folgende Hastags neben dem Bundesliga Hashtag verwendet. "
+            }
+          ]
+        }
       }
     }
   },
