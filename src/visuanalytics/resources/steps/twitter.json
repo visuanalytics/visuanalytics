@@ -16,6 +16,46 @@
     }
   },
   "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "_req|statuses",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "statuses",
+          "relevant_keys": [
+            "entities|hashtags"
+          ]
+        },
+        {
+          "type": "transform_array",
+          "array_key": "_loop|entities|hashtags",
+          "transform": [
+            {
+              "type": "select",
+              "array_key": "hashtags",
+              "relevant_keys": [
+                "text"
+              ]
+            },
+            {
+              "type": "append",
+              "key": "_loop|text",
+              "new_key": "_req|text",
+              "ignore_errors": true,
+              "new_key_is_string": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|search_metadata",
+        "_req|statuses"
+      ]
+    }
   ],
   "storing": [
   ],
