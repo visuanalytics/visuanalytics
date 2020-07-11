@@ -105,7 +105,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
 
-    args2.extend(("-i", output, "-c:a", "copy", "-filter_complex"))
+    args2.extend(("-i", output, "-c:a", "copy"))
 
     filter = ""
     for i in range(0, len(images) - 1):
@@ -120,13 +120,15 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
         else:
             filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
 
-    args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
-
+    if len(images) > 1:
+        args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
+    else:
+        args2.extend(("-pix_fmt", "yuv420p"))
     if step_data.get_config("h264_nvenc", False):
         args2.extend(("-c:v", "h264_nvenc"))
 
     args2.extend(("-shortest", "-s", "1920x1080", output2))
-    proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc2 = subprocess.run(args2)
     proc2.check_returncode()
 
     return output2
