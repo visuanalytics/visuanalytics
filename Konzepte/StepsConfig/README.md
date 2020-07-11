@@ -45,7 +45,15 @@
   - [Convert](#convert)
 - [Images](#images)
 - [Audios](#audios)
-- [Seqence](#seqence)
+  - [Pillow](#pillow)
+    - [Overlay](#overlay)
+      - [image](#image)
+      - [image-array](#image-array)
+      - [text](#text)
+      - [text-array](text-array)
+- [Sequence](#seqence)
+  - [successively](#successivel)
+  - [custom](#custom)
 - [Run Config](#run-config)
 - [Presets](#presets)
   
@@ -843,7 +851,11 @@ sind die internen Bildnamen der erstellten Bilder
 
 ## Pillow
 
-<!--TODO-->
+Pillow ist eine Image Library für Python.
+In unserem projekt nutzen wir grundlegend 3 Funktionen:
+Ein Bild öffnen um es zu bearbeiten.
+Ein Bild in ein Bild einfügen.
+Text in ein Bild einfügen.
 
 ```JSON
 
@@ -861,20 +873,23 @@ sind die internen Bildnamen der erstellten Bilder
   }
 }
 ```
-**`already_created`** _(Optional)_:
-<!--TODO-->
-**`path`**:
-<!--TODO-->
-**`overlay`**
-<!--TODO-->
+**`path`**:  
+Der Pfad zum Bild welches geöffnet werden soll, 
+hier kann auch ein Bild verwendet werden was vorher bereits erstellt wurde,   
+dazu muss lediglich der interne Bildname angegeben werden   
+**`already_created`** _(Optional)_:  
+Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss dies true sein  
+**`overlay`**  
+Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
 ## Overlay
 
 Es gibt 4 verschiedene Overlay Arten:
 
-## image
+### image
 
-<!--TODO-->
+
+Typ Image setzt ein Bild in das vorher definierte source image
 
 ```JSON
 
@@ -889,25 +904,28 @@ Es gibt 4 verschiedene Overlay Arten:
   "pattern": "123.png"
  }
 ```
-**`description`** _(Optional)_:
-<!--TODO-->
-**`type`** :
-<!--TODO-->
-**`pos_x`** :
-<!--TODO-->
-**`pos_y`** :
-<!--TODO-->
-**`size_x`** _(Optional)_:
-<!--TODO-->
-**`size_y`** _(Optional)_:
-<!--TODO-->
-**`colour`**:
-<!--TODO-->
-**`pattern`**:
-<!--TODO-->
-## image_array
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
+**`type`** :  
+Overlay typ der verwendet werden soll (Hier image)  
+**`pos_x`** :  
+X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)  
+**`pos_y`** :  
+Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)  
+**`size_x`** _(Optional)_:  
+X Größe des zu setzende Bildes   
+(wird nichts angeben wird das zu setzende Bild nicht skalliert)  
+**`size_y`** _(Optional)_:  
+Y Größe des zu setzende Bildes  
+(wird nichts angeben wird das zu setzende Bild nicht skalliert)  
+**`colour`**:   
+Farbe in welche das Bild konvertiert werden soll   
+(RGBA = bunt, L = schwarz-weiß)  
+**`pattern`**:  
+Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
+### image_array
 
-<!--TODO-->
+Typ Image-Array setzt mehrere Bilder in das vorher definierte source image
 
 ```JSON
 
@@ -926,26 +944,36 @@ Es gibt 4 verschiedene Overlay Arten:
 }
 ```
 
-**`description`** _(Optional)_:
-<!--TODO-->
-**`type`** :
-<!--TODO-->
-**`pos_x`** :
-<!--TODO-->
-**`pos_y`** :
-<!--TODO-->
-**`size_x`** _(Optional)_:
-<!--TODO-->
-**`size_y`** _(Optional)_:
-<!--TODO-->
-**`colour`**:
-<!--TODO-->
-**`pattern`**:
-<!--TODO-->
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON    
+**`type`** :  
+Overlay typ der verwendet werden soll (Hier image_array)   
+**`pos_x`** :  
+X Koordinaten der zu setztenden Bilder  (muss eine Liste sein)  
+(obere linke Ecke des Bildes)  
+**`pos_y`** :  
+X Koordinaten der zu setztenden Bilder  (muss eine Liste sein)  
+(obere linke Ecke des Bildes)  
+**`size_x`** _(Optional)_:    
+X Größe der zu setzenden Bilder (muss ein String sein)     
+(wird nichts angeben werden die Bilder nicht skaliert)  
+**`size_y`** _(Optional)_:  
+Y Größe der zu setzenden Bilder (muss ein String sein)     
+(wird nichts angeben werden die Bilder nicht skaliert)  
+**`colour`**:  
+Farbe in welche die Bilder konvertiert werden sollen.
+Kann ein String sein, dann wird die Farbe für alle verwendet oder eine Liste,
+dann wird jeder Eintrag einer Koordinate zu geordnet 
+(Liste muss dann lgischerweiße identisch lang sein wie pos_x)   
+(RGBA = bunt, L = schwarz-weiß)   
+**`pattern`**:  
+Pfad der zu setzenden Bilder 
+Kann ebenfalls wieder Liste oder String sein  
+(kann sich auch auf Daten aus der API beziehen)
 
-## text
+### text
 
-<!--TODO-->
+Typ Text setzt Text in das vorher definierte source image
 
 ```JSON
 
@@ -960,24 +988,25 @@ Es gibt 4 verschiedene Overlay Arten:
 }
 ```
 
-**`description`** _(Optional)_:
-<!--TODO-->
-**`type`** :
-<!--TODO-->
-**`anchor_point`**:
-<!--TODO-->
-**`pos_x`** :
-<!--TODO-->
-**`pos_y`** :
-<!--TODO-->
-**`preset`**:
-<!--TODO-->
-**`pattern`**:
-<!--TODO-->
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
+**`type`** :  
+Overlay typ der verwendet werden soll (Hier text)  
+**`anchor_point`**:  
+Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll  
+**`pos_x`** :  
+X Koordinate des zu setztenden Textes  
+**`pos_y`** :  
+Y Koordinate des zu setztenden Textes  
+**`preset`**:  
+Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
+Presets sind weiter unten in der JSON spezifiziert  
+**`pattern`**:  
+Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
-## text_array
+### text_array
 
-<!--TODO-->
+Typ Text-Array setzt mehrere Texte in das vorher definierte source image
 
 ```JSON
 
@@ -997,20 +1026,23 @@ Es gibt 4 verschiedene Overlay Arten:
  ]
 }
 ```
-**`description`** _(Optional)_:
-<!--TODO-->
-**`type`** :
-<!--TODO-->
-**`anchor_point`**:
-<!--TODO-->
-**`pos_x`** :
-<!--TODO-->
-**`pos_y`** :
-<!--TODO-->
-**`preset`**:
-<!--TODO-->
-**`pattern`**:
-<!--TODO-->
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
+**`type`** :  
+Overlay typ der verwendet werden soll (Hier text_array)  
+**`anchor_point`**:  
+Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll  
+**`pos_x`** :  
+X Koordinate der zu setztenden Texte  
+**`pos_y`** :  
+Y Koordinate der zu setztenden Texte 
+**`preset`**:  
+Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
+Dies kann wieder eine Liste oder ein String sein  
+Presets sind weiter unten in der JSON spezifiziert  
+**`pattern`**:  
+Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich   
+(kann sich auch auf Daten aus der API beziehen)
 
 
 # Audios
@@ -1019,7 +1051,7 @@ Es gibt 4 verschiedene Overlay Arten:
 
 # Sequence
 
-<!--TODO-->
+Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 
 ```JSON
 {
@@ -1031,7 +1063,10 @@ Es gibt 4 verschiedene Overlay Arten:
 
 ## successively
 
-<!--TODO-->
+Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
+und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
+definiert wurden. Jedes Bild wird so lange gezeigt wie die dazu geordnete Audio datei ist.
+Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Audios gibt
 
 ```JSON
 {
@@ -1039,11 +1074,19 @@ Es gibt 4 verschiedene Overlay Arten:
 }
 ```
 **`type`**:
-<!--TODO-->
+Typangabe des Sequence (Hier successively)
 
 ## custom
 
-<!--TODO-->
+Custom ist ein etwas schwierigere sequeunce Typ, diese setzt nicht vorraus das es die selbe
+Anzahl an Bilder sowie Audios gibt. Das heißt mann kann bestimmte Bilder doppelt oder auch gar nicht verwenden  
+Custom funktioniert wie folgt:    
+Die audios werden in der Reihenfolge aneinander gehängt wie in "audio_l" vorgegeben,  
+Die Bilder werden ebenfalls in der Reihenfolge wie in "imnage" angeben aneinander gehängt.  
+jedes Bild wird solange gezeigt wie "time_diff" + Länge des Audios "audio_l".
+Sollte kein Audio angegeben werden wird dies als + 0 betrachtet.
+Das heißt alle time_diff Werte aufaddiert müssen 0 ergeben,
+ansosten passt die gesamte audio Länge nicht auf alle Bilder
 
 ```JSON
 
@@ -1061,17 +1104,17 @@ Es gibt 4 verschiedene Overlay Arten:
       },
       {
         "image": "test5",
-        "time_diff": 4
+        "time_diff": -7
       }
     ]
 }
 ```
 **`image`**:
-<!--TODO-->
+Name des internen Bildes
 **`time_diff`**_(Optional)_:
-<!--TODO-->
+Zeit welches dieses Bild länger oder kürzer als die Audio datei angezeigt werden soll
 **`audio_l`**_(Optional)_:
-<!--TODO-->
+Name der internen Audio Datei
 
 
 # Run Config
@@ -1080,7 +1123,7 @@ Es gibt 4 verschiedene Overlay Arten:
 
 # Presets
 
-<!--TODO-->
+Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurden auf die Bilder zu schreiben
 
 ```JSON
 {
@@ -1099,10 +1142,10 @@ Es gibt 4 verschiedene Overlay Arten:
 }
 ```
 **`colour`**:
-<!--TODO-->
+Farbe des Textes, kann ein name sein aber auch eine Hexzahl
 **`font_size`**:
-<!--TODO-->
+Größe des Textes
 **`font`**:
-<!--TODO-->
+Pfad relativ vom ressource Ordner zu der Font Datei
 **`"test_preset_1"`, `"test_preset_2":`**   
 sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
