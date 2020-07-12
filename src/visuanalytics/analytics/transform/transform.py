@@ -134,26 +134,22 @@ def append(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     # TODO(Max) improve
-    new_key_is_string = data.format(values.get("new_key_is_string", False))
+    new_key_format = data.format(values.get("append_type", "list"))
     try:
-        array = data.get_data(values["new_key"], values)
+        result = data.get_data(values["new_key"], values)
     except StepKeyError:
-        if new_key_is_string:
+        if new_key_format == "string":
             data.insert_data(values["new_key"], "", values)
         else:
             data.insert_data(values["new_key"], [], values)
-        array = data.get_data(values["new_key"], values)
+        result = data.get_data(values["new_key"], values)
 
-    try:
-        value = data.get_data(values["key"], values)
-        if new_key_is_string:
-            array = array + data.format(values.get("delimiter", " ")) + value
-            data.insert_data(values["new_key"], array, values)
-        else:
-            array.append(value)
-    except StepKeyError:
-        if not data.format(values.get("ignore_errors", False)):
-            raise
+    value = data.get_data(values["key"], values)
+    if new_key_format == "string":
+        result = result + data.format(values.get("delimiter", " ")) + value
+        data.insert_data(values["new_key"], result, values)
+    else:
+        result.append(value)
 
 
 @register_transform

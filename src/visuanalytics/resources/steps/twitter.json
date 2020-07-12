@@ -4,7 +4,7 @@
   "api": {
     "type": "request",
     "api_key_name": "twitter",
-    "url_pattern": "https://api.twitter.com/1.1/search/tweets.json?",
+    "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
     "params": {
       "q": "%23Bundesliga",
       "count": "10",
@@ -42,8 +42,7 @@
               "type": "append",
               "key": "_loop|text",
               "new_key": "_req|text",
-              "ignore_errors": true,
-              "new_key_is_string": true
+              "append_type": "string"
             }
           ]
         }
@@ -56,8 +55,6 @@
         "_req|statuses"
       ]
     }
-  ],
-  "storing": [
   ],
   "images": {
   },
