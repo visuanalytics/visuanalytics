@@ -85,15 +85,8 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     :rtype: str
     """
 
-    if values.get("path", None) is None:
-        source_img = Image.open(resources.get_resource_path(prev_paths[values["image_name"]]))
-    else:
-        source_img = Image.open(resources.get_image_path(values["path"]))
-    # img1 = Image.new("RGBA", source_img.size)
-    draw = ImageDraw.Draw(source_img)
-
     for wordcloud in values["wordcloud"]:
         word_func = get_type_func(wordcloud, WORDCLOUD_TYPES)
-        file = word_func(wordcloud, source_img, draw, presets, step_data)
+        file = word_func(wordcloud, prev_paths, presets, step_data)
 
     return file

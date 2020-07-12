@@ -33,7 +33,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
 
 
 @register_wordcloud
-def wordcloud(image: dict, source_img, draw, presets: dict, step_data: StepData):
+def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     """
     Erstellt ein Wordcloud Bild  --- TODO.
 
