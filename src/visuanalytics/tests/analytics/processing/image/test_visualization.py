@@ -29,9 +29,10 @@ def prepare_image_test(values, data, config=None):
     return values["images"]
 
 
-class PreprocessTest(unittest.TestCase):
+class VisualizationTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "../../tests/resources"
+        resources.IMAGES_LOCATION = "../../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "102"), exist_ok=True)
 
@@ -77,7 +78,7 @@ class PreprocessTest(unittest.TestCase):
             "test_2": {
                 "type": "pillow",
                 "already_created": True,
-                "path": "test_1",
+                "path": "Test_Bild_1.png",
                 "overlay": [
                     {
                         "type": "text",

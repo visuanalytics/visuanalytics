@@ -1,6 +1,7 @@
 """
 Modul welches die Pillow Image Funktionen zum erstellen und bearbeiten von Bildern beinhaltet.
 """
+
 from PIL import Image
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -68,7 +69,6 @@ def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepDa
         else:
             pattern = overlay["pattern"]
         new_overlay = {
-            "description": overlay.get("description", None),
             "anchor_point": overlay["anchor_point"],
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
@@ -128,11 +128,11 @@ def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
     """
-    path = step_data.format(overlay["pattern"])
+    path = step_data.format(overlay["path"])
     icon = Image.open(
-        resources.get_resource_path(path)).convert("RGBA")
-    if step_data.format(overlay.get("colour", "RGBA")) != "RGBA":
-        icon = icon.convert(step_data.format(overlay["colour"]))
+        resources.get_image_path(path)).convert("RGBA")
+    if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
+        icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
@@ -159,21 +159,20 @@ def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepD
     :param step_data: Daten aus der API
     """
     for idx, i in enumerate(overlay["pos_x"]):
-        if isinstance(overlay["colour"], list):
-            colour = overlay["colour"][idx]
+        if isinstance(overlay["color"], list):
+            color = overlay["color"][idx]
         else:
-            colour = overlay["colour"]
-        if isinstance(overlay["pattern"], list):
-            pattern = overlay["pattern"][idx]
+            color = overlay["color"]
+        if isinstance(overlay["path"], list):
+            path = overlay["path"][idx]
         else:
-            pattern = overlay["pattern"]
+            path = overlay["path"]
         new_overlay = {
-            "description": overlay.get("description", None),
             "size_x": overlay.get("size_x", None),
             "size_y": overlay.get("size_y", None),
             "pos_x": overlay["pos_x"][idx],
             "pos_y": overlay["pos_y"][idx],
             "transparency": overlay.get("transparency", False),
-            "pattern": pattern,
-            "colour": colour}
+            "path": path,
+            "color": color}
         image(new_overlay, source_img, draw, presets, step_data)
