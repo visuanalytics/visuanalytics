@@ -19,7 +19,7 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
-import {parse, formatDistanceToNow, isPast, addDays, setDay, formatDistanceToNowStrict} from "date-fns";
+import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay} from "date-fns";
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 
@@ -104,6 +104,9 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             console.log(time);
             return  isPast(time) ? addDays(time, 1) : time
         } else if (job.schedule.weekly) {
+            const curWeekday = getDay(new Date());
+            var weekday;
+
             const time = parse(String(job.schedule.time), "H:m", setDay(new Date(),Number(job.schedule.weekdays[0])+1));
             return  isPast(time) ? addDays(time, 7) : time;
         } else {
