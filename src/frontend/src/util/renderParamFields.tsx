@@ -18,7 +18,7 @@ export const renderParamField = (param: Param, classes: any, disabled = true, re
                 onChange={handler}
                 className={classes.inputFields}
                 variant="outlined"
-                //     defaultValue={param.selected}
+                // defaultValue={param.selected}
                 value={param.selected}
                 InputProps={{
                     disabled: disabled
@@ -33,14 +33,14 @@ export const renderParamField = (param: Param, classes: any, disabled = true, re
             className={classes.inputFields}
             variant="outlined"
             label={param.displayName}
-            //     defaultValue={param.selected}
+            // defaultValue={param.selected}
             value={param.selected}
             InputProps={{
                 disabled: disabled,
             }}
             select>
             {param.possibleValues.map((val) => (
-                <MenuItem key={val.value} value={val.value}>
+                <MenuItem key={val.value} value={val.value.toString()}>
                     {val.displayValue}
                 </MenuItem>
             ))}
