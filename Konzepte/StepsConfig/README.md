@@ -843,8 +843,7 @@ Bilder lassen sich in der JSOn wie folgt darstellen:
   }
 }
 ```
-**`type`**:  
-Von welchem Typ die Bilder sind zb. Wordcloud oder Pillow (bisher gibt es nur Pillow)   
+
 **`"test1"`, `"test2":`**   
 sind die internen Bildnamen der erstellten Bilder
 
@@ -877,8 +876,10 @@ Text in ein Bild einfügen.
 Der Pfad zum Bild welches geöffnet werden soll, 
 hier kann auch ein Bild verwendet werden was vorher bereits erstellt wurde,   
 dazu muss lediglich der interne Bildname angegeben werden   
+
 **`already_created`** _(Optional)_:  
 Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss dies true sein  
+
 **`overlay`**  
 Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
@@ -906,21 +907,25 @@ Typ Image setzt ein Bild in das vorher definierte source image
 ```
 **`description`** _(Optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
-**`type`** :  
-Overlay typ der verwendet werden soll (Hier image)  
+
 **`pos_x`** :  
 X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)  
+
 **`pos_y`** :  
 Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)  
+
 **`size_x`** _(Optional)_:  
 X Größe des zu setzende Bildes   
 (wird nichts angeben wird das zu setzende Bild nicht skalliert)  
+
 **`size_y`** _(Optional)_:  
 Y Größe des zu setzende Bildes  
 (wird nichts angeben wird das zu setzende Bild nicht skalliert)  
+
 **`colour`**:   
 Farbe in welche das Bild konvertiert werden soll   
 (RGBA = bunt, L = schwarz-weiß)  
+
 **`pattern`**:  
 Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
 ### image_array
@@ -946,26 +951,30 @@ Typ Image-Array setzt mehrere Bilder in das vorher definierte source image
 
 **`description`** _(Optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON    
-**`type`** :  
-Overlay typ der verwendet werden soll (Hier image_array)   
+
 **`pos_x`** :  
 X Koordinaten der zu setztenden Bilder  (muss eine Liste sein)  
 (obere linke Ecke des Bildes)  
+
 **`pos_y`** :  
 X Koordinaten der zu setztenden Bilder  (muss eine Liste sein)  
 (obere linke Ecke des Bildes)  
+
 **`size_x`** _(Optional)_:    
 X Größe der zu setzenden Bilder (muss ein String sein)     
 (wird nichts angeben werden die Bilder nicht skaliert)  
+
 **`size_y`** _(Optional)_:  
 Y Größe der zu setzenden Bilder (muss ein String sein)     
 (wird nichts angeben werden die Bilder nicht skaliert)  
+
 **`colour`**:  
 Farbe in welche die Bilder konvertiert werden sollen.
 Kann ein String sein, dann wird die Farbe für alle verwendet oder eine Liste,
 dann wird jeder Eintrag einer Koordinate zu geordnet 
 (Liste muss dann lgischerweiße identisch lang sein wie pos_x)   
 (RGBA = bunt, L = schwarz-weiß)   
+
 **`pattern`**:  
 Pfad der zu setzenden Bilder 
 Kann ebenfalls wieder Liste oder String sein  
@@ -989,18 +998,21 @@ Typ Text setzt Text in das vorher definierte source image
 ```
 
 **`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
-**`type`** :  
-Overlay typ der verwendet werden soll (Hier text)  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON    
+
 **`anchor_point`**:  
 Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll  
+
 **`pos_x`** :  
 X Koordinate des zu setztenden Textes  
+
 **`pos_y`** :  
 Y Koordinate des zu setztenden Textes  
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Presets sind weiter unten in der JSON spezifiziert  
+
 **`pattern`**:  
 Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
@@ -1028,18 +1040,21 @@ Typ Text-Array setzt mehrere Texte in das vorher definierte source image
 ```
 **`description`** _(Optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON  
-**`type`** :  
-Overlay typ der verwendet werden soll (Hier text_array)  
+
 **`anchor_point`**:  
 Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll  
+
 **`pos_x`** :  
 X Koordinate der zu setztenden Texte  
+
 **`pos_y`** :  
-Y Koordinate der zu setztenden Texte 
+Y Koordinate der zu setztenden Texte   
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Dies kann wieder eine Liste oder ein String sein  
 Presets sind weiter unten in der JSON spezifiziert  
+
 **`pattern`**:  
 Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich   
 (kann sich auch auf Daten aus der API beziehen)
@@ -1073,8 +1088,6 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
   "type": "successively"
 }
 ```
-**`type`**:
-Typangabe des Sequence (Hier successively)
 
 ## custom
 
@@ -1109,11 +1122,13 @@ ansosten passt die gesamte audio Länge nicht auf alle Bilder
     ]
 }
 ```
-**`image`**:
+**`image`**:  
 Name des internen Bildes
-**`time_diff`**_(Optional)_:
+
+**`time_diff`**_(Optional)_:  
 Zeit welches dieses Bild länger oder kürzer als die Audio datei angezeigt werden soll
-**`audio_l`**_(Optional)_:
+
+**`audio_l`**_(Optional)_:  
 Name der internen Audio Datei
 
 
@@ -1141,11 +1156,14 @@ Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurde
   }
 }
 ```
-**`colour`**:
+**`colour`**:  
 Farbe des Textes, kann ein name sein aber auch eine Hexzahl
-**`font_size`**:
+
+**`font_size`**:  
 Größe des Textes
-**`font`**:
+
+**`font`**:  
 Pfad relativ vom ressource Ordner zu der Font Datei
+
 **`"test_preset_1"`, `"test_preset_2":`**   
 sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
