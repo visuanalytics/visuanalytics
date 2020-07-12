@@ -1,0 +1,74 @@
+{
+  "id": 1,
+  "name": "twitter",
+  "api": {
+    "type": "request",
+    "api_key_name": "twitter",
+    "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
+    "params": {
+      "q": "%23Bundesliga",
+      "count": "10",
+      "lang": "de",
+      "result_type": "recent"
+    },
+    "headers": {
+      "Authorization": "Bearer {_api_key}"
+    }
+  },
+  "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "_req|statuses",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "statuses",
+          "relevant_keys": [
+            "entities|hashtags"
+          ]
+        },
+        {
+          "type": "transform_array",
+          "array_key": "_loop|entities|hashtags",
+          "transform": [
+            {
+              "type": "select",
+              "array_key": "hashtags",
+              "relevant_keys": [
+                "text"
+              ]
+            },
+            {
+              "type": "append",
+              "key": "_loop|text",
+              "new_key": "_req|text",
+              "append_type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|search_metadata",
+        "_req|statuses"
+      ]
+    }
+  ],
+  "images": {
+  },
+  "audio": {
+    "audios": {
+    }
+  },
+  "sequence": {
+    "type": "successively"
+  },
+  "run_config": [
+    {
+    }
+  ],
+  "presets": {
+  }
+}

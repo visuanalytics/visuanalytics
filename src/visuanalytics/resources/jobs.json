@@ -52,6 +52,18 @@
         "league": "1",
         "keep_count": 3
       }
+    },
+    {
+      "name": "Twitter-Wordcloud",
+      "id": 1,
+      "steps": "twitter",
+      "schedule": {
+        "time": "10:10",
+        "daily": true
+      },
+      "config": {
+        "keep_count": 3
+      }
     }
   ]
 }
