@@ -69,19 +69,20 @@
           "part_length": 7,
           "stopwords": "und",
           "parameter": {
+            "transparency": true,
             "mask": {
               "x": 1000,
               "y": 1000,
               "figure": "circle"
             },
-            "background_color": "black",
+            "background_color": "white",
             "width": 1920,
             "height": 1080,
             "collocations": false,
             "max_font_size": 400,
             "max_words": 2000,
             "contour_width": 3,
-            "contour_color": "black",
+            "contour_color": "white",
             "interpolation": "bilinear"
           }
         }
@@ -89,12 +90,12 @@
     },
     "wordcloud_with_background": {
       "type": "pillow",
-      "path": "football/Matchday.png",
+      "path": "football/background.png",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "prev_image",
-          "pos_x": 500,
+          "pos_x": 450,
           "pos_y": 10,
           "color": "RGBA",
           "icon_name": "football_wordcloud",

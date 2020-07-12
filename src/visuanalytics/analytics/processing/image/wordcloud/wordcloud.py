@@ -29,7 +29,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     """
     Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
     """
-    return "hsl(38, 73%%, %d%%)" % random.randint(30, 80)
+    return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
 
 
 @register_wordcloud
@@ -47,13 +47,14 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
     WORDCLOUD_DEFAULT_PARAMETER = {
         "background_color": "white",
+        "transparency": False,
         "width": 400,
         "height": 200,
         "collocations": True,
         "max_font_size": None,
         "max_words": 200,
         "contour_width": 0,
-        "contour_color": "black",
+        "contour_color": "white",
         "interpolation": "bilinear",
         "bbox_inches": "tight",
         "font_path": None,
@@ -63,7 +64,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         "font_step": 1,
         "mode": "RGB",
         "relative_scaling": 0.5,
-        "color_func": None,
+        "color_func": color_func,
         "regexp": None,
         "colormap": "viridis",
         "normalize_plurals": True,
@@ -128,5 +129,20 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
+
+    if wordcloud_parameter["transparency"]:
+        img = Image.open(file)
+        img = img.convert("RGBA")
+        pixels = img.getdata()
+
+        newPixels = []
+        for item in pixels:
+            if item[0] == 255 and item[1] == 255 and item[2] == 255:
+                newPixels.append((255, 255, 255, 0))
+            else:
+                newPixels.append(item)
+
+        img.putdata(newPixels)
+        img.save(file)
 
     return file

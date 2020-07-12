@@ -191,6 +191,7 @@ def prev_image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_
     """
 
     icon = Image.open(resources.get_resource_path(prev_paths[overlay["icon_name"]])).convert("RGBA")
+    source_img.convert("RGB")
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
