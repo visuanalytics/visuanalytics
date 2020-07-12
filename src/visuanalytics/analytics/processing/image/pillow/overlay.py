@@ -6,7 +6,6 @@ from PIL import Image
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.draw import DRAW_TYPES
-from visuanalytics.analytics.processing.image.wordcloud.wordcloud import WORDCLOUD_TYPES
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import ImageError
 from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
@@ -27,7 +26,7 @@ def register_overlay(func):
 
 
 @register_overlay
-def text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+def text(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode um Text auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
 
@@ -48,7 +47,7 @@ def text(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
 
 
 @register_overlay
-def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+def text_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode um ein Text-Array auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
     Im Bauplan sind mehrere Texte vorgegeben die auf das Bild geschrieben werden sollen, diese werden ausgepackt
@@ -79,7 +78,7 @@ def text_array(overlay: dict, source_img, draw, presets: dict, step_data: StepDa
 
 
 @register_overlay
-def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
+def option(values: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
     wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
@@ -99,7 +98,7 @@ def option(values: dict, source_img, draw, presets: dict, step_data: StepData):
 
 
 @register_overlay
-def compare(values: dict, source_img, draw, presets: dict, step_data: StepData):
+def compare(values: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
     wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
@@ -119,7 +118,7 @@ def compare(values: dict, source_img, draw, presets: dict, step_data: StepData):
 
 
 @register_overlay
-def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode um ein Bild in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
 
@@ -146,7 +145,7 @@ def image(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
 
 
 @register_overlay
-def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
     Methode um ein Bild-Array in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
     Im Bauplan sind mehrere Bilder vorgegeben die auf das Bild gesetzt werden sollen, diese werden ausgepackt
@@ -180,19 +179,26 @@ def image_array(overlay: dict, source_img, draw, presets: dict, step_data: StepD
 
 
 @register_overlay
-def wordcloud(overlay: dict, source_img, draw, presets: dict, step_data: StepData):
+def prev_image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
     """
-    Erstellt ein Wordcloud Bild.
+    Methode um ein Bild in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
 
-    :param values: Image Bauplan des zu erstellenden Bildes
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param overlay: Bauplan des zu schreibenden Overlays
+    :param source_img: Bild auf welches das Bild eingefügt werden soll
+    :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
-    :return: Den Pfad zum erstellten Bild
-    :rtype: str
     """
 
-    word_func = get_type_func(overlay, WORDCLOUD_TYPES)
-    file = word_func(overlay, source_img, draw, presets, step_data)
-
-    return file
+    icon = Image.open(resources.get_resource_path(prev_paths[overlay["icon_name"]])).convert("RGBA")
+    if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
+        icon = icon.convert(step_data.format(overlay["color"]))
+    if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
+        icon = icon.resize([step_data.format(overlay["size_x"]),
+                            step_data.format(overlay["size_y"])], Image.LANCZOS)
+    if overlay.get("transparency", False):
+        source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
+                                          step_data.format(overlay["pos_y"])))
+    else:
+        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
+                                step_data.format(overlay["pos_y"])), icon)

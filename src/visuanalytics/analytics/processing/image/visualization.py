@@ -65,7 +65,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
     for overlay in values["overlay"]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, draw, presets, step_data)
+        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     Image.composite(img1, source_img, img1).save(file)

@@ -62,7 +62,6 @@
   "images": {
     "football_wordcloud": {
       "type": "wordcloud",
-      "path": "football/Matchday.png",
       "wordcloud": [
         {
           "type": "wordcloud",
@@ -87,11 +86,34 @@
           }
         }
       ]
+    },
+    "wordcloud_with_background": {
+      "type": "pillow",
+      "path": "football/Matchday.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "prev_image",
+          "pos_x": 500,
+          "pos_y": 10,
+          "color": "RGBA",
+          "icon_name": "football_wordcloud",
+          "transparency": false
+        }
+      ]
     }
   },
   "audio": {
     "audios": {
       "a0": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Twitter-Wordcloud. "
+          }
+        ]
+      },
+      "a1": {
         "parts": [
           {
             "type": "text",
