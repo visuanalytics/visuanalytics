@@ -32,6 +32,7 @@ def text(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: 
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param source_img: Bild auf welches geschrieben werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
@@ -55,6 +56,7 @@ def text_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param source_img: Bild auf welches geschrieben werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
@@ -86,6 +88,7 @@ def option(values: dict, source_img, prev_paths, draw, presets: dict, step_data:
 
     :param values: Baupläne des zu schreibenden Overlays
     :param source_img: Bild auf welches geschrieben werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
@@ -106,6 +109,7 @@ def compare(values: dict, source_img, prev_paths, draw, presets: dict, step_data
 
     :param values: Baupläne des zu schreibenden Overlays
     :param source_img: Bild auf welches geschrieben werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
@@ -124,6 +128,7 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param source_img: Bild auf welches das Bild eingefügt werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
@@ -158,6 +163,7 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param source_img: Bild auf welches das Bild eingefügt werden soll
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
