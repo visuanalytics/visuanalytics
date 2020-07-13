@@ -78,16 +78,15 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         if each in image["parameter"]:
             wordcloud_parameter[each] = step_data.format(image["parameter"][each])
 
-    if image["parameter"]["color_func"] == True:
+    if step_data.get_data(image["parameter"]["color_func"], image) == True:
         wordcloud_parameter["color_func"] = color_func
 
-    if image["parameter"]["mask"] is not None:
+    if image["parameter"]["mask"] is not None and image["parameter"]["mask"]["figure"] is not None:
         x0 = step_data.format(image["parameter"]["mask"]["x"])
         y0 = step_data.format(image["parameter"]["mask"]["y"])
         x, y = np.ogrid[:x0, :y0]
 
-        mask = None
-        figure = image["parameter"]["mask"]["figure"]
+        figure = step_data.get_data(image["parameter"]["mask"]["figure"], image)
         if figure == "circle":
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 400 ** 2
         elif figure == "square":
@@ -104,7 +103,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
     stopwords = set(STOPWORDS)
 
-    dont_use = step_data.format(image["stopwords"])
+    dont_use = step_data.get_data(image["stopwords"], image)
     stopwords.add(dont_use)
     list_dont_use = dont_use.split()
     STOPWORDS.update(list_dont_use)
