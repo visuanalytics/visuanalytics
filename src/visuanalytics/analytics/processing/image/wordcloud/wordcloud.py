@@ -7,27 +7,8 @@ from wordcloud import WordCloud, STOPWORDS
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.step_errors import ImageError
-from visuanalytics.analytics.util.type_utils import register_type_func
-
-WORDCLOUD_TYPES = {}
-"""Ein Dictionary bestehende aus allen Wordcloud Typ Methoden  """
 
 
-# todo nicht nötog da es nur einen wordcloud typ gibt
-
-
-def register_wordcloud(func):
-    """
-    Fügt eine Typ-Funktion dem Dictionary WORDCLOUD_TYPES hinzu.
-
-    :param func: Eine Funktion
-    :return: Die übergebene Funktion
-    """
-    return register_type_func(WORDCLOUD_TYPES, ImageError, func)
-
-
-@register_wordcloud
 def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
     """
     Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
@@ -35,7 +16,6 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
 
 
-@register_wordcloud
 def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
 
@@ -49,7 +29,6 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
     WORDCLOUD_DEFAULT_PARAMETER = {
         "background_color": "white",
-        "transparency": False,
         "width": 400,
         "height": 200,
         "collocations": True,
@@ -57,8 +36,6 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         "max_words": 200,
         "contour_width": 0,
         "contour_color": "white",
-        "interpolation": "bilinear",
-        "bbox_inches": "tight",
         "font_path": None,
         "prefer_horizontal": 0.90,
         "scale": 1,
@@ -108,26 +85,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     list_dont_use = dont_use.split()
     STOPWORDS.update(list_dont_use)
 
-    wordcloud_image = WordCloud(background_color=wordcloud_parameter["background_color"],
-                                width=wordcloud_parameter["width"],
-                                height=wordcloud_parameter["height"],
-                                collocations=wordcloud_parameter["collocations"],
-                                max_font_size=wordcloud_parameter["max_font_size"],
-                                max_words=wordcloud_parameter["max_words"],
-                                contour_width=wordcloud_parameter["contour_width"],
-                                contour_color=wordcloud_parameter["contour_color"],
-                                font_path=wordcloud_parameter["font_path"],
-                                prefer_horizontal=wordcloud_parameter["prefer_horizontal"],
-                                scale=wordcloud_parameter["scale"],
-                                min_font_size=wordcloud_parameter["min_font_size"],
-                                font_step=wordcloud_parameter["font_step"],
-                                mode=wordcloud_parameter["mode"],
-                                relative_scaling=wordcloud_parameter["relative_scaling"],
-                                color_func=wordcloud_parameter["color_func"],
-                                regexp=wordcloud_parameter["regexp"],
-                                colormap=wordcloud_parameter["colormap"],
-                                normalize_plurals=wordcloud_parameter["normalize_plurals"],
-                                mask=wordcloud_parameter["mask"]).generate(step_data.get_data(image["text"], image))
+    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(image["text"], image))
 
     plt.axis("off")
     image = wordcloud_image.to_image()

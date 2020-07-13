@@ -68,8 +68,8 @@
           "text": "_req|text",
           "part_length": 7,
           "stopwords": "_conf|stopwords",
+          "transparency": true,
           "parameter": {
-            "transparency": true,
             "mask": {
               "x": 1000,
               "y": 1000,
@@ -83,7 +83,6 @@
             "max_words": 2000,
             "contour_width": 3,
             "contour_color": "white",
-            "interpolation": "bilinear",
             "color_func": "_conf|color_func_words",
             "colormap": "_conf|colormap_words"
           }
