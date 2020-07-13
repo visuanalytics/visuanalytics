@@ -128,9 +128,10 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
     :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
     """
-    path = step_data.format(overlay["path"])
-    icon = Image.open(
-        resources.get_image_path(path)).convert("RGBA")
+    if overlay.get("path", None) is None:
+        icon = Image.open(resources.get_resource_path(prev_paths[overlay["image_name"]]))
+    else:
+        icon = Image.open(resources.get_image_path(overlay["path"]))
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
@@ -176,30 +177,3 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
             "path": path,
             "color": color}
         image(new_overlay, source_img, draw, presets, step_data)
-
-
-@register_overlay
-def prev_image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
-    """
-    Methode um ein Bild in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
-
-    :param overlay: Bauplan des zu schreibenden Overlays
-    :param source_img: Bild auf welches das Bild eingefügt werden soll
-    :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
-    """
-
-    icon = Image.open(resources.get_resource_path(prev_paths[overlay["icon_name"]])).convert("RGBA")
-    source_img.convert("RGB")
-    if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
-        icon = icon.convert(step_data.format(overlay["color"]))
-    if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
-        icon = icon.resize([step_data.format(overlay["size_x"]),
-                            step_data.format(overlay["size_y"])], Image.LANCZOS)
-    if overlay.get("transparency", False):
-        source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
-                                          step_data.format(overlay["pos_y"])))
-    else:
-        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
-                                step_data.format(overlay["pos_y"])), icon)

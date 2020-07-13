@@ -94,28 +94,23 @@
       "overlay": [
         {
           "description": "Wordcloud",
-          "type": "prev_image",
+          "type": "image",
           "pos_x": 450,
           "pos_y": 10,
           "color": "RGBA",
-          "icon_name": "football_wordcloud",
-          "transparency": false
+          "image_name": "football_wordcloud"
         }
       ]
     }
   },
   "audio": {
     "audios": {
-      "a0": {
+      "a1": {
         "parts": [
           {
             "type": "text",
             "pattern": "Twitter-Wordcloud. "
-          }
-        ]
-      },
-      "a1": {
-        "parts": [
+          },
           {
             "type": "text",
             "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
@@ -125,7 +120,13 @@
     }
   },
   "sequence": {
-    "type": "successively"
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "wordcloud_with_background",
+        "audio_l": "a1"
+      }
+    ]
   },
   "run_config": [
     {
