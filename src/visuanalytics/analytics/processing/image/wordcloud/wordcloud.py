@@ -14,6 +14,9 @@ WORDCLOUD_TYPES = {}
 """Ein Dictionary bestehende aus allen Wordcloud Typ Methoden  """
 
 
+# todo nicht nötog da es nur einen wordcloud typ gibt
+
+
 def register_wordcloud(func):
     """
     Fügt eine Typ-Funktion dem Dictionary WORDCLOUD_TYPES hinzu.
