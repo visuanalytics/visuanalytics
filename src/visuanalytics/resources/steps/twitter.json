@@ -83,7 +83,8 @@
             "max_words": 2000,
             "contour_width": 3,
             "contour_color": "white",
-            "interpolation": "bilinear"
+            "interpolation": "bilinear",
+            "color_func": true
           }
         }
       ]

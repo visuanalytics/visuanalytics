@@ -64,7 +64,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         "font_step": 1,
         "mode": "RGB",
         "relative_scaling": 0.5,
-        "color_func": color_func,
+        "color_func": None,
         "regexp": None,
         "colormap": "viridis",
         "normalize_plurals": True,
@@ -75,6 +75,9 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     for each in WORDCLOUD_DEFAULT_PARAMETER:
         if each in image["parameter"]:
             wordcloud_parameter[each] = step_data.format(image["parameter"][each])
+
+    if image["parameter"]["color_func"] == True:
+        wordcloud_parameter["color_func"] = color_func
 
     if image["parameter"]["mask"] is not None:
         x0 = step_data.format(image["parameter"]["mask"]["x"])
