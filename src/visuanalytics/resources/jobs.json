@@ -5,11 +5,11 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "09:42",
+        "time": "14:50",
         "daily": true
       },
       "config": {
-        "keep_count": 1
+        "keep_count": 3
       }
     },
     {
@@ -17,7 +17,7 @@
       "id": 1,
       "steps": "weather_single",
       "schedule": {
-        "time": "09:33",
+        "time": "17:43",
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -25,9 +25,19 @@
         }
       },
       "config": {
-        "keep_count": 1,
+        "keep_count": 3,
         "city_name": "Biebertal",
-        "p_code": "35444"
+        "p_code": "35444",
+        "speech_app_temp_2": true,
+        "speech_wind_2": false,
+        "speech_sun_2": true,
+        "speech_rh_2": true,
+        "speech_pop_2": true,
+        "speech_app_temp_3": false,
+        "speech_wind_3": false,
+        "speech_sun_3": false,
+        "speech_rh_3": false,
+        "speech_pop_3": true
       }
     },
     {
@@ -35,11 +45,23 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "22:29",
+        "time": "14:46",
         "daily": true
       },
       "config": {
         "league": "1",
+        "keep_count": 3
+      }
+    },
+    {
+      "name": "Twitter-Wordcloud",
+      "id": 1,
+      "steps": "twitter",
+      "schedule": {
+        "time": "10:10",
+        "daily": true
+      },
+      "config": {
         "keep_count": 3
       }
     }

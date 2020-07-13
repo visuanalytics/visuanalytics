@@ -104,9 +104,9 @@ def delete_job(job_id):
     con = db.open_con_f()
     job = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()
     schedule_id = job["schedule_id"]
-    con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
-    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", str(schedule_id))
-    con.execute("DELETE FROM job WHERE job_id=?", job_id).fetchone()
+    con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
+    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
+    con.execute("DELETE FROM job WHERE job_id=?", [job_id]).fetchone()
     con.commit()
 
 
@@ -117,10 +117,10 @@ def update_job(job_id, updated_data):
             con.execute("UPDATE job SET job_name=? WHERE job_id =?", [value, job_id])
         if key == "schedule":
             schedule_id = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()["schedule_id"]
-            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [str(schedule_id)])
-            con.execute("DELETE FROM schedule WHERE schedule_id=?", [str(schedule_id)])
+            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
+            con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
             new_schedule_id = _insert_schedule(con, value)
-            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [str(new_schedule_id), job_id])
+            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [new_schedule_id, job_id])
         if key == "params":
             # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])

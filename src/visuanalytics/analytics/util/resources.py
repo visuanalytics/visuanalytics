@@ -8,6 +8,11 @@ RESOURCES_LOCATION = "../../resources"
 Relativer Pfad zu dem resources Ordner.
 """
 
+IMAGES_LOCATION = "../../resources/images"
+"""
+Relativer Pfad zu dem Image Ordner.
+"""
+
 ROOT_LOCATION = "../../"
 """
 Relativer Pfad zur root location.
@@ -38,6 +43,17 @@ def get_resource_path(path: str):
     :return: Absoluter Pfad zur übergebener Ressource.
     """
     return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
+
+
+def get_image_path(path: str):
+    """Erstellt einen Absoluten Pfad zu der übergebene Image Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
+    :return: Absoluter Pfad zur übergebener Ressource.
+    """
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), IMAGES_LOCATION, path))
 
 
 def get_temp_resource_path(path: str, pipeline_id: str):

@@ -713,14 +713,14 @@
   "images": {
     "weather1": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|0|today}"
         },
@@ -753,8 +753,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|0|weather|icon}.png",
             "weather/icons/{_req|München|data|0|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|0|weather|icon}.png",
@@ -771,19 +771,19 @@
     },
     "weather2": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|0|today}"
         },
         {
-          "description": "kachel",
+          "description": "brown_bar",
           "type": "image_array",
           "pos_x": [
             897,
@@ -811,8 +811,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/kachel.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -860,14 +860,14 @@
     },
     "weather3": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|1|today}"
         },
@@ -900,8 +900,8 @@
           ],
           "size_x": 160,
           "size_y": 160,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Konstanz|data|1|weather|icon}.png",
             "weather/icons/{_req|München|data|1|weather|icon}.png",
             "weather/icons/{_req|Nürnberg|data|1|weather|icon}.png",
@@ -918,19 +918,19 @@
     },
     "weather4": {
       "type": "pillow",
-      "path": "weather/Wetter-morgen.png",
+      "path": "weather/DE1Tag.png",
       "overlay": [
         {
           "description": "week_day",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 305,
-          "pos_y": 48,
+          "pos_y": 33,
           "preset": "weather_white_2",
           "pattern": "{_req|Kiel|data|1|today}"
         },
         {
-          "description": "kachel",
+          "description": "brown_bar",
           "type": "image_array",
           "pos_x": [
             897,
@@ -958,8 +958,8 @@
           ],
           "size_x": null,
           "size_y": null,
-          "colour": "RGBA",
-          "pattern": "weather/kachel.png"
+          "color": "RGBA",
+          "path": "weather/brown_bar.png"
         },
         {
           "description": "temperatur",
@@ -1067,7 +1067,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "RGBA",
             "L",
             "L",
@@ -1081,7 +1081,7 @@
             "L",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1210,7 +1210,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "RGBA",
             "L",
@@ -1224,7 +1224,7 @@
             "RGBA",
             "L"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1353,7 +1353,7 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": [
+          "color": [
             "L",
             "L",
             "RGBA",
@@ -1367,7 +1367,7 @@
             "L",
             "RGBA"
           ],
-          "pattern": [
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
@@ -1493,8 +1493,8 @@
           ],
           "size_x": 200,
           "size_y": 200,
-          "colour": "RGBA",
-          "pattern": [
+          "color": "RGBA",
+          "path": [
             "weather/icons/{_req|Gießen|data|2|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|3|weather|icon}.png",
             "weather/icons/{_req|Gießen|data|4|weather|icon}.png",
