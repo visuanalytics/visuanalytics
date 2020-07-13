@@ -129,20 +129,4 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
-
-    if wordcloud_parameter["transparency"]:
-        img = Image.open(file)
-        img = img.convert("RGBA")
-        pixels = img.getdata()
-
-        newPixels = []
-        for item in pixels:
-            if item[0] == 255 and item[1] == 255 and item[2] == 255:
-                newPixels.append((255, 255, 255, 0))
-            else:
-                newPixels.append(item)
-
-        img.putdata(newPixels)
-        img.save(file)
-
     return file

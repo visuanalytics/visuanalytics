@@ -98,7 +98,8 @@
           "pos_x": 450,
           "pos_y": 10,
           "color": "RGBA",
-          "image_name": "football_wordcloud"
+          "image_name": "football_wordcloud",
+          "white_transparency": true
         }
       ]
     }

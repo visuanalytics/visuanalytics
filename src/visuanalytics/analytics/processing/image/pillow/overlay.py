@@ -129,9 +129,12 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
     :param step_data: Daten aus der API
     """
     if overlay.get("path", None) is None:
-        icon = Image.open(resources.get_resource_path(prev_paths[overlay["image_name"]]))
+        path = resources.get_resource_path(prev_paths[overlay["image_name"]])
     else:
-        icon = Image.open(resources.get_image_path(overlay["path"]))
+        path = resources.get_image_path(overlay["path"])
+    if overlay.get("white_transparency", False):
+        _white_to_transparent(path)
+    icon = Image.open(path)
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
@@ -182,4 +185,20 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
             "image_name": image_name,
             "white_transparency": overlay.get("white_transparency", False),
             "color": color}
-        image(new_overlay, source_img, draw, presets, step_data)
+        image(new_overlay, source_img, prev_paths, draw, presets, step_data)
+
+
+def _white_to_transparent(path):
+    img = Image.open(path).convert("RGBA")
+    img = img.convert("RGBA")
+    pixels = img.getdata()
+
+    new_pixels = []
+    for item in pixels:
+        if item[0] == 255 and item[1] == 255 and item[2] == 255:
+            new_pixels.append((255, 255, 255, 0))
+        else:
+            new_pixels.append(item)
+
+    img.putdata(new_pixels)
+    img.save(path)
