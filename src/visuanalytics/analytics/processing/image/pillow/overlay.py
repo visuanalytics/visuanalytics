@@ -74,7 +74,7 @@ def text_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_
             "pos_y": overlay["pos_y"][idx],
             "pattern": pattern,
             "preset": preset}
-        text(new_overlay, source_img, draw, presets, step_data)
+        text(new_overlay, source_img, prev_paths, draw, presets, step_data)
 
 
 @register_overlay
@@ -94,7 +94,7 @@ def option(values: dict, source_img, prev_paths, draw, presets: dict, step_data:
 
     for overlay in chosen_text:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, draw, presets, step_data)
+        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
 
 
 @register_overlay
@@ -114,7 +114,7 @@ def compare(values: dict, source_img, prev_paths, draw, presets: dict, step_data
 
     for overlay in chosen_text:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, draw, presets, step_data)
+        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
 
 
 @register_overlay
@@ -167,7 +167,11 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
         if isinstance(overlay["path"], list):
             path = overlay["path"][idx]
         else:
-            path = overlay["path"]
+            path = overlay.get("path", None)
+        if isinstance(overlay["image_name"], list):
+            image_name = overlay["image_name"][idx]
+        else:
+            image_name = overlay.get("image_name", None)
         new_overlay = {
             "size_x": overlay.get("size_x", None),
             "size_y": overlay.get("size_y", None),
@@ -175,5 +179,7 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
             "pos_y": overlay["pos_y"][idx],
             "transparency": overlay.get("transparency", False),
             "path": path,
+            "image_name": image_name,
+            "white_transparency": overlay.get("white_transparency", False),
             "color": color}
         image(new_overlay, source_img, draw, presets, step_data)
