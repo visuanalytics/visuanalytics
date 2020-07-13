@@ -37,8 +37,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
 
 @register_wordcloud
 def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
-    """
-    Erstellt ein Wordcloud Bild  --- TODO.
+    """Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
@@ -94,7 +93,8 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
         elif figure == "square":
             mask = x * y
         elif figure == "own_mask":
-            path = resources.get_image_path(image["parameter"]["mask"]["own_mask_path"])
+            # TODO testen
+            path = resources.get_image_path(image["parameter"]["mask"]["path"])
             mask = np.array(Image.open(path))
 
         wordcloud_parameter["mask"] = 255 * mask.astype(int)
@@ -131,7 +131,6 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
                                 mask=wordcloud_parameter["mask"]).generate(step_data.get_data(image["text"], image))
 
     plt.axis("off")
-    # plt.imshow(wordcloud_image, interpolation=step_data.format(image["parameter"]["interpolation"]))
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
