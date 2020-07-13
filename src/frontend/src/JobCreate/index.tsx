@@ -74,6 +74,7 @@ export default function JobCreate() {
 
     useEffect(() => {
         if (activeStep === 3) {
+            setActiveStep(4);
             setFinished(true);
             addJob();
         }

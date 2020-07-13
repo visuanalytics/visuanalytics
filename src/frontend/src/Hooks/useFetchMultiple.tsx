@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { handleResponse } from "../util/fetchUtils";
 
 // TODO Merge with useFetch (most code ist the same)
 export function useFetchMultiple<T>(
@@ -21,13 +22,7 @@ export function useFetchMultiple<T>(
     let isMounted = true;
 
     fetch(url, parms)
-      .then((res) => {
-        if (!res.ok)
-          throw new Error(`Network response was not ok, status: ${res.status}`);
-
-        // TODO (Max) solve better?
-        return res.status === 204 ? {} : res.json();
-      })
+      .then(handleResponse)
       .then((data) => {
         if (isMounted) handleGetData(data);
       })
