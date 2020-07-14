@@ -16,17 +16,13 @@ export const useFetch = (
 ) => {
   const [data, setData] = useState<any>();
 
-  const handleGetData = (data: any) => {
-    setData(data);
-  };
-
   useEffect(() => {
     let isMounted = true;
 
     fetch(url, parms)
       .then(handleResponse)
-      .then((data) => {
-        if (isMounted) handleGetData(data);
+      .then((newData: any) => {
+        if (isMounted) setData(newData);
       })
       .catch((err) => {
         if (isMounted && errorHandle) errorHandle(err);

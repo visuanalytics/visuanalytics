@@ -10,10 +10,6 @@ export function useFetchMultiple<T>(
   const [data, setData] = useState<T | undefined>();
   const [state, setState] = useState(false);
 
-  const handleGetData = (data: any) => {
-    setData(data);
-  };
-
   const update = () => {
     setState(!state);
   };
@@ -23,8 +19,8 @@ export function useFetchMultiple<T>(
 
     fetch(url, parms)
       .then(handleResponse)
-      .then((data) => {
-        if (isMounted) handleGetData(data);
+      .then((newData: any) => {
+        if (isMounted) setData(newData);
       })
       .catch((err) => {
         if (isMounted && errorHandle) errorHandle(err);
