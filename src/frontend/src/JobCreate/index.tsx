@@ -67,7 +67,7 @@ export default function JobCreate() {
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate ? selectedSchedule.date?.toLocaleDateString("de-DE") : null // TODO: format anpassen
+                date: selectedSchedule.onDate ? selectedSchedule.date : null
             }
         })
     }, (data) => {

@@ -18,7 +18,7 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
-import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay} from "date-fns";
+import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, format} from "date-fns";
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
@@ -92,7 +92,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         if (job.schedule.daily) {
             return "täglich, " + job.schedule.time + " Uhr";
         } else if (job.schedule.onDate) {
-            return job.schedule.date +", " + job.schedule.time + " Uhr";
+            return format(parse(String(job.schedule.date),"y-MM-dd", new Date()),"dd.MM.yyyy") +", " + job.schedule.time + " Uhr";
         } else if (job.schedule.weekly) {
             return "wöchentlich: " + job.schedule.weekdays.map(w => getWeekdayLabel(Number(w))) + ", " + job.schedule.time + " Uhr";
         }
@@ -154,7 +154,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate ? selectedSchedule.date?.toLocaleDateString("de-DE") : null // TODO: format anpassen
+                date: selectedSchedule.onDate ? selectedSchedule.date : null
             }
         })
     },getJobs);
