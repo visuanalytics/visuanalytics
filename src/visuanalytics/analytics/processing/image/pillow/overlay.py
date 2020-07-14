@@ -136,10 +136,10 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
     if overlay.get("path", None) is None:
         path = resources.get_resource_path(prev_paths[overlay["image_name"]])
     else:
-        path = resources.get_image_path(overlay["path"])
+        path = resources.get_image_path(step_data.format(overlay["path"]))
     if overlay.get("white_transparency", False):
         _white_to_transparent(path)
-    icon = Image.open(path)
+    icon = Image.open(path).convert("RGBA")
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
@@ -173,11 +173,11 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
             color = overlay["color"][idx]
         else:
             color = overlay["color"]
-        if isinstance(overlay["path"], list):
+        if isinstance(overlay.get("path", " "), list):
             path = overlay["path"][idx]
         else:
             path = overlay.get("path", None)
-        if isinstance(overlay["image_name"], list):
+        if isinstance(overlay.get("image_name", " "), list):
             image_name = overlay["image_name"][idx]
         else:
             image_name = overlay.get("image_name", None)
