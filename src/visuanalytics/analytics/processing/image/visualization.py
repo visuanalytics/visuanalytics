@@ -84,8 +84,4 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-
-    for wordcloud in values["wordcloud"]:
-        file = wc.wordcloud(wordcloud, prev_paths, presets, step_data)
-
-    return file
+    return wc.wordcloud(values, prev_paths, presets, step_data)

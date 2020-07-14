@@ -62,30 +62,26 @@
   "images": {
     "football_wordcloud": {
       "type": "wordcloud",
-      "wordcloud": [
-        {
-          "text": "_req|text",
-          "stopwords": "_conf|stopwords",
-          "transparency": true,
-          "parameter": {
-            "mask": {
-              "x": 1000,
-              "y": 1000,
-              "figure": "_conf|shape"
-            },
-            "background_color": "white",
-            "width": 1920,
-            "height": 1080,
-            "collocations": false,
-            "max_font_size": 400,
-            "max_words": 2000,
-            "contour_width": 3,
-            "contour_color": "white",
-            "color_func": "_conf|color_func_words",
-            "colormap": "_conf|colormap_words"
-          }
-        }
-      ]
+      "text": "_req|text",
+      "stopwords": "_conf|stopwords",
+      "transparency": true,
+      "parameter": {
+        "mask": {
+          "x": 1000,
+          "y": 1000,
+          "figure": "_conf|shape"
+        },
+        "background_color": "white",
+        "width": 1920,
+        "height": 1080,
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 2000,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
     },
     "wordcloud_with_background": {
       "type": "pillow",
