@@ -3,6 +3,7 @@ import { Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param } from "../../util/param";
 import { renderParamField } from "../../util/renderParamFields";
+import { Load } from "../../util/Load";
 
 interface ParamSelectionProps {
     topicId: number;
@@ -21,6 +22,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
+                <Load data={props.params} />
                 {props.params?.map((p: Param) =>
                     <div className={classes.paddingSmall} key={p.name}>
                         {renderParamField(p, classes, false, true, (e) => {
