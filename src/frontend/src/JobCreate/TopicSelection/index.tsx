@@ -4,6 +4,7 @@ import { TopicPanel } from "./TopicPanel";
 import { useStyles } from "../style";
 import { useFetch } from "../../Hooks/useFetch";
 import { Param } from "../../util/param";
+import { Load } from "../../util/Load";
 
 export interface Topic {
     topicName: string;
@@ -43,6 +44,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
+                <Load data={topics} />
                 <List>
                     {topics?.map(t => renderTopicPanel(t))}
                 </List>
