@@ -64,7 +64,6 @@
       "type": "wordcloud",
       "text": "_req|text",
       "stopwords": "_conf|stopwords",
-      "transparency": true,
       "parameter": {
         "mask": {
           "x": 1000,
