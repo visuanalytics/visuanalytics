@@ -98,6 +98,16 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         }
     }
 
+    const getHighestNumber = (list: number[], weekday: number) => {
+        var nextNum: number = 7;
+        for (var i = 1; i<list.length;i++) {
+            if (list[i] > weekday && list[i] < nextNum) {
+                nextNum = list[i];
+            }
+        }
+        return nextNum;
+    }
+
     // TODO May move to util component
     const getNextDate = () => {
         if(job.schedule.onDate) {
@@ -106,10 +116,8 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             const time = parse(String(job.schedule.time), "H:m", new Date());
             return  isPast(time) ? addDays(time, 1) : time
         } else if (job.schedule.weekly) {
-            const curWeekday = getDay(new Date());
-            var weekday;
-
-            const time = parse(String(job.schedule.time), "H:m", setDay(new Date(),Number(job.schedule.weekdays[0])+1));
+            const curWeekday = getDay(new Date()) - 1;
+            const time = parse(String(job.schedule.time), "H:m", setDay(new Date(),Number(getHighestNumber(job.schedule.weekdays, curWeekday)) + 1));
             return  isPast(time) ? addDays(time, 7) : time;
         } else {
             return new Date();
@@ -128,6 +136,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         }, 60000);
         return () => clearInterval(interval);
     }, [nextJob]);
+
+    useEffect(() => {
+        setNext(nextJob);
+    },[nextJob()]);
 
     const editJob = useCallFetch(`/edit/${job.jobId}`, {
         method: "PUT",
