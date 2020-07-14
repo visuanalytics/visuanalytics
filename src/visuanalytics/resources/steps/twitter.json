@@ -184,10 +184,6 @@
         {
           "value": "square",
           "display_value": "Quadrat"
-        },
-        {
-          "value": "full",
-          "display_value": "ausgefüllt"
         }
       ],
       "default_value": "circle"
