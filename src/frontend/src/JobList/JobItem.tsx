@@ -100,7 +100,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const getHighestNumber = (list: number[], weekday: number) => {
         var nextNum: number = 7;
-        for (var i = 1; i<list.length;i++) {
+        for (var i = 0; i<list.length;i++) {
             if (list[i] > weekday && list[i] < nextNum) {
                 nextNum = list[i];
             }
