@@ -149,6 +149,22 @@ class StepData(object):
 
         return self.get_data(key, values)
 
+    def get_data_bool(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key ein Boolean ist, diese direkt zurückgegeben wird.
+
+        :param key: fad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einem Boolean.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder der übergebene Boolean.
+        :raises: StepKeyError
+        """
+        if isinstance(key, bool):
+            return key
+
+        return self.get_data(key, values)
+
     def get_data(self, key_string: str, values: dict):
         """
         Gibt die daten zurück, die hinter `key_string` stehen.
