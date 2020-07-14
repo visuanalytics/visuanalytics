@@ -196,7 +196,6 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
 
 def _white_to_transparent(path, step_data: StepData, color):
     img = Image.open(path).convert("RGBA")
-    img = img.convert("RGBA")
     pixels = img.getdata()
 
     new_pixels = []
