@@ -65,7 +65,6 @@
       "wordcloud": [
         {
           "text": "_req|text",
-          "part_length": 7,
           "stopwords": "_conf|stopwords",
           "transparency": true,
           "parameter": {
