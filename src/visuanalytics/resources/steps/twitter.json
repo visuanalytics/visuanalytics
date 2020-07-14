@@ -67,13 +67,13 @@
           "type": "wordcloud",
           "text": "_req|text",
           "part_length": 7,
-          "stopwords": "und",
+          "stopwords": "_conf|stopwords",
+          "transparency": true,
           "parameter": {
-            "transparency": true,
             "mask": {
               "x": 1000,
               "y": 1000,
-              "figure": "circle"
+              "figure": "_conf|shape"
             },
             "background_color": "white",
             "width": 1920,
@@ -83,7 +83,8 @@
             "max_words": 2000,
             "contour_width": 3,
             "contour_color": "white",
-            "interpolation": "bilinear"
+            "color_func": "_conf|color_func_words",
+            "colormap": "_conf|colormap_words"
           }
         }
       ]
@@ -131,6 +132,67 @@
   },
   "run_config": [
     {
+      "name": "stopwords",
+      "display_name": "Aus Wordcloud ausschließen",
+      "possible_values": [],
+      "default_value": ""
+    },
+    {
+      "name": "colormap_words",
+      "display_name": "Farben der Wörter",
+      "possible_values": [
+        {
+          "value": "magma",
+          "display_value": "magma"
+        },
+        {
+          "value": "inferno",
+          "display_value": "inferno"
+        },
+        {
+          "value": "plasma",
+          "display_value": "plasma"
+        },
+        {
+          "value": "viridis",
+          "display_value": "viridis"
+        }
+      ],
+      "default_value": "viridis"
+    },
+    {
+      "name": "color_func_words",
+      "display_name": "Farbverlauf der Wörter",
+      "possible_values": [
+        {
+          "value": true,
+          "display_value": "Blau"
+        },
+        {
+          "value": false,
+          "display_value": "Standard"
+        }
+      ],
+      "default_value": false
+    },
+    {
+      "name": "shape",
+      "display_name": "Form der Wordcloud",
+      "possible_values": [
+        {
+          "value": "circle",
+          "display_value": "Kreis"
+        },
+        {
+          "value": "square",
+          "display_value": "Quadrat"
+        },
+        {
+          "value": "full",
+          "display_value": "ausgefüllt"
+        }
+      ],
+      "default_value": "circle"
     }
   ],
   "presets": {

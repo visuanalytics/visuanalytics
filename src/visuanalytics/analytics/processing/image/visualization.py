@@ -7,7 +7,7 @@ from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
-from visuanalytics.analytics.processing.image.wordcloud.wordcloud import WORDCLOUD_TYPES
+from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
@@ -86,7 +86,6 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """
 
     for wordcloud in values["wordcloud"]:
-        word_func = get_type_func(wordcloud, WORDCLOUD_TYPES)
-        file = word_func(wordcloud, prev_paths, presets, step_data)
+        file = wc.wordcloud(wordcloud, prev_paths, presets, step_data)
 
     return file
