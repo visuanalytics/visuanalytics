@@ -137,8 +137,8 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
         path = resources.get_resource_path(prev_paths[overlay["image_name"]])
     else:
         path = resources.get_image_path(step_data.format(overlay["path"]))
-    if overlay.get("white_transparency", False):
-        path = _white_to_transparent(path, step_data)
+    if overlay.get("color_transparency", None) is not None:
+        path = _white_to_transparent(path, step_data, overlay["color_transparency"])
     icon = Image.open(path).convert("RGBA")
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
@@ -194,14 +194,15 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
         image(new_overlay, source_img, prev_paths, draw, presets, step_data)
 
 
-def _white_to_transparent(path, step_data: StepData):
+def _white_to_transparent(path, step_data: StepData, color):
     img = Image.open(path).convert("RGBA")
     img = img.convert("RGBA")
     pixels = img.getdata()
 
     new_pixels = []
     for item in pixels:
-        if item[0] == 255 and item[1] == 255 and item[2] == 255:
+        if item[0] == int("0x" + color[0:2], 16) and item[1] == int("0x" + color[2:4], 16) and item[2] == int(
+                "0x" + color[4:6], 16):
             new_pixels.append((255, 255, 255, 0))
         else:
             new_pixels.append(item)
