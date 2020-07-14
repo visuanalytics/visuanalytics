@@ -58,9 +58,9 @@ def _row_to_job(row):
         "topicId": row["steps_id"],
         "params": params,
         "schedule": {
-            "daily": row["daily"],
-            "weekly": row["weekly"],
-            "onDate": row["on_date"],
+            "daily": row["daily"] == 1,
+            "weekly": row["weekly"] == 1,
+            "onDate": row["on_date"] == 1,
             "date": row["date"],
             "time": row["time"],
             "weekdays": weekdays
