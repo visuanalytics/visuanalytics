@@ -192,7 +192,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                             <TextField
                                 className={classes.inputFields}
                                 label="Zeitplan"
-                                defaultValue={showTime()}
+                                value={showTime()}
                                 InputProps={{
                                     disabled: state.edit,
                                     readOnly: true
@@ -206,7 +206,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         <TextField
                             className={classes.inputFields}
                             label="nächstes Video"
-                            defaultValue={next}
+                            value={next}
                             InputProps={{
                                 disabled: true,
                             }}
