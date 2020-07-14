@@ -4,6 +4,7 @@ import { JobItem } from "./JobItem";
 import { Fade } from '@material-ui/core';
 import { useFetchMultiple } from '../Hooks/useFetchMultiple';
 import {Schedule} from "../JobCreate";
+import {Load} from "../util/Load"
 
 export interface Job {
     jobId: number;
@@ -20,6 +21,7 @@ export const JobList: React.FC = () => {
     return (
         <Fade in={true}>
             <div>
+                <Load data={jobInfo}>
                 {jobInfo?.map((j : Job) =>
                     <div key={j.jobId}>
                         <JobItem
@@ -28,6 +30,7 @@ export const JobList: React.FC = () => {
                         />
                     </div>)
                 }
+                </Load>
             </div>
         </Fade>
     )
