@@ -202,7 +202,8 @@ def _white_to_transparent(path, step_data: StepData, color):
     for item in pixels:
         if item[0] == int("0x" + color[0:2], 16) and item[1] == int("0x" + color[2:4], 16) and item[2] == int(
                 "0x" + color[4:6], 16):
-            new_pixels.append((255, 255, 255, 0))
+            new_pixels.append((int("0x" + color[0:2], 16), int("0x" + color[2:4], 16), int(
+                "0x" + color[4:6], 16), 0))
         else:
             new_pixels.append(item)
 
