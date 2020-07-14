@@ -45,7 +45,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         daily: job.schedule.daily,
         weekly: job.schedule.weekly,
         onDate: job.schedule.onDate,
-        weekdays: [],
+        weekdays: job.schedule.weekdays.map(w => Number(w)),
         date: parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()),
         time: parse(String(job.schedule.time), "H:m", new Date()),
     });
