@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {Param} from "../util/param";
-import TextField from "@material-ui/core/TextField";
 import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import {AccordionSummary, useStyles} from "./style";
@@ -22,8 +21,8 @@ import {Schedule, Weekday} from "../JobCreate";
 import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay} from "date-fns";
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
-import {renderTextField} from "./renderTextField";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
+import TextField from "@material-ui/core/TextField";
 
 interface Props {
     job: Job,
@@ -46,9 +45,9 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         daily: job.schedule.daily,
         weekly: job.schedule.weekly,
         onDate: job.schedule.onDate,
-        weekdays: job.schedule.weekdays,
-        date: new Date(),
-        time: new Date()
+        weekdays: [],
+        date: parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()),
+        time: parse(String(job.schedule.time), "H:m", new Date()),
     });
 
     // handler for schedule selection logic
@@ -83,11 +82,9 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             return e;
         })
         setSelectedParams(newList);
-        console.log(newList)
     }
 
     const handleParamChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        console.log(event.target.value)
         handleSelectParam(name, event.target.value);
     }
 
@@ -125,11 +122,12 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const [next, setNext] = React.useState(nextJob());
 
-
-    setInterval(() => {
-        console.log("hallo")
-        setNext(nextJob);
-    }, 60000);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNext(nextJob);
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [nextJob]);
 
     const editJob = useCallFetch(`/edit/${job.jobId}`, {
         method: "PUT",
@@ -166,6 +164,59 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             setExpanded(String(job.jobId));
         }
 
+        const handleCheckClick = () => {
+            handleEditClick();
+            editJob();
+        }
+        const handleSaveModal = () => {
+            handleCheckClick();
+            handleClose();
+        }
+
+        const renderTextField = () => {
+            return (
+                <div>
+                    <div>
+                        <TextField
+                            className={classes.inputFields}
+                            label="Thema"
+                            defaultValue={job.topicName}
+                            InputProps={{
+                                disabled: true,
+                            }}
+                            variant="outlined"
+                        />
+                    </div>
+                    <div>
+                        <Button className={classes.inputButton} onClick={handleOpen}>
+                            <TextField
+                                className={classes.inputFields}
+                                label="Zeitplan"
+                                defaultValue={showTime()}
+                                InputProps={{
+                                    disabled: state.edit,
+                                    readOnly: true
+                                }}
+                                variant="outlined"
+                            />
+                        </Button>
+
+                    </div>
+                    <div>
+                        <TextField
+                            className={classes.inputFields}
+                            label="nächstes Video"
+                            defaultValue={next}
+                            InputProps={{
+                                disabled: true,
+                            }}
+                            variant="outlined"
+                        />
+                    </div>
+                </div>
+            )
+        }
+
         return (
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
@@ -174,9 +225,11 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                             <ExpandMore className={classes.expIcon}/>}
                         <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton className={classes.button} onClick={handleEditClick}>
-                                <EditIcon style={{display: state.editIcon}}/>
-                                <CheckCircleIcon style={{display: state.doneIcon}} onClick={editJob}/>
+                            <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton style={{display: state.doneIcon}} className={classes.button} onClick={handleCheckClick}>
+                                <CheckCircleIcon />
                             </IconButton>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
@@ -187,7 +240,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                     </AccordionSummary>
                     <AccordionDetails>
                         <Grid item md={6}>
-                            {renderTextField(job,classes, state.edit, handleOpen, showTime, next)}
+                            {renderTextField()}
                         </Grid>
                         <Modal
                             aria-labelledby="transition-modal-title"
@@ -214,7 +267,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                                             selectDateHandler={handleSelectDate}
                                             selectTimeHandler={handleSelectTime}
                                         />
-                                        <ContinueButton>SPEICHERN</ContinueButton>
+                                        <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
                                     </Paper>
                                 </Container>
                             </Fade>
