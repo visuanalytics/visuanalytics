@@ -18,8 +18,8 @@ export const useStyles = makeStyles((theme) => ({
     paddingSmall: {
         padding: theme.spacing(3)
     },
-    inputField: {
-        width: 300
+    inputFields: {
+        width: "45%"
     },
     centerDiv: {
         textAlign: "left",

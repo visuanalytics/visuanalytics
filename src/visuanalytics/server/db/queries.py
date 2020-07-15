@@ -21,14 +21,16 @@ def get_params(topic_id):
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
     with open(path_to_json) as fh:
         steps_json = json.loads(fh.read())
-    return steps_json["run_config"]
+    run_config = steps_json["run_config"]
+    params = [_with_selected(_to_camel_case(p), "") for p in run_config]
+    return params
 
 
 def get_job_list():
     con = db.open_con_f()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, daily, weekly, on_date, date, time, steps_id, steps_name, json_file_name,
+    job_id, job_name, daily, weekly, on_date, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
     group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
@@ -47,9 +49,7 @@ def _row_to_job(row):
     with open(path_to_json, encoding="utf-8") as fh:
         steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
-    params = [
-        {"name": kv[0], "selected": kv[1], "possibleValues": _find(steps_params, "name", kv[0])["possible_values"]}
-        for kv in key_values]
+    params = [_with_selected(_to_camel_case(_find(steps_params, "name", kv[0])), kv[1]) for kv in key_values]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["job_id"],
@@ -58,9 +58,9 @@ def _row_to_job(row):
         "topicId": row["steps_id"],
         "params": params,
         "schedule": {
-            "daily": row["daily"],
-            "weekly": row["weekly"],
-            "onDate": row["on_date"],
+            "daily": row["daily"] == 1,
+            "weekly": row["weekly"] == 1,
+            "onDate": row["on_date"] == 1,
             "date": row["date"],
             "time": row["time"],
             "weekdays": weekdays
@@ -72,6 +72,23 @@ def _find(lst, key, value):
     for e in lst:
         if e[key] == value:
             return e
+
+
+def _with_selected(param, selected):
+    param["selected"] = selected
+    return param
+
+
+def _to_camel_case(param):
+    possible_values = [] if param["possible_values"] == [] else [{
+        "value": pv["value"],
+        "displayValue": pv["display_value"]
+    } for pv in param["possible_values"]]
+    return {
+        "name": param["name"],
+        "displayName": param["display_name"],
+        "possibleValues": possible_values
+    }
 
 
 def insert_job(job):
@@ -87,9 +104,9 @@ def delete_job(job_id):
     con = db.open_con_f()
     job = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()
     schedule_id = job["schedule_id"]
-    con.execute("DELETE FROM schedule WHERE schedule_id=?", str(schedule_id))
-    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", str(schedule_id))
-    con.execute("DELETE FROM job WHERE job_id=?", job_id).fetchone()
+    con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
+    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
+    con.execute("DELETE FROM job WHERE job_id=?", [job_id]).fetchone()
     con.commit()
 
 
@@ -100,10 +117,10 @@ def update_job(job_id, updated_data):
             con.execute("UPDATE job SET job_name=? WHERE job_id =?", [value, job_id])
         if key == "schedule":
             schedule_id = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()["schedule_id"]
-            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [str(schedule_id)])
-            con.execute("DELETE FROM schedule WHERE schedule_id=?", [str(schedule_id)])
+            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
+            con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
             new_schedule_id = _insert_schedule(con, value)
-            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [str(new_schedule_id), job_id])
+            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [new_schedule_id, job_id])
         if key == "params":
             # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])

@@ -17,7 +17,7 @@
       "id": 1,
       "steps": "weather_single",
       "schedule": {
-        "time": "14:49",
+        "time": "17:43",
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -27,7 +27,17 @@
       "config": {
         "keep_count": 3,
         "city_name": "Biebertal",
-        "p_code": "35444"
+        "p_code": "35444",
+        "speech_app_temp_2": true,
+        "speech_wind_2": false,
+        "speech_sun_2": true,
+        "speech_rh_2": true,
+        "speech_pop_2": true,
+        "speech_app_temp_3": false,
+        "speech_wind_3": false,
+        "speech_sun_3": false,
+        "speech_rh_3": false,
+        "speech_pop_3": true
       }
     },
     {
@@ -40,6 +50,23 @@
       },
       "config": {
         "league": "1",
+        "keep_count": 3
+      }
+    },
+    {
+      "name": "Twitter-Wordcloud",
+      "id": 1,
+      "steps": "twitter",
+      "schedule": {
+        "time": "11:02",
+        "daily": true
+      },
+      "config": {
+        "hashtag": "Bundesliga",
+        "stopwords": "Bundesliga",
+        "colormap_words": "viridis",
+        "color_func_words": true,
+        "shape": "circle",
         "keep_count": 3
       }
     }
