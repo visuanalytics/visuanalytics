@@ -12,7 +12,7 @@ import {GreyDivider} from './GreyDivider';
 import {Param} from '../util/param';
 import {Fade} from '@material-ui/core';
 import {useCallFetch} from '../Hooks/useCallFetch';
-import {format, parse} from "date-fns";
+import {format} from "date-fns";
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -68,8 +68,7 @@ export default function JobCreate() {
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
-                //TODO bug beheben
-                date: selectedSchedule.onDate ? format(parse(String(selectedSchedule.date),"yyyy-MM-dd", new Date()),"yyyy-MM-dd") : null
+                date:  selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
             }
         })
     }, (data) => {

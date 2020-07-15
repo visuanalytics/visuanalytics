@@ -46,7 +46,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         weekly: job.schedule.weekly,
         onDate: job.schedule.onDate,
         weekdays: job.schedule.weekdays.map(w => Number(w)),
-        date: parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()),
+        date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
         time: parse(String(job.schedule.time), "H:m", new Date()),
     });
 
@@ -154,7 +154,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate ? format(parse(String(job.schedule.date),"y-MM-dd", new Date()),"yyyy-MM-dd") : null
+                date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
             }
         })
     },getJobs);
