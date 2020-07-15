@@ -9,10 +9,17 @@ Version: 0.1
 */
 
 function add_theme_scripts() {
-  wp_enqueue_script( '2.4de98020.chunk', '/wp-content/plugins/visuanalytics/src/2.4de98020.chunk.js', array (), '', true);
-  wp_enqueue_script( 'main.cc0add7f.chunk', '/wp-content/plugins/visuanalytics/src/main.cc0add7f.chunk.js', array (), '', true);
-  wp_enqueue_script( 'runtime-main.7f8671c6', '/wp-content/plugins/visuanalytics/src/runtime-main.7f8671c6.js', array (), '', true);
+  // Load all js files
+  $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
+  
+  foreach ($files as $file) {
+	$file_name = basename($file, ".js");
+	$file_url = "/wp-content/plugins/visuanalytics/src/js/".basename($file);
+	
+    wp_enqueue_script($file_name, $file_url, array (), '', true);
+  }
 }
+
 add_action( 'admin_enqueue_scripts', 'add_theme_scripts' );
 
 // add to settings menu
