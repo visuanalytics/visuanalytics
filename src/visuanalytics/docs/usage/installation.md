@@ -23,12 +23,12 @@ Die Konfigurationsdatei für das Programm hat folgendes Format:
 
 `api_keys`:
 
-Die Api Keys für die Verwendeten Apis:
+Die Api-Keys für die verwendeten Apis:
 - `weatherbit`: Api Key für [weatherbit.io](https://www.weatherbit.io)
 
 `steps_base_config`:
 
-Die Konfiguration die für jeden Job gelten soll (Die Konfigurationen in [jobs.json](#jobs.json) sind höherwertig)
+Die Konfiguration, die für jeden Job gelten soll (Die Konfigurationen in [jobs.json](#jobs.json) sind höherwertig)
 
 - `testing`:
   
@@ -42,7 +42,7 @@ Die Konfiguration die für jeden Job gelten soll (Die Konfigurationen in [jobs.j
 
 `testing`:
 
-Wenn `testing` aktiviert ist wird die *logging Ausgabe* auf Info Level aktiviert.
+Wenn `testing` aktiviert ist, wird die *logging Ausgabe* auf Info Level aktiviert.
 
 
 #### Jobs.json
@@ -80,7 +80,7 @@ Aktuelle Optionen:
 
 *Einstellen der Zeit*:
 
-Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
+Um den Zeitpunkt der Generierung festzulegen, gibt es vier mögliche Einträge:
 
 - `time`:
 
@@ -90,7 +90,7 @@ Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
 
 - `daily`:
 
-  Wenn dieser Wert 'true' ist, wird der Job jeden Tag ausgeführt
+  Wenn dieser Wert 'true' ist, wird der Job jeden Tag ausgeführt.
 
 - `date`: 
 
