@@ -45,10 +45,12 @@ def delete_old_videos(job_name: str, output_path: str, count: int):
     files = os.listdir(resources.path_from_root(output_path))
     files.sort(reverse=True)
     delete = False
-    for idx, file in enumerate(files):
+    idx = 0
+    for file in files:
         if file.startswith(job_name):
+            idx = idx + 1
             if delete:
                 os.remove(resources.path_from_root(os.path.join(output_path, file)))
                 logger.info("old video " + file + " has been deleted")
-            if idx + 1 == count:
+            if idx == count:
                 delete = True
