@@ -19,17 +19,24 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         props.selectParamHandler(name, event.target.value);
     }
 
+
     return (
         <Fade in={true}>
             <div>
                 <Load data={props.params} />
-                {props.params?.map((p: Param) =>
-                    <div className={classes.paddingSmall} key={p.name}>
-                        {renderParamField(p, classes, false, true, (e) => {
-                            handleChange(e, p.name)
-                        })}
-                    </div>
-                )}
+                {props.params.length !== 0
+                    ?
+                    props.params.map((p: Param) =>
+                        <div className={classes.paddingSmall} key={p.name}>
+                            {renderParamField(p, classes, false, true, (e) => {
+                                handleChange(e, p.name)
+                            })}
+                        </div>
+                    )
+                    :
+                    <div className={classes.paddingSmall}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                    </div>}
             </div>
         </Fade>
 
