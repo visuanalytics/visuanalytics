@@ -1,7 +1,7 @@
 import React from "react";
-import { ListItem, Divider, List, TextField, Fade } from "@material-ui/core";
+import { ListItem, Divider, List, Fade } from "@material-ui/core";
 import { TopicPanel } from "./TopicPanel";
-import { useStyles } from "../style";
+import { useStyles, InputField } from "../style";
 import { useFetch } from "../../Hooks/useFetch";
 import { Param } from "../../util/param";
 import { Load } from "../../util/Load";
@@ -50,7 +50,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                 </List>
                 <Divider />
                 <div className={classes.paddingSmall}>
-                    <TextField className={classes.inputFields}
+                    <InputField
                         required
                         value={props.jobName}
                         variant="outlined"
