@@ -11,32 +11,33 @@ class DbScheduler(Scheduler):
     def __init__(self, base_config=None):
         super().__init__(base_config)
 
-    def __run_jobs(self, schedule_id):
-        for job_step in job.get_all_schedules_steps(schedule_id):
-            logger.info(f"Job {job_step['job_id']} started")
+        
+    def __run_jobs(self, job_id):
+        job_name, json_file_name, config = job.get_job_run_info(str(job_id))
+        logger.info(f"Job {job_id}: '{job_name}' started")
+        self._start_job(job_name, json_file_name, config)
+        # todo für db scheduler muss noch delete_old_on_new abgefragt werden (da wo jetzt false steht)
 
-            steps_name, config = job.get_job_run_infos(job_step['job_id'])
-
-            self._start_job(steps_name, config)
 
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
 
-        for schedule in job.get_all_schedules():
+        for row in job.get_job_schedules():
             # Check if time is current Time
-            if not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
+            if not self._check_time(now, datetime.strptime(row["time"], "%H:%M").time()):
                 continue
+
             # If date is not none check if date is today
-            if schedule["date"] and not schedule["date"] == now.date():
+            if row["on_date"] and not row["date"] == now.date():
                 # TODO Delete date schedule after run
                 continue
 
             # If weekday is not none check if weekday is same as today
-            if schedule["weekday"] and not schedule["weekday"] == now.weekday():
+            if row["weekly"] and not now.weekday() in row["weekdays"]:
                 continue
 
             # if daily is not none check if daily is true
-            if schedule["daily"] is not None and not schedule["daily"]:
+            if row["daily"] is not None and not row["daily"]:
                 continue
 
-            self.__run_jobs(schedule["id"])
+            self.__run_jobs(row["job_id"])

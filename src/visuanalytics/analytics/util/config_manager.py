@@ -13,10 +13,12 @@ def _get_config_path(config_location):
 
 
 def _merge_config(public_config: dict, private_config: dict):
-    # merge sub dict steps_base_config
+    # merge sub dict steps_base_config and audio
     public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
+    public_config.get("audio").update(private_config.get("audio", {}))
     private_config.pop("steps_base_config", None)
-    
+    private_config.pop("audio", None)
+
     public_config.update(private_config)
 
 

@@ -6,29 +6,68 @@
     "use_loop_as_key": true,
     "steps_value": [
       "Spiele",
-      "Tabelle"
+      "Tabelle",
+      "Vorherige-Tabelle",
+      "Vorheriger-Spieltag",
+      "Vorherige-Vorherige-Tabelle"
     ],
     "requests": [
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+      },
+      {
+        "type": "request_memory",
+        "name": "table",
+        "use_last": 1,
+        "alternative": {
+          "type": "request",
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "spieltag",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "input": "-1. Spieltag"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "table",
+        "use_last": 2,
+        "alternative": {
+          "type": "request",
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        }
       }
     ]
   },
   "transform": [
     {
-      "type": "add_symbol",
+      "type": "alias",
       "keys": [
         "_req|Spiele|0|Group|GroupName"
       ],
       "new_keys": [
         "_req|Spieltag"
+      ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_conf|league"
       ],
-      "pattern": "{_key}"
+      "new_keys": [
+        "league_name"
+      ],
+      "pattern": "{_conf|league}. Fußball Bundesliga"
     },
     {
       "type": "transform_array",
@@ -46,7 +85,7 @@
             "MatchResults|0|PointsTeam1",
             "MatchResults|0|PointsTeam2"
           ],
-          "throw_errors": false
+          "ignore_errors": true
         },
         {
           "type": "alias",
@@ -56,7 +95,7 @@
           "new_keys": [
             "_loop|MatchResults"
           ],
-          "throw_errors": false
+          "ignore_errors": true
         },
         {
           "type": "date_weekday",
@@ -69,44 +108,79 @@
           "given_format": "%Y-%m-%dT%H:%M:%S"
         },
         {
-          "type": "copy",
-          "keys": [
-            "_loop|MatchResults|PointsTeam1",
-            "_loop|MatchResults|PointsTeam1"
+          "type": "option",
+          "check": "_loop|MatchIsFinished",
+          "on_true": [
+            {
+              "type": "compare",
+              "value_left": "_loop|MatchResults|PointsTeam1",
+              "value_right": "_loop|MatchResults|PointsTeam2",
+              "on_equal": [
+                {
+                  "type": "random_value",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "array": [
+                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
+              ],
+              "on_higher": [
+                {
+                  "type": "random_value",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "array": [
+                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
+              ],
+              "on_lower": [
+                {
+                  "type": "random_value",
+                  "keys": [
+                    "_loop"
+                  ],
+                  "new_keys": [
+                    "_loop|MatchResults|Text"
+                  ],
+                  "array": [
+                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
+                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                  ]
+                }
+              ]
+            }
           ],
-          "new_keys": [
-            "_loop|Team1|Won",
-            "_loop|Team2|Lost"
+          "on_false": [
+            {
+              "type": "random_value",
+              "keys": [
+                "_loop"
+              ],
+              "array": [
+                "Am {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
+                "Am {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
+                "Am kommenden {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
+                "Am kommenden {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
+                "{_key|Team1|TeamName} gegen {_key|Team2|TeamName} am {_key|weekday}. "
+              ],
+              "new_keys": [
+                "_loop|MatchText"
+              ]
+            }
           ]
-        },
-        {
-          "type": "copy",
-          "keys": [
-            "_loop|MatchResults|PointsTeam2",
-            "_loop|MatchResults|PointsTeam2"
-          ],
-          "new_keys": [
-            "_loop|Team2|Won",
-            "_loop|Team1|Lost"
-          ]
-        },
-        {
-          "type": "result",
-          "keys": [
-            "_loop|Team1",
-            "_loop|Team2"
-          ],
-          "new_keys": [
-            "_loop|Team1|Result",
-            "_loop|Team2|Result"
-          ],
-          "compare_1": "Won",
-          "compare_2": "Lost",
-          "points": {
-            "1": "1",
-            "2": "3",
-            "3": "0"
-          }
         }
       ]
     },
@@ -127,122 +201,371 @@
           ]
         },
         {
-          "type": "alias",
+          "type": "calculate",
+          "action": "subtract",
           "keys": [
-            "_loop|TeamInfoId"
+            "_loop|Points"
           ],
+          "value_left": "_req|Tabelle|0|Points",
           "new_keys": [
-            "_loop|TeamId"
+            "_loop|PointsDiffToFirstPlace"
           ]
         },
         {
           "type": "copy",
           "keys": [
-            "_loop|Points",
-            "_loop|Goals",
-            "_loop|OpponentGoals",
-            "_loop|GoalDiff"
+            "_loop|TeamInfoId"
           ],
           "new_keys": [
-            "_loop|Points_before",
-            "_loop|Goals_before",
-            "_loop|OpponentGoals_before",
-            "_loop|GoalDiff_before"
+            "_temp|TeamInfoId"
+          ]
+        },
+        {
+          "type": "copy",
+          "keys": [
+            "_idx"
+          ],
+          "new_keys": [
+            "_temp|TeamPos"
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_req|Spieltag",
+          "value_right": "_req|Vorheriger-Spieltag",
+          "on_equal": [
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "on_different": [
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         }
       ]
     },
     {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Result",
-      "new_key": "_loop|Result"
+      "type": "delete",
+      "keys": [
+        "_temp",
+        "_req|Vorherige-Tabelle",
+        "_req|Vorherige-Vorherige-Tabelle",
+        "_req|Vorheriger-Spieltag"
+      ]
     },
     {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Result",
-      "new_key": "_loop|Result"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Won",
-      "new_key": "_loop|Goals_Won"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Won",
-      "new_key": "_loop|Goals_Won"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team1",
-      "pattern": "Lost",
-      "new_key": "_loop|Goals_Lost"
-    },
-    {
-      "type": "transform_compare_arrays",
-      "array_key_1": "_req|Tabelle",
-      "array_key_2": "_req|Spiele",
-      "compare": "TeamName",
-      "where": "Team2",
-      "pattern": "Lost",
-      "new_key": "_loop|Goals_Lost"
-    },
-    {
-      "type": "transform_array",
-      "array_key": "_req|Tabelle",
-      "transform": [
+      "type": "compare",
+      "value_left": "_req|Tabelle|0|Rank_diff",
+      "value_right": 0,
+      "on_equal": [
         {
-          "type": "calculate",
-          "action": "subtract",
+          "type": "random_value",
           "keys": [
-            "_loop|Points_before",
-            "_loop|Goals_before",
-            "_loop|OpponentGoals_before",
-            "_loop|GoalDiff_before"
+            "_req|Tabelle|0"
           ],
-          "subtract": [
-            "_loop|Result",
-            "_loop|Goals_Won",
-            "_loop|Goals_Lost",
-            "_loop|Goals_Won"
+          "array": [
+            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+          ],
+          "new_keys": [
+            "_req|Tabelle|0|Text"
           ]
-        },
+        }
+      ],
+      "on_higher": [
         {
-          "type": "calculate",
-          "action": "add",
+          "type": "random_value",
           "keys": [
-            "_loop|GoalDiff_before"
+            "_req|Tabelle|0"
           ],
-          "add": [
-            "_loop|Goals_Lost"
+          "array": [
+            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+          ],
+          "new_keys": [
+            "_req|Tabelle|0|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|0"
+          ],
+          "array": [
+            "{_key|TeamName} übernimmt die Führung. ",
+            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+          ],
+          "new_keys": [
+            "_req|Tabelle|0|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "value_left": "_req|Tabelle|1|Rank_diff",
+      "value_right": 0,
+      "on_equal": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|1"
+          ],
+          "array": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|1|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|1"
+          ],
+          "array": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} übernimmt den zweiten Platz mit {_key|Points} Punkten.",
+            "{_key|TeamName} nun auf dem zweiten Platz mit {_key|Points} Punkten."
+          ],
+          "new_keys": [
+            "_req|Tabelle|1|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|1"
+          ],
+          "array": [
+            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} ist auf den zweiten Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|1|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "value_left": "_req|Tabelle|3|Rank_diff",
+      "value_right": 0,
+      "on_equal": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "array": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "array": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|3"
+          ],
+          "array": [
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
+            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. ",
+            "Auf den 4. Platz abgestiegen ist {_key|TeamName} mit {_key|Points}. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|3|Text"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "value_left": "_req|Tabelle|15|Rank_diff",
+      "value_right": 0,
+      "on_equal": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "array": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
+          ]
+        }
+      ],
+      "on_higher": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "array": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points}. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
+          ]
+        }
+      ],
+      "on_lower": [
+        {
+          "type": "random_value",
+          "keys": [
+            "_req|Tabelle|15"
+          ],
+          "array": [
+            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
+            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
+            "{_key|TeamName} steigt auf den Relegationsplatz ab. "
+          ],
+          "new_keys": [
+            "_req|Tabelle|15|Text"
           ]
         }
       ]
     }
   ],
+  "storing": [
+    {
+      "name": "table",
+      "key": "_req|Tabelle"
+    },
+    {
+      "name": "spieltag",
+      "key": "_req|Spieltag"
+    }
+  ],
   "images": {
-    "football1": {
+    "football0": {
       "type": "pillow",
-      "path": "football/Spieltag.png",
+      "path": "football/Matchday.png",
       "overlay": [
         {
           "description": "Spieltag",
@@ -260,15 +583,21 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
-        },
+          "pattern": "{league_name}"
+        }
+      ]
+    },
+    "football1": {
+      "type": "pillow",
+      "image_name": "football0",
+      "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 192,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -292,7 +621,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|0|MatchIsFinished}",
+          "check": "_req|Spiele|0|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -329,7 +658,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 180,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|0|weekday}"
             }
           ]
@@ -338,16 +667,15 @@
     },
     "football2": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football1",
+      "image_name": "football1",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 282,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -371,7 +699,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|1|MatchIsFinished}",
+          "check": "_req|Spiele|1|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -408,7 +736,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 270,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|1|weekday}"
             }
           ]
@@ -417,16 +745,15 @@
     },
     "football3": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football2",
+      "image_name": "football2",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 372,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -450,7 +777,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|2|MatchIsFinished}",
+          "check": "_req|Spiele|2|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -487,7 +814,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 360,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|2|weekday}"
             }
           ]
@@ -496,16 +823,15 @@
     },
     "football4": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football3",
+      "image_name": "football3",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 462,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -529,7 +855,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|3|MatchIsFinished}",
+          "check": "_req|Spiele|3|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -566,7 +892,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 450,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|3|weekday}"
             }
           ]
@@ -575,16 +901,15 @@
     },
     "football5": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football4",
+      "image_name": "football4",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 552,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -608,7 +933,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|4|MatchIsFinished}",
+          "check": "_req|Spiele|4|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -645,7 +970,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 540,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|4|weekday}"
             }
           ]
@@ -654,16 +979,15 @@
     },
     "football6": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football5",
+      "image_name": "football5",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 642,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -687,7 +1011,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|5|MatchIsFinished}",
+          "check": "_req|Spiele|5|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -724,7 +1048,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 630,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|5|weekday}"
             }
           ]
@@ -733,16 +1057,15 @@
     },
     "football7": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football6",
+      "image_name": "football6",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 732,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -766,7 +1089,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|6|MatchIsFinished}",
+          "check": "_req|Spiele|6|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -803,7 +1126,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 720,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|6|weekday}"
             }
           ]
@@ -812,16 +1135,15 @@
     },
     "football8": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football7",
+      "image_name": "football7",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 822,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -845,7 +1167,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|7|MatchIsFinished}",
+          "check": "_req|Spiele|7|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -882,7 +1204,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 810,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|7|weekday}"
             }
           ]
@@ -891,16 +1213,15 @@
     },
     "football9": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football8",
+      "image_name": "football8",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 912,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -924,7 +1245,7 @@
         {
           "description": "TeamErgebnisse",
           "type": "option",
-          "check": "{_req|Spiele|8|MatchIsFinished}",
+          "check": "_req|Spiele|8|MatchIsFinished",
           "on_true": [
             {
               "description": "TeamErgebnisse",
@@ -961,7 +1282,7 @@
               "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 900,
-              "preset": "football_4",
+              "preset": "football_3",
               "pattern": "{_req|Spiele|8|weekday}"
             }
           ]
@@ -970,7 +1291,7 @@
     },
     "football10": {
       "type": "pillow",
-      "path": "football/Tabelle_1.png",
+      "path": "football/Table_1.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -979,13 +1300,13 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|0|TeamName}"
@@ -994,7 +1315,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|0|Points}"
@@ -1004,10 +1325,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             250,
@@ -1024,10 +1345,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|0|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|1|TeamName}"
@@ -1036,7 +1390,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|1|Points}"
@@ -1046,10 +1400,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             338,
@@ -1066,10 +1420,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|1|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|2|TeamName}"
@@ -1078,7 +1465,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|2|Points}"
@@ -1088,10 +1475,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             426,
@@ -1108,10 +1495,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|2|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|3|TeamName}"
@@ -1120,7 +1540,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|3|Points}"
@@ -1130,10 +1550,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             514,
@@ -1150,10 +1570,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|3|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|4|TeamName}"
@@ -1162,7 +1615,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|4|Points}"
@@ -1172,10 +1625,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             602,
@@ -1192,10 +1645,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|4|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|5|TeamName}"
@@ -1204,7 +1690,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|5|Points}"
@@ -1214,10 +1700,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             690,
@@ -1234,10 +1720,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|5|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|6|TeamName}"
@@ -1246,7 +1765,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|6|Points}"
@@ -1256,10 +1775,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             778,
@@ -1276,10 +1795,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|6|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|7|TeamName}"
@@ -1288,7 +1840,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|7|Points}"
@@ -1298,10 +1850,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             866,
@@ -1318,10 +1870,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|7|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|8|TeamName}"
@@ -1330,7 +1915,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|8|Points}"
@@ -1340,10 +1925,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             954,
@@ -1358,12 +1943,45 @@
             "{_req|Tabelle|8|OpponentGoals}",
             "{_req|Tabelle|8|GoalDiff}"
           ]
+        },
+        {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|8|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
         }
       ]
     },
     "football11": {
       "type": "pillow",
-      "path": "football/Tabelle_2.png",
+      "path": "football/Table_2.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -1372,13 +1990,13 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|9|TeamName}"
@@ -1387,7 +2005,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 250,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|9|Points}"
@@ -1397,10 +2015,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             250,
@@ -1417,10 +2035,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|9|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 250,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|10|TeamName}"
@@ -1429,7 +2080,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 338,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|10|Points}"
@@ -1439,10 +2090,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             338,
@@ -1459,10 +2110,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|10|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 338,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|11|TeamName}"
@@ -1471,7 +2155,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 426,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|11|Points}"
@@ -1481,10 +2165,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             426,
@@ -1501,10 +2185,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|11|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 426,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|12|TeamName}"
@@ -1513,7 +2230,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 514,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|12|Points}"
@@ -1523,10 +2240,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             514,
@@ -1543,10 +2260,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|12|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 514,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|13|TeamName}"
@@ -1555,7 +2305,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 602,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|13|Points}"
@@ -1565,10 +2315,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             602,
@@ -1585,10 +2335,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|13|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 602,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|14|TeamName}"
@@ -1597,7 +2380,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 690,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|14|Points}"
@@ -1607,10 +2390,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             690,
@@ -1627,10 +2410,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|14|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 690,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|15|TeamName}"
@@ -1639,7 +2455,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 778,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|15|Points}"
@@ -1649,10 +2465,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             778,
@@ -1669,10 +2485,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|15|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 778,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|16|TeamName}"
@@ -1681,7 +2530,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 866,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|16|Points}"
@@ -1691,10 +2540,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             866,
@@ -1711,10 +2560,43 @@
           ]
         },
         {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|16|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 866,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
+        },
+        {
           "description": "Team-Name",
           "type": "text",
           "anchor_point": "left",
-          "pos_x": 374,
+          "pos_x": 407,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|17|TeamName}"
@@ -1723,7 +2605,7 @@
           "description": "Team-Punkte",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1612,
+          "pos_x": 1652,
           "pos_y": 954,
           "preset": "football_5",
           "pattern": "{_req|Tabelle|17|Points}"
@@ -1733,10 +2615,10 @@
           "type": "text_array",
           "anchor_point": "center",
           "pos_x": [
-            1253,
-            1333,
-            1417,
-            1513
+            1293,
+            1373,
+            1457,
+            1553
           ],
           "pos_y": [
             954,
@@ -1751,25 +2633,58 @@
             "{_req|Tabelle|17|OpponentGoals}",
             "{_req|Tabelle|17|GoalDiff}"
           ]
+        },
+        {
+          "description": "up/down/equals",
+          "type": "compare",
+          "value_left": "_req|Tabelle|17|Rank_diff",
+          "value_right": 0,
+          "on_higher": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/up.png"
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/down.png"
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "image",
+              "pos_x": 218,
+              "pos_y": 954,
+              "color": "RGBA",
+              "path": "football/equal.png"
+            }
+          ]
         }
       ]
     }
   },
   "audio": {
-    "config": {
-      "lang": "de",
-      "format": "mp3"
-    },
     "audios": {
+      "a0": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "In der {league_name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
+          }
+        ]
+      },
       "a1": {
         "parts": [
           {
             "type": "text",
-            "pattern": "In der Ersten Fußball-Bundesliga ist der 33 Spieltag.  Die Ergebnisse lauten: "
-          },
-          {
-            "type": "text",
-            "pattern": "{_req|Spiele|0|Team1|TeamName} spielte gegen {_req|Spiele|0|Team2|TeamName} {_req|Spiele|0|MatchResults|PointsTeam1} zu {_req|Spiele|0|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|0|MatchResults|Text}"
           }
         ]
       },
@@ -1777,7 +2692,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|1|Team1|TeamName} spielte gegen {_req|Spiele|1|Team2|TeamName} {_req|Spiele|1|MatchResults|PointsTeam1} zu {_req|Spiele|1|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|1|MatchResults|Text}"
           }
         ]
       },
@@ -1785,7 +2700,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|2|Team1|TeamName} spielte gegen {_req|Spiele|2|Team2|TeamName} {_req|Spiele|2|MatchResults|PointsTeam1} zu {_req|Spiele|2|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|2|MatchResults|Text}"
           }
         ]
       },
@@ -1793,7 +2708,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|3|Team1|TeamName} spielte gegen {_req|Spiele|3|Team2|TeamName} {_req|Spiele|3|MatchResults|PointsTeam1} zu {_req|Spiele|3|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|3|MatchResults|Text}"
           }
         ]
       },
@@ -1801,7 +2716,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|4|Team1|TeamName} spielte gegen {_req|Spiele|4|Team2|TeamName} {_req|Spiele|4|MatchResults|PointsTeam1} zu {_req|Spiele|4|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|4|MatchResults|Text}"
           }
         ]
       },
@@ -1809,7 +2724,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|5|Team1|TeamName} spielte gegen {_req|Spiele|5|Team2|TeamName} {_req|Spiele|5|MatchResults|PointsTeam1} zu {_req|Spiele|5|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|5|MatchResults|Text}"
           }
         ]
       },
@@ -1817,7 +2732,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|6|Team1|TeamName} spielte gegen {_req|Spiele|6|Team2|TeamName} {_req|Spiele|6|MatchResults|PointsTeam1} zu {_req|Spiele|6|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|6|MatchResults|Text}"
           }
         ]
       },
@@ -1825,7 +2740,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|7|Team1|TeamName} spielte gegen {_req|Spiele|7|Team2|TeamName} {_req|Spiele|7|MatchResults|PointsTeam1} zu {_req|Spiele|7|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|7|MatchResults|Text}"
           }
         ]
       },
@@ -1833,7 +2748,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "{_req|Spiele|8|Team1|TeamName} spielte gegen {_req|Spiele|8|Team2|TeamName} {_req|Spiele|8|MatchResults|PointsTeam1} zu {_req|Spiele|8|MatchResults|PointsTeam2}. "
+            "pattern": "{_req|Spiele|8|MatchResults|Text}"
           }
         ]
       },
@@ -1841,23 +2756,23 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem 33 Spieltag der Ersten Fußball-Bundesliga sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|0|TeamName} ist aktuell Tabellenführer mit {_req|Tabelle|0|Points} Punkten. "
+            "pattern": "{_req|Tabelle|0|Text} "
           },
           {
             "type": "text",
-            "pattern": "{_req|Tabelle|1|TeamName} auf dem zweitem Platz mit {_req|Tabelle|1|Points} Punkten. "
+            "pattern": "{_req|Tabelle|1|Text} "
           },
           {
             "type": "text",
-            "pattern": "Danach {_req|Tabelle|2|TeamName} mit {_req|Tabelle|2|Points}, gefolgt von {_req|Tabelle|3|TeamName} auf Platz 4. "
+            "pattern": "{_req|Tabelle|3|Text} "
           },
           {
             "type": "text",
-            "pattern": "Auf Platz 5 und 6 sind {_req|Tabelle|4|TeamName} und {_req|Tabelle|5|TeamName}. "
+            "pattern": "Auf den Europaleague Plätzen liegen {_req|Tabelle|4|TeamName} mit {_req|Tabelle|4|Points} Punkten und {_req|Tabelle|5|TeamName} mit {_req|Tabelle|5|Points} Punkten.  "
           }
         ]
       },
@@ -1865,7 +2780,11 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Auf den letzten drei Plätzen sind {_req|Tabelle|15|TeamName} und {_req|Tabelle|16|TeamName} gefolgt von {_req|Tabelle|17|TeamName}. "
+            "pattern": "{_req|Tabelle|15|Text} "
+          },
+          {
+            "type": "text",
+            "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} und {_req|Tabelle|17|TeamName} mit jeweils {_req|Tabelle|16|Points} und {_req|Tabelle|17|Points} Punkten. "
           }
         ]
       }
@@ -1874,15 +2793,26 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
+  "run_config": [
+    {
+      "name": "league",
+      "display_name": "Liga",
       "possible_values": [
-        true,
-        false
+        {
+          "value": 1,
+          "display_value": "1. Bundesliga"
+        },
+        {
+          "value": 2,
+          "display_value": "2. Bundesliga"
+        },
+        {
+          "value": 3,
+          "display_value": "3. Bundesliga"
+        }
       ]
     }
-  },
+  ],
   "presets": {
     "football_1": {
       "color": "black",
