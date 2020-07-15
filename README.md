@@ -4,7 +4,7 @@
 
 ### Konfiguration
 
-#### Config.json
+#### config.json
 
 Die Konfigurationsdatei für das Programm hat folgendes Format:
 
@@ -24,34 +24,34 @@ Die Konfigurationsdatei für das Programm hat folgendes Format:
 
 `api_keys`:
 
-Die Api Keys für die Verwendeten Apis:
-- `weatherbit`: Api Key für [weatherbit.io](https://www.weatherbit.io)
+Die API-Keys für die verwendeten APIs:
+- `weatherbit`: API-Key für [weatherbit.io](https://www.weatherbit.io)
 
 `steps_base_config`:
 
-Die Konfiguration die für jeden Job gelten soll (Die Konfigurationen in [jobs.json](#jobs.json) sind höherwertig)
+Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen in [jobs.json](#jobs.json) sind höherwertig).
 
 - `testing`:
   
   Wenn `testing` aktiviert ist, werden keine API-Abfragen gemacht. 
-  Zur Generierung des Videos werden Beispieldaten verwendet.
+  Zur Generierung des Videos werden in dem Fall Beispieldaten verwendet.
 
 - `h264_nvenc`:
 
-  Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardwarebeschleunigung bei Nvidia Grafikarten. 
-  Damit diese Option funktioniert, muss man ein paar Sachen beachten (Weitere Infos bei [Mit Docker](#Mit-Docker) und [Ohne Docker](#Ohne-Docker)).
+  Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardware-Beschleunigung bei Nvidia-Grafikkarten. 
+  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#Ohne-Docker)).
 
 `testing`:
 
-Wenn `testing` aktiviert ist wird die *logging Ausgabe* auf Info Level aktiviert.
+Wenn `testing` aktiviert ist, wird die *logging Ausgabe* auf das "Info"-Level gesetzt, wodurch mehr Informationen in den Log eingetragen werden.
 
 `audio`:
 
-Hier kan die Konfiguration für die Audio generation angegeben werden, eine Erklärung hierfür befindet sich in '[Konzepte/StepsConfig/audio-apis.md](Konzepte/StepsConfig/audio-apis.md)'.
+Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Erklärung hierfür befindet sich unter '[Konzepte/StepsConfig/audio-apis.md](Konzepte/StepsConfig/audio-apis.md)'.
 
-#### Jobs.json
+#### jobs.json
 
-Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert werden sollen:
+Diese Datei legt fest, zu welchen Zeitpunkten die verschiedenen Videos generiert werden sollen:
 
 ~~~JSON
 {
@@ -75,82 +75,87 @@ Diese Datei legt fest, zu welchem Zeitpunkt die verschiedenen Videos generiert w
 
 `name`: Name des Jobs
 
-`id`: Id des Jobs (sollte einzigartig sein)
+`id`: ID des Jobs (sollte einzigartig sein)
 
-`steps`:
+`steps`: Thema, für welches ein Video generiert werden soll
 
-Name des Videos, welches generiert werden soll. 
 Aktuelle Optionen:
 - `"weather_germany"`: Deutschlandweiter Wetterbericht
-- `"weather_single"`: Wetterbericht für einen Ort
-- `"football"`: Bericht des Spieltages der Fußball Bundesliga
+- `"weather_single"`: Ortsbezogener Wetterbericht
+- `"football"`: Spieltag-Bericht für die Fußball-Bundesliga
 
-`schedule`: 
+`schedule`: Hier kann der Zeitplan für die Videogenerierung festgelegt werden.
 
-Hier kann man die Zeiteinstellungen angeben:
-
-Um den Zeitpunkt der Generierung festzulegen gibt es vier mögliche Einträge:
+Hierzu gibt es vier mögliche Einträge:
 
 - `time`:
 
-  Uhrzeit der Ausführung. Die Uhrzeit muss im Format `"%H:%M"` angegeben werden. z.B.: `10:00`.
+  Uhrzeit der Ausführung. Die Uhrzeit muss im Format `"%H:%M"` angegeben werden.
+  
+  Beispiel: `10:00`
 
-  > muss immer angegeben werden.
+  > Die Uhrzeit muss immer angegeben werden.
 
 - `daily`:
 
-  Wenn dieser Wert 'true' ist, wird der Job jeden Tag ausgeführt
+  Wenn dieser Wert 'true' ist, wird der Job jeden Tag ausgeführt.
 
 - `date`: 
 
-  Datum an welchem der Job generiert werden soll. Ist ein Datum angegeben, so wird der Job nur einmal ausgeführt. Das Datum muss in dem Format '%y-%m-%d' angegeben werden. z.B.: '2020-06-09'
+  Ist ein Datum angegeben, so wird der Job nur ein mal an diesem Datum ausgeführt. Das Datum muss in dem Format '%y-%m-%d' angegeben werden.
+ 
+  Beispiel: '2020-06-09'
 
 - `weekdays`:
 
-  Angabe der Wochentage, an welchen der Job ausgeführt werden soll. Die Wochentage werden als Array von Zahlen angegeben wobei `0=Montag`, `1=Dienstag` usw. angegeben wird. z.B.: `[0, 5, 6]` (Wird Montags, Samstags und Sontags ausgeführt).
+  Enthält die Wochentage, an welchen der Job ausgeführt werden soll. Die Wochentage werden als Array von Zahlen angegeben, wobei `0 ~ Montag`, `1 ~ Dienstag` usw. 
+  
+  Beispiel: `[0, 5, 6]` => Der Job wird Montags, Samstags und Sontags ausgeführt.
 
-> Achtung die angabe von `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also eins der Drei angegeben werden, es darf aber nicht mehr als eins angegeben werden.
+> Achtung: Die Optionen `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also genau eine Option ausgewählt werden.
 
-`config`:
+`config`: Hier können die Konfigurationen für die Jobs festgelegt werden.
 
-Hier kann man die Konfigurationen für die Jobs angeben.
-Mögliche Konfigurationen:
+Mögliche Konfigurationen für die verschiedenen Themen:
 
-*Wetterbericht Deutschland (steps: `"weather_germany"`)*:
+*Deutschlandweiter Wetterbericht (steps: `"weather_germany"`)*:
 
-  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
 
-*Wetterbericht für einen Ort (steps: `"weather_single"`)*:
+*Ortsbezogener Wetterbericht (steps: `"weather_single"`)*:
 
-  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
+  - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
   - `city_name`: Name des Ortes
-  - `p_code`: Postleitzahl des ortes
+  - `p_code`: Postleitzahl des Ortes
 
-  > Ist nur `city_name` angegeben wird versucht diese Stadt zu finden es kann aber sein das die name nicht gefunden wird, daher ist die zusätzliche angabge einer Postleitzahl mit `p_code` Ratsam. Der angegebene `city_name` wird dann inerhalb des Videos als Stadt namen Angezeigt.
+  > Da es vorkommen kann, dass durch `city_name` kein für die Wettervorhersage verfügbarer bzw. eindeutig identifizierbarer Ort
+>spezifiziert wird, ist die zusätzliche Angabe einer Postleitzahl (`p_code`) ratsam. 
+>Der angegebene `city_name` wird dann innerhalb des Videos verwendet.
 
-  > Aktuell sind nur Städte in Deutschland möglich diese wird man aber später noch einstellen können.
+  > Aktuell lassen sich nur Wettervorhersagen für Städte in Deutschland generieren.
   
- *Bericht des Spieltages der Fußball Bundesliga (steps: `"football"`)
+ *Spieltag-Bericht für die Fußball-Bundesliga (steps: `"football"`)*:
  
-  - Alle Einstellungen welche man auch in der [config.json](#config.json) unter `steps_base_config` einstellen kann
-  - `liga-name`: Name der Liga
+  - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+  - `liga-name`: Spielklasse (1 ~ 1. Liga, 2 ~ 2. Liga, 3 ~ 3. Liga)
   
-  > Aktuell ist `liga-name` nur der Name der angezeigt wird nicht aber der name der für den Api-Request verwendet wird (Dies wird sich später noch ändern)
+  > Aktuell ist `liga-name` nur der Name, der angezeigt wird, nicht aber der Name, der für den eigentlichen API-Request verwendet wird (dies wird noch geändert).
 
 ### Mit Docker
 
 *Benötigte Software*: 
   - Docker
 
-*Docker Container erstellen:*
+*Docker-Container erstellen:*
 
 ~~~shell
 docker build -t visuanalytics src/visuanalytics
 ~~~
 
-*Docker Container Starten:*
+*Docker-Container starten:*
 
-> Die Pfade hinter `source=` müssen durch Pfade zu den Dateien (die in [Konfiguration](#Konfiguration) beschrieben werden) bzw. zu Output Ordner ersetzt werden.
+> Die Pfade hinter `source=` müssen durch Pfade zu den Dateien, die in [Konfiguration](#Konfiguration) beschrieben werden, 
+> bzw. durch den Pfad zum Output-Ordner ersetzt werden.
 
 *Linux:*
 
@@ -172,47 +177,51 @@ docker run -t ^
 	visuanalytics
 ~~~
 
-> Wenn man die Hardwarebeschleunigung eine Nvidia Grafikarte verwenden will, kann man beim Starten noch die Option `--runtime="nvidia"` angeben. Dafür muss man vorher allerdings ein Paar Konfigurationen/Installationen vornehmen. Eine Anleitung dafür defindet sich [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html) (Dies ist nicht die offizielle Doku wir fanden diese aber hilfreicher. Die Doku von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu))
+> Wenn die Hardware-Beschleunigung bei einer Nvidia-Grafikkarte verwendet werden soll, muss beim Starten die Option `--runtime="nvidia"` angeben werden. 
+>Dafür müssen vorher allerdings diverse Konfigurationen / Installationen vorgenommen werden. 
+>Eine Anleitung dafür befindet sich [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html).
+>Dies ist nicht die offizielle Dokumentation, für uns war diese allerdings hilfreicher. 
+>Die offizielle Dokumentation von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu).
 
 ### Ohne Docker
 
 *Benötigte Software*:
   
-  - Python >=3.6
-  - Pip
+  - python >=3.6
+  - pip
   - FFmpeg
 
-*In den Src Ordner Wechseln*: `cd src`
+*In den src-Ordner wechseln*: `cd src`
 
-*Packete Installieren*:
+*Pakete installieren*:
   - `pip install -r visuanalytics/requiraments.txt`
 
-- Config Dateien Anlegen/Verändern (diese werden [hier](#Configuration) beschrieben werden):
-  - Die Datei `config.json` muss sich in dem Ordner `visuanalytics/insance` befinden.
-  - Die Datei `jobs.json` befindet sich im Ordner `visuanalytics/resources` diese kann angepasst werden.  
+- Konfigurations-Dateien anlegen / anpassen (diese werden [hier](#Configuration) beschrieben):
+  - die Datei `config.json` muss sich in dem Ordner `visuanalytics/insance` befinden.
+  - die Datei `jobs.json` befindet sich im Ordner `visuanalytics/resources`. Diese kann angepasst werden.  
 
-*Programm Starten*: `python -m visuanalytics`
+*Programm starten*: `python -m visuanalytics`
 
-> unter Linux kann es sein das man `pip3` und `python3` verwenden muss damit die richtige Python version verwendet wird.
+> Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
 
-> um die Option `h264_nvenc` (Erklärung siehe [config.json](#config.json)) zu verwendet müssen ein paar einstellungen vorgenommen werden eine gute Anleitung defindet sich [hier](https://developer.nvidia.com/ffmpeg)
+> Um die Option `h264_nvenc` (siehe [config.json](#config.json)) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
+> Eine gute Anleitung befindet sich [hier](https://developer.nvidia.com/ffmpeg).
 
-## Doku Generieren
+## Dokumentation Generieren
 
-Für die Dokumentation wird das Python Package [Sphinx](https://www.sphinx-doc.org) verwendet.
+Für die Dokumentation wird das python-Paket [Sphinx](https://www.sphinx-doc.org) verwendet.
 
 ### Installation
 
+1. dev-dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
-1. Dev Dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
-
-> unter Linux kann es sein das man `pip3` verwenden muss damit die richtige Python version verwendet wird.
+> Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
 
 
 ### HTML Generieren
 
-1. in den Doku ordner wechseln: `cd src/visuanalytics/docs`
-2. Doku aus den Python **docstrings** generieren: `sphinx-apidoc -f -o modules ..`
+1. In den docs-Ordner wechseln: `cd src/visuanalytics/docs`
+2. Dokumentation aus den python-**docstrings** generieren: `sphinx-apidoc -f -o modules ..`
 3. **HTML** generieren: `make html`
 
-Die Dokumentation befindet sich dann in `_build/html`.
+Die Dokumentation befindet sich dann im Ordner `_build/html`.
