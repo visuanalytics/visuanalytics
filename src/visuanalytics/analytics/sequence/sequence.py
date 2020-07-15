@@ -127,7 +127,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     if step_data.get_config("h264_nvenc", False):
         args2.extend(("-c:v", "h264_nvenc"))
 
-    args2.extend(("-shortest", "-s", "1920x1080", output2))
+    args2.extend(("-s", "1920x1080", output2))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
 
