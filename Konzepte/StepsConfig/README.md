@@ -46,14 +46,13 @@
   - [convert](#convert)
 - [Images](#images)
   - [pillow](#pillow)
-  - [wordcloud](#wordcloud)
-- [Audios](#audios)
-  - [Pillow](#pillow)
-    - [Overlay](#overlay)
+      - [Overlay](#overlay)
       - [image](#image)
       - [image-array](#image-array)
       - [text](#text)
       - [text-array](text-array)
+  - [wordcloud](#wordcloud)
+- [Audios](#audios)
 - [Sequence](#seqence)
   - [successively](#successivel)
   - [custom](#custom)
@@ -922,108 +921,16 @@ Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
 ```
 
 ## pillow
+
+Pillow ist eine Image Library für Python.
+In unserem projekt nutzen wir grundlegend 3 Funktionen:
+Ein Bild öffnen um es zu bearbeiten.
+Ein Bild in ein Bild einfügen.
+Text in ein Bild einfügen.
+
 Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen, die aus den angegebenen 
 Parametern Bilddateien generieren.
 
-
-## wordcloud
-Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
-eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
-
-```PYTHON
-WORDCLOUD_DEFAULT_PARAMETER = {
-    "background_color": "white",
-    "width": 400,
-    "height": 200,
-    "collocations": True,
-    "max_font_size": None,
-    "max_words": 200,
-    "contour_width": 0,
-    "contour_color": "white",
-    "font_path": None,
-    "prefer_horizontal": 0.90,
-    "scale": 1,
-    "min_font_size": 4,
-    "font_step": 1,
-    "mode": "RGB",
-    "relative_scaling": 0.5,
-    "color_func": None,
-    "regexp": None,
-    "colormap": "viridis",
-    "normalize_plurals": True,
-    "stopwords": None
-}
-```
-Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
-der jeweilige default-Wert verwendet. 
-
-`background_color`: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll, 
-muss hier `None` angegeben werden und bei `mode` `RGBA`
-
-`width`: int - Breite der Wordcloud in Pixeln
-
-`height`: int - Höhe der Wordcloud in Pixeln
-
-`collocations`: bool - <!--TODO-->
-
-`max_font_size`: int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
-
-`max_words`: int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
-
-`contour_width`: int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
-
-`contour_color`: color value - Farbe der Kontur/Umrandung 
-
-`font_path`: str - Pfad zur Schriftart
-
-`prefer_horizontal`: float -  <!--TODO-->
-   
-`scale`: float/int - <!--TODO-->
-
-`min_font_size`: int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
-
-`font_step`: int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
-
-`mode`: `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
-
-`relative_scaling`: float - <!--TODO-->
-
-`color_func`: callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
-
-`regexp`: None, <!--TODO-->
-
-`colormap`: colormap (callable) von matplotlib - viridis, magma, inferno, plasma
-
-`normalize_plurals`: bool - <!--TODO-->
-
-`stopwords`: set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
-
-
-##### Beispiel
-```JSON
-{
-    "type": "wordcloud",
-    "text": "_req|text",
-    "stopwords": "_conf|stopwords",
-    "parameter": {
-        "mask": {
-            "x": 1000,
-            "y": 1000,
-            "figure": "_conf|shape"
-        },
-        "background_color": "white",
-        "width": 1920,
-        "height": 1080,
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 2000,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
-    }
-}
-```
 In diesem Part der JSON werden Bilder spezifiziert, welche dann später in Sequence  
 verwendet werden können 
 Bilder lassen sich in der JSOn wie folgt darstellen:
@@ -1043,15 +950,6 @@ Bilder lassen sich in der JSOn wie folgt darstellen:
 
 **`"test1"`, `"test2":`**   
 sind die internen Bildnamen der erstellten Bilder
-
-
-## Pillow
-
-Pillow ist eine Image Library für Python.
-In unserem projekt nutzen wir grundlegend 3 Funktionen:
-Ein Bild öffnen um es zu bearbeiten.
-Ein Bild in ein Bild einfügen.
-Text in ein Bild einfügen.
 
 ```JSON
 
@@ -1256,6 +1154,104 @@ Presets sind weiter unten in der JSON spezifiziert
 Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich   
 (kann sich auch auf Daten aus der API beziehen)
 
+## wordcloud
+Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
+eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
+
+```PYTHON
+WORDCLOUD_DEFAULT_PARAMETER = {
+    "background_color": "white",
+    "width": 400,
+    "height": 200,
+    "collocations": True,
+    "max_font_size": None,
+    "max_words": 200,
+    "contour_width": 0,
+    "contour_color": "white",
+    "font_path": None,
+    "prefer_horizontal": 0.90,
+    "scale": 1,
+    "min_font_size": 4,
+    "font_step": 1,
+    "mode": "RGB",
+    "relative_scaling": 0.5,
+    "color_func": None,
+    "regexp": None,
+    "colormap": "viridis",
+    "normalize_plurals": True,
+    "stopwords": None
+}
+```
+Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
+der jeweilige default-Wert verwendet. 
+
+`background_color`: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll, 
+muss hier `None` angegeben werden und bei `mode` `RGBA`
+
+`width`: int - Breite der Wordcloud in Pixeln
+
+`height`: int - Höhe der Wordcloud in Pixeln
+
+`collocations`: bool - <!--TODO-->
+
+`max_font_size`: int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
+
+`max_words`: int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
+
+`contour_width`: int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
+
+`contour_color`: color value - Farbe der Kontur/Umrandung 
+
+`font_path`: str - Pfad zur Schriftart
+
+`prefer_horizontal`: float -  <!--TODO-->
+   
+`scale`: float/int - <!--TODO-->
+
+`min_font_size`: int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
+
+`font_step`: int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
+
+`mode`: `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
+
+`relative_scaling`: float - <!--TODO-->
+
+`color_func`: callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
+
+`regexp`: None, <!--TODO-->
+
+`colormap`: colormap (callable) von matplotlib - viridis, magma, inferno, plasma
+
+`normalize_plurals`: bool - <!--TODO-->
+
+`stopwords`: set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
+
+
+##### Beispiel
+```JSON
+{
+    "type": "wordcloud",
+    "text": "_req|text",
+    "stopwords": "_conf|stopwords",
+    "parameter": {
+        "mask": {
+            "x": 1000,
+            "y": 1000,
+            "figure": "_conf|shape"
+        },
+        "background_color": "white",
+        "width": 1920,
+        "height": 1080,
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 2000,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+    }
+}
+```
 
 # Audios
 Der Abschnitt `audios` beinhaltet die Texte, die in eine Audio-Datei umgewandelt werden. Die Texte werden im gewünschten
