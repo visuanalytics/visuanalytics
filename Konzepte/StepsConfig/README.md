@@ -227,7 +227,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!-- TODO Description-->
 
-## Transform Array
+## transform_array
 
 <!-- TODO Description-->
 
@@ -243,7 +243,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-## Transform Dict
+## transform_dict
 
 <!-- TODO Description-->
 
@@ -259,19 +259,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-## Transform Compare Arrays
-
-<!-- TODO Description-->
-
-##### Beispiel <!-- omit in toc -->
-
-```JSON
-
-```
-
-<!--TODO-->
-
-## Calculate
+## calculate
 
 <!-- TODO Description-->
 
@@ -520,7 +508,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-## Select
+## select
 
 <!-- TODO Description-->
 
@@ -540,7 +528,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Delete
+## delete
 
 ##### Beispiel <!-- omit in toc -->
 
@@ -555,7 +543,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Select Range
+## select_range
 
 <!-- TODO Description-->
 
@@ -584,7 +572,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Append
+## append
 
 <!-- TODO Description-->
 
@@ -608,7 +596,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Add Symbol
+## add_symbol
 
 <!-- TODO Description-->
 
@@ -640,7 +628,7 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
 
 <!--TODO-->
 
-## Replace
+## replace
 
 <!-- TODO Description-->
 
@@ -685,7 +673,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Translate Key
+## translate_key
 
 <!-- TODO Description-->
 
@@ -709,7 +697,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Alias
+## alias
 
 <!-- TODO Description-->
 
@@ -733,7 +721,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Regex
+## regex
 
 <!-- TODO Description-->
 
@@ -745,7 +733,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Date Format
+## date_format
 
 <!-- TODO Description-->
 
@@ -788,7 +776,7 @@ welches in format angegeben ist.
 
 <!--TODO-->
 
-## Timestamp
+## timestamp
 
 <!-- TODO Description-->
 
@@ -827,7 +815,7 @@ zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
 <!--TODO-->
 
-## Date Weekday
+## date_weekday
 
 <!-- TODO Description-->
 
@@ -860,7 +848,7 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 
 <!--TODO-->
 
-## Date Now
+## date_now
 
 <!-- TODO Description-->
 
@@ -891,7 +879,7 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 <!--TODO-->
 
-## Wind Direction
+## wind_direction
 
 <!-- TODO Description-->
 
@@ -960,31 +948,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-## Choose Random
-
-<!-- TODO Description-->
-
-##### Beispiel <!-- omit in toc -->
-
-```JSON
-
-```
-
-`keys`:
-
-<!--TODO-->
-
-`dict`:
-
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-## Loop
+## loop
 
 <!-- TODO Description-->
 
@@ -1031,7 +995,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-## Add Data
+## add_data
 
 <!-- TODO Description-->
 
@@ -1058,7 +1022,7 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
 <!--TODO-->
 
-## Copy
+## copy
 
 <!-- TODO Description-->
 
@@ -1134,8 +1098,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## Random Text
-
+## random_value
 <!-- TODO Description-->
 
 ##### Beispiel <!-- omit in toc -->
@@ -1156,8 +1119,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## Convert
-
+## convert
 <!-- TODO Description-->
 
 ##### Beispiel <!-- omit in toc -->
@@ -1254,11 +1216,11 @@ Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
 ## Overlay
 
-Es gibt 4 verschiedene Overlay Arten:
+Es gibt 4 verschiedene Overlay-Arten:
 
 ### image
 
-Typ Image setzt ein Bild in das vorher definierte source image
+Der Typ Image setzt ein Bild in das zuvor definierte source image
 
 ```JSON
 
@@ -1300,7 +1262,7 @@ Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
 
 ### image_array
 
-Typ Image-Array setzt mehrere Bilder in das vorher definierte source image
+Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 
 ```JSON
 
@@ -1352,7 +1314,7 @@ Kann ebenfalls wieder Liste oder String sein
 
 ### text
 
-Typ Text setzt Text in das vorher definierte source image
+Der Typ `text` setzt einen Text in das zuvor definierte source image.
 
 ```JSON
 
@@ -1388,7 +1350,7 @@ Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
 ### text_array
 
-Typ Text-Array setzt mehrere Texte in das vorher definierte source image
+Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 
 ```JSON
 
@@ -1463,46 +1425,65 @@ WORDCLOUD_DEFAULT_PARAMETER = {
 Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
 der jeweilige default-Wert verwendet.
 
-`background_color`: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
+**`background_color`**: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
 muss hier `None` angegeben werden und bei `mode` `RGBA`
 
-`width`: int - Breite der Wordcloud in Pixeln
+**`width`**: 
+int - Breite der Wordcloud in Pixeln
 
-`height`: int - Höhe der Wordcloud in Pixeln
+**`height`**: 
+int - Höhe der Wordcloud in Pixeln
 
-`collocations`: bool - <!--TODO-->
+**`collocations`**: 
+bool - <!--TODO-->
 
-`max_font_size`: int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
+**`max_font_size`**: 
+int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
 
-`max_words`: int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
+**`max_words`**: 
+int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
 
-`contour_width`: int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
+**`contour_width`**: 
+int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
 
-`contour_color`: color value - Farbe der Kontur/Umrandung
+**`contour_color`**: 
+color value - Farbe der Kontur/Umrandung
 
-`font_path`: str - Pfad zur Schriftart
+**`font_path`**: 
+str - Pfad zur Schriftart
 
-`prefer_horizontal`: float - <!--TODO-->
+**`prefer_horizontal`**: 
+float - <!--TODO-->
 
-`scale`: float/int - <!--TODO-->
+**`scale`**: 
+float/int - <!--TODO-->
 
-`min_font_size`: int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
+**`min_font_size`**: 
+int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
 
-`font_step`: int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
+**`font_step`**: 
+int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
 
-`mode`: `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
+**`mode`**: 
+`RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
 
-`relative_scaling`: float - <!--TODO-->
+**`relative_scaling`**: 
+float - <!--TODO-->
 
-`color_func`: callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
+**`color_func`**: 
+callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
 
-`regexp`: None, <!--TODO-->
+**`regexp`**: 
+None, <!--TODO-->
 
-`colormap`: colormap (callable) von matplotlib - viridis, magma, inferno, plasma
+**`colormap`**: 
+colormap (callable) von matplotlib - viridis, magma, inferno, plasma
 
-`normalize_plurals`: bool - <!--TODO-->
+**`normalize_plurals`**: 
+bool - <!--TODO-->
 
-`stopwords`: set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
+**`stopwords`**: 
+set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
 ##### Beispiel <!-- omit in toc -->
 
@@ -1571,7 +1552,8 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 }
 ```
 
-`pattern`: str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
+**`pattern`**: 
+str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
 
 ## compare
 
@@ -1613,17 +1595,23 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 }
 ```
 
-`value_left`: str, int - Der Wert, der beim Vergleich auf der linken Seite steht.
+**`value_left`**:
+str, int - Der Wert, der beim Vergleich auf der linken Seite steht. 
 
-`value_right`: str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
+**`value_right`**: 
+str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
 
-`on_equal`: callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+**`on_equal`**: 
+callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_not_equal`: callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+**`on_not_equal`**: 
+callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_higher`: callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+**`on_higher`**: 
+callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_lower`: callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+**`on_lower`**: 
+callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
 ## option
 
@@ -1659,11 +1647,14 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 }
 ```
 
-`check`: str, int - Der Wert, der auf true oder false geprüft werden soll.
+**`check`**: 
+str, int - Der Wert, der auf true oder false geprüft werden soll.
 
-`on_true`: callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
+**`on_true`**: 
+callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_false`: callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
+**`on_false`**: 
+callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
 ## random_text
 
@@ -1682,7 +1673,8 @@ Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in 
 }
 ```
 
-`pattern`: array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
+**`pattern`**: 
+array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
 Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
 # Sequence
