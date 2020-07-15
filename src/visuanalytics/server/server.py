@@ -53,6 +53,9 @@ def start_backend():
     # Start Scheduler and init Programm
     config = config_manager.get_config()
 
+    # Ensure that console_mode is false
+    config["console_mode"] = False
+
     init(config)
 
     DbScheduler(config["steps_base_config"]).start_unblocking()
