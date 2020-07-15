@@ -96,7 +96,7 @@ Daten der API. Die Responses können auch .csv-Dateien sein.
 
 Führt eine **https**-Request durch.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -140,7 +140,7 @@ Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurati
 Führt mehrere **https**-Requests durch. Die Request bleibt gleich bis auf einen Wert der sich ändert.
 Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -182,7 +182,7 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden anderen Request-Typen verwenden, der
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -231,7 +231,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -247,7 +247,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -263,7 +263,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -281,7 +281,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -305,7 +305,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -329,7 +329,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -353,7 +353,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -377,7 +377,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -400,7 +400,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 Wird aufgerufen von den untenstehenden Methoden zum Multiplizieren, Dividieren, Subtrahieren und Addieren von mehreren
 Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem Wert.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -412,7 +412,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -440,7 +440,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -468,7 +468,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -496,7 +496,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -527,7 +527,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 Mit select kann man sich die Keys aus der API-Antwort heraussuchen, die für das zu erstellende Video relevant sind.
 Die Keys stehen in relevant_keys.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -542,7 +542,7 @@ Die Keys stehen in relevant_keys.
 
 ## Delete
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -559,7 +559,7 @@ Die Keys stehen in relevant_keys.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -588,7 +588,7 @@ Die Keys stehen in relevant_keys.
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -615,7 +615,7 @@ Die Keys stehen in relevant_keys.
 add_symbol setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Value von dem Key, welcher
 unter key steht. Man kann damit auch einen Value vom alten Key unter keys in einen neuen Key unter new_keys kopieren.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -650,7 +650,7 @@ count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt we
 
 Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -689,7 +689,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -713,7 +713,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -737,7 +737,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -754,7 +754,7 @@ stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Valu
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit das Format in das Format umgewandelt werden kann,
 welches in format angegeben ist.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -797,7 +797,7 @@ um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben im UN
 new_keys werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Value gespeichert wird.
 zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -835,7 +835,7 @@ date_weekday wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys an
 stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus der Wochentag bestimmt werden kann.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -867,7 +867,7 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 date_now gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
 Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -897,7 +897,7 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -964,7 +964,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -988,7 +988,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1006,7 +1006,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1038,7 +1038,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 add_data fügt den Daten ein neues Key-Value-Paar hinzu. Der Value wird unter pattern eingetragen und an die Stelle
 new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1064,7 +1064,7 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
 Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -1106,7 +1106,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -1138,7 +1138,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -1160,7 +1160,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!-- TODO Description-->
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 
@@ -1504,7 +1504,7 @@ muss hier `None` angegeben werden und bei `mode` `RGBA`
 
 `stopwords`: set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1554,7 +1554,7 @@ angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede 
 
 Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1578,7 +1578,7 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert größer, kleiner oder gleich einem anderen Wert ist, einen
 String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1630,7 +1630,7 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `false` ist, einen String mithilfe eines weiteren
 `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1669,7 +1669,7 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 
 Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in eine Audiodatei umgewandelt wird.
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
@@ -1759,7 +1759,7 @@ Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der
 
 Bei einem ortsbezogenen Wetterbericht würde dies wie folgt aussehen:
 
-##### Beispiel <!-- omit in toc -->
+**Beispiel**
 
 ```JSON
 {
