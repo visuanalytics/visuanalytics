@@ -58,6 +58,9 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
     }
     const handleSelectOnDate = () => {
+        // TODO improve
+        if (!selectedSchedule.date) selectedSchedule.date = new Date();
+    
         setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
     }
     const handleAddWeekDay = (d: Weekday) => {
