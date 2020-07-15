@@ -6,7 +6,7 @@ from PIL import Image
 from wordcloud import WordCloud, STOPWORDS
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 WORDCLOUD_DEFAULT_PARAMETER = {
     "background_color": "white",
