@@ -1,6 +1,6 @@
-# Instalation
+# Installation
 
-## Programm Starten
+## Programm starten
 
 ### Konfiguration
 
