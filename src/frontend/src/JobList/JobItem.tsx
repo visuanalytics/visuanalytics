@@ -154,7 +154,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate ? selectedSchedule.date : null
+                date: selectedSchedule.onDate ? format(parse(String(job.schedule.date),"y-MM-dd", new Date()),"yyyy-MM-dd") : null
             }
         })
     },getJobs);
