@@ -1,5 +1,7 @@
 import functools
 
+from requests import Response
+
 
 class StepError(Exception):
     """
@@ -25,24 +27,15 @@ class StepError(Exception):
         return f"On Type '{self.type}', \"{type(self.__cause__).__name__}: {self.__cause__}\" was raised"
 
 
-class StepTypeError(Exception):
-    """
-    Fehlerklasse für einen Typen Fehler
-    der innerhalb eines Schrittes auftritt.
-    """
-
-    def __init__(self, type):
-        if type is None:
-            super().__init__(f"Entry 'type' is missing")
-        else:
-            super().__init__(f"Type '{type}' does not Exists")
-
-
 class APIError(StepError):
     pass
 
 
 class TransformError(StepError):
+    pass
+
+
+class StoringError(StepError):
     pass
 
 
@@ -58,14 +51,17 @@ class SeqenceError(StepError):
     pass
 
 
-class APIKeyError(Exception):
+class StepTypeError(Exception):
     """
-    Fehlerklasse für einen Nicht
-    gefundenen API key Name.
+    Fehlerklasse für einen Typen Fehler
+    der innerhalb eines Schrittes auftritt.
     """
 
-    def __init__(self, api_key_name):
-        super().__init__(f"Api key '{api_key_name}' not Found.")
+    def __init__(self, type):
+        if type is None:
+            super().__init__(f"Entry 'type' is missing")
+        else:
+            super().__init__(f"Type '{type}' does not Exists")
 
 
 class StepKeyError(Exception):
@@ -84,9 +80,34 @@ class StepKeyError(Exception):
         return f"{self.func_name}: Could not Access data '{self.keys}': {self.__cause__}"
 
 
+class APIKeyError(Exception):
+    """
+    Fehlerklasse für einen Nicht
+    gefundenen API key Name.
+    """
+
+    def __init__(self, api_key_name):
+        super().__init__(f"Api key '{api_key_name}' not Found.")
+
+
+class APiRequestError(Exception):
+    def __init__(self, response: Response):
+        super().__init__(
+            f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+
+
+class InvalidContentTypeError(Exception):
+    def __init__(self, url, content_type: str, expected_type="'application/json'"):
+        if url is None:
+            super().__init__(f"Generate Audio: Invalid Content Type '{content_type}' only {expected_type} is Suported")
+        else:
+            super().__init__(
+                f"Error on respone from '{url}': Invalid Content Type '{content_type}' only {expected_type} is Suported")
+
+
 def raise_step_error(error):
     """
-    Gitbt einen Decorator zurück der die Orginal Funktion
+    Gibt einen Decorator zurück der die Orginal Funktion
     mit einem `try`, `expect` block umschießt. Die in `error` übergebene Exception
     wird dann Anstadt der Erwarteten Exception geworfen.
 

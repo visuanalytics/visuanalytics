@@ -11,15 +11,17 @@ from visuanalytics.analytics.processing.image.visualization import generate_all_
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.storing import storing
+from visuanalytics.analytics.storing.storing import storing
+from visuanalytics.analytics.util.video_delete import delete_old_videos
+
 
 logger = logging.getLogger(__name__)
 
 
 class Pipeline(object):
-    """Enthält alle informationen zu einer Pipeline, und führt alle Steps aus.
+    """Enthält alle Informationen zu einer Pipeline und führt alle Steps aus.
 
-    Benötigt beim Ersttellen eine id, und eine Instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
+    Benötigt beim Erstellen eine id und eine Instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
     Bei dem Aufruf von Start werden alle Steps der Reihe nach ausgeführt.
     """
     __steps = {-2: {"name": "Error"},
@@ -47,12 +49,12 @@ class Pipeline(object):
 
     @property
     def start_time(self):
-        """float: Startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` inizalisiert."""
+        """float: Startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` initialisiert."""
         return self.__start_time
 
     @property
     def end_time(self):
-        """float: Endzeit der Pipeline. Wird erst nach Beendigung der Pipeline inizalisiert."""
+        """float: Endzeit der Pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
         return self.__end_time
 
     @property
@@ -63,7 +65,7 @@ class Pipeline(object):
     def progress(self):
         """Fortschritt der Pipeline.
 
-        :return: Anzahl der schon ausgeführten schritte, Anzahl aller Schritte
+        :return: Anzahl der schon ausgeführten Schritte, Anzahl aller Schritte.
         :rtype: int, int
         """
         return self.__current_step + 1, self.__steps_max + 1
@@ -71,7 +73,7 @@ class Pipeline(object):
     def current_step_name(self):
         """Gibt den Namen des aktuellen Schritts zurück.
 
-        :return: Name des Aktuellen Schrittes.
+        :return: Name des aktuellen Schritts.
         :rtype: str
         """
         return self.__steps[self.__current_step]["name"]
@@ -89,18 +91,21 @@ class Pipeline(object):
         # delete Directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
+        if self.steps_config.get("keep_count", -1) > 0:
+            delete_old_videos(self.steps_config["job_name"], self.steps_config["output_path"],
+                              self.steps_config["keep_count"])
         logger.info("Finished cleanup!")
 
     def start(self):
-        """Führt alle Schritte die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind aus.
+        """Führt alle Schritte, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind, aus.
 
-        Initalisiertt zuerst einen Pipeline Ordner mit der Pipeline id, dieser kann dann im gesamten Pipeline zur
-        zwichenspeicherung von dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehler fall wieder gelöscht.
+        Initialisiert zuerst einen Pipeline-Ordner mit der Pipeline id. Dieser kann dann in der gesamten Pipeline zur
+        Zwichenspeicherung von Dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehlerfall wieder gelöscht.
 
-        Führt alle Schritte aus der übergebenen Steps instans, die in der Funktion :func:`sequence` difiniert sind,
-        der reihnfolge nach aus. Mit der ausnahme von allen Steps mit der id < 0 und >= `step_max`.
+        Führt alle Schritte aus der übergebenen Steps Instanz, die in der Funktion :func:`sequence` definiert sind,
+        der Reihenfolge nach aus. Mit der Ausnahme von allen Steps mit der id < 0 und >= `step_max`.
 
-        :return: Wenn ohne fehler ausgeführt `True`, sonst `False`
+        :return: Wenn ohne Fehler ausgeführt `True`, sonst `False`
         :rtype: bool
         """
         try:

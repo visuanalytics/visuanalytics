@@ -10,15 +10,15 @@ logger = logging.getLogger(__name__)
 
 
 class Scheduler(object):
-    """Klasse zum ausführen der Jobs an Vorgegebenen zeitpunkten.
+    """Klasse zum Ausführen der Jobs an vorgegebenen Zeitpunkten.
 
-    Wenn :func:`start` aufgerufen wird testet die Funktion jede minute ob ein job ausgeführt werden muss,
-     ist dies der fall wird die dazugehörige config aus der Datenbank geladen und
-     der Job wird in einem anderen Thread ausgeführt. Um zu besstimmen ob ein Job ausgeführt werden muss
-     werden die daten aus der Datenbank mithilfe der Funktion :func:job.get_all_schedules` aus der Datenbak geholt
-     und getestet ob diese jetzt ausgeführt werden mussen.
+    Wenn :func:`start` aufgerufen wird, testet die Funktion jede Minute, ob ein Job ausgeführt werden muss,
+     ist dies der Fall, wird die dazugehörige config aus der Datenbank geladen und
+     der Job wird in einem anderen Thread ausgeführt. Um zu bestimmen, ob ein Job ausgeführt werden muss,
+     werden die Daten aus der Datenbank mithilfe der Funktion :func:job.get_all_schedules` aus der Datenbak geholt
+     und getestet, ob diese jetzt ausgeführt werden mussen.
 
-    :param steps: Dictionary zum überstezen der Step id zu einer Step Klasse.
+    :param steps: Dictionary zum übersetzen der Step id zu einer Step Klasse.
     :type steps: dict
     """
 
@@ -31,6 +31,10 @@ class Scheduler(object):
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
+
+    @property
+    def base_config(self):
+        return self._base_config
 
     def _start_job(self, job_name: str, steps_name: str, config: dict):
         # Add base_config if exists
@@ -49,7 +53,7 @@ class Scheduler(object):
     def start(self):
         """Started den Scheduler.
 
-        Testet jede Minute ob jobs ausgeführt werden müssen, ist dies der fall werden diese in
+        Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
         einem andern Thread ausgeführt.
         """
         logger.info("Scheduler started")

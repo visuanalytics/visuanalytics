@@ -1,73 +1,88 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Fr. Juni 26 12:48:48 2020
+-- File generated with SQLiteStudio v3.2.1 on Do. Juli 2 19:40:04 2020
 --
 -- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS job;
-DROP TABLE IF EXISTS schedule;
-DROP TABLE IF EXISTS steps;
-
 -- Table: job
-CREATE TABLE job (
-    id    INTEGER PRIMARY KEY AUTOINCREMENT
-                  UNIQUE
-                  NOT NULL,
-    steps INTEGER NOT NULL
-                  REFERENCES steps (id) ON DELETE CASCADE
-                                        ON UPDATE CASCADE
+DROP TABLE IF EXISTS job;
+
+CREATE TABLE job
+(
+    job_id      INTEGER PRIMARY KEY AUTOINCREMENT
+        UNIQUE
+                        NOT NULL,
+    steps_id    INTEGER NOT NULL
+        REFERENCES steps (steps_id) ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    job_name    VARCHAR NOT NULL,
+    schedule_id INTEGER NOT NULL
+        UNIQUE
+        REFERENCES schedule (schedule_id)
 );
 
 
 -- Table: job_config
-CREATE TABLE job_config (
-    id     INTEGER PRIMARY KEY AUTOINCREMENT
-                   UNIQUE
-                   NOT NULL,
-    job_id INTEGER REFERENCES job (id) ON DELETE CASCADE
-                                       ON UPDATE CASCADE
-                   NOT NULL,
-    [key]  TEXT    NOT NULL,
-    value  TEXT    NOT NULL
-);
+DROP TABLE IF EXISTS job_config;
 
-
--- Table: job_schedule
-CREATE TABLE job_schedule (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT
-                        NOT NULL
-                        UNIQUE,
-    job_id      INTEGER REFERENCES job (id) ON DELETE CASCADE
-                                            ON UPDATE CASCADE
-                        NOT NULL,
-    schedule_id INTEGER REFERENCES schedule (id) ON DELETE RESTRICT
-                                                 ON UPDATE CASCADE
-                        NOT NULL
+CREATE TABLE job_config
+(
+    job_config_id INTEGER PRIMARY KEY AUTOINCREMENT
+        UNIQUE
+                       NOT NULL,
+    job_id        INTEGER REFERENCES job ON DELETE CASCADE
+        ON UPDATE CASCADE
+                       NOT NULL,
+    [key]         TEXT NOT NULL,
+    value         TEXT NOT NULL
 );
 
 
 -- Table: schedule
-CREATE TABLE schedule (
-    id      INTEGER     PRIMARY KEY AUTOINCREMENT
-                        UNIQUE
-                        NOT NULL,
-    date    DATE,
-    time    TIME        NOT NULL,
-    weekday INTEGER (0) CHECK (weekday >= 0 AND 
-                               weekday <= 6),
-    daily   BOOLEAN
+DROP TABLE IF EXISTS schedule;
+
+CREATE TABLE schedule
+(
+    schedule_id INTEGER PRIMARY KEY AUTOINCREMENT
+        UNIQUE
+                     NOT NULL,
+    date        DATE,
+    time        TIME NOT NULL,
+    daily       BOOLEAN,
+    weekly      BOOLEAN,
+    on_date     BOOLEAN
+);
+
+
+-- Table: schedule_weekday
+DROP TABLE IF EXISTS schedule_weekday;
+
+CREATE TABLE schedule_weekday
+(
+    schedule_weekday_id INTEGER PRIMARY KEY
+        UNIQUE
+                                   NOT NULL,
+    weekday             INTEGER(1) NOT NULL
+        CHECK (weekday >= 0 AND
+               weekday <= 6),
+    schedule_id REFERENCES schedule (schedule_id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+                                   NOT NULL
 );
 
 
 -- Table: steps
-CREATE TABLE steps (
-    id             INTEGER PRIMARY KEY AUTOINCREMENT
-                           UNIQUE
+DROP TABLE IF EXISTS steps;
+
+CREATE TABLE steps
+(
+    steps_id       INTEGER PRIMARY KEY AUTOINCREMENT
+        UNIQUE
                            NOT NULL,
-    name           VARCHAR NOT NULL
-                           UNIQUE,
+    steps_name     VARCHAR NOT NULL
+        UNIQUE,
     json_file_name VARCHAR UNIQUE
                            NOT NULL
 );

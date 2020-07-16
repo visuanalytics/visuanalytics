@@ -8,6 +8,11 @@ RESOURCES_LOCATION = "../../resources"
 Relativer Pfad zu dem resources Ordner.
 """
 
+IMAGES_LOCATION = "../../resources/images"
+"""
+Relativer Pfad zu dem Image Ordner.
+"""
+
 ROOT_LOCATION = "../../"
 """
 Relativer Pfad zur root location.
@@ -23,6 +28,11 @@ MEMORY_LOCATION = "memory"
 Memory Datei Ordner Name, zum abspeichern von vorherigen berechnungen
 """
 
+DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
+"""
+Date Format in welchem unsere Datein abgespeichert werden
+"""
+
 
 def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
@@ -35,6 +45,17 @@ def get_resource_path(path: str):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
 
 
+def get_image_path(path: str):
+    """Erstellt einen Absoluten Pfad zu der übergebene Image Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
+    :return: Absoluter Pfad zur übergebener Ressource.
+    """
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), IMAGES_LOCATION, path))
+
+
 def get_temp_resource_path(path: str, pipeline_id: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource im Temp Ordner.
 
@@ -45,13 +66,26 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
-def get_memory_path(path: str, job_name: str):
+def get_memory_path(path: str, name: str, job_name: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource in den Memory Ordner.
 
     :param path: Pfad zur Ressource, relativ zum `resources/memory` Ordner.
     :param job_name: Job Name, von der die Funktion aufgerufen wurde.
     """
-    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, path))
+    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, path))
+
+
+def get_specific_memory_path(job_name: str, name: str, number: int):
+    """Erstellt einen Absoluten Pfad zu der memory datei im übergebenen Ordner.
+
+    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    :param name: Name des dicts das exportiert wurde
+    :param number: Angabe welche Datei ausgewählt werden soll 0= zuletz erstellt, 1 = Zweit zuletzt erstellt etc.
+    """
+    files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
+    print(files)
+    files.sort(reverse=True)
+    return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number]))
 
 
 def new_temp_resource_path(pipeline_id: str, extension):
@@ -77,8 +111,8 @@ def new_memory_resource_path(job_name: str, name: str):
    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
    :param name: Name der Datei (ohne datum)
     """
-    os.makedirs(get_memory_path("", job_name), exist_ok=True)
-    return get_memory_path(f"{name}_{datetime.now().strftime('%Y-%m-%d')}.json", job_name)
+    os.makedirs(get_memory_path("", name, job_name), exist_ok=True)
+    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d')}.json", name, job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):
@@ -113,7 +147,7 @@ def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
     return open_resource(os.path.join(TEMP_LOCATION, pipeline_id, path), mode)
 
 
-def open_memory_resource(time_delta, job_name: str, name: str, mode: str = "rt"):
+def open_memory_resource(job_name: str, name: str, time_delta, mode: str = "rt"):
     """Öffnet die übergebene Memory Ressource.
 
     :param time_delta: Tage die abgezogen werden sollen vom heutigem Tage zum öffnen der richtigen Ressource
@@ -122,8 +156,20 @@ def open_memory_resource(time_delta, job_name: str, name: str, mode: str = "rt")
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
 
     """
-    res_name = name + "_" + (datetime.now() + timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
-    return open_resource(os.path.join(MEMORY_LOCATION, job_name, res_name), mode)
+    res_name = (datetime.now() - timedelta(time_delta)).strftime('%Y-%m-%d') + ".json"
+    return open_resource(os.path.join(MEMORY_LOCATION, job_name, name, res_name), mode)
+
+
+def open_specific_memory_resource(job_name: str, name: str, number: int = 1, mode: str = "rt"):
+    """Öffnet die angegebene Memory Ressource.
+
+    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    :param name: Name des dicts das exportiert wurde
+    :param number: Angabe welche Datei ausgewählt werden soll 0= zuletz erstellt, 1 = Zweit zuletzt erstellt etc.
+    :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
+
+    """
+    return open_resource(get_specific_memory_path(job_name, name, number - 1), mode)
 
 
 def delete_resource(path: str):
@@ -164,4 +210,4 @@ def get_out_path(out_path, job_name, format=".mp4"):
     :return: Die aktuelle Uhrzeit für den Dateinamen zum erstellen des Videos
     :rtype: str
     """
-    return path_from_root(os.path.join(out_path, f"{job_name}-{datetime.now().strftime('%Y-%m-%d_%H-%M.%S')}{format}"))
+    return path_from_root(os.path.join(out_path, f"{job_name}-{datetime.now().strftime(DATE_FORMAT)}{format}"))

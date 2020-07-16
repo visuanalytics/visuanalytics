@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
-    "@material-ui/core": "^4.10.2",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^5.11.0",
-    "@testing-library/react": "^10.4.3",
+    "@testing-library/react": "^10.4.4",
     "@testing-library/user-event": "^12.0.11",
     "@types/jest": "^26.0.3",
     "@types/node": "^14.0.14",
@@ -18,10 +18,14 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "(cd .. & python -m visuanalytics)",
+    "start:server-env": "(cd .. ; . ../venv/bin/activate; python -m visuanalytics)",
+    "start:all": "concurrently \"npm run start\" \"npm run start:server\"",
+    "start:all-env": "concurrently \"npm run start\" \"npm run start:server-env\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
 }

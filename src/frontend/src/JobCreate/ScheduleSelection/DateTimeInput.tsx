@@ -17,7 +17,7 @@ export const DateInputField: React.FC<DateInputProps> = (props: DateInputProps) 
                     disablePast
                     disableToolbar
                     variant="inline"
-                    format="dd/MM/yyyy"
+                    format="dd.MM.yyy"
                     margin="normal"
                     label="Datum auswählen"
                     value={props.date}

@@ -7,6 +7,7 @@ from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
+from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
 from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
@@ -55,16 +56,16 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    if values.get("already_created", False):
-        source_img = Image.open(resources.get_resource_path(prev_paths[values["path"]]))
+    if values.get("path", None) is None:
+        source_img = Image.open(resources.get_resource_path(prev_paths[values["image_name"]]))
     else:
-        source_img = Image.open(resources.get_resource_path(values["path"]))
+        source_img = Image.open(resources.get_image_path(values["path"]))
     img1 = Image.new("RGBA", source_img.size)
     draw = ImageDraw.Draw(source_img)
 
     for overlay in values["overlay"]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, draw, presets, step_data)
+        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -72,7 +73,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
 
 @register_image
-def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """
     Erstellt ein Wordcloud Bild  --- TODO.
 
@@ -83,4 +84,4 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    assert False, "Not Implemented"
+    return wc.wordcloud(values, prev_paths, presets, step_data)
