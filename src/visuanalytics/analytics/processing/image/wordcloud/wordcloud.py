@@ -8,7 +8,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 WORDCLOUD_DEFAULT_PARAMETER = {
-    "background_color": "white",
+    "background_color": None,
     "width": 400,
     "height": 200,
     "collocations": True,
@@ -21,7 +21,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "scale": 1,
     "min_font_size": 4,
     "font_step": 1,
-    "mode": "RGB",
+    "mode": "RGBA",
     "relative_scaling": 0.5,
     "color_func": None,
     "regexp": None,

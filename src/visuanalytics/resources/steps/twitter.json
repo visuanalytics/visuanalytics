@@ -63,7 +63,6 @@
       "stopwords": "_conf|stopwords",
       "parameter": {
         "figure": "_conf|shape",
-        "background_color": "white",
         "width": "_conf|width",
         "height": "_conf|height",
         "collocations": false,
@@ -72,7 +71,8 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "_conf|colormap_words",
+        "mode": "RGBA"
       }
     },
     "wordcloud_with_background": {
@@ -85,8 +85,7 @@
           "pos_x": 96,
           "pos_y": 54,
           "color": "RGBA",
-          "image_name": "football_wordcloud",
-          "color_transparency": "FFFFFF"
+          "image_name": "football_wordcloud"
         }
       ]
     }
