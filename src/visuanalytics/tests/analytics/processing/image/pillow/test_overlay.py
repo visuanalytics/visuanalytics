@@ -37,8 +37,8 @@ def prepare_overlay_test(values, data, config=None):
 
 class OverlayTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../../tests/resources"
-        resources.IMAGES_LOCATION = "../../tests/resources/images"
+        resources.RESOURCES_LOCATION = "../tests/resources"
+        resources.IMAGES_LOCATION = "../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "100"), exist_ok=True)
 
