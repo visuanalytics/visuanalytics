@@ -1239,10 +1239,10 @@ Der Typ Image setzt ein Bild in das zuvor definierte source image
 **`description`** _(Optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
 
-**`pos_x`** :  
+**`pos_x`** _(Optional)_:  
 X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
 
-**`pos_y`** :  
+**`pos_y`** _(Optional)_:  
 Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
 
 **`size_x`** _(Optional)_:  
@@ -1259,6 +1259,14 @@ Farbe in welche das Bild konvertiert werden soll
 
 **`pattern`**:  
 Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
+
+#### Bild mittig vor Hintergrund platzieren
+
+Um ein Bild mittig vor dem Hintergrund zu platzieren, sollten die Felder `pos_x` und `pos_y` nicht mit Werten 
+versehen werden. Die Position wird automatisch berechnet unter Berücksichtigung der Größe des Hintergrundbildes und 
+des einzufügenden Bildes. 
+
+Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Werten versehen werden.
 
 ### image_array
 
@@ -1418,7 +1426,8 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
-    "stopwords": None
+    "stopwords": None,
+    "repeat": False
 }
 ```
 
@@ -1485,6 +1494,9 @@ bool - <!--TODO-->
 **`stopwords`**: 
 set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
+**`repeat`**:
+bool - Ob Wörter wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
+
 **Beispiel** 
 
 ```JSON
@@ -1511,6 +1523,30 @@ set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dar
     }
 }
 ```
+
+### Wordcloud mit nur einem Wort
+Zum Generieren einer Wordcloud, die nur ein Wort enthält, muss `repeat` auf `True` gesetzt werden. Der Textstring `text`
+soll nur das Wort enthalten, welches wiederholt werden soll.
+
+### Wordcloud transparent
+Möchte man eine Wordcloud mit transparentem Hintergrund, so hat man mehrere Möglichkeiten.
+Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes angeben:
+"mode": "RGBA",
+"background_color": None
+
+**Alternativ für `square` und `circle` möglich**:
+
+Erstellen einer Wordcloud mit weißem Hintergrund.
+"mode": "RGB" (default),
+"background_color": "white" (default)
+
+Im Image-Overlay:
+"color": "RGBA",
+"color_transparency": "FFFFFF"
+
+Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
+und `circle`empfohlen.
+<!--TODO-->
 
 # Audios
 
