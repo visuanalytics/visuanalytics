@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y gcc
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
+WORKDIR /
+
 # Copy src
 COPY . ./visuanalytics
 
