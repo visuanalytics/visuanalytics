@@ -2,25 +2,27 @@
 /*
 Plugin Name: VisuAnalytics
 Plugin URI: 
-Description: Plugin zu generieren von Videos
+Description: Plugin zum generieren von Videos
 Author: 
 Author URI: 
 Version: 0.1
 */
 
-function add_theme_scripts() {
+function add_plugin_scripts() {
   // Load all js files
   $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
   
   foreach ($files as $file) {
-	$file_name = basename($file, ".js");
-	$file_url = "/wp-content/plugins/visuanalytics/src/js/".basename($file);
+	  $file_name = basename($file, ".js");
+	  $file_url = plugins_url("src/js/" . basename($file), __FILE__);
 	
     wp_enqueue_script($file_name, $file_url, array (), '', true);
   }
+
+  wp_enqueue_style("va_css_main", plugins_url("src/css/main.css", __FILE__));
 }
 
-add_action( 'admin_enqueue_scripts', 'add_theme_scripts' );
+add_action( 'admin_enqueue_scripts', 'add_plugin_scripts' );
 
 // add to settings menu
 add_action('admin_menu', function () {
