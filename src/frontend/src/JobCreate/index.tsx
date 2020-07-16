@@ -13,6 +13,7 @@ import {Param} from '../util/param';
 import {Fade} from '@material-ui/core';
 import {useCallFetch} from '../Hooks/useCallFetch';
 import {format} from "date-fns";
+import { getUrl } from '../util/fetchUtils';
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -53,7 +54,7 @@ export default function JobCreate() {
     });
 
     // initialize callback for add job functionality
-    const addJob = useCallFetch("/add", {
+    const addJob = useCallFetch(getUrl("/add"), {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
