@@ -8,7 +8,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util import resources
 
 WORDCLOUD_DEFAULT_PARAMETER = {
-    "background_color": None,
+    "background_color": "white",
     "width": 400,
     "height": 200,
     "collocations": True,
@@ -21,7 +21,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "scale": 1,
     "min_font_size": 4,
     "font_step": 1,
-    "mode": "RGBA",
+    "mode": "RGB",
     "relative_scaling": 0.5,
     "color_func": None,
     "regexp": None,
@@ -72,15 +72,17 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
             x, y = np.ogrid[:x0, :y0]
 
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2
-            wordcloud_parameter["mask"] = 255 * mask.astype(int)
+
+            mask = 255 * mask.astype(int)
+            wordcloud_parameter["mask"] = mask
             wordcloud_parameter["width"] = x0
             wordcloud_parameter["height"] = y0
+
         elif figure == "square":
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
     stopwords = set(STOPWORDS)
-    print(wordcloud_parameter)
     dont_use = step_data.get_data(image["stopwords"], {})
     stopwords.add(dont_use)
     list_dont_use = dont_use.split()
