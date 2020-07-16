@@ -145,12 +145,20 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
-    if overlay.get("transparency", False):
-        source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
-                                          step_data.format(overlay["pos_y"])))
+    if overlay.get("pos_x", None) is not None and overlay.get("pos_y", None) is not None:
+        pos_x = step_data.format(overlay["pos_x"])
+        pos_y = step_data.format(overlay["pos_x"])
     else:
-        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
-                                step_data.format(overlay["pos_y"])), icon)
+        width_b, height_b = source_img.size
+        width_i, height_i = icon.size
+        pos_x = int(round((width_b - width_i) / 2))
+        pos_y = int(round((height_b - height_i) / 2))
+    if overlay.get("transparency", False):
+        source_img.alpha_composite(icon, (pos_x,
+                                          pos_y))
+    else:
+        source_img.paste(icon, (pos_x,
+                                pos_y), icon)
 
 
 @register_overlay

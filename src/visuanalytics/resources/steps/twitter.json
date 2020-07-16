@@ -62,9 +62,9 @@
       "text": "_req|text",
       "stopwords": "_conf|stopwords",
       "parameter": {
-        "figure": "_conf|shape",
-        "width": "_conf|width",
-        "height": "_conf|height",
+        "figure": "_conf|figure",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
         "collocations": false,
         "max_font_size": 400,
         "max_words": 2000,
@@ -82,8 +82,6 @@
         {
           "description": "Wordcloud",
           "type": "image",
-          "pos_x": 96,
-          "pos_y": 54,
           "color": "RGBA",
           "image_name": "football_wordcloud"
         }
