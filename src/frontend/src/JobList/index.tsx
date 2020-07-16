@@ -5,6 +5,7 @@ import { Fade } from '@material-ui/core';
 import { useFetchMultiple } from '../Hooks/useFetchMultiple';
 import {Schedule} from "../JobCreate";
 import {Load} from "../util/Load"
+import { getUrl } from '../util/fetchUtils';
 
 export interface Job {
     jobId: number;
@@ -16,7 +17,7 @@ export interface Job {
 }
 
 export const JobList: React.FC = () => {
-    const [jobInfo, getJobs] = useFetchMultiple<Job []>("/jobs");
+    const [jobInfo, getJobs] = useFetchMultiple<Job []>(getUrl("/jobs"));
 
     return (
         <Fade in={true}>

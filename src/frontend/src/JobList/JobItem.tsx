@@ -23,6 +23,7 @@ import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
 import TextField from "@material-ui/core/TextField";
+import { getUrl } from "../util/fetchUtils";
 
 interface Props {
     job: Job,
@@ -31,7 +32,7 @@ interface Props {
 
 export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
-    const deleteJob = useCallFetch(`/remove/${job.jobId}`, {method: 'DELETE'}, getJobs);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
@@ -144,7 +145,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         setNext(nextJob);
     },[nextJob()]);
 
-    const editJob = useCallFetch(`/edit/${job.jobId}`, {
+    const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
