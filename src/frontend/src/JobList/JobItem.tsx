@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Param} from "../util/param";
 import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import {AccordionSummary, useStyles} from "./style";
+import {AccordionSummary, useStyles, InputField} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -192,8 +192,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             return (
                 <div>
                     <div>
-                        <TextField
-                            className={classes.inputFields}
+                        <InputField
                             label="Thema"
                             defaultValue={job.topicName}
                             InputProps={{
@@ -204,8 +203,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                     </div>
                     <div>
                         <Button className={classes.inputButton} onClick={handleOpen}>
-                            <TextField
-                                className={classes.inputFields}
+                            <InputField
                                 label="Zeitplan"
                                 value={showTime()}
                                 InputProps={{
@@ -218,8 +216,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
                     </div>
                     <div>
-                        <TextField
-                            className={classes.inputFields}
+                        <InputField
                             label="nächstes Video"
                             value={next}
                             InputProps={{
@@ -291,7 +288,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                             <div>
                                 {paramInfo.map(p =>
                                     <div key={p.name}>
-                                        {renderParamField(p, classes, state.edit, true, (e) => {
+                                        {renderParamField(p, InputField, state.edit, true, (e) => {
                                             handleParamChange(e, p.name)
                                         })}
                                     </div>)

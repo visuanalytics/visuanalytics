@@ -1,6 +1,6 @@
 import React from "react";
 import { Fade } from "@material-ui/core";
-import { useStyles } from "../style";
+import { useStyles, InputField } from "../style";
 import { Param } from "../../util/param";
 import { renderParamField } from "../../util/renderParamFields";
 import { Load } from "../../util/Load";
@@ -28,7 +28,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                     ?
                     props.params.map((p: Param) =>
                         <div className={classes.paddingSmall} key={p.name}>
-                            {renderParamField(p, classes, false, true, (e) => {
+                            {renderParamField(p, InputField, false, true, (e) => {
                                 handleChange(e, p.name)
                             })}
                         </div>
