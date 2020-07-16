@@ -10,7 +10,7 @@ FRONTEND_LOCATION = "../frontend"
 
 def main():
     cwd = os.path.dirname(os.path.realpath(__file__))
-    build = os.path.join(cwd, "build/visuanalytics")
+    build = os.path.join(cwd, "build", "visuanalytics")
     frontend_path = os.path.normpath(
         os.path.join(cwd, FRONTEND_LOCATION))
     args = sys.argv
@@ -26,7 +26,6 @@ def main():
 
     if (len(args) > 1):
         os.environ["REACT_APP_VA_SERVER_URL"] = args[1]
-        print(os.environ.get("VA_SERVER_URL"))
 
     subprocess.run("npm run build", shell=True, check=True, cwd=frontend_path)
 
@@ -36,6 +35,11 @@ def main():
     copy_tree(os.path.join(frontend_path, "build/static/js"),
               os.path.join(build, "src/js"))
     #copy_tree(os.path.join(frontend_path, "/build/images"), "toDirectory")
+
+    shutil.make_archive(os.path.join(
+        cwd, "build", "visuanalytics"), 'zip', build)
+
+    shutil.rmtree(build, ignore_errors=True)
 
 
 if __name__ == "__main__":
