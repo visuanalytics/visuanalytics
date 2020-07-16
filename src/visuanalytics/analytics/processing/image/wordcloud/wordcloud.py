@@ -2,7 +2,6 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
 from wordcloud import WordCloud, STOPWORDS
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -28,7 +27,9 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
-    "stopwords": None
+    "stopwords": None,
+    "repeat": False,
+    "mask": None
 }
 
 
@@ -59,24 +60,22 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     if step_data.get_data_bool(parameter.get("color_func", False), {}):
         wordcloud_parameter["color_func"] = color_func
 
-    if parameter["mask"] is not None and parameter["mask"]["figure"] is not None:
-        x0 = step_data.format(parameter["mask"]["x"])
-        y0 = step_data.format(parameter["mask"]["y"])
-        x, y = np.ogrid[:x0, :y0]
+    if step_data.get_data(parameter["colormap"], {}):
+        wordcloud_parameter["colormap"] = step_data.get_data(parameter["colormap"], {})
 
-        figure = step_data.get_data(parameter["mask"]["figure"], {})
+    if parameter["figure"] is not None:
+        figure = step_data.get_data(parameter["figure"], {})
         if figure == "circle":
-            mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 400 ** 2
-        elif figure == "square":
-            mask = x * y
-        else:
-            # TODO testen
-            path = resources.get_image_path(parameter["mask"]["path"])
-            mask = np.array(Image.open(path))
+            x0 = step_data.get_data(parameter["width"], {})
+            y0 = step_data.get_data(parameter["height"], {})
+            x, y = np.ogrid[:x0, :y0]
 
-        wordcloud_parameter["mask"] = 255 * mask.astype(int)
-    else:
-        wordcloud_parameter["mask"] = None
+            mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2
+            wordcloud_parameter["mask"] = 255 * mask.astype(int)
+
+        elif figure == "square":
+            wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
+            wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
     stopwords = set(STOPWORDS)
 
