@@ -3,10 +3,10 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 """
 import numbers
 
-from visuanalytics.analytics.util import config_manager
 from visuanalytics.analytics.util.step_errors import APIKeyError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
+from visuanalytics.util import config_manager
 
 
 class StepData(object):

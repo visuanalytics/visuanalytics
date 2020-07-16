@@ -5,8 +5,8 @@ Modul schreibt Dicts in JSON Files
 import json
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, StoringError
+from visuanalytics.util import resources
 
 
 @raise_step_error(StoringError)

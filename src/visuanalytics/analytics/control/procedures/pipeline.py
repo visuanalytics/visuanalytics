@@ -9,11 +9,10 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.sequence.sequence import link
-from visuanalytics.analytics.transform.transform import transform
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.storing.storing import storing
+from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_old_videos
-
+from visuanalytics.util import resources
 
 logger = logging.getLogger(__name__)
 

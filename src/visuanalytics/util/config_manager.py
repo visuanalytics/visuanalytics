@@ -4,8 +4,8 @@ import json
 import os
 from json import JSONDecodeError
 
-CONFIG_LOCATION = "../../config.json"
-CONFIG_PRIVATE_LOCATION = "../../instance/config.json"
+CONFIG_LOCATION = "../config.json"
+CONFIG_PRIVATE_LOCATION = "../instance/config.json"
 
 
 def _get_config_path(config_location):

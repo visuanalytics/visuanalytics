@@ -1,5 +1,4 @@
-instance/*
-!instance/.gitignore
+instance/
 .webassets-cache
 __pycache__/
 *.py[cod]
@@ -58,5 +57,6 @@ celerybeat-schedule
 .dmypy.json
 dmypy.json
 .pyre/
-docs/_build
-docs/modules
+docs/
+resources/temp/
+resources/memory/

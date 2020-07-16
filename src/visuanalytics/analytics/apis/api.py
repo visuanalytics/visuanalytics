@@ -3,9 +3,9 @@ import json
 import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
 
 API_TYPES = {}
 

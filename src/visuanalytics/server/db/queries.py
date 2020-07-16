@@ -19,7 +19,7 @@ def get_params(topic_id):
         return None
     json_file_name = res["json_file_name"]
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
-    with open(path_to_json) as fh:
+    with open(path_to_json, encoding="utf-8") as fh:
         steps_json = json.loads(fh.read())
     run_config = steps_json["run_config"]
     params = [_with_selected(_to_camel_case(p), "") for p in run_config]
@@ -46,7 +46,7 @@ def get_job_list():
 def _row_to_job(row):
     params_string = str(row["params"])
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
-    with open(path_to_json) as fh:
+    with open(path_to_json, encoding="utf-8") as fh:
         steps_params = json.loads(fh.read())["run_config"]
     key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
     params = [_with_selected(_to_camel_case(_find(steps_params, "name", kv[0])), kv[1]) for kv in key_values]

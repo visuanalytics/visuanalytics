@@ -3,9 +3,9 @@ Modul welches die verschieden Typen beeihaltet um Text auf ein Bild zu setzten
 """
 from PIL import ImageFont
 
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import ImageError
 from visuanalytics.analytics.util.type_utils import register_type_func
+from visuanalytics.util import resources
 
 DRAW_TYPES = {}
 """Ein Dictionary bestehende aus allen Draw Typ Methoden  """

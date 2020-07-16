@@ -9,3 +9,4 @@ wordcloud==1.7.0
 
 # Server requirements
 flask==1.1.2
+gunicorn==20.0.4
