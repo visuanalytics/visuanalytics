@@ -27,7 +27,7 @@ add_action( 'admin_enqueue_scripts', 'add_plugin_scripts' );
 // add to settings menu
 add_action('admin_menu', function () {
   global $visuanalytics_settings_page;
-  $icon = plugins_url('images/icon.png', __FILE__)
+  $icon = plugins_url('images/icon.png', __FILE__);
 
   $visuanalytics_settings_page = add_menu_page('VisuAnalytics Settings', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
   // Draw the menu page itself
