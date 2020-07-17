@@ -58,11 +58,11 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "11:02",
+        "time": "10:45",
         "daily": true
       },
       "config": {
-        "hashtag": "Bundesliga",
+        "hashtags": "Bundesliga,Fußball",
         "stopwords": "Bundesliga",
         "colormap_words": "viridis",
         "color_func_words": true,

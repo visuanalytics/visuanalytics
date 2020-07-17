@@ -173,6 +173,7 @@ def _create_query(values: dict, data: StepData):
     # Get/Format Url, Params, Response Format
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
     req["params"] = data.format_json(values.get("params", None), api_key_name, values)
+    data.format_recurring(values.get("recurring_param", None), api_key_name, values, req["params"])
     req["res_format"] = data.format(values.get("response_format", "json"))
     req["include_headers"] = values.get("include_headers", False)
 
