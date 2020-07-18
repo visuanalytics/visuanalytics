@@ -21,18 +21,21 @@ def delete_on_time(jobs: dict, output_path: str):
     for file in files:
         for job in jobs["jobs"]:
             if file.startswith(job["name"]):
-                file_date = file[len(job["name"]) + 1:len(file) - 4]
-                date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
-                time = job["schedule"].get("removal_time", {})
-                if time != {}:
-                    date_time_obj = date_time_obj + timedelta(days=time.get("days", 0),
-                                                              hours=time.get("hours", 0))
-                    if datetime.now() > date_time_obj:
-                        os.remove(resources.path_from_root(os.path.join(output_path, file)))
-                        logger.info("removal time of file " + file + " exceed, file has been deleted")
+                try:
+                    file_date = file[len(job["name"]) + 1:len(file) - 4]
+                    date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
+                    time = job["schedule"].get("removal_time", {})
+                    if time != {}:
+                        date_time_obj = date_time_obj + timedelta(days=time.get("days", 0),
+                                                                  hours=time.get("hours", 0))
+                        if datetime.now() > date_time_obj:
+                            os.remove(resources.path_from_root(os.path.join(output_path, file)))
+                            logger.info("removal time of file " + file + " exceed, file has been deleted")
+                except ValueError:
+                    pass
 
 
-def delete_old_videos(job_name: str, output_path: str, count: int):
+def delete_amount_videos(job_name: str, output_path: str, count: int):
     """
     Methode zum löschen alter erstellten Videos, diese löscht alle Videos eines Jobs bis auf die vorgegebene Anzahl
 
@@ -53,3 +56,31 @@ def delete_old_videos(job_name: str, output_path: str, count: int):
                 logger.info("old video " + file + " has been deleted")
             if idx == count:
                 delete = True
+
+
+def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, values: dict):
+    """
+    Methode zum umbenenen der erstellten Video nach dem style in der config
+
+    :param job_name: Ein String des Job Namens
+    :param fix_names: Eine Liste wie die Video zu heißen haben
+    :param output_path: Der Pfad zum Output Ordner
+    :param values: Werte aus der JSON-Datei
+    """
+    logger.info("Checking if Videos needs to be deleted")
+    if os.path.exists(
+            resources.path_from_root(os.path.join(output_path, job_name + fix_names[len(fix_names) - 1] + ".mp4"))):
+        os.remove(
+            resources.path_from_root(os.path.join(output_path, job_name + fix_names[len(fix_names) - 1] + ".mp4")))
+        logger.info("old video " + job_name + fix_names[len(fix_names) - 1] + ".mp4" + " has been deleted")
+    for idx, name in enumerate(reversed(fix_names)):
+        if idx <= len(fix_names) - 2:
+            if os.path.exists(resources.path_from_root(
+                    os.path.join(output_path, job_name + fix_names[len(fix_names) - 2 - idx] + ".mp4"))):
+                os.rename(
+                    resources.path_from_root(
+                        os.path.join(output_path, job_name + fix_names[len(fix_names) - 2 - idx] + ".mp4")),
+                    resources.path_from_root(os.path.join(output_path, job_name + name + ".mp4")))
+    os.rename(values["sequence"],
+              resources.path_from_root(os.path.join(output_path, job_name + fix_names[0] + ".mp4")))
+    values["sequence"] = resources.path_from_root(os.path.join(output_path, job_name + fix_names[0] + ".mp4"))

@@ -67,7 +67,11 @@
         "colormap_words": "viridis",
         "color_func_words": true,
         "shape": "circle",
-        "keep_count": 3
+        "fix_names": [
+          "_1",
+          "_2",
+          "_3"
+        ]
       }
     }
   ]

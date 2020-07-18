@@ -11,7 +11,7 @@ from visuanalytics.analytics.processing.image.visualization import generate_all_
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
 from visuanalytics.analytics.transform.transform import transform
-from visuanalytics.analytics.util.video_delete import delete_old_videos
+from visuanalytics.analytics.util.video_delete import delete_amount_videos, delete_fix_name_videos
 from visuanalytics.util import resources
 
 logger = logging.getLogger(__name__)
@@ -90,9 +90,9 @@ class Pipeline(object):
         # delete Directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
-        if self.steps_config.get("keep_count", -1) > 0:
-            delete_old_videos(self.steps_config["job_name"], self.steps_config["output_path"],
-                              self.steps_config["keep_count"])
+        if self.steps_config.get("keep_count", -1) > 0 and self.steps_config.get("fix_names", None) is None:
+            delete_amount_videos(self.steps_config["job_name"], self.steps_config["output_path"],
+                                 self.steps_config["keep_count"])
         logger.info("Finished cleanup!")
 
     def start(self):
@@ -124,6 +124,10 @@ class Pipeline(object):
 
             # Set state to ready
             self.__current_step = self.__steps_max
+
+            if self.steps_config.get("fix_names", None) is not None:
+                delete_fix_name_videos(self.steps_config["job_name"], self.steps_config["fix_names"],
+                                       self.steps_config["output_path"], self.__config)
 
             self.__end_time = time.time()
             completion_time = round(self.__end_time - self.__start_time, 2)
