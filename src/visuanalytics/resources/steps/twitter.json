@@ -43,6 +43,16 @@
               "key": "_loop|text",
               "new_key": "_req|text",
               "append_type": "string"
+            },
+            {
+              "type": "count_occurrences",
+              "keys": "_req|text",
+              "new_keys": "_req|words_dict"
+            },
+            {
+              "type": "sort_dict",
+              "keys": "_req|words_dict",
+              "new_keys": "_req|sorted_dict"
             }
           ]
         }
@@ -57,7 +67,7 @@
     }
   ],
   "images": {
-    "football_wordcloud": {
+    "all_words_wordcloud": {
       "type": "wordcloud",
       "text": "_req|text",
       "stopwords": "_conf|stopwords",
@@ -79,7 +89,29 @@
         "colormap": "_conf|colormap_words"
       }
     },
-    "wordcloud_with_background": {
+    "top5_word1_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|sorted_dict|0",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "mask": {
+          "x": 1000,
+          "y": 1000,
+          "figure": "_conf|shape"
+        },
+        "background_color": "white",
+        "width": 1920,
+        "height": 1080,
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 2000,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "wordcloud_all": {
       "type": "pillow",
       "path": "football/background.png",
       "overlay": [
@@ -89,7 +121,22 @@
           "pos_x": 450,
           "pos_y": 10,
           "color": "RGBA",
-          "image_name": "football_wordcloud",
+          "image_name": "all_words_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top5_1": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "pos_x": 450,
+          "pos_y": 10,
+          "color": "RGBA",
+          "image_name": "top5_word1_wordcloud",
           "color_transparency": "FFFFFF"
         }
       ]
@@ -108,6 +155,18 @@
             "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
           }
         ]
+      },
+      "a2": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Twitter-Wordcloud. "
+          },
+          {
+            "type": "text",
+            "pattern": "Auf Platz der Hashtags {_req|sorted_dict|0} "
+          }
+        ]
       }
     }
   },
@@ -115,8 +174,13 @@
     "type": "custom",
     "pattern": [
       {
-        "image": "wordcloud_with_background",
+        "image": "wordcloud_all",
         "audio_l": "a1",
+        "time_diff": 10
+      },
+      {
+        "image": "wordcloud_top5_1",
+        "audio_l": "a2",
         "time_diff": 10
       }
     ]

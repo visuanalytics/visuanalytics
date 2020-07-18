@@ -461,3 +461,44 @@ def convert(values: dict, data: StepData):
         value = new_type(data.get_data(key, values))
 
         data.insert_data(new_key, value, values)
+
+
+@register_transform
+def occurrences_to_string(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        dict = data.format(values["keys"], values)
+        string = ""
+        for each in dict:
+            count = dict[each]
+            for i in range(count):
+                string = string + each
+        new_values = string
+        data.insert_data(new_key, new_values, values)
+
+
+@register_transform
+def sort_dict(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        dict = data.format(values["keys"], values)
+        new_values = sorted(dict.items(), key=lambda x: x[1], reverse=True)
+
+        data.insert_data(new_key, new_values, values)
+
+
+@register_transform
+def count_occurrences(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        dict = {}
+        new_key = get_new_keys(values, idx)
+        value = data.format(values["keys"], values)
+        for each in value:
+            if each not in dict:
+                dict[each] = 0
+        for each_word in dict:
+            count = value.count(each_word)
+            dict[each_word] = count
+
+        new_values = dict
+        data.insert_data(new_key, new_values, values)
