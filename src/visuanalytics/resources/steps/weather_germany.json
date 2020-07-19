@@ -714,6 +714,7 @@
     "weather1": {
       "type": "pillow",
       "path": "weather/DE1Tag.png",
+      "thumbnail": true,
       "overlay": [
         {
           "description": "week_day",

@@ -43,13 +43,15 @@ def delete_old_videos(job_name: str, output_path: str, count: int):
     logger.info("Checking if Videos needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     files.sort(reverse=True)
-    delete = False
-    idx = 0
+    delete = [[0, False], [0, False]]
     for file in files:
         if file.startswith(job_name):
-            idx = idx + 1
-            if delete:
+            i = 0 if file.endswith(".mp4") else 1
+            delete[i][0] += 1
+            if delete[i][1]:
                 os.remove(resources.path_from_root(os.path.join(output_path, file)))
                 logger.info("old video " + file + " has been deleted")
-            if idx == count:
-                delete = True
+            if delete[i][0] == count:
+                delete[i][1] = True
+
+# todo (jannik) wenn anderen pull request gemerged löschen für thummails mit fixen namen

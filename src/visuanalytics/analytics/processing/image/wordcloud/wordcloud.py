@@ -39,7 +39,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
 
 
-def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
@@ -50,7 +50,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     :rtype: str
     """
     wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
-    parameter = image.get("parameter", {})
+    parameter = values.get("parameter", {})
 
     for each in wordcloud_parameter:
         if each in parameter:
@@ -80,15 +80,22 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
     stopwords = set(STOPWORDS)
 
-    dont_use = step_data.get_data(image["stopwords"], {})
+    dont_use = step_data.get_data(values["stopwords"], {})
     stopwords.add(dont_use)
     list_dont_use = dont_use.split()
     STOPWORDS.update(list_dont_use)
 
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(image["text"], {}))
+    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(values["text"], {}))
 
     plt.axis("off")
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
+
+    if values.get("thumbnail", False) and step_data.get_config("thumbnail"):
+        file2 = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"), ".png")
+        values = wordcloud_image.to_image()
+        values.save(file2)
+        values["thumbnail"] = file2
+
     return file

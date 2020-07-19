@@ -1214,6 +1214,7 @@
     "football9": {
       "type": "pillow",
       "image_name": "football8",
+      "thumbnail": true,
       "overlay": [
         {
           "description": "Weißes-bild",
