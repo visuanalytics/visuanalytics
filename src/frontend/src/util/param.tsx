@@ -2,8 +2,12 @@
 export interface Param {
     name: string,
     displayName: string,
-    selected: string,
-    possibleValues: PossibleValue[]
+    type: string,
+    optional: boolean,
+    selected: any,
+    defaultValue: string | null,
+    possibleValues: PossibleValue[] | null,
+    subParams: Param[] | null
 }
 
 export interface PossibleValue {
