@@ -8,8 +8,38 @@ Author URI:
 Version: 0.1
 */
 
-function add_plugin_scripts() {
-  // Load all js files
+// add to settings menu
+add_action('admin_menu', 'add_menu');
+
+function add_menu() {
+  global $va_settings_page;
+  $icon = plugins_url('images/icon.png', __FILE__);
+
+  $va_settings_page = add_menu_page('VisuAnalytics Settings', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
+  // Draw the menu page itself
+  function visuanalytics_settings_do_page() {
+    ?>
+        <div id="root" style='margin-left: -20px;'></div>
+	<?php
+  }
+
+  add_action( 'load-' . $va_settings_page, 'init_va_menu' );
+
+  // add link to settings on plugin page (next to "Deactivate")
+  add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
+    $settings_link = '<a href="admin.php?page=visuanalytics-settings">' . __( 'Starten' ) . '</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+  });
+}
+
+// Inizalisize the Plugin Menu Page
+function init_va_menu() {
+  add_action( 'admin_enqueue_scripts', 'add_va_scripts' );
+}
+
+function add_va_scripts() {
+  // add js files
   $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
   
   foreach ($files as $file) {
@@ -19,28 +49,6 @@ function add_plugin_scripts() {
     wp_enqueue_script($file_name, $file_url, array (), '', true);
   }
 
+  // add css files
   wp_enqueue_style("va_css_main", plugins_url("src/css/main.css", __FILE__));
 }
-
-add_action( 'admin_enqueue_scripts', 'add_plugin_scripts' );
-
-// add to settings menu
-add_action('admin_menu', function () {
-  global $visuanalytics_settings_page;
-  $icon = plugins_url('images/icon.png', __FILE__);
-
-  $visuanalytics_settings_page = add_menu_page('VisuAnalytics Settings', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
-  // Draw the menu page itself
-  function visuanalytics_settings_do_page() {
-    ?>
-        <div id="root" style='margin-left: -20px;'></div>
-	<?php
-  }
-
-  // add link to settings on plugin page (next to "Deactivate")
-  add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
-    $settings_link = '<a href="options-general.php?page=visuanalytics-settings">' . __( 'Settings' ) . '</a>';
-    array_unshift($links, $settings_link);
-    return $links;
-  });
-});
