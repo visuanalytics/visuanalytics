@@ -10,12 +10,10 @@
       "lang": "de",
       "result_type": "recent"
     },
-    "recurring_param": [
+    "params_array": [
       {
         "name": "q",
-        "value": "{_conf|hashtags}",
-        "delimiter": ",",
-        "before_each": "%23",
+        "array": "%23{_conf|hashtags}",
         "new_delimiter": "+"
       }
     ],
