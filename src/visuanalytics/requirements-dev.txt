@@ -2,5 +2,6 @@
 sphinx==3.1.2
 sphinx_rtd_theme==0.5.0
 recommonmark==0.6.0
+sphinx-markdown-tables==0.0.15
 
 -r requirements.txt
