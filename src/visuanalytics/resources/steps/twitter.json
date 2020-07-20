@@ -61,6 +61,7 @@
       "type": "wordcloud",
       "text": "{_req|text}",
       "stopwords": "{_conf|stopwords}",
+      "color_func": "_conf|color_func_words",
       "parameter": {
         "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
@@ -70,7 +71,6 @@
         "max_words": 2000,
         "contour_width": 3,
         "contour_color": "white",
-        "color_func": "_conf|color_func_words",
         "colormap": "{_conf|colormap_words}"
       }
     },
@@ -149,15 +149,48 @@
       "display_name": "Farbverlauf der Wörter",
       "possible_values": [
         {
-          "value": true,
+          "value": [
+            245,
+            46,
+            5,
+            35
+          ],
           "display_value": "Blau"
         },
         {
-          "value": false,
-          "display_value": "Standard"
+          "value": [
+            145,
+            46,
+            5,
+            35
+          ],
+          "display_value": "Grün"
+        },
+        {
+          "value": [
+            145,
+            46,
+            5,
+            35
+          ],
+          "display_value": "Rot"
+        },
+        {
+          "value": [
+            145,
+            46,
+            5,
+            35
+          ],
+          "display_value": "Gelb"
         }
       ],
-      "default_value": false
+      "default_value": [
+        245,
+        46,
+        5,
+        35
+      ]
     },
     {
       "name": "shape",

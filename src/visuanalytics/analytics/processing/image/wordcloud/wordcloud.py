@@ -33,11 +33,14 @@ WORDCLOUD_DEFAULT_PARAMETER = {
 }
 
 
-def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
-    """
-    Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
-    """
-    return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
+def get_color_func(h, s, l_start, l_end):
+    def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+        """
+        Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+        """
+        return "hsl(%d, %d%%, %d%%)" % (h, s, random.randint(l_start, l_end))
+
+    return color_func
 
 
 def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
@@ -63,9 +66,26 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
                 value = step_data.format(parameter[param])
 
             wordcloud_parameter[param] = value
-
+    # TODO
     if step_data.get_data_bool(parameter.get("color_func", False), {}):
-        wordcloud_parameter["color_func"] = color_func
+        if step_data.get_data_num(image["color_func"][0], {}) is not None:
+            h = step_data.get_data_num(image["color_func_h"][0], {})
+        else:
+            h = 245
+        if step_data.get_data_num(image["color_func_s"][1], {}) is not None:
+            s = step_data.get_data_num(image["color_func_s"][1], {})
+        else:
+            s = 46
+        if step_data.get_data_num(image["color_func_l_start"][2], {}) is not None:
+            l_start = step_data.get_data_num(image["color_func_l_start"][2], {})
+        else:
+            l_start = 5
+        if step_data.get_data_num(image["color_func_l_end"][3], {}) is not None:
+            l_end = step_data.get_data_num(image["color_func_l_end"][3], {})
+        else:
+            l_end = 35
+
+        wordcloud_parameter["color_func"] = get_color_func(h, s, l_start, l_end)
 
     if parameter.get("colormap", ""):
         wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])
