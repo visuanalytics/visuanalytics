@@ -66,7 +66,6 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     if parameter["figure"] is not None:
         figure = step_data.get_data(parameter["figure"], {})
         if figure == "circle":
-            # TODO geht nicht mehr
             x0 = step_data.get_data(parameter["width"], {})
             y0 = step_data.get_data(parameter["height"], {})
             x, y = np.ogrid[:x0, :y0]
