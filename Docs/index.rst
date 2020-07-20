@@ -19,7 +19,7 @@ https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
    mainreport/Projektbericht
    documentation/Dokumentation
    steps/stepsConfig
-   modules/modules
+   documentation/technische_dokumentation
 
 Indizes und Tabellen
 --------------------
