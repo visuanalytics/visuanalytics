@@ -401,17 +401,13 @@
     "type": "custom",
     "pattern": [
       {
-        "image": "wordcloud_all",
-        "audio_l": "a1",
-        "time_diff": -5
-      },
-      {
         "image": "wordcloud_top1",
-        "time_diff": 2
+        "audio_l": "a1",
+        "time_diff": -6
       },
       {
         "image": "wordcloud_top2",
-        "time_diff": 2
+        "time_diff": 1
       },
       {
         "image": "wordcloud_top3",
@@ -435,7 +431,7 @@
       },
       {
         "image": "wordcloud_all",
-        "time_diff": 2
+        "time_diff": 5
       }
     ]
   },
