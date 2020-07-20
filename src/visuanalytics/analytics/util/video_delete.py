@@ -68,19 +68,14 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
     :param values: Werte aus der JSON-Datei
     """
     logger.info("Checking if Videos needs to be deleted")
-    if os.path.exists(
-            resources.path_from_root(os.path.join(output_path, job_name + fix_names[len(fix_names) - 1] + ".mp4"))):
-        os.remove(
-            resources.path_from_root(os.path.join(output_path, job_name + fix_names[len(fix_names) - 1] + ".mp4")))
-        logger.info("old video " + job_name + fix_names[len(fix_names) - 1] + ".mp4" + " has been deleted")
+    out = resources.path_from_root(os.path.join(output_path))
+    if os.path.exists(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}.mp4")):
+        os.remove(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}.mp4"))
+        logger.info(f"old video {job_name}{fix_names[len(fix_names) - 1]}.mp4 has been deleted")
     for idx, name in enumerate(reversed(fix_names)):
         if idx <= len(fix_names) - 2:
-            if os.path.exists(resources.path_from_root(
-                    os.path.join(output_path, job_name + fix_names[len(fix_names) - 2 - idx] + ".mp4"))):
-                os.rename(
-                    resources.path_from_root(
-                        os.path.join(output_path, job_name + fix_names[len(fix_names) - 2 - idx] + ".mp4")),
-                    resources.path_from_root(os.path.join(output_path, job_name + name + ".mp4")))
-    os.rename(values["sequence"],
-              resources.path_from_root(os.path.join(output_path, job_name + fix_names[0] + ".mp4")))
-    values["sequence"] = resources.path_from_root(os.path.join(output_path, job_name + fix_names[0] + ".mp4"))
+            if os.path.exists(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}.mp4")):
+                os.rename(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}.mp4"),
+                          os.path.join(out, f"{job_name}{name}.mp4"))
+    os.rename(values["sequence"], os.path.join(out, f"{job_name}{fix_names[0]}.mp4"))
+    values["sequence"] = os.path.join(out, f"{job_name}{fix_names[0]}.mp4")
