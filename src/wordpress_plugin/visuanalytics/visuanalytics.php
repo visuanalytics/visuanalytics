@@ -1,10 +1,9 @@
 <?php
 /*
 Plugin Name: VisuAnalytics
-Plugin URI: 
-Description: Plugin zum generieren von Videos
-Author: 
-Author URI: 
+Plugin URI: https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
+Description: Plugin zum generieren von Videos.
+Author: David Martschenko, Jannik Lapp, Max Stephan, Tanja Gutsche, Timon Pellekoorne
 Version: 0.1
 */
 
@@ -16,16 +15,17 @@ function add_menu() {
   $icon = plugins_url('images/icon.png', __FILE__);
 
   $va_settings_page = add_menu_page('VisuAnalytics Settings', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
-  // Draw the menu page itself
+  
+  // Define the Menu Page HTML
   function visuanalytics_settings_do_page() {
     ?>
-        <div id="root" style='margin-left: -20px;'></div>
-	<?php
+        <div id="root" />
+	  <?php
   }
 
   add_action( 'load-' . $va_settings_page, 'init_va_menu' );
 
-  // add link to settings on plugin page (next to "Deactivate")
+  // add link to Plugin Menu Page
   add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
     $settings_link = '<a href="admin.php?page=visuanalytics-settings">' . __( 'Starten' ) . '</a>';
     array_unshift($links, $settings_link);
