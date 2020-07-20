@@ -66,7 +66,9 @@
         "stopwords": "Bundesliga",
         "colormap_words": "viridis",
         "color_func_words": true,
-        "shape": "circle",
+        "figure": "square",
+        "width_wordcloud": 1000,
+        "height_wordcloud": 1000,
         "fix_names": [
           "_1",
           "_2",
