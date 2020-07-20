@@ -123,10 +123,10 @@
   "images": {
     "all_words_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_all",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_all}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
         "collocations": false,
@@ -135,7 +135,7 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top1_wordcloud": {

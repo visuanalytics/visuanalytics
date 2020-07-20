@@ -4,7 +4,7 @@ numpy==1.19.0
 requests==2.24.0
 gTTS==2.1.1
 mutagen==1.45.0
-matplotlib==3.2.2
+matplotlib==3.3.0
 wordcloud==1.7.0
 
 # Server requirements
