@@ -394,14 +394,6 @@
             "pattern": "Auf 1 Platz der Hashtags {_req|sorted_list|0} "
           }
         ]
-      },
-      "a3": {
-        "parts": [
-          {
-            "type": "text",
-            "pattern": " "
-          }
-        ]
       }
     }
   },
@@ -411,47 +403,39 @@
       {
         "image": "wordcloud_all",
         "audio_l": "a1",
-        "time_diff": 5
+        "time_diff": -5
       },
       {
         "image": "wordcloud_top1",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top2",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top3",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top4",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top5",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top10",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top20",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       },
       {
         "image": "wordcloud_all",
-        "audio_l": "a3",
-        "time_diff": 1
+        "time_diff": 2
       }
     ]
   },
