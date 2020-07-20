@@ -1,1 +1,3 @@
-Die Beschreibung hierfür befindet sich [hier](/Docs/steps/stepsConfig.md)
+# StepsConfig
+
+Die Beschreibung befindet sich [hier](/Docs/steps/stepsConfig.md)
