@@ -16,7 +16,8 @@ FROM jrottenberg/ffmpeg:4.2-nvidia
 ENV TZ="Europe/Berlin"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends\
-    tzdata
+    tzdata \
+    fontconfig
 
 # install Python
 RUN apt-get update \
@@ -53,6 +54,9 @@ RUN rm ./visuanalytics/server/static/index.html
 
 # Create instance Folder
 RUN mkdir /home/appuser/visuanalytics/instance
+
+# Set FONTCONFIG_PATH
+ENV FONTCONFIG_PATH=/etc/fonts
 
 # Expose Server Post
 EXPOSE 8000
