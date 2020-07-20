@@ -465,16 +465,18 @@ def convert(values: dict, data: StepData):
 
 @register_transform
 def occurrences_to_string(values: dict, data: StepData):
-    for idx, key in data.loop_key(values["keys"], values):
-        new_key = get_new_keys(values, idx)
-        dictionary = data.format(values["keys"], values)
-        string = ""
-        for each in dictionary:
-            count = dictionary[each]
-            for i in range(count):
-                string = string + each
-        new_values = string
-        data.insert_data(new_key, new_values, values)
+    new_value = ""
+    value = data.get_data(values["keys"], values)
+    range_start = data.format(values.get("range_start", 0), values)
+    range_end = data.format(values.get("range_end", len(value) - 1), values)
+    for i in range(range_start, range_end):
+        dict_key = list(value.keys())[i]
+        dict_value = value[str(dict_key)]
+        for j in range(dict_value):
+            new_value = new_value + " " + dict_key
+
+    new_key = values.get("new_keys", None)
+    data.insert_data(new_key, new_value, values)
 
 
 @register_transform

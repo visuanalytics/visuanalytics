@@ -87,7 +87,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     stopwords.add(dont_use)
     list_dont_use = dont_use.split()
     STOPWORDS.update(list_dont_use)
-
+    print(step_data.get_data(image["text"], {}))
     wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(image["text"], {}))
 
     plt.axis("off")
