@@ -62,5 +62,5 @@ html_theme_options = {
     'style_nav_header_background': 'white'
 }
 
-html_logo = 'pictures/logo.png'
-html_favicon = 'pictures/favicon.ico'
+html_logo = '_static/images/logo.png'
+html_favicon = '_static/images/favicon.ico'

@@ -51,12 +51,12 @@ Die Vorgegebenen Ziele wurden vom Team erreicht.
 **Ergebnis Wetterbericht:**  
 **Heute/Morgen** 
 
-<img src="../pictures/reports/WetterIcons.png" width="49%">
-<img src="../pictures/reports/WetterGrad.png" width="49%">
+<img src="../_static/images/reports/WetterIcons.png" width="49%">
+<img src="../_static/images/reports/WetterGrad.png" width="49%">
 
 **3-Tage**
 
-<img src="../pictures/reports/Wetter3Tage.png" width="49%">
+<img src="../_static/images/reports/Wetter3Tage.png" width="49%">
 
 ### Aktueller Stand der Implementierung
 
@@ -73,7 +73,7 @@ In diesem Sprint war das Ziel den Wetterbericht weiter auszubauen und zu verbess
 
 Dazu wurde zusätzlich zu dem deutschlandweiten Wetterbericht, auch ein ortsbezogener Wetterbericht implementiert.
 
-<img src="../pictures/reports/BeispielOrt.png" width="70%">
+<img src="../_static/images/reports/BeispielOrt.png" width="70%">
 
 Es wurden die Texte und Grafiken überarbeitet, sowie dem Output-Video Übergänge hinzugefügt.
 
@@ -126,12 +126,12 @@ Des Weiteren wurde in diesem Sprint ein neuer interner Aufbau des Programmes bes
 ***Vorher:***  
 Die Bilder und Icons wurden im Python-Code auf die richtigen Koordinaten im Video gelegt.
 
-<img src="../pictures/reports/BeispielPillow.png" width="70%">
+<img src="../_static/images/reports/BeispielPillow.png" width="70%">
 
 ***Nachher:***  
 Für jedes Bild wird in der JSON-Datei die nötigen Konfigurationen angegeben. Die dort einzugebenden Parameter gelten für jedes Bild, unabhängig davon, zu welcher API es generiert werden soll.
 
-<img src="../pictures/reports/BeispielPillowJson.png" width="30%">
+<img src="../_static/images/reports/BeispielPillowJson.png" width="30%">
 
 ---
 
@@ -158,8 +158,8 @@ Das Programm wurde in diesem Sprint, so weiterentwickelt, dass alle Funktionen u
 ### Zusammenfassung
 In der ersten Hälfte des Sprints lag der Fokus auf der Vorbereitung der Präsentation des Projekts. In dem Meeting nach der Präsentation wurde festgelegt, dass der Themenbereich „Fußball Bundesliga“ und die dazugehörige API als nächstes implementiert werden soll. Mithilfe der JSON-Datei konnte eine erste Version erstellt werden.
 
-<img src="../pictures/reports/Tabelle.png" width="49%">
-<img src="../pictures/reports/Spieltag.png" width="49%">
+<img src="../_static/images/reports/Tabelle.png" width="49%">
+<img src="../_static/images/reports/Spieltag.png" width="49%">
 
 Außerdem wurde ein Entwurf der Web-API erstellt, welche dann im nächsten Sprint implementiert werden soll.
 
@@ -181,7 +181,7 @@ In diesem Sprint lag der Fokus unter anderem, auf der Verbesserung der Audioausg
 
 Ebenfalls wurde zu dem Thema „Bundesliga“ eine neue Funktion implementiert. Diese zeigt die Veränderung der Tabelle zum letzten Spieltag an.
 
-<img src="../pictures/reports/Veränderung.png" width="70%">
+<img src="../_static/images/reports/Veränderung.png" width="70%">
 
 Auch wurde begonnen die Endpunkte der Web-API zu implementieren und die Benutzeroberfläche als Wordpress-Plugin bereitzustellen.
 
@@ -197,7 +197,7 @@ Auch wurde begonnen die Endpunkte der Web-API zu implementieren und die Benutzer
 ### Zusammenfassung
 Die Benutzeroberfläche wurde nun als Wordpress-Plugin realisiert, so kann dieses einfach über die WordPress Oberfläche installiert werden. 
 
-<img src="../pictures/reports/Wordpress.png" width="70%">
+<img src="../_static/images/reports/Wordpress.png" width="70%">
 
 Auch wurde die Verwendung verschiedener Audiotools implementiert. Eine Anleitung wie man externe Audiotools verwenden kann, finden Sie hier: 
 
@@ -221,7 +221,7 @@ Ebenfalls wurde anhand der Twitter-API eine Wordcloud zu einem bestimmten „Has
 
 **Beispiel: Wordcloud zum „Hashtag“ Bundesliga.**
 
-<img src="../pictures/reports/Wordcloud.png" width="70%">
+<img src="../_static/images/reports/Wordcloud.png" width="70%">
 
 ### Ziel für den nächsten Sprint
 - Erste fertige Version als Wordpress-Plugin

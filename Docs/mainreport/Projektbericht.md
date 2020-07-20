@@ -55,7 +55,7 @@
 ## Zeitmanagement
 
 <figure style="float: right;">
-  <img src="../pictures/mainreport/timetable.png"/>
+  <img src="../_static/images/mainreport/timetable.png"/>
   <figcaption>Abbildung 1</figcaption>
 </figure>
 
@@ -132,7 +132,7 @@ Um unser Zeitmanagement in Github umzusetzen, wird in jedem Sprint-Planning ein 
 Ist das Sprint-Planning abgeschlossen stehen alle erstellten Issues im Project Board in der Spalte „To-Do“. (siehe Abbildung 2)
 
 <figure style="float: right;">
-  <img src="../pictures/mainreport/Projectboard.png" width="70%">
+  <img src="../_static/images/mainreport/Projectboard.png" width="70%">
   <figcaption>Abbildung 2</figcaption>
 </figure>
 
@@ -303,7 +303,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 - Es besteht die Möglichkeit, Videos zu generieren, welche die Daten aus mehreren Themenbereichen zusammenführt.
 - Den Themenbereich Finanzen dem Programm hinzufügen
 <figure style="float: right;">
-  <img width="200px" src="../pictures/mainreport/Wordcloud.png"/>
+  <img width="200px" src="../_static/images/mainreport/Wordcloud.png"/>
   <figcaption>Abbildung 3</figcaption>
 </figure> 
 
@@ -332,7 +332,7 @@ Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dor
 Der Benutzer kann auf dieser Seite einen neuen Job anlegen (1), bearbeiten (2), oder die Einstellungen (3) zu einem Job aufrufen.
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Startseite.png"/>
+  <img width="70%" src="../_static/images/mainreport/Startseite.png"/>
   <figcaption>Abbildung 4</figcaption>
 </figure> 
 
@@ -340,14 +340,14 @@ Der Benutzer kann auf dieser Seite einen neuen Job anlegen (1), bearbeiten (2), 
 Möchte der Benutzer einen Job anlegen, so gelangt er zuerst zu der Themenauswahl. Dort werden ihm alle Themen, die zur Auswahl stehen, angezeigt. Außerdem kann er ebenfalls auf dieser Seite den Namen des Jobs festlegen.
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Topic.png"/>
+  <img width="70%" src="../_static/images/mainreport/Topic.png"/>
   <figcaption>Abbildung 5</figcaption>
 </figure> 
 
 Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel „Bundesliga - Ergebnisse“), so kommt er als nächstes zu der Parameterauswahl. Die dort zur Auswahl stehenden Parameter sind an das vorher ausgewählte Thema angepasst. Diese Seite sieht je nach Thema unterschiedlich aus. (hier beispielhaft für das Thema „Bundesliga – Ergebnisse“).
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Param.png"/>
+  <img width="70%" src="../_static/images/mainreport/Param.png"/>
   <figcaption>Abbildung 6</figcaption>
 </figure> 
 
@@ -363,7 +363,7 @@ hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generi
 Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhrzeiten festlegen, zu welchen das Video neu generiert werden soll.
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Schedule.png"/>
+  <img width="70%" src="../_static/images/mainreport/Schedule.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure> 
 
@@ -372,7 +372,7 @@ Abschließend kann der Benutzer noch Einstellungen zu dem Video vornehmen.
 Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das Format des Videos und der Audiodatei. Diese Einstellungen kann der Benutzer auch im Nachhinein noch ändern
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Einstellungen.png"/>
+  <img width="70%" src="../_static/images/mainreport/Einstellungen.png"/>
   <figcaption>Abbildung 8</figcaption>
 </figure> 
 
@@ -380,7 +380,7 @@ Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das 
 Zusätzlich zu den „normalen“ Einstellungen eines Jobs, soll es dem Benutzer auch noch möglich sein, Entwicklertools zu aktivieren. Dort kann dieser dann spezifischere Änderungen vornehmen.
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Entwicklertools.png"/>
+  <img width="70%" src="../_static/images/mainreport/Entwicklertools.png"/>
   <figcaption>Abbildung 9</figcaption>
 </figure> 
 
@@ -388,9 +388,9 @@ Zusätzlich zu den „normalen“ Einstellungen eines Jobs, soll es dem Benutzer
 Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text und Grafiken verarbeitet werden. Aus diesen Ergebnissen soll ein Video erstellt werden, welches einen Wetterbericht für den nächsten Tag und die darauffolgenden drei Tage darstellt
 
 <figure>
-  <img width="32%" src="../pictures/reports/WetterIcons.png"/>
-  <img width="32%" src="../pictures/reports/WetterGrad.png"/>
-  <img width="32%" src="../pictures/reports/Wetter3Tage.png"/>
+  <img width="32%" src="../_static/images/reports/WetterIcons.png"/>
+  <img width="32%" src="../_static/images/reports/WetterGrad.png"/>
+  <img width="32%" src="../_static/images/reports/Wetter3Tage.png"/>
   <figcaption>Abbildung 10</figcaption>
 </figure> 
 
@@ -428,7 +428,7 @@ Für die Kommunikation zwischen dem Client und dem Server, wird das Python basie
 Um die funktionalen Anforderungen des Programmes zu verdeutlichen, ist unser Programm folgedermaßen strukturiert:
 
 <figure>
-  <img width="70%" src="../pictures/mainreport/Strukturdiagramm.png"/>
+  <img width="70%" src="../_static/images/mainreport/Strukturdiagramm.png"/>
   <figcaption>Abbildung 11</figcaption>
 </figure> 
 
@@ -447,17 +447,17 @@ Anhand der Werte welche wir aus der https://www.weatherbit.io/api API beziehen, 
 - aktuelle Luftqualität für vorausgewählte Städte in Deutschland
 
 **Technische Details**
-|  | Free | Starter | Developer | Advanced |
-|---|:---:|:---:|:---:|:---:|
-| **Preis** | $0/Monat | $35/Monat | $160/Monat | $470/Monat |
-| **Anfragen pro Tag** | 500 | 50.000 | 500.000 | 5 Millionen |
-| **Anfragen pro Tag (historische API)** | :x: | :x: | 25.000 | 250.000 |
-|**Zugang historische API**|:x:|:x:|1 Jahr|10 Jahre|
-|**aktuelles Wetter**|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
-|**16-Tage Vorhersage**|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
-|**2 Tage (stündlich) Vorhersage**|:x:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
-|**5 Tage (stündlich) Vorhersage**|:x:|:x:|:x:|:heavy_check_mark:|
-|**kommerzielle Nutzung**|:x:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+|                                        |        Free        |      Starter       |     Developer      |      Advanced      |
+| -------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
+| **Preis**                              |      $0/Monat      |     $35/Monat      |     $160/Monat     |     $470/Monat     |
+| **Anfragen pro Tag**                   |        500         |       50.000       |      500.000       |    5 Millionen     |
+| **Anfragen pro Tag (historische API)** |        :x:         |        :x:         |       25.000       |      250.000       |
+| **Zugang historische API**             |        :x:         |        :x:         |       1 Jahr       |      10 Jahre      |
+| **aktuelles Wetter**                   | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| **16-Tage Vorhersage**                 | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| **2 Tage (stündlich) Vorhersage**      |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| **5 Tage (stündlich) Vorhersage**      |        :x:         |        :x:         |        :x:         | :heavy_check_mark: |
+| **kommerzielle Nutzung**               |        :x:         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 Quelle: https://www.weatherbit.io/pricing 
 
@@ -499,11 +499,11 @@ z.B. Day Gainers - US, Day Losers - US, Most Actives - US
 **Technische Details:**
 - Unterstützt 175 Länder
 
-||||||
-|---|:---:|:---:|:---:|:---:|
-|**Preis**|€0.00/Monat|€9.00/Monat|€27.01/Monat|€270.11/Monat|
-|**Anfragen pro Monat**|500|10.000|50.000|Unlimited|
-|**Rate Limit**|5 Anfragen pro Sekunde|5 Anfragen pro Sekunde|5 Anfragen pro Sekunde|5 Anfragen pro Sekunde|
+|                        |                        |                        |                        |                        |
+| ---------------------- | :--------------------: | :--------------------: | :--------------------: | :--------------------: |
+| **Preis**              |      €0.00/Monat       |      €9.00/Monat       |      €27.01/Monat      |     €270.11/Monat      |
+| **Anfragen pro Monat** |          500           |         10.000         |         50.000         |       Unlimited        |
+| **Rate Limit**         | 5 Anfragen pro Sekunde | 5 Anfragen pro Sekunde | 5 Anfragen pro Sekunde | 5 Anfragen pro Sekunde |
 
 Quelle: https://rapidapi.com/apidojo/api/yahoo-finance1/pricing 
 

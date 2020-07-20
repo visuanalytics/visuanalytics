@@ -6,7 +6,7 @@ Die grafische Benutzeroberfläche ist mit mithilfe des Web-Frameworks ReactJS in
 Die Oberfläche besteht aus mehreren Components, welche je nach Bedarf geladen und angezeigt werden. So wird Beispielsweise bei einem Klick auf einen Button keine neue html-Datei geladen, sondern in die aktuelle, der neue `Component`.
 
 <figure>
-  <img width="90%" src="../pictures/documentation/ReactDiagramm.png"/>
+  <img width="90%" src="../_static/images/documentation/ReactDiagramm.png"/>
   <figcaption>Abbildung 1</figcaption>
 </figure> 
 
@@ -42,7 +42,7 @@ Der „Header“ steht immer am Oberen Bildschirmrand daher liegt dieser über �
 #### Header
 
 <figure>
-  <img width="100%" src="../pictures/documentation/Header.png"/>
+  <img width="100%" src="../_static/images/documentation/Header.png"/>
   <figcaption>Abbildung 2</figcaption>
 </figure>
 
@@ -87,7 +87,7 @@ In dem Component „JobList“ wird pro angelegten Job ein Component von „JobI
 
 #### JobItem
 <figure>
-  <img width="100%" src="../pictures/documentation/Item.png"/>
+  <img width="100%" src="../_static/images/documentation/Item.png"/>
   <figcaption>Abbildung 3</figcaption>
 </figure>
 
@@ -103,7 +103,7 @@ onClick={() => components?.setCurrent("jobpage")}
 Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
 
 <figure>
-  <img width="100%" src="../pictures/documentation/stepper.png"/>
+  <img width="100%" src="../_static/images/documentation/stepper.png"/>
   <figcaption>Abbildung 4</figcaption>
 </figure>
 
@@ -111,7 +111,7 @@ Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
 Die erste Seite „TopicSelection“ dient zur Auswahl des Themas. Dort kann man sich für eines der vorgegebenen Themen entscheiden und einen Namen für den Job festlegen.
 
 <figure>
-  <img width="70%" src="../pictures/documentation/topic.png"/>
+  <img width="70%" src="../_static/images/documentation/topic.png"/>
   <figcaption>Abbildung 5</figcaption>
 </figure>
 
@@ -119,7 +119,7 @@ Die erste Seite „TopicSelection“ dient zur Auswahl des Themas. Dort kann man
 Die zweite Seite des Steppers gibt einem die Möglichkeit je nach Thema individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden.
 
 <figure>
-  <img width="70%" src="../pictures/documentation/param.png"/>
+  <img width="70%" src="../_static/images/documentation/param.png"/>
   <figcaption>Abbildung 6</figcaption>
 </figure>
 
@@ -131,7 +131,7 @@ Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generi
 **an festem Datum:** Das Video wird einmalig an einem Datum generiert.
 
 <figure>
-  <img width="70%" src="../pictures/documentation/schedule.png"/>
+  <img width="70%" src="../_static/images/documentation/schedule.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure>
 
@@ -153,14 +153,14 @@ Es sind auch mehrere Schedule-einträge für einen Job möglich.
 In der Tabelle job_config stehen die Configwerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus key, value paaren.
 
 <figure>
-  <img width="70%" src="../pictures/documentation/db-diagramm.png"/>
+  <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
   <figcaption>Abbildung 8</figcaption>
 </figure>
 
 ## Scheduler
 
 <figure>
-  <img width="70%" src="../pictures/documentation/SchedulerClass.png"/>
+  <img width="70%" src="../_static/images/documentation/SchedulerClass.png"/>
   <figcaption>Abbildung 8</figcaption>
 </figure>
 
