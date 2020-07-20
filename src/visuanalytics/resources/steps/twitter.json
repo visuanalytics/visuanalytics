@@ -116,8 +116,22 @@
       "type": "occurrences_to_string",
       "keys": "_req|sorted_dict",
       "range_start": 0,
+      "range_end": 10,
+      "new_keys": "_req|text_top15"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
       "range_end": 20,
       "new_keys": "_req|text_top20"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 25,
+      "new_keys": "_req|text_top25"
     }
   ],
   "images": {
@@ -140,10 +154,10 @@
     },
     "top1_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top1",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top1}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -153,15 +167,15 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top2_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top2",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top2}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -171,15 +185,15 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top3_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top3",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top3}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -189,15 +203,15 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top4_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top4",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top4}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -207,15 +221,15 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top5_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top5",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top5}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -225,15 +239,15 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top10_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top10",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top10}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -243,15 +257,33 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top15_wordcloud": {
+      "type": "wordcloud",
+      "text": "{_req|text_top15}",
+      "stopwords": "{_conf|stopwords}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "top20_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text_top20",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text_top20}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "background_color": "white",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
@@ -261,7 +293,25 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top25_wordcloud": {
+      "type": "wordcloud",
+      "text": "{_req|text_top25}",
+      "stopwords": "{_conf|stopwords}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "wordcloud_all": {
@@ -355,6 +405,19 @@
         }
       ]
     },
+    "wordcloud_top15": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top15_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
     "wordcloud_top20": {
       "type": "pillow",
       "path": "football/background.png",
@@ -364,6 +427,19 @@
           "type": "image",
           "color": "RGBA",
           "image_name": "top20_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top25": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top25_wordcloud",
           "color_transparency": "FFFFFF"
         }
       ]
@@ -380,18 +456,6 @@
           {
             "type": "text",
             "pattern": "Auf Twitter wurden folgende Hashtags neben dem {_conf|hashtag} Hashtag verwendet. "
-          }
-        ]
-      },
-      "a2": {
-        "parts": [
-          {
-            "type": "text",
-            "pattern": "Twitter-Wordcloud. "
-          },
-          {
-            "type": "text",
-            "pattern": "Auf 1 Platz der Hashtags {_req|sorted_list|0} "
           }
         ]
       }
@@ -426,7 +490,15 @@
         "time_diff": 2
       },
       {
+        "image": "wordcloud_top15",
+        "time_diff": 2
+      },
+      {
         "image": "wordcloud_top20",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top25",
         "time_diff": 2
       },
       {
