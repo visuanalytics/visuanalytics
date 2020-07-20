@@ -63,10 +63,10 @@
       },
       "config": {
         "hashtag": "Bundesliga",
-        "stopwords": "Bundesliga",
+        "stopwords": " ",
         "colormap_words": "viridis",
         "color_func_words": true,
-        "figure": "square",
+        "figure": "circle",
         "width_wordcloud": 1000,
         "height_wordcloud": 1000,
         "keep_count": 3
