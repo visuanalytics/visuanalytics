@@ -74,8 +74,50 @@
       "type": "occurrences_to_string",
       "keys": "_req|sorted_dict",
       "range_start": 0,
-      "range_end": 5,
+      "range_end": 1,
+      "new_keys": "_req|text_top1"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 2,
+      "new_keys": "_req|text_top2"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 3,
       "new_keys": "_req|text_top3"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 4,
+      "new_keys": "_req|text_top4"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 5,
+      "new_keys": "_req|text_top5"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 10,
+      "new_keys": "_req|text_top10"
+    },
+    {
+      "type": "occurrences_to_string",
+      "keys": "_req|sorted_dict",
+      "range_start": 0,
+      "range_end": 20,
+      "new_keys": "_req|text_top20"
     }
   ],
   "images": {
@@ -96,9 +138,117 @@
         "colormap": "_conf|colormap_words"
       }
     },
-    "top5_word3_wordcloud": {
+    "top1_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top1",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top2_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top2",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top3_wordcloud": {
       "type": "wordcloud",
       "text": "_req|text_top3",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top4_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top4",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top5_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top5",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top10_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top10",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "figure": "_conf|figure",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "top20_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text_top20",
       "stopwords": "_conf|stopwords",
       "parameter": {
         "figure": "_conf|figure",
@@ -127,7 +277,7 @@
         }
       ]
     },
-    "wordcloud_top5_3": {
+    "wordcloud_top1": {
       "type": "pillow",
       "path": "football/background.png",
       "overlay": [
@@ -135,7 +285,85 @@
           "description": "Wordcloud",
           "type": "image",
           "color": "RGBA",
-          "image_name": "top5_word3_wordcloud",
+          "image_name": "top1_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top2": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top2_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top3": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top3_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top4": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top4_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top5": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top5_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top10": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top10_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top20": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top20_wordcloud",
           "color_transparency": "FFFFFF"
         }
       ]
@@ -166,6 +394,14 @@
             "pattern": "Auf 1 Platz der Hashtags {_req|sorted_list|0} "
           }
         ]
+      },
+      "a3": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": " "
+          }
+        ]
       }
     }
   },
@@ -178,9 +414,44 @@
         "time_diff": 5
       },
       {
-        "image": "wordcloud_top5_3",
-        "audio_l": "a2",
-        "time_diff": 5
+        "image": "wordcloud_top1",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top2",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top3",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top4",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top5",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top10",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_top20",
+        "audio_l": "a3",
+        "time_diff": 1
+      },
+      {
+        "image": "wordcloud_all",
+        "audio_l": "a3",
+        "time_diff": 1
       }
     ]
   },
