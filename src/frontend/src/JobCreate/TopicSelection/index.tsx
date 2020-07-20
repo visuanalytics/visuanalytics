@@ -1,31 +1,42 @@
 import React from "react";
-import { ListItem, Divider, List, TextField, Fade } from "@material-ui/core";
+import { ListItem, Divider, List, Fade } from "@material-ui/core";
 import { TopicPanel } from "./TopicPanel";
-import { useStyles } from "../style";
+import { useStyles, InputField } from "../style";
+import { useFetch } from "../../Hooks/useFetch";
+import { Param } from "../../util/param";
+import { Load } from "../../util/Load";
+import { getUrl } from "../../util/fetchUtils";
+
+export interface Topic {
+    topicName: string;
+    topicId: number;
+}
 
 interface TopicSelectionProps {
-    selectedTopic: string,
-    jobName: string,
-    selectTopicHandler: (topicName: string) => void;
+    selectedTopicId: number;
+    jobName: string;
+    selectTopicHandler: (topicId: number) => void;
     enterJobNameHandler: (jobName: string) => void;
+    fetchParamHandler: (params: Param[]) => void;
 }
 
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
-    // const topics: string[] = useFetch("/topics");
     const classes = useStyles();
-    const topics: string[] = ["Deutschlandweiter Wetterbericht", "Ortsbezogener Wetterbericht", "Bundesliga-Ergebnisse"]
+
+    const topics: Topic[] = useFetch(getUrl("/topics")) as Topic[]
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value);
     }
 
-    const renderTopicPanel = (topic: string) => {
+    const renderTopicPanel = (topic: Topic) => {
         return (
-            <ListItem key={topic}>
+            <ListItem key={topic.topicName}>
                 <TopicPanel
                     topic={topic}
-                    selectedTopic={props.selectedTopic}
-                    selectTopicHandler={props.selectTopicHandler} />
+                    selectedTopicId={props.selectedTopicId}
+                    selectTopicHandler={props.selectTopicHandler}
+                    fetchParamHandler={props.fetchParamHandler} />
                 <Divider />
             </ListItem>
         );
@@ -34,12 +45,13 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
+                <Load data={topics} />
                 <List>
-                    {topics.map(t => renderTopicPanel(t))}
+                    {topics?.map(t => renderTopicPanel(t))}
                 </List>
                 <Divider />
                 <div className={classes.paddingSmall}>
-                    <TextField className={classes.inputField}
+                    <InputField
                         required
                         value={props.jobName}
                         variant="outlined"

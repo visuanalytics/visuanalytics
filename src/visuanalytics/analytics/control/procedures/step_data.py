@@ -3,10 +3,10 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 """
 import numbers
 
-from visuanalytics.analytics.util import config_manager
 from visuanalytics.analytics.util.step_errors import APIKeyError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
+from visuanalytics.util import config_manager
 
 
 class StepData(object):
@@ -94,6 +94,12 @@ class StepData(object):
         """
         return map(lambda value: (value[0], self.save_loop_key(value[1], values)), enumerate(keys))
 
+    def get_config(self, key, default_value=None):
+        """
+        Configuration des Jobs
+        """
+        return self.__data["_conf"].get(key, default_value)
+
     @property
     def data(self):
         """
@@ -139,6 +145,22 @@ class StepData(object):
         :raises: StepKeyError
         """
         if isinstance(key, numbers.Number):
+            return key
+
+        return self.get_data(key, values)
+
+    def get_data_bool(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key ein Boolean ist, diese direkt zurückgegeben wird.
+
+        :param key: fad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einem Boolean.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder der übergebene Boolean.
+        :raises: StepKeyError
+        """
+        if isinstance(key, bool):
             return key
 
         return self.get_data(key, values)

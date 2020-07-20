@@ -8,9 +8,9 @@ import subprocess
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
+from visuanalytics.util import resources
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
@@ -86,7 +86,7 @@ def custom(values: dict, step_data: StepData):
 
 
 def _link(images, audios, audio_l, step_data: StepData, values: dict):
-    if step_data.data["_conf"].get("h264_nvenc", False):
+    if step_data.get_config("h264_nvenc", False):
         os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
     with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
@@ -100,12 +100,12 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_out_path(step_data.data["_conf"]["output_path"], step_data.data["_conf"]["job_name"])
+    output2 = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"))
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
 
-    args2.extend(("-i", output, "-c:a", "copy", "-filter_complex"))
+    args2.extend(("-i", output, "-c:a", "copy"))
 
     filter = ""
     for i in range(0, len(images) - 1):
@@ -120,12 +120,14 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
         else:
             filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
 
-    args2.extend((filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
-
-    if step_data.data["_conf"].get("h264_nvenc", False):
+    if len(images) > 2:
+        args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
+    else:
+        args2.extend(("-pix_fmt", "yuv420p"))
+    if step_data.get_config("h264_nvenc", False):
         args2.extend(("-c:v", "h264_nvenc"))
 
-    args2.extend(("-shortest", "-s", "1920x1080", output2))
+    args2.extend(("-s", "1920x1080", output2))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
 

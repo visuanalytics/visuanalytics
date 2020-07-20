@@ -1,6 +1,7 @@
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import {withStyles} from '@material-ui/core/styles';
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
+import TextField from '@material-ui/core/TextField/TextField';
 
 export const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -49,6 +50,13 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
+
+export const InputField = withStyles({
+    root: {
+        margin: '5px',
+        width: '90%'
+    }
+})(TextField); 
 
 export const AccordionSummary = withStyles({
     root: {

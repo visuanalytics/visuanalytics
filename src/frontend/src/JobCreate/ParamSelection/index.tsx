@@ -1,11 +1,14 @@
 import React from "react";
-import { TextField, MenuItem, Fade } from "@material-ui/core";
-import { useStyles } from "../style";
+import { Fade } from "@material-ui/core";
+import { useStyles, InputField } from "../style";
 import { Param } from "../../util/param";
+import { renderParamField } from "../../util/renderParamFields";
+import { Load } from "../../util/Load";
 
 interface ParamSelectionProps {
-    topic: string;
+    topicId: number;
     params: Param[];
+    fetchParamHandler: (params: Param[]) => void;
     selectParamHandler: (key: string, value: string) => void;
 }
 
@@ -16,60 +19,26 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         props.selectParamHandler(name, event.target.value);
     }
 
-    const renderParamField = (param: Param) => {
-        const name: string = param.name;
-        const possibleValues: string[] = param.possibleValues;
-        if (possibleValues.length === 0)
-            return (
-                <TextField
-                    required
-                    onChange={(e) => { handleChange(e, name) }}
-                    className={classes.inputField}
-                    variant="outlined"
-                    label={name}
-                    defaultValue=""
-                    value={lookupByName(name, props.params)?.selected}
-                />
-            )
-        return (
-            <TextField
-                required
-                onChange={(e) => { handleChange(e, name) }}
-                className={classes.inputField}
-                variant="outlined"
-                label={name}
-                defaultValue=""
-                value={lookupByName(name, props.params)?.selected}
-                select>
-                {possibleValues.map((val) => (
-                    <MenuItem key={val} value={val}>
-                        {val}
-                    </MenuItem>
-                ))}
-            </TextField>
-        )
-    }
 
     return (
         <Fade in={true}>
             <div>
-                {props.params.map(p =>
-                    <div className={classes.paddingSmall} key={p.name}>
-                        {renderParamField(p)}
-                    </div>)
-                }
+                <Load data={props.params} />
+                {props.params.length !== 0
+                    ?
+                    props.params.map((p: Param) =>
+                        <div className={classes.paddingSmall} key={p.name}>
+                            {renderParamField(p, InputField, false, true, (e) => {
+                                handleChange(e, p.name)
+                            })}
+                        </div>
+                    )
+                    :
+                    <div className={classes.paddingSmall}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                    </div>}
             </div>
         </Fade>
 
     );
 };
-
-const lookupByName: ((k: string, _: Param[]) => Param | null) = (k: string, list: Param[]) => {
-    var val: Param | null = null;
-    list.forEach((e: Param) => {
-        if (e.name === k) {
-            val = e;
-        }
-    })
-    return val;
-}

@@ -8,11 +8,11 @@ from gtts import gTTS
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.parts import part
-from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.config_manager import get_config
 from visuanalytics.analytics.util.step_errors import raise_step_error, AudioError, InvalidContentTypeError
 from visuanalytics.analytics.util.step_pattern import data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
+from visuanalytics.util.config_manager import get_config
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,7 @@ def custom(values: dict, data: StepData, config: dict):
     logger.info("Generate Audio with Custom Audio Config")
 
     # Set Testing to False (To generate Audio)
-    testing = data.data["_conf"].get("testing", False)
+    testing = data.get_config("testing", False)
     data.data["_conf"]["testing"] = False
 
     _prepare_custom(config.get("prepare", None), data, config)
@@ -95,8 +95,15 @@ def _prepare_custom(values: dict, data: StepData, config: dict):
 
 
 def _save_audio(response, data: StepData, config: dict):
-    content_type = response["headers"]["content-type"]
     post_generate = config.get("post_generate", {})
+    extension = data.format(post_generate["file_extension"]) if post_generate.get("file_extension",
+                                                                                  None) is not None else None
+    # If Multiple request were Used, get just the Request with the audio file
+    if config["generate"]["type"].startswith("request_multiple"):
+        audio_idx = data.format(config["generate"]["audio_idx"], {})
+        response = response[audio_idx]
+
+    content_type = response["headers"]["content-type"]
     audio = response["content"]
 
     # If Content Type is json Try to decode json String with base64
@@ -105,16 +112,15 @@ def _save_audio(response, data: StepData, config: dict):
         audio = data_get_pattern(data.format(post_generate["audio_key"]), audio)
         # decode Audio Key with base64
         audio = base64.b64decode(audio)
-        audio_path = resources.new_temp_resource_path(data.data["_pipe_id"],
-                                                      data.format(post_generate["file_extension"]))
-    else:
+    elif extension is None:
         # Check if Content type is an audio Type
         if not content_type.startswith("audio"):
             raise InvalidContentTypeError(None, content_type, "'audio/*'")
 
         # Get File Extention from Mime Type:
-        extension = mimetypes.guess_all_extensions(content_type)
-        audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension[0].replace(".", ""))
+        extension = mimetypes.guess_all_extensions(content_type)[0].replace(".", "")
+
+    audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension)
 
     with open(audio_path, "wb") as fp:
         fp.write(audio)

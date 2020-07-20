@@ -4,7 +4,7 @@ import unittest
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 
 def prepare_draw_test(values, data, config=None):
@@ -44,9 +44,10 @@ def prepare_draw_test(values, data, config=None):
     return values["images"]["testbild"]
 
 
-class PreprocessTest(unittest.TestCase):
+class DrawTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../../tests/resources"
+        resources.RESOURCES_LOCATION = "../tests/resources"
+        resources.IMAGES_LOCATION = "../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "101"), exist_ok=True)
 
@@ -54,13 +55,13 @@ class PreprocessTest(unittest.TestCase):
         values = "left"
         data = {}
         expected = prepare_draw_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_center(self):
         values = "center"
         data = {}
         expected = prepare_draw_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
         shutil.rmtree(resources.get_temp_resource_path("", "101"), ignore_errors=True)

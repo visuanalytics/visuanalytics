@@ -4,7 +4,7 @@ import unittest
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 
 def prepare_overlay_test(values, data, config=None):
@@ -35,9 +35,10 @@ def prepare_overlay_test(values, data, config=None):
     return values["images"]["testbild"]
 
 
-class PreprocessTest(unittest.TestCase):
+class OverlayTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../../tests/resources"
+        resources.RESOURCES_LOCATION = "../tests/resources"
+        resources.IMAGES_LOCATION = "../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "100"), exist_ok=True)
 
@@ -54,7 +55,7 @@ class PreprocessTest(unittest.TestCase):
             "test_1": "Test text"
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_text_array(self):
         values = {
@@ -79,7 +80,7 @@ class PreprocessTest(unittest.TestCase):
             "test_2": "Test text 2"
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image(self):
         values = {
@@ -88,13 +89,13 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": 462,
             "size_x": 300,
             "size_y": 5,
-            "colour": "RGBA",
-            "pattern": "Test_Bild_2.png",
+            "color": "RGBA",
+            "path": "Test_Bild_2.png",
             "transparency": False
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_image_array(self):
         values = {
@@ -103,13 +104,13 @@ class PreprocessTest(unittest.TestCase):
             "pos_y": [462, 47, 145],
             "size_x": 300,
             "size_y": 5,
-            "colour": ["RGBA", "L", "RGBA"],
-            "pattern": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
+            "color": ["RGBA", "L", "RGBA"],
+            "path": ["Test_Bild_2.png", "Test_Bild_2.png", "Test_Bild_2.png"],
             "transparency": False
         }
         data = {}
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def test_option(self):
         values = {
@@ -150,7 +151,7 @@ class PreprocessTest(unittest.TestCase):
             "checker": False
         }
         expected = prepare_overlay_test(values, data)
-        self.assertEquals(os.path.exists(resources.get_resource_path(expected)), 1)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
         shutil.rmtree(resources.get_temp_resource_path("", "100"), ignore_errors=True)

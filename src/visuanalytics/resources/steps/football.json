@@ -7,21 +7,41 @@
     "steps_value": [
       "Spiele",
       "Tabelle",
-      "Vorherige-Tabelle"
+      "Vorherige-Tabelle",
+      "Vorheriger-Spieltag",
+      "Vorherige-Vorherige-Tabelle"
     ],
     "requests": [
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl1"
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
       },
       {
         "type": "request_memory",
         "name": "table",
-        "timedelta": -7,
+        "use_last": 1,
+        "alternative": {
+          "type": "request",
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "spieltag",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "input": "-1. Spieltag"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "table",
+        "use_last": 2,
         "alternative": {
           "type": "request",
           "url_pattern": "https://www.openligadb.de/api/getbltable/bl1/2019"
@@ -38,6 +58,16 @@
       "new_keys": [
         "_req|Spieltag"
       ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_conf|league"
+      ],
+      "new_keys": [
+        "league_name"
+      ],
+      "pattern": "{_conf|league}. Fußball Bundesliga"
     },
     {
       "type": "transform_array",
@@ -200,31 +230,86 @@
           ]
         },
         {
-          "type": "transform_array",
-          "array_key": "_req|Vorherige-Tabelle",
-          "transform": [
-            {
-              "type": "select",
-              "relevant_keys": [
-                "TeamInfoId"
-              ]
-            },
+          "type": "compare",
+          "value_left": "_req|Spieltag",
+          "value_right": "_req|Vorheriger-Spieltag",
+          "on_equal": [
             {
               "type": "compare",
               "value_left": "_temp|TeamInfoId",
               "value_right": "_loop|TeamInfoId",
               "on_equal": [
                 {
-                  "type": "calculate",
-                  "action": "subtract",
-                  "keys": [
-                    "_idx"
-                  ],
-                  "keys_right": [
-                    "_temp|TeamPos"
-                  ],
-                  "new_keys": [
-                    "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "on_different": [
+            {
+              "type": "compare",
+              "value_left": "_temp|TeamInfoId",
+              "value_right": "_loop|TeamInfoId",
+              "on_equal": [
+                {
+                  "type": "transform_array",
+                  "array_key": "_req|Vorherige-Tabelle",
+                  "transform": [
+                    {
+                      "type": "select",
+                      "relevant_keys": [
+                        "TeamInfoId"
+                      ]
+                    },
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "calculate",
+                          "action": "subtract",
+                          "keys": [
+                            "_idx"
+                          ],
+                          "keys_right": [
+                            "_temp|TeamPos"
+                          ],
+                          "new_keys": [
+                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 }
               ]
@@ -237,7 +322,9 @@
       "type": "delete",
       "keys": [
         "_temp",
-        "_req|Vorherige-Tabelle"
+        "_req|Vorherige-Tabelle",
+        "_req|Vorherige-Vorherige-Tabelle",
+        "_req|Vorheriger-Spieltag"
       ]
     },
     {
@@ -468,13 +555,17 @@
   "storing": [
     {
       "name": "table",
-      "pattern": "Tabelle"
+      "key": "_req|Tabelle"
+    },
+    {
+      "name": "spieltag",
+      "key": "_req|Spieltag"
     }
   ],
   "images": {
-    "football1": {
+    "football0": {
       "type": "pillow",
-      "path": "football/Spieltag.png",
+      "path": "football/Matchday.png",
       "overlay": [
         {
           "description": "Spieltag",
@@ -492,15 +583,21 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
-        },
+          "pattern": "{league_name}"
+        }
+      ]
+    },
+    "football1": {
+      "type": "pillow",
+      "image_name": "football0",
+      "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 192,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -570,16 +667,15 @@
     },
     "football2": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football1",
+      "image_name": "football1",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 282,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -649,16 +745,15 @@
     },
     "football3": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football2",
+      "image_name": "football2",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 372,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -728,16 +823,15 @@
     },
     "football4": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football3",
+      "image_name": "football3",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 462,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -807,16 +901,15 @@
     },
     "football5": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football4",
+      "image_name": "football4",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 552,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -886,16 +979,15 @@
     },
     "football6": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football5",
+      "image_name": "football5",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 642,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -965,16 +1057,15 @@
     },
     "football7": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football6",
+      "image_name": "football6",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 732,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1044,16 +1135,15 @@
     },
     "football8": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football7",
+      "image_name": "football7",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 822,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1123,16 +1213,15 @@
     },
     "football9": {
       "type": "pillow",
-      "already_created": true,
-      "path": "football8",
+      "image_name": "football8",
       "overlay": [
         {
           "description": "Weißes-bild",
           "type": "image",
           "pos_x": 187,
           "pos_y": 912,
-          "colour": "RGBA",
-          "pattern": "football/Spieltag_Balken.png",
+          "color": "RGBA",
+          "path": "football/Matchday_bar.png",
           "transparency": true
         },
         {
@@ -1202,7 +1291,7 @@
     },
     "football10": {
       "type": "pillow",
-      "path": "football/Tabelle_1.png",
+      "path": "football/Table_1.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -1211,7 +1300,7 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
@@ -1265,8 +1354,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1274,8 +1363,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1283,8 +1372,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1340,8 +1429,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1349,8 +1438,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1358,8 +1447,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1415,8 +1504,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1424,8 +1513,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1433,8 +1522,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1490,8 +1579,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1499,8 +1588,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1508,8 +1597,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1565,8 +1654,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1574,8 +1663,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1583,8 +1672,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1640,8 +1729,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1649,8 +1738,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1658,8 +1747,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1715,8 +1804,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1724,8 +1813,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1733,8 +1822,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1790,8 +1879,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1799,8 +1888,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1808,8 +1897,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -1865,8 +1954,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1874,8 +1963,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1883,8 +1972,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         }
@@ -1892,7 +1981,7 @@
     },
     "football11": {
       "type": "pillow",
-      "path": "football/Tabelle_2.png",
+      "path": "football/Table_2.png",
       "overlay": [
         {
           "description": "Liga-Name",
@@ -1901,7 +1990,7 @@
           "pos_x": 960,
           "pos_y": 100,
           "preset": "football_2",
-          "pattern": "{_conf|liga-name}"
+          "pattern": "{league_name}"
         },
         {
           "description": "Team-Name",
@@ -1955,8 +2044,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -1964,8 +2053,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -1973,8 +2062,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 250,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2030,8 +2119,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2039,8 +2128,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2048,8 +2137,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 338,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2105,8 +2194,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2114,8 +2203,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2123,8 +2212,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 426,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2180,8 +2269,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2189,8 +2278,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2198,8 +2287,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 514,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2255,8 +2344,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2264,8 +2353,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2273,8 +2362,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 602,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2330,8 +2419,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2339,8 +2428,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2348,8 +2437,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 690,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2405,8 +2494,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2414,8 +2503,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2423,8 +2512,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 778,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2480,8 +2569,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2489,8 +2578,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2498,8 +2587,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 866,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         },
@@ -2555,8 +2644,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/up.png"
+              "color": "RGBA",
+              "path": "football/up.png"
             }
           ],
           "on_lower": [
@@ -2564,8 +2653,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/down.png"
+              "color": "RGBA",
+              "path": "football/down.png"
             }
           ],
           "on_equal": [
@@ -2573,8 +2662,8 @@
               "type": "image",
               "pos_x": 218,
               "pos_y": 954,
-              "colour": "RGBA",
-              "pattern": "football/equal.png"
+              "color": "RGBA",
+              "path": "football/equal.png"
             }
           ]
         }
@@ -2583,12 +2672,16 @@
   },
   "audio": {
     "audios": {
-      "a1": {
+      "a0": {
         "parts": [
           {
             "type": "text",
-            "pattern": "In der {_conf|liga-name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
-          },
+            "pattern": "In der {league_name} ist der {_req|Spieltag}.  Die Ergebnisse lauten: "
+          }
+        ]
+      },
+      "a1": {
+        "parts": [
           {
             "type": "text",
             "pattern": "{_req|Spiele|0|MatchResults|Text}"
@@ -2663,7 +2756,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {_conf|liga-name} sieht wie folgt aus: "
+            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
           },
           {
             "type": "text",
@@ -2700,15 +2793,26 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": {
-    "testing": {
-      "default_value": false,
+  "run_config": [
+    {
+      "name": "league",
+      "display_name": "Liga",
       "possible_values": [
-        true,
-        false
+        {
+          "value": 1,
+          "display_value": "1. Bundesliga"
+        },
+        {
+          "value": 2,
+          "display_value": "2. Bundesliga"
+        },
+        {
+          "value": 3,
+          "display_value": "3. Bundesliga"
+        }
       ]
     }
-  },
+  ],
   "presets": {
     "football_1": {
       "color": "black",

@@ -1,41 +1,46 @@
-import React from 'react';
-import {Param} from './param';
-import TextField from '@material-ui/core/TextField';
-import {MenuItem} from '@material-ui/core';
+import React, { ComponentType } from 'react';
+import { Param } from './param';
+import { MenuItem, TextFieldProps } from '@material-ui/core';
 
 
 /**
  *
  * @param param
- * @param classes (useStyles())
+ * @param classes (useStyles())     
  * @param state (optional)
  */
-export const renderParamField = (param: Param,classes: any, state = false) => {
-    const name: string = param.name;
-    const possibleValues: string[] = param.possibleValues;
-    if (possibleValues.length === 0) {
+export const renderParamField = (param: Param, InputField: ComponentType<TextFieldProps>, disabled = true, required = false, handler = (e: any) => { }) => {
+    if (param.possibleValues.length === 0) {
         return (
-            <TextField
-                className={classes.inputFields}
+            <InputField
+                required={required}
+                onChange={handler}
                 variant="outlined"
-                label={name}/>
+                // defaultValue={param.selected}
+                value={param.selected}
+                InputProps={{
+                    disabled: disabled
+                }}
+            label={param.displayName} />
         )
     }
     return (
-        <TextField
-            className={classes.inputFields}
+        <InputField
+            required={required}
+            onChange={handler}
             variant="outlined"
-            label={name}
-            defaultValue={param.selected}
+            label={param.displayName}
+            // defaultValue={param.selected}
+            value={param.selected}
             InputProps={{
-                disabled: state,
+                disabled: disabled,
             }}
             select>
-            {possibleValues.map((val) => (
-                <MenuItem key={val} value={val}>
-                    {val}
+            {param.possibleValues.map((val) => (
+                <MenuItem key={val.value} value={val.value.toString()}>
+                    {val.displayValue}
                 </MenuItem>
             ))}
-        </TextField>
+        </InputField>
     )
 }

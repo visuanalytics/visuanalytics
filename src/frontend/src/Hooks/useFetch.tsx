@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { handleResponse } from "../util/fetchUtils";
 
 /**
  * Funktion um Json daten beim laden eines React Components zu bekommen.
@@ -15,17 +16,13 @@ export const useFetch = (
 ) => {
   const [data, setData] = useState<any>();
 
-  const handleGetData = (data: any) => {
-    setData(data);
-  };
-
   useEffect(() => {
     let isMounted = true;
 
     fetch(url, parms)
-      .then((res) => res.json())
-      .then((data) => {
-        if (isMounted) handleGetData(data);
+      .then(handleResponse)
+      .then((newData: any) => {
+        if (isMounted) setData(newData);
       })
       .catch((err) => {
         if (isMounted && errorHandle) errorHandle(err);

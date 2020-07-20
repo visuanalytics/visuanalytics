@@ -1,11 +1,25 @@
 {
-  "external_programms": [
+  "external_programs": [
     "ffmpeg"
   ],
   "db": {
     "db_path": "instance/visuanalytics.db",
-    "use": false
+    "topics": [
+      {
+        "name": "Deutschlandweiter Wetterbericht",
+        "file_name": "weather_germany"
+      },
+      {
+        "name": "Ortsbezogener Wetterbericht",
+        "file_name": "weather_single"
+      },
+      {
+        "name": "Bundesliga-Ergebnisse",
+        "file_name": "football"
+      }
+    ]
   },
+  "console_mode": false,
   "steps_base_config": {
     "output_path": "out"
   },
@@ -15,4 +29,4 @@
     "format": "mp3"
   },
   "testing": false
-}
+} 

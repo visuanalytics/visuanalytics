@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, withStyles, TextField } from "@material-ui/core";
 
 export const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,8 +18,8 @@ export const useStyles = makeStyles((theme) => ({
     paddingSmall: {
         padding: theme.spacing(3)
     },
-    inputField: {
-        width: 300
+    inputFields: {
+        width: "45%"
     },
     centerDiv: {
         textAlign: "left",
@@ -27,3 +27,9 @@ export const useStyles = makeStyles((theme) => ({
         width: 180
     }
 }));
+
+export const InputField = withStyles({
+    root: {
+        width: "45%"
+    }
+})(TextField); 

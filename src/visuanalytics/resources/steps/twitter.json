@@ -1,0 +1,187 @@
+{
+  "id": 1,
+  "name": "twitter",
+  "api": {
+    "type": "request",
+    "api_key_name": "twitter",
+    "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
+    "params": {
+      "q": "%23{_conf|hashtag}",
+      "count": "100",
+      "lang": "de",
+      "result_type": "recent"
+    },
+    "headers": {
+      "Authorization": "Bearer {_api_key}"
+    }
+  },
+  "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "_req|statuses",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "statuses",
+          "relevant_keys": [
+            "entities|hashtags"
+          ]
+        },
+        {
+          "type": "transform_array",
+          "array_key": "_loop|entities|hashtags",
+          "transform": [
+            {
+              "type": "select",
+              "array_key": "hashtags",
+              "relevant_keys": [
+                "text"
+              ]
+            },
+            {
+              "type": "append",
+              "key": "_loop|text",
+              "new_key": "_req|text",
+              "append_type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|search_metadata",
+        "_req|statuses"
+      ]
+    }
+  ],
+  "images": {
+    "football_wordcloud": {
+      "type": "wordcloud",
+      "text": "_req|text",
+      "stopwords": "_conf|stopwords",
+      "parameter": {
+        "mask": {
+          "x": 1000,
+          "y": 1000,
+          "figure": "_conf|shape"
+        },
+        "background_color": "white",
+        "width": 1920,
+        "height": 1080,
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 2000,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func_words",
+        "colormap": "_conf|colormap_words"
+      }
+    },
+    "wordcloud_with_background": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "pos_x": 450,
+          "pos_y": 10,
+          "color": "RGBA",
+          "image_name": "football_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    }
+  },
+  "audio": {
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Twitter-Wordcloud. "
+          },
+          {
+            "type": "text",
+            "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
+          }
+        ]
+      }
+    }
+  },
+  "sequence": {
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "wordcloud_with_background",
+        "audio_l": "a1",
+        "time_diff": 10
+      }
+    ]
+  },
+  "run_config": [
+    {
+      "name": "stopwords",
+      "display_name": "Aus Wordcloud ausschließen",
+      "possible_values": [],
+      "default_value": ""
+    },
+    {
+      "name": "colormap_words",
+      "display_name": "Farben der Wörter",
+      "possible_values": [
+        {
+          "value": "magma",
+          "display_value": "magma"
+        },
+        {
+          "value": "inferno",
+          "display_value": "inferno"
+        },
+        {
+          "value": "plasma",
+          "display_value": "plasma"
+        },
+        {
+          "value": "viridis",
+          "display_value": "viridis"
+        }
+      ],
+      "default_value": "viridis"
+    },
+    {
+      "name": "color_func_words",
+      "display_name": "Farbverlauf der Wörter",
+      "possible_values": [
+        {
+          "value": true,
+          "display_value": "Blau"
+        },
+        {
+          "value": false,
+          "display_value": "Standard"
+        }
+      ],
+      "default_value": false
+    },
+    {
+      "name": "shape",
+      "display_name": "Form der Wordcloud",
+      "possible_values": [
+        {
+          "value": "circle",
+          "display_value": "Kreis"
+        },
+        {
+          "value": "square",
+          "display_value": "Quadrat"
+        }
+      ],
+      "default_value": "circle"
+    }
+  ],
+  "presets": {
+  }
+}

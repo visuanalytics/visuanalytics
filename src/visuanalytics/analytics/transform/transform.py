@@ -134,15 +134,22 @@ def append(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     # TODO(Max) improve
+    new_key_format = data.format(values.get("append_type", "list"))
     try:
-        array = data.get_data(values["new_key"], values)
+        result = data.get_data(values["new_key"], values)
     except StepKeyError:
-        data.insert_data(values["new_key"], [], values)
-        array = data.get_data(values["new_key"], values)
+        if new_key_format == "string":
+            data.insert_data(values["new_key"], "", values)
+        else:
+            data.insert_data(values["new_key"], [], values)
+        result = data.get_data(values["new_key"], values)
 
     value = data.get_data(values["key"], values)
-
-    array.append(value)
+    if new_key_format == "string":
+        result = result + data.format(values.get("delimiter", " ")) + value
+        data.insert_data(values["new_key"], result, values)
+    else:
+        result.append(value)
 
 
 @register_transform
@@ -402,14 +409,14 @@ def copy(values: dict, data: StepData):
 def option(values: dict, data: StepData):
     """Führt die aufgeführten `"transform"`-Funktionen aus, je nachdem ob ein bestimmter Wert `"true"` oder `"false"` ist.
 
-    Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_true"` stehen.
-    Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
-    die unter `"on_false"` stehen.
+     Wenn der Wert, der in `"check"` steht `"true"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_true"` stehen.
+     Wenn der Wert, der in `"check"` steht `"false"` ist, werden die `"transform"`-Funktionen ausgeführt,
+     die unter `"on_false"` stehen.
 
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    """
+     :param values: Werte aus der JSON-Datei
+     :param data: Daten aus der API
+     """
     values["transform"] = execute_type_option(values, data)
 
     transform(values, data)

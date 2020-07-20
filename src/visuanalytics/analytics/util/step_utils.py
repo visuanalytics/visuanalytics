@@ -17,7 +17,7 @@ def execute_type_compare(values: dict, data: StepData):
     if value_left == value_right:
         return values.get("on_equal", [])
 
-    # If on_not_equal is Pressent return on Not Eaual
+    # If on_not_equal is present return on not equal
     if values.get("on_not_equal", None) is not None:
         return values.get("on_not_equal", [])
 

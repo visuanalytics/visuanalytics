@@ -32,6 +32,10 @@ class Scheduler(object):
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
+    @property
+    def base_config(self):
+        return self._base_config
+
     def _start_job(self, job_name: str, steps_name: str, config: dict):
         # Add base_config if exists
         config = {**self._base_config, **config}
@@ -47,7 +51,7 @@ class Scheduler(object):
         assert False, "Not implemented"
 
     def start(self):
-        """Started den Scheduler.
+        """Started den Scheduler (Blocking).
 
         Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
         einem andern Thread ausgeführt.
@@ -65,3 +69,11 @@ class Scheduler(object):
                 now = datetime.now().second
 
                 time.sleep(60 - now)
+
+    def start_unblocking(self):
+        """Started den Scheduler in einem neuen Thread.
+
+        Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
+        einem andern Thread ausgeführt.
+        """
+        threading.Thread(target=self.start).start()

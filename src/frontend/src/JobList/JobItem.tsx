@@ -1,9 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Param} from "../util/param";
-import TextField from "@material-ui/core/TextField";
 import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import {AccordionSummary, useStyles} from "./style";
+import {AccordionSummary, useStyles, InputField} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -19,11 +18,22 @@ import {renderParamField} from "../util/renderParamFields";
 import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {Schedule, Weekday} from "../JobCreate";
+import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, format} from "date-fns";
+import de from "date-fns/esm/locale/de";
+import { useCallFetch } from "../Hooks/useCallFetch";
+import {getWeekdayLabel} from "../util/getWeekdayLabel";
+import TextField from "@material-ui/core/TextField";
+import { getUrl } from "../util/fetchUtils";
 
+interface Props {
+    job: Job,
+    getJobs: () => void;
+}
 
-export const JobItem: React.FC<Job> = (job) => {
-
+export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
+
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
         edit: true,
@@ -31,13 +41,14 @@ export const JobItem: React.FC<Job> = (job) => {
         doneIcon: 'none'
     });
     const [open, setOpen] = React.useState(false);
+    const [selectedParams, setSelectedParams] = React.useState<Param[]>(job.params);
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
-        daily: true,
-        weekly: false,
-        onDate: false,
-        weekdays: [],
-        date: new Date(),
-        time: new Date(),
+        daily: job.schedule.daily,
+        weekly: job.schedule.weekly,
+        onDate: job.schedule.onDate,
+        weekdays: job.schedule.weekdays.map(w => Number(w)),
+        date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
+        time: parse(String(job.schedule.time), "H:m", new Date()),
         delete: false,
         onTime: false,
         delete_old_on_new: true,
@@ -52,6 +63,9 @@ export const JobItem: React.FC<Job> = (job) => {
         setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
     }
     const handleSelectOnDate = () => {
+        // TODO improve
+        if (!selectedSchedule.date) selectedSchedule.date = new Date();
+
         setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
     }
     const handleAddWeekDay = (d: Weekday) => {
@@ -68,18 +82,124 @@ export const JobItem: React.FC<Job> = (job) => {
     const handleSelectTime = (time: Date | null) => {
         setSelectedSchedule({...selectedSchedule, time: time})
     }
+    const handleSelectParam = (key: string, value: string) => {
+        const newList = selectedParams?.map((e: Param) => {
+            if (e.name === key) {
+                return { ...e, selected: value };
+            }
+            return e;
+        })
+        setSelectedParams(newList);
+    }
+
+    const handleParamChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
+        handleSelectParam(name, event.target.value);
+    }
+
+    const showTime = () => {
+        if (job.schedule.daily) {
+            return "täglich, " + job.schedule.time + " Uhr";
+        } else if (job.schedule.onDate) {
+            return format(parse(String(job.schedule.date),"y-MM-dd", new Date()),"dd.MM.yyyy") +", " + job.schedule.time + " Uhr";
+        } else if (job.schedule.weekly) {
+            return "wöchentlich: " + job.schedule.weekdays.map(w => getWeekdayLabel(Number(w))) + ", " + job.schedule.time + " Uhr";
+        }
+    }
+
+    const getHighestNumber = (list: number[], weekday: number) => {
+        var nextNum: number = 7;
+        for (var i = 0; i<list.length;i++) {
+            if (list[i] > weekday && list[i] < nextNum) {
+                nextNum = list[i];
+            }
+        }
+        return nextNum;
+    }
+
+    // TODO May move to util component
+    const getNextDate = () => {
+        if(job.schedule.onDate) {
+            return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date());
+        } else if (job.schedule.daily) {
+            const time = parse(String(job.schedule.time), "H:m", new Date());
+            return  isPast(time) ? addDays(time, 1) : time
+        } else if (job.schedule.weekly) {
+            const curWeekday = getDay(new Date()) - 1;
+            const time = parse(String(job.schedule.time), "H:m", setDay(new Date(),Number(getHighestNumber(job.schedule.weekdays, curWeekday)) + 1));
+            return  isPast(time) ? addDays(time, 7) : time;
+        } else {
+            return new Date();
+        }
+    }
+
+    const nextJob = () => {
+        return formatDistanceToNowStrict(getNextDate(), {locale: de, addSuffix: true});
+    }
+
+    const [next, setNext] = React.useState(nextJob());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNext(nextJob);
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [nextJob]);
+
+    useEffect(() => {
+        setNext(nextJob);
+    },[nextJob()]);
+
+    const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            params: selectedParams,
+            schedule: {
+                daily: selectedSchedule.daily,
+                weekly: selectedSchedule.weekly,
+                onDate: selectedSchedule.onDate,
+                time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
+                weekdays: selectedSchedule.weekdays,
+                date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
+            }
+        })
+    },getJobs);
 
     const renderJobItem = (job: Job) => {
-        const paramInfo: Param[] = job.params;
+        const paramInfo: Param[] = selectedParams;
+
+        const handleOpen = () => {
+            setOpen(true);
+        };
+        const handleClose = () => {
+            setOpen(false);
+        };
+        const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+            setExpanded(isExpanded ? panel : false);
+        };
+        const handleEditClick = () => {
+            setState(state.edit ? {edit: false, editIcon: 'none', doneIcon: 'block'} : {edit: true, editIcon: 'block', doneIcon: 'none'});
+            setExpanded(String(job.jobId));
+        }
+
+        const handleCheckClick = () => {
+            handleEditClick();
+            editJob();
+        }
+        const handleSaveModal = () => {
+            handleCheckClick();
+            handleClose();
+        }
 
         const renderTextField = () => {
             return (
                 <div>
                     <div>
-                        <TextField
-                            className={classes.inputFields}
+                        <InputField
                             label="Thema"
-                            defaultValue={job.topic}
+                            defaultValue={job.topicName}
                             InputProps={{
                                 disabled: true,
                             }}
@@ -88,10 +208,9 @@ export const JobItem: React.FC<Job> = (job) => {
                     </div>
                     <div>
                         <Button className={classes.inputButton} onClick={handleOpen}>
-                            <TextField
-                                className={classes.inputFields}
+                            <InputField
                                 label="Zeitplan"
-                                defaultValue={job.schedule}
+                                value={showTime()}
                                 InputProps={{
                                     disabled: state.edit,
                                     readOnly: true
@@ -102,10 +221,9 @@ export const JobItem: React.FC<Job> = (job) => {
 
                     </div>
                     <div>
-                        <TextField
-                            className={classes.inputFields}
+                        <InputField
                             label="nächstes Video"
-                            defaultValue={job.next}
+                            value={next}
                             InputProps={{
                                 disabled: true,
                             }}
@@ -115,36 +233,24 @@ export const JobItem: React.FC<Job> = (job) => {
                 </div>
             )
         }
-        const handleOpen = () => {
-            setOpen(true);
-        };
 
-        const handleClose = () => {
-            setOpen(false);
-        };
-
-        const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
-            setExpanded(isExpanded ? panel : false);
-        };
-        const handleEditClick = () => {
-            setState(state.edit ? {edit: false, editIcon: 'none', doneIcon: 'block'} : {edit: true, editIcon: 'block', doneIcon: 'none'});
-            setExpanded(job.id);
-        }
         return (
             <div className={classes.root}>
-                <Accordion expanded={expanded === job.id} onChange={handleChange(job.id)}>
+                <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
-                        <Typography className={classes.heading}>#{job.id} {job.name}</Typography>
+                        <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton className={classes.button} onClick={handleEditClick}>
-                                <EditIcon style={{display: state.editIcon}}/>
-                                <CheckCircleIcon style={{display: state.doneIcon}}/>
+                            <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton style={{display: state.doneIcon}} className={classes.button} onClick={handleCheckClick}>
+                                <CheckCircleIcon />
                             </IconButton>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton className={classes.button}>
+                            <IconButton onClick={deleteJob} className={classes.button}>
                                 <DeleteIcon/>
                             </IconButton>
                         </div>
@@ -178,7 +284,7 @@ export const JobItem: React.FC<Job> = (job) => {
                                             selectDateHandler={handleSelectDate}
                                             selectTimeHandler={handleSelectTime}
                                         />
-                                        <ContinueButton>SPEICHERN</ContinueButton>
+                                        <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
                                     </Paper>
                                 </Container>
                             </Fade>
@@ -187,7 +293,9 @@ export const JobItem: React.FC<Job> = (job) => {
                             <div>
                                 {paramInfo.map(p =>
                                     <div key={p.name}>
-                                        {renderParamField(p, classes, state.edit)}
+                                        {renderParamField(p, InputField, state.edit, true, (e) => {
+                                            handleParamChange(e, p.name)
+                                        })}
                                     </div>)
                                 }
                             </div>
