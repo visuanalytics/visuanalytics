@@ -1,6 +1,5 @@
 import random
 
-import matplotlib.pyplot as plt
 import numpy as np
 from wordcloud import WordCloud, STOPWORDS
 
@@ -89,7 +88,6 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
     wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(image["text"], {}))
 
-    plt.axis("off")
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
