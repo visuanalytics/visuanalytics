@@ -43,16 +43,6 @@
               "key": "_loop|text",
               "new_key": "_req|text",
               "append_type": "string"
-            },
-            {
-              "type": "count_occurrences",
-              "keys": "_req|text",
-              "new_keys": "_req|words_dict"
-            },
-            {
-              "type": "sort_dict",
-              "keys": "_req|words_dict",
-              "new_keys": "_req|sorted_dict"
             }
           ]
         }
@@ -64,6 +54,21 @@
         "_req|search_metadata",
         "_req|statuses"
       ]
+    },
+    {
+      "type": "count_occurrences",
+      "keys": "_req|text",
+      "new_keys": "_req|words_dict"
+    },
+    {
+      "type": "sort_dict",
+      "keys": "_req|words_dict",
+      "new_keys": "_req|sorted_dict"
+    },
+    {
+      "type": "keys_to_list",
+      "keys": "_req|sorted_dict",
+      "new_keys": "_req|sorted_list"
     }
   ],
   "images": {
@@ -86,24 +91,21 @@
     },
     "top5_word1_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|sorted_dict|0",
+      "text": "_req|sorted_list|0",
       "stopwords": "_conf|stopwords",
       "parameter": {
-        "mask": {
-          "x": 1000,
-          "y": 1000,
-          "figure": "_conf|shape"
-        },
+        "figure": "_conf|figure",
         "background_color": "white",
-        "width": 1920,
-        "height": 1080,
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
         "collocations": false,
         "max_font_size": 400,
-        "max_words": 2000,
+        "max_words": 200,
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "_conf|colormap_words",
+        "repeat": true
       }
     },
     "wordcloud_all": {
@@ -126,8 +128,6 @@
         {
           "description": "Wordcloud",
           "type": "image",
-          "pos_x": 450,
-          "pos_y": 10,
           "color": "RGBA",
           "image_name": "top5_word1_wordcloud",
           "color_transparency": "FFFFFF"
@@ -145,7 +145,7 @@
           },
           {
             "type": "text",
-            "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
+            "pattern": "Auf Twitter wurden folgende Hashtags neben dem {_conf|hashtag} Hashtag verwendet. "
           }
         ]
       },
@@ -157,7 +157,7 @@
           },
           {
             "type": "text",
-            "pattern": "Auf Platz der Hashtags {_req|sorted_dict|0} "
+            "pattern": "Auf 1 Platz der Hashtags {_req|sorted_list|0} "
           }
         ]
       }
@@ -169,12 +169,12 @@
       {
         "image": "wordcloud_all",
         "audio_l": "a1",
-        "time_diff": 10
+        "time_diff": 5
       },
       {
         "image": "wordcloud_top5_1",
         "audio_l": "a2",
-        "time_diff": 10
+        "time_diff": 5
       }
     ]
   },
