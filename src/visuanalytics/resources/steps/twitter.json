@@ -161,28 +161,55 @@
           "value": [
             145,
             46,
-            5,
+            15,
             35
           ],
           "display_value": "Grün"
         },
         {
           "value": [
-            145,
-            46,
-            5,
-            35
+            353,
+            80,
+            20,
+            50
           ],
           "display_value": "Rot"
         },
         {
           "value": [
-            145,
-            46,
-            5,
-            35
+            59,
+            80,
+            45,
+            73
           ],
           "display_value": "Gelb"
+        },
+        {
+          "value": [
+            0,
+            0,
+            60,
+            100
+          ],
+          "display_value": "Grau"
+        },
+        {
+          "value": [
+            0,
+            0,
+            0,
+            20
+          ],
+          "display_value": "Schwarz"
+        },
+        {
+          "value": [
+            281,
+            66,
+            25,
+            70
+          ],
+          "display_value": "Lila"
         }
       ],
       "default_value": [
