@@ -25,6 +25,16 @@ export const useStyles = makeStyles((theme) => ({
         textAlign: "left",
         margin: "0 auto",
         width: 180
+    },
+    centerDivMedium: {
+        textAlign: "left",
+        margin: "0 auto",
+        width: 500,
+    },
+    checkboxParam: {
+        display: "flex",
+        justifyContent: "space-between",
+        margin: 0
     }
 }));
 

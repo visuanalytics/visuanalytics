@@ -1,8 +1,8 @@
 import React from "react";
 import { Fade } from "@material-ui/core";
-import { useStyles, InputField } from "../style";
+import { useStyles } from "../style";
 import { Param } from "../../util/param";
-import { renderParamField } from "../../util/renderParamFields";
+import { ParamFields } from "../../util/renderParamFields";
 import { Load } from "../../util/Load";
 
 interface ParamSelectionProps {
@@ -17,15 +17,16 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     return (
         <Fade in={true}>
-            <div>
+            <div className={classes.centerDivMedium}>
                 <Load data={props.params} />
                 {props.params.length !== 0
                     ?
-                    props.params.map((p: Param) =>
-                        <div className={classes.paddingSmall} key={p.name}>
-                            {renderParamField(p, InputField, false, true, props.selectParamHandler)}
-                        </div>
-                    )
+                    <ParamFields
+                        params={props.params}
+                        selectParamHandler={props.selectParamHandler}
+                        disabled={false}
+                        required={true}
+                    />
                     :
                     <div className={classes.paddingSmall}>
                         Für dieses Thema stehen keine Parameter zur Verfügung.
@@ -35,3 +36,19 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     );
 };
+
+// {renderParamField(p, InputField, props.selectParamHandler, false, true)}
+/*props.params.map((p: Param) =>
+                        <div>
+                            <div className={classes.paddingSmall} key={p.name}>
+                                <ParamField
+                                    param={p}
+                                    selectParamHandler={props.selectParamHandler}
+                                    disabled={false}
+                                    required={true}
+                                />
+                            </div>
+                            <Divider></Divider>
+                        </div>
+                    )
+                */

@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import { useStyles } from './style';
-import { ContinueButton } from './ContinueButton';
-import { BackButton } from './BackButton';
-import { ParamSelection } from './ParamSelection';
-import { TopicSelection } from './TopicSelection';
-import { ScheduleSelection } from './ScheduleSelection';
-import { GreyDivider } from './GreyDivider';
-import { Param } from '../util/param';
-import { Fade } from '@material-ui/core';
-import { useCallFetch } from '../Hooks/useCallFetch';
-import { format } from "date-fns";
+import {useStyles} from './style';
+import {ContinueButton} from './ContinueButton';
+import {BackButton} from './BackButton';
+import {ParamSelection} from './ParamSelection';
+import {TopicSelection} from './TopicSelection';
+import {ScheduleSelection} from './ScheduleSelection';
+import {GreyDivider} from './GreyDivider';
+import {Param} from '../util/param';
+import {Fade} from '@material-ui/core';
+import {useCallFetch} from '../Hooks/useCallFetch';
+import {format} from "date-fns";
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -125,7 +125,7 @@ export default function JobCreate() {
                 type: "string",
                 optional: false,
                 selected: "",
-                defaultValue: null,
+                defaultValue: "",
                 possibleValues: null,
                 subParams: null
             },
@@ -237,27 +237,27 @@ export default function JobCreate() {
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [],})
     }
     const handleSelectWeekly = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
     }
     const handleSelectOnDate = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+        setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
     }
     const handleAddWeekDay = (d: Weekday) => {
         const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
     }
     const handleRemoveWeekday = (d: Weekday) => {
         const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
     }
     const handleSelectDate = (date: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, date: date })
+        setSelectedSchedule({...selectedSchedule, date: date})
     }
     const handleSelectTime = (time: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, time: time })
+        setSelectedSchedule({...selectedSchedule, time: time})
     }
 
     // stepper texts
@@ -282,7 +282,7 @@ export default function JobCreate() {
                         selectedTopicId={selectedTopicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName} />
+                        enterJobNameHandler={handleEnterJobName}/>
                 );
             case 1:
                 return (
@@ -290,7 +290,7 @@ export default function JobCreate() {
                         topicId={selectedTopicId}
                         params={selectedParams}
                         fetchParamHandler={handleFetchParams}
-                        selectParamHandler={handleSelectParam} />
+                        selectParamHandler={handleSelectParam}/>
                 )
             case 2:
                 return (
@@ -330,16 +330,16 @@ export default function JobCreate() {
                         <div>
                             <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                         </div>
-                        <GreyDivider />
+                        <GreyDivider/>
                         {getSelectPanel(activeStep)}
-                        <GreyDivider />
+                        <GreyDivider/>
                         <div className={classes.paddingSmall}>
                             <span>
-                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
-                                    disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
+                                                disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
@@ -368,12 +368,14 @@ const validateParams = (params: Param[]): boolean => {
                     return p.subParams === null ? true : validateParams(p.subParams);
                 }
                 break;
-            case "string": case "number":
+            case "string":
+            case "number":
                 if (!p.optional) {
                     return p.selected.trim() !== "";
                 }
                 break;
-            case "multi-string": case "multi-number":
+            case "multi-string":
+            case "multi-number":
                 if (!p.optional) {
                     return p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
                 }
@@ -388,11 +390,11 @@ const validateParams = (params: Param[]): boolean => {
 const updateSelected = (params: Param[], key: string, value: any): Param[] => {
     return params.map(p => {
         if (p.name === key) {
-            return { ...p, selected: value };
+            return {...p, selected: value};
         }
         if (p.type === "sub_params" && p.subParams !== null) {
             const subParams = updateSelected(p.subParams, key, value);
-            return { ...p, subParams: subParams };
+            return {...p, subParams: subParams};
         }
         return p;
     })
@@ -401,14 +403,16 @@ const updateSelected = (params: Param[], key: string, value: any): Param[] => {
 const trimAllSelected = (params: Param[]): Param[] => {
     return params.map(p => {
         switch (p.type) {
-            case "string": case "number":
-                return { ...p, selected: p.selected.trim() };
-            case "multi-string": case "multi-number":
-                return { ...p, selected: p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "") };
+            case "string":
+            case "number":
+                return {...p, selected: p.selected.trim()};
+            case "multi-string":
+            case "multi-number":
+                return {...p, selected: p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "")};
             case "sub_params":
                 if (p.subParams !== null) {
                     const subParams = trimAllSelected(p.subParams);
-                    return { ...p, subParams: subParams };
+                    return {...p, subParams: subParams};
                 }
                 return p;
             default:

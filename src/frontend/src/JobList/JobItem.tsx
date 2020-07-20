@@ -14,7 +14,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
 import { ContinueButton } from "../JobCreate/ContinueButton";
-import { renderParamField } from "../util/renderParamFields";
+import { ParamFields } from "../util/renderParamFields";
 import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
 import { Schedule, Weekday } from "../JobCreate";
@@ -286,11 +286,12 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </Modal>
                         <Grid item md={6}>
                             <div>
-                                {paramInfo.map(p =>
-                                    <div key={p.name}>
-                                        {renderParamField(p, InputField, state.edit, true, handleSelectParam)}
-                                    </div>)
-                                }
+                                <ParamFields
+                                    params={paramInfo}
+                                    selectParamHandler={handleSelectParam}
+                                    disabled={true}
+                                    required={false}
+                                />
                             </div>
                         </Grid>
                     </AccordionDetails>

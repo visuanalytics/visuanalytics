@@ -1,63 +1,105 @@
-import React, { ComponentType } from 'react';
+import React from 'react';
 import { Param } from './param';
-import { MenuItem, TextFieldProps, FormControlLabel, Checkbox, Collapse } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider } from '@material-ui/core';
+import { useStyles } from '../JobCreate/style';
 
 
-export const renderParamField = (
-    param: Param, InputField: ComponentType<TextFieldProps>,
-    disabled = true,
-    required = false,
-    selectParamHandler = (_s: string, _a: any) => { }
-) => {
+interface ParamFieldProps extends IParamField {
+    param: Param,
+}
+
+interface ParamFieldsProps extends IParamField {
+    params: Param[],
+}
+
+interface IParamField {
+    selectParamHandler: (_s: string, _a: any) => void,
+    disabled: boolean,
+    required: boolean
+}
+
+export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
+    const classes = useStyles();
+
+    return (
+        <div>
+            {
+                props.params.filter(p => props.required || !p.optional).map(p => (
+                    <div>
+                        <div className={classes.paddingSmall}>
+                            <ParamField
+                                param={p}
+                                selectParamHandler={props.selectParamHandler}
+                                disabled={props.disabled}
+                                required={props.required}
+                            />
+                        </div>
+                        {(p.type === "sub_params") && <Divider />}
+                    </div>
+                ))
+            }
+        </div>
+    )
+}
+
+const ParamField: React.FC<ParamFieldProps> = (props) => {
+    const param = props.param;
+    const classes = useStyles();
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        selectParamHandler(name, event.target.value);
+        props.selectParamHandler(name, event.target.value);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
-        selectParamHandler(name, values);
+        props.selectParamHandler(name, values);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-        selectParamHandler(name, event.target.checked);
+        props.selectParamHandler(name, event.target.checked);
     }
 
     switch (param.type) {
         case "string": case "number": case "multi-string": case "multi-number":
             const multiline = param.type === "multi-string" || param.type === "multi-number";
             return (
-                <InputField
-                    required={required && !param.optional}
-                    multiline={multiline}
-                    onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
-                    variant="outlined"
-                    value={param.selected}
-                    InputProps={{
-                        disabled: disabled
-                    }}
-                    label={param.displayName}
-                />
+                <div>
+                    <TextField
+                        fullWidth
+                        required={props.required && !param.optional}
+                        multiline={multiline}
+                        onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
+                        variant="outlined"
+                        value={param.selected}
+                        InputProps={{
+                            disabled: props.disabled
+                        }}
+                        label={param.displayName}
+                    />
+                </div>
             )
         case "boolean":
             return (
                 <FormControlLabel
                     control={
-                        <Checkbox
+                        < Checkbox
                             checked={param.selected}
                             onChange={e => handleCheck(e, param.name)}
                         />}
                     label={param.displayName}
-                    labelPlacement="top"
+                    labelPlacement="start"
+                    className={classes.checkboxParam}
                 />
             )
         case "enum":
             return (
-                <InputField
-                    required={required && !param.optional}
+                <TextField
+                    fullWidth
+                    required={props.required && !param.optional}
                     onChange={e => handleChange(e, param.name)}
                     variant="outlined"
                     label={param.displayName}
                     value={param.selected}
                     InputProps={{
-                        disabled: disabled,
+                        disabled: props.disabled,
                     }}
                     select>
                     {param.possibleValues?.map((val) => (
@@ -65,7 +107,7 @@ export const renderParamField = (
                             {val.displayValue}
                         </MenuItem>
                     ))}
-                </InputField>
+                </TextField>
             )
         case "sub_params":
             return (
@@ -80,17 +122,22 @@ export const renderParamField = (
                                 />}
                             label={param.displayName}
                             labelPlacement="start"
+                            className={classes.checkboxParam}
                         />
                         :
-                        param.displayName}
+                        <p>
+                            {param.displayName}
+                        </p>
+                    }
                     <Collapse in={!param.optional || param.selected}>
-                        {param.subParams?.map((p: Param) =>
-                            <div key={p.name}>
-                                {renderParamField(p, InputField, disabled, required, selectParamHandler)}
-                            </div>
-                        )}
+                        <ParamFields
+                            params={param.subParams || []}
+                            selectParamHandler={props.selectParamHandler}
+                            disabled={props.disabled}
+                            required={props.required}
+                        />
                     </Collapse>
-                </div>
+                </div >
             )
         default:
             return (
