@@ -12,15 +12,14 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
 
+sys.path.insert(0, os.path.abspath('../src/visuanalytics'))
 
 # -- Project information -----------------------------------------------------
 
 project = 'VisuAnalytics'
 copyright = '2020, David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
 author = 'David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -44,7 +43,6 @@ language = 'de'
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 # -- Options for HTML output -------------------------------------------------
 

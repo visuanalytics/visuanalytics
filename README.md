@@ -212,7 +212,7 @@ Für die Dokumentation wird das Python Package [Sphinx](https://www.sphinx-doc.o
 ### HTML Generieren
 
 1. in den Doku ordner wechseln: `cd src/visuanalytics/docs`
-2. Doku aus den Python **docstrings** generieren: `sphinx-apidoc -f -o modules ..`
+2. Doku aus den Python **docstrings** generieren: `sphinx-apidoc -f -o modules ../src/visuanalytics`
 3. **HTML** generieren: `make html`
 
 Die Dokumentation befindet sich dann in `_build/html`.
