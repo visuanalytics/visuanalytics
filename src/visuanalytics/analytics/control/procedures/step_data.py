@@ -205,10 +205,11 @@ class StepData(object):
             return
         for entry in json:
             out = ""
-            for idx, param in enumerate(self.format_api(entry["array"], api_key_name, values)):
+            params = self.format_api(entry["array"], api_key_name, values).split(entry.get("delimiter", ","))
+            for idx, param in enumerate(params):
                 if idx != 0:
                     out += entry.get("new_delimiter", "")
-                out += param
+                out += entry.get("before_each", "") + param
             result[entry["name"]] = out
 
     def format_json(self, json: dict, api_key_name, values: dict):

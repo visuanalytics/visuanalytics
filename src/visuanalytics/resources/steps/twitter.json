@@ -13,7 +13,8 @@
     "params_array": [
       {
         "name": "q",
-        "array": "%23{_conf|hashtags}",
+        "array": "{_conf|hashtags}",
+        "before_each": "%23",
         "new_delimiter": "+"
       }
     ],
