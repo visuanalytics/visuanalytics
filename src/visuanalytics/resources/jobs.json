@@ -61,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "11:02",
+        "time": "14:32",
         "daily": true
       },
       "config": {
@@ -70,7 +70,9 @@
         "stopwords": "Bundesliga",
         "colormap_words": "viridis",
         "color_func_words": true,
-        "shape": "circle",
+        "figure": "square",
+        "width_wordcloud": 1000,
+        "height_wordcloud": 1000,
         "keep_count": 3
       }
     }
