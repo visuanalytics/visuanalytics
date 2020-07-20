@@ -93,9 +93,9 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     image.save(file)
 
     if values.get("thumbnail", False) and step_data.get_config("thumbnail"):
-        file2 = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"), ".png")
-        values = wordcloud_image.to_image()
-        values.save(file2)
-        values["thumbnail"] = file2
+        thumbnail = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"),
+                                           ".png")
+        image.save(thumbnail)
+        values["thumbnail"] = thumbnail
 
     return file
