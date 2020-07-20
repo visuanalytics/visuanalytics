@@ -30,7 +30,7 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
                 <div className={classes.paddingSmall}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="deleteOld" control={<Radio
-                            checked={props.schedule.delete_old_on_new}
+                            checked={props.schedule.deleteOldOnNew}
                             onChange={props.deleteOldNewHandler}
                             value="deleteOld"
                         />} label="Video bei Neugenerierung löschen" />

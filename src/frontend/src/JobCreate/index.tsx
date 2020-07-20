@@ -31,8 +31,8 @@ export interface Schedule {
     time: Date | null,
     delete: boolean,
     onTime: boolean,
-    delete_old_on_new: boolean,
-    removal_time: Date | null
+    deleteOldOnNew: boolean,
+    removalTime: Date | null
 }
 
 export default function JobCreate() {
@@ -61,9 +61,9 @@ export default function JobCreate() {
         date: new Date(),
         time: new Date(),
         delete: false,
-        delete_old_on_new: false,
+        deleteOldOnNew: false,
         onTime: false,
-        removal_time: new Date()
+        removalTime: new Date()
     });
 
     // initialize callback for add job functionality
@@ -90,8 +90,7 @@ export default function JobCreate() {
 
     useEffect(() => {
         if (activeStep === 4) {
-        if (activeStep === 3) {
-            setActiveStep(4);
+            setActiveStep(5);
             setFinished(true);
             addJob();
         }
@@ -197,18 +196,18 @@ export default function JobCreate() {
         setSelectedSchedule({...selectedSchedule, time: time})
     }
     const handleDelete = () => {
-        setSelectedSchedule({...selectedSchedule, delete: false, delete_old_on_new: false, onTime: false})
+        setSelectedSchedule({...selectedSchedule, delete: false, deleteOldOnNew: false, onTime: false})
     }
     const handleDeleteOldNew = () => {
-        setSelectedSchedule({...selectedSchedule, delete: true, delete_old_on_new: true, onTime: false})
+        setSelectedSchedule({...selectedSchedule, delete: true, deleteOldOnNew: true, onTime: false})
     }
 
     const handleDeleteOnTime = () => {
-        setSelectedSchedule({...selectedSchedule, delete: true, delete_old_on_new: false, onTime: true})
+        setSelectedSchedule({...selectedSchedule, delete: true, deleteOldOnNew: false, onTime: true})
     }
 
     const handleDeleteTime = (date: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, removal_time: date })
+        setSelectedSchedule({ ...selectedSchedule, removalTime: date })
     }
 
     // stepper texts

@@ -51,8 +51,8 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         time: parse(String(job.schedule.time), "H:m", new Date()),
         delete: false,
         onTime: false,
-        delete_old_on_new: true,
-        removal_time: new Date()
+        deleteOldOnNew: true,
+        removalTime: new Date()
     });
 
     // handler for schedule selection logic
