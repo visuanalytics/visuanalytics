@@ -163,5 +163,5 @@ out
 venv
 
 # Sphinx documentation
-docs/_build
-docs/modules
+Docs/_build
+Docs/modules
