@@ -1,90 +1,24 @@
-# Steps Config <!-- omit in toc -->
-
-- [Daten Zugriffe](#daten-zugriffe)
-  - [Pfade](#pfade)
-  - [Typen](#typen)
-  - [Key/New Key](#keynew-key)
-- [Api](#api)
-  - [request](#request)
-  - [request_multiple](#request_multiple)
-  - [request_multiple_custom](#request_multiple_custom)
-  - [input](#input)
-  - [request_memory](#request_memory)
-- [Transform](#transform)
-  - [Transform Array](#transform-array)
-  - [Transform Dict](#transform-dict)
-  - [Transform Compare Arrays](#transform-compare-arrays)
-  - [Calculate](#calculate)
-    - [mean](#mean)
-    - [max](#max)
-    - [min](#min)
-    - [round](#round)
-    - [mode](#mode)
-    - [\_bi_calculate](#_bi_calculate)
-    - [multiply](#multiply)
-    - [divide](#divide)
-    - [subtract](#subtract)
-    - [add](#add)
-  - [Select](#select)
-  - [Delete](#delete)
-  - [Select Range](#select-range)
-  - [Append](#append)
-  - [Add Symbol](#add-symbol)
-  - [Replace](#replace)
-  - [Translate Key](#translate-key)
-  - [Alias](#alias)
-  - [Regex](#regex)
-  - [Date Format](#date-format)
-  - [Timestamp](#timestamp)
-  - [Date Weekday](#date-weekday)
-  - [Date Now](#date-now)
-  - [Wind Direction](#wind-direction)
-  - [Choose Random](#choose-random)
-  - [Loop](#loop)
-  - [Add Data](#add-data)
-  - [Copy](#copy)
-  - [option](#option)
-  - [compare](#compare)
-  - [Random Text](#random-text)
-  - [Convert](#convert)
-- [Images](#images)
-  - [pillow](#pillow)
-  - [Overlay](#overlay)
-    - [image](#image)
-    - [image_array](#image_array)
-    - [text](#text)
-    - [text_array](#text_array)
-  - [wordcloud](#wordcloud)
-- [Audios](#audios)
-  - [text](#text-1)
-  - [compare](#compare-1)
-  - [option](#option-1)
-  - [random_text](#random_text)
-- [Sequence](#sequence)
-  - [successively](#successively)
-  - [custom](#custom)
-- [Run Config](#run-config)
-- [Presets](#presets)
+# Steps Config 
 
 <!-- TODO Description-->
 
-# Daten Zugriffe
+## Daten Zugriffe
 
 <!--TODO-->
 
-## Pfade
+#### Pfade
 
 <!--TODO-->
 
-## Typen
+#### Typen
 
 In der JSON-Konfigurationsdatei
 
-## Key/New Key
+#### Key/New Key
 
 <!--TODO-->
 
-# Api
+## Api
 
 <!-- TODO Description-->
 
@@ -92,11 +26,11 @@ Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
 Daten der API. Die Responses können auch .csv-Dateien sein.
 
-## request
+#### request
 
 Führt eine **https**-Request durch.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -133,14 +67,14 @@ Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurati
 
 <!--TODO-->
 
-## request_multiple
+#### request_multiple
 
 <!-- TODO Description-->
 
 Führt mehrere **https**-Requests durch. Die Request bleibt gleich bis auf einen Wert der sich ändert.
 Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -176,13 +110,13 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 <!--TODO-->
 
-## request_multiple_custom
+#### request_multiple_custom
 
 <!--TODO-->
 
 Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden anderen Request-Typen verwenden, der
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -215,23 +149,23 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 }
 ```
 
-## input
+#### input
 
 <!--TODO-->
 
-## request_memory
+#### request_memory
 
 <!--TODO-->
 
-# Transform
+## Transform
 
 <!-- TODO Description-->
 
-## Transform Array
+#### transform_array
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -243,11 +177,11 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-## Transform Dict
+#### transform_dict
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -259,29 +193,17 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-## Transform Compare Arrays
-
-<!-- TODO Description-->
-
-**Beispiel**
-
-```JSON
-
-```
-
-<!--TODO-->
-
-## Calculate
+#### calculate
 
 <!-- TODO Description-->
 
 calculate stellt Methoden für Berechnungen zur Verfügung.
 
-### mean
+###### mean
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -301,11 +223,11 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-### max
+###### max
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -325,11 +247,11 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-### min
+###### min
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -349,11 +271,11 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-### round
+###### round
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -373,11 +295,11 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-### mode
+###### mode
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -393,14 +315,14 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-### \_bi_calculate
+###### \_bi_calculate
 
 <!-- TODO Description-->
 
 Wird aufgerufen von den untenstehenden Methoden zum Multiplizieren, Dividieren, Subtrahieren und Addieren von mehreren
 Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem Wert.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -408,11 +330,11 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-### multiply
+###### multiply
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -436,11 +358,11 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-### divide
+###### divide
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -464,11 +386,11 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-### subtract
+###### subtract
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -492,11 +414,11 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-### add
+###### add
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -520,14 +442,14 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-## Select
+#### select
 
 <!-- TODO Description-->
 
 Mit select kann man sich die Keys aus der API-Antwort heraussuchen, die für das zu erstellende Video relevant sind.
 Die Keys stehen in relevant_keys.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -540,9 +462,9 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Delete
+#### delete
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -555,11 +477,11 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Select Range
+#### select_range
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -584,11 +506,11 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Append
+#### append
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -608,14 +530,14 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-## Add Symbol
+#### add_symbol
 
 <!-- TODO Description-->
 
 add_symbol setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Value von dem Key, welcher
 unter key steht. Man kann damit auch einen Value vom alten Key unter keys in einen neuen Key unter new_keys kopieren.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -640,7 +562,7 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
 
 <!--TODO-->
 
-## Replace
+#### replace
 
 <!-- TODO Description-->
 
@@ -650,7 +572,7 @@ count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt we
 
 Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -685,11 +607,11 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Translate Key
+#### translate_key
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -709,11 +631,11 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Alias
+#### alias
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -733,11 +655,11 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Regex
+#### regex
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -745,7 +667,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-## Date Format
+#### date_format
 
 <!-- TODO Description-->
 
@@ -754,7 +676,7 @@ stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Valu
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit das Format in das Format umgewandelt werden kann,
 welches in format angegeben ist.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -788,7 +710,7 @@ welches in format angegeben ist.
 
 <!--TODO-->
 
-## Timestamp
+#### timestamp
 
 <!-- TODO Description-->
 
@@ -797,7 +719,7 @@ um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben im UN
 new_keys werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Value gespeichert wird.
 zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -827,7 +749,7 @@ zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
 <!--TODO-->
 
-## Date Weekday
+#### date_weekday
 
 <!-- TODO Description-->
 
@@ -835,7 +757,7 @@ date_weekday wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys an
 stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus der Wochentag bestimmt werden kann.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -860,14 +782,14 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 
 <!--TODO-->
 
-## Date Now
+#### date_now
 
 <!-- TODO Description-->
 
 date_now gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
 Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -891,13 +813,13 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 <!--TODO-->
 
-## Wind Direction
+#### wind_direction
 
 <!-- TODO Description-->
 
 wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -960,35 +882,11 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-## Choose Random
+#### loop
 
 <!-- TODO Description-->
 
-**Beispiel**
-
-```JSON
-
-```
-
-`keys`:
-
-<!--TODO-->
-
-`dict`:
-
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-## Loop
-
-<!-- TODO Description-->
-
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1006,7 +904,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1031,14 +929,14 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-## Add Data
+#### add_data
 
 <!-- TODO Description-->
 
 add_data fügt den Daten ein neues Key-Value-Paar hinzu. Der Value wird unter pattern eingetragen und an die Stelle
 new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1058,13 +956,13 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
 <!--TODO-->
 
-## Copy
+#### copy
 
 <!-- TODO Description-->
 
 Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -1080,7 +978,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## option
+#### option
 
 <!-- TODO Description-->
 
@@ -1102,11 +1000,11 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## compare
+#### compare
 
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -1134,11 +1032,10 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## Random Text
-
+#### random_value
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -1156,11 +1053,10 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-## Convert
-
+#### convert
 <!-- TODO Description-->
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 
@@ -1178,7 +1074,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-# Images
+## Images
 
 Der Abschnitt `images` beinhaltet die Konfigurationen, für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
 `sequence` mit den generierten Audiodateien zu einem Video zusammengeschnitten werden.
@@ -1193,7 +1089,7 @@ Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
 }
 ```
 
-## pillow
+#### pillow
 
 Pillow ist eine Image Library für Python.
 In unserem projekt nutzen wir grundlegend 3 Funktionen:
@@ -1252,13 +1148,13 @@ Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss die
 **`overlay`**  
 Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
-## Overlay
+#### Overlay
 
-Es gibt 4 verschiedene Overlay Arten:
+Es gibt 4 verschiedene Overlay-Arten:
 
-### image
+###### image
 
-Typ Image setzt ein Bild in das vorher definierte source image
+Der Typ Image setzt ein Bild in das zuvor definierte source image
 
 ```JSON
 
@@ -1277,10 +1173,10 @@ Typ Image setzt ein Bild in das vorher definierte source image
 **`description`** _(Optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
 
-**`pos_x`** :  
+**`pos_x`** _(Optional)_:  
 X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
 
-**`pos_y`** :  
+**`pos_y`** _(Optional)_:  
 Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
 
 **`size_x`** _(Optional)_:  
@@ -1298,9 +1194,17 @@ Farbe in welche das Bild konvertiert werden soll
 **`pattern`**:  
 Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
 
-### image_array
+######## Bild mittig vor Hintergrund platzieren
 
-Typ Image-Array setzt mehrere Bilder in das vorher definierte source image
+Um ein Bild mittig vor dem Hintergrund zu platzieren, sollten die Felder `pos_x` und `pos_y` nicht mit Werten 
+versehen werden. Die Position wird automatisch berechnet unter Berücksichtigung der Größe des Hintergrundbildes und 
+des einzufügenden Bildes. 
+
+Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Werten versehen werden.
+
+###### image_array
+
+Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 
 ```JSON
 
@@ -1350,9 +1254,9 @@ Pfad der zu setzenden Bilder
 Kann ebenfalls wieder Liste oder String sein  
 (kann sich auch auf Daten aus der API beziehen)
 
-### text
+###### text
 
-Typ Text setzt Text in das vorher definierte source image
+Der Typ `text` setzt einen Text in das zuvor definierte source image.
 
 ```JSON
 
@@ -1386,9 +1290,9 @@ Presets sind weiter unten in der JSON spezifiziert
 **`pattern`**:  
 Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
-### text_array
+###### text_array
 
-Typ Text-Array setzt mehrere Texte in das vorher definierte source image
+Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 
 ```JSON
 
@@ -1430,7 +1334,7 @@ Presets sind weiter unten in der JSON spezifiziert
 Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
 (kann sich auch auf Daten aus der API beziehen)
 
-## wordcloud
+#### wordcloud
 
 Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
 eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
@@ -1456,55 +1360,78 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
-    "stopwords": None
+    "stopwords": None,
+    "repeat": False
 }
 ```
 
 Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
 der jeweilige default-Wert verwendet.
 
-`background_color`: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
+**`background_color`**: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
 muss hier `None` angegeben werden und bei `mode` `RGBA`
 
-`width`: int - Breite der Wordcloud in Pixeln
+**`width`**: 
+int - Breite der Wordcloud in Pixeln
 
-`height`: int - Höhe der Wordcloud in Pixeln
+**`height`**: 
+int - Höhe der Wordcloud in Pixeln
 
-`collocations`: bool - <!--TODO-->
+**`collocations`**: 
+bool - <!--TODO-->
 
-`max_font_size`: int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
+**`max_font_size`**: 
+int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
 
-`max_words`: int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
+**`max_words`**: 
+int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
 
-`contour_width`: int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
+**`contour_width`**: 
+int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
 
-`contour_color`: color value - Farbe der Kontur/Umrandung
+**`contour_color`**: 
+color value - Farbe der Kontur/Umrandung
 
-`font_path`: str - Pfad zur Schriftart
+**`font_path`**: 
+str - Pfad zur Schriftart
 
-`prefer_horizontal`: float - <!--TODO-->
+**`prefer_horizontal`**: 
+float - <!--TODO-->
 
-`scale`: float/int - <!--TODO-->
+**`scale`**: 
+float/int - <!--TODO-->
 
-`min_font_size`: int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
+**`min_font_size`**: 
+int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
 
-`font_step`: int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
+**`font_step`**: 
+int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
 
-`mode`: `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
+**`mode`**: 
+`RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
 
-`relative_scaling`: float - <!--TODO-->
+**`relative_scaling`**: 
+float - <!--TODO-->
 
-`color_func`: callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
+**`color_func`**: 
+callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
 
-`regexp`: None, <!--TODO-->
+**`regexp`**: 
+None, <!--TODO-->
 
-`colormap`: colormap (callable) von matplotlib - viridis, magma, inferno, plasma
+**`colormap`**: 
+colormap (callable) von matplotlib - viridis, magma, inferno, plasma
 
-`normalize_plurals`: bool - <!--TODO-->
+**`normalize_plurals`**: 
+bool - <!--TODO-->
 
-`stopwords`: set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
+**`stopwords`**: 
+set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
-**Beispiel**
+**`repeat`**:
+bool - Ob Wörter wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
+
+**Beispiel** 
 
 ```JSON
 {
@@ -1531,7 +1458,31 @@ muss hier `None` angegeben werden und bei `mode` `RGBA`
 }
 ```
 
-# Audios
+###### Wordcloud mit nur einem Wort
+Zum Generieren einer Wordcloud, die nur ein Wort enthält, muss `repeat` auf `True` gesetzt werden. Der Textstring `text`
+soll nur das Wort enthalten, welches wiederholt werden soll.
+
+###### Wordcloud transparent
+Möchte man eine Wordcloud mit transparentem Hintergrund, so hat man mehrere Möglichkeiten.
+Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes angeben:
+"mode": "RGBA",
+"background_color": None
+
+**Alternativ für `square` und `circle` möglich**:
+
+Erstellen einer Wordcloud mit weißem Hintergrund.
+"mode": "RGB" (default),
+"background_color": "white" (default)
+
+Im Image-Overlay:
+"color": "RGBA",
+"color_transparency": "FFFFFF"
+
+Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
+und `circle`empfohlen.
+<!--TODO-->
+
+## Audios
 
 Der Abschnitt `audios` beinhaltet die Texte, die in eine Audio-Datei umgewandelt werden. Die Texte werden im gewünschten
 `parts`-Typ generiert. Die Audiodateien werden am Ende im Abschnitt `sequence` mit den generierten Bilddateien zu einem
@@ -1550,11 +1501,11 @@ angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede 
 }
 ```
 
-## text
+#### text
 
 Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1571,14 +1522,15 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 }
 ```
 
-`pattern`: str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
+**`pattern`**: 
+str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
 
-## compare
+#### compare
 
 Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert größer, kleiner oder gleich einem anderen Wert ist, einen
 String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1613,24 +1565,30 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 }
 ```
 
-`value_left`: str, int - Der Wert, der beim Vergleich auf der linken Seite steht.
+**`value_left`**:
+str, int - Der Wert, der beim Vergleich auf der linken Seite steht. 
 
-`value_right`: str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
+**`value_right`**: 
+str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
 
-`on_equal`: callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+**`on_equal`**: 
+callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_not_equal`: callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+**`on_not_equal`**: 
+callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_higher`: callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+**`on_higher`**: 
+callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_lower`: callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+**`on_lower`**: 
+callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-## option
+#### option
 
 Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `false` ist, einen String mithilfe eines weiteren
 `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1659,17 +1617,20 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 }
 ```
 
-`check`: str, int - Der Wert, der auf true oder false geprüft werden soll.
+**`check`**: 
+str, int - Der Wert, der auf true oder false geprüft werden soll.
 
-`on_true`: callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
+**`on_true`**: 
+callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
 
-`on_false`: callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
+**`on_false`**: 
+callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
-## random_text
+#### random_text
 
 Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in eine Audiodatei umgewandelt wird.
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1682,10 +1643,11 @@ Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in 
 }
 ```
 
-`pattern`: array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
+**`pattern`**: 
+array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
 Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
-# Sequence
+## Sequence
 
 Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 
@@ -1697,7 +1659,7 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 }
 ```
 
-## successively
+#### successively
 
 Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
 und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
@@ -1710,7 +1672,7 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
 }
 ```
 
-## custom
+#### custom
 
 Custom ist ein etwas schwierigere sequeunce Typ, diese setzt nicht vorraus das es die selbe
 Anzahl an Bilder sowie Audios gibt. Das heißt mann kann bestimmte Bilder doppelt oder auch gar nicht verwenden  
@@ -1753,13 +1715,13 @@ Zeit welches dieses Bild länger oder kürzer als die Audio datei angezeigt werd
 **`audio_l`**_(Optional)_:  
 Name der internen Audio Datei
 
-# Run Config
+## Run Config
 
 Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der Job-Erstellung am Anfang auswählen kann.
 
 Bei einem ortsbezogenen Wetterbericht würde dies wie folgt aussehen:
 
-**Beispiel**
+**Beispiel** 
 
 ```JSON
 {
@@ -1801,7 +1763,7 @@ und einen default-Wert `default_value`. Wird bei der Job-Erstellung keine Auswah
 vorgenommen, wird automatisch der `default_value` verwendet. Bei der Job-Erstellung erscheinen die möglichen Werte
 als `display_value`.
 
-# Presets
+## Presets
 
 Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurden auf die Bilder zu schreiben
 
