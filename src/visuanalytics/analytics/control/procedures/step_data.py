@@ -216,17 +216,13 @@ class StepData(object):
 
         return self.__formatter.format(value_string, data)
 
-    def format_array(self, json: dict, api_key_name, values: dict, result: dict):
-        if json is None:
+    def format_array(self, array: dict, api_key_name, values: dict):
+        if array is None:
             return
-        for entry in json:
-            out = ""
-            params = self.format_api(entry["array"], api_key_name, values).split(entry.get("delimiter", ","))
-            for idx, param in enumerate(params):
-                if idx != 0:
-                    out += entry.get("new_delimiter", "")
-                out += entry.get("before_each", "") + param
-            result[entry["name"]] = out
+        for idx, value in enumerate(array):
+            array[idx] = self.format_api(value, api_key_name, values)
+
+        return array
 
     def format_json(self, json: dict, api_key_name, values: dict):
         """
