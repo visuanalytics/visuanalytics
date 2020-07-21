@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 
@@ -6,6 +7,8 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 from visuanalytics.util import resources
+
+logger = logging.getLogger(__name__)
 
 API_TYPES = {}
 
@@ -16,10 +19,10 @@ def api(values: dict, data: StepData):
 
 
 @raise_step_error(APIError)
-def api_request(values: dict, data: StepData, name):
+def api_request(values: dict, data: StepData, name: str, ignore_testing=False):
     api_func = get_type_func(values, API_TYPES)
 
-    return api_func(values, data, name)
+    return api_func(values, data, name, ignore_testing)
 
 
 def register_api(func):
@@ -27,25 +30,25 @@ def register_api(func):
 
 
 @register_api
-def request(values: dict, data: StepData, name):
+def request(values: dict, data: StepData, name: str, ignore_testing=False):
     """Fragt einmal die gewünschten Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    if data.get_config("testing", False):
+    if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(name)
 
     return _fetch(values, data)
 
 
 @register_api
-def input(values: dict, data: StepData, name):
+def input(values: dict, data: StepData, name: str, ignore_testing=False):
     return data.format_api(values["input"], values.get("api_key_name", None), values)
 
 
 @register_api
-def request_memory(values: dict, data: StepData, name):
+def request_memory(values: dict, data: StepData, name: str, ignore_testing=False):
     """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
 
     :param values: Werte aus der JSON-Datei
@@ -65,14 +68,14 @@ def request_memory(values: dict, data: StepData, name):
 
 
 @register_api
-def request_multiple(values: dict, data: StepData, name):
+def request_multiple(values: dict, data: StepData, name: str, ignore_testing=False):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
 
-    if data.get_config("testing", False):
+    if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(name)
 
     if data.format(values.get("use_loop_as_key", False), values):
@@ -88,14 +91,14 @@ def request_multiple(values: dict, data: StepData, name):
 
 
 @register_api
-def request_multiple_custom(values: dict, data: StepData, name):
+def request_multiple_custom(values: dict, data: StepData, name: str, ignore_testing=False):
     """Fragt unterschiedliche Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
 
-    if data.get_config("testing", False):
+    if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(name)
 
     if values.get("use_loop_as_key", False):
@@ -112,6 +115,7 @@ def request_multiple_custom(values: dict, data: StepData, name):
 
 
 def _load_test_data(name):
+    logger.info(f"Loading test data from 'exampledata/{name}.json'")
     with resources.open_resource(f"exampledata/{name}.json") as fp:
         return json.loads(fp.read())
 
