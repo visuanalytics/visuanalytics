@@ -170,11 +170,32 @@ def _create_query(values: dict, data: StepData):
         if values.get("body_encoding", None) is not None:
             req[req["body_type"]] = req[req["body_type"]].encode(values["body_encoding"])
 
-    # Get/Format Url, Params, Response Format
+    # Get/Format Url
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
+
+    # Get/Format Params
     req["params"] = data.format_json(values.get("params", None), api_key_name, values)
-    data.format_array(values.get("params_array", None), api_key_name, values, req["params"])
+    if values.get("params_array", None) is not None:
+        _build_params_array(values, data, api_key_name, req)
+
+    # Get/Format Response, Format
     req["res_format"] = data.format(values.get("response_format", "json"))
     req["include_headers"] = values.get("include_headers", False)
 
     return req
+
+
+def _build_params_array(values: dict, data: StepData, api_key_name: str, req: dict):
+    if req["params"] is None:
+        req["params"] = {}
+
+    for params in values["params_array"]:
+        params_array = data.get_data_array(params["array"], values)
+        data.format_array(params_array, api_key_name, values)
+
+        param = "".join(
+            [
+                f"{data.format(params['pattern'], values)}{data.format(params.get('delimiter', ''), values)}"
+                for _ in data.loop_array(params_array, values)
+            ])
+        req["params"][params["key"]] = param[:-1]
