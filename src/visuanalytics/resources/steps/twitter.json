@@ -12,10 +12,10 @@
     },
     "params_array": [
       {
-        "name": "q",
-        "array": "{_conf|hashtags}",
-        "before_each": "%23",
-        "new_delimiter": "+"
+        "key": "q",
+        "array": "_conf|hashtags",
+        "pattern": "%23{_loop}",
+        "delimiter": "+"
       }
     ],
     "headers": {
