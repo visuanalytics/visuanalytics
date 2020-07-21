@@ -16,7 +16,9 @@ export const useStyles = makeStyles((theme) => ({
         fontSize: "large"
     },
     paddingSmall: {
-        padding: theme.spacing(3)
+        paddingBottom: theme.spacing(3),
+        paddingTop: theme.spacing(3)
+
     },
     inputFields: {
         width: "45%"

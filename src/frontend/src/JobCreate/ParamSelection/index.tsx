@@ -2,8 +2,8 @@ import React from "react";
 import { Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param } from "../../util/param";
-import { ParamFields } from "../../util/renderParamFields";
 import { Load } from "../../util/Load";
+import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {
     topicId: number;
@@ -36,19 +36,3 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     );
 };
-
-// {renderParamField(p, InputField, props.selectParamHandler, false, true)}
-/*props.params.map((p: Param) =>
-                        <div>
-                            <div className={classes.paddingSmall} key={p.name}>
-                                <ParamField
-                                    param={p}
-                                    selectParamHandler={props.selectParamHandler}
-                                    disabled={false}
-                                    required={true}
-                                />
-                            </div>
-                            <Divider></Divider>
-                        </div>
-                    )
-                */

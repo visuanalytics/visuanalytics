@@ -142,7 +142,7 @@ export default function JobCreate() {
             {
                 name: "twitter",
                 displayName: "Twitter-Wordcloud generieren",
-                type: "sub_params",
+                type: "subParams",
                 optional: true,
                 selected: false,
                 possibleValues: null,
@@ -151,7 +151,7 @@ export default function JobCreate() {
                     {
                         name: "banned",
                         displayName: "Verbotene Wörter",
-                        type: "multi-string",
+                        type: "multiString",
                         optional: false,
                         selected: [],
                         possibleValues: null,
@@ -161,7 +161,7 @@ export default function JobCreate() {
                     {
                         name: "hashtags",
                         displayName: "Hashtags",
-                        type: "multi-string",
+                        type: "multiString",
                         optional: false,
                         selected: [],
                         possibleValues: null,
@@ -173,7 +173,7 @@ export default function JobCreate() {
             {
                 name: "read",
                 displayName: "Welche Angaben sollen explizit im Video genannt werden?",
-                type: "sub_params",
+                type: "subParams",
                 optional: false,
                 selected: false,
                 possibleValues: null,
@@ -360,10 +360,9 @@ export default function JobCreate() {
 
 // validate selected params
 const validateParams = (params: Param[]): boolean => {
-    console.log(trimAllSelected(params));
     return params?.every(p => {
         switch (p.type) {
-            case "sub_params":
+            case "subParams":
                 if ((p.optional && p.selected) || !p.optional) {
                     return p.subParams === null ? true : validateParams(p.subParams);
                 }
@@ -374,8 +373,8 @@ const validateParams = (params: Param[]): boolean => {
                     return p.selected.trim() !== "";
                 }
                 break;
-            case "multi-string":
-            case "multi-number":
+            case "multiString":
+            case "multiNumber":
                 if (!p.optional) {
                     return p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
                 }
@@ -392,7 +391,7 @@ const updateSelected = (params: Param[], key: string, value: any): Param[] => {
         if (p.name === key) {
             return {...p, selected: value};
         }
-        if (p.type === "sub_params" && p.subParams !== null) {
+        if (p.type === "subParams" && p.subParams !== null) {
             const subParams = updateSelected(p.subParams, key, value);
             return {...p, subParams: subParams};
         }
@@ -406,10 +405,10 @@ const trimAllSelected = (params: Param[]): Param[] => {
             case "string":
             case "number":
                 return {...p, selected: p.selected.trim()};
-            case "multi-string":
-            case "multi-number":
+            case "multiString":
+            case "multiNumber":
                 return {...p, selected: p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "")};
-            case "sub_params":
+            case "subParams":
                 if (p.subParams !== null) {
                     const subParams = trimAllSelected(p.subParams);
                     return {...p, subParams: subParams};

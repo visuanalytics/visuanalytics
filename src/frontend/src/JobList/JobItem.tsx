@@ -14,7 +14,6 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
 import { ContinueButton } from "../JobCreate/ContinueButton";
-import { ParamFields } from "../util/renderParamFields";
 import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
 import { Schedule, Weekday } from "../JobCreate";
@@ -23,6 +22,7 @@ import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { getWeekdayLabel } from "../util/getWeekdayLabel";
 import TextField from "@material-ui/core/TextField";
+import { ParamFields } from "../ParamFields";
 
 interface Props {
     job: Job,
