@@ -40,7 +40,7 @@ def create_app():
     mimetypes.add_type("text/javascript", ".js")
 
     # Register the Blueprints
-    app.register_blueprint(api.api)
+    app.register_blueprint(api.api, url_prefix="/visuanalytics")
 
     # Serve index.html
     @app.route("/", methods=["GET"])
