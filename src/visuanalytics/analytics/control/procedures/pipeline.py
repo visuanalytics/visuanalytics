@@ -99,6 +99,7 @@ class Pipeline(object):
 
                 # Ignore Testing and Make request
                 testing = data.get_config("testing", False)
+                data.data["_conf"]["testing"] = False
                 api_request(cp_request, data, "")
                 data.data["_conf"]["testing"] = testing
 
