@@ -83,7 +83,6 @@ def get_specific_memory_path(job_name: str, name: str, number: int):
     :param number: Angabe welche Datei ausgewählt werden soll 0= zuletz erstellt, 1 = Zweit zuletzt erstellt etc.
     """
     files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
-    print(files)
     files.sort(reverse=True)
     return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number]))
 

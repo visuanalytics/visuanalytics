@@ -6,11 +6,18 @@
     "api_key_name": "twitter",
     "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
     "params": {
-      "q": "%23{_conf|hashtag}",
       "count": "100",
       "lang": "de",
       "result_type": "recent"
     },
+    "params_array": [
+      {
+        "key": "q",
+        "array": "_conf|hashtags",
+        "pattern": "%23{_loop}",
+        "delimiter": "+"
+      }
+    ],
     "headers": {
       "Authorization": "Bearer {_api_key}"
     }
@@ -59,10 +66,10 @@
   "images": {
     "football_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "figure": "_conf|figure",
+        "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
         "height": "_conf|height_wordcloud",
         "collocations": false,
@@ -71,7 +78,7 @@
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "wordcloud_with_background": {

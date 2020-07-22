@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 
-from visuanalytics.analytics.apis.api import api
+from visuanalytics.analytics.apis.api import api, api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
@@ -86,10 +86,29 @@ class Pipeline(object):
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
+        logger.info(f"Inizalization finished!")
+
+    @staticmethod
+    def __on_completion(data: StepData):
+        cp_request = data.get_config("on_completion")
+
+        # IF ON Completion is in config send Request
+        if cp_request is not None:
+            try:
+                logger.info("Send completion notice...")
+
+                # Make request
+                api_request(cp_request, data, "", True)
+
+                logger.info("Completion report sent out!")
+            except Exception:
+                logger.exception("Completion report could not be sent: ")
+
     def __cleanup(self):
         # delete Directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
+
         if self.steps_config.get("keep_count", -1) > 0 and self.steps_config.get("fix_names", None) is None:
             delete_amount_videos(self.steps_config["job_name"], self.steps_config["output_path"],
                                  self.steps_config["keep_count"])
@@ -133,6 +152,7 @@ class Pipeline(object):
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
 
+            self.__on_completion(data)
             self.__cleanup()
             return True
 
