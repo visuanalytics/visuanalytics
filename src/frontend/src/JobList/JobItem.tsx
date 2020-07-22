@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Param} from "../util/param";
-import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
+import {Button, Container, Fade, InputBase, Modal, Paper, withStyles} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import {AccordionSummary, useStyles, InputField} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -22,7 +22,6 @@ import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, forma
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
-import TextField from "@material-ui/core/TextField";
 import { getUrl } from "../util/fetchUtils";
 
 interface Props {
@@ -32,14 +31,27 @@ interface Props {
 
 export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
 
-    const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
         edit: true,
         editIcon: 'block',
         doneIcon: 'none'
     });
+
+    const NameInput = withStyles({
+        input: {
+        padding: '0 8px',
+        marginLeft: '8px',
+        color: 'white',
+        fontSize: '1.5625rem',
+        borderBottom: state.edit ? '' : '2px solid #c4c4c4'
+        },
+    })(InputBase);
+
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
+
+    const [expanded, setExpanded] = React.useState<string | false>(false);
+    const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
     const [selectedParams, setSelectedParams] = React.useState<Param[]>(job.params);
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
@@ -90,6 +102,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const handleParamChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         handleSelectParam(name, event.target.value);
+    }
+
+    const handleJobName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setJobName(event.target.value);
     }
 
     const showTime = () => {
@@ -143,7 +159,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     useEffect(() => {
         setNext(nextJob);
-    },[nextJob()]);
+    },[nextJob]);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -151,6 +167,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            jobName: jobName,
             params: selectedParams,
             schedule: {
                 daily: selectedSchedule.daily,
@@ -236,7 +253,15 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
-                        <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
+                        <Typography component="span" className={classes.heading}>#{job.jobId}
+                        <NameInput
+                            autoFocus={true}
+                            value={jobName}
+                            readOnly={state.edit}
+                            onClick={state.edit ? () => {} : (event) => event.stopPropagation()}
+                            onChange={handleJobName}
+                        >
+                        {job.jobName}</NameInput></Typography>
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
                                 <EditIcon />
