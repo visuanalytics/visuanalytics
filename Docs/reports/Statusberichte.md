@@ -228,3 +228,15 @@ Ebenfalls wurde anhand der Twitter-API eine Wordcloud zu einem bestimmten „Has
 - kleine Anpassungen der Oberfläche
 - Funktion zum anbinden der Twitter Wordcloud implementieren
 
+## Statusbericht 21.07.2020 (Sprint 11)
+
+### Zusammenfassung
+In diesem Sprint wurde das Wordpress-Plugin zusammen mit dem Backend auf dem Zielsystem installiert und getestet. 
+
+Ebenso wurden weitere kleine Anpassungen auf der Oberfläche vorgenommen. So wurde den aus der Json-Datei generierten Eingabefeldern, ein Parameter `type` hinzugefügt, damit je nach benötigter Eingabe ein `select`, `checkbox` etc. verwendet werden kann.
+
+Das Video zu der Twitter-Wordcloud wird nun dynamisch erstellt. Die Begriffe werden also je nach Häufigkeit nacheinander eingeblendet.
+
+### Ziel für den nächsten Sprint
+- weitere Anpassungen der Benutzeroberfläche
+- Wordcloud Video an andere Videos anhängen
