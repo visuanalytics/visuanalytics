@@ -22,7 +22,7 @@ def storing(values: dict, data: StepData):
     """
     if values.get("storing", None):
         for value in values["storing"]:
-            if value.get("safe_on_change", True):
+            if value.get("safe_only_on_change", True):
                 try:
                     with resources.open_specific_memory_resource(data.get_data("_conf|job_name", values),
                                                                  value["name"]) as fp:
