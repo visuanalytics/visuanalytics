@@ -12,16 +12,7 @@ export interface ParamValues {
     [key: string]: any
 }
 
-type ParamType = "string"
-    | "number"
-    | "boolean"
-    | "multiString"
-    | "multiNumber"
-    | "enum"
-    | "subParams"
-
 interface IParam {
-    type: ParamType;
     name: string;
     displayName: string;
     optional: boolean;
