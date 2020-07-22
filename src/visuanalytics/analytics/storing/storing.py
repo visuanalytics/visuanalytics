@@ -32,4 +32,7 @@ def storing(values: dict, data: StepData):
                     pass
             with open(resources.new_memory_resource_path(data.get_data("_conf|job_name", values), value["name"]),
                       'w') as fp:
-                json.dump(data.get_data(value["key"], data.data), fp)
+                export_data = data.get_data(value["key"], data.data)
+                for key in value["except"]:
+                    del export_data[key]
+                json.dump(export_data, fp)
