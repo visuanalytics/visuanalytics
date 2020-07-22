@@ -96,7 +96,6 @@ export default function JobCreate() {
             const allSet = validateParamValues(paramList, paramValues);
             setSelectComplete(allSet);
         }
-        console.log(trimParamValues(paramValues))
     }, [paramList, paramValues, activeStep])
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
