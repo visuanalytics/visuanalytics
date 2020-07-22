@@ -1,20 +1,65 @@
-export interface Param {
-    name: string,
-    displayName: string,
-    type: string,
-    optional: boolean,
-    defaultValue: string | null,
-    enumValues: enumValue[] | null,
-    subParams: Param[] | null
-}
+// represents parameter information
+export type Param = StringParam
+    | NumberParam
+    | MultiNumberParam
+    | MultiStringParam
+    | BoolParam
+    | EnumParam
+    | SuperParam
 
-interface enumValue {
-    value: string,
-    displayValue: string;
-}
-
+// represents the selected values for a collection of `Param`
 export interface ParamValues {
     [key: string]: any
+}
+
+type ParamType = "string"
+    | "number"
+    | "boolean"
+    | "multiString"
+    | "multiNumber"
+    | "enum"
+    | "subParams"
+
+interface IParam {
+    type: ParamType;
+    name: string;
+    displayName: string;
+    optional: boolean;
+}
+
+interface StringParam extends IParam {
+    type: "string"
+}
+
+interface NumberParam extends IParam {
+    type: "number"
+}
+
+interface MultiStringParam extends IParam {
+    type: "multiString"
+}
+
+interface MultiNumberParam extends IParam {
+    type: "multiNumber"
+}
+
+interface BoolParam extends IParam {
+    type: "boolean"
+}
+
+interface EnumParam extends IParam {
+    type: "enum"
+    enumValues: EnumValue[]
+}
+
+interface SuperParam extends IParam {
+    type: "subParams"
+    subParams: Param[]
+}
+
+interface EnumValue {
+    value: string,
+    displayValue: string;
 }
 
 // validate parameter values
@@ -28,6 +73,7 @@ export const validateParamValues = (params: Param[], values: ParamValues): boole
                 break;
             case "string":
             case "number":
+            case "enum":
                 if (!p.optional) {
                     return values[p.name].trim() !== "";
                 }
@@ -43,6 +89,7 @@ export const validateParamValues = (params: Param[], values: ParamValues): boole
     })
 }
 
+// trim all string / string[] values
 export const trimParamValues = (values: ParamValues): ParamValues => {
     Object.keys(values).forEach((k) => {
         if (typeof (values[k]) === "string") {
@@ -61,7 +108,7 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
 }
 
 
-// initializes an object with param names as keys and default values ("", false, []) as values
+// initialize an object with param names as keys
 export const initSelectedValues = (params: Param[]) => {
     let selected: ParamValues = {};
     params.forEach(p => {

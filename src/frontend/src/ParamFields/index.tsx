@@ -139,7 +139,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     }
                     <Collapse in={!param.optional || props.values[param.name]}>
                         <ParamFields
-                            params={param.subParams || []}
+                            params={param.subParams}
                             values={props.values}
                             selectParamHandler={props.selectParamHandler}
                             disabled={props.disabled}

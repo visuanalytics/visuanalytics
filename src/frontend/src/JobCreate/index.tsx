@@ -129,44 +129,30 @@ export default function JobCreate() {
                 displayName: "Ort",
                 type: "string",
                 optional: false,
-                defaultValue: "",
-                enumValues: null,
-                subParams: null
             },
             {
                 name: "p_code",
                 displayName: "PLZ",
                 type: "number",
                 optional: true,
-                enumValues: null,
-                defaultValue: "",
-                subParams: null
             },
             {
                 name: "twitter",
                 displayName: "Twitter-Wordcloud generieren",
                 type: "subParams",
                 optional: true,
-                enumValues: null,
-                defaultValue: "",
                 subParams: [
                     {
                         name: "banned",
                         displayName: "Verbotene Wörter",
                         type: "multiString",
                         optional: false,
-                        enumValues: null,
-                        defaultValue: "",
-                        subParams: null
                     },
                     {
                         name: "hashtags",
                         displayName: "Hashtags",
                         type: "multiString",
                         optional: false,
-                        enumValues: null,
-                        defaultValue: "",
-                        subParams: null
                     }
                 ]
             },
@@ -175,26 +161,18 @@ export default function JobCreate() {
                 displayName: "Welche Angaben sollen explizit im Video genannt werden?",
                 type: "subParams",
                 optional: false,
-                enumValues: null,
-                defaultValue: "",
                 subParams: [
                     {
                         name: "windspeed",
                         displayName: "Windgeschwindigkeit",
                         type: "boolean",
                         optional: false,
-                        enumValues: null,
-                        defaultValue: "",
-                        subParams: null
                     },
                     {
                         name: "temp",
                         displayName: "Temperatur",
                         type: "boolean",
                         optional: false,
-                        enumValues: null,
-                        defaultValue: "",
-                        subParams: null
                     }
                 ]
             },
@@ -204,8 +182,6 @@ export default function JobCreate() {
                 displayName: "Bla",
                 type: "enum",
                 optional: true,
-                defaultValue: "hallo",
-                subParams: null,
                 enumValues: [
                     {
                         value: "hallo",
