@@ -16,12 +16,12 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { ContinueButton } from "../JobCreate/ContinueButton";
 import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
-import { Schedule, Weekday } from "../JobCreate";
 import { parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, format } from "date-fns";
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { getWeekdayLabel } from "../util/getWeekdayLabel";
 import { ParamFields } from "../ParamFields";
+import { Schedule, Weekday } from "../util/schedule";
 
 interface Props {
     job: Job,
@@ -40,30 +40,53 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     });
     const [open, setOpen] = React.useState(false);
     const [selectedParams, setSelectedParams] = React.useState<Param[]>(job.params);
-    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
-        daily: job.schedule.daily,
-        weekly: job.schedule.weekly,
-        onDate: job.schedule.onDate,
-        weekdays: job.schedule.weekdays.map(w => Number(w)),
-        date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
+    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>(job.schedule
+        /*
+        type: job.schedule.type,
+    //    weekdays: job.schedule.weekdays.map(w => Number(w)),
+    //    date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
         time: parse(String(job.schedule.time), "H:m", new Date()),
-    });
+    */
+    );
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+        // setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+        setSelectedSchedule({ type: "daily", time: selectedSchedule.time })
     }
     const handleSelectWeekly = () => {
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+        // setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+        setSelectedSchedule({ type: "weekly", time: selectedSchedule.time, weekdays: [] })
     }
     const handleSelectOnDate = () => {
         // TODO improve
-        if (!selectedSchedule.date) selectedSchedule.date = new Date();
-
-        setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+        //   if (!selectedSchedule.date) selectedSchedule.date = new Date();
+        //   setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+        setSelectedSchedule({ type: "onDate", time: selectedSchedule.time, date: new Date() })
     }
     const handleAddWeekDay = (d: Weekday) => {
-        const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
+        if (selectedSchedule.type === "weekly") {
+            const weekdays = [...selectedSchedule.weekdays, d];
+            setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        }
+    }
+    const handleRemoveWeekday = (d: Weekday) => {
+        if (selectedSchedule.type === "weekly") {
+            const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
+            setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
+        }
+    }
+    const handleSelectDate = (date: Date) => {
+        if (selectedSchedule.type === "onDate") {
+            setSelectedSchedule({ ...selectedSchedule, date: date })
+        }
+    }
+    const handleSelectTime = (time: Date) => {
+        setSelectedSchedule({ ...selectedSchedule, time: time })
+    }
+    /*
+    const handleAddWeekDay = (d: Weekday) => {
+        const weekdays = [...selectedSchedule.weekdays, d];
         setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
     }
     const handleRemoveWeekday = (d: Weekday) => {
@@ -76,6 +99,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const handleSelectTime = (time: Date | null) => {
         setSelectedSchedule({ ...selectedSchedule, time: time })
     }
+    */
     const handleSelectParam = (key: string, value: string) => {
         const newList = selectedParams?.map((e: Param) => {
             if (e.name === key) {
@@ -91,11 +115,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     }
 
     const showTime = () => {
-        if (job.schedule.daily) {
+        if (job.schedule.type === "daily") {
             return "täglich, " + job.schedule.time + " Uhr";
-        } else if (job.schedule.onDate) {
+        } else if (job.schedule.type === "onDate") {
             return format(parse(String(job.schedule.date), "y-MM-dd", new Date()), "dd.MM.yyyy") + ", " + job.schedule.time + " Uhr";
-        } else if (job.schedule.weekly) {
+        } else if (job.schedule.type === "weekly") {
             return "wöchentlich: " + job.schedule.weekdays.map(w => getWeekdayLabel(Number(w))) + ", " + job.schedule.time + " Uhr";
         }
     }
@@ -112,18 +136,19 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
 
     // TODO May move to util component
     const getNextDate = () => {
-        if (job.schedule.onDate) {
-            return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date());
-        } else if (job.schedule.daily) {
+        if (job.schedule.type === "daily") {
+            //     return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date());
+        } else if (job.schedule.type === "weekly") {
             const time = parse(String(job.schedule.time), "H:m", new Date());
             return isPast(time) ? addDays(time, 1) : time
-        } else if (job.schedule.weekly) {
+        } else if (job.schedule.type === "onDate") {
             const curWeekday = getDay(new Date()) - 1;
-            const time = parse(String(job.schedule.time), "H:m", setDay(new Date(), Number(getHighestNumber(job.schedule.weekdays, curWeekday)) + 1));
-            return isPast(time) ? addDays(time, 7) : time;
+            //       const time = parse(String(job.schedule.time), "H:m", setDay(new Date(), Number(getHighestNumber(job.schedule.weekdays, curWeekday)) + 1));
+            //       return isPast(time) ? addDays(time, 7) : time;
         } else {
             return new Date();
         }
+        return new Date();
     }
 
     const nextJob = () => {
@@ -151,12 +176,14 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         body: JSON.stringify({
             params: selectedParams,
             schedule: {
+                /*
                 daily: selectedSchedule.daily,
                 weekly: selectedSchedule.weekly,
                 onDate: selectedSchedule.onDate,
                 time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
                 weekdays: selectedSchedule.weekdays,
                 date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date, "yyyy-MM-dd") : null
+                */
             }
         })
     }, getJobs);

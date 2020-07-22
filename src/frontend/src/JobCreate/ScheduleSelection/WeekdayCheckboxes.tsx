@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react"
 import { FormControl, FormGroup, FormControlLabel, Checkbox } from "@material-ui/core"
-import { Schedule, Weekday } from ".."
-import {getWeekdayLabel} from "../../util/getWeekdayLabel";
+import { getWeekdayLabel } from "../../util/getWeekdayLabel";
+import { Weekday, Schedule } from "../../util/schedule";
 
 interface WeekdayCheckboxProps {
     schedule: Schedule;
@@ -10,6 +10,7 @@ interface WeekdayCheckboxProps {
 }
 
 export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
+    const schedule = props.schedule;
     const weekdays = [
         Weekday.MONDAY,
         Weekday.TUESDAY,
@@ -26,7 +27,7 @@ export const WeekdayCheckboxes: React.FC<WeekdayCheckboxProps> = (props) => {
                 key={day}
                 control={
                     <Checkbox
-                        checked={props.schedule.weekdays.includes(day)}
+                        checked={schedule.type === "weekly" && schedule.weekdays.includes(day)}
                         value={day}
                         onChange={handleChange} />}
                 label={getWeekdayLabel(day)}

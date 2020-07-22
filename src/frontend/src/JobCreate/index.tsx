@@ -12,8 +12,12 @@ import { GreyDivider } from './GreyDivider';
 import { Param, ParamValues, trimParamValues, validateParamValues, initSelectedValues } from '../util/param';
 import { Fade } from '@material-ui/core';
 import { useCallFetch } from '../Hooks/useCallFetch';
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
+import { Schedule, Weekday } from '../util/schedule';
+import { datePickerDefaultProps } from '@material-ui/pickers/constants/prop-types';
 
+
+/*
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
@@ -24,8 +28,9 @@ export interface Schedule {
     onDate: boolean,
     weekdays: Weekday[],
     date: Date | null,
-    time: Date | null
+    time: Date
 }
+*/
 
 export default function JobCreate() {
     const classes = useStyles();
@@ -45,11 +50,7 @@ export default function JobCreate() {
 
     // state for schedule selection logic
     const [schedule, setSchedule] = React.useState<Schedule>({
-        daily: true,
-        weekly: false,
-        onDate: false,
-        weekdays: [],
-        date: new Date(),
+        type: "daily",
         time: new Date()
     });
 
@@ -63,6 +64,7 @@ export default function JobCreate() {
             topicId: topicId,
             jobName: jobName,
             params: trimParamValues(paramValues),
+            /*
             schedule: {
                 daily: schedule.daily,
                 weekly: schedule.weekly,
@@ -71,6 +73,7 @@ export default function JobCreate() {
                 weekdays: schedule.weekdays,
                 date: schedule.onDate && schedule.date ? format(schedule.date, "yyyy-MM-dd") : null
             }
+            */
         })
     });
 
@@ -100,7 +103,7 @@ export default function JobCreate() {
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
-        if (activeStep === 2 && schedule.weekly) {
+        if (activeStep === 2 && schedule.type === "weekly") {
             setSelectComplete(schedule.weekdays.length > 0);
         }
     }, [schedule, activeStep])
@@ -207,26 +210,32 @@ export default function JobCreate() {
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
-        setSchedule({ ...schedule, daily: true, weekly: false, onDate: false, weekdays: [], })
+        setSchedule({ type: "daily", time: schedule.time })
     }
     const handleSelectWeekly = () => {
-        setSchedule({ ...schedule, daily: false, weekly: true, onDate: false, weekdays: [], })
+        setSchedule({ type: "weekly", time: schedule.time, weekdays: [] })
     }
     const handleSelectOnDate = () => {
-        setSchedule({ ...schedule, daily: false, weekly: false, onDate: true, weekdays: [], })
+        setSchedule({ type: "onDate", time: schedule.time, date: new Date() })
     }
     const handleAddWeekDay = (d: Weekday) => {
-        const weekdays: Weekday[] = [...schedule.weekdays, d];
-        setSchedule({ ...schedule, weekdays: weekdays });
+        if (schedule.type === "weekly") {
+            const weekdays = [...schedule.weekdays, d];
+            setSchedule({ ...schedule, weekdays: weekdays });
+        }
     }
     const handleRemoveWeekday = (d: Weekday) => {
-        const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
-        setSchedule({ ...schedule, weekdays: weekdays });
+        if (schedule.type === "weekly") {
+            const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
+            setSchedule({ ...schedule, weekdays: weekdays });
+        }
     }
-    const handleSelectDate = (date: Date | null) => {
-        setSchedule({ ...schedule, date: date })
+    const handleSelectDate = (date: Date) => {
+        if (schedule.type === "onDate") {
+            setSchedule({ ...schedule, date: date })
+        }
     }
-    const handleSelectTime = (time: Date | null) => {
+    const handleSelectTime = (time: Date) => {
         setSchedule({ ...schedule, time: time })
     }
 

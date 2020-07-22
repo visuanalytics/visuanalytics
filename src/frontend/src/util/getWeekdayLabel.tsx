@@ -1,4 +1,4 @@
-import {Weekday} from "../JobCreate";
+import { Weekday } from "./schedule";
 
 export const getWeekdayLabel = (day: Weekday) => {
     switch (day) {
