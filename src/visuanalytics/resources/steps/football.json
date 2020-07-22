@@ -554,7 +554,6 @@
   ],
   "storing": [
     {
-      "safe_on_change": true,
       "name": "table",
       "key": "_req|Tabelle",
       "except": [
@@ -563,7 +562,6 @@
       ]
     },
     {
-      "safe_on_change": true,
       "name": "spieltag",
       "key": "_req|Spieltag"
     }

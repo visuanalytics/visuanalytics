@@ -22,21 +22,19 @@ def storing(values: dict, data: StepData):
     """
     if values.get("storing", None):
         for value in values["storing"]:
-            if value.get("safe_on_change", False):
+            if value.get("safe_on_change", True):
                 try:
                     with resources.open_specific_memory_resource(data.get_data("_conf|job_name", values),
                                                                  value["name"]) as fp:
                         old_data = json.loads(fp.read())
-                    new_data = data.get_data(value["key"], values)
-                    new_data = _remove_keys(value, new_data)
+                    new_data = _remove_keys(value, data.get_data(value["key"], values))
                     if old_data == new_data:
                         continue
                 except (FileNotFoundError, IndexError):
                     pass
             with open(resources.new_memory_resource_path(data.get_data("_conf|job_name", values), value["name"]),
                       'w') as fp:
-                export_data = data.get_data(value["key"], data.data)
-                export_data = _remove_keys(value, export_data)
+                export_data = _remove_keys(value, data.get_data(value["key"], data.data))
                 json.dump(export_data, fp)
 
 
