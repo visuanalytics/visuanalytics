@@ -555,7 +555,10 @@
   "storing": [
     {
       "name": "table",
-      "key": "_req|Tabelle"
+      "key": "_req|Tabelle",
+      "except": [
+        "Text"
+      ]
     },
     {
       "name": "spieltag",
