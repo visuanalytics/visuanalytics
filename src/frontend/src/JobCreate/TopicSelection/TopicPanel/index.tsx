@@ -1,12 +1,12 @@
 import React from "react";
-import {makeStyles, Button} from "@material-ui/core";
-import {Topic} from "..";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
-import {Param} from "../../../util/param";
+import { makeStyles, Button } from "@material-ui/core";
+import { Topic } from "..";
+import { useCallFetch } from "../../../Hooks/useCallFetch";
+import { Param } from "../../../util/param";
 
 interface TopicPanelProps {
     topic: Topic;
-    selectedTopicId: number;
+    topicId: number;
     selectTopicHandler: (topicId: number) => void;
     fetchParamHandler: (params: Param[]) => void;
 }
@@ -38,7 +38,7 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     return (
         <Button
             className={classes.panel}
-            style={props.topic.topicId === props.selectedTopicId ? {border: "solid #00638D 7px"} : {border: ""}}
+            style={props.topic.topicId === props.topicId ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
                 fetchParams();
                 props.selectTopicHandler(props.topic.topicId);

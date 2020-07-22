@@ -21,7 +21,6 @@ import { parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, form
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { getWeekdayLabel } from "../util/getWeekdayLabel";
-import TextField from "@material-ui/core/TextField";
 import { ParamFields } from "../ParamFields";
 
 interface Props {
@@ -288,6 +287,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <div>
                                 <ParamFields
                                     params={paramInfo}
+                                    values={{}}
                                     selectParamHandler={handleSelectParam}
                                     disabled={true}
                                     required={false}

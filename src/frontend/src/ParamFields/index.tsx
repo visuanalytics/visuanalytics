@@ -1,21 +1,22 @@
 import React from 'react';
 import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
 import { useStyles } from '../JobCreate/style';
-import { Param } from '../util/param';
+import { Param, ParamValues } from '../util/param';
 
 
-interface ParamFieldProps extends IParamField {
+interface ParamFieldProps extends ParamField {
     param: Param,
 }
 
-interface ParamFieldsProps extends IParamField {
+interface ParamFieldsProps extends ParamField {
     params: Param[],
 }
 
-interface IParamField {
+interface ParamField {
     selectParamHandler: (_s: string, _a: any) => void,
     disabled: boolean,
-    required: boolean
+    required: boolean,
+    values: ParamValues
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
@@ -29,6 +30,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                         <div className={classes.paddingSmall}>
                             <ParamField
                                 param={p}
+                                values={props.values}
                                 selectParamHandler={props.selectParamHandler}
                                 disabled={props.disabled}
                                 required={props.required}
@@ -72,7 +74,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         multiline={multiline}
                         onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
                         variant="outlined"
-                        value={param.selected}
+                        value={props.values[param.name]}
                         InputProps={{
                             disabled: props.disabled
                         }}
@@ -85,7 +87,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                 <FormControlLabel
                     control={
                         < Checkbox
-                            checked={param.selected}
+                            checked={props.values[param.name]}
                             onChange={e => handleCheck(e, param.name)}
                         />}
                     label={makeLabel(param.displayName)}
@@ -101,12 +103,12 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     onChange={e => handleChange(e, param.name)}
                     variant="outlined"
                     label={param.displayName}
-                    value={param.selected}
+                    value={props.values[param.name]}
                     InputProps={{
                         disabled: props.disabled,
                     }}
                     select>
-                    {param.possibleValues?.map((val) => (
+                    {param.enumValues?.map((val) => (
                         <MenuItem key={val.value} value={val.value.toString()}>
                             {val.displayValue}
                         </MenuItem>
@@ -122,7 +124,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={param.selected}
+                                        checked={props.values[param.name]}
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
                                 label={makeSubParamLabel(param.displayName)}
@@ -135,9 +137,10 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             {makeSubParamLabel(param.displayName)}
                         </div>
                     }
-                    <Collapse in={!param.optional || param.selected}>
+                    <Collapse in={!param.optional || props.values[param.name]}>
                         <ParamFields
                             params={param.subParams || []}
+                            values={props.values}
                             selectParamHandler={props.selectParamHandler}
                             disabled={props.disabled}
                             required={props.required}

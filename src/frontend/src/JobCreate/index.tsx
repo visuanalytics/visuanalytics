@@ -1,18 +1,18 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {useStyles} from './style';
-import {ContinueButton} from './ContinueButton';
-import {BackButton} from './BackButton';
-import {ParamSelection} from './ParamSelection';
-import {TopicSelection} from './TopicSelection';
-import {ScheduleSelection} from './ScheduleSelection';
-import {GreyDivider} from './GreyDivider';
-import {Param} from '../util/param';
-import {Fade} from '@material-ui/core';
-import {useCallFetch} from '../Hooks/useCallFetch';
-import {format} from "date-fns";
+import { useStyles } from './style';
+import { ContinueButton } from './ContinueButton';
+import { BackButton } from './BackButton';
+import { ParamSelection } from './ParamSelection';
+import { TopicSelection } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
+import { Param, ParamValues, trimParamValues, validateParamValues, initSelectedValues } from '../util/param';
+import { Fade } from '@material-ui/core';
+import { useCallFetch } from '../Hooks/useCallFetch';
+import { format } from "date-fns";
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -36,14 +36,15 @@ export default function JobCreate() {
     const [finished, setFinished] = React.useState(false);
 
     // states for topic selection logic
-    const [selectedTopicId, setSelectedTopicId] = React.useState(-1);
+    const [topicId, setTopicId] = React.useState(-1);
     const [jobName, setJobName] = React.useState("");
 
     // state for param selection logic
-    const [selectedParams, setSelectedParams] = React.useState<Param[]>([]);
+    const [paramList, setParamList] = React.useState<Param[]>([]);
+    const [paramValues, setParamValues] = React.useState<ParamValues>({});
 
     // state for schedule selection logic
-    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
+    const [schedule, setSchedule] = React.useState<Schedule>({
         daily: true,
         weekly: false,
         onDate: false,
@@ -59,16 +60,16 @@ export default function JobCreate() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            topicId: selectedTopicId,
+            topicId: topicId,
             jobName: jobName,
-            params: selectedParams,
+            params: trimParamValues(paramValues),
             schedule: {
-                daily: selectedSchedule.daily,
-                weekly: selectedSchedule.weekly,
-                onDate: selectedSchedule.onDate,
-                time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
-                weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date, "yyyy-MM-dd") : null
+                daily: schedule.daily,
+                weekly: schedule.weekly,
+                onDate: schedule.onDate,
+                time: schedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
+                weekdays: schedule.weekdays,
+                date: schedule.onDate && schedule.date ? format(schedule.date, "yyyy-MM-dd") : null
             }
         })
     });
@@ -84,25 +85,26 @@ export default function JobCreate() {
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
         if (activeStep === 0) {
-            const allSet = selectedTopicId !== -1 && jobName.trim() !== "";
+            const allSet = topicId !== -1 && jobName.trim() !== "";
             setSelectComplete(allSet);
         }
-    }, [selectedTopicId, jobName, activeStep])
+    }, [topicId, jobName, activeStep])
 
-    // when a new parameter is selected, check if parameter selection is complete 
+    // when a new parameter value is entered, check if parameter selection is complete 
     useEffect(() => {
         if (activeStep === 1) {
-            const allSet = validateParams(selectedParams);
+            const allSet = validateParamValues(paramList, paramValues);
             setSelectComplete(allSet);
         }
-    }, [selectedParams, activeStep])
+        console.log(trimParamValues(paramValues))
+    }, [paramList, paramValues, activeStep])
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
-        if (activeStep === 2 && selectedSchedule.weekly) {
-            setSelectComplete(selectedSchedule.weekdays.length > 0);
+        if (activeStep === 2 && schedule.weekly) {
+            setSelectComplete(schedule.weekdays.length > 0);
         }
-    }, [selectedSchedule, activeStep])
+    }, [schedule, activeStep])
 
     // handlers for stepper logic
     const handleNext = () => {
@@ -114,7 +116,11 @@ export default function JobCreate() {
 
     // handlers for topic selection logic
     const handleSelectTopic = (topicId: number) => {
-        setSelectedTopicId(topicId);
+        setTopicId(topicId);
+    }
+
+    const handleEnterJobName = (jobName: string) => {
+        setJobName(jobName);
     }
 
     const handleFetchParams = (params: Param[]) => {
@@ -124,9 +130,8 @@ export default function JobCreate() {
                 displayName: "Ort",
                 type: "string",
                 optional: false,
-                selected: "",
                 defaultValue: "",
-                possibleValues: null,
+                enumValues: null,
                 subParams: null
             },
             {
@@ -134,8 +139,7 @@ export default function JobCreate() {
                 displayName: "PLZ",
                 type: "number",
                 optional: true,
-                selected: "",
-                possibleValues: null,
+                enumValues: null,
                 defaultValue: "",
                 subParams: null
             },
@@ -144,8 +148,7 @@ export default function JobCreate() {
                 displayName: "Twitter-Wordcloud generieren",
                 type: "subParams",
                 optional: true,
-                selected: false,
-                possibleValues: null,
+                enumValues: null,
                 defaultValue: "",
                 subParams: [
                     {
@@ -153,8 +156,7 @@ export default function JobCreate() {
                         displayName: "Verbotene Wörter",
                         type: "multiString",
                         optional: false,
-                        selected: [],
-                        possibleValues: null,
+                        enumValues: null,
                         defaultValue: "",
                         subParams: null
                     },
@@ -163,8 +165,7 @@ export default function JobCreate() {
                         displayName: "Hashtags",
                         type: "multiString",
                         optional: false,
-                        selected: [],
-                        possibleValues: null,
+                        enumValues: null,
                         defaultValue: "",
                         subParams: null
                     }
@@ -175,8 +176,7 @@ export default function JobCreate() {
                 displayName: "Welche Angaben sollen explizit im Video genannt werden?",
                 type: "subParams",
                 optional: false,
-                selected: false,
-                possibleValues: null,
+                enumValues: null,
                 defaultValue: "",
                 subParams: [
                     {
@@ -184,8 +184,7 @@ export default function JobCreate() {
                         displayName: "Windgeschwindigkeit",
                         type: "boolean",
                         optional: false,
-                        selected: false,
-                        possibleValues: null,
+                        enumValues: null,
                         defaultValue: "",
                         subParams: null
                     },
@@ -194,8 +193,7 @@ export default function JobCreate() {
                         displayName: "Temperatur",
                         type: "boolean",
                         optional: false,
-                        selected: false,
-                        possibleValues: null,
+                        enumValues: null,
                         defaultValue: "",
                         subParams: null
                     }
@@ -208,9 +206,8 @@ export default function JobCreate() {
                 type: "enum",
                 optional: true,
                 defaultValue: "hallo",
-                selected: "",
                 subParams: null,
-                possibleValues: [
+                enumValues: [
                     {
                         value: "hallo",
                         displayValue: "Hallo"
@@ -222,42 +219,40 @@ export default function JobCreate() {
                 ]
             }
         ]
-        setSelectedParams(params2);
-    }
-
-    const handleEnterJobName = (jobName: string) => {
-        setJobName(jobName);
+        setParamList(params2);
+        setParamValues(initSelectedValues(params2));
     }
 
     // handler for param selection logic
     const handleSelectParam = (key: string, value: any) => {
-        const newList = updateSelected(selectedParams, key, value);
-        setSelectedParams(newList);
+        const updated = { ...paramValues }
+        updated[key] = value;
+        setParamValues(updated);
     }
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
-        setSelectedSchedule({...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [],})
+        setSchedule({ ...schedule, daily: true, weekly: false, onDate: false, weekdays: [], })
     }
     const handleSelectWeekly = () => {
-        setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
+        setSchedule({ ...schedule, daily: false, weekly: true, onDate: false, weekdays: [], })
     }
     const handleSelectOnDate = () => {
-        setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
+        setSchedule({ ...schedule, daily: false, weekly: false, onDate: true, weekdays: [], })
     }
     const handleAddWeekDay = (d: Weekday) => {
-        const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
-        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
+        const weekdays: Weekday[] = [...schedule.weekdays, d];
+        setSchedule({ ...schedule, weekdays: weekdays });
     }
     const handleRemoveWeekday = (d: Weekday) => {
-        const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
+        const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
+        setSchedule({ ...schedule, weekdays: weekdays });
     }
     const handleSelectDate = (date: Date | null) => {
-        setSelectedSchedule({...selectedSchedule, date: date})
+        setSchedule({ ...schedule, date: date })
     }
     const handleSelectTime = (time: Date | null) => {
-        setSelectedSchedule({...selectedSchedule, time: time})
+        setSchedule({ ...schedule, time: time })
     }
 
     // stepper texts
@@ -279,23 +274,24 @@ export default function JobCreate() {
                 return (
                     <TopicSelection
                         fetchParamHandler={handleFetchParams}
-                        selectedTopicId={selectedTopicId}
+                        topicId={topicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName}/>
+                        enterJobNameHandler={handleEnterJobName} />
                 );
             case 1:
                 return (
                     <ParamSelection
-                        topicId={selectedTopicId}
-                        params={selectedParams}
+                        topicId={topicId}
+                        values={paramValues}
+                        params={paramList}
                         fetchParamHandler={handleFetchParams}
-                        selectParamHandler={handleSelectParam}/>
+                        selectParamHandler={handleSelectParam} />
                 )
             case 2:
                 return (
                     <ScheduleSelection
-                        schedule={selectedSchedule}
+                        schedule={schedule}
                         selectDailyHandler={handleSelectDaily}
                         selectWeeklyHandler={handleSelectWeekly}
                         selectOnDateHandler={handleSelectOnDate}
@@ -330,16 +326,16 @@ export default function JobCreate() {
                         <div>
                             <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                         </div>
-                        <GreyDivider/>
+                        <GreyDivider />
                         {getSelectPanel(activeStep)}
-                        <GreyDivider/>
+                        <GreyDivider />
                         <div className={classes.paddingSmall}>
                             <span>
-                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
-                                                disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
+                                    disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
@@ -355,67 +351,4 @@ export default function JobCreate() {
             </div>
         </div>
     );
-}
-
-
-// validate selected params
-const validateParams = (params: Param[]): boolean => {
-    return params?.every(p => {
-        switch (p.type) {
-            case "subParams":
-                if ((p.optional && p.selected) || !p.optional) {
-                    return p.subParams === null ? true : validateParams(p.subParams);
-                }
-                break;
-            case "string":
-            case "number":
-                if (!p.optional) {
-                    return p.selected.trim() !== "";
-                }
-                break;
-            case "multiString":
-            case "multiNumber":
-                if (!p.optional) {
-                    return p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
-                }
-                break;
-        }
-        return true;
-    })
-}
-
-
-// update selected value in a list of parameters
-const updateSelected = (params: Param[], key: string, value: any): Param[] => {
-    return params.map(p => {
-        if (p.name === key) {
-            return {...p, selected: value};
-        }
-        if (p.type === "subParams" && p.subParams !== null) {
-            const subParams = updateSelected(p.subParams, key, value);
-            return {...p, subParams: subParams};
-        }
-        return p;
-    })
-}
-
-const trimAllSelected = (params: Param[]): Param[] => {
-    return params.map(p => {
-        switch (p.type) {
-            case "string":
-            case "number":
-                return {...p, selected: p.selected.trim()};
-            case "multiString":
-            case "multiNumber":
-                return {...p, selected: p.selected.map((v: string) => v.trim()).filter((v: string) => v !== "")};
-            case "subParams":
-                if (p.subParams !== null) {
-                    const subParams = trimAllSelected(p.subParams);
-                    return {...p, subParams: subParams};
-                }
-                return p;
-            default:
-                return p;
-        }
-    })
 }
