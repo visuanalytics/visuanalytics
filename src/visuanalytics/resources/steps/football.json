@@ -558,7 +558,8 @@
       "name": "table",
       "key": "_req|Tabelle",
       "except": [
-        "Text"
+        "Text",
+        "Rank_diff"
       ]
     },
     {
