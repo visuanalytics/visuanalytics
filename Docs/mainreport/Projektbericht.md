@@ -447,6 +447,7 @@ Anhand der Werte welche wir aus der https://www.weatherbit.io/api API beziehen, 
 - aktuelle Luftqualität für vorausgewählte Städte in Deutschland
 
 **Technische Details**
+
 |                                        |        Free        |      Starter       |     Developer      |      Advanced      |
 | -------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
 | **Preis**                              |      $0/Monat      |     $35/Monat      |     $160/Monat     |     $470/Monat     |
