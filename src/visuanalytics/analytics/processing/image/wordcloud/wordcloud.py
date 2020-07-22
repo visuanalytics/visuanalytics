@@ -66,26 +66,29 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
                 value = step_data.format(parameter[param])
 
             wordcloud_parameter[param] = value
-    # TODO
-    if step_data.get_data_bool(parameter.get("color_func", False), {}):
-        if step_data.get_data_num(image["color_func"][0], {}) is not None:
-            h = step_data.get_data_num(image["color_func_h"][0], {})
+
+    if wordcloud_parameter["color_func"] is True:
+        cfw_str = step_data.format(image["color_func_words"])
+        cfw = cfw_str.split(" ")
+        if cfw[0] is not None:
+            h = int(cfw[0])
         else:
             h = 245
-        if step_data.get_data_num(image["color_func_s"][1], {}) is not None:
-            s = step_data.get_data_num(image["color_func_s"][1], {})
+        if cfw[1] is not None:
+            s = int(cfw[1])
         else:
             s = 46
-        if step_data.get_data_num(image["color_func_l_start"][2], {}) is not None:
-            l_start = step_data.get_data_num(image["color_func_l_start"][2], {})
+        if cfw[2] is not None:
+            l_start = int(cfw[2])
         else:
             l_start = 5
-        if step_data.get_data_num(image["color_func_l_end"][3], {}) is not None:
-            l_end = step_data.get_data_num(image["color_func_l_end"][3], {})
+        if cfw[3] is not None:
+            l_end = int(cfw[3])
         else:
             l_end = 35
-
         wordcloud_parameter["color_func"] = get_color_func(h, s, l_start, l_end)
+    else:
+        wordcloud_parameter["color_func"] = None
 
     if parameter.get("colormap", ""):
         wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])

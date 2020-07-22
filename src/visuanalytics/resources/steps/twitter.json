@@ -61,7 +61,7 @@
       "type": "wordcloud",
       "text": "{_req|text}",
       "stopwords": "{_conf|stopwords}",
-      "color_func": "_conf|color_func_words",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
@@ -71,6 +71,7 @@
         "max_words": 2000,
         "contour_width": 3,
         "contour_color": "white",
+        "color_func": "{_conf|color_func}",
         "colormap": "{_conf|colormap_words}"
       }
     },
@@ -145,79 +146,54 @@
       "default_value": "viridis"
     },
     {
+      "name": "color_func",
+      "display_name": "Farbverlauf",
+      "possible_values": [
+        {
+          "value": false,
+          "display_value": "Standard verwenden"
+        },
+        {
+          "value": true,
+          "display_value": "andere Farben auswählen"
+        }
+      ],
+      "default_value": false
+    },
+    {
       "name": "color_func_words",
       "display_name": "Farbverlauf der Wörter",
       "possible_values": [
         {
-          "value": [
-            245,
-            46,
-            5,
-            35
-          ],
+          "value": "245 46 5 35",
           "display_value": "Blau"
         },
         {
-          "value": [
-            145,
-            46,
-            15,
-            35
-          ],
+          "value": "145 46 5 35",
           "display_value": "Grün"
         },
         {
-          "value": [
-            353,
-            80,
-            20,
-            50
-          ],
+          "value": "353 80 20 50",
           "display_value": "Rot"
         },
         {
-          "value": [
-            59,
-            80,
-            45,
-            73
-          ],
+          "value": "59 80 45 73",
           "display_value": "Gelb"
         },
         {
-          "value": [
-            0,
-            0,
-            60,
-            100
-          ],
+          "value": "0 0 60 100",
           "display_value": "Grau"
         },
         {
-          "value": [
-            0,
-            0,
-            0,
-            20
-          ],
+          "value": "0 0 0 20",
           "display_value": "Schwarz"
         },
         {
-          "value": [
-            281,
-            66,
-            25,
-            70
-          ],
+          "value": "281 66 25 70",
           "display_value": "Lila"
         }
       ],
-      "default_value": [
-        245,
-        46,
-        5,
-        35
-      ]
+      "default_value": "245 46 5 35"
     },
     {
       "name": "shape",

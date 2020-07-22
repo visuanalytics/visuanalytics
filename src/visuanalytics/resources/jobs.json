@@ -58,20 +58,16 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "15:17",
+        "time": "10:17",
         "daily": true
       },
       "config": {
         "hashtag": "Bundesliga",
         "stopwords": " ",
         "colormap_words": "viridis",
-        "color_func_words": [
-          245,
-          46,
-          5,
-          35
-        ],
-        "figure": "square",
+        "color_func": false,
+        "color_func_words": "145 46 5 35",
+        "figure": "circle",
         "width_wordcloud": 1000,
         "height_wordcloud": 1000,
         "keep_count": 3
