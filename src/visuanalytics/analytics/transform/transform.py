@@ -523,12 +523,12 @@ def counter(values: dict, data: StepData):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        c = Counter(value)
+        most_common = Counter(value).most_common()
 
         if data.get_data_bool(values.get("include_count", False), values):
-            new_value = c.items()
+            new_value = most_common
         else:
-            new_value = list(c)
+            new_value = [elm[0] for elm in most_common]
 
         data.insert_data(new_key, new_value, values)
 
