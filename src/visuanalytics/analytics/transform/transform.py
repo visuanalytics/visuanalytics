@@ -465,56 +465,15 @@ def convert(values: dict, data: StepData):
 
 
 @register_transform
-def occurrences_to_string(values: dict, data: StepData):
-    new_value = ""
-    value = data.get_data(values["keys"], values)
-    range_start = data.format(values.get("range_start", 0), values)
-    range_end = data.format(values.get("range_end", len(value) - 1), values)
-    for i in range(range_start, range_end):
-        dict_key = list(value.keys())[i]
-        dict_value = value[str(dict_key)]
-        for j in range(dict_value):
-            new_value = new_value + " " + dict_key
+def sort(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        new_key = get_new_keys(values, idx)
+        value = data.get_data(key, values)
+        reverse = data.get_data_bool(value.get("reverse", False), values)
 
-    new_key = values.get("new_keys", None)
-    data.insert_data(new_key, new_value, values)
+        new_value = sorted(value, reverse=reverse)
 
-
-@register_transform
-def sort_dict(values: dict, data: StepData):
-    new_key = data.format(values["new_keys"], values)
-    dictionary = data.get_data(values["keys"], values)
-    new_values = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
-    new_values = dict(new_values)
-    data.insert_data(new_key, new_values, values)
-
-
-@register_transform
-def count_occurrences(values: dict, data: StepData):
-    dictionary = {}
-    new_key = data.format(values["new_keys"], values)
-    value = data.get_data(values["keys"], values)
-    list_values = value.split()
-    for each in list_values:
-        if each not in dictionary:
-            dictionary[each] = 0
-    for each_word in dictionary:
-        count = value.count(each_word)
-        dictionary[each_word] = count
-
-    new_values = dictionary
-
-    data.insert_data(new_key, new_values, values)
-
-
-@register_transform
-def keys_to_list(values: dict, data: StepData):
-    new_key = data.format(values["new_keys"], values)
-    value = data.get_data(values["keys"], values)
-    new_values = []
-    for each in value:
-        new_values.append(each)
-    data.insert_data(new_key, new_values, values)
+        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
