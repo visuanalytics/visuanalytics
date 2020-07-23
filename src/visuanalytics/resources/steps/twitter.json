@@ -41,8 +41,7 @@
             {
               "type": "append",
               "key": "_loop|text",
-              "new_key": "_req|text_all",
-              "append_type": "string"
+              "new_key": "_req|text_all"
             }
           ]
         }
@@ -56,82 +55,77 @@
       ]
     },
     {
-      "type": "count_occurrences",
-      "keys": "_req|text_all",
-      "new_keys": "_req|words_dict"
+      "type": "counter",
+      "keys": [
+        "_req|text_all"
+      ]
     },
     {
-      "type": "sort_dict",
-      "keys": "_req|words_dict",
-      "new_keys": "_req|sorted_dict"
+      "type": "sub_lists",
+      "array_key": "_req|text_all",
+      "sub_lists": [
+        {
+          "new_key": "_req|text_top1",
+          "range_start": 0,
+          "range_end": 1
+        },
+        {
+          "new_key": "_req|text_top2",
+          "range_start": 0,
+          "range_end": 2
+        },
+        {
+          "new_key": "_req|text_top3",
+          "range_start": 0,
+          "range_end": 3
+        },
+        {
+          "new_key": "_req|text_top4",
+          "range_start": 0,
+          "range_end": 4
+        },
+        {
+          "new_key": "_req|text_top5",
+          "range_start": 0,
+          "range_end": 5
+        },
+        {
+          "new_key": "_req|text_top10",
+          "range_start": 0,
+          "range_end": 10
+        },
+        {
+          "new_key": "_req|text_top15",
+          "range_start": 0,
+          "range_end": 15
+        },
+        {
+          "new_key": "_req|text_top20",
+          "range_start": 0,
+          "range_end": 20
+        },
+        {
+          "new_key": "_req|text_top25",
+          "range_start": 0,
+          "range_end": 25
+        }
+      ]
     },
     {
-      "type": "keys_to_list",
-      "keys": "_req|sorted_dict",
-      "new_keys": "_req|sorted_list"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 1,
-      "new_keys": "_req|text_top1"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 2,
-      "new_keys": "_req|text_top2"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 3,
-      "new_keys": "_req|text_top3"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 4,
-      "new_keys": "_req|text_top4"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 5,
-      "new_keys": "_req|text_top5"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 10,
-      "new_keys": "_req|text_top10"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 10,
-      "new_keys": "_req|text_top15"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 20,
-      "new_keys": "_req|text_top20"
-    },
-    {
-      "type": "occurrences_to_string",
-      "keys": "_req|sorted_dict",
-      "range_start": 0,
-      "range_end": 25,
-      "new_keys": "_req|text_top25"
+      "type": "join",
+      "keys": [
+        "_req|text_all",
+        "_req|text_top1",
+        "_req|text_top2",
+        "_req|text_top3",
+        "_req|text_top4",
+        "_req|text_top5",
+        "_req|text_top10",
+        "_req|text_top15",
+        "_req|text_top20",
+        "_req|text_top25"
+      ],
+      "delimiter": " "
     }
   ],
   "images": {
