@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 from datetime import datetime
 from pydoc import locate
 from random import randint
@@ -514,3 +515,45 @@ def keys_to_list(values: dict, data: StepData):
     for each in value:
         new_values.append(each)
     data.insert_data(new_key, new_values, values)
+
+
+@register_transform
+def counter(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+
+        c = Counter(value)
+
+        if data.get_data_bool(values.get("include_count", False), values):
+            new_value = c.items()
+        else:
+            new_value = list(c)
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def sub_lists(values: dict, data: StepData):
+    value = data.get_data(values["array_key"], values)
+
+    for sub_list in values["sub_lists"]:
+        start = data.get_data_num(sub_list.get("range_start", 0), values)
+        end = data.get_data_num(sub_list.get("range_end", -1), values)
+        new_key = get_new_key(sub_list)
+
+        new_value = value[start:end]
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def join(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        delimiter = data.format(values.get("delimiter", ""), values)
+
+        new_value = delimiter.join(value)
+
+        data.insert_data(new_key, new_value, values)
