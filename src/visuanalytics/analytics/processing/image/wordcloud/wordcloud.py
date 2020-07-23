@@ -40,7 +40,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
 
 
-def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
@@ -51,7 +51,7 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     :rtype: str
     """
     wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
-    parameter = image.get("parameter", {})
+    parameter = values.get("parameter", {})
 
     for param in parameter:
         if param in wordcloud_parameter:
@@ -88,12 +88,12 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-    if image.get("stopwords", None) is not None:
+    if values.get("stopwords", None) is not None:
         # TODO (max) May change to array (not string) or change delimiter to ','
-        dont_use = step_data.format(image["stopwords"], {})
+        dont_use = step_data.format(values["stopwords"], {})
         wordcloud_parameter["stopwords"] = set(dont_use.split())
 
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(image["text"], {}))
+    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
 
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")

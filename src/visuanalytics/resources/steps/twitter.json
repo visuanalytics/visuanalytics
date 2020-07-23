@@ -95,6 +95,10 @@
       ]
     }
   },
+  "thumbnail": {
+    "type": "created",
+    "name": "wordcloud_with_background"
+  },
   "audio": {
     "audios": {
       "a1": {

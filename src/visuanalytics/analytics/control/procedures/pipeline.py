@@ -11,8 +11,10 @@ from visuanalytics.analytics.processing.image.visualization import generate_all_
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
 from visuanalytics.analytics.transform.transform import transform
+from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
 from visuanalytics.analytics.util.video_delete import delete_old_videos
 from visuanalytics.util import resources
+from visuanalytics.util.resources import get_current_time
 
 logger = logging.getLogger(__name__)
 
@@ -29,10 +31,11 @@ class Pipeline(object):
                1: {"name": "Transform", "call": transform},
                2: {"name": "Storing", "call": storing},
                3: {"name": "Images", "call": generate_all_images},
-               4: {"name": "Audios", "call": generate_audios},
-               5: {"name": "Sequence", "call": link},
-               6: {"name": "Ready"}}
-    __steps_max = 6
+               4: {"name": "Thumbnail", "call": thumbnail},
+               5: {"name": "Audios", "call": generate_audios},
+               6: {"name": "Sequence", "call": link},
+               7: {"name": "Ready"}}
+    __steps_max = 7
 
     def __init__(self, pipeline_id: str, step_name: str, steps_config=None):
         if steps_config is None:
@@ -131,6 +134,7 @@ class Pipeline(object):
             self.__setup()
             data = StepData(self.steps_config, self.id)
 
+            self.__config["out_time"] = get_current_time()
             self.__start_time = time.time()
             logger.info(f"Pipeline {self.id} started!")
 

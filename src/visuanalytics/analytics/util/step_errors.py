@@ -43,6 +43,10 @@ class ImageError(StepError):
     pass
 
 
+class ThumbnailError(StepError):
+    pass
+
+
 class AudioError(StepError):
     pass
 
