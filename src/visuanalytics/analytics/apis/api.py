@@ -138,7 +138,7 @@ def _fetch(values: dict, data: StepData):
     s = requests.session()
     response = s.send(req.prepare())
 
-    if response.status_code != 200:
+    if not response.ok:
         raise APiRequestError(response)
 
     # Get the Right Return Format
