@@ -6,11 +6,18 @@
     "api_key_name": "twitter",
     "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
     "params": {
-      "q": "%23{_conf|hashtag}",
       "count": "100",
       "lang": "de",
       "result_type": "recent"
     },
+    "params_array": [
+      {
+        "key": "q",
+        "array": "_conf|hashtags",
+        "pattern": "%23{_loop}",
+        "delimiter": "+"
+      }
+    ],
     "headers": {
       "Authorization": "Bearer {_api_key}"
     }

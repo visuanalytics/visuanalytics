@@ -5,7 +5,7 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "14:50",
+        "time": "12:48",
         "daily": true
       },
       "config": {
@@ -45,7 +45,7 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "14:46",
+        "time": "12:56",
         "daily": true
       },
       "config": {
@@ -58,11 +58,14 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "14:32",
+        "time": "11:08",
         "daily": true
       },
       "config": {
-        "hashtag": "Bundesliga",
+        "hashtags": [
+          "Bundesliga",
+          "Fußball"
+        ],
         "stopwords": " ",
         "colormap_words": "viridis",
         "color_func_words": true,
