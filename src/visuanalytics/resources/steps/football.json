@@ -556,7 +556,7 @@
     {
       "name": "table",
       "key": "_req|Tabelle",
-      "except": [
+      "exclude": [
         "Text",
         "Rank_diff"
       ]
