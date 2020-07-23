@@ -161,13 +161,13 @@ def _create_query(values: dict, data: StepData):
 
     # Get/Format Method and Headers
     req["method"] = data.format(values.get("method", "get"))
-    req["headers"] = data.format_json(values.get("headers", None), api_key_name, values)
+    req["headers"] = data.deep_format(values.get("headers", None), api_key_name, values)
 
     # Get/Format Body Data
     req["body_type"] = data.format(values.get("body_type", "json"), values)
 
     if req["body_type"].__eq__("json"):
-        req[req["body_type"]] = data.format_json(values.get("body", None), api_key_name, values)
+        req[req["body_type"]] = data.deep_format(values.get("body", None), api_key_name, values)
     else:
         req[req["body_type"]] = data.format(values.get("body", None))
 
@@ -178,7 +178,7 @@ def _create_query(values: dict, data: StepData):
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
 
     # Get/Format Params
-    req["params"] = data.format_json(values.get("params", None), api_key_name, values)
+    req["params"] = data.deep_format(values.get("params", None), api_key_name, values)
     if values.get("params_array", None) is not None:
         _build_params_array(values, data, api_key_name, req)
 
@@ -195,7 +195,7 @@ def _build_params_array(values: dict, data: StepData, api_key_name: str, req: di
 
     for params in values["params_array"]:
         params_array = data.get_data_array(params["array"], values)
-        data.format_array(params_array, api_key_name, values)
+        data.deep_format(params_array, api_key_name, values)
 
         param = "".join(
             [

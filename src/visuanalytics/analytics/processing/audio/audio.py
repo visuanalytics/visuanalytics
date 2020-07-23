@@ -46,7 +46,7 @@ def default(values: dict, data: StepData, config: dict):
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
-        sub_pairs = data.format_json(config.get("sub_pairs", None), None, values)
+        sub_pairs = data.deep_format(config.get("sub_pairs", None), values=values)
 
         if sub_pairs:
             for key in sub_pairs:
