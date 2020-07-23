@@ -133,6 +133,25 @@
         "_req|text_top25"
       ],
       "delimiter": " "
+    },
+    {
+      "type": "length",
+      "keys": [
+        "_conf|hashtags"
+      ],
+      "new_keys": [
+        "_req|hashtags_len"
+      ]
+    },
+    {
+      "type": "join",
+      "keys": [
+        "_conf|hashtags"
+      ],
+      "new_keys": [
+        "_req|text_hashtags"
+      ],
+      "delimiter": ", "
     }
   ],
   "images": {
@@ -455,8 +474,21 @@
             "pattern": "Twitter-Wordcloud. "
           },
           {
-            "type": "text",
-            "pattern": "Auf Twitter wurden folgende Hashtags neben dem {_conf|hashtag} Hashtag verwendet. "
+            "type": "compare",
+            "value_left": "_req|hashtags_len",
+            "value_right": 1,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Auf Twitter wurden folgende Hashtags neben dem {_req|text_hashtags} Hashtag verwendet. "
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "text",
+                "pattern": "Auf Twitter wurden folgende Hashtags neben den Hashtags {_req|text_hashtags} verwendet"
+              }
+            ]
           }
         ]
       }
