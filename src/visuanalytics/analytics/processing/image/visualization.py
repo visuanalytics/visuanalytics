@@ -38,7 +38,8 @@ def generate_all_images(values: dict, step_data: StepData):
     for key, item in enumerate(values["images"]):
         image_func = get_type_func(values["images"][item], IMAGE_TYPES)
 
-        values["images"][item] = image_func(values["images"][item], values["images"], values["presets"], step_data)
+        values["images"][item] = image_func(values["images"][item], values["images"], values.get("presets", {}),
+                                            step_data)
 
 
 @register_image
