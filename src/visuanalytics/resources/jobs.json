@@ -65,7 +65,10 @@
         "daily": true
       },
       "config": {
-        "hashtag": "Bundesliga",
+        "hashtags": [
+          "Bundesliga",
+          "Fußball"
+        ],
         "thumbnail": true,
         "stopwords": "Bundesliga",
         "colormap_words": "viridis",

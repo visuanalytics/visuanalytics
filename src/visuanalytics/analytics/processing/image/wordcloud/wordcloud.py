@@ -1,7 +1,8 @@
+import numbers
 import random
 
 import numpy as np
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
@@ -52,21 +53,28 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
     parameter = values.get("parameter", {})
 
-    for each in wordcloud_parameter:
-        if each in parameter:
-            wordcloud_parameter[each] = step_data.format(parameter[each])
+    for param in parameter:
+        if param in wordcloud_parameter:
+            if isinstance(wordcloud_parameter[param], bool):
+                value = step_data.get_data_bool(parameter[param], {})
+            elif isinstance(wordcloud_parameter[param], numbers.Number):
+                value = step_data.get_data_num(parameter[param], {})
+            else:
+                value = step_data.format(parameter[param])
+
+            wordcloud_parameter[param] = value
 
     if step_data.get_data_bool(parameter.get("color_func", False), {}):
         wordcloud_parameter["color_func"] = color_func
 
-    if step_data.get_data(parameter["colormap"], {}):
-        wordcloud_parameter["colormap"] = step_data.get_data(parameter["colormap"], {})
+    if parameter.get("colormap", ""):
+        wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])
 
-    if parameter["figure"] is not None:
-        figure = step_data.get_data(parameter["figure"], {})
+    if parameter.get("figure", None) is not None:
+        figure = step_data.format(parameter["figure"], {})
         if figure == "circle":
-            x0 = step_data.get_data(parameter["width"], {})
-            y0 = step_data.get_data(parameter["height"], {})
+            x0 = step_data.get_data_num(parameter["width"], {})
+            y0 = step_data.get_data_num(parameter["height"], {})
             x, y = np.ogrid[:x0, :y0]
 
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2
@@ -80,13 +88,12 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-    stopwords = set(STOPWORDS)
-    dont_use = step_data.get_data(values["stopwords"], {})
-    stopwords.add(dont_use)
-    list_dont_use = dont_use.split()
-    STOPWORDS.update(list_dont_use)
+    if image.get("stopwords", None) is not None:
+        # TODO (max) May change to array (not string) or change delimiter to ','
+        dont_use = step_data.format(values["stopwords"], {})
+        wordcloud_parameter["stopwords"] = set(dont_use.split())
 
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(values["text"], {}))
+    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
 
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")

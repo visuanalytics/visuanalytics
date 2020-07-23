@@ -11,6 +11,7 @@ Welcome to VisuAnalytics's documentation!
    :caption: Inhalt
 
    usage/installation
+   steps/stepsConfig
    modules/modules
 
 Indizes und Tabellen
