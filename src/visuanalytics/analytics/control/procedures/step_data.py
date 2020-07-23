@@ -216,30 +216,35 @@ class StepData(object):
 
         return self.__formatter.format(value_string, data)
 
-    def format_array(self, array: dict, api_key_name, values: dict):
-        if array is None:
-            return
-        for idx, value in enumerate(array):
-            array[idx] = self.format_api(value, api_key_name, values)
-
-        return array
-
-    def format_json(self, json: dict, api_key_name, values: dict):
+    def deep_format(self, config, api_key_name=None, values: dict = None):
         """
-        Wendet :func:`format_api` auf alle Elemente eines Dictionaries an.
+        Ersetzt in allen Strings alle Werte in `{}` duch den Wert, dem man aus :func:`get_data` bekommt.
 
-        :param json: Dictionary das formatiert werden soll.
-        :param api_key_name: Name des Config-Eintrages für den Api key.
+        Es werden alle elemente des Dictionaries/Arrays durchlaufen und bei debarf ersetzt.
+        Hierzu wird die Funktion :func:`format_api` verwendet.
+
+        :param config: Configurations Dict/Array/String/Num
+        :param api_key_name: Name des ApiKeys
         :param values: Werte aus der JSON-Datei.
-        :return: Formatiertes input Dictionary
+        :return: Formattierter input
+        :raises: StepKeyError
         """
-        if json is None:
-            return json
+        if config is None or isinstance(config, numbers.Number):
+            return config
 
-        for key in json:
-            json[key] = self.format_api(json[key], api_key_name, values)
+        if values is None:
+            values = {}
 
-        return json
+        if isinstance(config, dict):
+            for key in config:
+                config[key] = self.deep_format(config[key], api_key_name, values)
+            return config
+        if isinstance(config, list):
+            for idx, value in enumerate(config):
+                config[idx] = self.deep_format(value, api_key_name, values)
+            return config
+
+        return self.format_api(config, api_key_name, values)
 
     def format(self, value_string, values=None):
         """
