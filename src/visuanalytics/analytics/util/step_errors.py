@@ -13,18 +13,26 @@ class StepError(Exception):
 
     def __init__(self, values):
         self.type = values.get("type", None)
+        self.desc = values.get("description", None)
         self.values = values
 
+    def __type_msg(self, msg: str):
+        return f"{msg}'{self.type}', " if self.type is not None else ""
+
     def __str__(self):
+        # Build Start messages
+        pos_msg = f"On '{self.desc}' {self.__type_msg('with Type ')}" if self.desc is not None else self.__type_msg(
+            'On Type ')
+
         if isinstance(self.__cause__, (StepKeyError, StepTypeError)):
             # Invalid Key
-            return f"On Type '{self.type}', {self.__cause__}"
+            return f"{pos_msg}{self.__cause__}"
         elif isinstance(self.__cause__, KeyError):
             # Field for type is missing
-            return f"On Type '{self.type}', Entry {self.__cause__} is missing."
+            return f"{pos_msg}Entry {self.__cause__} is missing."
 
         # Other errors
-        return f"On Type '{self.type}', \"{type(self.__cause__).__name__}: {self.__cause__}\" was raised"
+        return f"{pos_msg}'{type(self.__cause__).__name__}: {self.__cause__}' was raised"
 
 
 class APIError(StepError):
