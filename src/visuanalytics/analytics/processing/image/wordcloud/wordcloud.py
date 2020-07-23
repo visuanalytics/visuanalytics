@@ -88,7 +88,7 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-    if image.get("stopwords", None) is not None:
+    if values.get("stopwords", None) is not None:
         # TODO (max) May change to array (not string) or change delimiter to ','
         dont_use = step_data.format(values["stopwords"], {})
         wordcloud_parameter["stopwords"] = set(dont_use.split())
@@ -98,11 +98,4 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)
-
-    if values.get("thumbnail", False) and step_data.get_config("thumbnail"):
-        thumbnail = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"),
-                                           ".png")
-        image.save(thumbnail)
-        values["thumbnail"] = thumbnail
-
     return file

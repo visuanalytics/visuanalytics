@@ -84,7 +84,6 @@
     "wordcloud_with_background": {
       "type": "pillow",
       "path": "football/background.png",
-      "thumbnail": true,
       "overlay": [
         {
           "description": "Wordcloud",
@@ -95,6 +94,10 @@
         }
       ]
     }
+  },
+  "thumbnail": {
+    "type": "created",
+    "name": "wordcloud_with_background"
   },
   "audio": {
     "audios": {

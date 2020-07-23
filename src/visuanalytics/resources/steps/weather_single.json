@@ -869,7 +869,6 @@
     "weather3": {
       "type": "pillow",
       "path": "weather/Ort_2day2.png",
-      "thumbnail": true,
       "overlay": [
         {
           "description": "icon",
@@ -1746,6 +1745,10 @@
         }
       ]
     }
+  },
+  "thumbnail": {
+    "type": "created",
+    "name": "weather3"
   },
   "audio": {
     "audios": {

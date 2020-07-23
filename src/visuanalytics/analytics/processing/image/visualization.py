@@ -69,11 +69,6 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     Image.composite(img1, source_img, img1).save(file)
-
-    if values.get("thumbnail", False) and step_data.get_config("thumbnail"):
-        file2 = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"), ".png")
-        Image.composite(img1, source_img, img1).save(file2)
-        values["thumbnail"] = file2
     return file
 
 

@@ -16,12 +16,13 @@ def delete_on_time(jobs: dict, output_path: str):
     :param jobs: Eine Liste aller Jobs
     :param output_path: Der Pfad zum Output Ordner
     """
-    logger.info("Checking if Videos needs to be deleted")
+    logger.info("Checking if Videos or Images needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     for file in files:
         for job in jobs["jobs"]:
             if file.startswith(job["name"]):
-                file_date = file[len(job["name"]) + 1:len(file) - 4]
+                file_without_thumb = file.replace("_thumbnail", "")
+                file_date = file_without_thumb[len(job["name"]) + 1:len(file_without_thumb) - 4]
                 date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
                 time = job["schedule"].get("removal_time", {})
                 if time != {}:
@@ -40,7 +41,7 @@ def delete_old_videos(job_name: str, output_path: str, count: int):
     :param output_path: Der Pfad zum Output Ordner
     :param count: Die Anzahl an Video die erhalten bleiben sollen
     """
-    logger.info("Checking if Videos needs to be deleted")
+    logger.info("Checking if Videos or Images needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     files.sort(reverse=True)
     delete = [[0, False], [0, False]]

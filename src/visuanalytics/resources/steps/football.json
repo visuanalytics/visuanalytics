@@ -1218,7 +1218,6 @@
     "football9": {
       "type": "pillow",
       "image_name": "football8",
-      "thumbnail": true,
       "overlay": [
         {
           "description": "Weißes-bild",
@@ -2671,6 +2670,24 @@
               "path": "football/equal.png"
             }
           ]
+        }
+      ]
+    }
+  },
+  "thumbnail": {
+    "type": "new",
+    "image": {
+      "type": "pillow",
+      "path": "football/Table_1.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 500,
+          "preset": "football_2",
+          "pattern": "{league_name}"
         }
       ]
     }

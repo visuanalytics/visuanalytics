@@ -34,6 +34,14 @@ Date Format in welchem unsere Datein abgespeichert werden
 """
 
 
+def get_current_time():
+    """
+    Gibt die aktuelle Uhrzeit in Form eines Strings zurück
+    :return: Uhrzeit
+    """
+    return datetime.now().strftime(DATE_FORMAT)
+
+
 def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
 
@@ -196,7 +204,7 @@ def path_from_root(path):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), ROOT_LOCATION, path))
 
 
-def get_out_path(out_path, job_name, format=".mp4"):
+def get_out_path(time, out_path, job_name, format=".mp4", thumbnail=False):
     """
     Liefert die aktuelle Uhrzeit in Form eines String zurück
 
@@ -206,7 +214,10 @@ def get_out_path(out_path, job_name, format=".mp4"):
     :type job_name: str
     :param format: Format in das gespeichert werden soll
     :type format: str
+    :param thumbnail: Ob es sich um ein Thumbnail handelt
     :return: Die aktuelle Uhrzeit für den Dateinamen zum erstellen des Videos
     :rtype: str
     """
-    return path_from_root(os.path.join(out_path, f"{job_name}-{datetime.now().strftime(DATE_FORMAT)}{format}"))
+    if thumbnail:
+        return path_from_root(os.path.join(out_path, f"{job_name}-{time}_thumbnail{format}"))
+    return path_from_root(os.path.join(out_path, f"{job_name}-{time}{format}"))
