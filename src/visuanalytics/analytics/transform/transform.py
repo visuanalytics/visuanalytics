@@ -382,14 +382,15 @@ def loop(values: dict, data: StepData):
 def add_data(values: dict, data: StepData):
     """Fügt Daten zu einem neuen Key hinzu.
 
-    Fügt die unter `"pattern"` angegebenen Daten zu einem neuen Key hinzu.
+    Fügt die unter `"data"` angegebenen Daten zu einem neuen Key hinzu.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for new_key in values["new_keys"]:
-        value = data.format(values["pattern"], values)
+        value = data.deep_format(values["data"], values=values)
         data.insert_data(new_key, value, values)
+        print(value, type(value))
 
 
 @register_transform
