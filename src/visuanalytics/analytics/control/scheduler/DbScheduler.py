@@ -36,8 +36,6 @@ class DbScheduler(Scheduler):
                 self.__run_jobs(row["job_id"])
                 continue
 
-            print("daily", row["daily"])
-
             # check if daily is true
             if row["daily"]:
                 self.__run_jobs(row["job_id"])

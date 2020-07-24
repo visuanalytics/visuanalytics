@@ -9,6 +9,7 @@
         "daily": true
       },
       "config": {
+        "thumbnail": true,
         "keep_count": 3
       }
     },
@@ -25,6 +26,7 @@
         }
       },
       "config": {
+        "thumbnail": true,
         "keep_count": 3,
         "city_name": "Biebertal",
         "p_code": "35444",
@@ -49,6 +51,7 @@
         "daily": true
       },
       "config": {
+        "thumbnail": true,
         "league": "1",
         "keep_count": 3
       }
@@ -58,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "14:30",
+        "time": "15:11",
         "daily": true
       },
       "config": {
@@ -66,8 +69,8 @@
           "Bundesliga",
           "Fußball"
         ],
-        "thumbnail": true,
         "stopwords": " ",
+        "thumbnail": true,
         "colormap_words": "viridis",
         "color_func": true,
         "color_func_words": "145 46 5 35",
