@@ -2674,6 +2674,24 @@
       ]
     }
   },
+  "thumbnail": {
+    "type": "new",
+    "image": {
+      "type": "pillow",
+      "path": "football/Table_1.png",
+      "overlay": [
+        {
+          "description": "Liga-Name",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 500,
+          "preset": "football_2",
+          "pattern": "{league_name}"
+        }
+      ]
+    }
+  },
   "audio": {
     "audios": {
       "a0": {
