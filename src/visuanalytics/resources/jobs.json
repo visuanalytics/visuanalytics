@@ -76,11 +76,9 @@
         "figure": "square",
         "width_wordcloud": 1000,
         "height_wordcloud": 1000,
-        "fix_names": [
-          "_1",
-          "_2",
-          "_3"
-        ]
+        "fix_names": {
+          "count": 3
+        }
       }
     }
   ]

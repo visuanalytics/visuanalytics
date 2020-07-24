@@ -149,9 +149,14 @@ class Pipeline(object):
             self.__current_step = self.__steps_max
 
             if self.steps_config.get("fix_names", None) is not None:
-                delete_fix_name_videos(self.steps_config["job_name"], self.steps_config["fix_names"],
+                fix_names = []
+                if self.steps_config["fix_names"].get("names", None) is None:
+                    for i in range(1, self.steps_config["fix_names"].get("count", 3) + 1):
+                        fix_names.append(f"_{i}")
+                else:
+                    fix_names = self.steps_config["fix_names"]["names"]
+                delete_fix_name_videos(self.steps_config["job_name"], fix_names,
                                        self.steps_config["output_path"], self.__config)
-
             self.__end_time = time.time()
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
