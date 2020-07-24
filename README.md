@@ -47,7 +47,7 @@ Wenn `testing` aktiviert ist wird die *logging Ausgabe* auf Info Level aktiviert
 
 `audio`:
 
-Hier kan die Konfiguration für die Audio generation angegeben werden, eine Erklärung hierfür befindet sich '[hier](Docs/steps/audio-apis.md)'.
+Hier kan die Konfiguration für die Audio generation angegeben werden, eine Erklärung hierfür befindet sich [hier](Docs/usage/audio-apis.md).
 
 #### Jobs.json
 

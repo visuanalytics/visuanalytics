@@ -17,7 +17,8 @@ Die Konfigurationsdatei für das Programm hat folgendes Format:
     "testing": false,
     "h264_nvenc": false
   },
-  "testing": false
+  "testing": false,
+  "audio": {}
 }
 ~~~
 
@@ -43,6 +44,10 @@ Die Konfiguration, die für jeden Job gelten soll (Die Konfigurationen in [jobs.
 `testing`:
 
 Wenn `testing` aktiviert ist, wird die *logging Ausgabe* auf Info Level aktiviert.
+
+`audio`:
+
+Hier kan die Konfiguration für die Audio generation angegeben werden, eine Erklärung hierfür befindet sich [hier](audio-apis.md).
 
 
 #### Jobs.json
