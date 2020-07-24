@@ -69,7 +69,7 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
+    wordcloud_parameter = dict(WORDCLOUD_DEFAULT_PARAMETER)
     parameter = values.get("parameter", {})
 
     for param in parameter:
@@ -84,7 +84,7 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter[param] = value
 
     if bool(wordcloud_parameter.get("color_func", False)):
-        cfw = DEFAULT_COLOR_FUNC_VALUES
+        cfw = list(DEFAULT_COLOR_FUNC_VALUES)
 
         if "color_func_words" in values:
             cfw_list = step_data.format(values["color_func_words"]).split(" ")
