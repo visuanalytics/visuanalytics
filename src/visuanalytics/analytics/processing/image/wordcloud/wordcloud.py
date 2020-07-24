@@ -84,11 +84,13 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter[param] = value
 
     if bool(wordcloud_parameter.get("color_func", False)):
-        cfw_list = step_data.format(image.get("color_func_words", [])).cfw_str.split(" ")
         cfw = DEFAULT_COLOR_FUNC_VALUES
 
-        for idx, c in enumerate(cfw_list):
-            cfw[idx] = int(c)
+        if "color_func_words" in values:
+            cfw_list = step_data.format(values["color_func_words"]).split(" ")
+
+            for idx, c in enumerate(cfw_list):
+                cfw[idx] = int(c)
 
         wordcloud_parameter["color_func"] = get_color_func(*cfw)
     else:
