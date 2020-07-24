@@ -16,7 +16,7 @@ def main():
     else:
         # Runt with Flask Server and DBScheduler
         app = server.create_app()
-        app.run(debug=True)
+        app.run(debug=True, use_reloader=False)
 
 
 if __name__ == '__main__':
