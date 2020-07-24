@@ -8,15 +8,16 @@ Die Oberfläche besteht aus mehreren Components, welche je nach Bedarf geladen u
 <figure>
   <img width="90%" src="../_static/images/documentation/ReactDiagramm.png"/>
   <figcaption>Abbildung 1</figcaption>
-</figure> 
+</figure>  
+<br> 
 
 #### index
-Die index.html wird vom Browser geladen. Diese beinhaltet den div-Container „root“:
+Die `index.html` wird vom Browser geladen. Diese beinhaltet den div-Container `root`:
 ~~~HTML
 <div id="root"></div>
 ~~~
 
-In der index.tsx wird mit Hilfe der ID, der Component „App“ in den Container geladen
+In der `index.tsx` wird mit Hilfe der ID, der Component `App` in den Container geladen
 
 ~~~tsx
 ReactDOM.render(
@@ -28,9 +29,9 @@ ReactDOM.render(
 ~~~
 
 #### App
-Der Component „App###“ besteht aus einem „Header“ und einem „Main“ Component. 
+Der Component `App` besteht aus einem `Header` und einem `Main` Component. 
 
-Der „Header“ steht immer am Oberen Bildschirmrand daher liegt dieser über „Main“. In „Main“ wird der Inhalt der Seite geladen.
+Der `Header` steht immer am Oberen Bildschirmrand daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
 
 ~~~html
 <ComponentProvider>
@@ -44,9 +45,10 @@ Der „Header“ steht immer am Oberen Bildschirmrand daher liegt dieser über �
 <figure>
   <img width="100%" src="../_static/images/documentation/Header.png"/>
   <figcaption>Abbildung 2</figcaption>
-</figure>
+</figure>  
+<br>
 
-Der Component „Header“ stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programmes man sich befindet.
+Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programmes man sich befindet.
 
 #### Main
 
@@ -57,7 +59,7 @@ export const Main = () => {
 };
 ~~~
 
-„Main“ zeigt immer den aktuellen Component an. Soll sich also die Seite beim Klicken auf einen Button verändern, so muss nur der aktuelle Component (current.component) gesetzt werden.
+`Main` zeigt immer den aktuellen Component an. Soll sich also die Seite beim Klicken auf einen Button verändern, so muss nur der aktuelle Component (`current.component`) gesetzt werden.
 
 #### Home
 
@@ -71,7 +73,7 @@ export const Main = () => {
 
 ~~~
 
-„Home“ stellt die Startseite dar. Auf dieser wird eine Liste aller angelegten Jobs angezeigt. Dazu gibt es den Component „JobList“.
+`Home` stellt die Startseite dar. Auf dieser wird eine Liste aller angelegten Jobs angezeigt. Dazu gibt es den Component `JobList`.
 
 #### JobList
 
@@ -83,20 +85,21 @@ export const Main = () => {
 }
 ~~~
 
-In dem Component „JobList“ wird pro angelegten Job ein Component von „JobItem“ generiert.
+In dem Component `JobList` wird pro angelegten Job ein Component von `JobItem` generiert.
 
 #### JobItem
 <figure>
   <img width="100%" src="../_static/images/documentation/Item.png"/>
   <figcaption>Abbildung 3</figcaption>
-</figure>
+</figure>  
+<br>
 
 Ein JobItem besteht aus den genaueren Informationen zu einem Job. 
 
 #### JobCreate
-Möchte man einen neuen Job erstellen, so wird bei dem klicken auf den dazugehörigen Button der Component „JobCreate“ in den Main-Component geladen.
+Möchte man einen neuen Job erstellen, so wird bei dem klicken auf den dazugehörigen Button der Component `JobCreate` in den Main-Component geladen.
 
-~~~tsx
+~~~ts
 onClick={() => components?.setCurrent("jobpage")}
 ~~~
 
@@ -106,14 +109,16 @@ Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
   <img width="100%" src="../_static/images/documentation/stepper.png"/>
   <figcaption>Abbildung 4</figcaption>
 </figure>
+<br>
 
 #### TopicSelection
-Die erste Seite „TopicSelection“ dient zur Auswahl des Themas. Dort kann man sich für eines der vorgegebenen Themen entscheiden und einen Namen für den Job festlegen.
+Die erste Seite `TopicSelection` dient zur Auswahl des Themas. Dort kann man sich für eines der vorgegebenen Themen entscheiden und einen Namen für den Job festlegen.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/topic.png"/>
   <figcaption>Abbildung 5</figcaption>
-</figure>
+</figure>  
+<br>
 
 #### ParamSelection
 Die zweite Seite des Steppers gibt einem die Möglichkeit je nach Thema individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden.
@@ -121,7 +126,8 @@ Die zweite Seite des Steppers gibt einem die Möglichkeit je nach Thema individu
 <figure>
   <img width="70%" src="../_static/images/documentation/param.png"/>
   <figcaption>Abbildung 6</figcaption>
-</figure>
+</figure>  
+<br>
 
 ScheduleSelection
 Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generiert werden soll.
@@ -133,7 +139,8 @@ Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generi
 <figure>
   <img width="70%" src="../_static/images/documentation/schedule.png"/>
   <figcaption>Abbildung 7</figcaption>
-</figure>
+</figure>  
+<br>
 
 ## Web-API
 ### Datenbank
@@ -141,7 +148,7 @@ Für die Datenbank wird eine SQLite Datenbank verwendet.
 
 _(Eine spätere Anbindung an einen SQL-Server ist aber einfach möglich.)_
 
-Die Tabelle „job“ beinhaltet einen Job für eine Videoreihe. Diese hat die ID für seine Schritte gespeichert. In der Tabelle „schedule“ wird die Zeit gespeichert, an welcher der Job ausgeführt werden soll. z.B.: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank, 
+Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Diese hat die ID für seine Schritte gespeichert. In der Tabelle `schedule` wird die Zeit gespeichert, an welcher der Job ausgeführt werden soll. z.B.: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank, 
 
 date = null,  
 time = 12:00,  
@@ -155,14 +162,16 @@ In der Tabelle job_config stehen die Configwerte, die bei der Ausführung des Jo
 <figure>
   <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
   <figcaption>Abbildung 8</figcaption>
-</figure>
+</figure>  
+<br>
 
 ## Scheduler
 
 <figure>
   <img width="70%" src="../_static/images/documentation/SchedulerClass.png"/>
   <figcaption>Abbildung 8</figcaption>
-</figure>
+</figure>  
+<br>
 
 Der Scheduler prüft minütlich, ob ein neuer Job ausgeführt werden soll. 
 
