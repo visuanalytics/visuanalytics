@@ -1074,6 +1074,117 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
+### counter
+<!-- TODO Description-->
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "counter",
+  "keys": [
+    "_req|text_all"
+  ],
+  "new_keys": [
+    "_req|text_all_counter"
+  ]
+}
+```
+
+`keys`:
+
+<!--TODO-->
+
+`new_keys`:
+
+<!--TODO-->
+
+### sub_lists
+<!-- TODO Description-->
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "sub_lists",
+  "array_key": "_req|text_all_counter",
+  "sub_lists": [
+    {
+      "new_key": "_req|text_top1",
+      "range_start": 0,
+      "range_end": 1
+    },
+    {
+      "new_key": "_req|text_top2",
+      "range_start": 0,
+      "range_end": 2
+    }
+  ]
+}
+```
+
+`keys`:
+
+<!--TODO-->
+
+`new_keys`:
+
+<!--TODO-->
+
+### join
+
+<!-- TODO Description-->
+
+~~~json
+{
+  "type": "join",
+  "keys": [
+    "_conf|hashtags"
+  ],
+  "new_keys": [
+    "_req|text_hashtags"
+  ],
+  "delimiter": ", "
+}
+~~~
+
+`keys`:
+
+<!--TODO-->
+
+`new_keys`:
+
+<!--TODO-->
+
+`delimiter`:
+
+<!--TODO-->
+
+### length
+
+<!-- TODO Description-->
+
+~~~json
+{
+  "type": "length",
+  "keys": [
+    "_conf|hashtags"
+  ],
+  "new_keys": [
+    "_req|hashtags_len"
+  ]
+},
+~~~
+
+`keys`:
+
+<!--TODO-->
+
+`new_keys`:
+
+<!--TODO-->
+
+
 ## Images
 
 Der Abschnitt `images` beinhaltet die Konfigurationen, für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
