@@ -7,7 +7,7 @@
 ### Zusammenfassung
 Das Ziel der Planungsphase war es, das Projekt zu strukturieren. Dies bedeutete konkret:
 - **Zeitmanagement ausarbeiten**  
-Dazu wurde der vorgegebene Zeitraum so aufgeteilt, dass ein möglichst effektives Arbeiten ermöglicht wird. Die genauere Erläuterung dieser Struktur finden sie hier.
+Dazu wurde der vorgegebene Zeitraum so aufgeteilt, dass ein möglichst effektives Arbeiten ermöglicht wird. Die genauere Erläuterung dieser Struktur finden sie [hier](../mainreport/Projektbericht.md).
 - **Festlegen der einzusetzenden Technologien**  
 Jedes Teammitglied hat recherchiert, welche Technologien für dieses Projekt zum Einsatz kommen könnten und wie diese zu Verwenden sind. Bei einem Meeting wurden diese dann dem restlichen Team vorgestellt und sich auf einige festgelegt. Welche Technologien sin diesem Projekt verwendet werden, finden sie in dem Pflichtenheft. 
 - **Lastenheft erstellen**  

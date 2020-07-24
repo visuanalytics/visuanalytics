@@ -160,7 +160,7 @@ Der Name des Branches ist wie folgt aufgebaut:
 
 _Pull Request erstellen_
 
-Wird ein Issue in die Spalte `Review` gezogen, wird automatisch ein `Pull Request` erstellt. Dieser beinhaltet die Nachricht resolves #[issueNummer], somit wird beim mergen der Issue automatisch geschlossen.
+Wird ein Issue in die Spalte `Review` gezogen, wird automatisch ein `Pull Request` erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim mergen der Issue automatisch geschlossen.
 ##### Einrichtung
 
 _Projekt hinzufügen_
@@ -198,14 +198,14 @@ Die Datei muss im master(default) branch liegen.
 _Github App erstellen_
 
 Um mit dieser Action auch andere Actions auslösen zu können, muss eine Github App erstellt werden, die dann zur Authentifizierung verwendet wird. 
-1.	Github App erstellen (siehe hier)
+1.	Github App erstellen (siehe [hier](https://developer.github.com/apps/building-github-apps/creating-a-github-app/))
 2.	App Berechtigungen einstellen:
-    - Contents: read & write
-    - Issues: read & write
-    - Metadata: read-only
-    - Pull request: read & write
-    - Projects: read-only
-3.	App zum Repository hinzufügen (siehe hier)
+    - Contents: `read & write`
+    - Issues: `read & write`
+    - Metadata: `read-only`
+    - Pull request: `read & write`
+    - Projects: `read-only`
+3.	App zum Repository hinzufügen (siehe [hier](https://developer.github.com/apps/installing-github-apps/))
 4.	Secrets anlegen  
 Es müssen zwei Secrets für das Repository angelegt werden:
     1.	Name: APP_ID
@@ -243,7 +243,7 @@ Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action d
 Bei einem Pull request werden automatisierte Tests durchgeführt.
 ##### Einrichtung
 _Docker Dateien erstellen:_
-- Dockerfile für Projekt erstellen (siehe hier)
+- Dockerfile für Projekt erstellen (siehe [hier](https://docs.docker.com/engine/reference/builder/))
 - Docker Test Datei erstellen: docker-compose.test.yml (im gleichen Ordner wie das Dockerfile)
 - Datei mit folgendem Inhalt ausfüllen:
 
@@ -432,7 +432,7 @@ Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Webs
 - Anhand dieser Informationen sollen Grafiken erstellt werden, welche diese Informationen veranschaulichen. Ebenfalls soll aus den gewonnenen Informationen ein Fließtext generiert werden, welcher die Informationen erläutert. Aus diesem Text soll dann eine Audio-Datei generiert werden.
 - Abschließend sollen die Grafiken sowie die Audio-Datei zu einem Video zusammengefügt werden
 
-Die technische Umsetzung der einzelnen Bestimmungen finden Sie unter hier.
+Die technische Umsetzung der einzelnen Bestimmungen finden Sie [hier](#technische-umsetzung).
 ### Benutzerschnittstellen
 Das Produkt ist Betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
 
@@ -532,7 +532,7 @@ Die Daten aus dem im Preprocessing angelegtem Dictionary, werde nun ebenfalls in
 
 Um aus diesem generierten Text eine mp3-Datei zu erzeugen, benutzen wir die Python-Bibliothek `gTTS`.
 
-Einen Vergleich zwischen `gTTS` und `pico2wave` finden Sie hier.
+Einen Vergleich zwischen `gTTS` und `pico2wave` finden Sie [hier](#vergleich-von-gtts-mit-pico2wave).
 
 #### Datenvisualisierung
 Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte), können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
