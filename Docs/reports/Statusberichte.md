@@ -33,8 +33,8 @@ Außerdem wurde sich mit den Lizenzen beschäftigt, um Wetter Icons oder andere 
 
 ### Aktueller Stand der Implementierung
 - Die Grundstruktur des Servers ist aufgesetzt.
-- Die Wetterdaten der API werden ausgelesen und in einem „Dictionary“ abgelegt.
-- „Lückentexte“ erstellt, um die Daten aus der API in diese einzufügen und einen Fließtext daraus zu bekommen. Mithilfe eines „Dictionary“ Mehrere Sätze pro Stadt oder ähnlichem angelegt, um variable Texte zu generieren.
+- Die Wetterdaten der API werden ausgelesen und in einem `Dictionary` abgelegt.
+- `Lückentexte` erstellt, um die Daten aus der API in diese einzufügen und einen Fließtext daraus zu bekommen. Mithilfe eines `Dictionary` Mehrere Sätze pro Stadt oder ähnlichem angelegt, um variable Texte zu generieren.
 - Wetterdaten sowie Icons der API über die erstellten Grafiken legen, um daraus ein Video zusammen zu schneiden.
 
 ---
@@ -85,7 +85,7 @@ Auch wurde sich mit der Zeit-API auseinandergesetzt (Wie kommt man an die releva
 ### Ziel für den nächsten Sprint
 - Wetterbericht abschließen
 - Zeit-API implementieren
-- Implementierung der Benutzeroberfläche mit „React“ und „Material-UI“ beginnen
+- Implementierung der Benutzeroberfläche mit `React` und `Material-UI` beginnen
 
 ---
 
@@ -93,7 +93,7 @@ Auch wurde sich mit der Zeit-API auseinandergesetzt (Wie kommt man an die releva
 ### Zusammenfassung
 In diesem Sprint wurde die Implementierung des Wetterberichtes abgeschlossen. Dazu wurden noch Verbesserungen an den Grafiken und Texten vorgenommen.
 
-Des Weiteren wurde mit der Implementierung der „ZEIT“ API begonnen. Das Ziel dieser Implementierung soll es sein, Wordclouds zu jedem Monat in einem bestimmten Zeitraum zu generieren, um die Veränderung dieser Wordclous über diese Monate darzustellen.
+Des Weiteren wurde mit der Implementierung der `ZEIT` API begonnen. Das Ziel dieser Implementierung soll es sein, Wordclouds zu jedem Monat in einem bestimmten Zeitraum zu generieren, um die Veränderung dieser Wordclous über diese Monate darzustellen.
 
 Auch die Implementierung der Benutzeroberfläche wurde begonnen. Hierzu wurden die benötigten Komponenten in React implementiert.
 
@@ -106,7 +106,7 @@ Auch die Implementierung der Benutzeroberfläche wurde begonnen. Hierzu wurden d
 
 ### Ziel für den nächsten Sprint
 - Docker File updaten
-- Erstes Video aus der „ZEIT“ API generieren
+- Erstes Video aus der `ZEIT` API generieren
 - Benutzeroberfläche ausbauen
 
 ---
@@ -115,9 +115,9 @@ Auch die Implementierung der Benutzeroberfläche wurde begonnen. Hierzu wurden d
 ### Zusammenfassung
 In diesem Sprint lag der Fokus auf der Fertigstellung des Dockercontainers und somit des ersten Release (Release 0.1.0). Dieser wurde erfolgreich fertiggestellt und steht in dem Repository:
 
-https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
+[https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
 
-zur Verfügung. Eine genaue Erläuterung, wie dieser zu verwenden ist, ist der Datei „Bericht_Data-Analytics“ zu entnehmen.
+zur Verfügung. Eine genaue Erläuterung, wie dieser zu verwenden ist, ist der Datei `Bericht_Data-Analytics` zu entnehmen.
 
 Des Weiteren wurde in diesem Sprint ein neuer interner Aufbau des Programmes besprochen und mit der Implementierung begonnen. Es werden nun alle variablen Daten, welche für jede API benötigt werden, in einer vordefinierten JSON-Datei angelegt. Das Programm liest diese Informationen aus und kann anhand dieser, die Texte, Grafiken und Videos erstellen.
 
@@ -156,7 +156,7 @@ Das Programm wurde in diesem Sprint, so weiterentwickelt, dass alle Funktionen u
 
 ## Statusbericht 23.06.2020 (Sprint 7)
 ### Zusammenfassung
-In der ersten Hälfte des Sprints lag der Fokus auf der Vorbereitung der Präsentation des Projekts. In dem Meeting nach der Präsentation wurde festgelegt, dass der Themenbereich „Fußball Bundesliga“ und die dazugehörige API als nächstes implementiert werden soll. Mithilfe der JSON-Datei konnte eine erste Version erstellt werden.
+In der ersten Hälfte des Sprints lag der Fokus auf der Vorbereitung der Präsentation des Projekts. In dem Meeting nach der Präsentation wurde festgelegt, dass der Themenbereich `Fußball Bundesliga` und die dazugehörige API als nächstes implementiert werden soll. Mithilfe der JSON-Datei konnte eine erste Version erstellt werden.
 
 <img src="../_static/images/reports/Tabelle.png" width="49%">
 <img src="../_static/images/reports/Spieltag.png" width="49%">
@@ -179,7 +179,7 @@ Außerdem wurde ein Entwurf der Web-API erstellt, welche dann im nächsten Sprin
 ### Zusammenfassung
 In diesem Sprint lag der Fokus unter anderem, auf der Verbesserung der Audioausgabe. Dazu wurden auf der einen Seite die Texte verbessert, aber auch nach Cloud-Lösungen von Google, Amazon und Microsoft geschaut, welche wir eventuell in das Projekt einbinden können.
 
-Ebenfalls wurde zu dem Thema „Bundesliga“ eine neue Funktion implementiert. Diese zeigt die Veränderung der Tabelle zum letzten Spieltag an.
+Ebenfalls wurde zu dem Thema `Bundesliga` eine neue Funktion implementiert. Diese zeigt die Veränderung der Tabelle zum letzten Spieltag an.
 
 <img src="../_static/images/reports/Veränderung.png" width="70%">
 
@@ -199,9 +199,7 @@ Die Benutzeroberfläche wurde nun als Wordpress-Plugin realisiert, so kann diese
 
 <img src="../_static/images/reports/Wordpress.png" width="70%">
 
-Auch wurde die Verwendung verschiedener Audiotools implementiert. Eine Anleitung wie man externe Audiotools verwenden kann, finden Sie hier: 
-
-https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/Konzepte/StepsConfig/audio-apis.md
+Auch wurde die Verwendung verschiedener Audiotools implementiert. Eine Anleitung wie man externe Audiotools verwenden kann, finden Sie [hier](../usage/audio-apis.md).
 
 Eine weitere Funktion, welche dem Programm hinzugefügt wurde, ist das Löschen der generierten Videos. Es ist nun möglich anzugeben, ob ein Video direkt gelöscht werden soll, sobald ein neues erstellt wurde, oder aber erst nach einer bestimmten Zeit oder Anzahl an Videos.
 
@@ -217,9 +215,9 @@ Ziel für den nächsten Sprint
 ### Zusammenfassung
 In diesem Sprint haben wir das Frontend an den Server angebunden. Nun ist es möglich, über Eingaben auf der Benutzeroberfläche, neue Jobs anzulegen, diese zu bearbeiten und zu löschen.
 
-Ebenfalls wurde anhand der Twitter-API eine Wordcloud zu einem bestimmten „Hashtag“ generiert. Dies soll als zusätzliche Option zu jedem Thema zur Verfügung stehen. Die Wordcloud soll dann, unter Angabe eines gewünschten „Hashtags“, an das Ende des zum Thema generierten Videos gehängt werden.
+Ebenfalls wurde anhand der Twitter-API eine Wordcloud zu einem bestimmten `Hashtag` generiert. Dies soll als zusätzliche Option zu jedem Thema zur Verfügung stehen. Die Wordcloud soll dann, unter Angabe eines gewünschten `Hashtags`, an das Ende des zum Thema generierten Videos gehängt werden.
 
-**Beispiel: Wordcloud zum „Hashtag“ Bundesliga.**
+**Beispiel: Wordcloud zum `Hashtag` Bundesliga.**
 
 <img src="../_static/images/reports/Wordcloud.png" width="70%">
 
