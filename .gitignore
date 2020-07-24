@@ -165,3 +165,6 @@ venv
 # Sphinx documentation
 Docs/_build
 Docs/modules
+
+# vscode
+.vscode
