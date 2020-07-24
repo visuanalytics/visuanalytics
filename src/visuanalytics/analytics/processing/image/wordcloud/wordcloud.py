@@ -83,22 +83,14 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
             wordcloud_parameter[param] = value
 
-    if eval(wordcloud_parameter.get("color_func", False)):
-        if image.get("color_func_words", None) is not None:
-            cfw_str = step_data.format(image["color_func_words"])
-            cfw = cfw_str.split(" ")
-            h = int(cfw[0]) if cfw[0] is not None else DEFAULT_COLOR_FUNC_VALUES[0]
-            s = int(cfw[1]) if cfw[1] is not None else DEFAULT_COLOR_FUNC_VALUES[1]
-            l_start = int(cfw[2]) if cfw[2] is not None else DEFAULT_COLOR_FUNC_VALUES[2]
-            l_end = int(cfw[3]) if cfw[3] is not None else DEFAULT_COLOR_FUNC_VALUES[3]
+    if bool(wordcloud_parameter.get("color_func", False)):
+        cfw_list = step_data.format(image.get("color_func_words", [])).cfw_str.split(" ")
+        cfw = DEFAULT_COLOR_FUNC_VALUES
 
-        else:
-            h = DEFAULT_COLOR_FUNC_VALUES[0]
-            s = DEFAULT_COLOR_FUNC_VALUES[1]
-            l_start = DEFAULT_COLOR_FUNC_VALUES[2]
-            l_end = DEFAULT_COLOR_FUNC_VALUES[3]
+        for idx, c in enumerate(cfw_list):
+            cfw[idx] = int(c)
 
-        wordcloud_parameter["color_func"] = get_color_func(h, s, l_start, l_end)
+        wordcloud_parameter["color_func"] = get_color_func(*cfw)
     else:
         wordcloud_parameter["color_func"] = None
 
