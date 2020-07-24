@@ -80,7 +80,7 @@ Hier können noch einige Einstellungen angegeben werden, die nach der Generierun
   Wird nur benötigt, wenn der Response-body json-Daten enthält. Dieser Key sollte zu dem String, der die Audio daten enthält, zeigen. Dieser wird dann mit `base64` decodiert und mit der angegebenen `file_extension` gespeichert und verwendet.
 
 
-# Keys
+### Keys
 
 Um auf die Daten(Konfigurations Dateien, den Text, vorherige Requests)  zugreifen zu können gibt es eine Syntax:
 
@@ -88,7 +88,7 @@ Um auf die Daten(Konfigurations Dateien, den Text, vorherige Requests)  zugreife
 - Zwichen einem normalen Json `Objekt` (In Python `dictionary`) und einem Array gibt es in der Syntax keine Unterschide, man kann diese also gleich verwenden (also z.B.: `_audio|0|test`)
 - will man in einem Value-String (in `config.json`) einen Wert aus einem Key einsetzen, muss man diesen Key in `{}` schreiben.
 
-## Spezial Variablen
+#### Spezial Variablen
 
 `Spezial Variablen die überall möglich sind`: 
 
@@ -102,11 +102,11 @@ Um auf die Daten(Konfigurations Dateien, den Text, vorherige Requests)  zugreife
 - unter `_audio|text` befindet sich der zu generierende Text.
 
 
-# API Requests
+### API Requests
 
 Es gibt zwei verschidene Request-Typen die verwendet werden können:
 
-## request
+#### request
 
 Führt einen **Https** Request durch.
 
@@ -179,7 +179,7 @@ Der Datentype des Response-Bodys.
 
 > Falls man bei `generate` eine Audiodatei zurückbekommt, muss man diesen Wert auf `Other` setzen.
 
-## request Multiple Custom
+#### request Multiple Custom
 
 Führt mehrere Requests nacheinander durch.
 
@@ -205,9 +205,9 @@ Gibt an, welcher der Requests die Audiodatei enthält.
 
 > Man gibt nur den Index des Requests aus `requests` an.
 
-# Beispiel
+### Beispiel
 
-## Verwendung des Azure (Microsoft) TTS Services
+#### Verwendung des Azure (Microsoft) TTS Services
 
 Config zur Verwendung des Azure TTs Service:
 

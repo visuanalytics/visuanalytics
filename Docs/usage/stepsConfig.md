@@ -6,15 +6,15 @@
 
 <!--TODO-->
 
-#### Pfade
+### Pfade
 
 <!--TODO-->
 
-#### Typen
+### Typen
 
 In der JSON-Konfigurationsdatei
 
-#### Key/New Key
+### Key/New Key
 
 <!--TODO-->
 
@@ -26,7 +26,7 @@ Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
 Daten der API. Die Responses können auch .csv-Dateien sein.
 
-#### request
+### request
 
 Führt eine **https**-Request durch.
 
@@ -67,7 +67,7 @@ Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurati
 
 <!--TODO-->
 
-#### request_multiple
+### request_multiple
 
 <!-- TODO Description-->
 
@@ -110,7 +110,7 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 <!--TODO-->
 
-#### request_multiple_custom
+### request_multiple_custom
 
 <!--TODO-->
 
@@ -149,11 +149,11 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 }
 ```
 
-#### input
+### input
 
 <!--TODO-->
 
-#### request_memory
+### request_memory
 
 <!--TODO-->
 
@@ -161,7 +161,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!-- TODO Description-->
 
-#### transform_array
+### transform_array
 
 <!-- TODO Description-->
 
@@ -177,7 +177,7 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-#### transform_dict
+### transform_dict
 
 <!-- TODO Description-->
 
@@ -193,13 +193,13 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 <!--TODO-->
 
-#### calculate
+### calculate
 
 <!-- TODO Description-->
 
 calculate stellt Methoden für Berechnungen zur Verfügung.
 
-###### mean
+#### mean
 
 <!-- TODO Description-->
 
@@ -223,7 +223,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-###### max
+#### max
 
 <!-- TODO Description-->
 
@@ -247,7 +247,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-###### min
+#### min
 
 <!-- TODO Description-->
 
@@ -271,7 +271,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-###### round
+#### round
 
 <!-- TODO Description-->
 
@@ -295,7 +295,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-###### mode
+#### mode
 
 <!-- TODO Description-->
 
@@ -315,7 +315,7 @@ calculate stellt Methoden für Berechnungen zur Verfügung.
 
 <!--TODO-->
 
-###### \_bi_calculate
+#### \_bi_calculate
 
 <!-- TODO Description-->
 
@@ -330,7 +330,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-###### multiply
+#### multiply
 
 <!-- TODO Description-->
 
@@ -358,7 +358,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-###### divide
+#### divide
 
 <!-- TODO Description-->
 
@@ -386,7 +386,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-###### subtract
+#### subtract
 
 <!-- TODO Description-->
 
@@ -414,7 +414,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-###### add
+#### add
 
 <!-- TODO Description-->
 
@@ -442,7 +442,7 @@ Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem W
 
 <!--TODO-->
 
-#### select
+### select
 
 <!-- TODO Description-->
 
@@ -462,7 +462,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-#### delete
+### delete
 
 **Beispiel** 
 
@@ -477,7 +477,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-#### select_range
+### select_range
 
 <!-- TODO Description-->
 
@@ -506,7 +506,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-#### append
+### append
 
 <!-- TODO Description-->
 
@@ -530,7 +530,7 @@ Die Keys stehen in relevant_keys.
 
 <!--TODO-->
 
-#### add_symbol
+### add_symbol
 
 <!-- TODO Description-->
 
@@ -562,7 +562,7 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
 
 <!--TODO-->
 
-#### replace
+### replace
 
 <!-- TODO Description-->
 
@@ -607,7 +607,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-#### translate_key
+### translate_key
 
 <!-- TODO Description-->
 
@@ -631,7 +631,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-#### alias
+### alias
 
 <!-- TODO Description-->
 
@@ -655,7 +655,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-#### regex
+### regex
 
 <!-- TODO Description-->
 
@@ -667,7 +667,7 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-#### date_format
+### date_format
 
 <!-- TODO Description-->
 
@@ -710,7 +710,7 @@ welches in format angegeben ist.
 
 <!--TODO-->
 
-#### timestamp
+### timestamp
 
 <!-- TODO Description-->
 
@@ -749,7 +749,7 @@ zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
 <!--TODO-->
 
-#### date_weekday
+### date_weekday
 
 <!-- TODO Description-->
 
@@ -782,7 +782,7 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 
 <!--TODO-->
 
-#### date_now
+### date_now
 
 <!-- TODO Description-->
 
@@ -813,7 +813,7 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 <!--TODO-->
 
-#### wind_direction
+### wind_direction
 
 <!-- TODO Description-->
 
@@ -882,7 +882,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-#### loop
+### loop
 
 <!-- TODO Description-->
 
@@ -929,7 +929,7 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 
 <!--TODO-->
 
-#### add_data
+### add_data
 
 <!-- TODO Description-->
 
@@ -956,7 +956,7 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 
 <!--TODO-->
 
-#### copy
+### copy
 
 <!-- TODO Description-->
 
@@ -978,7 +978,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-#### option
+### option
 
 <!-- TODO Description-->
 
@@ -1000,7 +1000,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-#### compare
+### compare
 
 <!-- TODO Description-->
 
@@ -1032,7 +1032,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-#### random_value
+### random_value
 <!-- TODO Description-->
 
 **Beispiel** 
@@ -1053,7 +1053,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-#### convert
+### convert
 <!-- TODO Description-->
 
 **Beispiel** 
@@ -1089,7 +1089,7 @@ Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
 }
 ```
 
-#### pillow
+### pillow
 
 Pillow ist eine Image Library für Python.
 In unserem projekt nutzen wir grundlegend 3 Funktionen:
@@ -1148,11 +1148,11 @@ Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss die
 **`overlay`**  
 Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
-#### Overlay
+### Overlay
 
 Es gibt 4 verschiedene Overlay-Arten:
 
-###### image
+#### image
 
 Der Typ Image setzt ein Bild in das zuvor definierte source image
 
@@ -1202,7 +1202,7 @@ des einzufügenden Bildes.
 
 Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Werten versehen werden.
 
-###### image_array
+#### image_array
 
 Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 
@@ -1254,7 +1254,7 @@ Pfad der zu setzenden Bilder
 Kann ebenfalls wieder Liste oder String sein  
 (kann sich auch auf Daten aus der API beziehen)
 
-###### text
+#### text
 
 Der Typ `text` setzt einen Text in das zuvor definierte source image.
 
@@ -1290,7 +1290,7 @@ Presets sind weiter unten in der JSON spezifiziert
 **`pattern`**:  
 Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
-###### text_array
+#### text_array
 
 Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 
@@ -1334,7 +1334,7 @@ Presets sind weiter unten in der JSON spezifiziert
 Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
 (kann sich auch auf Daten aus der API beziehen)
 
-#### wordcloud
+### wordcloud
 
 Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
 eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
@@ -1458,11 +1458,11 @@ bool - Ob Wörter wiederholt werden sollen. Wird benötigt bei einer Wordcloud m
 }
 ```
 
-###### Wordcloud mit nur einem Wort
+#### Wordcloud mit nur einem Wort
 Zum Generieren einer Wordcloud, die nur ein Wort enthält, muss `repeat` auf `True` gesetzt werden. Der Textstring `text`
 soll nur das Wort enthalten, welches wiederholt werden soll.
 
-###### Wordcloud transparent
+#### Wordcloud transparent
 Möchte man eine Wordcloud mit transparentem Hintergrund, so hat man mehrere Möglichkeiten.
 Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes angeben:
 "mode": "RGBA",
@@ -1501,7 +1501,7 @@ angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede 
 }
 ```
 
-#### text
+### text
 
 Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 
@@ -1525,7 +1525,7 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 **`pattern`**: 
 str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
 
-#### compare
+### compare
 
 Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert größer, kleiner oder gleich einem anderen Wert ist, einen
 String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
@@ -1626,7 +1626,7 @@ callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird 
 **`on_false`**: 
 callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
-#### random_text
+### random_text
 
 Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in eine Audiodatei umgewandelt wird.
 
@@ -1659,7 +1659,7 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 }
 ```
 
-#### successively
+### successively
 
 Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
 und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
@@ -1672,7 +1672,7 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
 }
 ```
 
-#### custom
+### custom
 
 Custom ist ein etwas schwierigere sequeunce Typ, diese setzt nicht vorraus das es die selbe
 Anzahl an Bilder sowie Audios gibt. Das heißt mann kann bestimmte Bilder doppelt oder auch gar nicht verwenden  

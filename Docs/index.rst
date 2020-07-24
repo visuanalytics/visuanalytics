@@ -14,11 +14,10 @@ https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
    :maxdepth: 1
    :caption: Inhalt
 
-   usage/installation
+   usage/verwendung
    reports/Statusberichte
    mainreport/Projektbericht
    documentation/Dokumentation
-   steps/stepsConfig
    documentation/technische_dokumentation
 
 Indizes und Tabellen
