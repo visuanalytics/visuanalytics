@@ -103,8 +103,9 @@ export default function JobCreate() {
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
-        if (activeStep === 2 && schedule.type === "weekly") {
-            setSelectComplete(schedule.weekdays.length > 0);
+        if (activeStep === 2) {
+            const allSet = schedule.type !== "weekly" || (schedule.type === "weekly" && schedule.weekdays.length > 0);
+            setSelectComplete(allSet);
         }
     }, [schedule, activeStep])
 
@@ -209,34 +210,8 @@ export default function JobCreate() {
     }
 
     // handler for schedule selection logic
-    const handleSelectDaily = () => {
-        setSchedule({ type: "daily", time: schedule.time })
-    }
-    const handleSelectWeekly = () => {
-        setSchedule({ type: "weekly", time: schedule.time, weekdays: [] })
-    }
-    const handleSelectOnDate = () => {
-        setSchedule({ type: "onDate", time: schedule.time, date: new Date() })
-    }
-    const handleAddWeekDay = (d: Weekday) => {
-        if (schedule.type === "weekly") {
-            const weekdays = [...schedule.weekdays, d];
-            setSchedule({ ...schedule, weekdays: weekdays });
-        }
-    }
-    const handleRemoveWeekday = (d: Weekday) => {
-        if (schedule.type === "weekly") {
-            const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
-            setSchedule({ ...schedule, weekdays: weekdays });
-        }
-    }
-    const handleSelectDate = (date: Date) => {
-        if (schedule.type === "onDate") {
-            setSchedule({ ...schedule, date: date })
-        }
-    }
-    const handleSelectTime = (time: Date) => {
-        setSchedule({ ...schedule, time: time })
+    const handleSelectSchedule = (schedule: Schedule) => {
+        setSchedule(schedule);
     }
 
     // stepper texts
@@ -276,13 +251,7 @@ export default function JobCreate() {
                 return (
                     <ScheduleSelection
                         schedule={schedule}
-                        selectDailyHandler={handleSelectDaily}
-                        selectWeeklyHandler={handleSelectWeekly}
-                        selectOnDateHandler={handleSelectOnDate}
-                        addWeekDayHandler={handleAddWeekDay}
-                        removeWeekDayHandler={handleRemoveWeekday}
-                        selectDateHandler={handleSelectDate}
-                        selectTimeHandler={handleSelectTime}
+                        selectScheduleHandler={handleSelectSchedule}
                     />
                 )
             default:

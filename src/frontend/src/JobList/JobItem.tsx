@@ -50,6 +50,10 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     );
 
     // handler for schedule selection logic
+    const handleSelectSchedule = (schedule: Schedule) => {
+        setSelectedSchedule(schedule);
+    }
+    /*
     const handleSelectDaily = () => {
         // setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
         setSelectedSchedule({ type: "daily", time: selectedSchedule.time })
@@ -84,7 +88,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const handleSelectTime = (time: Date) => {
         setSelectedSchedule({ ...selectedSchedule, time: time })
     }
-    /*
     const handleAddWeekDay = (d: Weekday) => {
         const weekdays = [...selectedSchedule.weekdays, d];
         setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
@@ -297,13 +300,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     <Paper variant="outlined" className={classes.paper}>
                                         <ScheduleSelection
                                             schedule={selectedSchedule}
-                                            selectDailyHandler={handleSelectDaily}
-                                            selectWeeklyHandler={handleSelectWeekly}
-                                            selectOnDateHandler={handleSelectOnDate}
-                                            addWeekDayHandler={handleAddWeekDay}
-                                            removeWeekDayHandler={handleRemoveWeekday}
-                                            selectDateHandler={handleSelectDate}
-                                            selectTimeHandler={handleSelectTime}
+                                            selectScheduleHandler={handleSelectSchedule}
                                         />
                                         <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
                                     </Paper>

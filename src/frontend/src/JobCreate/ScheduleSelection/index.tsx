@@ -8,28 +8,41 @@ import { Schedule, Weekday } from "../../util/schedule";
 
 interface ScheduleSelectionProps {
     schedule: Schedule,
-    selectDailyHandler: () => void;
-    selectWeeklyHandler: () => void;
-    selectOnDateHandler: () => void;
-    addWeekDayHandler: (day: Weekday) => void;
-    removeWeekDayHandler: (day: Weekday) => void;
-    selectDateHandler: (date: Date) => void;
-    selectTimeHandler: (date: Date) => void;
+    selectScheduleHandler: (schedule: Schedule) => void;
 }
 
-export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
-    const schedule = props.schedule;
+export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, selectScheduleHandler }) => {
     const classes = useStyles();
 
-    const handleDateChange = (date: Date | null) => {
-        if (date !== null) {
-            props.selectDateHandler(date);
+    const handleSelectDaily = () => {
+        selectScheduleHandler({ type: "daily", time: schedule.time })
+    }
+    const handleSelectWeekly = () => {
+        selectScheduleHandler({ type: "weekly", time: schedule.time, weekdays: [] })
+    }
+    const handleSelectOnDate = () => {
+        selectScheduleHandler({ type: "onDate", time: schedule.time, date: new Date() })
+    }
+    const handleAddWeekDay = (d: Weekday) => {
+        if (schedule.type === "weekly") {
+            const weekdays = [...schedule.weekdays, d];
+            selectScheduleHandler({ ...schedule, weekdays: weekdays });
         }
     }
-
-    const handleTimeChange = (date: Date | null) => {
-        if (date !== null) {
-            props.selectTimeHandler(date);
+    const handleRemoveWeekday = (d: Weekday) => {
+        if (schedule.type === "weekly") {
+            const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
+            selectScheduleHandler({ ...schedule, weekdays: weekdays });
+        }
+    }
+    const handleSelectDate = (date: Date | null) => {
+        if (date !== null && schedule.type === "onDate") {
+            selectScheduleHandler({ ...schedule, date: date })
+        }
+    }
+    const handleSelectTime = (time: Date | null) => {
+        if (time !== null) {
+            selectScheduleHandler({ ...schedule, time: time })
         }
     }
 
@@ -40,7 +53,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="daily" control={<Radio
                             checked={schedule.type === "daily"}
-                            onChange={props.selectDailyHandler}
+                            onChange={handleSelectDaily}
                             value="daily"
                         />} label="täglich" />
                     </div>
@@ -50,7 +63,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="weekly" control={<Radio
                             checked={schedule.type === "weekly"}
-                            onChange={props.selectWeeklyHandler}
+                            onChange={handleSelectWeekly}
                             value="weekly"
                         />} label="wöchentlich" />
                     </div>
@@ -58,8 +71,8 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                         <div>
                             <WeekdayCheckboxes
                                 schedule={schedule}
-                                addWeekDayHandler={props.addWeekDayHandler}
-                                removeWeekDayHandler={props.removeWeekDayHandler}
+                                addWeekDayHandler={handleAddWeekDay}
+                                removeWeekDayHandler={handleRemoveWeekday}
                             />
                         </div>
                     </Collapse>
@@ -69,17 +82,17 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="onDate" control={<Radio
                             checked={schedule.type === "onDate"}
-                            onChange={props.selectOnDateHandler}
+                            onChange={handleSelectOnDate}
                             value="onDate"
                         />} label="an festem Datum" />
                     </div>
                     <Collapse in={schedule.type === "onDate"}>
-                        <DateInputField date={schedule.type === "onDate" ? schedule.date : null} handler={handleDateChange} />
+                        <DateInputField date={schedule.type === "onDate" ? schedule.date : null} handler={handleSelectDate} />
                     </Collapse>
                 </div>
                 <Divider />
                 <div className={classes.paddingSmall} >
-                    <TimeInputField date={schedule.time} handler={handleTimeChange} />
+                    <TimeInputField date={schedule.time} handler={handleSelectTime} />
                 </div>
             </div >
         </Fade>
