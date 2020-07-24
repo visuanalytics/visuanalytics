@@ -179,7 +179,7 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-Dokumentation: https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/i399-documentation-f%C3%BCr-steps-config/Konzepte/StepsConfig/README.md
+Eine Beschreibung hierfür befindet sich [hier](../usage/stepsConfig.md).
 
 ## API
 ``api(values: dict, data: StepData)``
