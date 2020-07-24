@@ -38,11 +38,11 @@ def delete_on_time(jobs: dict, output_path: str):
 
 def delete_amount_videos(job_name: str, output_path: str, count: int):
     """
-        Methode zum löschen alter erstellten Videos, diese löscht alle Videos eines Jobs bis auf die vorgegebene Anzahl
-        :param job_name: Ein String des Job Namens
-        :param output_path: Der Pfad zum Output Ordner
-        :param count: Die Anzahl an Video die erhalten bleiben sollen
-        """
+    Methode zum löschen alter erstellten Videos, diese löscht alle Videos eines Jobs bis auf die vorgegebene Anzahl
+    :param job_name: Ein String des Job Namens
+    :param output_path: Der Pfad zum Output Ordner
+    :param count: Die Anzahl an Video die erhalten bleiben sollen
+    """
     logger.info("Checking if Videos or Images needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     files.sort(reverse=True)
@@ -53,7 +53,7 @@ def delete_amount_videos(job_name: str, output_path: str, count: int):
             delete[i][0] += 1
             if delete[i][1]:
                 os.remove(resources.path_from_root(os.path.join(output_path, file)))
-                logger.info("old video " + file + " has been deleted")
+                logger.info("old file " + file + " has been deleted")
             if delete[i][0] == count:
                 delete[i][1] = True
 
@@ -67,7 +67,7 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
     :param output_path: Der Pfad zum Output Ordner
     :param values: Werte aus der JSON-Datei
     """
-    logger.info("Checking if Videos needs to be deleted")
+    logger.info("Checking if Videos or Images needs to be deleted")
     out = resources.path_from_root(os.path.join(output_path))
     thumbnail = ["", "_thumbnail"]
     format = [".mp4", ".png"]
@@ -75,7 +75,7 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
         if os.path.exists(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]}")):
             os.remove(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]}"))
             logger.info(
-                f"old video {job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]} has been deleted")
+                f"old file {job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]} has been deleted")
         for idx, name in enumerate(reversed(fix_names)):
             if idx <= len(fix_names) - 2:
                 if os.path.exists(
