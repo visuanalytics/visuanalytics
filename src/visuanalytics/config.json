@@ -2,8 +2,24 @@
   "external_programs": [
     "ffmpeg"
   ],
-  "db_path": "instance/visuanalytics.db",
-  "console_mode": true,
+  "db": {
+    "db_path": "instance/visuanalytics.db",
+    "topics": [
+      {
+        "name": "Deutschlandweiter Wetterbericht",
+        "file_name": "weather_germany"
+      },
+      {
+        "name": "Ortsbezogener Wetterbericht",
+        "file_name": "weather_single"
+      },
+      {
+        "name": "Bundesliga-Ergebnisse",
+        "file_name": "football"
+      }
+    ]
+  },
+  "console_mode": false,
   "steps_base_config": {
     "output_path": "out"
   },

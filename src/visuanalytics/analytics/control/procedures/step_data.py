@@ -3,10 +3,10 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 """
 import numbers
 
-from visuanalytics.analytics.util import config_manager
 from visuanalytics.analytics.util.step_errors import APIKeyError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
+from visuanalytics.util import config_manager
 
 
 class StepData(object):
@@ -165,6 +165,22 @@ class StepData(object):
 
         return self.get_data(key, values)
 
+    def get_data_array(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key eine Liste ist, diese direkt zurückgegeben wird.
+
+        :param key: fad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einer Liste.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder die übergebene Liste.
+        :raises: StepKeyError
+        """
+        if isinstance(key, list):
+            return key
+
+        return self.get_data(key, values)
+
     def get_data(self, key_string: str, values: dict):
         """
         Gibt die daten zurück, die hinter `key_string` stehen.
@@ -199,6 +215,14 @@ class StepData(object):
             data = {**self.__data, **values.get("_loop_states", {})}
 
         return self.__formatter.format(value_string, data)
+
+    def format_array(self, array: dict, api_key_name, values: dict):
+        if array is None:
+            return
+        for idx, value in enumerate(array):
+            array[idx] = self.format_api(value, api_key_name, values)
+
+        return array
 
     def format_json(self, json: dict, api_key_name, values: dict):
         """

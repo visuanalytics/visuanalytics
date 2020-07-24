@@ -1149,9 +1149,7 @@
       "OpponentGoals": 32,
       "GoalDiff": 68,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 0,
-      "Rank_diff": 0,
-      "Text": "Tabellenführer ist aktuell FC Bayern mit 82 Punkten."
+      "PointsDiffToFirstPlace": 0
     },
     {
       "TeamName": "Borussia Dortmund",
@@ -1161,9 +1159,7 @@
       "OpponentGoals": 41,
       "GoalDiff": 43,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 13,
-      "Rank_diff": 0,
-      "Text": "Borussia Dortmund liegt mit 13 Punkten Rückstand auf dem 2. Platz."
+      "PointsDiffToFirstPlace": 13
     },
     {
       "TeamName": "RB Leipzig",
@@ -1173,8 +1169,7 @@
       "OpponentGoals": 37,
       "GoalDiff": 44,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 16,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 16
     },
     {
       "TeamName": "Borussia Mönchengladbach",
@@ -1184,9 +1179,7 @@
       "OpponentGoals": 40,
       "GoalDiff": 26,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 17,
-      "Rank_diff": 0,
-      "Text": "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt Borussia Mönchengladbach. "
+      "PointsDiffToFirstPlace": 17
     },
     {
       "TeamName": "Bayer Leverkusen",
@@ -1196,8 +1189,7 @@
       "OpponentGoals": 44,
       "GoalDiff": 17,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 19,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 19
     },
     {
       "TeamName": "TSG 1899 Hoffenheim",
@@ -1207,8 +1199,7 @@
       "OpponentGoals": 53,
       "GoalDiff": 0,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 30,
-      "Rank_diff": 1
+      "PointsDiffToFirstPlace": 30
     },
     {
       "TeamName": "VfL Wolfsburg",
@@ -1218,8 +1209,7 @@
       "OpponentGoals": 46,
       "GoalDiff": 2,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 33,
-      "Rank_diff": -1
+      "PointsDiffToFirstPlace": 33
     },
     {
       "TeamName": "SC Freiburg",
@@ -1229,8 +1219,7 @@
       "OpponentGoals": 47,
       "GoalDiff": 1,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 34,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 34
     },
     {
       "TeamName": "Eintracht Frankfurt",
@@ -1240,8 +1229,7 @@
       "OpponentGoals": 60,
       "GoalDiff": -1,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 37,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 37
     },
     {
       "TeamName": "Hertha BSC",
@@ -1251,8 +1239,7 @@
       "OpponentGoals": 59,
       "GoalDiff": -11,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 41,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 41
     },
     {
       "TeamName": "1. FC Union Berlin",
@@ -1262,8 +1249,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -17,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 41,
-      "Rank_diff": 1
+      "PointsDiffToFirstPlace": 41
     },
     {
       "TeamName": "FC Schalke 04",
@@ -1273,8 +1259,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -20,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 43,
-      "Rank_diff": -1
+      "PointsDiffToFirstPlace": 43
     },
     {
       "TeamName": "1. FSV Mainz 05",
@@ -1284,8 +1269,7 @@
       "OpponentGoals": 65,
       "GoalDiff": -21,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 45,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 45
     },
     {
       "TeamName": "1. FC Köln",
@@ -1295,8 +1279,7 @@
       "OpponentGoals": 69,
       "GoalDiff": -18,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 46,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 46
     },
     {
       "TeamName": "FC Augsburg",
@@ -1306,8 +1289,7 @@
       "OpponentGoals": 63,
       "GoalDiff": -18,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 46,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 46
     },
     {
       "TeamName": "Werder Bremen",
@@ -1317,9 +1299,7 @@
       "OpponentGoals": 69,
       "GoalDiff": -27,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 51,
-      "Rank_diff": 1,
-      "Text": "Werder Bremen liegt auf dem 16ten Platz mit 31 Punkten. "
+      "PointsDiffToFirstPlace": 51
     },
     {
       "TeamName": "Fortuna Düsseldorf",
@@ -1329,8 +1309,7 @@
       "OpponentGoals": 67,
       "GoalDiff": -31,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 52,
-      "Rank_diff": -1
+      "PointsDiffToFirstPlace": 52
     },
     {
       "TeamName": "SC Paderborn 07",
@@ -1340,8 +1319,7 @@
       "OpponentGoals": 74,
       "GoalDiff": -37,
       "Matches": 34,
-      "PointsDiffToFirstPlace": 62,
-      "Rank_diff": 0
+      "PointsDiffToFirstPlace": 62
     }
   ],
   "Vorheriger-Spieltag": "34. Spieltag",
@@ -1353,9 +1331,7 @@
       "OpponentGoals": 32,
       "GoalDiff": 64,
       "Matches": 33,
-      "TeamInfoId": 40,
-      "Rank": "0",
-      "Rank_Dif": 0
+      "TeamInfoId": 40
     },
     {
       "TeamName": "Borussia Dortmund",
@@ -1364,9 +1340,7 @@
       "OpponentGoals": 37,
       "GoalDiff": 47,
       "Matches": 33,
-      "TeamInfoId": 7,
-      "Rank": "1",
-      "Rank_Dif": 0
+      "TeamInfoId": 7
     },
     {
       "TeamName": "RB Leipzig",
@@ -1375,9 +1349,7 @@
       "OpponentGoals": 36,
       "GoalDiff": 43,
       "Matches": 33,
-      "TeamInfoId": 1635,
-      "Rank": "2",
-      "Rank_Dif": 0
+      "TeamInfoId": 1635
     },
     {
       "TeamName": "Borussia Mönchengladbach",
@@ -1386,9 +1358,7 @@
       "OpponentGoals": 39,
       "GoalDiff": 25,
       "Matches": 33,
-      "TeamInfoId": 87,
-      "Rank": "3",
-      "Rank_Dif": 0
+      "TeamInfoId": 87
     },
     {
       "TeamName": "Bayer Leverkusen",
@@ -1397,9 +1367,7 @@
       "OpponentGoals": 44,
       "GoalDiff": 16,
       "Matches": 33,
-      "TeamInfoId": 6,
-      "Rank": "4",
-      "Rank_Dif": 0
+      "TeamInfoId": 6
     },
     {
       "TeamName": "VfL Wolfsburg",
@@ -1408,9 +1376,7 @@
       "OpponentGoals": 42,
       "GoalDiff": 6,
       "Matches": 33,
-      "TeamInfoId": 131,
-      "Rank": "5",
-      "Rank_Dif": 0
+      "TeamInfoId": 131
     },
     {
       "TeamName": "TSG 1899 Hoffenheim",
@@ -1419,9 +1385,7 @@
       "OpponentGoals": 53,
       "GoalDiff": -4,
       "Matches": 33,
-      "TeamInfoId": 175,
-      "Rank": "6",
-      "Rank_Dif": 0
+      "TeamInfoId": 175
     },
     {
       "TeamName": "SC Freiburg",
@@ -1430,9 +1394,7 @@
       "OpponentGoals": 47,
       "GoalDiff": -3,
       "Matches": 33,
-      "TeamInfoId": 112,
-      "Rank": "7",
-      "Rank_Dif": 0
+      "TeamInfoId": 112
     },
     {
       "TeamName": "Eintracht Frankfurt",
@@ -1441,9 +1403,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -2,
       "Matches": 33,
-      "TeamInfoId": 91,
-      "Rank": "8",
-      "Rank_Dif": 0
+      "TeamInfoId": 91
     },
     {
       "TeamName": "Hertha BSC",
@@ -1452,9 +1412,7 @@
       "OpponentGoals": 57,
       "GoalDiff": -10,
       "Matches": 33,
-      "TeamInfoId": 54,
-      "Rank": "9",
-      "Rank_Dif": 0
+      "TeamInfoId": 54
     },
     {
       "TeamName": "FC Schalke 04",
@@ -1463,9 +1421,7 @@
       "OpponentGoals": 54,
       "GoalDiff": -16,
       "Matches": 33,
-      "TeamInfoId": 9,
-      "Rank": "10",
-      "Rank_Dif": 0
+      "TeamInfoId": 9
     },
     {
       "TeamName": "1. FC Union Berlin",
@@ -1474,9 +1430,7 @@
       "OpponentGoals": 58,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamInfoId": 80,
-      "Rank": "11",
-      "Rank_Dif": 0
+      "TeamInfoId": 80
     },
     {
       "TeamName": "1. FSV Mainz 05",
@@ -1485,9 +1439,7 @@
       "OpponentGoals": 64,
       "GoalDiff": -20,
       "Matches": 33,
-      "TeamInfoId": 81,
-      "Rank": "12",
-      "Rank_Dif": 0
+      "TeamInfoId": 81
     },
     {
       "TeamName": "1. FC Köln",
@@ -1496,9 +1448,7 @@
       "OpponentGoals": 63,
       "GoalDiff": -13,
       "Matches": 33,
-      "TeamInfoId": 65,
-      "Rank": "13",
-      "Rank_Dif": 0
+      "TeamInfoId": 65
     },
     {
       "TeamName": "FC Augsburg",
@@ -1507,9 +1457,7 @@
       "OpponentGoals": 61,
       "GoalDiff": -17,
       "Matches": 33,
-      "TeamInfoId": 95,
-      "Rank": "14",
-      "Rank_Dif": 0
+      "TeamInfoId": 95
     },
     {
       "TeamName": "Fortuna Düsseldorf",
@@ -1518,9 +1466,7 @@
       "OpponentGoals": 64,
       "GoalDiff": -28,
       "Matches": 33,
-      "TeamInfoId": 185,
-      "Rank": "15",
-      "Rank_Dif": 0
+      "TeamInfoId": 185
     },
     {
       "TeamName": "Werder Bremen",
@@ -1529,9 +1475,7 @@
       "OpponentGoals": 68,
       "GoalDiff": -32,
       "Matches": 33,
-      "TeamInfoId": 134,
-      "Rank": "16",
-      "Rank_Dif": 0
+      "TeamInfoId": 134
     },
     {
       "TeamName": "SC Paderborn 07",
@@ -1540,9 +1484,7 @@
       "OpponentGoals": 71,
       "GoalDiff": -36,
       "Matches": 33,
-      "TeamInfoId": 31,
-      "Rank": "17",
-      "Rank_Dif": 0
+      "TeamInfoId": 31
     }
   ]
 }

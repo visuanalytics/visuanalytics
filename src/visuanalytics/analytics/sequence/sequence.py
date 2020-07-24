@@ -8,9 +8,9 @@ import subprocess
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
+from visuanalytics.util import resources
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
@@ -100,7 +100,8 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_out_path(step_data.get_config("output_path"), step_data.get_config("job_name"))
+    output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
+                                     step_data.get_config("job_name"))
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))

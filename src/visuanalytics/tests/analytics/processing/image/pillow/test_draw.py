@@ -4,7 +4,7 @@ import unittest
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 
 def prepare_draw_test(values, data, config=None):
@@ -46,8 +46,8 @@ def prepare_draw_test(values, data, config=None):
 
 class DrawTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../../tests/resources"
-        resources.IMAGES_LOCATION = "../../tests/resources/images"
+        resources.RESOURCES_LOCATION = "../tests/resources"
+        resources.IMAGES_LOCATION = "../tests/resources/images"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "101"), exist_ok=True)
 

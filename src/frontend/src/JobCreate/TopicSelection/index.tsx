@@ -5,6 +5,7 @@ import {useStyles} from "../style";
 import {useFetch} from "../../Hooks/useFetch";
 import {Param} from "../../util/param";
 import {Load} from "../../util/Load";
+import { getUrl } from "../../util/fetchUtils";
 
 export interface Topic {
     topicName: string;
@@ -22,7 +23,7 @@ interface TopicSelectionProps {
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     const classes = useStyles();
 
-    const topics: Topic[] = useFetch("/topics") as Topic[]
+    const topics: Topic[] = useFetch(getUrl("/topics")) as Topic[]
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value);

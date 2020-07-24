@@ -12,9 +12,8 @@ import { GreyDivider } from './GreyDivider';
 import { Param, ParamValues, trimParamValues, validateParamValues, initSelectedValues } from '../util/param';
 import { Fade } from '@material-ui/core';
 import { useCallFetch } from '../Hooks/useCallFetch';
-import { format, formatDistanceToNow } from "date-fns";
 import { Schedule, Weekday } from '../util/schedule';
-import { datePickerDefaultProps } from '@material-ui/pickers/constants/prop-types';
+import { getUrl } from '../util/fetchUtils';
 
 
 /*
@@ -55,7 +54,7 @@ export default function JobCreate() {
     });
 
     // initialize callback for add job functionality
-    const addJob = useCallFetch("/add", {
+    const addJob = useCallFetch(getUrl("/add"), {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -93,7 +92,7 @@ export default function JobCreate() {
         }
     }, [topicId, jobName, activeStep])
 
-    // when a new parameter value is entered, check if parameter selection is complete 
+    // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
         if (activeStep === 1) {
             const allSet = validateParamValues(paramList, paramValues);

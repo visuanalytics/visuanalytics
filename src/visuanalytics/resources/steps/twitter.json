@@ -6,11 +6,18 @@
     "api_key_name": "twitter",
     "url_pattern": "https://api.twitter.com/1.1/search/tweets.json",
     "params": {
-      "q": "%23{_conf|hashtag}",
       "count": "100",
       "lang": "de",
       "result_type": "recent"
     },
+    "params_array": [
+      {
+        "key": "q",
+        "array": "_conf|hashtags",
+        "pattern": "%23{_loop}",
+        "delimiter": "+"
+      }
+    ],
     "headers": {
       "Authorization": "Bearer {_api_key}"
     }
@@ -59,24 +66,19 @@
   "images": {
     "football_wordcloud": {
       "type": "wordcloud",
-      "text": "_req|text",
-      "stopwords": "_conf|stopwords",
+      "text": "{_req|text}",
+      "stopwords": "{_conf|stopwords}",
       "parameter": {
-        "mask": {
-          "x": 1000,
-          "y": 1000,
-          "figure": "_conf|shape"
-        },
-        "background_color": "white",
-        "width": 1920,
-        "height": 1080,
+        "figure": "{_conf|figure}",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
         "collocations": false,
         "max_font_size": 400,
         "max_words": 2000,
         "contour_width": 3,
         "contour_color": "white",
         "color_func": "_conf|color_func_words",
-        "colormap": "_conf|colormap_words"
+        "colormap": "{_conf|colormap_words}"
       }
     },
     "wordcloud_with_background": {
@@ -86,14 +88,16 @@
         {
           "description": "Wordcloud",
           "type": "image",
-          "pos_x": 450,
-          "pos_y": 10,
           "color": "RGBA",
           "image_name": "football_wordcloud",
           "color_transparency": "FFFFFF"
         }
       ]
     }
+  },
+  "thumbnail": {
+    "type": "created",
+    "name": "wordcloud_with_background"
   },
   "audio": {
     "audios": {

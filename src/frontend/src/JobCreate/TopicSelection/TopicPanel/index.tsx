@@ -3,6 +3,7 @@ import { makeStyles, Button } from "@material-ui/core";
 import { Topic } from "..";
 import { useCallFetch } from "../../../Hooks/useCallFetch";
 import { Param } from "../../../util/param";
+import { getUrl } from "../../../util/fetchUtils";
 
 interface TopicPanelProps {
     topic: Topic;
@@ -31,7 +32,7 @@ const useStyles = makeStyles({
 
 export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
-    const fetchParams = useCallFetch("/params/" + props.topic.topicId, {}, (data) => {
+    const fetchParams = useCallFetch(getUrl("/params/") + props.topic.topicId, {}, (data) => {
         props.fetchParamHandler(data);
     });
 

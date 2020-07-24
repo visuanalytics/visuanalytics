@@ -8,11 +8,11 @@ from gtts import gTTS
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.parts import part
-from visuanalytics.analytics.util import resources
-from visuanalytics.analytics.util.config_manager import get_config
 from visuanalytics.analytics.util.step_errors import raise_step_error, AudioError, InvalidContentTypeError
 from visuanalytics.analytics.util.step_pattern import data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
+from visuanalytics.util.config_manager import get_config
 
 logger = logging.getLogger(__name__)
 
@@ -65,10 +65,6 @@ def default(values: dict, data: StepData, config: dict):
 def custom(values: dict, data: StepData, config: dict):
     logger.info("Generate Audio with Custom Audio Config")
 
-    # Set Testing to False (To generate Audio)
-    testing = data.get_config("testing", False)
-    data.data["_conf"]["testing"] = False
-
     _prepare_custom(config.get("prepare", None), data, config)
 
     for key in values:
@@ -78,12 +74,9 @@ def custom(values: dict, data: StepData, config: dict):
         # TODO set Testing to false
         generate = config["generate"]
         generate["include_headers"] = True
-        response = api_request(generate, data, "audio")
+        response = api_request(generate, data, "audio", True)
 
         values[key] = _save_audio(response, data, config)
-
-    # Reset Testing
-    data.data["_conf"]["testing"] = testing
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
@@ -91,7 +84,7 @@ def _prepare_custom(values: dict, data: StepData, config: dict):
 
     if values is not None:
         # TODO(Max) Solve better
-        data.data["_audio"]["pre"] = api_request(values, data, "audio")
+        data.data["_audio"]["pre"] = api_request(values, data, "audio", True)
 
 
 def _save_audio(response, data: StepData, config: dict):

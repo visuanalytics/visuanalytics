@@ -1,12 +1,11 @@
+import numbers
 import random
 
-import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util import resources
+from visuanalytics.util import resources
 
 WORDCLOUD_DEFAULT_PARAMETER = {
     "background_color": "white",
@@ -28,7 +27,9 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
-    "stopwords": None
+    "stopwords": None,
+    "repeat": False,
+    "mask": None
 }
 
 
@@ -39,7 +40,7 @@ def color_func(word, font_size, position, orientation, random_state=None, **kwar
     return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
 
 
-def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
@@ -50,44 +51,50 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     :rtype: str
     """
     wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
-    parameter = image.get("parameter", {})
+    parameter = values.get("parameter", {})
 
-    for each in wordcloud_parameter:
-        if each in parameter:
-            wordcloud_parameter[each] = step_data.format(parameter[each])
+    for param in parameter:
+        if param in wordcloud_parameter:
+            if isinstance(wordcloud_parameter[param], bool):
+                value = step_data.get_data_bool(parameter[param], {})
+            elif isinstance(wordcloud_parameter[param], numbers.Number):
+                value = step_data.get_data_num(parameter[param], {})
+            else:
+                value = step_data.format(parameter[param])
+
+            wordcloud_parameter[param] = value
 
     if step_data.get_data_bool(parameter.get("color_func", False), {}):
         wordcloud_parameter["color_func"] = color_func
 
-    if parameter["mask"] is not None and parameter["mask"]["figure"] is not None:
-        x0 = step_data.format(parameter["mask"]["x"])
-        y0 = step_data.format(parameter["mask"]["y"])
-        x, y = np.ogrid[:x0, :y0]
+    if parameter.get("colormap", ""):
+        wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])
 
-        figure = step_data.get_data(parameter["mask"]["figure"], {})
+    if parameter.get("figure", None) is not None:
+        figure = step_data.format(parameter["figure"], {})
         if figure == "circle":
-            mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 400 ** 2
+            x0 = step_data.get_data_num(parameter["width"], {})
+            y0 = step_data.get_data_num(parameter["height"], {})
+            x, y = np.ogrid[:x0, :y0]
+
+            mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2
+
+            mask = 255 * mask.astype(int)
+            wordcloud_parameter["mask"] = mask
+            wordcloud_parameter["width"] = x0
+            wordcloud_parameter["height"] = y0
+
         elif figure == "square":
-            mask = x * y
-        else:
-            # TODO testen
-            path = resources.get_image_path(parameter["mask"]["path"])
-            mask = np.array(Image.open(path))
+            wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
+            wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-        wordcloud_parameter["mask"] = 255 * mask.astype(int)
-    else:
-        wordcloud_parameter["mask"] = None
+    if values.get("stopwords", None) is not None:
+        # TODO (max) May change to array (not string) or change delimiter to ','
+        dont_use = step_data.format(values["stopwords"], {})
+        wordcloud_parameter["stopwords"] = set(dont_use.split())
 
-    stopwords = set(STOPWORDS)
+    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
 
-    dont_use = step_data.get_data(image["stopwords"], {})
-    stopwords.add(dont_use)
-    list_dont_use = dont_use.split()
-    STOPWORDS.update(list_dont_use)
-
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.get_data(image["text"], {}))
-
-    plt.axis("off")
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     image.save(file)

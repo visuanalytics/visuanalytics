@@ -164,3 +164,5 @@ docs/modules
 # End of https://www.gitignore.io/api/flask,python
 /resources/temp/
 /resources/memory/
+server/static
+server/templates

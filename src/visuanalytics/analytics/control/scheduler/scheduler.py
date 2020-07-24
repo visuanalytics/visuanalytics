@@ -51,7 +51,7 @@ class Scheduler(object):
         assert False, "Not implemented"
 
     def start(self):
-        """Started den Scheduler.
+        """Started den Scheduler (Blocking).
 
         Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
         einem andern Thread ausgeführt.
@@ -69,3 +69,11 @@ class Scheduler(object):
                 now = datetime.now().second
 
                 time.sleep(60 - now)
+
+    def start_unblocking(self):
+        """Started den Scheduler in einem neuen Thread.
+
+        Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
+        einem andern Thread ausgeführt.
+        """
+        threading.Thread(target=self.start).start()

@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { Param } from "../util/param";
-import { Button, Container, Fade, Modal, Paper } from "@material-ui/core";
+import React, {useEffect} from "react";
+import {Param} from "../util/param";
+import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import { AccordionSummary, useStyles, InputField } from "./style";
+import {AccordionSummary, useStyles, InputField } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -22,6 +22,8 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { getWeekdayLabel } from "../util/getWeekdayLabel";
 import { ParamFields } from "../ParamFields";
 import { Schedule, Weekday } from "../util/schedule";
+import { getUrl } from "../util/fetchUtils";
+
 
 interface Props {
     job: Job,
@@ -30,7 +32,7 @@ interface Props {
 
 export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const classes = useStyles();
-    const deleteJob = useCallFetch(`/remove/${job.jobId}`, { method: 'DELETE' }, getJobs);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
@@ -171,7 +173,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         setNext(nextJob);
     }, [nextJob()]);
 
-    const editJob = useCallFetch(`/edit/${job.jobId}`, {
+    const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
