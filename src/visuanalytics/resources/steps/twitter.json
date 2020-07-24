@@ -201,6 +201,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top1}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -219,6 +220,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top2}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -237,6 +239,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top3}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -255,6 +258,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top4}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -273,6 +277,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top5}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -291,6 +296,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top6}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -309,6 +315,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top7}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -327,6 +334,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top8}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -345,6 +353,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top9}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -363,6 +372,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top10}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -381,6 +391,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top15}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -399,6 +410,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top20}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
@@ -417,6 +429,7 @@
       "type": "wordcloud",
       "text": "{_req|text_top25}",
       "stopwords": "{_conf|stopwords}",
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "background_color": "white",
