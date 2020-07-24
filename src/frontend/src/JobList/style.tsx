@@ -48,11 +48,6 @@ export const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'center',
         },
-        inputName: {
-            padding: '0 8px 0',
-            color: 'white',
-            fontSize: '1.5625rem',
-        },
     }),
 );
 
