@@ -61,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "14:32",
+        "time": "15:11",
         "daily": true
       },
       "config": {
@@ -72,7 +72,7 @@
         "stopwords": " ",
         "thumbnail": true,
         "colormap_words": "viridis",
-        "color_func_words": true,
+        "color_func": true,
         "figure": "circle",
         "width_wordcloud": 1000,
         "height_wordcloud": 1000,
