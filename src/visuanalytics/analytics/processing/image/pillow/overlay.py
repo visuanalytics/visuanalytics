@@ -147,7 +147,7 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
     if overlay.get("pos_x", None) is not None and overlay.get("pos_y", None) is not None:
         pos_x = step_data.format(overlay["pos_x"])
-        pos_y = step_data.format(overlay["pos_x"])
+        pos_y = step_data.format(overlay["pos_y"])
     else:
         width_b, height_b = source_img.size
         width_i, height_i = icon.size
