@@ -32,12 +32,25 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "mask": None
 }
 
+DEFAULT_COLOR_FUNC_VALUES = [0, 0, 0, 40]
+
 
 def get_color_func(h, s, l_start, l_end):
+    """
+    Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+
+    Die Werte werden jeweils als Integer angegeben.
+
+    :param h: (hue) Farbton in Grad auf einem Farbenrad. Mögliche Werte: 0 bis 360
+        0 ist Rot, 120 ist Grün und 240 ist Blau.
+    :param s: (saturation) Sättigung in Prozent. 0% entspricht einem Grauton, 100% ist die volle Farbe.
+    :param l_start: (lightness range start) Start des Helligkeitsbereichs in Prozent: 0% ist Schwarz, 100% ist Weiß.
+    :param l_end: (lightness range end) Ende des Helligkeitsbereichs in Prozent: 0% ist Schwarz, 100% ist Weiß.
+    :return: Funktion, die den Farbverlauf innerhalb der Wordcloud erstellt
+    :rtype: callable
+    """
+
     def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
-        """
-        Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
-        """
         return "hsl(%d, %d%%, %d%%)" % (h, s, random.randint(l_start, l_end))
 
     return color_func
@@ -45,6 +58,9 @@ def get_color_func(h, s, l_start, l_end):
 
 def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
+
+    Der Standard-Farbverlauf bei color_func true ist Grau/Schwarz.
+    Die Standard-Farbe ist generell die Colormap viridis.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
@@ -67,25 +83,21 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
 
             wordcloud_parameter[param] = value
 
-    if wordcloud_parameter["color_func"] is True:
-        cfw_str = step_data.format(image["color_func_words"])
-        cfw = cfw_str.split(" ")
-        if cfw[0] is not None:
-            h = int(cfw[0])
+    if eval(wordcloud_parameter.get("color_func", False)):
+        if image.get("color_func_words", None) is not None:
+            cfw_str = step_data.format(image["color_func_words"])
+            cfw = cfw_str.split(" ")
+            h = int(cfw[0]) if cfw[0] is not None else DEFAULT_COLOR_FUNC_VALUES[0]
+            s = int(cfw[1]) if cfw[1] is not None else DEFAULT_COLOR_FUNC_VALUES[1]
+            l_start = int(cfw[2]) if cfw[2] is not None else DEFAULT_COLOR_FUNC_VALUES[2]
+            l_end = int(cfw[3]) if cfw[3] is not None else DEFAULT_COLOR_FUNC_VALUES[3]
+
         else:
-            h = 245
-        if cfw[1] is not None:
-            s = int(cfw[1])
-        else:
-            s = 46
-        if cfw[2] is not None:
-            l_start = int(cfw[2])
-        else:
-            l_start = 5
-        if cfw[3] is not None:
-            l_end = int(cfw[3])
-        else:
-            l_end = 35
+            h = DEFAULT_COLOR_FUNC_VALUES[0]
+            s = DEFAULT_COLOR_FUNC_VALUES[1]
+            l_start = DEFAULT_COLOR_FUNC_VALUES[2]
+            l_end = DEFAULT_COLOR_FUNC_VALUES[3]
+
         wordcloud_parameter["color_func"] = get_color_func(h, s, l_start, l_end)
     else:
         wordcloud_parameter["color_func"] = None

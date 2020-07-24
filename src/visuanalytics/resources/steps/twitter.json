@@ -185,7 +185,7 @@
           "display_value": "Grau"
         },
         {
-          "value": "0 0 0 20",
+          "value": "0 0 0 40",
           "display_value": "Schwarz"
         },
         {
@@ -193,7 +193,7 @@
           "display_value": "Lila"
         }
       ],
-      "default_value": "245 46 5 35"
+      "default_value": "0 0 0 40"
     },
     {
       "name": "shape",
