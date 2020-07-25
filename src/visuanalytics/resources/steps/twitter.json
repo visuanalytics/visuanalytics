@@ -68,6 +68,14 @@
       ]
     },
     {
+      "type": "remove_from_list",
+      "keys": [
+        "_req|text_all"
+      ],
+      "to_remove": "_conf|stopwords",
+      "count": 1
+    },
+    {
       "type": "sub_lists",
       "array_key": "_req|text_all",
       "sub_lists": [
