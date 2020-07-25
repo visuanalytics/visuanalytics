@@ -88,7 +88,7 @@ def insert_job(job):
     schedule_id = _insert_schedule(con, job["schedule"])
     job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
                          [job["jobName"], job["topicId"], schedule_id]).lastrowid
-    _insert_param_values(con, job_id, job["params"])
+    _insert_param_values(con, job_id, job["values"])
     con.commit()
 
 
@@ -122,7 +122,8 @@ def update_job(job_id, updated_data):
 
 def _insert_schedule(con, schedule):
     schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
-                              [schedule["type"], schedule["date"], schedule["time"]]).lastrowid
+                              [schedule["type"], schedule["date"] if schedule["type"] == "onDate" else None,
+                               schedule["time"]]).lastrowid
     if schedule["type"] == "weekly":
         id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
         con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
