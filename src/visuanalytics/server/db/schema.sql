@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Do. Juli 2 19:40:04 2020
+-- File generated with SQLiteStudio v3.2.1 on Sa. Juli 25 19:41:42 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -50,9 +50,8 @@ CREATE TABLE schedule
                      NOT NULL,
     date        DATE,
     time        TIME NOT NULL,
-    daily       BOOLEAN,
-    weekly      BOOLEAN,
-    on_date     BOOLEAN
+    type        VARCHAR CHECK (type IN ("daily", "weekly", "on_date") )
+                     NOT NULL
 );
 
 
@@ -86,6 +85,27 @@ CREATE TABLE steps
     json_file_name VARCHAR UNIQUE
                            NOT NULL
 );
+
+INSERT INTO steps (steps_id,
+                   steps_name,
+                   json_file_name)
+VALUES (1,
+        'Deutschlandweiter Wetterbericht',
+        'weather_germany');
+
+INSERT INTO steps (steps_id,
+                   steps_name,
+                   json_file_name)
+VALUES (2,
+        'Ortsbezogener Wetterbericht',
+        'weather_single');
+
+INSERT INTO steps (steps_id,
+                   steps_name,
+                   json_file_name)
+VALUES (3,
+        'Bundesliga-Ergebnisse',
+        'football');
 
 
 COMMIT TRANSACTION;
