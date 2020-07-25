@@ -534,11 +534,36 @@ def remove_from_list(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         new_value = value
         for each in data.get_data(values["to_remove"], values):
-            if data.get_data_num(values.get("count", -1), values):
-                count = data.get_data_num(values.get("count", -1), values)
-                for i in range(count):
+            if each in new_value:
+                if data.get_data_num(values.get("count", -1), values):
+                    count = data.get_data_num(values.get("count", -1), values)
+                    for i in range(count):
+                        new_value.remove(each)
+                else:
                     new_value.remove(each)
-            else:
-                new_value.remove(each)
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def append_stopwords(values: dict, data: StepData):
+    """Bekommt eine Liste und wandelt bestimmte Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
+
+    :param values:
+    :param data:
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = value
+        length = len(value)
+        for i in range(length):
+            up = value[i].upper()
+            cap = value[i].capitalize()
+            low = value[i].lower()
+            new_value.append(up)
+            new_value.append(cap)
+            new_value.append(low)
 
         data.insert_data(new_key, new_value, values)
