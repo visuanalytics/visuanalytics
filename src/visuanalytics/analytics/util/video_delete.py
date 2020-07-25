@@ -58,7 +58,7 @@ def delete_amount_videos(job_name: str, output_path: str, count: int):
                 delete[i][1] = True
 
 
-def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, values: dict):
+def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, values: dict, thumbnail: bool):
     """
     Methode zum umbenenen der erstellten Video nach dem style in der config
 
@@ -66,26 +66,29 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
     :param fix_names: Eine Liste wie die Video zu heißen haben
     :param output_path: Der Pfad zum Output Ordner
     :param values: Werte aus der JSON-Datei
+    :param sym: Boolean ob Thumbnails ebenso umbenannt werden sollen
     """
     logger.info("Checking if Videos or Images needs to be deleted")
     out = resources.path_from_root(os.path.join(output_path))
-    thumbnail = ["", "_thumbnail"]
+    sym = ["", "_thumbnail"]
     format = [".mp4", ".png"]
-    for i in range(0, 2):
-        if os.path.exists(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]}")):
-            os.remove(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]}"))
+    x = 2 if thumbnail else 1
+    for i in range(0, x):
+        if os.path.exists(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{sym[i]}{format[i]}")):
+            os.remove(os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 1]}{sym[i]}{format[i]}"))
             logger.info(
-                f"old file {job_name}{fix_names[len(fix_names) - 1]}{thumbnail[i]}{format[i]} has been deleted")
+                f"old file {job_name}{fix_names[len(fix_names) - 1]}{sym[i]}{format[i]} has been deleted")
         for idx, name in enumerate(reversed(fix_names)):
             if idx <= len(fix_names) - 2:
                 if os.path.exists(
-                        os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}{thumbnail[i]}{format[i]}")):
+                        os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}{sym[i]}{format[i]}")):
                     os.rename(
-                        os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}{thumbnail[i]}{format[i]}"),
-                        os.path.join(out, f"{job_name}{name}{thumbnail[i]}{format[i]}"))
+                        os.path.join(out, f"{job_name}{fix_names[len(fix_names) - 2 - idx]}{sym[i]}{format[i]}"),
+                        os.path.join(out, f"{job_name}{name}{sym[i]}{format[i]}"))
 
     os.rename(values["sequence"], os.path.join(out, f"{job_name}{fix_names[0]}.mp4"))
     values["sequence"] = os.path.join(out, f"{job_name}{fix_names[0]}.mp4")
 
-    os.rename(values["thumbnail"], os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png"))
-    values["thumbnail"] = os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png")
+    if thumbnail:
+        os.rename(values["thumbnail"], os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png"))
+        values["thumbnail"] = os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png")

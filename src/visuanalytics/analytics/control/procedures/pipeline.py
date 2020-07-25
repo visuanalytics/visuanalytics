@@ -156,7 +156,8 @@ class Pipeline(object):
                 else:
                     fix_names = self.steps_config["fix_names"]["names"]
                 delete_fix_name_videos(self.steps_config["job_name"], fix_names,
-                                       self.steps_config["output_path"], self.__config)
+                                       self.steps_config["output_path"], self.__config,
+                                       self.steps_config.get("thumbnail", False))
             self.__end_time = time.time()
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
