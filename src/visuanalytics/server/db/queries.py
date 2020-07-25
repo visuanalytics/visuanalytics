@@ -29,7 +29,7 @@ def get_job_list():
     con = db.open_con_f()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, daily, weekly, on_date, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
+    job_id, job_name, type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
     group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
@@ -59,9 +59,7 @@ def _row_to_job(row):
         "params": params,
         "values": values,
         "schedule": {
-            "daily": row["daily"] == 1,
-            "weekly": row["weekly"] == 1,
-            "onDate": row["on_date"] == 1,
+            "type": row["type"],
             "date": row["date"],
             "time": row["time"],
             "weekdays": [int(w) for w in weekdays]
@@ -123,10 +121,9 @@ def update_job(job_id, updated_data):
 
 
 def _insert_schedule(con, schedule):
-    schedule_id = con.execute("INSERT INTO schedule(daily, weekly, on_date, date, time) VALUES(?, ?, ?, ?, ?)",
-                              [schedule["daily"], schedule["weekly"], schedule["onDate"], schedule["date"],
-                               schedule["time"]]).lastrowid
-    if schedule["weekly"]:
+    schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
+                              [schedule["type"], schedule["date"], schedule["time"]]).lastrowid
+    if schedule["type"] == "weekly":
         id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
         con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
     return schedule_id
