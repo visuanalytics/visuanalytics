@@ -22,8 +22,7 @@ def get_params(topic_id):
     with open(path_to_json, encoding="utf-8") as fh:
         steps_json = json.loads(fh.read())
     run_config = steps_json["run_config"]
-    params = [_with_selected(_to_camel_case(p), "") for p in run_config]
-    return params
+    return run_config
 
 
 def get_job_list():
@@ -48,8 +47,9 @@ def _row_to_job(row):
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
     with open(path_to_json, encoding="utf-8") as fh:
         steps_params = json.loads(fh.read())["run_config"]
-    key_values = [kv.split(":") for kv in params_string.split(",")] if params_string != "None" else []
-    params = [_with_selected(_to_camel_case(_find(steps_params, "name", kv[0])), kv[1]) for kv in key_values]
+    pre_values = ([kv.split(":") for kv in params_string.split(",")]) if params_string != "None" else []
+    values = {k: v.split(";") if ";" in v else v for (k, v) in _to_dict(pre_values).items()}
+    params = [_to_camel_case(p) for p in steps_params]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["job_id"],
@@ -57,26 +57,20 @@ def _row_to_job(row):
         "topicName": row["steps_name"],
         "topicId": row["steps_id"],
         "params": params,
+        "values": values,
         "schedule": {
             "daily": row["daily"] == 1,
             "weekly": row["weekly"] == 1,
             "onDate": row["on_date"] == 1,
             "date": row["date"],
             "time": row["time"],
-            "weekdays": weekdays
+            "weekdays": [int(w) for w in weekdays]
         }
     }
 
 
-def _find(lst, key, value):
-    for e in lst:
-        if e[key] == value:
-            return e
-
-
-def _with_selected(param, selected):
-    param["selected"] = selected
-    return param
+def _to_dict(list):
+    return {e[0]: e[1] for e in list}
 
 
 def _to_camel_case(param):
@@ -96,7 +90,7 @@ def insert_job(job):
     schedule_id = _insert_schedule(con, job["schedule"])
     job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
                          [job["jobName"], job["topicId"], schedule_id]).lastrowid
-    _insert_params(con, job_id, job["params"])
+    _insert_param_values(con, job_id, job["params"])
     con.commit()
 
 
@@ -121,10 +115,10 @@ def update_job(job_id, updated_data):
             con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
             new_schedule_id = _insert_schedule(con, value)
             con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [new_schedule_id, job_id])
-        if key == "params":
+        if key == "values":
             # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
-            _insert_params(con, job_id, value)
+            _insert_param_values(con, job_id, value)
     con.commit()
 
 
@@ -138,6 +132,14 @@ def _insert_schedule(con, schedule):
     return schedule_id
 
 
-def _insert_params(con, job_id, params):
-    id_key_values = [(job_id, p["name"], p["selected"]) for p in params]
+def _insert_param_values(con, job_id, values):
+    id_key_values = [(job_id, k, _to_db_entry(v)) for (k, v) in values.items()]
     con.executemany("INSERT INTO job_config(job_id, key, value) VALUES(?, ?, ?)", id_key_values)
+
+
+def _to_db_entry(value):
+    if isinstance(value, list):
+        return "[" + ";".join(value) + "]"
+    if isinstance(value, bool):
+        return int(value)
+    return value
