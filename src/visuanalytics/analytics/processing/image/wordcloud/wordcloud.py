@@ -16,7 +16,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "max_words": 200,
     "contour_width": 0,
     "contour_color": "white",
-    "font_path": None,
+    "font_path": resources.get_resource_path("fonts/Dosis-Medium.ttf"),
     "prefer_horizontal": 0.90,
     "scale": 1,
     "min_font_size": 4,
