@@ -507,6 +507,17 @@ def sub_lists(values: dict, data: StepData):
 
 
 @register_transform
+def tuple2dict(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        for i in value:
+            new_value = dict(value)
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
 def join(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)

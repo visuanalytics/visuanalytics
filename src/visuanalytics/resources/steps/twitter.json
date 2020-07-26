@@ -65,7 +65,8 @@
       "type": "counter",
       "keys": [
         "_req|text_all"
-      ]
+      ],
+      "include_count": true
     },
     {
       "type": "sub_lists",
@@ -136,6 +137,25 @@
           "range_start": 0,
           "range_end": 25
         }
+      ]
+    },
+    {
+      "type": "tuple2dict",
+      "keys": [
+        "_req|text_all",
+        "_req|text_top1",
+        "_req|text_top2",
+        "_req|text_top3",
+        "_req|text_top4",
+        "_req|text_top5",
+        "_req|text_top6",
+        "_req|text_top7",
+        "_req|text_top8",
+        "_req|text_top9",
+        "_req|text_top10",
+        "_req|text_top15",
+        "_req|text_top20",
+        "_req|text_top25"
       ]
     },
     {
