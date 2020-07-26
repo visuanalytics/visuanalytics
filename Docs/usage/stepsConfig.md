@@ -203,8 +203,6 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 ### request_multiple_custom
 
-<!--TODO-->
-
 Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden anderen Request-Typen verwenden, der
 
 **Beispiel** 
@@ -286,252 +284,217 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 ### calculate
 
-<!-- TODO Description-->
+calculate beinhaltet actions, die Funktionen für Berechnungen zur Verfügung stellen.
+Für alle calculate-actions gilt:
 
-calculate stellt Methoden für Berechnungen zur Verfügung.
+**`keys`** :
+
+<!--TODO-->
+
+**`new_keys`**:
+
+<!--TODO-->
 
 #### mean
 
-<!-- TODO Description-->
+Berechnet den Mittelwert von Werten, die in einem Array stehen. 
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "action": "mean",
+    "keys": [
+       "_loop|max_temp"
+    ],
+    "new_keys": [
+       "_loop|temp_avg"
+    ]
+}
 ```
 
-`keys`:
+**`decimal`** : 
 
-<!--TODO-->
-
-`decimal`:
-
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
-
-<!--TODO-->
+int - Nachkommastelle auf die der Durchschnittswert gerundet werden soll.
 
 #### max
 
-<!-- TODO Description-->
+Findet den Maximalwert von Werten, die in einem Array stehen.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "action": "max",
+    "keys": [
+       "_loop|max_temp"
+    ],
+    "new_keys": [
+       "_loop|temp_max"
+    ]
+}
 ```
 
-`keys`:
-
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
-
-`save_idx_to`:
-
-<!--TODO-->
+**`save_idx_to`**:
 
 <!--TODO-->
 
 #### min
 
-<!-- TODO Description-->
+Findet den Minimalwert von Werten, die in einem Array stehen.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "action": "min",
+    "keys": [
+       "_loop|min_temp"
+    ],
+    "new_keys": [
+       "_loop|temp_min"
+    ]
+}
 ```
 
-`keys`:
+**`save_idx_to`**:
 
 <!--TODO-->
 
-`new_keys`:
-
-<!--TODO-->
-
-`save_idx_to`:
-
-<!--TODO-->
-
-<!--TODO-->
 
 #### round
 
-<!-- TODO Description-->
+Rundet gegebene Werte auf eine gewünschte Nachkommastelle.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "action": "round",
+    "keys": [
+        "_loop|temp_avg",
+        "_loop|max_temp",
+        "_loop|min_temp"
+     ],
+     "count": 0
+}
 ```
 
-`keys`:
+**`decimal`**: 
 
-<!--TODO-->
+int - Nachkommastelle auf die der Durchschnittswert gerundet werden soll.
 
-`decimal`:
-
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
+**`count`**: ???
 
 <!--TODO-->
 
 #### mode
 
-<!-- TODO Description-->
+Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "action": "mode",
+    "keys": [
+        "_loop|code"
+    ]
+}
 ```
 
-`keys`:
+#### Grundrechenarten
 
-<!--TODO-->
+multiply, divide, subtract und add sind gleich aufgebaut. Daher haben die keys auch die gleiche Bedeutung.
+Als Standard ist der Wert zu "key" immer auf der linken Seite der Gleichung. Alternativ: "keys_right".
 
-`new_keys`:
+**`keys_right`**: Datenzugriff auf Daten, die auf der rechten Seite der Gleichung stehen sollen. Wichtig: bei divide und subtract.
 
-<!--TODO-->
+**`value_right`**: Wert, der immer auf der rechten Seite der Gleichung stehen soll. Wichtig: bei divide und subtract.
 
-<!--TODO-->
+**`value_left`**: Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei divide und subtract.
 
-#### \_bi_calculate
+**`decimal`**: Nachkommastelle auf die das Ergebnis gerundet werden soll.
 
-<!-- TODO Description-->
 
-Wird aufgerufen von den untenstehenden Methoden zum Multiplizieren, Dividieren, Subtrahieren und Addieren von mehreren
-Werten z.B. aus einem Array oder von nur einem Wert oder einem Array und einem Wert.
+##### multiply
+
+Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
+die unter decimal angegeben wird.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "keys": [
+        "_loop|number1"
+    ],
+    "action": "multiply",
+    "value_right": 3.6,
+    "decimal": 2
+}
 ```
 
-<!--TODO-->
+##### divide
 
-#### multiply
-
-<!-- TODO Description-->
+Dividiert gegebene Werte durch Werte, die in divide_by stehen und rundet auf die gewünschte Nachkommastelle,
+die unter decimal angegeben wird.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+     "keys": [
+         "_loop|number1"
+     ],
+     "action": "divide",
+     "value_right": 3.6,
+     "decimal": 2
+}
 ```
 
-`keys_right`:
+##### subtract
 
-<!--TODO-->
-
-`value_right`:
-
-<!--TODO-->
-
-`value_left`:
-
-<!--TODO-->
-
-`decimal`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-#### divide
-
-<!-- TODO Description-->
+Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "keys_right": [
+        "_loop|number1"
+    ],
+    "action": "subtract",
+    "value_left": 3.6,
+    "decimal": 2
+}
 ```
 
-`keys_right`:
+##### add
 
-<!--TODO-->
-
-`value_right`:
-
-<!--TODO-->
-
-`value_left`:
-
-<!--TODO-->
-
-`decimal`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-#### subtract
-
-<!-- TODO Description-->
+Die jeweiligen Werte, die in add stehen, werden zu den Werten, die in key stehen, hinzuaddiert.
 
 **Beispiel** 
 
 ```JSON
-
+{
+    "type": "calculate",
+    "keys": [
+        "_loop|number1"
+    ],
+    "action": "add",
+    "value_right": 3.6,
+    "decimal": 2
+}
 ```
-
-`keys_right`:
-
-<!--TODO-->
-
-`value_right`:
-
-<!--TODO-->
-
-`value_left`:
-
-<!--TODO-->
-
-`decimal`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-#### add
-
-<!-- TODO Description-->
-
-**Beispiel** 
-
-```JSON
-
-```
-
-`keys_right`:
-
-<!--TODO-->
-
-`value_right`:
-
-<!--TODO-->
-
-`value_left`:
-
-<!--TODO-->
-
-`decimal`:
-
-<!--TODO-->
-
-<!--TODO-->
 
 ### select
 
@@ -549,11 +512,14 @@ Die Keys stehen in relevant_keys.
 }
 ```
 
-`relevant_keys`:
+**`relevant_keys`**: 
 
-<!--TODO-->
+str-Array - Namen der Keys, die aus der API-Antwort übernommen werden sollen.
+
 
 ### delete
+
+Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
 
 **Beispiel** 
 
@@ -564,9 +530,9 @@ Die Keys stehen in relevant_keys.
 }
 ```
 
-`keys`:
+**`keys`**:
 
-<!--TODO-->
+str-Array - Namen der Keys, die aus der JSON-Ausgabe-Datei entfernt werden sollen.
 
 ### select_range
 
@@ -583,19 +549,18 @@ Die Keys stehen in relevant_keys.
 }
 ```
 
-`array_key`:
+**`array_key`**:
 
 <!--TODO-->
 
-`range_start`:
+**`range_start`**:
 
 <!--TODO-->
 
-`range_end`:
+**`range_end`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### append
 
@@ -611,19 +576,16 @@ Die Keys stehen in relevant_keys.
 }
 ```
 
-`key`:
+**`key`**:
 
 <!--TODO-->
 
-`new_key`:
+**`new_key`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### add_symbol
-
-<!-- TODO Description-->
 
 add_symbol setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Value von dem Key, welcher
 unter key steht. Man kann damit auch einen Value vom alten Key unter keys in einen neuen Key unter new_keys kopieren.
@@ -639,23 +601,20 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
 }
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-`pattern`:
+**`pattern`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### replace
-
-<!-- TODO Description-->
 
 replace ersetzt einen String, der in old_value angegeben ist mit einem String, der in new_value angegeben ist.
 Der Value, der unter keys gespeichert ist, wird verändert und in einem neuen Key (angegeben unter new_keys) gespeichert.
@@ -676,27 +635,26 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 }
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-`old_value`:
+**`old_value`**:
 
 <!--TODO-->
 
-`new_value`:
+**`new_value`**:
 
 <!--TODO-->
 
-`count`:
+**`count`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### translate_key
 
@@ -708,19 +666,19 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`dict`:
+**`dict`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-<!--TODO-->
+
 
 ### alias
 
@@ -736,15 +694,14 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 }
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### regex
 
@@ -758,11 +715,32 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 
 <!--TODO-->
 
-### date_format
+### Uhrzeit und Datum
 
-<!-- TODO Description-->
+**`keys`**:
 
-date_format wandelt das Format von Datumsangaben um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
+str-Array - Keys unter denen die Uhrzeit bzw. die Daten als Werte stehen. 
+
+**`new_keys`**:
+
+str-Array - Keys unter denen die umgeformte Uhrzeit bzw. die Daten als Werte stehen sollen.
+
+**`format`**:
+
+str - Das Format, in das die Uhrzeit bzw. das Datum umgewandelt werden soll.
+
+**`given_format`**:
+
+str - Das Format, in dem die Uhrzeit bzw. das Datum angegeben sind.
+
+**`zeropaded_off`**:
+
+bool - True: Entfernt die 0 am Anfang einer Zahl. False (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
+
+
+#### date_format
+
+`date_format` wandelt das Format von Datumsangaben um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
 stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit das Format in das Format umgewandelt werden kann,
 welches in format angegeben ist.
@@ -779,33 +757,9 @@ welches in format angegeben ist.
 }
 ```
 
-`keys`:
+#### timestamp
 
-<!--TODO-->
-
-`new_keys`:
-
-<!--TODO-->
-
-`given_format`:
-
-<!--TODO-->
-
-`format`:
-
-<!--TODO-->
-
-`zeropaded_off`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-### timestamp
-
-<!-- TODO Description-->
-
-timestamp wandelt Datumsangaben, welche im UNIX-Timestamp-Format angegeben sind, in das unter format spezifizierte Format
+`timestamp` wandelt Datumsangaben, welche im UNIX-Timestamp-Format angegeben sind, in das unter format spezifizierte Format
 um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben im UNIX-Timestamo-Format stehen. Unter
 new_keys werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Value gespeichert wird.
 zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
@@ -822,29 +776,12 @@ zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 }
 ```
 
-`keys`:
+Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
 
-<!--TODO-->
+#### date_weekday
 
-`new_keys`:
 
-<!--TODO-->
-
-`format`:
-
-<!--TODO-->
-
-`zeropaded_off`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-### date_weekday
-
-<!-- TODO Description-->
-
-date_weekday wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
+`date_weekday` wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
 stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
 wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus der Wochentag bestimmt werden kann.
 
@@ -859,25 +796,10 @@ wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus d
 }
 ```
 
-`keys`:
+#### date_now
 
-<!--TODO-->
 
-`new_keys`:
-
-<!--TODO-->
-
-`given_format`:
-
-<!--TODO-->
-
-<!--TODO-->
-
-### date_now
-
-<!-- TODO Description-->
-
-date_now gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
+`date_now` gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
 Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 
 **Beispiel** 
@@ -890,25 +812,12 @@ Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
 }
 ```
 
-`new_key`:
-
-<!--TODO-->
-
-`format`:
-
-<!--TODO-->
-
-`zeropaded_off`:
-
-<!--TODO-->
-
-<!--TODO-->
+Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
+Diese haben immer dasselbe Format.
 
 ### wind_direction
 
-<!-- TODO Description-->
-
-wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
+`wind_direction` ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
 
 **Beispiel** 
 
@@ -955,23 +864,22 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
         }
 ```
 
-`key`:
+**`key`**:
 
 <!--TODO-->
 
-`new_key`:
+**`new_key`**:
 
 <!--TODO-->
 
-`dict`:
+**`dict`**:
 
 <!--TODO-->
 
-`delimiter`:
+**`delimiter`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### loop
 
@@ -987,11 +895,11 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 }
 ```
 
-`values`:
+**`values`**:
 
 <!--TODO-->
 
-`transform`:
+**`transform`**:
 
 <!--TODO-->
 
@@ -1006,23 +914,20 @@ wind_direction ist eine Funktion, die zum Umwandeln der Windrichtung aus der Wea
 }
 ```
 
-`range_start`:
+**`range_start`**:
 
 <!--TODO-->
 
-`range_stop`:
+**`range_stop`**:
 
 <!--TODO-->
 
-`transform`:
+**`transform`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### add_data
-
-<!-- TODO Description-->
 
 add_data fügt den Daten ein neues Key-Value-Paar hinzu. Der Value wird unter pattern eingetragen und an die Stelle
 new_key kommt der Key, unter dem der Value gespeichert werden soll.
@@ -1037,19 +942,16 @@ new_key kommt der Key, unter dem der Value gespeichert werden soll.
 }
 ```
 
-`new_key`:
+**`new_key`**:
 
 <!--TODO-->
 
-`patter`n:
+**`pattern`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### copy
-
-<!-- TODO Description-->
 
 Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt.
 
@@ -1059,15 +961,14 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### option
 
@@ -1077,19 +978,18 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ```
 
-`check`:
+**`check`**:
 
 <!--TODO-->
 
-`on_true`:
+**`on_true`**:
 
 <!--TODO-->
 
-`on_false`:
+**`on_false`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### compare
 
@@ -1101,27 +1001,26 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ```
 
-`value_left`:
+**`value_left`**:
 
 <!--TODO-->
 
-`value_right`:
+**`value_right`**:
 
 <!--TODO-->
 
-`on_equal`:
+**`on_equal`**:
 
 <!--TODO-->
 
-`on_higher`:
+**`on_higher`**:
 
 <!--TODO-->
 
-`on_lower`:
+**`on_lower`**:
 
 <!--TODO-->
 
-<!--TODO-->
 
 ### random_value
 <!-- TODO Description-->
@@ -1132,15 +1031,15 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`pattern`:
+**`pattern`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
@@ -1153,15 +1052,15 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`to`:
+**`to`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
@@ -1182,11 +1081,11 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 }
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
@@ -1214,11 +1113,11 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 }
 ```
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
@@ -1239,15 +1138,15 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 }
 ~~~
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
-`delimiter`:
+**`delimiter`**:
 
 <!--TODO-->
 
@@ -1267,11 +1166,11 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 }
 ~~~
 
-`keys`:
+**`keys`**:
 
 <!--TODO-->
 
-`new_keys`:
+**`new_keys`**:
 
 <!--TODO-->
 
@@ -1595,7 +1494,7 @@ int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
 color value - Farbe der Kontur/Umrandung
 
 **`font_path`**: 
-str - Pfad zur Schriftart
+str - Relativer Pfad zur Schriftart (Default: Dosis-Medium.ttf)
 
 **`prefer_horizontal`**: 
 float - <!--TODO-->
@@ -1631,7 +1530,7 @@ bool - <!--TODO-->
 set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
 **`repeat`**:
-bool - Ob Wörter wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
+bool - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
 
 **Beispiel** 
 
@@ -1683,6 +1582,10 @@ Im Image-Overlay:
 Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
 und `circle`empfohlen.
 <!--TODO-->
+
+#### Stopwords
+
+Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann sie bei der Joberstellung angeben. 
 
 ## Audios
 
@@ -1876,15 +1779,15 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
 
 ### custom
 
-Custom ist ein etwas schwierigere sequeunce Typ, diese setzt nicht vorraus das es die selbe
-Anzahl an Bilder sowie Audios gibt. Das heißt mann kann bestimmte Bilder doppelt oder auch gar nicht verwenden  
-Custom funktioniert wie folgt:  
-Die audios werden in der Reihenfolge aneinander gehängt wie in "audio_l" vorgegeben,  
-Die Bilder werden ebenfalls in der Reihenfolge wie in "imnage" angeben aneinander gehängt.  
-jedes Bild wird solange gezeigt wie "time_diff" + Länge des Audios "audio_l".
-Sollte kein Audio angegeben werden wird dies als + 0 betrachtet.
-Das heißt alle time_diff Werte aufaddiert müssen 0 ergeben,
-ansosten passt die gesamte audio Länge nicht auf alle Bilder
+`custom` ist ein etwas schwierigerer sequence-Typ, dieser setzt nicht voraus, dass es dieselbe
+Anzahl an Bildern und Audios gibt. Das heißt man kann bestimmte Bilder doppelt oder auch gar nicht verwenden.
+`custom` funktioniert wie folgt:  
+Die Audios werden in der Reihenfolge aneinander gehängt wie in `audio_l` vorgegeben.  
+Die Bilder werden ebenfalls in der Reihenfolge wie in `image` angeben aneinander gehängt.  
+Jedes Bild wird solange gezeigt wie `time_diff` + Länge des Audios `audio_l`.
+Sollte kein Audio angegeben werden, wird dies als + 0 betrachtet.
+Das heißt alle `time_diff`-Werte aufaddiert, müssen 0 ergeben,
+ansonsten passt die gesamte Audiolänge nicht auf alle Bilder.
 
 ```JSON
 
@@ -1909,15 +1812,15 @@ ansosten passt die gesamte audio Länge nicht auf alle Bilder
 ```
 
 **`image`**:  
-Name des internen Bildes
+str - Name des internen Bildes.
 
 **`time_diff`**_(Optional)_:  
-Zeit welches dieses Bild länger oder kürzer als die Audio datei angezeigt werden soll
+int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer als die Audiodatei angezeigt werden soll.
 
 **`audio_l`**_(Optional)_:  
-Name der internen Audio Datei
+str - Name der internen Audiodatei.
 
-## Run Config
+## run_config
 
 Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der Job-Erstellung am Anfang auswählen kann.
 
@@ -1967,7 +1870,7 @@ als `display_value`.
 
 ## Presets
 
-Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurden auf die Bilder zu schreiben
+Presets werden verwendet, um Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben.
 
 ```JSON
 {
@@ -1987,13 +1890,13 @@ Presets werden verwendet um Texte in dem Style wie sie im preset angegeben wurde
 ```
 
 **`colour`**:  
-Farbe des Textes, kann ein name sein aber auch eine Hexzahl
+str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
 
 **`font_size`**:  
-Größe des Textes
+int - Größe des Textes
 
 **`font`**:  
-Pfad relativ vom ressource Ordner zu der Font Datei
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
 
 **`"test_preset_1"`, `"test_preset_2":`**  
-sind die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
+str - Die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
