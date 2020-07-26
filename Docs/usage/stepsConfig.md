@@ -1,26 +1,117 @@
 # Steps Config 
 
-<!-- TODO Description-->
+Die JSON-Datei zu einem Job hat folgende Abschnitte:
+```JSON
+{
+"id": 1,
+"name": "name_des_videos",
+"api": {},
+"transform": [],
+"storing": [],
+"images": {},
+"thumbnail": {},
+"audio": {},
+"sequence": {},
+"run_config": [],
+"presets": {}
+}
+```
+Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von id und name gibt es mehrere Typen, aus denen bei 
+den einzelnen ABschnitten ausgewählt werden kann, je nachdem wie das Video am ENde aussehen soll und wie die Daten 
+verarbeitet und visualisiert werden sollen.
 
-## Daten Zugriffe
+Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
-<!--TODO-->
+## Datenzugriffe
+
+### JSON-Ausgabe-Datei
+Die JSON-Ausgabe-Datei enthält die ggf. modifizierte API-Antwort und die Konfigurationsparameter. D.h. sie stellt alle für 
+die Video-Generierung benötigten und relevanten Daten bereit. Sie hat die folgenden zwei Abschnitte:
+
+**_req**: 
+In der JSON-Datei stehen die Daten aus der API-Antwort unter dem Abschnitt _req.
+
+**_conf**: 
+In der JSON-Datei stehen die Konfigurationsdaten, die bei der Job-Erstellung festgelegt und ausgewählt wurden unter dem Abschnitt _conf.
+
+Die JSON-Ausgabe-Datei enthält die ggf. modifizierte API-Antwort und die Konfigurationsparameter. D.h. sie stellt alle für 
+die Video-Generierung benötigten und relevanten Daten bereit.
+
+### JSON-StepsConfig-Datei
+In der JSON-StepsConfig-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
+Die Daten aus der API und die Konfigurationen, welche bei der Job-Erstellung festgelegt wurden, werden in einer JSON-Ausgabe-Datei gespeichert.
+Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-StepsConfig-Datei "transform"-Typen verwendet.
+Des Weiteren können auch Daten mit "images"-Typen visualisiert werden. 
+
+Um auf die Daten der JSON-Ausgabe-Datei zuzugreifen und diese modifizieren zu können, gibt es verschiedene Methoden, 
+je nachdem welche Datentypen, die jeweils benötigten Daten besitzen. 
+
+Die verschiedenen Datenzugriffe werden im Folgenden aufgeführt und erläutert.
+
 
 ### Pfade
 
-<!--TODO-->
+Es gibt einen Ordner "resources" in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
+abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
+Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
+**Beispiel**:
+```JSON
+{
+"path": "football/Matchday.png"
+}
+```
+
+### string
+Um auf einen string in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+
+Beispiel:
+```JSON
+{
+"text": "{_req|text}",
+"stopwords": "{_conf|stopwords}"
+}
+```
+
+### boolean
+Um auf einen boolean-Wert in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+Beispiel:
+```JSON
+{
+"collocations": "_conf|collocations",
+"color_func": "_conf|color_func"
+}
+```
+### number
+Um auf einen Zahlenwert (int, double, float) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+Beispiel:
+```JSON
+{
+"width": "_conf|width_wordcloud",
+"height": "_conf|height_wordcloud"
+}
+```
 ### Typen
 
-In der JSON-Konfigurationsdatei
+In der JSON-StepsConfig-Datei gibt es die Typen zu Anfang dieser Seite genannten Abschnitte. 
 
 ### Key/New Key
+Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet kann die key/new_key-Syntax.
+Man hat einen Text, den man verändern und neu abspeichern möchte. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
+Key "text1" abgespeichert. Den modifizierten Text kann man nun wieder unter "text1" abspeichern, indem man keinen neuen Key mit "new_key" angibt. 
+Dann ist der default-Speicherplatz an der Stelle "text1". Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
+Um die Daten zu ergänzen anstatt sie zu Überschreiben, wird der "new_key" verwendet, z.B. mit dem Wert "text_modifiziert".
 
-<!--TODO-->
-
+**Beispiel**:
+```JSON
+{
+    "type": "append",
+    "key": "_loop|text1",
+    "new_key": "_req|text_modifiziert"
+}
+```
 ## Api
 
-<!-- TODO Description-->
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
@@ -1173,7 +1264,7 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
   "new_keys": [
     "_req|hashtags_len"
   ]
-},
+}
 ~~~
 
 `keys`:
