@@ -12,6 +12,7 @@ from visuanalytics.analytics.util.step_errors import TransformError, \
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
 
 TRANSFORM_TYPES = {}
 
@@ -553,17 +554,28 @@ def append_stopwords(values: dict, data: StepData):
     :param data:
     :return:
     """
+    file = resources.get_resource_path("stopwords/stopwords.txt")
+    f = open(file, "r", encoding='utf-8')
+    more_stopwords = ""
+    for x in f:
+        more_stopwords = more_stopwords + x
+    list_stopwords = more_stopwords.split('\n')
+
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
+        value = value + list_stopwords
         new_value = value
         length = len(value)
         for i in range(length):
-            up = value[i].upper()
-            cap = value[i].capitalize()
-            low = value[i].lower()
-            new_value.append(up)
-            new_value.append(cap)
-            new_value.append(low)
+            if (value[i]).upper() != value[i]:
+                up = (value[i]).upper()
+                new_value.append(up)
+            if (value[i]).capitalize() != value[i]:
+                cap = (value[i]).capitalize()
+                new_value.append(cap)
+            if (value[i]).lower() != value[i]:
+                low = (value[i]).lower()
+                new_value.append(low)
 
         data.insert_data(new_key, new_value, values)
