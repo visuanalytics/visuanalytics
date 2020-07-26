@@ -29,7 +29,7 @@ def get_job_list():
     con = db.open_con_f()
     res = con.execute("""
     SELECT DISTINCT 
-    job_id, job_name, type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
+    job_id, job_name, schedule.type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name,
     group_concat(DISTINCT weekday) AS weekdays,
     group_concat(DISTINCT key || ":"  || value) AS params
     FROM job 
@@ -98,7 +98,9 @@ def delete_job(job_id):
     schedule_id = job["schedule_id"]
     con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
     con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
-    con.execute("DELETE FROM job WHERE job_id=?", [job_id]).fetchone()
+    con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
+    con.execute("DELETE FROM job WHERE job_id=?", [job_id])
+    # TODO (David): delete param values
     con.commit()
 
 
