@@ -133,8 +133,8 @@ def _insert_schedule(con, schedule):
 
 
 def _insert_param_values(con, job_id, values):
-    id_key_values = [(job_id, k, _to_db_entry(v)) for (k, v) in values.items()]
-    con.executemany("INSERT INTO job_config(job_id, key, value) VALUES(?, ?, ?)", id_key_values)
+    id_key_values = [(job_id, k, _to_db_entry(v["value"]), v["type"]) for (k, v) in values.items()]
+    con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
 
 
 def _to_db_entry(value):
