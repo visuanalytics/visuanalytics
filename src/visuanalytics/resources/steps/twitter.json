@@ -125,17 +125,18 @@
       }
     ]
   },
-  "run_config": [
-    {
-      "name": "stopwords",
-      "display_name": "Aus Wordcloud ausschließen",
-      "possible_values": [],
-      "default_value": ""
+  "run_config": {
+    "stopwords": {
+      "type": "multiString",
+      "display_name": "Verbotene Wörter",
+      "optional": true,
+      "default_value": []
     },
-    {
-      "name": "colormap_words",
+    "colormap_words": {
+      "type": "enum",
       "display_name": "Farben der Wörter",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "magma",
           "display_value": "magma"
@@ -155,10 +156,11 @@
       ],
       "default_value": "viridis"
     },
-    {
-      "name": "color_func_words",
+    "color_func_words": {
+      "type": "enum",
       "display_name": "Farbverlauf der Wörter",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": true,
           "display_value": "Blau"
@@ -170,10 +172,11 @@
       ],
       "default_value": false
     },
-    {
-      "name": "shape",
+    "shape": {
+      "type": "enum",
       "display_name": "Form der Wordcloud",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "circle",
           "display_value": "Kreis"
@@ -185,7 +188,7 @@
       ],
       "default_value": "circle"
     }
-  ],
+  },
   "presets": {
   }
 }

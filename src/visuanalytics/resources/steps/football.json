@@ -2815,11 +2815,12 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": [
-    {
-      "name": "league",
+  "run_config": {
+    "league": {
+      "type": "enum",
       "display_name": "Liga",
-      "possible_values": [
+      "optional": false,
+      "enum_values": [
         {
           "value": 1,
           "display_value": "1. Bundesliga"
@@ -2834,7 +2835,7 @@
         }
       ]
     }
-  ],
+  },
   "presets": {
     "football_1": {
       "color": "black",
