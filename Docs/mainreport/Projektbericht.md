@@ -55,53 +55,65 @@
 ## Zeitmanagement
 
 <figure style="float: right;">
-  <img src="../_static/images/mainreport/timetable.png"/>
+  <img src="../_static/images/mainreport/Sprintübersicht.png" />
   <figcaption>Abbildung 1</figcaption>
 </figure>
-<br>
 
 Das Projekt findet vom 23.04. – 23.08.2020 statt. 
 
-Inspiriert von der Methode `Scrum` wird dieser Zeitraum in einwöchige Sprints unterteilt, wobei die ersten eineinhalb Wochen die Planungsphase darstellen. 
+Inspiriert von der Methode _Scrum_ wird dieser Zeitraum in einwöchige _Sprints_ unterteilt, wobei die ersten eineinhalb Wochen die Planungsphase darstellen. 
 
-Ab Montag dem 04.05.2020 beginnen die wöchentlichen Sprints. Dazu findet jeden Montag ein Sprint-Planning statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen Sprint berichten, neue Issues erstellt, und eventuelle neue Herausforderungen besprochen werden.
+Ab Montag dem 04.05.2020 beginnen die wöchentlichen _Sprints_. Dazu findet jeden Montag ein _Sprint-Planning_ statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen _Sprint_ berichten, neue _Issues_ erstellt, und eventuelle neue Herausforderungen besprochen werden.
 
-Hinzu kommen die wöchentlichen Meetings mit dem Auftraggeber. Da dieses Meeting mitten in einem Sprint liegt, kann der Projektleiter dem Auftraggeber eine gute Übersicht über den zuletzt abgeschlossenen Sprint, sowie eine Zwischenbilanz des aktuellen Sprints, geben.
+Hinzu kommen die wöchentlichen Meetings mit dem Auftraggeber. Da dieses Meeting mitten in einem _Sprint_ liegt, kann der Projektleiter dem Auftraggeber eine gute Übersicht über den zuletzt abgeschlossenen _Sprint_, sowie eine Zwischenbilanz des aktuellen _Sprints_, geben.
 
-In der `Abbildung 1` wird die zeitliche Aufteilung des Projektzeitraums grafisch dargestellt. Die rot markierten Linien stellen besondere Termine dar:
+In der **Abbildung 1** wird die zeitliche Aufteilung des Projektzeitraums grafisch dargestellt. Die rot markierten Linien stellen besondere Termine dar:
 1.	Lastenheft
 2.	Pflichtenheft
 3.	Zwischenpräsentation
 4.	Abschlusspräsentation 
+5. Abgabe
 
 ### Verwaltung der Arbeitszeiten
 Um die Arbeitszeiten der Teammitglieder zu verwalten, wird eine Excel-Datei benutzt. Die Funktionen dieser werden im folgenden Text erläutert.
 
-Die Excel-Datei besteht aus zehn Tabellenblätter. 
+Die Excel-Datei besteht aus neun Tabellenblätter. 
 - Übersicht
 - Sprintübersicht
 - Issues
 - Meeting
-- Tabellenblatt für jedes Teammitglied (sechs Mitglieder)
+- Tabellenblatt für jedes Teammitglied (fünf Mitglieder)
 
 #### Übersicht
-In diesem Tabellenblatt hat man die Übersicht über das Zeitmanagement des Projektes (siehe Abbildung 1), sowie eine Übersicht über die Zeiten eines Teammitgliedes. 
+In diesem Tabellenblatt hat man die Übersicht über das Zeitmanagement des Projektes (**Abbildung 1**), sowie eine Übersicht über die Zeiten eines Teammitgliedes (**Abbildung 2**). 
+
+<figure style="float: right;">
+  <img src="../_static/images/mainreport/Übersicht.png" />
+  <figcaption>Abbildung 2</figcaption>
+</figure>
 
 Für jedes Teammitglied werden folgende Zeiten angezeigt:
-- Gesamtstunden für diesen Sprint
+- Gesamtstunden für diesen Sprint (_Stunden_)
     - Dieser Wert wird auf dem Tabellenblatt des zugehörigen Mitgliedes berechnet.
-- Zielstunden für diesen Sprint
+- Zielstunden für diesen Sprint (_Soll_)
     - Für das Projekt sind 270 Stunden vorgesehen. Diese Stundenanzahl wird zu Beginn auf alle Sprints aufgeteilt. Wird nun ein Sprint angeschlossen und in der Übersicht abgehakt, so wird für die folgenden Sprints, anhand der übrigen Gesamtzeit, ein neuer Durchschnitt berechnet.
 
-- Differenz beider Stunden
+- Differenz beider Stunden (_Differenz_)
     - Diese Angabe zeigt, wie stark die Abweichung der tatsächlichen Arbeitszeit in einem Sprint, zu der Durchschnittszeit ist.
 
 #### Sprintübersicht
 Auf diesem Tabellenblatt werden die Gesamtzeiten jeder Kategorie pro Sprint angezeigt. So lässt sich gut überblicken, welchen Anteil eine Kategorie in einem Sprint hatte.
+
+<figure>
+  <img src="../_static/images/mainreport/Kategorieübersicht.png" width="80%"/>
+  <figcaption>Abbildung 3</figcaption>
+</figure>
+
 #### Issues
 Auf diesem Tabellenblatt werden die Eingaben getätigt. Dazu stehen einem drei Funktionen zur Verfügung.
+
 #### Hinzufügen
-Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dieses geschieht auf dem Tabellenblatt `Issues`, sowie auf allen Blättern der Mitglieder. 
+Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dieses geschieht auf dem Tabellenblatt **Issues**, sowie auf allen Blättern der Mitglieder. 
 
 Die Tabelle besteht aus dem Namen eines Issues, der Dauer, sowie den Mitgliedern, welche diesen bearbeitet haben.
 #### Entfernen
@@ -109,11 +121,11 @@ Wird dieser Button gedrückt so wird ein Sprint mit all seinen Issues entfernt.
 #### Anwenden
 Hat man einen neuen Sprint hinzugefügt, so füllt man die Tabelle nun mit den neuen Issues, deren Dauer und deren Assignee.
 
-Sobald alle Issues übertragen sind, kann man den Button `Anwenden` drücken, dieser kopiert die Issues in die Tabellenblätter der einzelnen Mitglieder, wenn diese als Assignee aufgeführt sind.
+Sobald alle Issues übertragen sind, kann man den Button `Anwenden` drücken. Dieser kopiert die Issues in die Tabellenblätter der einzelnen Mitglieder, wenn diese als _Assignee_ aufgeführt sind.
 #### Meeting
 In dieses Tabellenblatt werden alle Meetings des Teams eingetragen. Dazu wird das Datum, die Dauer und die Teilnehmer des Meetings eingetragen.
 #### Mitglieder
-Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jeder Issue mit einem `tag` ([Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
+Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jeder Issue mit einem _tag_ (z.B. [Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
 
 ### Erweiterbarkeit Excel-Datei
 Um die Excel-Datei für das Zeitmanagement auch für andere Projekte verwenden zu können, sollten die Mitglieder, sowie die Anzahl Sprints einstellbar sein. In der aktuellen Version der Excel-Datei ist dies noch nicht ohne Kenntnisse in VBA möglich.
@@ -128,39 +140,39 @@ Die Weiterentwicklung dieser Datei läuft parallel zu dem Projekt ab und ist unt
 
 Um das Projekt ordentlich zu strukturieren, benutzen wir Github. Dies dient uns zum einen als Versionsverwaltung, da Git dort integriert ist, sowie auch zum managen unseres Projektes. 
 
-Um unser Zeitmanagement in Github umzusetzen, wird in jedem Sprint-Planning ein neuer milestone mit dem Namen des Sprints (z.B. `Sprint 2`) und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im Sprint-Planning Issues gemeinsam mit allen Teammitgliedern erstellt und dem passenden milestone zugewiesen. Diese Issues werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
+Um unser Zeitmanagement in Github umzusetzen, wird in jedem Sprint-Planning ein neuer _Milestone_ mit dem Namen des Sprints (z.B. "Sprint 2") und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im _Sprint-Planning_ _Issues_ gemeinsam mit allen Teammitgliedern erstellt und dem passenden _Milestone_ zugewiesen. Diese _Issues_ werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
 
-Ist das Sprint-Planning abgeschlossen stehen alle erstellten Issues im Project Board in der Spalte `To-Do`. (siehe Abbildung 2)
+Ist das _Sprint-Planning_ abgeschlossen stehen alle erstellten _Issues_ im Project Board in der Spalte `To-Do`. (**Abbildung 4**)
 
 <figure style="float: right;">
   <img src="../_static/images/mainreport/Projectboard.png" width="70%">
-  <figcaption>Abbildung 2</figcaption>
+  <figcaption>Abbildung 4</figcaption>
 </figure>
 <br>
 
-Wird nun ein Issue in die Spalte `In Progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen Issues trägt. 
+Wird nun ein _Issue_ in die Spalte `In Progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen Issues trägt. 
 
-Hat ein Teammitglied den Issue erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein Pull Request erstellt. Ebenfalls werden alle Unit-Tests, die Github finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
+Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein _Pull Request_ erstellt. Ebenfalls werden alle Unit-Tests, die Github finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
 
-Die Pull Request wird dann einem anderen Teammitglied zum reviewen zugeteilt. Diese überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
+Die _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Diese überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
 
 Link zum Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
 
 ### Github Automatisation
 
 #### Project Board
-Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in `Github Actions` erstellt, welche die Funktionen des Boards erweitern.
+Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in Github _Actions_ erstellt, welche die Funktionen des Boards erweitern.
 
 _Issue Branch erstellen_
 
-Wird ein Issue in die Spalte `In progress` gezogen, wird automatisch ein neuer Branch erstellt.
+Wird ein _Issue_ in die Spalte `In progress` gezogen, wird automatisch ein neuer Branch erstellt.
 
 Der Name des Branches ist wie folgt aufgebaut:  
 `i[issueNummer]-[issueName] (z.B. i1-test)`
 
 _Pull Request erstellen_
 
-Wird ein Issue in die Spalte `Review` gezogen, wird automatisch ein `Pull Request` erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim mergen der Issue automatisch geschlossen.
+Wird ein _Issue_ in die Spalte `Review` gezogen, wird automatisch ein _Pull Request_ erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim mergen der _Issue_ automatisch geschlossen.
 ##### Einrichtung
 
 _Projekt hinzufügen_
@@ -234,13 +246,13 @@ Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action d
 
 ##### Einschränkungen
 
-- Benennt man ein Issue um deren Branch es schon gibt, so kann kein Pull request mehr erstellt werden, da der Branch nicht mehr gefunden wird.
-- Durch einen Fehler von GitHub werden die verlinkten Issues bei einem Pull request erst nach dem Mergen, oder wenn jemand ein Kommentar schreibt, richtig angezeigt.
-- Wenn der Branch keine Änderungen zum Master Branch enthält, kann kein Pull request erstellt werden.
-- Im Projekt Board sollten keine Pull requests hinzugefügt werden, da diese in Github nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die Pull requests auch Branches usw. erstellen.
+- Benennt man einen _Issue_ um, dessen _Branch_ es schon gibt, so kann kein _Pull Request_ mehr erstellt werden, da der _Branch_ nicht mehr gefunden wird.
+- Durch einen Fehler von GitHub werden die verlinkten _Issues_ bei einem _Pull Request_ erst nach dem Mergen, oder wenn jemand ein Kommentar schreibt, richtig angezeigt.
+- Wenn der Branch keine Änderungen zum Master Branch enthält, kann kein _Pull Request_ erstellt werden.
+- Im Projekt Board sollten keine _Pull Requests_ hinzugefügt werden, da diese in Github nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
 
 #### Automatisierte Tests
-Bei einem Pull request werden automatisierte Tests durchgeführt.
+Bei einem _Pull Request_ werden automatisierte Tests durchgeführt.
 ##### Einrichtung
 _Docker Dateien erstellen:_
 - Dockerfile für Projekt erstellen (siehe [hier](https://docs.docker.com/engine/reference/builder/))
@@ -270,9 +282,9 @@ Nachdem die Action das Repository ausgecheckt hat, wird zuerst der Docker Contai
 ---
 
 ## Entwicklungsumgebung	
-Für die Entwicklung des Programmes nutzen wir zwei Entwicklungsumgebungen von `JetBrains`.  
-- Entwicklung der Logik in Python: PyCharm.
-- Entwicklung des User-Interfaces: WebStorm.
+Für die Entwicklung des Programmes nutzen wir zwei Entwicklungsumgebungen von **JetBrains**.  
+- Entwicklung der Logik in Python: **PyCharm**.
+- Entwicklung des User-Interfaces: **WebStorm**.
 
 ---
 
@@ -306,7 +318,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 - Den Themenbereich Finanzen dem Programm hinzufügen
 <figure style="float: right;">
   <img width="200px" src="../_static/images/mainreport/Wordcloud.png"/>
-  <figcaption>Abbildung 3</figcaption>
+  <figcaption>Abbildung 5</figcaption>
 </figure>
 <br>
 
@@ -325,7 +337,7 @@ Eine genaue Zielgruppe wird bei der Herstellung nicht berücksichtigt, die Theme
 ### Produktübersicht
 #### Benutzeroberfläche/Funktion
 ##### Übersicht
-Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das klicken auf den Job Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
+Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das Klicken auf den Job Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
 1.	Einer einzigartigen ID (z.B. #1)
 2.	Einem zugeordneten Thema 
 3.	Dem Zeitpunkt wann das Video neu generiert wird
@@ -336,7 +348,7 @@ Der Benutzer kann auf dieser Seite einen neuen Job anlegen (1), bearbeiten (2), 
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Startseite.png"/>
-  <figcaption>Abbildung 4</figcaption>
+  <figcaption>Abbildung 6</figcaption>
 </figure>
 <br>
 
@@ -345,7 +357,7 @@ Möchte der Benutzer einen Job anlegen, so gelangt er zuerst zu der Themenauswah
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Topic.png"/>
-  <figcaption>Abbildung 5</figcaption>
+  <figcaption>Abbildung 7</figcaption>
 </figure>
 <br>
 
@@ -353,21 +365,21 @@ Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel `Bundesliga
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Param.png"/>
-  <figcaption>Abbildung 6</figcaption>
+  <figcaption>Abbildung 8</figcaption>
 </figure>
 <br>
 
 Danach kann der Benutzer den Zeitplan des Jobs festlegen. Hier hat der Benutzer zunächst drei Möglichkeiten. 
 
-**`Täglich`**:
+**Täglich**:
 
 wählt er diesen Punkt, so wird das Video täglich generiert.   
 
-**`Wöchentlich`**:
+**Wöchentlich**:
 
 hier kann der Benutzer aus allen sieben Wochentagen auswählen, an denen dann wöchentlich das Video generiert wird.  
 
-**`Datum`**:
+**Datum**:
 
 hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generiert wird  
 
@@ -375,7 +387,7 @@ Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhr
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Schedule.png"/>
-  <figcaption>Abbildung 7</figcaption>
+  <figcaption>Abbildung 9</figcaption>
 </figure>
 <br>
 
@@ -385,7 +397,7 @@ Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das 
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Einstellungen.png"/>
-  <figcaption>Abbildung 8</figcaption>
+  <figcaption>Abbildung 10</figcaption>
 </figure>
 <br>
 
@@ -394,7 +406,7 @@ Zusätzlich zu den `normalen` Einstellungen eines Jobs, soll es dem Benutzer auc
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Entwicklertools.png"/>
-  <figcaption>Abbildung 9</figcaption>
+  <figcaption>Abbildung 11</figcaption>
 </figure>
 <br>
 
@@ -405,7 +417,7 @@ Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text 
   <img width="32%" src="../_static/images/reports/WetterIcons.png"/>
   <img width="32%" src="../_static/images/reports/WetterGrad.png"/>
   <img width="32%" src="../_static/images/reports/Wetter3Tage.png"/>
-  <figcaption>Abbildung 10</figcaption>
+  <figcaption>Abbildung 12</figcaption>
 </figure>
 <br>
 
