@@ -6,7 +6,6 @@ import os
 import subprocess
 
 from mutagen.mp3 import MP3
-
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
@@ -36,13 +35,24 @@ def link(values: dict, step_data: StepData):
     :return: Den Pfad zum OutputVideo
     :rtype: str
     """
+    out_images, out_audios, out_audio_l = [], [], []
     seq_func = get_type_func(values["sequence"], SEQUENCE_TYPES)
+    seq_func(values, step_data, out_images, out_audios, out_audio_l)
 
-    return seq_func(values, step_data)
+    if step_data.get_config("attach", None) is not None:
+        for item in step_data.get_config("attach", None):
+            from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+            pipeline = Pipeline(step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
+            pipeline.start()
+            if pipeline.current_step != -2:
+                seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
+                seq_func(pipeline.config, step_data, out_images, out_audios, out_audio_l)
+
+    _link(out_images, out_audios, out_audio_l, step_data, values)
 
 
 @register_sequence
-def successively(values: dict, step_data: StepData):
+def successively(values: dict, step_data: StepData, out_images, out_audios, out_audio_l):
     """
     Generiert das Output Video, dazu werden dediglich alle Bilder und alle Video Datein in der
     Reihenfolge wie sie in values(also in der JSON) vorliegen aneinander gereiht.
@@ -52,17 +62,15 @@ def successively(values: dict, step_data: StepData):
     :return: Den Pfad zum OutputVideo
     :rtype: str
     """
-    out_images, out_audios, out_audio_l = [], [], []
     for image in values["images"]:
         out_images.append(values["images"][image])
     for audio in values["audio"]["audios"]:
         out_audios.append(values["audio"]["audios"][audio])
         out_audio_l.append(MP3(values["audio"]["audios"][audio]).info.length)
-    return _link(out_images, out_audios, out_audio_l, step_data, values)
 
 
 @register_sequence
-def custom(values: dict, step_data: StepData):
+def custom(values: dict, step_data: StepData, out_images, out_audios, out_audio_l):
     """
     Generiert das Output Video, in values(also in der JSON) muss angegeben sein in welcher Reihenfolge und wie lange jedes Bild
     und die passenden Audio Datei aneinander gereiht werden sollen.
@@ -72,7 +80,6 @@ def custom(values: dict, step_data: StepData):
     :return: Den Pfad zum OutputVideo
     :rtype: str
     """
-    out_images, out_audios, out_audio_l = [], [], []
     for s in values["sequence"]["pattern"]:
         out_images.append(values["images"][step_data.format(s["image"])])
         if s.get("audio_l", None) is None:
@@ -81,8 +88,6 @@ def custom(values: dict, step_data: StepData):
             out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
             out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
-
-    return _link(out_images, out_audios, out_audio_l, step_data, values)
 
 
 def _link(images, audios, audio_l, step_data: StepData, values: dict):

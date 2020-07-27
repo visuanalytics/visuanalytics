@@ -47,13 +47,32 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "14:46",
+        "time": "10:25",
         "daily": true
       },
       "config": {
         "thumbnail": true,
         "league": "1",
-        "keep_count": 3
+        "keep_count": 3,
+        "attach": [
+          {
+            "steps": "twitter",
+            "config": {
+              "hashtags": [
+                "Bundesliga",
+                "Fußball"
+              ],
+              "stopwords": " ",
+              "colormap_words": "viridis",
+              "color_func": true,
+              "color_func_words": "145 46 5 35",
+              "figure": "circle",
+              "width_wordcloud": 1000,
+              "height_wordcloud": 1000,
+              "keep_count": 3
+            }
+          }
+        ]
       }
     },
     {

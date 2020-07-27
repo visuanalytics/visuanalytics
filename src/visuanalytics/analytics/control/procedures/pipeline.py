@@ -36,8 +36,9 @@ class Pipeline(object):
                6: {"name": "Sequence", "call": link},
                7: {"name": "Ready"}}
     __steps_max = 7
+    cleanup = True
 
-    def __init__(self, pipeline_id: str, step_name: str, steps_config=None):
+    def __init__(self, pipeline_id: str, step_name: str, steps_config=None, no_sequence=False):
         if steps_config is None:
             steps_config = {}
 
@@ -49,6 +50,10 @@ class Pipeline(object):
         self.__config = {}
         self.__current_step = -1
 
+        if no_sequence:
+            self.__steps_max = 6
+            self.cleanup = False
+
     @property
     def start_time(self):
         """float: Startzeit der Pipeline. Wird erst bei dem Aufruf von :func:`start` initialisiert."""
@@ -58,6 +63,16 @@ class Pipeline(object):
     def end_time(self):
         """float: Endzeit der Pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
         return self.__end_time
+
+    @property
+    def config(self):
+        """float: config der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
+        return self.__config
+
+    @property
+    def current_step(self):
+        """int: Aktuelle Step der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
+        return self.__current_step
 
     @property
     def id(self):
@@ -87,7 +102,8 @@ class Pipeline(object):
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
-        os.mkdir(resources.get_temp_resource_path("", self.id))
+        if self.cleanup:
+            os.mkdir(resources.get_temp_resource_path("", self.id))
 
         logger.info(f"Inizalization finished!")
 
@@ -153,13 +169,15 @@ class Pipeline(object):
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
 
-            self.__on_completion(data)
-            self.__cleanup()
+            if self.cleanup:
+                self.__on_completion(data)
+                self.__cleanup()
             return True
 
         except Exception:
             self.__current_step = -2
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
-            self.__cleanup()
+            if self.cleanup:
+                self.__cleanup()
             return False
