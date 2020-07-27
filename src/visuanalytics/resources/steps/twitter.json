@@ -71,6 +71,12 @@
       ]
     },
     {
+      "type": "normalize_words",
+      "keys": [
+        "_req|text_all"
+      ]
+    },
+    {
       "type": "counter",
       "keys": [
         "_req|text_all"

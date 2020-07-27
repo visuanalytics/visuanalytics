@@ -426,6 +426,12 @@ def option(values: dict, data: StepData):
 
 @register_transform
 def compare(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     values["transform"] = execute_type_compare(values, data)
 
     transform(values, data)
@@ -457,6 +463,12 @@ def random_value(values: dict, data: StepData):
 
 @register_transform
 def convert(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     new_type = locate(values["to"])
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
@@ -467,6 +479,12 @@ def convert(values: dict, data: StepData):
 
 @register_transform
 def sort(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
         value = data.get_data(key, values)
@@ -479,6 +497,12 @@ def sort(values: dict, data: StepData):
 
 @register_transform
 def counter(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -495,6 +519,12 @@ def counter(values: dict, data: StepData):
 
 @register_transform
 def sub_lists(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["array_key"], values)
 
     for sub_list in values["sub_lists"]:
@@ -509,6 +539,12 @@ def sub_lists(values: dict, data: StepData):
 
 @register_transform
 def join(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -521,6 +557,12 @@ def join(values: dict, data: StepData):
 
 @register_transform
 def length(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -530,6 +572,12 @@ def length(values: dict, data: StepData):
 
 @register_transform
 def remove_from_list(values: dict, data: StepData):
+    """
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -548,50 +596,156 @@ def remove_from_list(values: dict, data: StepData):
 
 @register_transform
 def append_stopwords(values: dict, data: StepData):
-    """Bekommt eine Liste und wandelt bestimmte Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
+    """Bekommt Stopwords und wandelt die jeweiligen Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
 
-    :param values:
-    :param data:
+    Bekommt eine Stopword-Liste aus der Textdatei resources/stopwords/stopwords.txt und ggf. die bei der Job-Erstellung
+    eingegebenen wurden und wandelt die jeweiligen Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
     :return:
     """
-    file = resources.get_resource_path("stopwords/stopwords.txt")
-    f = open(file, "r", encoding='utf-8')
-    more_stopwords = ""
-    for x in f:
-        more_stopwords = more_stopwords + x
-    list_stopwords = more_stopwords.split('\n')
 
-    if values.get("keys", None):
+    def case_not_sensitive_stopwords(value):
+        new_value = value
+        for i in range(len(value)):
+            if (value[i]).upper() != value[i]:
+                up = (value[i]).upper()
+                new_value.append(up)
+            if (value[i]).capitalize() != value[i]:
+                cap = (value[i]).capitalize()
+                new_value.append(cap)
+            if (value[i]).lower() != value[i]:
+                low = (value[i]).lower()
+                new_value.append(low)
+
+        return new_value
+
+    try:
+        file = resources.get_resource_path("stopwords/stopwordsx.txt")
+        f = open(file, "r", encoding='utf-8')
+        more_stopwords = ""
+        for x in f:
+            more_stopwords = more_stopwords + x
+        list_stopwords = more_stopwords.split('\n')
+
+        if values.get("keys", None):
+            for idx, key in data.loop_key(values["keys"], values):
+                value = data.get_data(key, values)
+                new_key = get_new_keys(values, idx)
+                value = value + list_stopwords
+                new_value = case_not_sensitive_stopwords(value)
+
+                data.insert_data(new_key, new_value, values)
+        else:
+            for j in range(len(values["new_keys"])):
+                value = list_stopwords
+                new_value = case_not_sensitive_stopwords(value)
+
+                data.insert_data(values["new_keys"][j], new_value, values)
+    except:
         for idx, key in data.loop_key(values["keys"], values):
             value = data.get_data(key, values)
             new_key = get_new_keys(values, idx)
-            value = value + list_stopwords
-            new_value = value
-            length = len(value)
-            for i in range(length):
-                if (value[i]).upper() != value[i]:
-                    up = (value[i]).upper()
-                    new_value.append(up)
-                if (value[i]).capitalize() != value[i]:
-                    cap = (value[i]).capitalize()
-                    new_value.append(cap)
-                if (value[i]).lower() != value[i]:
-                    low = (value[i]).lower()
-                    new_value.append(low)
+            new_value = case_not_sensitive_stopwords(value)
+
             data.insert_data(new_key, new_value, values)
-    else:
-        for j in range(len(values["new_keys"])):
-            value = list_stopwords
-            new_value = value
-            length = len(value)
-            for i in range(length):
-                if (value[i]).upper() != value[i]:
-                    up = (value[i]).upper()
-                    new_value.append(up)
-                if (value[i]).capitalize() != value[i]:
-                    cap = (value[i]).capitalize()
-                    new_value.append(cap)
-                if (value[i]).lower() != value[i]:
-                    low = (value[i]).lower()
-                    new_value.append(low)
-            data.insert_data(values["new_keys"][j], new_value, values)
+
+
+@register_transform
+def lower_case(values: dict, data: StepData):
+    """Jedes Wort in der Liste wird komplett in Kleinbuchstaben geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = ""
+        for each in value:
+            if each.upper() == each or each.capitalize() == each or each.lower() == each:
+                low = each.lower()
+                new_value = new_value + " " + low
+            else:
+                new_value = new_value + " " + each
+        new_value = new_value.split(" ")
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def upper_case(values: dict, data: StepData):
+    """Jedes Wort in der Liste wird komplett in Großbuchstaben geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = ""
+        for each in value:
+            if each.upper() == each or each.capitalize() == each or each.lower() == each:
+                up = each.upper()
+                new_value = new_value + " " + up
+            else:
+                new_value = new_value + " " + each
+        new_value = new_value.split(" ")
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def capitalize(values: dict, data: StepData):
+    """Der erste Buchstabe jedes Worts in der Liste wird groß geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = ""
+        for each in value:
+            if each.upper() == each or each.capitalize() == each or each.lower() == each:
+                cap = each.capitalize()
+                new_value = new_value + " " + cap
+            else:
+                new_value = new_value + " " + each
+        new_value = new_value.split(" ")
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def normalize_words(values: dict, data: StepData):
+    """Wörter, die öfter vorkommen und unterschiedliche cases besitzen, werden normalisiert.
+
+    Eine Liste wird durchlaufen und jedes Wort welches bei zweiten Vorkommen anders geschrieben wurde als das erste
+    vorgekommene wird dann so ersetzt, dass es so geschrieben wird wie das zuerst vorgekommene. Z.B. Bundesliga und
+    bundesliga. Aus bundesliga wird Bundesliga.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        already_there = []
+        new_value = ""
+        for each in value:
+            if each.upper() in already_there:
+                new_value = new_value + " " + each.upper()
+            elif each.lower() in already_there:
+                new_value = new_value + " " + each.lower()
+            elif each.capitalize() in already_there:
+                new_value = new_value + " " + each.capitalize()
+            else:
+                already_there.append(each)
+                new_value = new_value + " " + each
+
+        new_value = new_value.split(" ")
+        
+        data.insert_data(new_key, new_value, values)
