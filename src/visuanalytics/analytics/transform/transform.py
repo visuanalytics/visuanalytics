@@ -622,7 +622,7 @@ def append_stopwords(values: dict, data: StepData):
         return new_value
 
     try:
-        file = resources.get_resource_path("stopwords/stopwordsx.txt")
+        file = resources.get_resource_path("stopwords/stopwords.txt")
         f = open(file, "r", encoding='utf-8')
         more_stopwords = ""
         for x in f:
@@ -747,5 +747,5 @@ def normalize_words(values: dict, data: StepData):
                 new_value = new_value + " " + each
 
         new_value = new_value.split(" ")
-        
+
         data.insert_data(new_key, new_value, values)
