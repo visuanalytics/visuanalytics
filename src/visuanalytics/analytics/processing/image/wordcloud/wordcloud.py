@@ -32,16 +32,35 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "mask": None
 }
 
+DEFAULT_COLOR_FUNC_VALUES = [0, 0, 0, 40]
 
-def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+
+def get_color_func(h, s, l_start, l_end):
     """
     Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+
+    Die Werte werden jeweils als Integer angegeben.
+
+    :param h: (hue) Farbton in Grad auf einem Farbenrad. Mögliche Werte: 0 bis 360
+        0 ist Rot, 120 ist Grün und 240 ist Blau.
+    :param s: (saturation) Sättigung in Prozent. 0% entspricht einem Grauton, 100% ist die volle Farbe.
+    :param l_start: (lightness range start) Start des Helligkeitsbereichs in Prozent: 0% ist Schwarz, 100% ist Weiß.
+    :param l_end: (lightness range end) Ende des Helligkeitsbereichs in Prozent: 0% ist Schwarz, 100% ist Weiß.
+    :return: Funktion, die den Farbverlauf innerhalb der Wordcloud erstellt
+    :rtype: callable
     """
-    return "hsl(245, 46%%, %d%%)" % random.randint(5, 35)
+
+    def color_func(word, font_size, position, orientation, random_state=None, **kwargs):
+        return "hsl(%d, %d%%, %d%%)" % (h, s, random.randint(l_start, l_end))
+
+    return color_func
 
 
 def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """Erstellt ein Wordcloud Bild.
+
+    Der Standard-Farbverlauf bei color_func true ist Grau/Schwarz.
+    Die Standard-Farbe ist generell die Colormap viridis.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
@@ -50,7 +69,7 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    wordcloud_parameter = WORDCLOUD_DEFAULT_PARAMETER
+    wordcloud_parameter = dict(WORDCLOUD_DEFAULT_PARAMETER)
     parameter = values.get("parameter", {})
 
     for param in parameter:
@@ -64,8 +83,18 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
 
             wordcloud_parameter[param] = value
 
-    if step_data.get_data_bool(parameter.get("color_func", False), {}):
-        wordcloud_parameter["color_func"] = color_func
+    if bool(wordcloud_parameter.get("color_func", False)):
+        cfw = list(DEFAULT_COLOR_FUNC_VALUES)
+
+        if "color_func_words" in values:
+            cfw_list = step_data.format(values["color_func_words"]).split(" ")
+
+            for idx, c in enumerate(cfw_list):
+                cfw[idx] = int(c)
+
+        wordcloud_parameter["color_func"] = get_color_func(*cfw)
+    else:
+        wordcloud_parameter["color_func"] = None
 
     if parameter.get("colormap", ""):
         wordcloud_parameter["colormap"] = step_data.format(parameter["colormap"])
