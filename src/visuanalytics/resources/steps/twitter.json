@@ -764,7 +764,7 @@
       "default_value": "viridis"
     },
     "color_func": {
-      "type": "subParams",
+      "type": "sub_params",
       "display_name": "Farbverlauf",
       "optional": true,
       "sub_params": {
