@@ -37,7 +37,7 @@ class Scheduler(object):
     def _check_datetime(now: datetime, run_time: datetime):
         return now.date() >= run_time.date() and now.hour >= run_time.hour and now.minute >= run_time.minute
 
-    def _check_intervall(self, now: datetime, interval: dict, job_id: int):
+    def _check_interval(self, now: datetime, interval: dict, job_id: int):
         next_run = self._interval.get(job_id, None)
         run = False
 

@@ -48,7 +48,7 @@ class JsonScheduler(Scheduler):
                 continue
 
             # if interval is set and not the nex_run time is not now continue
-            if "interval" in schedule and not self._check_intervall(now, schedule["interval"], job["id"]):
+            if "interval" in schedule and not self._check_interval(now, schedule["interval"], job["id"]):
                 continue
 
             # If Step id is valid run
