@@ -31,11 +31,11 @@ class JsonScheduler(Scheduler):
             schedule = job["schedule"]
 
             # if Time is set and not current continue
-            if "time" in schedule and not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
+            if "times" in schedule and not self._check_times(now, schedule["times"]):
                 continue
 
             # if date is set and not today continue
-            if "date" in schedule and not datetime.strptime(schedule["date"], "%y-%m-%d").date() == now.date():
+            if "dates" in schedule and not self._check_dates(now, schedule["dates"], True):
                 # TODO Delete date schedule after run
                 continue
 
