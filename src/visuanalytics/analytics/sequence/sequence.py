@@ -131,8 +131,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     args2.extend(("-s", "1920x1080", output2))
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
-
-    return output2
+    values["sequence"] = output2
 
 
 def _sum_audio_l(audio_l, index):
