@@ -2,7 +2,7 @@ import logging
 import threading
 import time
 import uuid
-from datetime import datetime, time as dt_time
+from datetime import datetime, time as dt_time, timedelta
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
 
@@ -27,10 +27,31 @@ class Scheduler(object):
         if base_config is None:
             base_config = {}
         self._base_config = base_config
+        self._interval = {}
 
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
+
+    @staticmethod
+    def _check_datetime(now: datetime, run_time: datetime):
+        return now.date() >= run_time.date() and now.hour >= run_time.hour and now.minute >= run_time.minute
+
+    def _check_intervall(self, now: datetime, interval: dict, job_id: int):
+        next_run = self._interval.get(job_id, None)
+        run = False
+
+        print(f"Start: Next Runtime {self._interval.get(job_id, None)} for job({job_id})")
+
+        if not next_run is None:
+            run = self._check_datetime(now, next_run)
+
+        if run or next_run is None:
+            self._interval[job_id] = now + timedelta(**interval)
+
+        print(f"End: Next Runtime {self._interval.get(job_id, None)} for job({job_id})")
+
+        return run
 
     @property
     def base_config(self):
