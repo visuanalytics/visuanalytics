@@ -86,8 +86,7 @@ class StepKeyError(Exception):
 
 class APIKeyError(Exception):
     """
-    Fehlerklasse für einen Nicht
-    gefundenen API key Name.
+    Fehlerklasse für einen nicht-gefundenen API key-Namen.
     """
 
     def __init__(self, api_key_name):
@@ -112,10 +111,10 @@ class InvalidContentTypeError(Exception):
 def raise_step_error(error):
     """
     Gibt einen Decorator zurück der die Orginal Funktion
-    mit einem `try`, `expect` block umschießt. Die in `error` übergebene Exception
-    wird dann Anstadt der Erwarteten Exception geworfen.
+    mit einem `try`, `expect` Block umschließt. Die in `error` übergebene Exception
+    wird dann anstatt der erwarteten Exception geworfen.
 
-    :param error: Neue Fehler Klasse
+    :param error: Neue Fehlerklasse
     :return: Decorator
     """
 
