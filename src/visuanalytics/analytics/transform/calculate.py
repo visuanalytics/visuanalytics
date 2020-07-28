@@ -1,4 +1,5 @@
 import collections
+import numbers
 import operator
 
 import numpy as np
@@ -27,7 +28,7 @@ def calculate_mean(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
         mean_value = float(np.mean(value))
         if values.get("decimal", None):
-            new_value = round(mean_value, data.get_data_num(values["decimal"], values))
+            new_value = round(mean_value, data.get_data(values["decimal"], values, numbers.Number))
         else:
             new_value = round(mean_value)
         data.insert_data(new_key, new_value, values)
@@ -79,7 +80,7 @@ def calculate_round(values: dict, data: StepData):
         new_key = get_new_keys(values, idx)
 
         if values.get("decimal", None):
-            new_value = round(value, data.get_data_num(values["decimal"], values))
+            new_value = round(value, data.get_data(values["decimal"], values, numbers.Number))
         else:
             new_value = round(value)
         data.insert_data(new_key, new_value, values)
@@ -117,16 +118,16 @@ def _bi_calculate(values: dict, data: StepData, op):
             res = op(key, right)
         elif value_right is not None:
             # If value_right is present use that value
-            right = data.get_data_num(value_right, values)
+            right = data.get_data(value_right, values, numbers.Number)
             res = op(key, right)
         else:
             # If value_left is present use that value
-            left = data.get_data_num(value_left, values)
+            left = data.get_data(value_left, values, numbers.Number)
             res = op(left, key)
 
         if decimal is not None:
             # If decimal is present round
-            decimal = data.get_data_num(decimal, values)
+            decimal = data.get_data(decimal, values, numbers.Number)
             res = round(res, decimal)
 
         data.insert_data(new_key, res, values)

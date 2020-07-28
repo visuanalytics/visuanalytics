@@ -5,7 +5,7 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "12:48",
+        "time": "11:53",
         "daily": true
       },
       "config": {

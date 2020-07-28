@@ -194,7 +194,7 @@ def _build_params_array(values: dict, data: StepData, api_key_name: str, req: di
         req["params"] = {}
 
     for params in values["params_array"]:
-        params_array = data.get_data_array(params["array"], values)
+        params_array = data.get_data(params["array"], values, list)
         data.deep_format(params_array, api_key_name, values)
 
         param = "".join(

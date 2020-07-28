@@ -56,15 +56,15 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     for param in parameter:
         if param in wordcloud_parameter:
             if isinstance(wordcloud_parameter[param], bool):
-                value = step_data.get_data_bool(parameter[param], {})
+                value = step_data.get_data(parameter[param], {}, bool)
             elif isinstance(wordcloud_parameter[param], numbers.Number):
-                value = step_data.get_data_num(parameter[param], {})
+                value = step_data.get_data(parameter[param], {}, numbers.Number)
             else:
                 value = step_data.format(parameter[param])
 
             wordcloud_parameter[param] = value
 
-    if step_data.get_data_bool(parameter.get("color_func", False), {}):
+    if step_data.get_data(parameter.get("color_func", False), {}, bool):
         wordcloud_parameter["color_func"] = color_func
 
     if parameter.get("colormap", ""):
@@ -73,8 +73,8 @@ def wordcloud(image: dict, prev_paths, presets: dict, step_data: StepData):
     if parameter.get("figure", None) is not None:
         figure = step_data.format(parameter["figure"], {})
         if figure == "circle":
-            x0 = step_data.get_data_num(parameter["width"], {})
-            y0 = step_data.get_data_num(parameter["height"], {})
+            x0 = step_data.get_data(parameter["width"], {}, numbers.Number)
+            y0 = step_data.get_data(parameter["height"], {}, numbers.Number)
             x, y = np.ogrid[:x0, :y0]
 
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2

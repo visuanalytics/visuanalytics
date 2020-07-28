@@ -1,3 +1,5 @@
+import numbers
+
 from visuanalytics.analytics.control.procedures.step_data import StepData
 
 
@@ -11,8 +13,8 @@ def execute_type_option(values: dict, data: StepData):
 
 
 def execute_type_compare(values: dict, data: StepData):
-    value_left = data.get_data_num(values["value_left"], values)
-    value_right = data.get_data_num(values["value_right"], values)
+    value_left = data.get_data(values["value_left"], values, numbers.Number)
+    value_right = data.get_data(values["value_right"], values, numbers.Number)
 
     if value_left == value_right:
         return values.get("on_equal", [])
