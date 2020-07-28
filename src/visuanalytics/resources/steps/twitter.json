@@ -126,6 +126,12 @@
     ]
   },
   "run_config": {
+    "hashtags": {
+      "type": "multiString",
+      "display_name": "Hashtags",
+      "optional": false,
+      "default_value": []
+    },
     "stopwords": {
       "type": "multiString",
       "display_name": "Verbotene Wörter",
