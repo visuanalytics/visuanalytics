@@ -807,7 +807,7 @@
       },
       "default_value": false
     },
-    "shape": {
+    "figure": {
       "type": "enum",
       "display_name": "Form der Wordcloud",
       "optional": true,
@@ -822,6 +822,18 @@
         }
       ],
       "default_value": "circle"
+    },
+    "width_wordcloud": {
+      "type": "number",
+      "display_value": "Breite der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
+    },
+    "height_wordcloud": {
+      "type": "number",
+      "display_value": "Höhe der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
     }
   },
   "presets": {
