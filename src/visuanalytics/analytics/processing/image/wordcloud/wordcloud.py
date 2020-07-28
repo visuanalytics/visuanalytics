@@ -122,7 +122,11 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
         dont_use = step_data.format(values["stopwords"], {})
         wordcloud_parameter["stopwords"] = set(dont_use.split())
 
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
+    if values.get("text", None) is not None:
+        wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
+    elif values.get("dict", None) is not None:
+        wordcloud_image = WordCloud(**wordcloud_parameter).generate_from_frequencies(
+            step_data.get_data_dict(values["dict"], {}))
 
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
