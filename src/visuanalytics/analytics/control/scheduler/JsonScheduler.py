@@ -28,21 +28,27 @@ class JsonScheduler(Scheduler):
             delete_on_time(jobs, self.base_config["output_path"])
 
         for job in jobs.get("jobs", []):
-            # if Time is not current continue
-            # TODO error if time is not set
-            if not self._check_time(now, datetime.strptime(job["schedule"]["time"], "%H:%M").time()):
+            schedule = job["schedule"]
+
+            # if Time is set and not current continue
+            if "time" in schedule and not self._check_time(now, datetime.strptime(schedule["time"], "%H:%M").time()):
                 continue
+
             # if date is set and not today continue
-            if "date" in job and not datetime.strptime(job["schedule"]["date"], "%y-%m-%d").date() == now.date():
+            if "date" in schedule and not datetime.strptime(schedule["date"], "%y-%m-%d").date() == now.date():
                 # TODO Delete date schedule after run
                 continue
 
             # if weekday is set and not the same as today continue
-            if "weekday" in job and not now.weekday() in job["schedule"]["weekday"]:
+            if "weekday" in schedule and not now.weekday() in schedule["weekday"]:
                 continue
 
             # if daily is set and not True continue
-            if "daily" in job and not job["schedule"]["daily"]:
+            if "daily" in schedule and not schedule["daily"]:
+                continue
+
+            # if interval is set and not the nex_run time is not now continue
+            if "interval" in schedule and not self._check_intervall(now, schedule["interval"], job["id"]):
                 continue
 
             # If Step id is valid run
