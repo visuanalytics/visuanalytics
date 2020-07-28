@@ -764,55 +764,48 @@
       "default_value": "viridis"
     },
     "color_func": {
-      "name": "color_func",
+      "type": "subParams",
       "display_name": "Farbverlauf",
-      "possible_values": [
-        {
-          "value": false,
-          "display_value": "Standard verwenden"
-        },
-        {
-          "value": true,
-          "display_value": "andere Farben auswählen"
-        }
-      ],
-      "default_value": false
-    },
-    "color_func_words": {
-      "type": "enum",
-      "display_name": "Farbverlauf der Wörter",
       "optional": true,
-      "enum_values": [
-        {
-          "value": "245 46 5 35",
-          "display_value": "Blau"
-        },
-        {
-          "value": "145 46 5 35",
-          "display_value": "Grün"
-        },
-        {
-          "value": "353 80 20 50",
-          "display_value": "Rot"
-        },
-        {
-          "value": "59 80 45 73",
-          "display_value": "Gelb"
-        },
-        {
-          "value": "0 0 60 100",
-          "display_value": "Grau"
-        },
-        {
-          "value": "0 0 0 40",
-          "display_value": "Schwarz"
-        },
-        {
-          "value": "281 66 25 70",
-          "display_value": "Lila"
+      "sub_params": {
+        "color_func_words": {
+          "type": "enum",
+          "display_name": "Farbe",
+          "optional": false,
+          "enum_values": [
+            {
+              "value": "245 46 5 35",
+              "display_value": "Blau"
+            },
+            {
+              "value": "145 46 5 35",
+              "display_value": "Grün"
+            },
+            {
+              "value": "353 80 20 50",
+              "display_value": "Rot"
+            },
+            {
+              "value": "59 80 45 73",
+              "display_value": "Gelb"
+            },
+            {
+              "value": "0 0 60 100",
+              "display_value": "Grau"
+            },
+            {
+              "value": "0 0 0 40",
+              "display_value": "Schwarz"
+            },
+            {
+              "value": "281 66 25 70",
+              "display_value": "Lila"
+            }
+          ],
+          "default_value": "0 0 0 40"
         }
-      ],
-      "default_value": "0 0 0 40"
+      },
+      "default_value": false
     },
     "shape": {
       "type": "enum",
