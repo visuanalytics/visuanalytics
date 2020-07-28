@@ -47,4 +47,5 @@ def _copy_and_rename(src_file: str, values: dict, step_data: StepData):
     values["thumbnail"] = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
                                                  step_data.get_config("job_name"), format=".png", thumbnail=True)
     shutil.copy(src_file, step_data.get_config("output_path"))
-    os.rename(os.path.join(step_data.get_config("output_path"), os.path.basename(src_file)), values["thumbnail"])
+    _, basename = os.path.split(src_file)
+    os.rename(os.path.join(step_data.get_config("output_path"), basename), values["thumbnail"])
