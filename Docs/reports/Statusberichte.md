@@ -238,3 +238,15 @@ Das Video zu der Twitter-Wordcloud wird nun dynamisch erstellt. Die Begriffe wer
 ### Ziel für den nächsten Sprint
 - weitere Anpassungen der Benutzeroberfläche
 - Wordcloud Video an andere Videos anhängen
+
+## Statusbericht 28.07.2020 (Sprint 12)
+
+### Zusammenfassung
+
+Während der Anpassungen der Parameterauswahl in der Benutzeroberfläche, hat sich gezeigt, dass diese Anpassungen umfangreicher sind als erwartet. So wurde nun sowohl das Backend als auch die Datenbank angepasst, um eine übersichtliche Parameterauswahl für jedes Thema darzustellen.
+
+Zusätzlich wurde in diesem Sprint ermöglicht das Video einer Twitter-Wordcloud an ein anderes Thema anzuhängen, aber auch dieses einzeln zu generieren. 
+
+### Ziel für den nächsten Sprint
+- Fertigstellungen der überarbeiteten Parameterauswahl
+- hinzufügen der Zeitintervalle im Scheduler
