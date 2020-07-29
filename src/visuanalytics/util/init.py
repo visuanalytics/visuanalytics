@@ -16,7 +16,7 @@ def init(config: dict):
     # if Graphic mode -> init db
     if not config["console_mode"]:
         # init db
-        db.init_db(config["db"].get("topics", []))
+        db.init_db(config["db"].get("topics", []), config["db"]["db_path"])
 
     # create temp dir
     os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
