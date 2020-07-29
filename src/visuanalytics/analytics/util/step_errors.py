@@ -102,9 +102,22 @@ class APIKeyError(Exception):
 
 
 class APiRequestError(Exception):
+    """
+    Fehlerklasse für einen Fehlgeschlagenen Http/s request
+    """
+
     def __init__(self, response: Response):
         super().__init__(
             f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+
+
+class TestDataError(IOError):
+    """
+    FehlerKlasse für das laden von TestDaten
+    """
+
+    def __init__(self, file_name: str):
+        super().__init__(f"test data from 'exampledata/{file_name}.json' could not be loaded")
 
 
 class InvalidContentTypeError(Exception):

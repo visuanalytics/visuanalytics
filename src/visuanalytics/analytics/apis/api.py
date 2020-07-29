@@ -4,7 +4,7 @@ import logging
 import requests
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
+from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError, TestDataError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 from visuanalytics.util import resources
 
@@ -116,10 +116,11 @@ def request_multiple_custom(values: dict, data: StepData, name: str, ignore_test
 
 def _load_test_data(name):
     logger.info(f"Loading test data from 'exampledata/{name}.json'")
-    with resources.open_resource(f"exampledata/{name}.json") as fp:
-        return json.loads(fp.read())
-
-    # TODO(max) Catch possible errors
+    try:
+        with resources.open_resource(f"exampledata/{name}.json") as fp:
+            return json.loads(fp.read())
+    except IOError as e:
+        raise TestDataError(name) from e
 
 
 def _fetch(values: dict, data: StepData):
