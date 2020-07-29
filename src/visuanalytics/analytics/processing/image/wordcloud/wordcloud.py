@@ -23,7 +23,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "font_step": 1,
     "mode": "RGB",
     "relative_scaling": 0.5,
-    "color_func": None,
+    "color_func": False,
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
