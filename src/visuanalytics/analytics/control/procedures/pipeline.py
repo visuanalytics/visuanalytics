@@ -4,14 +4,14 @@ import os
 import shutil
 import time
 
-from visuanalytics.analytics.apis.api import api, api_request
+from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
-from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
+from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_video
 from visuanalytics.util import resources
 from visuanalytics.util.resources import get_current_time
@@ -101,7 +101,7 @@ class Pipeline(object):
                 logger.info("Send completion notice...")
 
                 # Make request
-                api_request(cp_request, data, "", True)
+                api_request(cp_request, data, "", "_comp", True)
 
                 logger.info("Completion report sent out!")
             except Exception:
