@@ -74,9 +74,9 @@ def custom(values: dict, data: StepData, config: dict):
         text = part.audio_parts(values[key]["parts"], data)
 
         data.data["_audio"]["text"] = text
-        # TODO set Testing to false
         generate = config["generate"]
         generate["include_headers"] = True
+
         response = api_request(generate, data, "audio", True)
 
         values[key] = _save_audio(response, data, config)

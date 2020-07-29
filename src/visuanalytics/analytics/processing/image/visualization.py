@@ -76,7 +76,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 @register_image
 def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     """
-    Erstellt ein Wordcloud Bild  --- TODO.
+    Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
