@@ -5,6 +5,7 @@
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
     "steps_value": [
+      "season_helper",
       "Spiele",
       "Tabelle",
       "Vorherige-Tabelle",
@@ -14,11 +15,30 @@
     "requests": [
       {
         "type": "request",
+        "url_pattern": "https://www.openligadb.de/Webservices/Sportsdata.asmx",
+        "method": "post",
+        "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<GetLastMatch xmlns=\"http://msiggi.de/Sportsdata/Webservices\">\n<leagueShortcut>bl1</leagueShortcut>\n</GetLastMatch>\n</soap12:Body>\n</soap12:Envelope>",
+        "body_type": "other",
+        "body_encoding": "utf-8",
+        "response_format": "xml",
+        "xml_config": {
+          "process_namespaces": true,
+          "namespaces": {
+            "http://www.w3.org/2003/05/soap-envelope": null,
+            "http://msiggi.de/Sportsdata/Webservices": null
+          }
+        },
+        "headers": {
+          "Content-Type": "application/soap+xml; charset=utf-8"
+        }
+      },
+      {
+        "type": "request",
         "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
       },
       {
         "type": "request_memory",
@@ -26,7 +46,7 @@
         "use_last": 1,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
         }
       },
       {
@@ -44,12 +64,27 @@
         "use_last": 2,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
         }
       }
     ]
   },
   "transform": [
+    {
+      "type": "alias",
+      "keys": [
+        "_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison"
+      ],
+      "new_keys": [
+        "_req|league_saison"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|season_helper"
+      ]
+    },
     {
       "type": "alias",
       "keys": [
