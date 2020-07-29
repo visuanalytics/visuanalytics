@@ -16,14 +16,14 @@ API_TYPES = {}
 
 @raise_step_error(APIError)
 def api(values: dict, data: StepData):
-    data.init_data(api_request(values["api"], data, values["name"]))
+    api_request(values["api"], data, values["name"], "_req")
 
 
 @raise_step_error(APIError)
-def api_request(values: dict, data: StepData, name: str, ignore_testing=False):
+def api_request(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
     api_func = get_type_func(values, API_TYPES)
 
-    return api_func(values, data, name, ignore_testing)
+    api_func(values, data, name, save_key, ignore_testing)
 
 
 def register_api(func):
@@ -31,25 +31,26 @@ def register_api(func):
 
 
 @register_api
-def request(values: dict, data: StepData, name: str, ignore_testing=False):
+def request(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
     """Fragt einmal die gewünschten Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     if data.get_config("testing", False) and not ignore_testing:
-        return _load_test_data(name)
+        return _load_test_data(values, data, name, save_key)
 
-    return _fetch(values, data)
-
-
-@register_api
-def input(values: dict, data: StepData, name: str, ignore_testing=False):
-    return data.format_api(values["input"], values.get("api_key_name", None), values)
+    _fetch(values, data, save_key)
 
 
 @register_api
-def request_memory(values: dict, data: StepData, name: str, ignore_testing=False):
+def input(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
+    res = data.format_api(values["input"], values.get("api_key_name", None), values)
+    data.insert_data(save_key, res, values)
+
+
+@register_api
+def request_memory(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
     """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
 
     :param values: Werte aus der JSON-Datei
@@ -59,17 +60,17 @@ def request_memory(values: dict, data: StepData, name: str, ignore_testing=False
         if values.get("timedelta", None) is None:
             with resources.open_specific_memory_resource(data.get_config("job_name"), values["name"],
                                                          values.get("use_last", 1)) as fp:
-                return json.loads(fp.read())
+                data.insert_data(save_key, json.loads(fp.read()), values)
         else:
             with resources.open_memory_resource(data.get_config("job_name"),
                                                 values["name"], values["timedelta"]) as fp:
-                return json.loads(fp.read())
+                data.insert_data(save_key, json.loads(fp.read()), values)
     except (FileNotFoundError, IndexError):
-        return api_request(values["alternative"], data, name)
+        api_request(values["alternative"], data, name, save_key, ignore_testing)
 
 
 @register_api
-def request_multiple(values: dict, data: StepData, name: str, ignore_testing=False):
+def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
     """Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -77,22 +78,20 @@ def request_multiple(values: dict, data: StepData, name: str, ignore_testing=Fal
     """
 
     if data.get_config("testing", False) and not ignore_testing:
-        return _load_test_data(name)
+        return _load_test_data(values, data, name, save_key)
 
     if data.format(values.get("use_loop_as_key", False), values):
-        data_dict = {}
+        data.insert_data(save_key, {}, values)
         for _, key in data.loop_array(values["steps_value"], values):
-            data_dict[key] = _fetch(values, data)
-        return data_dict
-
-    data_array = []
-    for _ in data.loop_array(values["steps_value"], values):
-        data_array.append(_fetch(values, data))
-        return data_array
+            _fetch(values, data, f"{save_key}|{key}")
+    else:
+        data.insert_data(save_key, [None] * len(values["steps_value"]), values)
+        for idx, _ in data.loop_array(values["steps_value"], values):
+            _fetch(values, data, f"{save_key}|{idx}", )
 
 
 @register_api
-def request_multiple_custom(values: dict, data: StepData, name: str, ignore_testing=False):
+def request_multiple_custom(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
     """Fragt unterschiedliche Daten einer API ab.
 
     :param values: Werte aus der JSON-Datei
@@ -100,30 +99,29 @@ def request_multiple_custom(values: dict, data: StepData, name: str, ignore_test
     """
 
     if data.get_config("testing", False) and not ignore_testing:
-        return _load_test_data(name)
+        return _load_test_data(values, data, name, save_key)
 
     if values.get("use_loop_as_key", False):
-        data_dict = {}
+        data.insert_data(save_key, {}, values)
 
         for idx, key in enumerate(values["steps_value"]):
-            data_dict[key] = api_request(values["requests"][idx], data, name)
-        return data_dict
+            api_request(values["requests"][idx], data, name, f"{save_key}|{key}", ignore_testing)
+    else:
+        data.insert_data(save_key, [None] * len(values["requests"]), values)
 
-    data_array = []
-    for idx, value in enumerate(values["requests"]):
-        data_array.append(api_request(value, data, name))
-    return data_array
+        for idx, value in enumerate(values["requests"]):
+            api_request(value, data, name, f"{save_key}|{idx}", ignore_testing)
 
 
-def _load_test_data(name):
+def _load_test_data(values: dict, data: StepData, name, save_key):
     logger.info(f"Loading test data from 'exampledata/{name}.json'")
     with resources.open_resource(f"exampledata/{name}.json") as fp:
-        return json.loads(fp.read())
+        data.insert_data(save_key, json.loads(fp.read()), values)
 
     # TODO(max) Catch possible errors
 
 
-def _fetch(values: dict, data: StepData):
+def _fetch(values: dict, data: StepData, save_key):
     """Abfrage einer API und Umwandlung der API-Antwort ein Angegebenes Format.
 
     :param req_data: Dictionary das alle informationen für den request enthält.
@@ -153,9 +151,9 @@ def _fetch(values: dict, data: StepData):
         res = response.content
 
     if req_data["include_headers"]:
-        return {"headers": response.headers, "content": res}
+        res = {"headers": response.headers, "content": res}
 
-    return res
+    data.insert_data(save_key, res, values)
 
 
 def _create_query(values: dict, data: StepData):
