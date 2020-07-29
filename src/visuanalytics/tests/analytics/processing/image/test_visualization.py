@@ -31,8 +31,7 @@ def prepare_image_test(values, data, config=None):
 
 class VisualizationTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../tests/resources"
-        resources.IMAGES_LOCATION = "../tests/resources/images"
+        resources.RESOURCES_LOCATION = "tests/resources"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "102"), exist_ok=True)
 
