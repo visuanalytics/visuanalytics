@@ -26,6 +26,9 @@ def get_audio_config(values: dict, data: StepData):
     # If Config in Step Json is pressent use That config
     config.update(custom_config)
 
+    # Init _audio with audio config
+    data.init_data({"_conf": config}, "_audio")
+
     return config
 
 
@@ -80,10 +83,7 @@ def custom(values: dict, data: StepData, config: dict):
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
-    data.data["_audio"] = {}
-
     if values is not None:
-        # TODO(Max) Solve better
         data.data["_audio"]["pre"] = api_request(values, data, "audio", True)
 
 
