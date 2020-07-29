@@ -91,6 +91,25 @@ Beispiel:
 "height": "_conf|height_wordcloud"
 }
 ```
+
+### dict
+Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+Beispiel:
+```JSON
+{
+"dict": "_conf|value"
+}
+```
+
+### list
+Um auf ein Array/eine Liste (list) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+Beispiel:
+```JSON
+{
+"list": "_conf|value"
+}
+```
+
 ### Typen
 
 In der JSON-StepsConfig-Datei gibt es die Typen zu Anfang dieser Seite genannten Abschnitte. 
@@ -1537,7 +1556,7 @@ bool - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud 
 ```JSON
 {
     "type": "wordcloud",
-    "text": "_req|text",
+    "text": "{_req|text}",
     "stopwords": "_conf|stopwords",
     "parameter": {
         "mask": {
@@ -1582,6 +1601,30 @@ Im Image-Overlay:
 Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
 und `circle`empfohlen.
 <!--TODO-->
+
+#### Text oder Dictionary hinterlegen
+Um eine Wordcloud zu erstellen kann man zwei verschiedene Datenstrukturen angeben, mit denen diese erstellt werden kann.
+
+**Option 1: `text`**
+
+Der Key `text` wird angegeben und dahinter muss ein Verweis auf einen String stehen.
+
+```JSON
+{
+"text": "{_req|text}"
+}
+```
+
+**Option 2: `dict`**
+
+Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary stehen.
+
+```JSON
+{
+"dict": "_req|dict"
+}
+```
+
 
 #### Stopwords
 
