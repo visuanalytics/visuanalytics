@@ -51,7 +51,6 @@ def data_insert_pattern(keys, data, value, split_key="|"):
         raise StepKeyError("insert_data", keys) from e
 
 
-# TODO(max) maybe move
 def data_remove_pattern(keys, data, split_key="|"):
     try:
         if isinstance(keys, str) and '|' in keys:
