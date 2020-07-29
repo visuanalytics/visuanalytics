@@ -268,7 +268,6 @@ class StepData(object):
 
     def __clean_up_data_manipulation(self):
         # Remove temporary Used loop data
-        # TODO(Max) vtl. solve better
         self.__data.pop("_loop", None)
         self.__data.pop("_key", None)
         self.__data.pop("_idx", None)

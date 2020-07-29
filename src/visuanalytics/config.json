@@ -22,6 +22,14 @@
       }
     ]
   },
+  "resources": {
+    "main_path": "resources",
+    "sub_paths": {
+      "images": "images",
+      "temp": "temp",
+      "memory": "memory"
+    }
+  },
   "console_mode": false,
   "steps_base_config": {
     "output_path": "out"
