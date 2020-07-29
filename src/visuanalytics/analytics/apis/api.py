@@ -146,7 +146,7 @@ def _fetch(values: dict, data: StepData, save_key):
     elif req_data["res_format"].__eq__("text"):
         res = response.text
     elif req_data["res_format"].__eq__("xml"):
-        res = xmltodict.parse(response.text)
+        res = xmltodict.parse(response.text, **req_data["xml_config"])
     else:
         res = response.content
 
@@ -185,6 +185,8 @@ def _create_query(values: dict, data: StepData):
 
     # Get/Format Response, Format
     req["res_format"] = data.format(values.get("response_format", "json"))
+    # TODO use Format
+    req["xml_config"] = values.get("xml_config", {})
     req["include_headers"] = values.get("include_headers", False)
 
     return req
