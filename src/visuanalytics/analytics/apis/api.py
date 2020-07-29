@@ -2,6 +2,7 @@ import json
 import logging
 
 import requests
+import xmltodict
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
@@ -146,6 +147,8 @@ def _fetch(values: dict, data: StepData):
         res = response.json()
     elif req_data["res_format"].__eq__("text"):
         res = response.text
+    elif req_data["res_format"].__eq__("xml"):
+        res = xmltodict.parse(response.text)
     else:
         res = response.content
 
