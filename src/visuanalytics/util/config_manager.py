@@ -12,14 +12,13 @@ def _get_config_path(config_location):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), config_location))
 
 
-def _merge_config(public_config: dict, private_config: dict):
-    # merge sub dict steps_base_config and audio
-    public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
-    public_config.get("audio").update(private_config.get("audio", {}))
-    private_config.pop("steps_base_config", None)
-    private_config.pop("audio", None)
-
-    public_config.update(private_config)
+def _merge_config(config1, config2):
+    for k in set(config1).union(set(config2)):
+        if k in config2:
+            if isinstance(config1.get(k, None), dict) and isinstance(config2[k], dict):
+                _merge_config(config1[k], config2[k])
+            else:
+                config1[k] = config2[k]
 
 
 def get_config():
