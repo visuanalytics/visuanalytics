@@ -217,7 +217,8 @@ def alias(values: dict, data: StepData):
 
             data.insert_data(new_key, value, values)
 
-            if not data.get_data(value.get("keep_old", False), {}, bool):
+            if not data.get_data(values.get("keep_old", False), {}, bool):
+                print("remove")
                 data.remove_data(key, values)
         except:
             if values.get("ignore_errors", False):
