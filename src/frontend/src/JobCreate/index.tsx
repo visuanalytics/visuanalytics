@@ -10,10 +10,11 @@ import {TopicSelection} from './TopicSelection';
 import {ScheduleSelection} from './ScheduleSelection';
 import {GreyDivider} from './GreyDivider';
 import {Param} from '../util/param';
-import {Fade} from '@material-ui/core';
+import {Fade, Grid, Typography} from '@material-ui/core';
 import {useCallFetch} from '../Hooks/useCallFetch';
 import {format} from "date-fns";
 import { getUrl } from '../util/fetchUtils';
+import {HintButton} from "../util/HintButton";
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -180,6 +181,38 @@ export default function JobCreate() {
         "Parameter auswählen für: '" + jobName + "'",
         "Wann sollen neue Videos generiert werden?"
     ];
+    const hintContent = [
+        <div>
+            <Typography variant="h5" gutterBottom>Themenauswahl</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen zu welchem der Themen Ihnen ein Video generiert werden soll.
+            </Typography>
+            <Typography variant="h6" >Bundesliga-Ergebnisse</Typography>
+            <Typography gutterBottom>Video zum aktuellen Spieltag und zur aktuellen Tabelle</Typography>
+            <Typography variant="h6" >Deutschlandweiter Wetterbericht</Typography>
+            <Typography gutterBottom>Deutschlandweiter Wetterbericht für den aktuellen Tag und die darauffolgenden 4 Tage</Typography>
+            <Typography variant="h6" >Ortsbezogener Wetterbericht</Typography>
+            <Typography gutterBottom>Wetterbericht für einen ausgewählten Ort in Deutschland. Für den aktuellen Tag und die darauffolgenden 4 Tage</Typography>
+        </div>,
+        <div>
+            <Typography variant="h5" gutterBottom>Parameterauswahl</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie bestimmte Parameter auswahlen.
+            </Typography>
+        </div>,
+        <div>
+            <Typography variant="h5" gutterBottom>Zeitplan auswählen</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
+            </Typography>
+            <Typography variant="h6" >täglich</Typography>
+            <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >wöchentlich</Typography>
+            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >an festem Datum</Typography>
+            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+        </div>
+    ];
 
     // based on active step, render specific selection panel
     const getSelectPanel = (step: number) => {
@@ -237,7 +270,16 @@ export default function JobCreate() {
                     ?
                     <div>
                         <div>
-                            <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
+                            <Grid container>
+                                <Grid item xs={1}>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
+                                </Grid>
+                                <Grid container xs={1}>
+                                    <HintButton content={hintContent[activeStep]} />
+                                </Grid>
+                            </Grid>
                         </div>
                         <GreyDivider/>
                         {getSelectPanel(activeStep)}

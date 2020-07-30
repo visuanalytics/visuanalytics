@@ -17,6 +17,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         infoIcon: {
             fontSize: "50px",
+        },
+        hintIcons: {
+            color: "white"
         }
     }),
 );

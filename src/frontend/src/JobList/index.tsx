@@ -25,7 +25,7 @@ export const JobList: React.FC = () => {
     const components = React.useContext(ComponentContext);
     const [jobInfo, getJobs] = useFetchMultiple<Job []>(getUrl("/jobs"));
 
-    if (jobInfo?.length == 0) {
+    if (jobInfo?.length === 0) {
         return (
             <Fade in={true}>
                 <Paper variant="outlined" className={classes.paper}>

@@ -1,10 +1,21 @@
 import React from "react";
-import {Container, Grid, IconButton, Paper, Tooltip, Typography} from "@material-ui/core";
+import {
+    Container,
+    Grid,
+    IconButton,
+    List,
+    ListItem, ListItemIcon, ListItemText,
+    Paper,
+    Tooltip,
+    Typography
+} from "@material-ui/core";
 import {JobList} from "../JobList";
 import {useStyles} from "./style";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {ComponentContext} from "../ComponentProvider";
 import {HintButton} from "../util/HintButton";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export const Home = () => {
     const classes = useStyles();
@@ -28,7 +39,38 @@ export const Home = () => {
                         </Grid>
                     </Grid>
                     <Grid container xs={9} justify={"flex-end"}>
-                        <HintButton content={"Erklärung"} />
+                        <HintButton content={
+                            <div>
+                                <Typography variant="h5" gutterBottom>Job-Pool</Typography>
+                                <Typography>Auf dieser Seite haben Sie eine Übersicht über Ihre angelegten Jobs.</Typography>
+                                <List>
+                                   <ListItem>
+                                       <ListItemIcon className={classes.hintIcons}>
+                                           <AddCircleIcon/>
+                                       </ListItemIcon>
+                                       <ListItemText primary="Neuen Job erstellen"/>
+                                   </ListItem>
+                                    <ListItem>
+                                       <ListItemIcon className={classes.hintIcons}>
+                                           <EditIcon />
+                                       </ListItemIcon>
+                                       <ListItemText primary="Job bearbeiten"/>
+                                   </ListItem>
+                                    <ListItem>
+                                       <ListItemIcon className={classes.hintIcons}>
+                                           <DeleteIcon/>
+                                       </ListItemIcon>
+                                       <ListItemText primary="Job löschen"/>
+                                   </ListItem>
+                                    <ListItem>
+                                       <ListItemIcon className={classes.hintIcons}>
+                                           <AddCircleIcon/>
+                                       </ListItemIcon>
+                                       <ListItemText primary="Job-Informationen ausklappen"/>
+                                   </ListItem>
+                                </List>
+                            </div>
+                        } />
                     </Grid>
                 </Grid>
                 <JobList/>

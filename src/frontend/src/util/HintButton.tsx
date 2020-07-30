@@ -1,15 +1,30 @@
 import React from "react";
-import {IconButton, Tooltip} from "@material-ui/core";
+import {Tooltip} from "@material-ui/core";
 import HelpIcon from '@material-ui/icons/Help';
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 
 interface Props {
-    content: string,
+    content: any,
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        hintButton: {
+            margin: "auto 10px",
+            cursor: "pointer",
+            color: "#d2d2d2"
+        }
+    }),
+)
+
+
 export const HintButton: React.FC<Props> = ({content}) => {
+    const classes = useStyles();
     return (
         <Tooltip title={content}>
-            <HelpIcon/>
+            <div className={classes.hintButton}>
+                <HelpIcon/>
+            </div>
         </Tooltip>
     )
 }
