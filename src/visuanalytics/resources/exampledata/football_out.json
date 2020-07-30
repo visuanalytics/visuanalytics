@@ -1,12 +1,22 @@
 {
   "_conf": {
     "output_path": "out",
-    "testing": true,
+    "testing": false,
     "h264_nvenc": false,
-    "liga-name": "1. Fußball Bundesliga",
+    "on_completion": {
+      "type": "request",
+      "url_pattern": "http://localhost:5000/api/encode",
+      "method": "post",
+      "body": {
+        "filename": "{_conf|video_name}"
+      }
+    },
+    "thumbnail": true,
+    "league": "1",
+    "keep_count": 3,
     "job_name": "Fußballbericht"
   },
-  "_pipe_id": "b37f8849641b4e42a70515b9e6b46467",
+  "_pipe_id": "6bdb070b729e481ba60e67ec3f6a5424",
   "_req": {
     "Spiele": [
       {
@@ -41,7 +51,7 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 0,
-          "Text": "Bayer Leverkusen gewann gegen 1. FSV Mainz 05 1 zu 0. "
+          "Text": "Bayer Leverkusen gewann Zuhause gegen 1. FSV Mainz 05 1 zu 0. "
         },
         "weekday": "Samstag"
       },
@@ -59,7 +69,7 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 1,
-          "Text": "Borussia Mönchengladbach gewann gegen Hertha BSC 2 zu 1. "
+          "Text": "Borussia Mönchengladbach gewann Zuhause gegen Hertha BSC 2 zu 1. "
         },
         "weekday": "Samstag"
       },
@@ -77,7 +87,7 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 4,
-          "Text": "VfL Wolfsburg unterlag FC Bayern mit einem 0 zu 4. "
+          "Text": "VfL Wolfsburg unterlag Zuhause FC Bayern mit einem 0 zu 4. "
         },
         "weekday": "Samstag"
       },
@@ -113,7 +123,7 @@
         "MatchResults": {
           "PointsTeam1": 6,
           "PointsTeam2": 1,
-          "Text": "Werder Bremen gewann gegen 1. FC Köln 6 zu 1. "
+          "Text": "Werder Bremen gewann Zuhause gegen 1. FC Köln 6 zu 1. "
         },
         "weekday": "Samstag"
       },
@@ -131,7 +141,7 @@
         "MatchResults": {
           "PointsTeam1": 4,
           "PointsTeam2": 0,
-          "Text": "SC Freiburg gewann Zuhause gegen FC Schalke 04 4 zu 0. "
+          "Text": "SC Freiburg gewann gegen FC Schalke 04 4 zu 0. "
         },
         "weekday": "Samstag"
       },
@@ -149,7 +159,7 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 2,
-          "Text": "FC Augsburg unterlag RB Leipzig mit einem 1 zu 2. "
+          "Text": "FC Augsburg unterlag Zuhause RB Leipzig mit einem 1 zu 2. "
         },
         "weekday": "Samstag"
       },
@@ -193,9 +203,9 @@
         "OpponentGoals": 41,
         "GoalDiff": 43,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -13,
+        "PointsDiffToFirstPlace": 13,
         "Rank_diff": 0,
-        "Text": "Gefolgt von Borussia Dortmund auf dem zweiten Platz. "
+        "Text": "Borussia Dortmund liegt mit 13 Punkten Rückstand auf dem 2. Platz."
       },
       {
         "TeamName": "RB Leipzig",
@@ -205,7 +215,7 @@
         "OpponentGoals": 37,
         "GoalDiff": 44,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -16,
+        "PointsDiffToFirstPlace": 16,
         "Rank_diff": 0
       },
       {
@@ -216,9 +226,9 @@
         "OpponentGoals": 40,
         "GoalDiff": 26,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -17,
+        "PointsDiffToFirstPlace": 17,
         "Rank_diff": 0,
-        "Text": "Borussia Mönchengladbach liegt auf dem vierten Platz mit 65 Punkten. "
+        "Text": "Auf Platz 4 liegt Borussia Mönchengladbach mit 65 Punkten. "
       },
       {
         "TeamName": "Bayer Leverkusen",
@@ -228,7 +238,7 @@
         "OpponentGoals": 44,
         "GoalDiff": 17,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -19,
+        "PointsDiffToFirstPlace": 19,
         "Rank_diff": 0
       },
       {
@@ -239,7 +249,7 @@
         "OpponentGoals": 53,
         "GoalDiff": 0,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -30,
+        "PointsDiffToFirstPlace": 30,
         "Rank_diff": 0
       },
       {
@@ -250,7 +260,7 @@
         "OpponentGoals": 46,
         "GoalDiff": 2,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -33,
+        "PointsDiffToFirstPlace": 33,
         "Rank_diff": 0
       },
       {
@@ -261,7 +271,7 @@
         "OpponentGoals": 47,
         "GoalDiff": 1,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -34,
+        "PointsDiffToFirstPlace": 34,
         "Rank_diff": 0
       },
       {
@@ -272,7 +282,7 @@
         "OpponentGoals": 60,
         "GoalDiff": -1,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -37,
+        "PointsDiffToFirstPlace": 37,
         "Rank_diff": 0
       },
       {
@@ -283,7 +293,7 @@
         "OpponentGoals": 59,
         "GoalDiff": -11,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -41,
+        "PointsDiffToFirstPlace": 41,
         "Rank_diff": 0
       },
       {
@@ -294,7 +304,7 @@
         "OpponentGoals": 58,
         "GoalDiff": -17,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -41,
+        "PointsDiffToFirstPlace": 41,
         "Rank_diff": 0
       },
       {
@@ -305,7 +315,7 @@
         "OpponentGoals": 58,
         "GoalDiff": -20,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -43,
+        "PointsDiffToFirstPlace": 43,
         "Rank_diff": 0
       },
       {
@@ -316,7 +326,7 @@
         "OpponentGoals": 65,
         "GoalDiff": -21,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -45,
+        "PointsDiffToFirstPlace": 45,
         "Rank_diff": 0
       },
       {
@@ -327,7 +337,7 @@
         "OpponentGoals": 69,
         "GoalDiff": -18,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -46,
+        "PointsDiffToFirstPlace": 46,
         "Rank_diff": 0
       },
       {
@@ -338,7 +348,7 @@
         "OpponentGoals": 63,
         "GoalDiff": -18,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -46,
+        "PointsDiffToFirstPlace": 46,
         "Rank_diff": 0
       },
       {
@@ -349,9 +359,9 @@
         "OpponentGoals": 69,
         "GoalDiff": -27,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -51,
+        "PointsDiffToFirstPlace": 51,
         "Rank_diff": 0,
-        "Text": "Werder Bremen liegt auf dem 16ten Platz mit 31 Punkten. "
+        "Text": "Auf dem 16ten Platz liegt Werder Bremen mit 31 Punkten. "
       },
       {
         "TeamName": "Fortuna Düsseldorf",
@@ -361,7 +371,7 @@
         "OpponentGoals": 67,
         "GoalDiff": -31,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -52,
+        "PointsDiffToFirstPlace": 52,
         "Rank_diff": 0
       },
       {
@@ -372,11 +382,11 @@
         "OpponentGoals": 74,
         "GoalDiff": -37,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -62,
-        "Rank_diff": 0,
-        "Text": "Auf dem letzten Platz liegt SC Paderborn 07 mit 20 Punkten. "
+        "PointsDiffToFirstPlace": 62,
+        "Rank_diff": 0
       }
     ],
     "Spieltag": "34. Spieltag"
-  }
+  },
+  "league_name": "1. Fußball Bundesliga"
 }
