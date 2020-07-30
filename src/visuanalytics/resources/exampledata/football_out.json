@@ -8,7 +8,7 @@
       "url_pattern": "http://localhost:5000/api/encode",
       "method": "post",
       "body": {
-        "filename": "{_conf|job_name}"
+        "filename": "{_conf|video_name}"
       }
     },
     "thumbnail": true,
@@ -16,7 +16,7 @@
     "keep_count": 3,
     "job_name": "Fußballbericht"
   },
-  "_pipe_id": "07dd2792faca44d6ac3a6cb5ba200dd8",
+  "_pipe_id": "6bdb070b729e481ba60e67ec3f6a5424",
   "_req": {
     "Spiele": [
       {
@@ -69,7 +69,7 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 1,
-          "Text": "Borussia Mönchengladbach gewann gegen Hertha BSC 2 zu 1. "
+          "Text": "Borussia Mönchengladbach gewann Zuhause gegen Hertha BSC 2 zu 1. "
         },
         "weekday": "Samstag"
       },
@@ -87,7 +87,7 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 4,
-          "Text": "VfL Wolfsburg unterlag FC Bayern mit einem 0 zu 4. "
+          "Text": "VfL Wolfsburg unterlag Zuhause FC Bayern mit einem 0 zu 4. "
         },
         "weekday": "Samstag"
       },
@@ -159,7 +159,7 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 2,
-          "Text": "FC Augsburg unterlag RB Leipzig mit einem 1 zu 2. "
+          "Text": "FC Augsburg unterlag Zuhause RB Leipzig mit einem 1 zu 2. "
         },
         "weekday": "Samstag"
       },
@@ -205,7 +205,7 @@
         "Matches": 34,
         "PointsDiffToFirstPlace": 13,
         "Rank_diff": 0,
-        "Text": "Borussia Dortmund liegt auf dem zweiten Platz mit 69 Punkten. "
+        "Text": "Borussia Dortmund liegt mit 13 Punkten Rückstand auf dem 2. Platz."
       },
       {
         "TeamName": "RB Leipzig",
@@ -361,7 +361,7 @@
         "Matches": 34,
         "PointsDiffToFirstPlace": 51,
         "Rank_diff": 0,
-        "Text": "Werder Bremen liegt auf dem 16ten Platz mit 31 Punkten. "
+        "Text": "Auf dem 16ten Platz liegt Werder Bremen mit 31 Punkten. "
       },
       {
         "TeamName": "Fortuna Düsseldorf",

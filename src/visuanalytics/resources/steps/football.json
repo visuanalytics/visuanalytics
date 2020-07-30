@@ -111,6 +111,7 @@
         {
           "type": "select",
           "relevant_keys": [
+            "LeagueName",
             "Team1|TeamName",
             "Team1|TeamId",
             "Team2|TeamName",
@@ -2713,16 +2714,25 @@
     "type": "new",
     "image": {
       "type": "pillow",
-      "path": "football/Table_1.png",
+      "path": "football/FootballThumbnail.png",
       "overlay": [
+        {
+          "description": "Spieltag",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 400,
+          "preset": "football_7",
+          "pattern": "{_req|Spieltag}"
+        },
         {
           "description": "Liga-Name",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 960,
-          "pos_y": 500,
-          "preset": "football_2",
-          "pattern": "{league_name}"
+          "pos_y": 190,
+          "preset": "football_8",
+          "pattern": "{_req|Spiele|0|LeagueName}"
         }
       ]
     }
@@ -2899,6 +2909,16 @@
     "football_6": {
       "color": "#858582",
       "font_size": 60,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_7": {
+      "color": "black",
+      "font_size": 180,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_8": {
+      "color": "white",
+      "font_size": 100,
       "font": "fonts/Dosis-Bold.ttf"
     }
   }

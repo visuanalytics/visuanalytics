@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Param} from "../util/param";
-import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
+import {Button, Container, Fade, InputBase, Modal, Paper, withStyles} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import {AccordionSummary, useStyles, InputField} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -22,24 +22,47 @@ import {parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, forma
 import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
-import TextField from "@material-ui/core/TextField";
 import { getUrl } from "../util/fetchUtils";
+import {Notification, TMessageStates} from "../util/Notification";
 
 interface Props {
     job: Job,
     getJobs: () => void;
 }
 
+interface INotification {
+    open: boolean,
+    stateType: TMessageStates,
+    message: string
+}
+
 export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
 
-    const [expanded, setExpanded] = React.useState<string | false>(false);
     const [state, setState] = React.useState({
         edit: true,
         editIcon: 'block',
         doneIcon: 'none'
     });
+
+    const NameInput = withStyles({
+        root: {
+             cursor:"pointer",
+        },
+        input: {
+            cursor: state.edit ? 'pointer' : 'text',
+            padding: '0 8px',
+            marginLeft: '8px',
+            color: 'white',
+            fontSize: '1.5625rem',
+            borderBottom: state.edit ? '' : '2px solid #c4c4c4'
+        },
+    })(InputBase);
+
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
+
+    const [expanded, setExpanded] = React.useState<string | false>(false);
+    const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
     const [selectedParams, setSelectedParams] = React.useState<Param[]>(job.params);
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
@@ -50,6 +73,13 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
         time: parse(String(job.schedule.time), "H:m", new Date()),
     });
+    const [error, setError] = React.useState(false);
+    const [success, setSucess] = React.useState<INotification>({
+        open: false,
+        stateType: "success",
+        message: ""
+        }
+    );
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
@@ -90,6 +120,19 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const handleParamChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         handleSelectParam(name, event.target.value);
+    }
+
+    const handleJobName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setJobName(event.target.value);
+    }
+
+    const handleEditError = () => {
+        setSucess({open: true,stateType: "error", message: "Bearbeitung fehlgeschlagen"})
+    }
+
+    const handleEditSuccess = () => {
+        getJobs()
+        setSucess({open: true, stateType: "success", message: "Job erfolgreich geändert"})
     }
 
     const showTime = () => {
@@ -143,7 +186,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     useEffect(() => {
         setNext(nextJob);
-    },[nextJob()]);
+    },[nextJob]);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -151,6 +194,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            jobName: jobName,
             params: selectedParams,
             schedule: {
                 daily: selectedSchedule.daily,
@@ -161,7 +205,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                 date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
             }
         })
-    },getJobs);
+    },handleEditSuccess,handleEditError);
 
     const renderJobItem = (job: Job) => {
         const paramInfo: Param[] = selectedParams;
@@ -181,6 +225,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         }
 
         const handleCheckClick = () => {
+            if (jobName === "") {
+                setError(true);
+                return;
+            }
             handleEditClick();
             editJob();
         }
@@ -230,13 +278,31 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             )
         }
 
+        const handleCloseError = () => {
+            setError(false);
+        }
+        const handleCloseSuccess = () => {
+            setSucess({open: false, stateType: success.stateType, message: success.message});
+        }
+
         return (
             <div className={classes.root}>
+
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
-                        <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
+                        <Typography component="span" className={classes.heading}>#{job.jobId}
+                        <NameInput
+                            autoFocus={true}
+                            value={jobName}
+                            readOnly={state.edit}
+                            onClick={state.edit ? () => {} : (event) => event.stopPropagation()}
+                            onChange={handleJobName}
+                        >
+                        {job.jobName}</NameInput></Typography>
+                        <Notification handleClose={handleCloseError} open={error} message={"Job Name nicht ausgefüllt"} type={"error"} />
+                        <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message} type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
                                 <EditIcon />
