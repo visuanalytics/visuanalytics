@@ -592,15 +592,15 @@ def remove_from_list(values: dict, data: StepData):
         if values.get("use_stopwords", False) is not None:
             use_stopwords = data.get_data_bool(values["use_stopwords"], {})
             if use_stopwords:
-                file = resources.get_resource_path("stopwords/stopwords.txt")
-                f = open(file, "r", encoding='utf-8')
-                more_stopwords = ""
-                for x in f:
-                    more_stopwords = more_stopwords + x
-                f.close()
-                list_stopwords = more_stopwords.split('\n')
-                for each in list_stopwords:
-                    to_remove.append(each)
+                try:
+                    file = resources.get_resource_path("stopwords/stopwords.txt")
+                    with open(file, "r", encoding='utf-8') as f:
+                        list_stopwords = f.read().splitlines()
+
+                    for each in list_stopwords:
+                        to_remove.append(each)
+                except:
+                    IOError
 
         if values.get("ignore_case", False) is not None:
             ignore_case = data.get_data_bool(values["ignore_case"], {})

@@ -126,23 +126,21 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
 
     if values.get("stopwords", None) is not None:
         if values.get("use_global_stopwords", None) is not None:
-
-            file = resources.get_resource_path("stopwords/stopwords.txt")
-            f = open(file, "r", encoding='utf-8')
-            more_stopwords = ""
-            for x in f:
-                more_stopwords = more_stopwords + x
-            f.close()
-
-            list_stopwords = more_stopwords.split('\n')
             try:
-                dont_use = step_data.get_data_array(values["stopwords"], {})
-                for each in list_stopwords:
-                    if each not in dont_use:
-                        dont_use.append(each)
-                wordcloud_parameter["stopwords"] = set(dont_use)
+                file = resources.get_resource_path("stopwords/stopwords.txt")
+                with open(file, "r", encoding='utf-8') as f:
+                    list_stopwords = f.read().splitlines()
+
+                try:
+                    dont_use = step_data.get_data_array(values["stopwords"], {})
+                    for each in list_stopwords:
+                        if each not in dont_use:
+                            dont_use.append(each)
+                    wordcloud_parameter["stopwords"] = set(dont_use)
+                except:
+                    wordcloud_parameter["stopwords"] = set(list_stopwords)
             except:
-                wordcloud_parameter["stopwords"] = set(list_stopwords)
+                IOError
         # TODO (max) May change to array (not string) or change delimiter to ','
         else:
             dont_use = step_data.get_data_array(values["stopwords"], {})
