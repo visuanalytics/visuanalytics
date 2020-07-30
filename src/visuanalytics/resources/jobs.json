@@ -61,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "15:11",
+        "time": "16:38",
         "daily": true
       },
       "config": {
@@ -69,8 +69,12 @@
           "Bundesliga",
           "Fußball"
         ],
-        "stopwords": " ",
+        "stopwords": [
+          "Bundesliga",
+          "Werder"
+        ],
         "thumbnail": true,
+        "normalize_words": true,
         "colormap_words": "viridis",
         "color_func": true,
         "color_func_words": "145 46 5 35",
