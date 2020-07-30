@@ -83,12 +83,8 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
 
             wordcloud_parameter[param] = value
 
-    if values.get("font_path", None) is not None:
-        path = resources.get_resource_path(values["font_path"])
-        wordcloud_parameter["font_path"] = path
-    else:
-        path = resources.get_resource_path(wordcloud_parameter["font_path"])
-        wordcloud_parameter["font_path"] = path
+    path = resources.get_resource_path(wordcloud_parameter["font_path"])
+    wordcloud_parameter["font_path"] = path
 
     if bool(wordcloud_parameter.get("color_func", False)):
         cfw = list(DEFAULT_COLOR_FUNC_VALUES)
@@ -124,27 +120,22 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-    if values.get("stopwords", None) is not None:
-        if values.get("use_global_stopwords", None) is not None:
-            try:
-                file = resources.get_resource_path("stopwords/stopwords.txt")
-                with open(file, "r", encoding='utf-8') as f:
-                    list_stopwords = f.read().splitlines()
+    if values.get("use_global_stopwords", None) is not None:
+        try:
+            file = resources.get_resource_path("stopwords/stopwords.txt")
+            with open(file, "r", encoding='utf-8') as f:
+                list_stopwords = f.read().splitlines()
+        except IOError:
+            list_stopwords = []
 
-                try:
-                    dont_use = step_data.get_data_array(values["stopwords"], {})
-                    for each in list_stopwords:
-                        if each not in dont_use:
-                            dont_use.append(each)
-                    wordcloud_parameter["stopwords"] = set(dont_use)
-                except:
-                    wordcloud_parameter["stopwords"] = set(list_stopwords)
-            except:
-                IOError
-        # TODO (max) May change to array (not string) or change delimiter to ','
-        else:
-            dont_use = step_data.get_data_array(values["stopwords"], {})
-            wordcloud_parameter["stopwords"] = set(dont_use)
+        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        for each in list_stopwords:
+            if each not in dont_use:
+                dont_use.append(each)
+        wordcloud_parameter["stopwords"] = set(dont_use)
+    else:
+        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        wordcloud_parameter["stopwords"] = set(dont_use)
 
     wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
 
