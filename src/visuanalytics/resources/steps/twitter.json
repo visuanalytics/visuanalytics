@@ -62,9 +62,15 @@
       ]
     },
     {
-      "type": "normalize_words",
-      "keys": [
-        "_req|text_all"
+      "type": "option",
+      "check": "_conf|normalize_words",
+      "on_true": [
+        {
+          "type": "normalize_words",
+          "keys": [
+            "_req|text_all"
+          ]
+        }
       ]
     },
     {
@@ -781,6 +787,21 @@
       "display_name": "Aus Wordcloud ausschließen",
       "possible_values": [],
       "default_value": ""
+    },
+    {
+      "name": "normalize_words",
+      "display_name": "Wörter normalisieren",
+      "possible_values": [
+        {
+          "value": true,
+          "display_value": "aktiviert"
+        },
+        {
+          "value": false,
+          "display_value": "deaktiviert"
+        }
+      ],
+      "default_value": true
     },
     {
       "name": "colormap_words",
