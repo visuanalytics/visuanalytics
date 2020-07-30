@@ -205,7 +205,7 @@ Fragt unterschiedliche Daten einer API ab.
 Für die Wetterberichte werden die ersten beiden Funktionen verwendet.
 
 ## Transform
-Mit den ``transform``-Funktionen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten transformieren kann.
+Mit den ``transform``-Typen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten transformieren kann.
 
 **Wetterbericht**  
 Für den Wetterbericht werden folgende Funktionen verwendet:
@@ -269,23 +269,23 @@ Die Funktion ``choose_random`` hatte ein Dictionary mit kleinen Dictionaries geg
 
 Beispiel:
 
-„500“: {„1”: “Text1”, “2”: “Text2“}
+``"500": {"1": "Text1", "2": "Text2"}``
 
 Man musste immer genau diese Anzahl an Key-Value-Paaren eintragen, um die Funktion nutzen zu können. 
 
 Dies wurde so geändert, dass dort ein Dictionary mit 
 
-„key“: [„Array“ ] 
+``"key": ["Array"] ``
 
 anstelle von
 
-„key“:  {„key“: „Dictionary“} 
+``"key":  {"key": "Dictionary"} ``
 
 steht und man aus diesem Array zufällig einen Text auswählen kann, egal wie viele Einträge das Array hat. 
 
 Beispiel:
 
-„500“: [„Text1“, Text2“]
+``"500": ["Text1", "Text2"]``
 
 Diese Funktion (``choose_random``) wurde zu ``random_string`` umbenannt und man kann entweder ein Dictionary oder ein Array einfügen, aus dem ein Value per Zufall ausgewählt werden soll und unter einem neuen Key in der JSON abgespeichert wird. 
 
@@ -296,6 +296,30 @@ Zudem wurden die Funktionen ``copy`` und ``delete`` implementiert.
 ``copy`` dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren.  
 Die Funktion ``delete`` dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
 
+**Twitter-Wordcloud**
+
+Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet mit Hashtags. Als Antwort erhält man unter anderem alle Posts, die das gesuchte Hashtag innerhalb der letzten 7 Tage verwendet haben.
+Die API-Antwort wird so verkürzt, dass nur noch die Hashtags, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden Wordclouds erstellt.
+
+
+Die zuvor implementierten ``transform``-Typen konnten größtenteils nicht übernommen werden und mussten neu implementiert werden.
+transform_array, select, append und delete konnten verwendet werden.
+
+Folgende transform-Typen wurden verwendet: 
+
+|        Funktion        |       Beschreibung       |
+|------------------------|--------------------------|
+|transform_array||
+|select||
+|append||
+|delete||
+|normalize_words||
+|counter||
+|remove_from_list|Entfernt Wörter aus einer Liste.|
+|sub_lists|Erstellt aus einer großen Liste, eine (oder mehrere) kleinere Listen, die nur einen Teil der großen Liste repräsentieren.|
+|join||
+|length||
+
 ## Processing
 ### Audio
 ``part.py``
@@ -305,11 +329,29 @@ Die Funktion ``delete`` dient dazu, Werte mit dem dazugehörigen Key aus der Dat
 ``generate_audios()``
 
 ### Image
-``pillow``
+**``pillow``** 
 
 ``draw.py``
 
 ``overlay.py``
+
+**``wordcloud.py``**
+Wordclouds sind Images, die erstellt werden können. Der Hintergrund kann einfarbig sein oder aber auch ein anderes Bild als Hintergrund haben. Hier wird dann mit dem overlay-Typ "image" gearbeitet.
+
+Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
+
+Wordcloud einfügen
+
+Die Wörter, die zu sehen sind, sind alles Hashtags, die neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
+Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
+
+Man kann außerdem entscheiden, welche Wörter man auf keinen Fall in der Wordcloud haben möchte, die Stopwords. Dafür ist eine Textdatei im Resources-Ordner hinterlegt und man kann sie im Frontend eingeben, 
+falls spontan neue Stopwords hinzukommen. Die Textdatei mit den Stopwords kann optional verwendet werden. Es kann außerdem berücksichtig werden, dass Wörter, die upper, lower oder capitalized vorkommen, aber zu den Stopwords gehören, auch nicht auftauchen sollen.
+
+Man kann auch Stopwords mit nur einen Wort, welches sich wiederholt, darstellen.
+
+Möchte man einen Verlauf von dem am häufigsten genannten Hashtag zu dem immer das nächsthäufigste hinzu kommt, muss man einzelne Wordclouds erstellen und diese aneinanderhängen, damit man einen Verlauf als Video hat.
+Dies geschieht dann mit dem Sequencer. 
 
 ## Sequence
 ``link(values: dict, step_data: StepData)``
