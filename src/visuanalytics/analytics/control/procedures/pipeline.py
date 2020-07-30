@@ -151,7 +151,6 @@ class Pipeline(object):
 
                 # Execute Step
                 self.__steps[self.__current_step].get("call", lambda: None)(self.__config, data)
-                print(data.data)
 
                 logger.info(f"Step finished: {self.current_step_name()}!")
 
