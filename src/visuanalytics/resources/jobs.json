@@ -61,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "11:39",
+        "time": "16:38",
         "daily": true
       },
       "config": {
@@ -74,6 +74,7 @@
           "Werder"
         ],
         "thumbnail": true,
+        "normalize_words": true,
         "colormap_words": "viridis",
         "color_func": true,
         "color_func_words": "145 46 5 35",
