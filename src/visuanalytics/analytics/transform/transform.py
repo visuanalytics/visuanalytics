@@ -584,48 +584,23 @@ def remove_from_list(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        new_value = value
-        try:
-            to_remove = data.get_data_array(values["to_remove"], values)
-        except:
-            to_remove = []
-        if values.get("use_stopwords", False) is not None:
-            use_stopwords = data.get_data_bool(values["use_stopwords"], {})
-            if use_stopwords:
-                try:
-                    file = resources.get_resource_path("stopwords/stopwords.txt")
-                    with open(file, "r", encoding='utf-8') as f:
-                        list_stopwords = f.read().splitlines()
+        to_remove = data.get_data_array(values.get("to_remove", []), values)
 
-                    for each in list_stopwords:
-                        to_remove.append(each)
-                except:
-                    IOError
+        if data.get_data_bool(values.get("use_stopwords", False), values):
+            try:
+                file = resources.get_resource_path("stopwords/stopwords.txt")
+                with open(file, "r", encoding='utf-8') as f:
+                    list_stopwords = f.read().splitlines()
 
-        if values.get("ignore_case", False) is not None:
-            ignore_case = data.get_data_bool(values["ignore_case"], {})
-            if ignore_case:
-                to_remove_new = list(to_remove)
-                for i in range(len(to_remove)):
-                    if (to_remove[i]).upper() != to_remove[i]:
-                        up = (to_remove[i]).upper()
-                        to_remove_new.append(up)
-                    if (to_remove[i]).capitalize() != to_remove[i]:
-                        cap = (to_remove[i]).capitalize()
-                        to_remove_new.append(cap)
-                    if (to_remove[i]).lower() != to_remove[i]:
-                        low = (to_remove[i]).lower()
-                        to_remove_new.append(low)
-                to_remove = to_remove_new
+                to_remove = to_remove + list_stopwords
+            except IOError:
+                pass
 
-        for each in to_remove:
-            if each in new_value:
-                if data.get_data_num(values.get("count", -1), values):
-                    count = data.get_data_num(values.get("count", -1), values)
-                    for i in range(count):
-                        new_value.remove(each)
-                else:
-                    new_value.remove(each)
+        if data.get_data_bool(values.get("ignore_case", False), values):
+            to_remove = [r.lower() for r in to_remove]
+            new_value = [v for v in value if v.lower() not in to_remove]
+        else:
+            new_value = [v for v in value if v not in to_remove]
 
         data.insert_data(new_key, new_value, values)
 
@@ -641,6 +616,7 @@ def lower_case(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
+
         new_value = [each.lower() for each in value]
         data.insert_data(new_key, new_value, values)
 
@@ -656,6 +632,7 @@ def upper_case(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
+
         new_value = [each.upper() for each in value]
         data.insert_data(new_key, new_value, values)
 
@@ -671,6 +648,7 @@ def capitalize(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
+
         new_value = [each.capitalize() for each in value]
         data.insert_data(new_key, new_value, values)
 
