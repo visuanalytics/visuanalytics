@@ -44,7 +44,6 @@ export const JobList: React.FC = () => {
                             <Typography align={"center"}>
                                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
                             </Typography>
-                            <p></p>
                         </Grid>
                         <Grid container item justify="center">
                             <ContinueButton style={{width: "auto"}} onClick={() => components?.setCurrent("jobpage")}>Neuen Job erstellen</ContinueButton>
