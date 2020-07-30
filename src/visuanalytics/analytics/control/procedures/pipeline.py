@@ -101,12 +101,17 @@ class Pipeline(object):
                 logger.info("Send completion notice...")
 
                 # Save Video Name and Thumbnail name to Config
+                video_name = os.path.basename(values["sequence"])
+                thumbnail_name = os.path.basename(values["thumbnail"])
+
                 data.insert_data("_conf|video_path", values["sequence"], {})
-                data.insert_data("_conf|video_name", os.path.basename(values["sequence"]), {})
+                data.insert_data("_conf|video_name", video_name, {})
+                data.insert_data("_conf|video_id", os.path.splitext(video_name)[0], {})
 
                 if isinstance(values["thumbnail"], str):
                     data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
-                    data.insert_data("_conf|thumbnail_name", os.path.basename(values["thumbnail"]), {})
+                    data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
+                    data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
 
                 # Make request
                 api_request(cp_request, data, "", True)
