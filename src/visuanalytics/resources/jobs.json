@@ -80,7 +80,9 @@
         "figure": "circle",
         "width_wordcloud": 1000,
         "height_wordcloud": 1000,
-        "keep_count": 3
+        "fix_names": {
+          "count": 3
+        }
       }
     }
   ]

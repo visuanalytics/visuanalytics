@@ -1,10 +1,10 @@
-import shutil
 import os
+import shutil
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import IMAGE_TYPES
-from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.analytics.util.step_errors import raise_step_error, ThumbnailError
+from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
 
 THUMBNAIL_TYPES = {}
@@ -44,7 +44,9 @@ def created(values: dict, step_data: StepData):
 
 
 def _copy_and_rename(src_file: str, values: dict, step_data: StepData):
-    shutil.copy(src_file, step_data.get_config("output_path"))
-    os.rename(os.path.join(step_data.get_config("output_path"), os.path.basename(src_file)),
-              resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
-                                     step_data.get_config("job_name"), format=".png", thumbnail=True))
+    out_path = resources.path_from_root(step_data.get_config("output_path"))
+
+    values["thumbnail"] = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
+                                                 step_data.get_config("job_name"), format=".png", thumbnail=True)
+    shutil.copy(src_file, out_path)
+    os.rename(os.path.join(out_path, os.path.basename(src_file)), values["thumbnail"])

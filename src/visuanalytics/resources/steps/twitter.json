@@ -71,7 +71,8 @@
       "type": "counter",
       "keys": [
         "_req|text_all"
-      ]
+      ],
+      "include_count": true
     },
     {
       "type": "remove_from_list",
@@ -154,7 +155,7 @@
       ]
     },
     {
-      "type": "join",
+      "type": "to_dict",
       "keys": [
         "_req|text_all",
         "_req|text_top1",
@@ -171,7 +172,22 @@
         "_req|text_top20",
         "_req|text_top25"
       ],
-      "delimiter": " "
+      "new_keys": [
+        "_req|dict_all",
+        "_req|dict_top1",
+        "_req|dict_top2",
+        "_req|dict_top3",
+        "_req|dict_top4",
+        "_req|dict_top5",
+        "_req|dict_top6",
+        "_req|dict_top7",
+        "_req|dict_top8",
+        "_req|dict_top9",
+        "_req|dict_top10",
+        "_req|dict_top15",
+        "_req|dict_top20",
+        "_req|dict_top25"
+      ]
     },
     {
       "type": "length",
@@ -196,7 +212,7 @@
   "images": {
     "all_words_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_all}",
+      "dict": "_req|dict_all",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": false,
       "color_func_words": "{_conf|color_func_words}",
@@ -215,7 +231,7 @@
     },
     "top1_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top1}",
+      "dict": "_req|dict_top1",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -235,7 +251,7 @@
     },
     "top2_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top2}",
+      "dict": "_req|dict_top2",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -255,7 +271,7 @@
     },
     "top3_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top3}",
+      "dict": "_req|dict_top3",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -275,7 +291,7 @@
     },
     "top4_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top4}",
+      "dict": "_req|dict_top4",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -295,7 +311,7 @@
     },
     "top5_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top5}",
+      "dict": "_req|dict_top5",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -315,7 +331,7 @@
     },
     "top6_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top6}",
+      "dict": "_req|dict_top6",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -335,7 +351,7 @@
     },
     "top7_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top7}",
+      "dict": "_req|dict_top7",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -355,7 +371,7 @@
     },
     "top8_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top8}",
+      "dict": "_req|dict_top8",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -375,7 +391,7 @@
     },
     "top9_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top9}",
+      "dict": "_req|dict_top9",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -395,7 +411,7 @@
     },
     "top10_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top10}",
+      "dict": "_req|dict_top10",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -415,7 +431,7 @@
     },
     "top15_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top15}",
+      "dict": "_req|dict_top15",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -435,7 +451,7 @@
     },
     "top20_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top20}",
+      "dict": "_req|dict_top20",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
@@ -455,7 +471,7 @@
     },
     "top25_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top25}",
+      "dict": "_req|dict_top25",
       "stopwords": "_conf|stopwords",
       "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
