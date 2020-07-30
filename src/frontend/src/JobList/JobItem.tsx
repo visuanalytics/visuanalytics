@@ -23,6 +23,7 @@ import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
 import { getUrl } from "../util/fetchUtils";
+import {HintButton} from "../util/HintButton";
 
 interface Props {
     job: Job,
@@ -278,6 +279,25 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         >
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
+                                    <Grid container>
+                                        <Grid xs={11}/>
+                                        <Grid container xs={1} justify={"flex-end"}>
+                                            <HintButton content={
+                                                <div>
+                                                    <Typography variant="h5" gutterBottom>Zeitplan auswählen</Typography>
+                                                    <Typography gutterBottom>
+                                                        Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
+                                                    </Typography>
+                                                    <Typography variant="h6" >täglich</Typography>
+                                                    <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
+                                                    <Typography variant="h6" >wöchentlich</Typography>
+                                                    <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+                                                    <Typography variant="h6" >an festem Datum</Typography>
+                                                    <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+                                                </div>
+                                            } />
+                                        </Grid>
+                                    </Grid>
                                     <Paper variant="outlined" className={classes.paper}>
                                         <ScheduleSelection
                                             schedule={selectedSchedule}
