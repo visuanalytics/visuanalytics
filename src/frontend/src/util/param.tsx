@@ -12,6 +12,10 @@ export interface ParamValues {
     [key: string]: any
 }
 
+interface TypedParamValues {
+    [key: string]: { type: string, value: any }
+}
+
 interface IParam {
     name: string;
     displayName: string;
@@ -54,25 +58,27 @@ interface EnumValue {
 }
 
 // validate parameter values
-export const validateParamValues = (params: Param[], values: ParamValues): boolean => {
+export const validateParamValues = (values: ParamValues, params: Param[]): boolean => {
     return params.every((p: Param) => {
         switch (p.type) {
             case "subParams":
                 if (!p.optional || values[p.name]) {
-                    return p.subParams === null ? true : validateParamValues(p.subParams, values);
+                    return p.subParams === null ? true : validateParamValues(values, p.subParams);
                 }
                 break;
             case "string":
             case "number":
             case "enum":
                 if (!p.optional) {
-                    return values[p.name].trim() !== "";
+                    const v = values[p.name];
+                    return v.trim() !== "";
                 }
                 break;
             case "multiString":
             case "multiNumber":
                 if (!p.optional) {
-                    return values[p.name].map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
+                    const vs = values[p.name];
+                    return vs.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
                 }
                 break;
         }
@@ -111,7 +117,7 @@ export const initSelectedValues = (params: Param[]) => {
                 break;
             case "multiString":
             case "multiNumber":
-                selected[p.name] = [""]
+                selected[p.name] = []
                 break;
             case "boolean":
                 selected[p.name] = false;
@@ -128,4 +134,23 @@ export const initSelectedValues = (params: Param[]) => {
         }
     })
     return selected;
+}
+
+export const toTypedValues = (values: ParamValues, params: Param[]) => {
+    let tValues: TypedParamValues = {};
+    params.forEach(p => {
+        if (p.name in values) {
+            const v = values[p.name];
+            if (p.type === "subParams" && (!p.optional || v)) {
+                const stValues = toTypedValues(values, p.subParams);
+                tValues = { ...tValues, ...stValues };
+            }
+            tValues[p.name] = { type: p.type, value: v };
+        }
+        if ((p.type === "subParams" && !p.optional)) {
+            const stValues = toTypedValues(values, p.subParams);
+            tValues = { ...tValues, ...stValues };
+        }
+    })
+    return tValues;
 }

@@ -1,19 +1,19 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {useStyles} from './style';
-import {ContinueButton} from './ContinueButton';
-import {BackButton} from './BackButton';
-import {ParamSelection} from './ParamSelection';
-import {TopicSelection} from './TopicSelection';
-import {ScheduleSelection} from './ScheduleSelection';
-import {GreyDivider} from './GreyDivider';
-import {Param, ParamValues, trimParamValues, validateParamValues, initSelectedValues} from '../util/param';
-import {Fade} from '@material-ui/core';
-import {useCallFetch} from '../Hooks/useCallFetch';
-import {Schedule, Weekday, withFormattedDates} from '../util/schedule';
-import {getUrl} from '../util/fetchUtils';
+import { useStyles } from './style';
+import { ContinueButton } from './ContinueButton';
+import { BackButton } from './BackButton';
+import { ParamSelection } from './ParamSelection';
+import { TopicSelection } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
+import { Param, ParamValues, trimParamValues, validateParamValues, initSelectedValues, toTypedValues } from '../util/param';
+import { Fade } from '@material-ui/core';
+import { useCallFetch } from '../Hooks/useCallFetch';
+import { Schedule, Weekday, withFormattedDates } from '../util/schedule';
+import { getUrl } from '../util/fetchUtils';
 
 
 /*
@@ -62,7 +62,7 @@ export default function JobCreate() {
         body: JSON.stringify({
             topicId: topicId,
             jobName: jobName,
-            values: trimParamValues(paramValues),
+            values: toTypedValues(trimParamValues(paramValues), paramList),
             schedule: withFormattedDates(schedule)
         })
     });
@@ -86,7 +86,7 @@ export default function JobCreate() {
     // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
         if (activeStep === 1) {
-            const allSet = validateParamValues(paramList, paramValues);
+            const allSet = validateParamValues(paramValues, paramList);
             setSelectComplete(allSet);
         }
     }, [paramList, paramValues, activeStep])
@@ -194,7 +194,7 @@ export default function JobCreate() {
 
     // handler for param selection logic
     const handleSelectParam = (key: string, value: any) => {
-        const updated = {...paramValues}
+        const updated = { ...paramValues }
         updated[key] = value;
         setParamValues(updated);
     }
@@ -226,7 +226,7 @@ export default function JobCreate() {
                         topicId={topicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName}/>
+                        enterJobNameHandler={handleEnterJobName} />
                 );
             case 1:
                 return (
@@ -235,7 +235,7 @@ export default function JobCreate() {
                         values={paramValues}
                         params={paramList}
                         fetchParamHandler={handleFetchParams}
-                        selectParamHandler={handleSelectParam}/>
+                        selectParamHandler={handleSelectParam} />
                 )
             case 2:
                 return (
@@ -269,16 +269,16 @@ export default function JobCreate() {
                         <div>
                             <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                         </div>
-                        <GreyDivider/>
+                        <GreyDivider />
                         {getSelectPanel(activeStep)}
-                        <GreyDivider/>
+                        <GreyDivider />
                         <div className={classes.paddingSmall}>
                             <span>
-                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
-                                                disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
+                                    disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
