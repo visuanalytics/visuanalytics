@@ -10,8 +10,8 @@ from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
-from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
+from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_old_videos
 from visuanalytics.util import resources
 from visuanalytics.util.resources import get_current_time
@@ -80,12 +80,28 @@ class Pipeline(object):
         """
         return self.__steps[self.__current_step]["name"]
 
+    def __get_default_config(self, run_config: dict):
+        default_config = {}
+        for c, v in run_config.items():
+            # If config has sub_params: include all sub_params
+            if v["type"] == "sub_params":
+                default_config.update(self.__get_default_config(v["sub_params"]))
+
+            default_config[c] = v.get("default_value", None)
+
+        return default_config
+
     def __setup(self):
         logger.info(f"Initializing Pipeline {self.id}...")
 
         # Load json config file
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
+
+        # Init Steps config with default config
+        steps_config = self.__get_default_config(self.__config.get("run_config", {}))
+        steps_config.update(self.steps_config)
+        self.steps_config = steps_config
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
