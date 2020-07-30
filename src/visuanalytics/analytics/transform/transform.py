@@ -669,18 +669,16 @@ def normalize_words(values: dict, data: StepData):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
         already_there = []
-        new_value = ""
+        new_value = []
         for each in value:
             if each.upper() in already_there:
-                new_value = new_value + " " + each.upper()
+                new_value.append(each.upper())
             elif each.lower() in already_there:
-                new_value = new_value + " " + each.lower()
+                new_value.append(each.lower())
             elif each.capitalize() in already_there:
-                new_value = new_value + " " + each.capitalize()
+                new_value.append(each.capitalize())
             else:
                 already_there.append(each)
-                new_value = new_value + " " + each
-
-        new_value = new_value.split(" ")
+                new_value.append(each)
 
         data.insert_data(new_key, new_value, values)
