@@ -641,14 +641,7 @@ def lower_case(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        new_value = ""
-        for each in value:
-            if each.upper() == each or each.capitalize() == each or each.lower() == each:
-                low = each.lower()
-                new_value = new_value + " " + low
-            else:
-                new_value = new_value + " " + each
-        new_value = new_value.split(" ")
+        new_value = [each.lower() for each in value]
         data.insert_data(new_key, new_value, values)
 
 
@@ -663,14 +656,7 @@ def upper_case(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        new_value = ""
-        for each in value:
-            if each.upper() == each or each.capitalize() == each or each.lower() == each:
-                up = each.upper()
-                new_value = new_value + " " + up
-            else:
-                new_value = new_value + " " + each
-        new_value = new_value.split(" ")
+        new_value = [each.upper() for each in value]
         data.insert_data(new_key, new_value, values)
 
 
@@ -685,14 +671,7 @@ def capitalize(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        new_value = ""
-        for each in value:
-            if each.upper() == each or each.capitalize() == each or each.lower() == each:
-                cap = each.capitalize()
-                new_value = new_value + " " + cap
-            else:
-                new_value = new_value + " " + each
-        new_value = new_value.split(" ")
+        new_value = [each.capitalize() for each in value]
         data.insert_data(new_key, new_value, values)
 
 
