@@ -103,8 +103,10 @@ class Pipeline(object):
                 # Save Video Name and Thumbnail name to Config
                 data.insert_data("_conf|video_path", values["sequence"], {})
                 data.insert_data("_conf|video_name", os.path.basename(values["sequence"]), {})
-                data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
-                data.insert_data("_conf|thumbnail_name", os.path.basename(values["thumbnail"]), {})
+
+                if isinstance(values["thumbnail"], str):
+                    data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
+                    data.insert_data("_conf|thumbnail_name", os.path.basename(values["thumbnail"]), {})
 
                 # Make request
                 api_request(cp_request, data, "", True)
