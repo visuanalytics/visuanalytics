@@ -205,11 +205,96 @@ Fragt unterschiedliche Daten einer API ab.
 Für die Wetterberichte werden die ersten beiden Funktionen verwendet.
 
 ## Transform
-Mit den transform-Funktionen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten transformieren kann.
+Mit den ``transform``-Funktionen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten transformieren kann.
 
-Mit den transform-Funktionen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten (bei der Weatherbit-API ist dies eine JSON-Datei) umwandeln kann.Für den Wetterbericht werden folgende Funktionen verwendet:transform_dict , select, select_range, transform_array, select, calculate(round), append, calculate(ms_to_kmh), add_symbol, replace, date_weekday, timestamp, wind_direction (geht nur für dieses Format und nur für die Weatherbit-API), translate_key (wählt aus dict einen Code als Key und gibt dazu den Value aus), choose_random (wählt Text aus dict ..dort sind pro key mehrere Wahlmöglichkeiten -> random), append, date_nowFür den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städtenabgefragt, um eine Tendenz berechnen zu können wie die Durchschnittswerte an einem Tag in ganz Deutschland sind. Dafür wird die transform-Funktion transform_dict verwendet. Mithilfe dieser Funktion kann in der JSON-Datenstruktur ein neuer Dictionary-Eintrag generiert werden, in dem Zusammenfassungen von Daten aus allen 19 Anfragen zu einem bestimmten Datum berechnet werden. Zunächst werden z.B. alle maximalen Temperaturwertefür einen Tag von allen Städten in einem Array gespeichert. Mit der calculate_mean-Funktion wird aus diesem Array an Zahlen der Mittelwert berechnet und anstelle des Arrays in das Dictionary geschrieben. Außerdem kannz.B. auch der Minimal- und Maximalwert eines Arrays anstelle des Arrays zu einem Key in dem Dictionary abgespeichert werden. Mit calculate_mode wird das am häufigsten in einem Array vorkommende Element anstelle des Arrays gespeichert. Neue API einbauenNachdem die Weatherbit-API erfolgreich implementiert wurde, wurde sich um die Einbindung einer neuen API gekümmert. Die neue API ist die openligadb-API. Genauer genommen wurde zunächst die Darstellung der Fußball-Bundesliga-Ergebnisse in einem Video umgesetzt. Die zuvor implementierten Funktionen konnten größtenteils übernommen werden.API
-Für die API-Anfrage wurde die Funktion request_multiple_custom (ruft die Funktion request mehrmals) verwendet, die zuvor noch keine Verwendung gefunden hatte. Nun sollten nämlich die Tabelle der Bundesliga und die Spiele des aktuellen Spieltages abgefragt werden, dies sind bei der API zwei verschiedene einzelne Requests.  Außerdem wurde eine weitere Funktion für die API-Anfragen implementiert: request_memory. Diese wird dafür benötigt, zuvor abgefragte Requests zu speichern. Bei openligadb war das Problem, dass man nur die aktuelle Tabelle abfragen konnte und keine vorherigen. Vorherige Spieltage waren allerdings kein Problem. Die vorherigen Tabellen werden dafür benötigt Veränderungen zwischender vorherigen und der aktuellen Tabelle visualisieren zu können. Wenn sich zum Bespiel eine Mannschaft auf der Tabelle um einen Platz verbessert oder verschlechtert hat, kann man dies mithilfe von Pfeilen oder einem anderen dazugehörigen Text darstellen.TransformDie zuvor implementierten transform-Funktionen konnten größtenteils übernommen werden. Einige wurden verallgemeinert, ergänzt, entfernt oder zusammengefügt zu einer Funktion. Nachdem die verbesserten Funktionen getestet wurden, wurden die Änderungen auch in den JSON-Dateien der Wetterberichte eingepflegt.Folgende transform-Funktionen wurden verwendet: alias, transform_array, select,date_weekday, option, compare, random_string, calculate, subtract, copy, deleteFolgende Änderungen wurden durchgeführt, um die Funktionen allgemeiner und modularer zu gestalten:Aus der Funktion ms_to_kmh wurde die Funktion calculcate_multiply. Mit dieser Funktion kann man beliebige Einträge von Arrays miteinander mulitplizieren oder Array-Einträge immer mit einer bestimmten Zahl oder einfach zwei Zahlen miteinander. Außerdem wurden calculate_divide, calculate_subtract und calculate_add hinzugefügt, um alle vier Hauptrechenarten abzudecken. Die Funktion choose_random hatte ein Dictionary mit kleinen Dictionaries gegeben. Ein Key hatte eine festgelegte Anzahl an Key-Value-Paaren (ein kleines Dictionary) aus denen zufällig ein Value ausgewählten werden soll. Beispiel: „500“: {„1”: “Text1”, “2”: “Text2“}Man musste immer genau diese Anzahl an Key-Value-Paaren eintragen, um die Funktion nutzen zu können. Dies wurde so geändert, dass dort ein Dictionary mit „key“: [„Array“ ]anstelle von „key“:  {„key“: „Dictionary“} steht und man aus diesem Array zufällig einen Text auswählen kann, egal wie viele Einträge das Array hat. Beispiel: „500“: [„Text1“, Text2“]Diese Funktion (choose_random) wurde zu random_string umbenannt und man kann entweder ein Dictionary oder ein Array einfügen, aus dem ein Value per Zufall ausgewählt werden soll und unter einem neuen Key in der JSON abgespeichert wird. 
-Bei allen Funktion, mit denen das Datumsformat geändert werden kann, wurde ergänzt, dass man z.B. aus 05. Mai -> 5. Mai machen kann, wenn zeropaded_ofauf True gesetzt wird. Dieser Key ist optional.Die Funktionen option und compare wurden neu hinzugefügt. Bei option wird überprüft, ob ein gewisser Wert True oder False ist und je nachdem, werden unterschiedliche Funktionen durchgeführt. Bei compare werden zwei Werte miteinander vergleichen. Je nachdem ob ein Wert gleich, größer oder kleiner als der andere Wert ist, werden unterschiedliche Funktionen durchgeführt.Zudem wurden die Funktionen copy und delete implementiert. copy dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren. Die Funktion delete dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
+**Wetterbericht**  
+Für den Wetterbericht werden folgende Funktionen verwendet:
+
+|        Funktion        |       Beschreibung       |
+|------------------------|--------------------------|
+| transform_dict |Führt alle angegebenen `transform`-Funktionen für alle Werte eines Dictionaries aus.|
+|select|Entfernt alle Keys, die nicht in `relevant_keys` stehen aus dem Dictionary.|
+|select_range|Entfernt alle Werte aus `array_key`, die nicht in `range` sind.|
+|transform_array|Führt alle angegebenen `transform`-Funktionen für alle Werte eines Arrays aus.|
+|calculate(round)|Rundet gegebene Werte auf eine gewünschte Nachkommastelle.|
+|append|Speichert den Wert unter `key` in einem Array.|
+|calculate(ms_to_kmh)||
+|add_symbol |Fügt ein Zeichen, Symbol, Wort oder einen Satz zu einem Wert hinzu.|
+|replace|Ersetzt ein Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text in einem String.|
+|date_weekday|Wandelt das angegebene Datum in den jeweiligen Wochentag um.|
+|timestamp|Wandelt einen UNIX-Zeitstempel in ein anderes Format um.|
+|wind_direction|Wandelt einen String von Windrichtungen um. (geht nur für dieses Format und nur für die Weatherbit-API) |
+|translate_key|Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. (wählt aus dict einen Code als Key und gibt dazu den Value aus) |
+|choose_random | (wählt Text aus dict ..dort sind pro key mehrere Wahlmöglichkeiten -> random) |
+|date_now|Generiert das heutige Datum und gibt es im gewünschten Format aus.|
+
+Für den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städtenabgefragt, um eine Tendenz berechnen zu können wie die Durchschnittswerte an einem Tag in ganz Deutschland sind.  
+Dafür wird die ``transform``-Funktion ``transform_dict`` verwendet. Mithilfe dieser Funktion kann in der JSON-Datenstruktur ein neuer Dictionary-Eintrag generiert werden, in dem Zusammenfassungen von Daten aus allen 19 Anfragen zu einem bestimmten Datum berechnet werden.  
+Zunächst werden z.B. alle maximalen Temperaturwerte für einen Tag von allen Städten in einem Array gespeichert. Mit der ``calculate_mean``-Funktion wird aus diesem Array an Zahlen der Mittelwert berechnet und anstelle des Arrays in das Dictionary geschrieben. Außerdem kann z.B. auch der Minimal- und Maximalwert eines Arrays anstelle des Arrays zu einem Key in dem Dictionary abgespeichert werden.  
+Mit ``calculate_mode`` wird das am häufigsten in einem Array vorkommende Element anstelle des Arrays gespeichert. 
+
+**Fußball-Bundesliga**
+
+Nachdem die Weatherbit-API erfolgreich implementiert wurde, wurde sich um die Einbindung einer neuen API gekümmert. Die neue API ist die _openligadb_-API.  
+Genauer genommen wurde zunächst die Darstellung der Fußball-Bundesliga-Ergebnisse in einem Video umgesetzt. Die zuvor implementierten Funktionen konnten größtenteils übernommen werden.
+
+Für die API-Anfrage wurde die Funktion ``request_multiple_custom`` (ruft die Funktion ``request`` mehrmals) verwendet, die zuvor noch keine Verwendung gefunden hatte. Nun sollten nämlich die Tabelle der Bundesliga und die Spiele des aktuellen Spieltages abgefragt werden, dies sind bei der API zwei verschiedene einzelne Requests.  Außerdem wurde eine weitere Funktion für die API-Anfragen implementiert: ``request_memory``. Diese wird dafür benötigt, zuvor abgefragte Requests zu speichern.  
+Bei _openligadb_ war das Problem, dass man nur die aktuelle Tabelle abfragen konnte und keine vorherigen. Vorherige Spieltage waren allerdings kein Problem. Die vorherigen Tabellen werden dafür benötigt Veränderungen zwischen der vorherigen und der aktuellen Tabelle visualisieren zu können. Wenn sich zum Bespiel eine Mannschaft auf der Tabelle um einen Platz verbessert oder verschlechtert hat, kann man dies mithilfe von Pfeilen oder einem anderen dazugehörigen Text darstellen.
+
+Die zuvor implementierten ``transform``-Funktionen konnten größtenteils übernommen werden. Einige wurden verallgemeinert, ergänzt, entfernt oder zusammengefügt zu einer Funktion. Nachdem die verbesserten Funktionen getestet wurden, wurden die Änderungen auch in den JSON-Dateien der Wetterberichte eingepflegt.
+
+Folgende transform-Funktionen wurden verwendet: 
+
+|        Funktion        |       Beschreibung       |
+|------------------------|--------------------------|
+|alias|Erstzt einen Key durch einen neuen Key.|
+|transform_array|Führt alle angegebenen `transform`-Funktionen für alle Werte eines Arrays aus.|
+|select|Entfernt alle Keys, die nicht in `relevant_keys` stehen aus dem Dictionary.|
+|date_weekday|Wandelt das angegebene Datum in den jeweiligen Wochentag um.|
+|option|Führt die aufgeführten `transform`-Funktionen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist.|
+|compare||
+|random_string||
+|calculate subtract|Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.|
+|copy|Kopiert einen Wert zu einem neuen Key.|
+|delete|Löscht die angegebenen Keys aus den Daten|
+
+Folgende Änderungen wurden durchgeführt, um die Funktionen allgemeiner und modularer zu gestalten:
+
+``ms_to_kmh`` wurde zu ``calculcate_multiply``.  
+Mit dieser Funktion kann man beliebige Einträge von Arrays miteinander mulitplizieren oder Array-Einträge immer mit einer bestimmten Zahl oder einfach zwei Zahlen miteinander. 
+
+Außerdem wurden ``calculate_divide``, ``calculate_subtract`` und ``calculate_add`` hinzugefügt, um alle vier Hauptrechenarten abzudecken. 
+
+Die Funktion ``choose_random`` hatte ein Dictionary mit kleinen Dictionaries gegeben. Ein Key hatte eine festgelegte Anzahl an Key-Value-Paaren (ein kleines Dictionary) aus denen zufällig ein Value ausgewählten werden soll. 
+
+Beispiel:
+
+„500“: {„1”: “Text1”, “2”: “Text2“}
+
+Man musste immer genau diese Anzahl an Key-Value-Paaren eintragen, um die Funktion nutzen zu können. 
+
+Dies wurde so geändert, dass dort ein Dictionary mit 
+
+„key“: [„Array“ ] 
+
+anstelle von
+
+„key“:  {„key“: „Dictionary“} 
+
+steht und man aus diesem Array zufällig einen Text auswählen kann, egal wie viele Einträge das Array hat. 
+
+Beispiel:
+
+„500“: [„Text1“, Text2“]
+
+Diese Funktion (``choose_random``) wurde zu ``random_string`` umbenannt und man kann entweder ein Dictionary oder ein Array einfügen, aus dem ein Value per Zufall ausgewählt werden soll und unter einem neuen Key in der JSON abgespeichert wird. 
+
+Bei allen Funktion, mit denen das Datumsformat geändert werden kann, wurde ergänzt, dass man z.B. aus 05. Mai -> 5. Mai machen kann, wenn ``zeropaded_of`` auf ``True`` gesetzt wird. Dieser Key ist optional. Die Funktionen ``option`` und ``compare`` wurden neu hinzugefügt. Bei ``option`` wird überprüft, ob ein gewisser Wert ``True`` oder ``False`` ist und je nachdem, werden unterschiedliche Funktionen durchgeführt.  
+Bei ``compare`` werden zwei Werte miteinander vergleichen. Je nachdem ob ein Wert gleich, größer oder kleiner als der andere Wert ist, werden unterschiedliche Funktionen durchgeführt. 
+
+Zudem wurden die Funktionen ``copy`` und ``delete`` implementiert.  
+``copy`` dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren.  
+Die Funktion ``delete`` dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
 
 ## Processing
 ### Audio
