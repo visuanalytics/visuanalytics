@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Param} from "../util/param";
-import {Button, Container, Fade, Modal, Paper} from "@material-ui/core";
+import {Button, Container, Fade, Modal, Paper, Tooltip} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import {AccordionSummary, useStyles, InputField} from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -202,17 +202,21 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         />
                     </div>
                     <div>
-                        <Button className={classes.inputButton} onClick={handleOpen}>
-                            <InputField
-                                label="Zeitplan"
-                                value={showTime()}
-                                InputProps={{
-                                    disabled: state.edit,
-                                    readOnly: true
-                                }}
-                                variant="outlined"
-                            />
-                        </Button>
+                        <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
+                                 arrow
+                        >
+                            <Button className={classes.inputButton} onClick={handleOpen}>
+                                <InputField
+                                    label="Zeitplan"
+                                    value={showTime()}
+                                    InputProps={{
+                                        disabled: state.edit,
+                                        readOnly: true
+                                    }}
+                                    variant="outlined"
+                                />
+                            </Button>
+                        </Tooltip>
 
                     </div>
                     <div>
@@ -237,17 +241,23 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                             <ExpandMore className={classes.expIcon}/>}
                         <Typography className={classes.heading}>#{job.jobId} {job.jobName}</Typography>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton style={{display: state.doneIcon}} className={classes.button} onClick={handleCheckClick}>
-                                <CheckCircleIcon />
-                            </IconButton>
+                            <Tooltip title="Job bearbeiten" arrow>
+                                <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Job speichern" arrow>
+                                <IconButton style={{display: state.doneIcon}} className={classes.button} onClick={handleCheckClick}>
+                                    <CheckCircleIcon />
+                                </IconButton>
+                            </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton onClick={deleteJob} className={classes.button}>
-                                <DeleteIcon/>
-                            </IconButton>
+                            <Tooltip title="Job löschen" arrow>
+                                <IconButton onClick={deleteJob} className={classes.button}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>

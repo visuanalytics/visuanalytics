@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Grid, IconButton, Paper, Typography} from "@material-ui/core";
+import {Container, Grid, IconButton, Paper, Tooltip, Typography} from "@material-ui/core";
 import {JobList} from "../JobList";
 import {useStyles} from "./style";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -18,9 +18,11 @@ export const Home = () => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <IconButton aria-label="delete" className={classes.button} size="small" onClick={() => components?.setCurrent("jobpage")}>
-                        <AddCircleIcon fontSize="large"/>
-                    </IconButton>
+                    <Tooltip title="Job erstellen" arrow>
+                        <IconButton className={classes.button} size="small" onClick={() => components?.setCurrent("jobpage")}>
+                            <AddCircleIcon fontSize="large"/>
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
                 </Grid>
                 <JobList/>
