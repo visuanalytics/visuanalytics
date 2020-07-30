@@ -23,11 +23,17 @@ import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import {getWeekdayLabel} from "../util/getWeekdayLabel";
 import { getUrl } from "../util/fetchUtils";
-import {Notification} from "../util/Notification";
+import {Notification, TMessageStates} from "../util/Notification";
 
 interface Props {
     job: Job,
     getJobs: () => void;
+}
+
+interface INotification {
+    open: boolean,
+    stateType: TMessageStates,
+    message: string
 }
 
 export const JobItem: React.FC<Props> = ({job, getJobs}) => {
@@ -68,7 +74,12 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         time: parse(String(job.schedule.time), "H:m", new Date()),
     });
     const [error, setError] = React.useState(false);
-    const [success, setSucess] = React.useState(false);
+    const [success, setSucess] = React.useState<INotification>({
+        open: false,
+        stateType: "success",
+        message: ""
+        }
+    );
 
     // handler for schedule selection logic
     const handleSelectDaily = () => {
@@ -113,6 +124,15 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const handleJobName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setJobName(event.target.value);
+    }
+
+    const handleEditError = () => {
+        setSucess({open: true,stateType: "error", message: "Bearbeitung fehlgeschlagen"})
+    }
+
+    const handleEditSuccess = () => {
+        getJobs()
+        setSucess({open: true, stateType: "success", message: "Job erfolgreich geändert"})
     }
 
     const showTime = () => {
@@ -185,7 +205,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                 date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
             }
         })
-    },getJobs);
+    },handleEditSuccess,handleEditError);
 
     const renderJobItem = (job: Job) => {
         const paramInfo: Param[] = selectedParams;
@@ -211,7 +231,6 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             }
             handleEditClick();
             editJob();
-            setSucess(true);
         }
         const handleSaveModal = () => {
             handleCheckClick();
@@ -263,7 +282,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             setError(false);
         }
         const handleCloseSuccess = () => {
-            setSucess(false);
+            setSucess({open: false, stateType: success.stateType, message: success.message});
         }
 
         return (
@@ -283,7 +302,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         >
                         {job.jobName}</NameInput></Typography>
                         <Notification handleClose={handleCloseError} open={error} message={"Job Name nicht ausgefüllt"} type={"error"} />
-                        <Notification handleClose={handleCloseSuccess} open={success} message={"Job erfolgreich geändert"} type={"success"} />
+                        <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message} type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton style={{display: state.editIcon}} className={classes.button} onClick={handleEditClick}>
                                 <EditIcon />
