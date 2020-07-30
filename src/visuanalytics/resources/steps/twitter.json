@@ -62,15 +62,6 @@
       ]
     },
     {
-      "type": "append_stopwords",
-      "keys": [
-        "_conf|stopwords"
-      ],
-      "new_keys": [
-        "_req|stopwords"
-      ]
-    },
-    {
       "type": "normalize_words",
       "keys": [
         "_req|text_all"
@@ -87,8 +78,10 @@
       "keys": [
         "_req|text_all"
       ],
-      "to_remove": "_req|stopwords",
-      "count": 1
+      "to_remove": "_conf|stopwords",
+      "count": 1,
+      "use_stopwords": true,
+      "ignore_case": true
     },
     {
       "type": "sub_lists",
@@ -205,7 +198,8 @@
     "all_words_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_all}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": false,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -223,7 +217,8 @@
     "top1_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top1}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -242,7 +237,8 @@
     "top2_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top2}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -261,7 +257,8 @@
     "top3_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top3}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -280,7 +277,8 @@
     "top4_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top4}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -299,7 +297,8 @@
     "top5_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top5}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -318,7 +317,8 @@
     "top6_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top6}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -337,7 +337,8 @@
     "top7_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top7}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -356,7 +357,8 @@
     "top8_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top8}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -375,7 +377,8 @@
     "top9_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top9}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -394,7 +397,8 @@
     "top10_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top10}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -413,7 +417,8 @@
     "top15_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top15}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -432,7 +437,8 @@
     "top20_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top20}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -451,7 +457,8 @@
     "top25_wordcloud": {
       "type": "wordcloud",
       "text": "{_req|text_top25}",
-      "stopwords": "{_conf|stopwords}",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",

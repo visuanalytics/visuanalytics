@@ -572,30 +572,6 @@ def length(values: dict, data: StepData):
 
 @register_transform
 def remove_from_list(values: dict, data: StepData):
-    """
-
-    :param values: Werte aus der JSON-Datei
-    :param data: Daten aus der API
-    :return:
-    """
-    for idx, key in data.loop_key(values["keys"], values):
-        value = data.get_data(key, values)
-        new_key = get_new_keys(values, idx)
-        new_value = value
-        for each in data.get_data(values["to_remove"], values):
-            if each in new_value:
-                if data.get_data_num(values.get("count", -1), values):
-                    count = data.get_data_num(values.get("count", -1), values)
-                    for i in range(count):
-                        new_value.remove(each)
-                else:
-                    new_value.remove(each)
-
-        data.insert_data(new_key, new_value, values)
-
-
-@register_transform
-def append_stopwords(values: dict, data: StepData):
     """Bekommt Stopwords und wandelt die jeweiligen Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
 
     Bekommt eine Stopword-Liste aus der Textdatei resources/stopwords/stopwords.txt und ggf. die bei der Job-Erstellung
@@ -605,51 +581,53 @@ def append_stopwords(values: dict, data: StepData):
     :param data: Daten aus der API
     :return:
     """
-
-    def case_not_sensitive_stopwords(value):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
         new_value = value
-        for i in range(len(value)):
-            if (value[i]).upper() != value[i]:
-                up = (value[i]).upper()
-                new_value.append(up)
-            if (value[i]).capitalize() != value[i]:
-                cap = (value[i]).capitalize()
-                new_value.append(cap)
-            if (value[i]).lower() != value[i]:
-                low = (value[i]).lower()
-                new_value.append(low)
+        try:
+            to_remove = data.get_data_array(values["to_remove"], values)
+        except:
+            to_remove = []
+        if values.get("use_stopwords", False) is not None:
+            use_stopwords = data.get_data_bool(values["use_stopwords"], {})
+            if use_stopwords:
+                file = resources.get_resource_path("stopwords/stopwords.txt")
+                f = open(file, "r", encoding='utf-8')
+                more_stopwords = ""
+                for x in f:
+                    more_stopwords = more_stopwords + x
+                f.close()
+                list_stopwords = more_stopwords.split('\n')
+                for each in list_stopwords:
+                    to_remove.append(each)
 
-        return new_value
+        if values.get("ignore_case", False) is not None:
+            ignore_case = data.get_data_bool(values["ignore_case"], {})
+            if ignore_case:
+                to_remove_new = list(to_remove)
+                for i in range(len(to_remove)):
+                    if (to_remove[i]).upper() != to_remove[i]:
+                        up = (to_remove[i]).upper()
+                        to_remove_new.append(up)
+                    if (to_remove[i]).capitalize() != to_remove[i]:
+                        cap = (to_remove[i]).capitalize()
+                        to_remove_new.append(cap)
+                    if (to_remove[i]).lower() != to_remove[i]:
+                        low = (to_remove[i]).lower()
+                        to_remove_new.append(low)
+                to_remove = to_remove_new
 
-    try:
-        file = resources.get_resource_path("stopwords/stopwords.txt")
-        f = open(file, "r", encoding='utf-8')
-        more_stopwords = ""
-        for x in f:
-            more_stopwords = more_stopwords + x
-        list_stopwords = more_stopwords.split('\n')
+        for each in to_remove:
+            if each in new_value:
+                if data.get_data_num(values.get("count", -1), values):
+                    count = data.get_data_num(values.get("count", -1), values)
+                    for i in range(count):
+                        new_value.remove(each)
+                else:
+                    new_value.remove(each)
 
-        if values.get("keys", None):
-            for idx, key in data.loop_key(values["keys"], values):
-                value = data.get_data(key, values)
-                new_key = get_new_keys(values, idx)
-                value = value + list_stopwords
-                new_value = case_not_sensitive_stopwords(value)
-
-                data.insert_data(new_key, new_value, values)
-        else:
-            for j in range(len(values["new_keys"])):
-                value = list_stopwords
-                new_value = case_not_sensitive_stopwords(value)
-
-                data.insert_data(values["new_keys"][j], new_value, values)
-    except:
-        for idx, key in data.loop_key(values["keys"], values):
-            value = data.get_data(key, values)
-            new_key = get_new_keys(values, idx)
-            new_value = case_not_sensitive_stopwords(value)
-
-            data.insert_data(new_key, new_value, values)
+        data.insert_data(new_key, new_value, values)
 
 
 @register_transform
