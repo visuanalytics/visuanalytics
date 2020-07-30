@@ -15,5 +15,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             margin: theme.spacing(1),
             color: '#2E97C5'
         },
+        infoIcon: {
+            fontSize: "50px",
+        }
     }),
 );
