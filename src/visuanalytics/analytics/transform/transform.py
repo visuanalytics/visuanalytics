@@ -498,7 +498,7 @@ def sort(values: dict, data: StepData):
 
 
 @register_transform
-def counter(values: dict, data: StepData):
+def most_common(values: dict, data: StepData):
     """
 
     :param values: Werte aus der JSON-Datei
@@ -509,12 +509,12 @@ def counter(values: dict, data: StepData):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        most_common = Counter(value).most_common()
+        most_c_list = Counter(value).most_common()
 
         if data.get_data(values.get("include_count", False), values, bool):
-            new_value = most_common
+            new_value = most_c_list
         else:
-            new_value = [elm[0] for elm in most_common]
+            new_value = [elm[0] for elm in most_c_list]
 
         data.insert_data(new_key, new_value, values)
 

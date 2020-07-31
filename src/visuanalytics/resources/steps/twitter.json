@@ -83,7 +83,7 @@
       ]
     },
     {
-      "type": "counter",
+      "type": "most_common",
       "keys": [
         "_req|text_all"
       ],
