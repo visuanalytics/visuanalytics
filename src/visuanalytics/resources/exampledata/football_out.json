@@ -33,7 +33,7 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 4,
-          "Text": "Borussia Dortmund unterlag Zuhause TSG 1899 Hoffenheim mit einem 0 zu 4. "
+          "Text": "Borussia Dortmund unterlag TSG 1899 Hoffenheim mit einem 0 zu 4. "
         },
         "weekday": "Samstag"
       },
@@ -177,7 +177,7 @@
         "MatchResults": {
           "PointsTeam1": 3,
           "PointsTeam2": 0,
-          "Text": "1. FC Union Berlin gewann gegen Fortuna Düsseldorf 3 zu 0. "
+          "Text": "1. FC Union Berlin gewann Zuhause gegen Fortuna Düsseldorf 3 zu 0. "
         },
         "weekday": "Samstag"
       }
@@ -193,7 +193,7 @@
         "Matches": 34,
         "PointsDiffToFirstPlace": 0,
         "Rank_diff": 0,
-        "Text": "FC Bayern ist weiterhin an der Tabellenspitze. "
+        "Text": "FC Bayern liegt auf dem ersten Platz mit 82 Punkten. "
       },
       {
         "TeamName": "Borussia Dortmund",
@@ -386,6 +386,7 @@
         "Rank_diff": 0
       }
     ],
+    "league_saison": "2019",
     "Spieltag": "34. Spieltag"
   },
   "league_name": "1. Fußball Bundesliga"

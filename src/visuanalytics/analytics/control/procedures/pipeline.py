@@ -4,7 +4,7 @@ import os
 import shutil
 import time
 
-from visuanalytics.analytics.apis.api import api, api_request
+from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
@@ -115,7 +115,7 @@ class Pipeline(object):
                     data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
 
                 # Make request
-                api_request(cp_request, data, "", True)
+                api_request(cp_request, data, "", "_comp", True)
 
                 logger.info("Completion report sent out!")
             except Exception:

@@ -7,7 +7,7 @@ def prepare_test(values: list, data, expected_data: dict, config=None):
         config = {}
 
     step_data = StepData(config, "0")
-    step_data.init_data(data)
+    step_data.insert_data("_req", data, {})
     transform({"transform": values}, step_data)
 
     # removed Temporary set data

@@ -71,20 +71,18 @@ def custom(values: dict, data: StepData, config: dict):
         text = part.audio_parts(values[key]["parts"], data)
 
         data.data["_audio"]["text"] = text
-        # TODO set Testing to false
         generate = config["generate"]
         generate["include_headers"] = True
-        response = api_request(generate, data, "audio", True)
+        api_request(generate, data, "audio", "_audio|gen", True)
 
-        values[key] = _save_audio(response, data, config)
+        values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
     data.data["_audio"] = {}
 
     if values is not None:
-        # TODO(Max) Solve better
-        data.data["_audio"]["pre"] = api_request(values, data, "audio", True)
+        api_request(values, data, "audio", "_audio|pre", True)
 
 
 def _save_audio(response, data: StepData, config: dict):
