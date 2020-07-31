@@ -110,18 +110,16 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
 
     filter = ""
     for i in range(0, len(images) - 1):
-        filter += "[" + str(i + 1) + "]format=yuva444p,fade=d=0.8:t=in:alpha=1,setpts=PTS-STARTPTS+" + str(
-            _sum_audio_l(audio_l, i)) + "/TB[f" + str(
-            i) + "];"
+        filter += f"[{i + 1}]format=yuva444p,fade=d={values['sequence'].get('transitions', 0.8)}:t=in:alpha=1,setpts=PTS-STARTPTS+{_sum_audio_l(audio_l, i)}/TB[f{i}];"
     for j in range(0, len(images) - 1):
         if j == 0:
             filter += "[0][f0]overlay[bg1];"
         elif j == len(images) - 2:
-            filter += "[bg" + str(j) + "][f" + str(j) + "]overlay,format=yuv420p[v]"
+            filter += f"[bg{j}][f{j}]overlay,format=yuv420p[v]"
         else:
-            filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
+            filter += f"[bg{j}][f{j}]overlay[bg{j + 1}];"
 
-    if len(images) > 2 and values["sequence"].get("transitions", True):
+    if len(images) > 2:
         args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
     else:
         args2.extend(("-pix_fmt", "yuv420p"))

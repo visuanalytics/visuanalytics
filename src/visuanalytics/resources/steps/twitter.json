@@ -721,7 +721,7 @@
   },
   "sequence": {
     "type": "custom",
-    "transitions": false,
+    "transitions": 0.1,
     "pattern": [
       {
         "image": "wordcloud_top1",
