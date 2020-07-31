@@ -117,8 +117,8 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["height"] = y0
 
         elif figure == "square":
-            wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
-            wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
+            wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {}, numbers.Number)
+            wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {}, numbers.Number)
 
     if values.get("use_global_stopwords", None) is not None:
         try:
@@ -128,13 +128,13 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
         except IOError:
             list_stopwords = []
 
-        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        dont_use = step_data.get_data(values.get("stopwords", []), {}, list)
         for each in list_stopwords:
             if each not in dont_use:
                 dont_use.append(each)
         wordcloud_parameter["stopwords"] = set(dont_use)
     else:
-        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        dont_use = step_data.get_data(values.get("stopwords", []), {}, list)
         wordcloud_parameter["stopwords"] = set(dont_use)
 
     if values.get("text", None) is not None:

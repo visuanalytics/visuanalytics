@@ -1,3 +1,4 @@
+import numbers
 import re
 from collections import Counter
 from datetime import datetime
@@ -489,7 +490,7 @@ def sort(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
         value = data.get_data(key, values)
-        reverse = data.get_data_bool(value.get("reverse", False), values)
+        reverse = data.get_data(value.get("reverse", False), values, bool)
 
         new_value = sorted(value, reverse=reverse)
 
@@ -510,7 +511,7 @@ def counter(values: dict, data: StepData):
 
         most_common = Counter(value).most_common()
 
-        if data.get_data_bool(values.get("include_count", False), values):
+        if data.get_data(values.get("include_count", False), values, bool):
             new_value = most_common
         else:
             new_value = [elm[0] for elm in most_common]
@@ -529,8 +530,8 @@ def sub_lists(values: dict, data: StepData):
     value = data.get_data(values["array_key"], values)
 
     for sub_list in values["sub_lists"]:
-        start = data.get_data_num(sub_list.get("range_start", 0), values)
-        end = data.get_data_num(sub_list.get("range_end", -1), values)
+        start = data.get_data(sub_list.get("range_start", 0), values, numbers.Number)
+        end = data.get_data(sub_list.get("range_end", -1), values, numbers.Number)
         new_key = get_new_key(sub_list)
 
         new_value = value[start:end]
@@ -595,9 +596,9 @@ def remove_from_list(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
-        to_remove = data.get_data_array(values.get("to_remove", []), values)
+        to_remove = data.get_data(values.get("to_remove", []), values, list)
 
-        if data.get_data_bool(values.get("use_stopwords", False), values):
+        if data.get_data(values.get("use_stopwords", False), values, bool):
             try:
                 file = resources.get_resource_path("stopwords/stopwords.txt")
                 with open(file, "r", encoding='utf-8') as f:
@@ -607,7 +608,7 @@ def remove_from_list(values: dict, data: StepData):
             except IOError:
                 pass
 
-        if data.get_data_bool(values.get("ignore_case", False), values):
+        if data.get_data(values.get("ignore_case", False), values, bool):
             to_remove = [r.lower() for r in to_remove]
             new_value = [v for v in value if v.lower() not in to_remove]
         else:
