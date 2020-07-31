@@ -45,7 +45,7 @@ def request(values: dict, data: StepData, name: str, save_key, ignore_testing=Fa
 
 @register_api
 def input(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
-    res = data.format_api(values["input"], values.get("api_key_name", None), values)
+    res = data.deep_format(values["data"], values=values)
     data.insert_data(save_key, res, values)
 
 

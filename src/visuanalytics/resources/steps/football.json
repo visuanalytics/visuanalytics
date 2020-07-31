@@ -55,7 +55,7 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "input": "-1. Spieltag"
+          "data": "-1. Spieltag"
         }
       },
       {
