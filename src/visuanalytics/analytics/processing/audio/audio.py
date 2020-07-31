@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 GENERATE_AUDIO_TYPES = {}
 
 
-def get_audio_config(values: dict, data: StepData):
+def _get_audio_config(values: dict, data: StepData):
     config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
 
@@ -34,7 +34,7 @@ def get_audio_config(values: dict, data: StepData):
 
 @raise_step_error(AudioError)
 def generate_audios(values: dict, data: StepData):
-    config: dict = get_audio_config(values, data)
+    config: dict = _get_audio_config(values, data)
 
     audio_func = get_type_func(config, GENERATE_AUDIO_TYPES)
     audio_func(values["audio"]["audios"], data, config)
