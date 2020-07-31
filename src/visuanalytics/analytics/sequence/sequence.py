@@ -121,7 +121,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
         else:
             filter += "[bg" + str(j) + "][f" + str(j) + "]overlay[bg" + str(j + 1) + "];"
 
-    if len(images) > 2:
+    if len(images) > 2 and values["sequence"].get("transitions", True):
         args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
     else:
         args2.extend(("-pix_fmt", "yuv420p"))
