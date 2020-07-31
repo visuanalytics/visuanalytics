@@ -4,14 +4,14 @@ import os
 import shutil
 import time
 
-from visuanalytics.analytics.apis.api import api, api_request
+from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
-from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
+from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_video
 from visuanalytics.util import resources
 from visuanalytics.util.resources import get_current_time
@@ -92,7 +92,7 @@ class Pipeline(object):
         logger.info(f"Inizalization finished!")
 
     @staticmethod
-    def __on_completion(data: StepData):
+    def __on_completion(values: dict, data: StepData):
         cp_request = data.get_config("on_completion")
 
         # IF ON Completion is in config send Request
@@ -100,8 +100,22 @@ class Pipeline(object):
             try:
                 logger.info("Send completion notice...")
 
+                # Save Video Name and Thumbnail name to Config
+                video_name = os.path.basename(values["sequence"])
+
+                data.insert_data("_conf|video_path", values["sequence"], {})
+                data.insert_data("_conf|video_name", video_name, {})
+                data.insert_data("_conf|video_id", os.path.splitext(video_name)[0], {})
+
+                if isinstance(values["thumbnail"], str):
+                    thumbnail_name = os.path.basename(values["thumbnail"])
+                    
+                    data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
+                    data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
+                    data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
+
                 # Make request
-                api_request(cp_request, data, "", True)
+                api_request(cp_request, data, "", "_comp", True)
 
                 logger.info("Completion report sent out!")
             except Exception:
@@ -150,7 +164,7 @@ class Pipeline(object):
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
 
-            self.__on_completion(data)
+            self.__on_completion(self.__config, data)
             self.__cleanup()
             return True
 

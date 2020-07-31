@@ -107,18 +107,6 @@ class StepData(object):
         """
         return self.__data
 
-    def init_data(self, data: dict, key: str = "_req"):
-        """
-        Initialisiert die Daten.
-        
-        Die übergebenen daten werden unter dem übergebenen `key` gespeichert.
-        Ist zur Verwendung im Schritt `API` gedacht.
-
-        :param data: Daten die geschpeichert werden sollen.
-        :param key: Key unter dem die Daten geschpeichert werden sollen. Standart: `_req`.
-        """
-        self.__data[key] = data
-
     def clear_data(self):
         """
         Löscht alle Daten mit Ausnahme von `_conf` und `_pipe_id`.

@@ -76,15 +76,14 @@ def custom(values: dict, data: StepData, config: dict):
         data.data["_audio"]["text"] = text
         generate = config["generate"]
         generate["include_headers"] = True
+        api_request(generate, data, "audio", "_audio|gen", True)
 
-        response = api_request(generate, data, "audio", True)
-
-        values[key] = _save_audio(response, data, config)
+        values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
     if values is not None:
-        data.data["_audio"]["pre"] = api_request(values, data, "audio", True)
+        api_request(values, data, "audio", "_audio|pre", True)
 
 
 def _save_audio(response, data: StepData, config: dict):

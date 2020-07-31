@@ -12,7 +12,7 @@ def prepare_image_test(values, data, config=None):
         config = {}
 
     step_data = StepData(config, "1")
-    step_data.init_data({"_test": data})
+    step_data.insert_data("_req", {"_test": data}, {})
     values = {
         "images": values,
         "presets": {

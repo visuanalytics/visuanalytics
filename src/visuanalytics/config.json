@@ -19,6 +19,10 @@
       {
         "name": "Bundesliga-Ergebnisse",
         "file_name": "football"
+      },
+      {
+        "name": "Twitter-Wordcloud",
+        "file_name": "twitter"
       }
     ]
   },
