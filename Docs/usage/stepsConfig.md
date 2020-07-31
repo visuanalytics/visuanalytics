@@ -303,16 +303,17 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 ### calculate
 
-calculate beinhaltet actions, die Funktionen für Berechnungen zur Verfügung stellen.
-Für alle calculate-actions gilt:
+calculate beinhaltet Actionen (actions), die Funktionen für mathematische Berechnungen zur Verfügung stellen.
+Für alle calculate-Actions gilt:
 
 **`keys`** :
 
-<!--TODO-->
+Die Werte, die durchlaufen und transformiert werden sollen. 
 
-**`new_keys`**:
+**`new_keys`**_optional_:
 
-<!--TODO-->
+optional - Die tranformierten Werte werden unter diesem Key neu gespeichert. 
+Ist `new_keys` nicht vorhanden, werden die Werte in `keys` mit den transformierten Werten überschrieben.
 
 #### mean
 
@@ -333,9 +334,11 @@ Berechnet den Mittelwert von Werten, die in einem Array stehen.
 }
 ```
 
-**`decimal`** : 
+**`decimal`**_optional_: 
 
-int - Nachkommastelle auf die der Durchschnittswert gerundet werden soll.
+int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
+
+Default: 0. (keine Nachkommastelle)
 
 #### max
 
@@ -352,13 +355,17 @@ Findet den Maximalwert von Werten, die in einem Array stehen.
     ],
     "new_keys": [
        "_loop|temp_max"
+    ],
+    "save_idx_to": [
+       "_loop|temp_highest_max_city"
     ]
 }
 ```
 
-**`save_idx_to`**:
+**`save_idx_to`**_optional_:
 
-<!--TODO-->
+int - Der Index vom Durchlaufen der Schleife (_loop) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
+Dient z.B. dazu auf eine vorherige Ebene in der JSON-Struktur zugreifen zu können. 
 
 #### min
 
@@ -375,13 +382,18 @@ Findet den Minimalwert von Werten, die in einem Array stehen.
     ],
     "new_keys": [
        "_loop|temp_min"
+    ],
+    "save_idx_to": [
+       "_loop|temp_min_city",
+       "_loop|temp_lowest_max_city"
     ]
 }
 ```
 
-**`save_idx_to`**:
+**`save_idx_to`**_optional_:
 
-<!--TODO-->
+int - Der Index vom Durchlaufen der Schleife (_loop) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
+Dient z.B. dazu auf eine vorherige Ebene in der JSON-Struktur zugreifen zu können. 
 
 
 #### round
@@ -399,17 +411,16 @@ Rundet gegebene Werte auf eine gewünschte Nachkommastelle.
         "_loop|max_temp",
         "_loop|min_temp"
      ],
-     "count": 0
+     "decimal": 3
 }
 ```
 
-**`decimal`**: 
+**`decimal`**_optional_: 
 
-int - Nachkommastelle auf die der Durchschnittswert gerundet werden soll.
+int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
 
-**`count`**: ???
+Default: 0. (keine Nachkommastelle)
 
-<!--TODO-->
 
 #### mode
 
@@ -423,28 +434,41 @@ Bestimmt den am häufigsten in einem Array vorkommenden Wert.
     "action": "mode",
     "keys": [
         "_loop|code"
+    ],
+     "new_keys": [
+        "_loop|new_code"
     ]
 }
 ```
 
 #### Grundrechenarten
 
-multiply, divide, subtract und add sind gleich aufgebaut. Daher haben die keys auch die gleiche Bedeutung.
-Als Standard ist der Wert zu "key" immer auf der linken Seite der Gleichung. Alternativ: "keys_right".
+Die Aktionen `multiply`, `divide`, `subtract` und `add` sind gleich aufgebaut. Daher haben die Keys auch die gleiche Bedeutung.
+Als Standard ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
 
-**`keys_right`**: Datenzugriff auf Daten, die auf der rechten Seite der Gleichung stehen sollen. Wichtig: bei divide und subtract.
+**`keys_right`**_optional_: 
 
-**`value_right`**: Wert, der immer auf der rechten Seite der Gleichung stehen soll. Wichtig: bei divide und subtract.
+Datenzugriff auf Daten/Werte, die auf der rechten Seite der Gleichung stehen sollen. Wichtig: bei `divide` und `subtract`.
 
-**`value_left`**: Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei divide und subtract.
+**`value_right`**_optional_: 
 
-**`decimal`**: Nachkommastelle auf die das Ergebnis gerundet werden soll.
+Wert, der immer auf der rechten Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
+
+**`value_left`**_optional_: 
+
+Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
+
+**`decimal`**_optional_: 
+
+int - Nachkommastelle, auf die das Ergebnis gerundet werden soll. 
+
+Default: 0. (keine Nachkommastelle)
 
 
 ##### multiply
 
-Multipliziert gegebene Werte mit Werten, die in multiply_by stehen und rundet auf die gewünschte Nachkommastelle,
-die unter decimal angegeben wird.
+Multipliziert gegebene Werte mit Werten, die in `multiply_by` stehen. Es kann optional auf die gewünschte Nachkommastelle,
+die unter `decimal` angegeben wird, gerundet werden.
 
 **Beispiel** 
 
@@ -462,8 +486,8 @@ die unter decimal angegeben wird.
 
 ##### divide
 
-Dividiert gegebene Werte durch Werte, die in divide_by stehen und rundet auf die gewünschte Nachkommastelle,
-die unter decimal angegeben wird.
+Dividiert gegebene Werte durch Werte, die in `divide_by` stehen. Es kann optional auf die gewünschte Nachkommastelle,
+die unter `decimal` angegeben wird, gerundet werden.
 
 **Beispiel** 
 
@@ -481,7 +505,8 @@ die unter decimal angegeben wird.
 
 ##### subtract
 
-Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.
+Die jeweiligen Werte, die in `subtract` stehen, werden von den Werten, die in key stehen, subtrahiert. Es kann optional 
+auf die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet werden.
 
 **Beispiel** 
 
@@ -499,7 +524,8 @@ Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key 
 
 ##### add
 
-Die jeweiligen Werte, die in add stehen, werden zu den Werten, die in key stehen, hinzuaddiert.
+Die jeweiligen Werte, die in `add` stehen, werden zu den Werten, die in key stehen, hinzuaddiert. Es kann optional auf 
+die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet werden.
 
 **Beispiel** 
 
@@ -517,23 +543,32 @@ Die jeweiligen Werte, die in add stehen, werden zu den Werten, die in key stehen
 
 ### select
 
-<!-- TODO Description-->
+`select` entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus dem Dictionary bzw. der JSON-Ausgabe-Datei.
 
-Mit select kann man sich die Keys aus der API-Antwort heraussuchen, die für das zu erstellende Video relevant sind.
-Die Keys stehen in relevant_keys.
+Mit `select` kann man sich also die Key/Value-Paare aus der API-Antwort herausziehen, die für das zu erstellende Video 
+relevant sind. 
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "select",
-  "relevant_keys": []
+  "array_key": "data",
+  "relevant_keys": [
+      "key1",
+      "key2"
+  ]
 }
 ```
 
+**`array_key`**:
+
+str - Angabe, in welcher Ebene in der JSON-Ausgabe-Datei, die `relevant_keys` zu finden sind.
+
 **`relevant_keys`**: 
 
-str-Array - Namen der Keys, die aus der API-Antwort übernommen werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und in die JSON-Ausgabe-Datei 
+eingefügt werden sollen.
 
 
 ### delete
@@ -545,17 +580,21 @@ Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
 ```JSON
 {
   "type": "delete",
-  "keys": []
+  "keys": [
+      "key1",
+      "key2"
+  ]
 }
 ```
 
-**`keys`**:
+**`keys`**: 
 
-str-Array - Namen der Keys, die aus der JSON-Ausgabe-Datei entfernt werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare aus der JSON-Ausgabe-Datei entfernt werden sollen.
+
 
 ### select_range
 
-<!-- TODO Description-->
+Entfernt alle Werte aus `array_key`, die nicht innerhalb der von `range_start` und `range_end` liegen.
 
 **Beispiel** 
 
@@ -570,20 +609,22 @@ str-Array - Namen der Keys, die aus der JSON-Ausgabe-Datei entfernt werden solle
 
 **`array_key`**:
 
-<!--TODO-->
+str - Angabe, aus welcher Ebene in der JSON-Ausgabe-Datei, die Daten ausgewählt werden sollen.
 
-**`range_start`**:
+**`range_start`**_optional_:
 
-<!--TODO-->
+int - Startwert für die Schleife durch die Daten.
+
+Default: 0. 
 
 **`range_end`**:
 
-<!--TODO-->
+int - Endwert für die Schleife durch die Daten.
 
 
 ### append
 
-<!-- TODO Description-->
+Speichert den Wert, der unter `key` steht, in einem Array.
 
 **Beispiel** 
 
@@ -591,23 +632,36 @@ str-Array - Namen der Keys, die aus der JSON-Ausgabe-Datei entfernt werden solle
 {
   "type": "append",
   "key": "key",
-  "new_key": "new_key"
+  "new_key": "new_key",
+  "append_type": "list"
 }
 ```
 
 **`key`**:
 
-<!--TODO-->
+Name des Keys zum Wert, der in ein neues Array gespeichert werden soll. 
 
-**`new_key`**:
+**`new_key`**_optional_:
 
-<!--TODO-->
+Name des Arrays unter dem die neuen Werte (Wert unter `key`) gespeichert werden sollen.
 
+**`append_type`**_optional_:
+
+"list" oder "string" - Datentyp der Werte, die in einem Array gespeichert werden sollen.
+
+Default: "list".
+
+**`delimiter`**_optional_:
+
+str - Zeichen mit dem die Werte - im Falle des Datentyps String - voneinander getrennt werden sollen.
+
+Default: " " (Leerzeichen).
 
 ### add_symbol
 
-add_symbol setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Value von dem Key, welcher
-unter key steht. Man kann damit auch einen Value vom alten Key unter keys in einen neuen Key unter new_keys kopieren.
+`add_symbol` setzt ein Zeichen, ein Wort, einen Satzteil oder ganze Sätze hinter oder vor den Wert von dem Key, welcher
+unter `keys` steht. Man kann damit auch einen Wert vom alten Key unter `keys` in einen neuen Key unter `new_keys` kopieren.
+Unter `{_key}` wird dann der Wert zum Key aus `keys` eingefügt.
 
 **Beispiel** 
 
@@ -620,106 +674,113 @@ unter key steht. Man kann damit auch einen Value vom alten Key unter keys in ein
 }
 ```
 
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
-
 **`pattern`**:
 
-<!--TODO-->
+str - String mit `{_key}` und/oder auch nur einem Satz/Wort/Zeichen o.Ä. der/das eingefügt werden soll unter `new_keys`.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "add_symbol",
+  "keys": [
+      "max_temp"
+  ],
+  "new_keys": [
+      "max_temp_text"
+  ],
+  "pattern": "Heute werden Temperaturen von {_key}° Celsius erreicht."
+}
+```
+
+`{_key}` wird durch eine Temperatur ersetzt, die unter dem Key `max_temp` in `keys` steht und der neue Satz wird unter 
+dem Key `max_temp_text` in `new_keys` gespeichert. 
 
 
 ### replace
+Ersetzt ein Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text in einem String.
 
-replace ersetzt einen String, der in old_value angegeben ist mit einem String, der in new_value angegeben ist.
-Der Value, der unter keys gespeichert ist, wird verändert und in einem neuen Key (angegeben unter new_keys) gespeichert.
+`replace` ersetzt einen String, der in `old_value` angegeben ist, mit einem String, der in `new_value` angegeben ist.
+Der Wert, der unter `keys` gespeichert ist, wird verändert und in einem neuen Key (angegeben unter `new_keys`) gespeichert.
 count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt werden soll.
-
-Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden.
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "replace",
-  "keys": ["key"],
-  "new_keys": ["new_key"],
+  "keys": [
+      "key"
+  ],
+  "new_keys": [
+      "new_key"
+  ],
   "old_value": ".",
   "new_value": ",",
   "count": 1
 }
 ```
 
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
-
 **`old_value`**:
 
-<!--TODO-->
+str - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der ersetzt werden soll.
 
 **`new_value`**:
 
-<!--TODO-->
+str - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der den `old_value` ersetzen soll.
 
-**`count`**:
+**`count`**_optional_:
 
-<!--TODO-->
+int - Gibt an, wie oft der `old_value` in dem Wert mit dem `new_value` ersetzt werden soll.
+
+Default: -1. 
 
 
 ### translate_key
 
-<!-- TODO Description-->
+Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. Dieser neue Wert steht in einem Dictionary. 
 
 **Beispiel** 
 
 ```JSON
-
+{
+          "type": "translate_key",
+          "keys": [
+            "_loop|weather|code"
+          ],
+          "new_keys": [
+            "_loop|weather|str_code_short"
+          ],
+          "dict": {
+            "key1": "Gewitter",
+            "key2": "Sonne",
+            "key3": "Regen"
+          }
+}
 ```
-
-**`keys`**:
-
-<!--TODO-->
 
 **`dict`**:
 
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
-
+dict - Ein Dictionary mit bekannten Keys, welche unter `keys` stehen und den Werten, die anstelle dieser Keys neu abgespeichert werden sollen.
 
 
 ### alias
 
-<!-- TODO Description-->
+Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "alias",
-  "keys": ["key"],
-  "new_keys": ["new_key"]
+  "keys": [
+      "key"
+   ],
+  "new_keys": [
+      "new_key"
+  ]
 }
 ```
-
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
 
 
 ### regex
@@ -735,6 +796,9 @@ Es können einzelne Zeichen oder auch ganze Satzteile oder Sätze ersetzt werden
 <!--TODO-->
 
 ### Uhrzeit und Datum
+
+Im folgenden werden einige transform-Typen für Uhrzeit- und Datumsformate näher erläutert. 
+Für alle diese Typen gilt:
 
 **`keys`**:
 
@@ -754,23 +818,40 @@ str - Das Format, in dem die Uhrzeit bzw. das Datum angegeben sind.
 
 **`zeropaded_off`**:
 
-bool - True: Entfernt die 0 am Anfang einer Zahl. False (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
+bool - `True`: Entfernt die 0 am Anfang einer Zahl. `False` (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
+`zeropaded_off` ist True, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
+**Beispiele für Formate**:
+
+Für die Implementierung der Typen wurde die Python-Bibliothek **datetime** verwendet. 
+Beispiele für die Darstellung von Datum und Uhrzeit finden Sie unter: https://docs.python.org/3/library/datetime.html
+
+Einige gängige Formate sind:
+
+|        Format        |       Beispiel       |
+|------------------------|--------------------------|
+|%Y-%m-%dT%H:%M:%S|2020-05-15T23:56:05|
+|%H:%M:%S|23:56:05|
+|%Y-%m-%d|2020-05-15|
+|%d.%m.%Y|15.05.2020|
+|On the %dth of %b %Y|On the 15th of May 2020|
 
 #### date_format
 
-`date_format` wandelt das Format von Datumsangaben um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
-stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
-wird angegeben in welchem Format das Datum in den Daten vorliegt, damit das Format in das Format umgewandelt werden kann,
-welches in format angegeben ist.
+`date_format` ändert das vorliegende Format des Datums und der Uhrzeit, welches unter `given_format` angegeben wird, in 
+ein gewünschtes anderes Format, welches unter `format` angegeben wird.
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "date_format",
-  "keys": ["key"],
-  "new_keys": ["new_key"],
+  "keys": [
+      "key"
+  ],
+  "new_keys": [
+      "new_key"
+  ],
   "given_format": "%Y-%m-%dT%H:%M:%S",
   "format": "%Y-%m-%d"
 }
@@ -778,18 +859,22 @@ welches in format angegeben ist.
 
 #### timestamp
 
-`timestamp` wandelt Datumsangaben, welche im UNIX-Timestamp-Format angegeben sind, in das unter format spezifizierte Format
-um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben im UNIX-Timestamo-Format stehen. Unter
-new_keys werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Value gespeichert wird.
-zeropaded_off ist true, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
+`timestamp` wandelt Datumsangaben, welche im UNIX-Timestamp-Format angegeben sind, in das unter `format` angegebene Format
+um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im UNIX-Timestamp-Format stehen. Unter
+`new_keys` werden die Keys angegeben zu denen das Datum mit dem gewünschten Format als Wert gespeichert werden soll.
+
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "timestamp",
-  "keys": ["key"],
-  "new_keys": ["new_key"],
+  "keys": [
+      "key"
+  ],
+  "new_keys": [
+      "new_key"
+  ],
   "format": "%H Uhr %M",
   "zeropaded_off": true
 }
@@ -799,27 +884,28 @@ Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
 
 #### date_weekday
 
-
-`date_weekday` wandelt Datumsangaben in Wochentage um. Unter keys sind die Keys angegeben unter denen als Werte Datumsangaben
-stehen. Unter new_keys werden die Keys angegeben zu denen der Wochentag als Value gespeichert wird. Unter given_format
-wird angegeben in welchem Format das Datum in den Daten vorliegt, damit daraus der Wochentag bestimmt werden kann.
+`date_weekday` wandelt das angegebene Datum, im unter `"given_format"` angegebenen Format, in den jeweiligen Wochentag zum Datum um.
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "date_weekday",
-  "keys": ["key"],
-  "new_keys": ["new_key"],
+  "keys": [
+      "key"
+   ],
+  "new_keys": [
+      "new_key"
+  ],
   "given_format": "%Y-%m-%d"
 }
 ```
 
+Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+
 #### date_now
 
-
-`date_now` gibt das heutige (aktuelle) Datum in dem Format aus, welches als Value unter dem Key format angegeben ist.
-Weitere Formate sind möglich (siehe dazu Python Doku zu DateTime).
+`date_now` gibt das heutige (aktuelle) Datum in dem Format aus, welches als Wert unter dem Key `format` angegeben ist.
 
 **Beispiel** 
 
@@ -836,7 +922,8 @@ Diese haben immer dasselbe Format.
 
 ### wind_direction
 
-`wind_direction` ist eine Funktion, die zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
+`wind_direction` ist eine Funktion, die ausschließlich zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
+Die englischen Wörter werden auf Deutsch übersetzt.
 
 **Beispiel** 
 
@@ -883,21 +970,13 @@ Diese haben immer dasselbe Format.
         }
 ```
 
-**`key`**:
-
-<!--TODO-->
-
-**`new_key`**:
-
-<!--TODO-->
-
 **`dict`**:
 
-<!--TODO-->
+dict - Enthält die Übersetzungen der Wörter von Englisch zu Deutsch.
 
 **`delimiter`**:
 
-<!--TODO-->
+str - Trennzeichen. Z.B. "south-southwest", zuerst wird south übersetzt und dann southwest.
 
 
 ### loop
