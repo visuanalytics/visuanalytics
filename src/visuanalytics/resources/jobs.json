@@ -48,7 +48,10 @@
       "steps": "football",
       "schedule": {
         "time": "14:46",
-        "daily": true
+        "daily": true,
+        "memory_removal_time": {
+          "days": 30
+        }
       },
       "config": {
         "thumbnail": true,

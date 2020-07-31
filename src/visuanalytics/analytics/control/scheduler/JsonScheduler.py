@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 
 from visuanalytics.analytics.control.scheduler.scheduler import Scheduler
-from visuanalytics.analytics.util.video_delete import delete_on_time
+from visuanalytics.analytics.util.video_delete import delete_on_time, delete_memory_on_time
 from visuanalytics.util import resources
 
 logger = logging.getLogger(__name__)
@@ -26,6 +26,8 @@ class JsonScheduler(Scheduler):
 
         if int(now.strftime("%M")) == 00:
             delete_on_time(jobs, self.base_config["output_path"])
+            if int(now.strftime("%H")) == 00:
+                delete_memory_on_time(jobs)
 
         for job in jobs.get("jobs", []):
             # if Time is not current continue
