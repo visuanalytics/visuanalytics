@@ -1162,14 +1162,14 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
-### counter
+### most_common
 <!-- TODO Description-->
 
 **Beispiel** 
 
 ```JSON
 {
-  "type": "counter",
+  "type": "most_common",
   "keys": [
     "_req|text_all"
   ],
