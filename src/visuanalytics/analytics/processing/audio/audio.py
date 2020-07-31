@@ -27,7 +27,7 @@ def get_audio_config(values: dict, data: StepData):
     config.update(custom_config)
 
     # Init _audio with audio config
-    data.init_data({"_conf": config}, "_audio")
+    data.insert_data("_audio|_conf", config, {})
 
     return config
 
