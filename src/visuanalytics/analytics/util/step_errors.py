@@ -1,4 +1,5 @@
 import functools
+from typing import Type
 
 from requests import Response
 
@@ -12,6 +13,10 @@ class StepError(Exception):
     """
 
     def __init__(self, values):
+        # Make sure that values is a dictonary
+        if not isinstance(values, dict):
+            values = {}
+
         self.type = values.get("type", None)
         self.desc = values.get("description", None)
         self.values = values
@@ -20,7 +25,7 @@ class StepError(Exception):
         return f"{msg}'{self.type}', " if self.type is not None else ""
 
     def __str__(self):
-        # Build Start messages
+        # Build Post messages
         pos_msg = f"On '{self.desc}' {self.__type_msg('with Type ')}" if self.desc is not None else self.__type_msg(
             'On Type ')
 
@@ -129,7 +134,12 @@ class InvalidContentTypeError(Exception):
                 f"Error on respone from '{url}': Invalid Content Type '{content_type}' only {expected_type} is Suported")
 
 
-def raise_step_error(error):
+class PresetError(Exception):
+    def __init__(self, key):
+        super().__init__(f"Preset '{key}' not Found")
+
+
+def raise_step_error(error: Type[StepError]):
     """
     Gibt einen Decorator zurück der die Orginal Funktion
     mit einem `try`, `expect` Block umschließt. Die in `error` übergebene Exception
@@ -144,7 +154,7 @@ def raise_step_error(error):
         def new_func(values, *args, **kwargs):
             try:
                 return func(values, *args, **kwargs)
-            # Not raise TransformError Twice
+            # Not raise the Same Error Twice
             except error:
                 raise
             except BaseException as e:
