@@ -3,7 +3,7 @@ Modul das die Klasse :class:`StepData` beinhaltet.
 """
 import numbers
 
-from visuanalytics.analytics.util.step_errors import APIKeyError
+from visuanalytics.analytics.util.step_errors import APIKeyError, PresetError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
     data_remove_pattern
 from visuanalytics.util import config_manager
@@ -18,10 +18,15 @@ class StepData(object):
     aus dem Modul :py:mod:`step_pattern` verwendet.
     """
 
-    def __init__(self, run_config, pipeline_id):
+    def __init__(self, run_config, pipeline_id, presets: dict = None):
         super().__init__()
+
+        if presets is None:
+            presets = {}
+
         self.__data = {"_conf": run_config, "_pipe_id": pipeline_id}
         self.__formatter = StepPatternFormatter()
+        self.__presets = presets
 
     @staticmethod
     def get_api_key(api_key_name):
@@ -99,6 +104,23 @@ class StepData(object):
         Configuration des Jobs
         """
         return self.__data["_conf"].get(key, default_value)
+
+    def get_preset(self, key: str):
+        """
+        Funktion um ein Preset zu Bekommen.
+
+        :param key: key (Name) des Presets
+        :type key: str
+        :return: ihnalt des Presets
+        :rtype: dict
+        :raises: PresetError
+        """
+        preset = self.__presets.get(key, None)
+
+        if preset is None:
+            raise PresetError(key)
+
+        return preset
 
     @property
     def data(self):
