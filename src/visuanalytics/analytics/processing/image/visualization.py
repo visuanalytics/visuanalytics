@@ -38,12 +38,11 @@ def generate_all_images(values: dict, step_data: StepData):
     for key, item in enumerate(values["images"]):
         image_func = get_type_func(values["images"][item], IMAGE_TYPES)
 
-        values["images"][item] = image_func(values["images"][item], values["images"], values.get("presets", {}),
-                                            step_data)
+        values["images"][item] = image_func(values["images"][item], step_data, values["images"])
 
 
 @register_image
-def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
+def pillow(values: dict, step_data: StepData, prev_paths: dict):
     """
     Erstellt ein Bild mit Hilfe von Pillow.
     Dazu wird ein neues Bild geöffnet oder ein bisher erstelltest Bild weiter bearbeitet.
@@ -51,9 +50,8 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
     ausführt und schlussendlich auf das Bild packt.
 
     :param values: Image Bauplan des zu erstellenden Bildes
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
@@ -66,7 +64,7 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
     for overlay in values["overlay"]:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
+        over_func(overlay, step_data, source_img, prev_paths, draw)
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     Image.composite(img1, source_img, img1).save(file)
@@ -74,15 +72,14 @@ def pillow(values: dict, prev_paths: dict, presets: dict, step_data: StepData):
 
 
 @register_image
-def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
+def wordcloud(values: dict, step_data: StepData, prev_paths):
     """
     Erstellt ein Wordcloud Bild.
 
     :param values: Image Bauplan des zu erstellenden Bildes
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param presets: Preset Part aus der JSON
     :param step_data: Daten aus der API
+    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :return: Den Pfad zum erstellten Bild
     :rtype: str
     """
-    return wc.wordcloud(values, prev_paths, presets, step_data)
+    return wc.wordcloud(values, step_data, prev_paths)
