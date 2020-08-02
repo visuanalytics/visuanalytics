@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Sa. Juli 25 19:41:42 2020
+-- File generated with SQLiteStudio v3.2.1 on So. Aug. 2 11:15:40 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -36,7 +36,9 @@ CREATE TABLE job_config
         ON UPDATE CASCADE
                        NOT NULL,
     [key]         TEXT NOT NULL,
-    value         TEXT NOT NULL
+    value         TEXT NOT NULL,
+    type          VARCHAR CHECK (type IN
+                                 ("string", "number", "multiString", "multiNumber", "boolean", "enum", "subParams") )
 );
 
 
@@ -85,27 +87,6 @@ CREATE TABLE steps
     json_file_name VARCHAR UNIQUE
                            NOT NULL
 );
-
-INSERT INTO steps (steps_id,
-                   steps_name,
-                   json_file_name)
-VALUES (1,
-        'Deutschlandweiter Wetterbericht',
-        'weather_germany');
-
-INSERT INTO steps (steps_id,
-                   steps_name,
-                   json_file_name)
-VALUES (2,
-        'Ortsbezogener Wetterbericht',
-        'weather_single');
-
-INSERT INTO steps (steps_id,
-                   steps_name,
-                   json_file_name)
-VALUES (3,
-        'Bundesliga-Ergebnisse',
-        'football');
 
 
 COMMIT TRANSACTION;
