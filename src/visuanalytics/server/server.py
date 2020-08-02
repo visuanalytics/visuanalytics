@@ -4,7 +4,8 @@ Enthält die Startkonfiguration für den Flask-Server.
 """
 import mimetypes
 
-from flask import Flask, render_template
+from flask import Flask, render_template, abort
+from jinja2 import TemplateNotFound
 
 from visuanalytics.analytics.control.scheduler.DbScheduler import DbScheduler
 from visuanalytics.server.api import api
@@ -39,12 +40,15 @@ def create_app():
     mimetypes.add_type("text/javascript", ".js")
 
     # Register the Blueprints
-    app.register_blueprint(api.api)
+    app.register_blueprint(api.api, url_prefix="/visuanalytics")
 
     # Serve index.html
     @app.route("/", methods=["GET"])
     def index():
-        return render_template("index.html")
+        try:
+            return render_template("index.html")
+        except TemplateNotFound:
+            abort(404)
 
     return app
 

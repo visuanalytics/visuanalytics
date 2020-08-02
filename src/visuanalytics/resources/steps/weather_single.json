@@ -1746,6 +1746,10 @@
       ]
     }
   },
+  "thumbnail": {
+    "type": "created",
+    "name": "weather3"
+  },
   "audio": {
     "audios": {
       "a1": {

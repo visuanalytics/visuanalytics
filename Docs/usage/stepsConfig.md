@@ -1324,24 +1324,14 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 <!--TODO-->
 
-### sort
-
-<!-- TODO Description-->
-
-**Beispiel** 
-
-```JSON
-
-```
-
-### counter
+### most_common
 <!-- TODO Description-->
 
 **Beispiel** 
 
 ```JSON
 {
-  "type": "counter",
+  "type": "most_common",
   "keys": [
     "_req|text_all"
   ],
@@ -1454,110 +1444,40 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 <!--TODO-->
 
-### remove_from_list
+## Storing
 
-Es werden bestimmte Wörter von einer Liste bzw. aus einem Array entfernt.
-Diese Wörter werden Stopwords genannt. Somit kann z.B. vom Ersteller der Videos gewährleistet werden, dass gewisse 
-Beleidigungen oder "böse Wörter" nicht angezeigt werden können. 
-Die Funktion wurde für die Vermeidung von Wörtern in der Wordcloud eingebaut, da man keinen Einfluss darauf hat, was 
-manche Menschen auf Twitter posten.
-
-Es ist egal, wie die Wörter vom Ersteller der Videos angegeben wurden, sie werden auch entfernt, wenn die Groß- und 
-Kleinschreibung anders verwendet wurde. Bei Vertippen und Rechtschreibfehlern werden die Wörter nicht als Stopwords 
-erkannt und sie können in der Wordcloud auftauchen.
-
-Bei der Erstellung der JSON können zusätzlich im Resources-Ordner unter stopwords/stopwords.txt solche Wörter hinterlegt 
-werden, sodass sie nicht bei der Joberstellung im Frontend jedes Mal neu eingegeben werden müssten. Dort können zusätzlich 
-jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei entfernt werden sollen. 
-
-**Beispiel** 
-
-```JSON
-
-```
-
-### lower_case
-
-Jedes Wort in dem Array wird komplett in Kleinbuchstaben geschrieben.
-
-**Beispiel** 
+Mit Hilfe von Storing können ganze Dictionarys oder auch einzelne Werte in Dateien gespeichert werden
+und in einem späterem Durchlauf des Programms wieder eingelesen werden
 
 ```JSON
 {
-  "type": "lower_case",
-  "keys": [
-    "_conf|array"
-  ],
-  "new_keys": [
-    "_req|array_lower_case"
+  "storing": [
+    {
+      "name": "table",
+      "key": "_req|Tabelle",
+      "exclude": [
+        "Text",
+        "Rank_diff"
+      ]
+    },
+    {
+      "name": "spieltag",
+      "key": "_req|Spieltag"
+    }
   ]
 }
+
 ```
 
-### upper_case
+**`name`**:  
+str - Frei zu wähender Name des zu Exportierenden Dicts oder values (dieser Name wird später wieder zum importieren benötigt)
 
-Jedes Wort in dem Array wird komplett in Großbuchstaben geschrieben.
+**`key`**:  
+str - Angabe des Keys welcher exportiert werden soll
 
-**Beispiel** 
-
-```JSON
-{
-  "type": "upper_case",
-  "keys": [
-    "_conf|array"
-  ],
-  "new_keys": [
-    "_req|array_upper_case"
-  ]
-}
-```
-
-### capitalize
-
-Der erste Buchstabe jedes Worts in dem Array wird groß geschrieben.
-
-**Beispiel** 
-
-```JSON
-{
-  "type": "capitalize",
-  "keys": [
-    "_conf|array"
-  ],
-  "new_keys": [
-    "_req|array_capitalized"
-  ]
-}
-```
-
-### normalize_words
-
-Wörter, welche öfter in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen 
-für die Zählung der Häufigkeit und der Darstellung in der Wordcloud vereinheitlicht werden. 
-
-Ein Array wird durchlaufen und jedes Wort, welches beim zweiten Vorkommen anders geschrieben wurde als das Wort beim 
-ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vorgekommen ist.
-
-**Beispiel**
-
-**Vorher**: Bundesliga, VfL, sport, bundesliga, BundesLIGA, BUNDESLIGA, Sport, vfl
-
-**Nachher**: Bundesliga, VfL, sport, Bundesliga, Bundesliga, Bundesliga, sport, VfL
-
-
-**Beispiel** 
-
-```JSON
-{
-  "type": "normalize_words",
-  "keys": [
-    "_conf|array"
-  ],
-  "new_keys": [
-    "_req|array_normalized"
-  ]
-}
-```
+**`exclude`** _(Optional)_:  
+list - Angabe von Keys welche beim exportieren nicht mit exportiert werden soll
+(Macht logischerweiße nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
 
 ## Images
 
@@ -1635,7 +1555,88 @@ Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
 ### Overlay
 
-Es gibt 4 verschiedene Overlay-Arten:
+Es gibt 6 verschiedene Overlay-Arten:
+
+
+#### option
+
+Werted den boolean Wert aus der in `check` angegeben wurde, 
+und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` aus
+
+```JSON
+
+{
+     "description": "TeamErgebnisse",
+     "type": "option",
+     "check": "_req|Spiele|0|MatchIsFinished",
+     "on_true": [
+           
+     ],
+     "on_false": [
+
+     ]
+}
+```
+
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+
+**`check`**  
+Der Wert anhand dem entschieden wird ob `on_true` oder `on_false` ausgeführt wird
+
+**`on_true`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert True ergab
+
+**`on_false`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert False ergab
+
+#### compare
+
+Vergleicht die beiden Werte in `value_left` und `value_right`, 
+und führt jenachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus
+oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower` verwendet
+
+```JSON
+
+{
+     "description": "TeamErgebnisse",
+     "type": "compare",
+     "value_left": "_req|Test1",
+     "value_right": "_req|Test2",
+     "on_equals": [
+           
+     ],
+     "on_higher": [
+
+     ],
+     "on_lower": [
+
+     ]
+}
+```
+
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+
+**`value_left`**  
+Der Erste Wert der verglichen werden soll
+
+**`value_right`**  
+Der Zweite Wert der verglichen werden soll
+
+**`on_equals`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte identisch sind
+
+**`on_not_equals`**  _(Optional)_  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte nicht identisch sind
+
+**`on_higher`**  _(Optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite wert größer wie der erste ist.
+
+**`on_lower`**  _(Optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite Wert kleiner wie der erste ist.
 
 #### image
 
@@ -1768,12 +1769,24 @@ X Koordinate des zu setztenden Textes
 **`pos_y`** :  
 Y Koordinate des zu setztenden Textes
 
+**`pattern`**:  
+Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Presets sind weiter unten in der JSON spezifiziert
 
-**`pattern`**:  
-Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+
+**`colour`**:  
+str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+
+**`font_size`**:  
+int - Größe des Textes
+
+**`font`**:  
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+
 
 #### text_array
 
@@ -1810,14 +1823,26 @@ X Koordinate der zu setztenden Texte
 **`pos_y`** :  
 Y Koordinate der zu setztenden Texte
 
+**`pattern`**:  
+Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
+(kann sich auch auf Daten aus der API beziehen)
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Dies kann wieder eine Liste oder ein String sein  
 Presets sind weiter unten in der JSON spezifiziert
 
-**`pattern`**:  
-Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
-(kann sich auch auf Daten aus der API beziehen)
+
+**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+
+**`colour`**:  
+str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+
+**`font_size`**:  
+int - Größe des Textes
+
+**`font`**:  
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
 
 ### wordcloud
 
@@ -1995,6 +2020,52 @@ Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary s
 
 Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann sie bei der Joberstellung angeben. 
 
+## Thumbnail
+
+In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann,
+sofern in der config angegeben neben dem Video zusätzlich erstellt
+
+```JSON
+{
+  "thumbnail": {
+    "type": "new"
+  }
+}
+
+```
+
+### created
+
+```JSON
+{
+ "type": "created",
+ "name": "wordcloud_all"   
+}
+
+```
+
+**`name`**:  
+str - Angabe des Internen Namen des bereits erstellten Bildes
+
+
+### new
+
+```JSON
+{
+  "type": "new",
+  "image": {
+     "type": "pillow",
+     "path": "football/FootballThumbnail.png",
+     "overlay": [
+     ]
+  } 
+}
+
+```
+
+**`image`**:  
+dict - Hier wird ein Bild spezifiziert wie unter `images` erläutert
+
 ## Audios
 
 Der Abschnitt `audios` beinhaltet die Texte, die in eine Audio-Datei umgewandelt werden. Die Texte werden im gewünschten
@@ -2035,7 +2106,7 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 }
 ```
 
-**`pattern`**: 
+**`pattern`**:  
 str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
 
 ### compare
@@ -2078,22 +2149,22 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 }
 ```
 
-**`value_left`**:
+**`value_left`**:  
 str, int - Der Wert, der beim Vergleich auf der linken Seite steht. 
 
-**`value_right`**: 
+**`value_right`**:   
 str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
 
-**`on_equal`**: 
+**`on_equal`**:   
 callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_not_equal`**: 
+**`on_not_equal`**:   
 callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_higher`**: 
+**`on_higher`**:   
 callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_lower`**: 
+**`on_lower`**:   
 callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
 #### option
@@ -2130,13 +2201,13 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 }
 ```
 
-**`check`**: 
+**`check`**:   
 str, int - Der Wert, der auf true oder false geprüft werden soll.
 
-**`on_true`**: 
+**`on_true`**:   
 callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_false`**: 
+**`on_false`**:   
 callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
 ### random_text
@@ -2156,7 +2227,7 @@ Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in 
 }
 ```
 
-**`pattern`**: 
+**`pattern`**:   
 array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
 Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
@@ -2167,10 +2238,14 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 ```JSON
 {
  "sequence": {
-    "type": "successively"
+    "type": "successively",
+    "transitions": 0.1
   }
 }
 ```
+
+**`transitions`**:  
+float - wie lange das Bildübergängsintervall ist.
 
 ### successively
 
