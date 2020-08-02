@@ -75,9 +75,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
                         variant="outlined"
                         value={props.values[param.name]}
-                        InputProps={{
-                            disabled: props.disabled
-                        }}
+                        disabled={props.disabled}
                         label={param.displayName}
                     />
                 </div>
@@ -90,6 +88,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             checked={props.values[param.name]}
                             onChange={e => handleCheck(e, param.name)}
                         />}
+                    disabled={props.disabled}
                     label={makeLabel(param.displayName)}
                     labelPlacement="start"
                     className={classes.checkboxParam}
@@ -104,9 +103,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     variant="outlined"
                     label={param.displayName}
                     value={props.values[param.name]}
-                    InputProps={{
-                        disabled: props.disabled,
-                    }}
+                    disabled={props.disabled}
                     select>
                     {param.enumValues?.map((val) => (
                         <MenuItem key={val.value} value={val.value.toString()}>
@@ -130,6 +127,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                 label={makeSubParamLabel(param.displayName)}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
+                                disabled={props.disabled}
                             />
                         </div>
                         :
