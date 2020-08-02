@@ -1850,7 +1850,49 @@ Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann si
 
 ## Thumbnail
 
-<!--TODO-->
+In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann,
+sofern in der config angegeben neben dem Video zusätzlich erstellt
+
+```JSON
+{
+  "thumbnail": {
+    "type": "new"
+  }
+}
+
+```
+
+### created
+
+```JSON
+{
+ "type": "created",
+ "name": "wordcloud_all"   
+}
+
+```
+
+**`name`**:  
+str - Angabe des Internen Namen des bereits erstellten Bildes
+
+
+### new
+
+```JSON
+{
+  "type": "new",
+  "image": {
+     "type": "pillow",
+     "path": "football/FootballThumbnail.png",
+     "overlay": [
+     ]
+  } 
+}
+
+```
+
+**`image`**:  
+dict - Hier wird ein Bild spezifiziert wie unter `images` erläutert
 
 ## Audios
 
