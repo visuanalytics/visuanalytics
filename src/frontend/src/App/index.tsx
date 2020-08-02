@@ -33,7 +33,12 @@ const theme = createMuiTheme({
             root: {
                 color: "#00638D !important"
             }
-        }
+        },
+        MuiAccordionSummary: {
+            root: {
+                backgroundColor: '#2E97C5 !important'
+            }
+        },
     }
 });
 

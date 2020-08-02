@@ -65,33 +65,24 @@ def default(values: dict, data: StepData, config: dict):
 def custom(values: dict, data: StepData, config: dict):
     logger.info("Generate Audio with Custom Audio Config")
 
-    # Set Testing to False (To generate Audio)
-    testing = data.get_config("testing", False)
-    data.data["_conf"]["testing"] = False
-
     _prepare_custom(config.get("prepare", None), data, config)
 
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
         data.data["_audio"]["text"] = text
-        # TODO set Testing to false
         generate = config["generate"]
         generate["include_headers"] = True
-        response = api_request(generate, data, "audio")
+        api_request(generate, data, "audio", "_audio|gen", True)
 
-        values[key] = _save_audio(response, data, config)
-
-    # Reset Testing
-    data.data["_conf"]["testing"] = testing
+        values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
     data.data["_audio"] = {}
 
     if values is not None:
-        # TODO(Max) Solve better
-        data.data["_audio"]["pre"] = api_request(values, data, "audio")
+        api_request(values, data, "audio", "_audio|pre", True)
 
 
 def _save_audio(response, data: StepData, config: dict):

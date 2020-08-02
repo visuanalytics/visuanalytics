@@ -3,7 +3,7 @@ import {
   Snackbar,
   IconButton,
   SnackbarContent,
-  makeStyles,
+  makeStyles, Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneOutlinedIcon from "@material-ui/icons/DoneOutlined";
@@ -22,7 +22,7 @@ const Message_States = (message: string) => ({
     message: (
       <NotificationContent>
         <ErrorOutlineOutlinedIcon />
-        {message}
+        <Typography style={{marginLeft: "5px"}}>{message}</Typography>
       </NotificationContent>
     ),
   },
@@ -31,7 +31,7 @@ const Message_States = (message: string) => ({
     message: (
       <NotificationContent>
         <DoneOutlinedIcon />
-        {message}
+        <Typography style={{marginLeft: "5px"}}>{message}</Typography>
       </NotificationContent>
     ),
   },
