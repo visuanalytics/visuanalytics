@@ -126,7 +126,7 @@ Um die Daten zu ergänzen anstatt sie zu Überschreiben, wird der "new_key" verw
 {
     "type": "append",
     "key": "_loop|text1",
-    "new_key": "_req|text_modifiziert"
+    "new_key": "_req|text_transformed"
 }
 ```
 ## Api
@@ -267,11 +267,44 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 ## Transform
 
-<!-- TODO Description-->
+`transform`-Typen sind Funktionen zum Bearbeiten der Daten der API-Antwort zu verarbeiten. 
+Die Daten können verändert oder entfernt werden, neue Daten können hinzugefügt werden.
+
+### transform
+
+Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays oder eines Dictionaries aus. 
+Dem `transform` wird entweder ein `transform_array` oder ein `transform_dict` vorangestellt. 
+
+**Beispiel** 
+
+```JSON
+{
+   "type": "transform_dict",
+   "dict_key": "_req",
+   "transform": [
+      {
+       "type": "select",
+       "relevant_keys": [
+           "data"
+       ]
+      },
+      {
+       "type": "select_range",
+       "array_key": "_loop|data",
+       "range_start": 0,
+       "range_end": 5
+      }
+   ]
+} 
+```
+
+Im Beispiel werden für das Dictionary (siehe `transform_dict`) mit dem Key `_req` (in der JSON-Ausgabedatei) die 
+`transform`-Typen `select` und `select_range` durchgeführt. Es wird mit einer Schleife durch alle Werte der Ebene unter 
+`dict_key` gelaufen und die `transform`-Typen werden auf diese Daten angewandt.
 
 ### transform_array
 
-<!-- TODO Description-->
+Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus. 
 
 **Beispiel** 
 
@@ -283,23 +316,35 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 }
 ```
 
-<!--TODO-->
+**`array_key`**:
+
+str - Keys zu einem Array, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
+
+**`transform`**:
+
+`transform`-Typen, die für alle Werte des - unter `array_key` angegebenen - Arrays ausgeführt werden sollen.
 
 ### transform_dict
 
-<!-- TODO Description-->
+Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus. 
 
 **Beispiel** 
 
 ```JSON
 {
-  "type": "transform_array",
+  "type": "transform_dict",
   "dict_key": "key",
   "transform": []
 }
 ```
 
-<!--TODO-->
+**`dict_key`**:
+
+str - Keys zu einem Dictionary, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
+
+**`transform`**:
+
+`transform`-Typen, die für alle Werte des - unter `dict_key` angegebenen - Dictionaries ausgeführt werden sollen.
 
 ### calculate
 
@@ -392,7 +437,7 @@ Findet den Minimalwert von Werten, die in einem Array stehen.
 
 **`save_idx_to`**_optional_:
 
-int - Der Index vom Durchlaufen der Schleife (_loop) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
+int - Der Index vom Durchlaufen der Schleife (`_loop`) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
 Dient z.B. dazu auf eine vorherige Ebene in der JSON-Struktur zugreifen zu können. 
 
 
@@ -668,8 +713,12 @@ Unter `{_key}` wird dann der Wert zum Key aus `keys` eingefügt.
 ```JSON
 {
   "type": "add_symbol",
-  "keys": ["key"],
-  "new_keys": ["new_key"],
+  "keys": [
+    "key"
+  ],
+  "new_keys": [
+    "new_key"
+  ],
   "pattern": "{_key} test"
 }
 ```
@@ -782,16 +831,28 @@ Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
 }
 ```
 
-
 ### regex
 
-<!-- TODO Description-->
+regex - regular expression (zu Deutsch: regulärer Ausdruck)
+Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf keinen Backslash (\) enthalten, da JSON keine Regex.
 
 **Beispiel** 
 
 ```JSON
-
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "",
+  "replace_by": ""
+}
 ```
+**regex**
+
+<!--TODO-->
+
+**replace_by**
 
 <!--TODO-->
 
@@ -981,9 +1042,12 @@ str - Trennzeichen. Z.B. "south-southwest", zuerst wird south übersetzt und dan
 
 ### loop
 
-<!-- TODO Description-->
+Durchläuft das angegebene Array und führt für jedes Element die angegebenen `transform`-Typen aus. Es muss nicht immer das
+gesamte Array durchlaufen werden, will man nur bestimmte Werte verarbeiten, so kann man in `loop` festlegen, welche 
+Werte des Arrays verarbeitet werden sollen und diese werden entweder direkt angegeben mit `values` oder man gibt einen 
+Bereich an mit `range_start` und `range_stop` (siehe Beispiele).
 
-**Beispiel** 
+**Beispiel (values)** 
 
 ```JSON
 {
@@ -995,13 +1059,13 @@ str - Trennzeichen. Z.B. "south-southwest", zuerst wird south übersetzt und dan
 
 **`values`**:
 
-<!--TODO-->
+int-Array - Bestimmte Werte, welche in der Schleife durchlaufen werden sollen. 
 
 **`transform`**:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays ausgeführt werden sollen.
 
-**Beispiel** 
+**Beispiel (range)** 
 
 ```JSON
 {
@@ -1014,132 +1078,230 @@ str - Trennzeichen. Z.B. "south-southwest", zuerst wird south übersetzt und dan
 
 **`range_start`**:
 
-<!--TODO-->
+int - Beginn des Bereichs, welcher in der Schleife durchlaufen werden soll. 
+
+Default: 0.
 
 **`range_stop`**:
 
-<!--TODO-->
+int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll. 
 
 **`transform`**:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays ausgeführt werden sollen.
 
 
 ### add_data
 
-add_data fügt den Daten ein neues Key-Value-Paar hinzu. Der Value wird unter pattern eingetragen und an die Stelle
-new_key kommt der Key, unter dem der Value gespeichert werden soll.
+`add_data` fügt den Daten ein neues Key/Value-Paar hinzu. Der gewünschte Wert wird unter `pattern` eingetragen und an die Stelle
+`new_key` kommt der Key-Name, unter dem der neue Wert gespeichert werden soll.
 
 **Beispiel** 
 
 ```JSON
 {
   "type": "add_data",
-  "new_key": "key",
-  "pattern": "data"
+  "new_key": "new_data",
+  "pattern": "new values"
 }
 ```
 
 **`new_key`**:
 
-<!--TODO-->
+str - Name des Keys unter dem der neue Wert gespeichert werden soll. 
 
 **`pattern`**:
 
-<!--TODO-->
+str - Neuer Wert, der abgespeichert werden soll. 
 
 
 ### copy
 
-Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetzt.
+Der Wert aus einem Key wird kopiert und als ein Wert eines neuen Keys gesetzt.
 
 **Beispiel** 
 
 ```JSON
-
+{
+          "type": "copy",
+          "keys": [
+            "_loop|TeamInfoId"
+          ],
+          "new_keys": [
+            "_temp|TeamInfos"
+          ]
+        }
 ```
 
-**`keys`**:
+`new_keys` ist hier nicht optional. Der neue Key wird benötigt, da sonst der alte Key mit den Daten überschrieben wird, 
+die er sowieso enthält. Zum Beispiel können Werte so an einem anderen Ort gespeichert oder der Key kann umbenannt werden.
 
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
+Alternativ kann der Typ `replace` ohne `{_key}` im `pattern` verwendet werden.
+Der Typ `alias` kann zum Umbenennen des Key-Names verwendet werden.
 
 
 ### option
 
-<!-- TODO Description-->
+Führt die aufgeführten `transform`-Typen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist.
+
+Wenn der Wert, der in `check` steht `true` ist, werden die `transform`-Typen ausgeführt,
+die unter `on_true` stehen.
+
+Wenn der Wert, der in `check` steht `false` ist, werden die `transform`-Typen ausgeführt,
+die unter `on_false` stehen.
 
 ```JSON
-
+ {
+          "type": "option",
+          "check": "_loop|MatchIsFinished",
+          "on_true": [],
+          "on_false": []
+        }
 ```
 
 **`check`**:
 
-<!--TODO-->
+bool - Der Wert, der auf true bzw. false getestet werden soll. 
 
 **`on_true`**:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter `check` `true` ist.
 
 **`on_false`**:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter `check` `false` ist.
 
 
 ### compare
 
-<!-- TODO Description-->
+Führt die aufgeführten `transform`-Typen aus, je nachdem ob zwei Werte gleich sind oder der eine größer oder kleiner als der andere ist.
+
+Folgende Vergleiche werden durchgeführt:
+
+`value_left` = `value_right` (für `on_equal` und `on_not_equal`) 
+`value_left` > `value_right` (für `on_higher`)
+`value_left` < `value_right` (für `on_lower`)
 
 **Beispiel** 
 
 ```JSON
+ {
+    "type": "compare",
+    "value_left": "_loop|MatchResults|PointsTeam1",
+    "value_right": "_loop|MatchResults|PointsTeam2",
+    "on_equal": [],
+    "on_higher": [],
+    "on_lower": []
+}  
+```
 
+**Beispiel** 
+
+```JSON
+ {
+    "type": "compare",
+    "value_left": "_loop|MatchResults|PointsTeam1",
+    "value_right": "_loop|MatchResults|PointsTeam2",
+    "on_equal": [],
+    "on_not_equal": []
+}  
 ```
 
 **`value_left`**:
 
-<!--TODO-->
+Wert der auf der linken Seite beim Vergleich steht.
 
 **`value_right`**:
 
-<!--TODO-->
+Wert der auf der rechten Seite beim Vergleich steht.
 
-**`on_equal`**:
+**Vergleichsmöglichkeiten:**
 
-<!--TODO-->
+Eine der folgenden Möglichkeiten sollte angegeben werden, sonst passiert generell keine Umwandlung der Daten.
 
-**`on_higher`**:
+**`on_equal`**_optional_:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
+`value_left` gleich dem Wert unter `value_right` ist.
 
-**`on_lower`**:
+**`on_not_equal`**_optional_:
 
-<!--TODO-->
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
+`value_left` nicht gleich dem Wert unter `value_right` ist.
 
+Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`.
+
+**`on_higher`**_optional_:
+
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
+`value_left` größer als der Wert unter `value_right` ist.
+
+Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
+
+**`on_lower`**_optional_:
+
+`transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
+`value_left` kleiner als der Wert unter `value_right` ist.
+
+Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
 
 ### random_value
-<!-- TODO Description-->
+
+Wählt zufällig einen Wert aus einem Array oder einem Dictionary mit verschiedenen Werten aus.
 
 **Beispiel** 
-
 ```JSON
+{
+     "type": "random_value",
+     "keys": [
+        "_req|Text"
+     ],
+     "array": [
+        "Text 1 ",
+        "Text 2 ",
+        "Text 3 ",
+        "Text 4 "
+     ],
+     "new_keys": [
+        "_req|Text_finally"
+     ]
+}
+```
+**`array`**
 
+array - Das Array enthält verschiedene Werte aus denen zufällig ein Wert ausgewählt werden soll.
+
+**Beispiel** 
+```JSON
+{
+     "type": "random_value",
+     "keys": [
+         "_loop|Text|201"
+     ],
+     "dict": {
+        "200": [
+           "kommt es zu Gewittern mit leichtem Regen",
+           "ist mit Gewitter und leichtem Regen zu rechnen"
+        ],
+        "201": [
+           "kommt es zu Gewittern mit Regen",
+           "ist mit Gewitter und Regen zu rechnen"
+        ],
+        "202": [
+           "kommt es zu Gewittern mit starkem Regen",
+           "ist mit Gewitter und starkem Regen zu rechnen"
+        ]
+     }
+}
 ```
 
-**`keys`**:
+**`dict`**
 
-<!--TODO-->
+dict - Das Dictionary enthält mögliche Keys mit verschiedenen Werten aus denen zufällig ein Wert ausgewählt werden soll. 
+In diesem Beispiel erhält man einen Zahlencode und je nachdem welcher Zahlencode verwendet werden soll, wird aus dem dazugehörigen Werte-Array ein Wert ausgewählt.
 
-**`pattern`**:
+In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, damit aus dessen Werte-Array ein Wert ausgewählt werden kann.
 
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
 
 ### convert
 <!-- TODO Description-->
@@ -1161,6 +1323,16 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 **`new_keys`**:
 
 <!--TODO-->
+
+### sort
+
+<!-- TODO Description-->
+
+**Beispiel** 
+
+```JSON
+
+```
 
 ### counter
 <!-- TODO Description-->
@@ -1219,6 +1391,16 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
+### to_dict
+
+<!-- TODO Description-->
+
+**Beispiel** 
+
+```JSON
+
+```
+
 ### join
 
 <!-- TODO Description-->
@@ -1272,6 +1454,110 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
+### remove_from_list
+
+Es werden bestimmte Wörter von einer Liste bzw. aus einem Array entfernt.
+Diese Wörter werden Stopwords genannt. Somit kann z.B. vom Ersteller der Videos gewährleistet werden, dass gewisse 
+Beleidigungen oder "böse Wörter" nicht angezeigt werden können. 
+Die Funktion wurde für die Vermeidung von Wörtern in der Wordcloud eingebaut, da man keinen Einfluss darauf hat, was 
+manche Menschen auf Twitter posten.
+
+Es ist egal, wie die Wörter vom Ersteller der Videos angegeben wurden, sie werden auch entfernt, wenn die Groß- und 
+Kleinschreibung anders verwendet wurde. Bei Vertippen und Rechtschreibfehlern werden die Wörter nicht als Stopwords 
+erkannt und sie können in der Wordcloud auftauchen.
+
+Bei der Erstellung der JSON können zusätzlich im Resources-Ordner unter stopwords/stopwords.txt solche Wörter hinterlegt 
+werden, sodass sie nicht bei der Joberstellung im Frontend jedes Mal neu eingegeben werden müssten. Dort können zusätzlich 
+jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei entfernt werden sollen. 
+
+**Beispiel** 
+
+```JSON
+
+```
+
+### lower_case
+
+Jedes Wort in dem Array wird komplett in Kleinbuchstaben geschrieben.
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "lower_case",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_lower_case"
+  ]
+}
+```
+
+### upper_case
+
+Jedes Wort in dem Array wird komplett in Großbuchstaben geschrieben.
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "upper_case",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_upper_case"
+  ]
+}
+```
+
+### capitalize
+
+Der erste Buchstabe jedes Worts in dem Array wird groß geschrieben.
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "capitalize",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_capitalized"
+  ]
+}
+```
+
+### normalize_words
+
+Wörter, welche öfter in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen 
+für die Zählung der Häufigkeit und der Darstellung in der Wordcloud vereinheitlicht werden. 
+
+Ein Array wird durchlaufen und jedes Wort, welches beim zweiten Vorkommen anders geschrieben wurde als das Wort beim 
+ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vorgekommen ist.
+
+**Beispiel**
+
+**Vorher**: Bundesliga, VfL, sport, bundesliga, BundesLIGA, BUNDESLIGA, Sport, vfl
+
+**Nachher**: Bundesliga, VfL, sport, Bundesliga, Bundesliga, Bundesliga, sport, VfL
+
+
+**Beispiel** 
+
+```JSON
+{
+  "type": "normalize_words",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_normalized"
+  ]
+}
+```
 
 ## Images
 
