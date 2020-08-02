@@ -16,14 +16,14 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "max_words": 200,
     "contour_width": 0,
     "contour_color": "white",
-    "font_path": None,
+    "font_path": "fonts/Dosis-Regular.ttf",
     "prefer_horizontal": 0.90,
     "scale": 1,
     "min_font_size": 4,
     "font_step": 1,
     "mode": "RGB",
     "relative_scaling": 0.5,
-    "color_func": None,
+    "color_func": False,
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
@@ -83,6 +83,9 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
 
             wordcloud_parameter[param] = value
 
+    path = resources.get_resource_path(wordcloud_parameter["font_path"])
+    wordcloud_parameter["font_path"] = path
+
     if bool(wordcloud_parameter.get("color_func", False)):
         cfw = list(DEFAULT_COLOR_FUNC_VALUES)
 
@@ -117,12 +120,28 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
             wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
             wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
-    if values.get("stopwords", None) is not None:
-        # TODO (max) May change to array (not string) or change delimiter to ','
-        dont_use = step_data.format(values["stopwords"], {})
-        wordcloud_parameter["stopwords"] = set(dont_use.split())
+    if values.get("use_global_stopwords", None) is not None:
+        try:
+            file = resources.get_resource_path("stopwords/stopwords.txt")
+            with open(file, "r", encoding='utf-8') as f:
+                list_stopwords = f.read().splitlines()
+        except IOError:
+            list_stopwords = []
 
-    wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
+        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        for each in list_stopwords:
+            if each not in dont_use:
+                dont_use.append(each)
+        wordcloud_parameter["stopwords"] = set(dont_use)
+    else:
+        dont_use = step_data.get_data_array(values.get("stopwords", []), {})
+        wordcloud_parameter["stopwords"] = set(dont_use)
+
+    if values.get("text", None) is not None:
+        wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
+    elif values.get("dict", None) is not None:
+        wordcloud_image = WordCloud(**wordcloud_parameter).generate_from_frequencies(
+            step_data.get_data_dict(values["dict"], {}))
 
     image = wordcloud_image.to_image()
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
