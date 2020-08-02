@@ -1,5 +1,6 @@
 import json
 import os
+import humps
 
 from visuanalytics.server.db import db
 
@@ -22,7 +23,7 @@ def get_params(topic_id):
     with open(path_to_json, encoding="utf-8") as fh:
         steps_json = json.loads(fh.read())
     run_config = steps_json["run_config"]
-    return run_config
+    return humps.camelize(_to_param_list(run_config))
 
 
 def get_job_list():
@@ -47,7 +48,7 @@ def _row_to_job(row):
     path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
     with open(path_to_json, encoding="utf-8") as fh:
         steps_params = json.loads(fh.read())["run_config"]
-    params = [_to_camel_case(p) for p in steps_params]
+    params = humps.camelize(_to_param_list(steps_params))
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {
         "jobId": row["job_id"],
@@ -57,7 +58,7 @@ def _row_to_job(row):
         "params": params,
         "values": values,
         "schedule": {
-            "type": row["type"],
+            "type": humps.camelize(row["type"]),
             "date": row["date"],
             "time": row["time"],
             "weekdays": [int(w) for w in weekdays]
@@ -66,11 +67,11 @@ def _row_to_job(row):
 
 
 def _get_values(param_string):
-    if param_string == "None":
+    if param_string is None:
         return []
     kvts = [kvt.split(":") for kvt in param_string.split(",")]
     values = {kvt[0]: _to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
-    return values;
+    return values
 
 
 def _to_typed_value(v, t):
@@ -82,16 +83,12 @@ def _to_typed_value(v, t):
         return v == "True"
 
 
-def _to_camel_case(param):
-    possible_values = [] if param["possible_values"] == [] else [{
-        "value": pv["value"],
-        "displayValue": pv["display_value"]
-    } for pv in param["possible_values"]]
-    return {
-        "name": param["name"],
-        "displayName": param["display_name"],
-        "possibleValues": possible_values
-    }
+def _to_param_list(run_config):
+    return [{**{"name": key},
+             **(value if value["type"] != "sub_params" else {**value,
+                                                             "sub_params": _to_param_list(value["sub_params"]),
+                                                             "type": humps.camelize(value["type"])})}
+            for key, value in run_config.items()]
 
 
 def insert_job(job):
@@ -111,7 +108,6 @@ def delete_job(job_id):
     con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
     con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
     con.execute("DELETE FROM job WHERE job_id=?", [job_id])
-    # TODO (David): delete param values
     con.commit()
 
 
@@ -135,7 +131,8 @@ def update_job(job_id, updated_data):
 
 def _insert_schedule(con, schedule):
     schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
-                              [schedule["type"], schedule["date"] if schedule["type"] == "onDate" else None,
+                              [humps.decamelize(schedule["type"]),
+                               schedule["date"] if schedule["type"] == "onDate" else None,
                                schedule["time"]]).lastrowid
     if schedule["type"] == "weekly":
         id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
