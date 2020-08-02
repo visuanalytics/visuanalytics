@@ -1,9 +1,9 @@
 import React from "react";
-import {Fade} from "@material-ui/core";
-import {useStyles} from "../style";
-import {Param, ParamValues} from "../../util/param";
-import {Load} from "../../util/Load";
-import {ParamFields} from "../../ParamFields";
+import { Fade } from "@material-ui/core";
+import { useStyles } from "../style";
+import { Param, ParamValues } from "../../util/param";
+import { Load } from "../../util/Load";
+import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {
     topicId: number;
@@ -19,7 +19,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
-                <Load data={props.params}/>
+                <Load data={props.params} />
                 {props.params.length !== 0
                     ?
                     <ParamFields
@@ -30,7 +30,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                         required={true}
                     />
                     :
-                    <div className={classes.paddingSmall}>
+                    <div className={classes.paddingSmall} style={{ textAlign: "center" }}>
                         Für dieses Thema stehen keine Parameter zur Verfügung.
                     </div>}
             </div>
