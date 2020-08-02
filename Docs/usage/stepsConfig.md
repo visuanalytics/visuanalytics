@@ -1272,6 +1272,10 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 <!--TODO-->
 
+## Storing
+
+<!--TODO-->
+
 
 ## Images
 
@@ -1349,7 +1353,88 @@ Eine Liste mit Overlays welche alle auf das Bild angewendet werden
 
 ### Overlay
 
-Es gibt 4 verschiedene Overlay-Arten:
+Es gibt 6 verschiedene Overlay-Arten:
+
+
+#### option
+
+Werted den boolean Wert aus der in `check` angegeben wurde, 
+und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` aus
+
+```JSON
+
+{
+     "description": "TeamErgebnisse",
+     "type": "option",
+     "check": "_req|Spiele|0|MatchIsFinished",
+     "on_true": [
+           
+     ],
+     "on_false": [
+
+     ]
+}
+```
+
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+
+**`check`**  
+Der Wert anhand dem entschieden wird ob `on_true` oder `on_false` ausgeführt wird
+
+**`on_true`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert True ergab
+
+**`on_false`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert False ergab
+
+#### compare
+
+Vergleicht die beiden Werte in `value_left` und `value_right`, 
+und führt jenachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus
+oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower` verwendet
+
+```JSON
+
+{
+     "description": "TeamErgebnisse",
+     "type": "compare",
+     "value_left": "_req|Test1",
+     "value_right": "_req|Test2",
+     "on_equals": [
+           
+     ],
+     "on_higher": [
+
+     ],
+     "on_lower": [
+
+     ]
+}
+```
+
+**`description`** _(Optional)_:  
+Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+
+**`value_left`**  
+Der Erste Wert der verglichen werden soll
+
+**`value_right`**  
+Der Zweite Wert der verglichen werden soll
+
+**`on_equals`**  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte identisch sind
+
+**`on_not_equals`**  _(Optional)_  
+Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte nicht identisch sind
+
+**`on_higher`**  _(Optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite wert größer wie der erste ist.
+
+**`on_lower`**  _(Optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite Wert kleiner wie der erste ist.
 
 #### image
 
@@ -1482,12 +1567,24 @@ X Koordinate des zu setztenden Textes
 **`pos_y`** :  
 Y Koordinate des zu setztenden Textes
 
+**`pattern`**:  
+Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Presets sind weiter unten in der JSON spezifiziert
 
-**`pattern`**:  
-Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+
+**`colour`**:  
+str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+
+**`font_size`**:  
+int - Größe des Textes
+
+**`font`**:  
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+
 
 #### text_array
 
@@ -1524,14 +1621,26 @@ X Koordinate der zu setztenden Texte
 **`pos_y`** :  
 Y Koordinate der zu setztenden Texte
 
+**`pattern`**:  
+Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
+(kann sich auch auf Daten aus der API beziehen)
+
 **`preset`**:  
 Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
 Dies kann wieder eine Liste oder ein String sein  
 Presets sind weiter unten in der JSON spezifiziert
 
-**`pattern`**:  
-Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
-(kann sich auch auf Daten aus der API beziehen)
+
+**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+
+**`colour`**:  
+str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+
+**`font_size`**:  
+int - Größe des Textes
+
+**`font`**:  
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
 
 ### wordcloud
 
@@ -1708,6 +1817,10 @@ Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary s
 #### Stopwords
 
 Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann sie bei der Joberstellung angeben. 
+
+## Thumbnail
+
+<!--TODO-->
 
 ## Audios
 
