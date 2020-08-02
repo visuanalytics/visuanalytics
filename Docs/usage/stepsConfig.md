@@ -1749,7 +1749,7 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 }
 ```
 
-**`pattern`**: 
+**`pattern`**:  
 str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
 
 ### compare
@@ -1792,22 +1792,22 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 }
 ```
 
-**`value_left`**:
+**`value_left`**:  
 str, int - Der Wert, der beim Vergleich auf der linken Seite steht. 
 
-**`value_right`**: 
+**`value_right`**:   
 str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
 
-**`on_equal`**: 
+**`on_equal`**:   
 callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_not_equal`**: 
+**`on_not_equal`**:   
 callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_higher`**: 
+**`on_higher`**:   
 callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_lower`**: 
+**`on_lower`**:   
 callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
 #### option
@@ -1844,13 +1844,13 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 }
 ```
 
-**`check`**: 
+**`check`**:   
 str, int - Der Wert, der auf true oder false geprüft werden soll.
 
-**`on_true`**: 
+**`on_true`**:   
 callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_false`**: 
+**`on_false`**:   
 callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
 ### random_text
@@ -1870,7 +1870,7 @@ Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in 
 }
 ```
 
-**`pattern`**: 
+**`pattern`**:   
 array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
 Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
@@ -1881,10 +1881,14 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 ```JSON
 {
  "sequence": {
-    "type": "successively"
+    "type": "successively",
+    "transitions": 0.1
   }
 }
 ```
+
+**`transitions`**:  
+float - wie lange das Bildübergängsintervall ist.
 
 ### successively
 
