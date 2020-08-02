@@ -844,17 +844,97 @@ Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf kein
   "keys": [
       "keys"  
   ],
-  "regex": "",
-  "replace_by": ""
+  "regex": "[.]+",
+  "replace_by": ","
 }
 ```
-**regex**
+Dieses Beispiel sucht alle . und ersetzt diese mit einem ,
+Durch das + soll mindestens ein . ersetzt werden.
 
-<!--TODO-->
+**Beispiel (mehrere Zeichen)** 
 
-**replace_by**
+```JSON
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "[al]",
+  "replace_by": "XX"
+}
+```
+In diesem Beispiel werden in einem String die Buchstaben a und l gesucht und jedes a und jedes l wird mit jeweils einem XX ersetzt.
 
-<!--TODO-->
+**Beispiel (or)** 
+
+```JSON
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "ll|ss",
+  "replace_by": "xx"
+}
+```
+
+In diesem Beispiel werden in einem String ll oder ss gesucht und durch xx ersetzt.
+
+**Beispiel (ends with a specific character)** 
+
+```JSON
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "o$",
+  "replace_by": "END"
+}
+```
+
+In diesem Beispiel wird das Ende eines Strings betrachtet. Endet das Wort mit einem o so wird das o durch END ersetzt.
+
+
+**Beispiel (start with a specific character)** 
+
+```JSON
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "^H|T",
+  "replace_by": "START"
+}
+```
+
+In diesem Beispiel wird der Anfang eines Strings betrachtet. Beginnt das Wort mit dem Buchstaben H oder T, so wird 
+dieser Buchstabe jeweils durch START ersetzt.
+
+**Beispiel (character set)** 
+
+```JSON
+{
+  "type": "regex",
+  "keys": [
+      "keys"  
+  ],
+  "regex": "[0-9]",
+  "replace_by": " "
+}
+```
+
+In diesem Beispiel wird jede Zahl in einem String durch ein Leerzeichen ersetzt.
+
+**`regex`**
+
+str - Beinhaltet den regulären Ausdruck. Oben sind einige Beispiele genannt. 
+Der String unter regex darf keine Backslashes (\) enthalten.
+
+**`replace_by`**
+
+str - Zeichen mit denen der reguläre Ausdruck im String ersetzt werden soll.
 
 ### Uhrzeit und Datum
 
@@ -1304,12 +1384,22 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 
 ### convert
-<!-- TODO Description-->
+
+<!--TODO-->
 
 **Beispiel** 
 
 ```JSON
-
+{
+  "type": "convert",
+  "keys": [
+      "key"
+  ],
+  "to": "",
+  "new_keys": [
+      "new_key" 
+  ]
+}
 ```
 
 **`keys`**:
@@ -1324,8 +1414,38 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 <!--TODO-->
 
+### sort
+
+`sort` sortiert die Einträge eines Arrays, Arrays bestehend aus Tupeln oder Dictionaries nach der Größe der jeweiligen Zahlen.
+Es kann auch alphabetisch sortiert werden, wenn die Einträge keine Zahlen sind.
+
+```JSON
+{
+  "type": "sort",
+  "keys": [
+     "key"
+  ],
+  "new_keys": [
+     "new_key"  
+  ],
+  "reverse": true
+}
+```
+
+**`reverse`**
+
+bool - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
+sortiert werden (kleinste Zahl als Erstes).
+
+Default: False.
+
 ### most_common
-<!-- TODO Description-->
+
+`most_common` betrachtet ein Array oder einen String und zählt die Häufigkeit der jeweils darin vorkommenden Wörter.
+
+Beispiel: "Der Hund sucht die Katze und die Katze sucht die Maus."
+
+der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
 
 **Beispiel** 
 
@@ -1341,16 +1461,13 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 }
 ```
 
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
-
 ### sub_lists
-<!-- TODO Description-->
+
+`sub_lists` geht durchläuft eine Liste und sucht sich bestimmte Teile dieser Liste heraus, um daraus kleinere Listen zu erhalten.
+
+Beispiel: Hund, Katze, Maus, Garage, Hoftor, Tür, Fenster
+
+Daraus wollen wir zwei Listen machen: Die ersten 3 Einträge sollen in die erste Liste und die anderen 4 Einträge in eine zweite Liste.
 
 **Beispiel** 
 
@@ -1360,42 +1477,61 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
   "array_key": "_req|text_all_counter",
   "sub_lists": [
     {
-      "new_key": "_req|text_top1",
-      "range_start": 0,
-      "range_end": 1
-    },
-    {
-      "new_key": "_req|text_top2",
+      "new_key": "_req|Tiere",
       "range_start": 0,
       "range_end": 2
+    },
+    {
+      "new_key": "_req|Haus",
+      "range_start": 3,
+      "range_end": 6
     }
   ]
 }
 ```
 
-**`keys`**:
+**`array_key`**:
 
-<!--TODO-->
+str - Enthält den Key zum Array, von dem die Unterlisten erstellt werden sollen.
 
-**`new_keys`**:
+**`sub_lists`**:
 
-<!--TODO-->
+Pro Unterliste wird eine new_key/range_start/range_end-Struktur hinzugefügt.
+
+**`range_start`**_optional_:
+
+int - Listeneintrag ab dem die Unterliste generiert werden soll.
+
+Default: 0.
+
+**`range_end`**:
+
+int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
 
 ### to_dict
 
-<!-- TODO Description-->
+`to_dict` wandelt die gegebenen Werte in ein Dictionary um.
 
 **Beispiel** 
 
 ```JSON
-
+{
+  "type": "to_dict",
+  "keys": [
+      "key"
+  ],  
+  "new_keys": [
+      "new_key" 
+  ]
+}
 ```
 
 ### join
 
-<!-- TODO Description-->
+`join` nimmt alle Einträge eines Dictionaries, Arrays oder eines Tupels und verbindet sie mit einem Delimiter 
+(Trennzeichen, z.B. Komma, Punkt oder Leereichen) zu einem String.
 
-~~~json
+```json
 {
   "type": "join",
   "keys": [
@@ -1406,25 +1542,18 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
   ],
   "delimiter": ", "
 }
-~~~
-
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
+```
 
 **`delimiter`**:
 
-<!--TODO-->
+str - Trennzeichen zum Trennen der einzelnen Einträge in einem String. Z.B. . , ; : - + 
 
 ### length
 
-<!-- TODO Description-->
+`length` gibt die Anzahl der Elemente eines Arrays/einer Liste aus, falls der Wert ein Array ist.
+Ist der Wert ein String, so wird die Anzahl der Zeichen des Strings ausgegeben.
 
-~~~json
+```json
 {
   "type": "length",
   "keys": [
@@ -1434,21 +1563,15 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
     "_req|hashtags_len"
   ]
 }
-~~~
+```
 
-**`keys`**:
-
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
 
 ### remove_from_list
 
 Es werden bestimmte Wörter von einer Liste bzw. aus einem Array entfernt.
-Diese Wörter werden Stopwords genannt. Somit kann z.B. vom Ersteller der Videos gewährleistet werden, dass gewisse
-Beleidigungen oder "böse Wörter" nicht angezeigt werden können.
+
+Bei der Erstellung einer Wordcloud werden diese Wörter Stopwords genannt. Somit kann z.B. vom Ersteller der Videos 
+gewährleistet werden, dass gewisse Beleidigungen oder "böse Wörter" nicht angezeigt werden können.
 Die Funktion wurde für die Vermeidung von Wörtern in der Wordcloud eingebaut, da man keinen Einfluss darauf hat, was
 manche Menschen auf Twitter posten.
 
@@ -1463,8 +1586,40 @@ jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei en
 **Beispiel**
 
 ```JSON
-
+{
+      "type": "remove_from_list",
+      "keys": [
+        "_req|text_all"
+      ],
+      "to_remove": "_conf|stopwords",
+      "use_stopwords": true,
+      "ignore_case": true
+}
 ```
+
+**`to_remove`**:
+
+Array - Eine Liste mit Wörtern, die aus einem String oder einer anderen Liste entfernt werden sollen.
+
+**`use_stopwords`**:
+
+bool - Sollen die Stopwords, die in der Datei stopwords/stopwords.txt stehen aus dem String oder der Liste entfernt werden?
+
+`true`: Stopwords aus der Datei stopwords/stopwords.txt entfernen.
+
+`false`: Stopword aus der Datei stopwords/stopwords.txt nicht entfernen.
+
+Default: `false`.
+
+**`ignore_case`**:
+
+bool - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
+
+`true`: Ja, auch entfernen, wenn sie eine andere Groß- bzw. Kleinschreibung besitzen.
+
+`false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
+
+Default: `false`.
 
 ### lower_case
 
