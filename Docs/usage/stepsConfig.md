@@ -1274,8 +1274,38 @@ Der Value aus einem Key wird kopiert und als ein Value eines anderen Keys gesetz
 
 ## Storing
 
-<!--TODO-->
+Mit Hilfe von Storing können ganze Dictionarys oder auch einzelne Werte in Dateien gespeichert werden
+und in einem späterem Durchlauf des Programms wieder eingelesen werden
 
+```JSON
+{
+  "storing": [
+    {
+      "name": "table",
+      "key": "_req|Tabelle",
+      "exclude": [
+        "Text",
+        "Rank_diff"
+      ]
+    },
+    {
+      "name": "spieltag",
+      "key": "_req|Spieltag"
+    }
+  ]
+}
+
+```
+
+**`name`**:  
+str - Frei zu wähender Name des zu Exportierenden Dicts oder values (dieser Name wird später wieder zum importieren benötigt)
+
+**`key`**:  
+str - Angabe des Keys welcher exportiert werden soll
+
+**`exclude`** _(Optional)_:  
+list - Angabe von Keys welche beim exportieren nicht mit exportiert werden soll
+(Macht logischerweiße nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
 
 ## Images
 
