@@ -1444,6 +1444,112 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 <!--TODO-->
 
+### remove_from_list
+
+Es werden bestimmte Wörter von einer Liste bzw. aus einem Array entfernt.
+Diese Wörter werden Stopwords genannt. Somit kann z.B. vom Ersteller der Videos gewährleistet werden, dass gewisse
+Beleidigungen oder "böse Wörter" nicht angezeigt werden können.
+Die Funktion wurde für die Vermeidung von Wörtern in der Wordcloud eingebaut, da man keinen Einfluss darauf hat, was
+manche Menschen auf Twitter posten.
+
+Es ist egal, wie die Wörter vom Ersteller der Videos angegeben wurden, sie werden auch entfernt, wenn die Groß- und
+Kleinschreibung anders verwendet wurde. Bei Vertippen und Rechtschreibfehlern werden die Wörter nicht als Stopwords
+erkannt und sie können in der Wordcloud auftauchen.
+
+Bei der Erstellung der JSON können zusätzlich im Resources-Ordner unter stopwords/stopwords.txt solche Wörter hinterlegt
+werden, sodass sie nicht bei der Joberstellung im Frontend jedes Mal neu eingegeben werden müssten. Dort können zusätzlich
+jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei entfernt werden sollen.
+
+**Beispiel**
+
+```JSON
+
+```
+
+### lower_case
+
+Jedes Wort in dem Array wird komplett in Kleinbuchstaben geschrieben.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "lower_case",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_lower_case"
+  ]
+}
+```
+
+### upper_case
+
+Jedes Wort in dem Array wird komplett in Großbuchstaben geschrieben.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "upper_case",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_upper_case"
+  ]
+}
+```
+
+### capitalize
+
+Der erste Buchstabe jedes Worts in dem Array wird groß geschrieben.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "capitalize",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_capitalized"
+  ]
+}
+```
+
+### normalize_words
+
+Wörter, welche öfter in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen
+für die Zählung der Häufigkeit und der Darstellung in der Wordcloud vereinheitlicht werden.
+
+Ein Array wird durchlaufen und jedes Wort, welches beim zweiten Vorkommen anders geschrieben wurde als das Wort beim
+ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vorgekommen ist.
+
+**Beispiel**
+
+**Vorher**: Bundesliga, VfL, sport, bundesliga, BundesLIGA, BUNDESLIGA, Sport, vfl
+
+**Nachher**: Bundesliga, VfL, sport, Bundesliga, Bundesliga, Bundesliga, sport, VfL
+
+
+**Beispiel**
+
+```JSON
+{
+  "type": "normalize_words",
+  "keys": [
+    "_conf|array"
+  ],
+  "new_keys": [
+    "_req|array_normalized"
+  ]
+}
+```
+
+
 ## Storing
 
 Mit Hilfe von Storing können ganze Dictionarys oder auch einzelne Werte in Dateien gespeichert werden
