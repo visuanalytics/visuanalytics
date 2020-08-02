@@ -7,6 +7,7 @@ mutagen==1.45.0
 matplotlib==3.3.0
 wordcloud==1.7.0
 pyhumps==1.6.1
+xmltodict==0.12.0
 
 # Server requirements
 flask==1.1.2

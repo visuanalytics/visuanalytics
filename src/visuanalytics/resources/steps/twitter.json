@@ -62,10 +62,32 @@
       ]
     },
     {
+      "type": "remove_from_list",
+      "keys": [
+        "_req|text_all"
+      ],
+      "to_remove": "_conf|stopwords",
+      "use_stopwords": true,
+      "ignore_case": true
+    },
+    {
+      "type": "option",
+      "check": "_conf|normalize_words",
+      "on_true": [
+        {
+          "type": "normalize_words",
+          "keys": [
+            "_req|text_all"
+          ]
+        }
+      ]
+    },
+    {
       "type": "counter",
       "keys": [
         "_req|text_all"
-      ]
+      ],
+      "include_count": true
     },
     {
       "type": "sub_lists",
@@ -139,7 +161,7 @@
       ]
     },
     {
-      "type": "join",
+      "type": "to_dict",
       "keys": [
         "_req|text_all",
         "_req|text_top1",
@@ -156,7 +178,22 @@
         "_req|text_top20",
         "_req|text_top25"
       ],
-      "delimiter": " "
+      "new_keys": [
+        "_req|dict_all",
+        "_req|dict_top1",
+        "_req|dict_top2",
+        "_req|dict_top3",
+        "_req|dict_top4",
+        "_req|dict_top5",
+        "_req|dict_top6",
+        "_req|dict_top7",
+        "_req|dict_top8",
+        "_req|dict_top9",
+        "_req|dict_top10",
+        "_req|dict_top15",
+        "_req|dict_top20",
+        "_req|dict_top25"
+      ]
     },
     {
       "type": "length",
@@ -181,8 +218,9 @@
   "images": {
     "all_words_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_all}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_all",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": false,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -199,8 +237,9 @@
     },
     "top1_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top1}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top1",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -218,8 +257,9 @@
     },
     "top2_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top2}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top2",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -237,8 +277,9 @@
     },
     "top3_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top3}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top3",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -256,8 +297,9 @@
     },
     "top4_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top4}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top4",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -275,8 +317,9 @@
     },
     "top5_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top5}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top5",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -294,8 +337,9 @@
     },
     "top6_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top6}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top6",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -313,8 +357,9 @@
     },
     "top7_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top7}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top7",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -332,8 +377,9 @@
     },
     "top8_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top8}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top8",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -351,8 +397,9 @@
     },
     "top9_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top9}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top9",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -370,8 +417,9 @@
     },
     "top10_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top10}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top10",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -389,8 +437,9 @@
     },
     "top15_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top15}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top15",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -408,8 +457,9 @@
     },
     "top20_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top20}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top20",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -427,8 +477,9 @@
     },
     "top25_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top25}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_top25",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
       "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
@@ -670,11 +721,16 @@
   },
   "sequence": {
     "type": "custom",
+    "transitions": 0.1,
     "pattern": [
       {
         "image": "wordcloud_top1",
         "audio_l": "a1",
         "time_diff": -6
+      },
+      {
+        "image": "wordcloud_top2",
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top3",
@@ -726,24 +782,32 @@
       }
     ]
   },
-  "run_config": {
-    "hashtags": {
-      "type": "multiString",
-      "display_name": "Hashtags",
-      "optional": false,
-      "default_value": []
+  "run_config": [
+    {
+      "name": "stopwords",
+      "display_name": "Aus Wordcloud ausschließen",
+      "possible_values": [],
+      "default_value": ""
     },
-    "stopwords": {
-      "type": "multiString",
-      "display_name": "Verbotene Wörter",
-      "optional": true,
-      "default_value": []
+    {
+      "name": "normalize_words",
+      "display_name": "Wörter normalisieren",
+      "possible_values": [
+        {
+          "value": true,
+          "display_value": "aktiviert"
+        },
+        {
+          "value": false,
+          "display_value": "deaktiviert"
+        }
+      ],
+      "default_value": true
     },
-    "colormap_words": {
-      "type": "enum",
+    {
+      "name": "colormap_words",
       "display_name": "Farben der Wörter",
-      "optional": true,
-      "enum_values": [
+      "possible_values": [
         {
           "value": "magma",
           "display_value": "magma"
@@ -763,55 +827,60 @@
       ],
       "default_value": "viridis"
     },
-    "color_func": {
-      "type": "sub_params",
+    {
+      "name": "color_func",
       "display_name": "Farbverlauf",
-      "optional": true,
-      "sub_params": {
-        "color_func_words": {
-          "type": "enum",
-          "display_name": "Farbe",
-          "optional": false,
-          "enum_values": [
-            {
-              "value": "245 46 5 35",
-              "display_value": "Blau"
-            },
-            {
-              "value": "145 46 5 35",
-              "display_value": "Grün"
-            },
-            {
-              "value": "353 80 20 50",
-              "display_value": "Rot"
-            },
-            {
-              "value": "59 80 45 73",
-              "display_value": "Gelb"
-            },
-            {
-              "value": "0 0 60 100",
-              "display_value": "Grau"
-            },
-            {
-              "value": "0 0 0 40",
-              "display_value": "Schwarz"
-            },
-            {
-              "value": "281 66 25 70",
-              "display_value": "Lila"
-            }
-          ],
-          "default_value": "0 0 0 40"
+      "possible_values": [
+        {
+          "value": false,
+          "display_value": "Standard verwenden"
+        },
+        {
+          "value": true,
+          "display_value": "andere Farben auswählen"
         }
-      },
+      ],
       "default_value": false
     },
-    "figure": {
-      "type": "enum",
+    {
+      "name": "color_func_words",
+      "display_name": "Farbverlauf der Wörter",
+      "possible_values": [
+        {
+          "value": "245 46 5 35",
+          "display_value": "Blau"
+        },
+        {
+          "value": "145 46 5 35",
+          "display_value": "Grün"
+        },
+        {
+          "value": "353 80 20 50",
+          "display_value": "Rot"
+        },
+        {
+          "value": "59 80 45 73",
+          "display_value": "Gelb"
+        },
+        {
+          "value": "0 0 60 100",
+          "display_value": "Grau"
+        },
+        {
+          "value": "0 0 0 40",
+          "display_value": "Schwarz"
+        },
+        {
+          "value": "281 66 25 70",
+          "display_value": "Lila"
+        }
+      ],
+      "default_value": "0 0 0 40"
+    },
+    {
+      "name": "shape",
       "display_name": "Form der Wordcloud",
-      "optional": true,
-      "enum_values": [
+      "possible_values": [
         {
           "value": "circle",
           "display_value": "Kreis"
@@ -822,20 +891,8 @@
         }
       ],
       "default_value": "circle"
-    },
-    "width_wordcloud": {
-      "type": "number",
-      "display_value": "Breite der Wordcloud (in Pixeln)",
-      "optional": true,
-      "default_value": 1000
-    },
-    "height_wordcloud": {
-      "type": "number",
-      "display_value": "Höhe der Wordcloud (in Pixeln)",
-      "optional": true,
-      "default_value": 1000
     }
-  },
+  ],
   "presets": {
   }
 }
