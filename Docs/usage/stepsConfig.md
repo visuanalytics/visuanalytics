@@ -17,7 +17,7 @@ Die JSON-Datei zu einem Job hat folgende Abschnitte:
 }
 ```
 Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von id und name gibt es mehrere Typen, aus denen bei 
-den einzelnen ABschnitten ausgewählt werden kann, je nachdem wie das Video am ENde aussehen soll und wie die Daten 
+den einzelnen Abschnitten ausgewählt werden kann, je nachdem wie das Video am ENde aussehen soll und wie die Daten 
 verarbeitet und visualisiert werden sollen.
 
 Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
