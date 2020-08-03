@@ -11,8 +11,6 @@ def prepare_overlay_test(values, data, config=None):
     if config is None:
         config = {}
 
-    step_data = StepData(config, "0")
-    step_data.insert_data("_req", {"_test": data}, {})
     values = {
         "images": {
             "testbild": {
@@ -29,6 +27,9 @@ def prepare_overlay_test(values, data, config=None):
             },
         }
     }
+
+    step_data = StepData(config, "0", values.get("presets", None))
+    step_data.insert_data("_req", {"_test": data}, {})
     step_data.data["_pipe_id"] = "100"
     generate_all_images(values, step_data)
 
