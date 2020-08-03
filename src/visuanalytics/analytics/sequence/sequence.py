@@ -40,15 +40,23 @@ def link(values: dict, step_data: StepData):
     seq_func(values, step_data, out_images, out_audios, out_audio_l)
 
     if step_data.get_config("attach", None) is not None:
-        for item in step_data.get_config("attach", None):
-            from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-            pipeline = Pipeline(step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
-            pipeline.start()
-            if pipeline.current_step != -2:
-                seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
-                seq_func(pipeline.config, step_data, out_images, out_audios, out_audio_l)
-
-    _link(out_images, out_audios, out_audio_l, step_data, values)
+        if step_data.get_config("separate_rendering", False) is False:
+            for item in step_data.get_config("attach", None):
+                from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+                pipeline = Pipeline(step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
+                pipeline.start()
+                if pipeline.current_step != -2:
+                    seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
+                    seq_func(pipeline.config, step_data, out_images, out_audios, out_audio_l)
+        else:
+            _link(out_images, out_audios, out_audio_l, step_data, values)
+            sequence_out = [f"{step_data.data['_pipe_id`']}_0"]
+            for idx, item in step_data.get_config("attach", None):
+                from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+                pipeline = Pipeline(f"{step_data.data['_pipe_id`']}_{idx + 1}", item["steps"], item.get("config", {}))
+                pipeline.start()
+                if pipeline.current_step != -2:
+                    sequence_out.append(f"{step_data.data['_pipe_id`']}_{idx + 1}")
 
 
 @register_sequence
@@ -107,6 +115,8 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
 
     output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
                                      step_data.get_config("job_name"))
+    if step_data.get_config("separate_rendering", False):
+        output2 += f"{output2}_0"
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
@@ -135,6 +145,19 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
     values["sequence"] = output2
+
+
+def _combine(sequence_out: list, step_data: StepData, values: dict):
+    concat = "concat:"
+    for entry in sequence_out:
+        concat += concat + entry
+    print(concat)
+    output = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
+                                    step_data.get_config("job_name"))
+    args = ["ffmpeg", "-i", f"\"{concat}\"", "-c", "copy", output]
+    proc2 = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc2.check_returncode()
+    values["sequence"] = output
 
 
 def _sum_audio_l(audio_l, index):
