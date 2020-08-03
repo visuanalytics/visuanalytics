@@ -180,6 +180,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     disabled: state.edit,
                                     readOnly: true
                                 }}
+                                required={!state.edit}
                                 variant="outlined"
                             />
                         </Button>
@@ -272,7 +273,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     values={paramValues}
                                     selectParamHandler={handleSelectParam}
                                     disabled={state.edit}
-                                    required={false}
+                                    required={!state.edit}
                                 />
                             </div>
                         </Grid>
