@@ -54,7 +54,10 @@ export const fromFormattedDates = (fSchedule: any): Schedule => {
     return partial;
 }
 
-const getNextJobDate = (schedule: Schedule): Date => {
+const getNextJobDate = (schedule: Schedule) => {
+    if (!validateSchedule(schedule)) {
+        return null;
+    }
     const fToday = format(new Date(), "yyyy-MM-dd");
     const fTime = schedule.time.toLocaleTimeString("de-DE").slice(0, -3);
     const combined = parse(`${fTime}-${fToday}`, "H:m-y-MM-dd", new Date());
@@ -73,9 +76,6 @@ const getNextJobDate = (schedule: Schedule): Date => {
                 }
                 return d;
             });
-            if (ds.length === 0) {
-                return new Date();
-            }
             return new Date(Math.min.apply(null, ds.map(d => d.getTime())));
         case "onDate":
             const fDate = format(schedule.date, "yyyy-MM-dd");
@@ -89,6 +89,9 @@ export const showSchedule = (schedule: Schedule) => {
     } else if (schedule.type === "onDate") {
         return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "hh:mm") + " Uhr";
     } else if (schedule.type === "weekly") {
+        if (schedule.weekdays.length === 0) {
+            return "wöchentlich: " + "kein Wochentag ausgewählt";
+        }
         const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
         return "wöchentlich: " + weekdays + ", " + format(schedule.time, "hh:mm") + " Uhr";
     }
@@ -107,7 +110,11 @@ export const getWeekdayLabel = (day: Weekday) => {
 }
 
 export const showTimeToNextDate = (schedule: Schedule) => {
-    return formatDistanceToNowStrict(getNextJobDate(schedule), { locale: de, addSuffix: true });
+    const date = getNextJobDate(schedule);
+    if (date === null) {
+        return "-";
+    }
+    return formatDistanceToNowStrict(date, { locale: de, addSuffix: true });
 }
 
 export const validateSchedule = (schedule: Schedule) => {
