@@ -88,20 +88,21 @@ export const validateParamValues = (values: ParamValues, params: Param[]): boole
 
 // trim all string / string[] values
 export const trimParamValues = (values: ParamValues): ParamValues => {
-    Object.keys(values).forEach((k) => {
-        if (typeof (values[k]) === "string") {
-            const v = values[k].trim();
+    let cValues: ParamValues = { ...values }
+    Object.keys(cValues).forEach((k) => {
+        if (typeof (cValues[k]) === "string") {
+            const v = cValues[k].trim();
             if (v === "") {
-                const { [k]: x, ...r } = values;
-                values = r;
+                const { [k]: x, ...r } = cValues;
+                cValues = r;
             } else {
-                values[k] = v;
+                cValues[k] = v;
             }
-        } else if (values[k] instanceof Array) {
-            values[k] = values[k].map((s: string) => s.trim()).filter((s: string) => s !== "");
+        } else if (cValues[k] instanceof Array) {
+            cValues[k] = cValues[k].map((s: string) => s.trim()).filter((s: string) => s !== "");
         }
     })
-    return values;
+    return cValues;
 }
 
 
