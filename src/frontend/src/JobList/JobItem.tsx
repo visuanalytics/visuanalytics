@@ -113,7 +113,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            jobName: jobName,
+            jobName: jobName.trim(),
             values: toTypedValues(trimParamValues(paramValues), job.params),
             schedule: withFormattedDates(selectedSchedule)
         })
@@ -135,7 +135,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         }
 
         const handleCheckClick = () => {
-            if (jobName === "") {
+            if (jobName.trim() === "") {
                 setError(true);
                 return;
             }
