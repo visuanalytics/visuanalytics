@@ -161,9 +161,9 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
@@ -177,8 +177,8 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
@@ -192,8 +192,8 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ]
@@ -562,7 +562,7 @@
             "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points}. "
+            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
