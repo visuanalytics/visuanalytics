@@ -4,9 +4,11 @@ Modul welches Bilder und Audios kombiniert zu einem fertigem Video.
 
 import os
 import subprocess
+import uuid
 
 from mutagen.mp3 import MP3
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.control.scheduler import scheduler
 from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
@@ -48,15 +50,27 @@ def link(values: dict, step_data: StepData):
                 if pipeline.current_step != -2:
                     seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
                     seq_func(pipeline.config, step_data, out_images, out_audios, out_audio_l)
+            _link(out_images, out_audios, out_audio_l, step_data, values)
         else:
             _link(out_images, out_audios, out_audio_l, step_data, values)
-            sequence_out = [f"{step_data.data['_pipe_id`']}_0"]
-            for idx, item in step_data.get_config("attach", None):
+            sequence_out = [values["sequence"]]
+            for idx, item in enumerate(step_data.get_config("attach", None)):
                 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-                pipeline = Pipeline(f"{step_data.data['_pipe_id`']}_{idx + 1}", item["steps"], item.get("config", {}))
+                config = item.get("config", {})
+                config["output_path"] = step_data.get_config("output_path", "")
+                config["job_name"] = f"subtask{idx}"
+                pipeline = Pipeline(uuid.uuid4().hex, item["steps"], config, no_cleanup=True)
                 pipeline.start()
                 if pipeline.current_step != -2:
-                    sequence_out.append(f"{step_data.data['_pipe_id`']}_{idx + 1}")
+                    sequence_out.append(pipeline.config["sequence"])
+            try:
+                _combine(sequence_out, step_data, values)
+            except:
+                pass
+            for file in sequence_out:
+                os.remove(file)
+    else:
+        _link(out_images, out_audios, out_audio_l, step_data, values)
 
 
 @register_sequence
@@ -113,10 +127,12 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
     proc1 = subprocess.run(args1, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc1.check_returncode()
 
-    output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
-                                     step_data.get_config("job_name"))
+    output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
+                                     step_data.get_config("job_name", ""))
     if step_data.get_config("separate_rendering", False):
-        output2 += f"{output2}_0"
+        output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
+                                         step_data.get_config("job_name", "") + "_0")
+
     args2 = ["ffmpeg", "-y"]
     for i in range(0, len(images)):
         args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
@@ -148,13 +164,26 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
 
 
 def _combine(sequence_out: list, step_data: StepData, values: dict):
+    args = ["ffmpeg", "-i"]
     concat = "concat:"
-    for entry in sequence_out:
-        concat += concat + entry
-    print(concat)
-    output = resources.get_out_path(values["out_time"], step_data.get_config("output_path"),
-                                    step_data.get_config("job_name"))
-    args = ["ffmpeg", "-i", f"\"{concat}\"", "-c", "copy", output]
+    file_temp = []
+    output = resources.get_temp_resource_path(f"file.mkv", step_data.data["_pipe_id"])
+    for idx, file in enumerate(sequence_out):
+        temp_file = resources.get_temp_resource_path(f"temp{idx}.ts", step_data.data["_pipe_id"])
+        args2 = ["ffmpeg", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts", temp_file]
+        proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        proc2.check_returncode()
+        file_temp.append(temp_file)
+    for idx, file in enumerate(file_temp):
+        if idx != 0:
+            concat += "|"
+        concat += file
+    args.extend((concat, "-codec", "copy", output))
+    proc2 = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    proc2.check_returncode()
+    new_output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
+                                        step_data.get_config("job_name", ""))
+    args = ["ffmpeg", "-i", output, new_output]
     proc2 = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     proc2.check_returncode()
     values["sequence"] = output

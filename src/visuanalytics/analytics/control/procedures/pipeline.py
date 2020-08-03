@@ -36,9 +36,9 @@ class Pipeline(object):
                6: {"name": "Sequence", "call": link},
                7: {"name": "Ready"}}
     __steps_max = 7
-    cleanup = True
+    cleanup = [True, True]
 
-    def __init__(self, pipeline_id: str, step_name: str, steps_config=None, no_sequence=False):
+    def __init__(self, pipeline_id: str, step_name: str, steps_config=None, no_sequence=False, no_cleanup=False):
         if steps_config is None:
             steps_config = {}
 
@@ -52,7 +52,9 @@ class Pipeline(object):
 
         if no_sequence:
             self.__steps_max = 6
-            self.cleanup = False
+            self.cleanup = [False, False]
+        if no_cleanup:
+            self.cleanup = [True, False]
 
     @property
     def start_time(self):
@@ -174,14 +176,16 @@ class Pipeline(object):
             # Set state to ready
             self.__current_step = self.__steps_max
 
-            delete_video(self.steps_config, self.__config)
+            if self.cleanup[1]:
+                delete_video(self.steps_config, self.__config)
 
             self.__end_time = time.time()
             completion_time = round(self.__end_time - self.__start_time, 2)
             logger.info(f"Pipeline {self.id} finished in {completion_time}s")
 
-            if self.cleanup:
+            if self.cleanup[1]:
                 self.__on_completion(self.__config, data)
+            if self.cleanup[0]:
                 self.__cleanup()
             return True
 
