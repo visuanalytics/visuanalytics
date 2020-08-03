@@ -57,13 +57,12 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         },
     })(InputBase);
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
-
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
     const [paramValues, setParamValues] = React.useState<ParamValues>(job.values);
-    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
+    const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
+    const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [error, setError] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
     const [success, setSucess] = React.useState<INotification>({
@@ -71,10 +70,9 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         stateType: "success",
         message: ""
     });
-    const [next, setNext] = React.useState(showTimeToNextDate(selectedSchedule));
 
     const handleSelectSchedule = (schedule: Schedule) => {
-        setSelectedSchedule(schedule);
+        setSchedule(schedule);
     }
 
     const handleSelectParam = (key: string, value: any) => {
@@ -96,16 +94,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
     }
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setNext(showTimeToNextDate(selectedSchedule));
-        }, 60000);
-        return () => clearInterval(interval);
-    }, [selectedSchedule]);
-
-    useEffect(() => {
-        setNext(showTimeToNextDate(selectedSchedule));
-    }, [selectedSchedule]);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -115,9 +104,20 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         body: JSON.stringify({
             jobName: jobName.trim(),
             values: toTypedValues(trimParamValues(paramValues), job.params),
-            schedule: withFormattedDates(selectedSchedule)
+            schedule: withFormattedDates(schedule)
         })
     }, handleEditSuccess, handleEditError);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNext(showTimeToNextDate(schedule));
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [schedule]);
+
+    useEffect(() => {
+        setNext(showTimeToNextDate(schedule));
+    }, [schedule]);
 
     const renderJobItem = (job: Job) => {
         const handleOpen = () => {
@@ -145,7 +145,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                 setError(true);
                 return;
             }
-            if (!validateSchedule(selectedSchedule)) {
+            if (!validateSchedule(schedule)) {
                 setErrorMessage("Es muss mindestens ein Wochentag ausgewählt werden");
                 setError(true);
                 return;
@@ -175,7 +175,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         <Button className={classes.inputButton} onClick={handleOpen}>
                             <InputField
                                 label="Zeitplan"
-                                value={showSchedule(selectedSchedule)}
+                                value={showSchedule(schedule)}
                                 InputProps={{
                                     disabled: state.edit,
                                     readOnly: true
@@ -258,7 +258,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                 <Container className={classes.backdropContent}>
                                     <Paper variant="outlined" className={classes.paper}>
                                         <ScheduleSelection
-                                            schedule={selectedSchedule}
+                                            schedule={schedule}
                                             selectScheduleHandler={handleSelectSchedule}
                                         />
                                         <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>

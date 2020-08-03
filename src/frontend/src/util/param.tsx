@@ -128,9 +128,7 @@ export const initSelectedValues = (params: Param[]) => {
                     selected[p.name] = false;
                 }
                 let subSelected = {}
-                if (p.subParams !== null) {
-                    subSelected = initSelectedValues(p.subParams)
-                }
+                subSelected = initSelectedValues(p.subParams)
                 selected = { ...selected, ...subSelected };
         }
     })

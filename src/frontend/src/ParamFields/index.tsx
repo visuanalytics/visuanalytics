@@ -105,7 +105,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     value={props.values[param.name]}
                     disabled={props.disabled}
                     select>
-                    {param.enumValues?.map((val) => (
+                    {param.enumValues.map((val) => (
                         <MenuItem key={val.value} value={val.value.toString()}>
                             {val.displayValue}
                         </MenuItem>
