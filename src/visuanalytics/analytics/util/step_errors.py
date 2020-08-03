@@ -29,7 +29,8 @@ class StepError(Exception):
         pos_msg = f"On '{self.desc}' {self.__type_msg('with Type ')}" if self.desc is not None else self.__type_msg(
             'On Type ')
 
-        if isinstance(self.__cause__, (StepKeyError, StepTypeError)):
+        if isinstance(self.__cause__,
+                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError)):
             # Invalid Key
             return f"{pos_msg}{self.__cause__}"
         elif isinstance(self.__cause__, KeyError):
