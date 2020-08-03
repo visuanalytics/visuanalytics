@@ -43,54 +43,6 @@ def get_job_list():
     return [_row_to_job(row) for row in res]
 
 
-def _row_to_job(row):
-    values = _get_values((row["params"]))
-    path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
-    with open(path_to_json, encoding="utf-8") as fh:
-        steps_params = json.loads(fh.read())["run_config"]
-    params = humps.camelize(_to_param_list(steps_params))
-    weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
-    return {
-        "jobId": row["job_id"],
-        "jobName": row["job_name"],
-        "topicName": row["steps_name"],
-        "topicId": row["steps_id"],
-        "params": params,
-        "values": values,
-        "schedule": {
-            "type": humps.camelize(row["type"]),
-            "date": row["date"],
-            "time": row["time"],
-            "weekdays": [int(w) for w in weekdays]
-        }
-    }
-
-
-def _get_values(param_string):
-    if param_string is None:
-        return []
-    kvts = [kvt.split(":") for kvt in param_string.split(",")]
-    values = {kvt[0]: _to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
-    return values
-
-
-def _to_typed_value(v, t):
-    if t in ["string", "number", "enum"]:
-        return v
-    if t in ["multiString", "multiNumber"]:
-        return v.split(";")
-    if t in ["boolean", "subParams"]:
-        return v == "True"
-
-
-def _to_param_list(run_config):
-    return [{**{"name": key},
-             **(value if value["type"] != "sub_params" else {**value,
-                                                             "sub_params": _to_param_list(value["sub_params"]),
-                                                             "type": humps.camelize(value["type"])})}
-            for key, value in run_config.items()]
-
-
 def insert_job(job):
     con = db.open_con_f()
     schedule_id = _insert_schedule(con, job["schedule"])
@@ -129,6 +81,65 @@ def update_job(job_id, updated_data):
     con.commit()
 
 
+def _row_to_job(row):
+    values = _get_values((row["params"]))
+    path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
+    with open(path_to_json, encoding="utf-8") as fh:
+        steps_params = json.loads(fh.read())["run_config"]
+    params = humps.camelize(_to_param_list(steps_params))
+    weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
+    return {
+        "jobId": row["job_id"],
+        "jobName": row["job_name"],
+        "topicName": row["steps_name"],
+        "topicId": row["steps_id"],
+        "params": params,
+        "values": values,
+        "schedule": {
+            "type": humps.camelize(row["type"]),
+            "date": row["date"],
+            "time": row["time"],
+            "weekdays": [int(w) for w in weekdays]
+        }
+    }
+
+
+def _insert_param_values(con, job_id, values):
+    id_key_values = [
+        (job_id,
+         k,
+         _to_untyped_value(v["value"], humps.decamelize(v["type"])),
+         humps.decamelize(v["type"])) for (k, v)
+        in values.items()]
+    con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
+
+
+def _get_values(param_string):
+    if param_string is None:
+        return []
+    kvts = [kvt.split(":") for kvt in param_string.split(",")]
+    values = {kvt[0]: _to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
+    return values
+
+
+def _to_untyped_value(v, t):
+    if t in ["string", "number", "enum"]:
+        return v
+    if t in ["multi_string", "multi_number"]:
+        return ";".join(v)
+    if t in ["boolean", "sub_params"]:
+        return str(v)
+
+
+def _to_typed_value(v, t):
+    if t in ["string", "number", "enum"]:
+        return v
+    if t in ["multi_string", "multi_number"]:
+        return v.split(";")
+    if t in ["boolean", "sub_params"]:
+        return v == "True"
+
+
 def _insert_schedule(con, schedule):
     schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
                               [humps.decamelize(schedule["type"]),
@@ -140,15 +151,13 @@ def _insert_schedule(con, schedule):
     return schedule_id
 
 
-def _insert_param_values(con, job_id, values):
-    id_key_values = [(job_id, k, _to_untyped_value(v["value"], v["type"]), v["type"]) for (k, v) in values.items()]
-    con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
-
-
-def _to_untyped_value(v, t):
-    if t in ["string", "number", "enum"]:
-        return v
-    if t in ["multiString", "multiNumber"]:
-        return ";".join(v)
-    if t in ["boolean", "subParams"]:
-        return str(v)
+def _to_param_list(run_config):
+    return [{**{"name": key},
+             **({**value, "type": humps.camelize(value["type"])}
+                if value["type"] != "sub_params"
+                else {**value,
+                 "sub_params": _to_param_list(
+                     value[
+                         "sub_params"]),
+             })}
+            for key, value in run_config.items()]

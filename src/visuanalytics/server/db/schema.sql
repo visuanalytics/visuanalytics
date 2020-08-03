@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on So. Aug. 2 11:15:40 2020
+-- File generated with SQLiteStudio v3.2.1 on Mo. Aug. 3 20:50:18 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -38,7 +38,7 @@ CREATE TABLE job_config
     [key]         TEXT NOT NULL,
     value         TEXT NOT NULL,
     type          VARCHAR CHECK (type IN
-                                 ("string", "number", "multiString", "multiNumber", "boolean", "enum", "subParams") )
+                                 ("string", "number", "multi_string", "multi_number", "boolean", "enum", "sub_params") )
 );
 
 
