@@ -1,7 +1,6 @@
 import React, { ChangeEvent } from "react"
 import { FormControl, FormGroup, FormControlLabel, Checkbox } from "@material-ui/core"
-import { getWeekdayLabel } from "../../util/getWeekdayLabel";
-import { Weekday, Schedule } from "../../util/schedule";
+import { Weekday, Schedule, getWeekdayLabel } from "../../util/schedule";
 
 interface WeekdayCheckboxProps {
     schedule: Schedule;

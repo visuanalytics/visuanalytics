@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
-import {Param} from "../util/param";
-import {Button, Container, Fade, InputBase, Modal, Paper, withStyles} from "@material-ui/core";
+import React, { useEffect } from "react";
+import { ParamValues, toTypedValues, trimParamValues } from "../util/param";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import {AccordionSummary, useStyles, InputField } from "./style";
+import { AccordionSummary, useStyles, InputField } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -16,14 +16,11 @@ import Backdrop from "@material-ui/core/Backdrop";
 import { ContinueButton } from "../JobCreate/ContinueButton";
 import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
-import { parse, isPast, addDays, setDay, formatDistanceToNowStrict, getDay, format } from "date-fns";
-import de from "date-fns/esm/locale/de";
 import { useCallFetch } from "../Hooks/useCallFetch";
-import { getWeekdayLabel } from "../util/getWeekdayLabel";
 import { ParamFields } from "../ParamFields";
-import { Schedule, Weekday } from "../util/schedule";
+import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import {Notification, TMessageStates} from "../util/Notification";
+import { Notification, TMessageStates } from "../util/Notification";
 
 
 interface Props {
@@ -37,7 +34,7 @@ interface INotification {
     message: string
 }
 
-export const JobItem: React.FC<Props> = ({job, getJobs}) => {
+export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const classes = useStyles();
 
     const [state, setState] = React.useState({
@@ -48,7 +45,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
 
     const NameInput = withStyles({
         root: {
-             cursor:"pointer",
+            cursor: "pointer",
         },
         input: {
             cursor: state.edit ? 'pointer' : 'text',
@@ -60,94 +57,28 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         },
     })(InputBase);
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
-    const [selectedParams, setSelectedParams] = React.useState<Param[]>(job.params);
-    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>(job.schedule
-        /*
-        type: job.schedule.type,
-    //    weekdays: job.schedule.weekdays.map(w => Number(w)),
-    //    date: job.schedule.date ? parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date()) : null,
-        time: parse(String(job.schedule.time), "H:m", new Date()),
-    */
-    );
+    const [paramValues, setParamValues] = React.useState<ParamValues>(job.values);
+    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [error, setError] = React.useState(false);
     const [success, setSucess] = React.useState<INotification>({
         open: false,
         stateType: "success",
         message: ""
-        }
-    );
+    });
 
-    // handler for schedule selection logic
     const handleSelectSchedule = (schedule: Schedule) => {
         setSelectedSchedule(schedule);
     }
-    /*
-    const handleSelectDaily = () => {
-        // setSelectedSchedule({ ...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [], })
-        setSelectedSchedule({ type: "daily", time: selectedSchedule.time })
-    }
-    const handleSelectWeekly = () => {
-        // setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [], })
-        setSelectedSchedule({ type: "weekly", time: selectedSchedule.time, weekdays: [] })
-    }
-    const handleSelectOnDate = () => {
-        // TODO improve
-        //   if (!selectedSchedule.date) selectedSchedule.date = new Date();
-        //   setSelectedSchedule({ ...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [], })
-        setSelectedSchedule({ type: "onDate", time: selectedSchedule.time, date: new Date() })
-    }
-    const handleAddWeekDay = (d: Weekday) => {
-        if (selectedSchedule.type === "weekly") {
-            const weekdays = [...selectedSchedule.weekdays, d];
-            setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
-        }
-    }
-    const handleRemoveWeekday = (d: Weekday) => {
-        if (selectedSchedule.type === "weekly") {
-            const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-            setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
-        }
-    }
-    const handleSelectDate = (date: Date) => {
-        if (selectedSchedule.type === "onDate") {
-            setSelectedSchedule({ ...selectedSchedule, date: date })
-        }
-    }
-    const handleSelectTime = (time: Date) => {
-        setSelectedSchedule({ ...selectedSchedule, time: time })
-    }
-    const handleAddWeekDay = (d: Weekday) => {
-        const weekdays = [...selectedSchedule.weekdays, d];
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
-    }
-    const handleRemoveWeekday = (d: Weekday) => {
-        const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-        setSelectedSchedule({ ...selectedSchedule, weekdays: weekdays });
-    }
-    const handleSelectDate = (date: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, date: date })
-    }
-    const handleSelectTime = (time: Date | null) => {
-        setSelectedSchedule({ ...selectedSchedule, time: time })
-    }
-    */
-    const handleSelectParam = (key: string, value: string) => {
-        const newList = selectedParams?.map((e: Param) => {
-            if (e.name === key) {
-                return { ...e, selected: value };
-            }
-            return e;
-        })
-        setSelectedParams(newList);
-    }
 
-    const handleParamChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        handleSelectParam(name, event.target.value);
+    const handleSelectParam = (key: string, value: any) => {
+        const updated = { ...paramValues }
+        updated[key] = value;
+        setParamValues(updated);
     }
 
     const handleJobName = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -155,67 +86,26 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     }
 
     const handleEditError = () => {
-        setSucess({open: true,stateType: "error", message: "Bearbeitung fehlgeschlagen"})
+        setSucess({ open: true, stateType: "error", message: "Bearbeitung fehlgeschlagen" })
     }
 
     const handleEditSuccess = () => {
         getJobs()
-        setSucess({open: true, stateType: "success", message: "Job erfolgreich geändert"})
+        setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
     }
 
-    const showTime = () => {
-        if (job.schedule.type === "daily") {
-            return "täglich, " + job.schedule.time + " Uhr";
-        } else if (job.schedule.type === "onDate") {
-            return format(parse(String(job.schedule.date), "y-MM-dd", new Date()), "dd.MM.yyyy") + ", " + job.schedule.time + " Uhr";
-        } else if (job.schedule.type === "weekly") {
-            return "wöchentlich: " + job.schedule.weekdays.map(w => getWeekdayLabel(Number(w))) + ", " + job.schedule.time + " Uhr";
-        }
-    }
-
-    const getHighestNumber = (list: number[], weekday: number) => {
-        var nextNum: number = 7;
-        for (var i = 0; i < list.length; i++) {
-            if (list[i] > weekday && list[i] < nextNum) {
-                nextNum = list[i];
-            }
-        }
-        return nextNum;
-    }
-
-    // TODO May move to util component
-    const getNextDate = () => {
-        if (job.schedule.type === "daily") {
-            //     return parse(`${job.schedule.time}-${job.schedule.date}`, "H:m-y-MM-dd", new Date());
-        } else if (job.schedule.type === "weekly") {
-            const time = parse(String(job.schedule.time), "H:m", new Date());
-            return isPast(time) ? addDays(time, 1) : time
-        } else if (job.schedule.type === "onDate") {
-            const curWeekday = getDay(new Date()) - 1;
-            //       const time = parse(String(job.schedule.time), "H:m", setDay(new Date(), Number(getHighestNumber(job.schedule.weekdays, curWeekday)) + 1));
-            //       return isPast(time) ? addDays(time, 7) : time;
-        } else {
-            return new Date();
-        }
-        return new Date();
-    }
-
-    const nextJob = () => {
-        return formatDistanceToNowStrict(getNextDate(), { locale: de, addSuffix: true });
-    }
-
-    const [next, setNext] = React.useState(nextJob());
+    const [next, setNext] = React.useState(showTimeToNextDate(selectedSchedule));
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setNext(nextJob);
+            setNext(showTimeToNextDate(selectedSchedule));
         }, 60000);
         return () => clearInterval(interval);
-    }, [nextJob]);
+    }, []);
 
     useEffect(() => {
-        setNext(nextJob);
-    }, [nextJob()]);
+        setNext(showTimeToNextDate(selectedSchedule));
+    }, []);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -224,23 +114,12 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         },
         body: JSON.stringify({
             jobName: jobName,
-            params: selectedParams,
-            schedule: {
-                /*
-                daily: selectedSchedule.daily,
-                weekly: selectedSchedule.weekly,
-                onDate: selectedSchedule.onDate,
-                time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
-                weekdays: selectedSchedule.weekdays,
-                date: selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date, "yyyy-MM-dd") : null
-                */
-            }
+            values: toTypedValues(trimParamValues(paramValues), job.params),
+            schedule: withFormattedDates(selectedSchedule)
         })
     }, handleEditSuccess, handleEditError);
 
     const renderJobItem = (job: Job) => {
-        const paramInfo: Param[] = selectedParams;
-
         const handleOpen = () => {
             setOpen(true);
         };
@@ -285,7 +164,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         <Button className={classes.inputButton} onClick={handleOpen}>
                             <InputField
                                 label="Zeitplan"
-                                value={showTime()}
+                                value={showSchedule(selectedSchedule)}
                                 InputProps={{
                                     disabled: state.edit,
                                     readOnly: true
@@ -313,24 +192,24 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             setError(false);
         }
         const handleCloseSuccess = () => {
-            setSucess({open: false, stateType: success.stateType, message: success.message});
+            setSucess({ open: false, stateType: success.stateType, message: success.message });
         }
 
         return (
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
-                        {expanded ? <ExpandLess className={classes.expIcon}/> :
-                            <ExpandMore className={classes.expIcon}/>}
+                        {expanded ? <ExpandLess className={classes.expIcon} /> :
+                            <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>#{job.jobId}
-                        <NameInput
-                            autoFocus={true}
-                            value={jobName}
-                            readOnly={state.edit}
-                            onClick={state.edit ? () => {} : (event) => event.stopPropagation()}
-                            onChange={handleJobName}
-                        >
-                        {job.jobName}</NameInput></Typography>
+                            <NameInput
+                                // autoFocus={true}
+                                value={jobName}
+                                readOnly={state.edit}
+                                onClick={state.edit ? () => { } : (event) => event.stopPropagation()}
+                                onChange={handleJobName}
+                            >
+                                {job.jobName}</NameInput></Typography>
                         <Notification handleClose={handleCloseError} open={error} message={"Job Name nicht ausgefüllt"} type={"error"} />
                         <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message} type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
@@ -378,10 +257,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                         <Grid item md={6}>
                             <div>
                                 <ParamFields
-                                    params={paramInfo}
-                                    values={{}}
+                                    params={job.params}
+                                    values={paramValues}
                                     selectParamHandler={handleSelectParam}
-                                    disabled={true}
+                                    disabled={state.edit}
                                     required={false}
                                 />
                             </div>
