@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {useStyles} from './style';
-import {ContinueButton} from './ContinueButton';
-import {BackButton} from './BackButton';
-import {ParamSelection} from './ParamSelection';
-import {TopicSelection} from './TopicSelection';
-import {ScheduleSelection} from './ScheduleSelection';
-import {GreyDivider} from './GreyDivider';
+import { useStyles } from './style';
+import { ContinueButton } from './ContinueButton';
+import { BackButton } from './BackButton';
+import { ParamSelection } from './ParamSelection';
+import { TopicSelection } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
 import {
     Param,
     ParamValues,
@@ -17,10 +17,10 @@ import {
     initSelectedValues,
     toTypedValues
 } from '../util/param';
-import {Fade} from '@material-ui/core';
-import {useCallFetch} from '../Hooks/useCallFetch';
-import {Schedule, withFormattedDates} from '../util/schedule';
-import {getUrl} from '../util/fetchUtils';
+import { Fade } from '@material-ui/core';
+import { useCallFetch } from '../Hooks/useCallFetch';
+import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
+import { getUrl } from '../util/fetchUtils';
 
 
 export default function JobCreate() {
@@ -86,7 +86,7 @@ export default function JobCreate() {
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
         if (activeStep === 2) {
-            const allSet = schedule.type !== "weekly" || (schedule.type === "weekly" && schedule.weekdays.length > 0);
+            const allSet = validateSchedule(schedule);
             setSelectComplete(allSet);
         }
     }, [schedule, activeStep])
@@ -108,85 +108,13 @@ export default function JobCreate() {
         setJobName(jobName);
     }
 
-    const handleFetchParams = (params: Param[]) => {
-        const params2: Param[] = [
-            {
-                name: "city_name",
-                displayName: "Ort",
-                type: "string",
-                optional: false,
-            },
-            {
-                name: "p_code",
-                displayName: "PLZ",
-                type: "number",
-                optional: true,
-            },
-            {
-                name: "twitter",
-                displayName: "Twitter-Wordcloud generieren",
-                type: "subParams",
-                optional: true,
-                subParams: [
-                    {
-                        name: "banned",
-                        displayName: "Verbotene Wörter",
-                        type: "multiString",
-                        optional: false,
-                    },
-                    {
-                        name: "hashtags",
-                        displayName: "Hashtags",
-                        type: "multiString",
-                        optional: false,
-                    }
-                ]
-            },
-            {
-                name: "read",
-                displayName: "Welche Angaben sollen explizit im Video genannt werden?",
-                type: "subParams",
-                optional: false,
-                subParams: [
-                    {
-                        name: "windspeed",
-                        displayName: "Windgeschwindigkeit",
-                        type: "boolean",
-                        optional: false,
-                    },
-                    {
-                        name: "temp",
-                        displayName: "Temperatur",
-                        type: "boolean",
-                        optional: false,
-                    }
-                ]
-            },
-
-            {
-                name: "bla",
-                displayName: "Bla",
-                type: "enum",
-                optional: true,
-                enumValues: [
-                    {
-                        value: "hallo",
-                        displayValue: "Hallo"
-                    },
-                    {
-                        value: "hola",
-                        displayValue: "Hola"
-                    }
-                ]
-            }
-        ]
-        setParamList(params2);
-        setParamValues(initSelectedValues(params2));
-    }
-
     // handler for param selection logic
+    const handleFetchParams = (params: Param[]) => {
+        setParamList(params);
+        setParamValues(initSelectedValues(params));
+    }
     const handleSelectParam = (key: string, value: any) => {
-        const updated = {...paramValues}
+        const updated = { ...paramValues }
         updated[key] = value;
         setParamValues(updated);
     }
@@ -218,7 +146,7 @@ export default function JobCreate() {
                         topicId={topicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName}/>
+                        enterJobNameHandler={handleEnterJobName} />
                 );
             case 1:
                 return (
@@ -227,7 +155,7 @@ export default function JobCreate() {
                         values={paramValues}
                         params={paramList}
                         fetchParamHandler={handleFetchParams}
-                        selectParamHandler={handleSelectParam}/>
+                        selectParamHandler={handleSelectParam} />
                 )
             case 2:
                 return (
@@ -261,16 +189,16 @@ export default function JobCreate() {
                         <div>
                             <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                         </div>
-                        <GreyDivider/>
+                        <GreyDivider />
                         {getSelectPanel(activeStep)}
-                        <GreyDivider/>
+                        <GreyDivider />
                         <div className={classes.paddingSmall}>
                             <span>
-                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
-                                                disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
+                                    disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
