@@ -90,7 +90,7 @@ export const showSchedule = (schedule: Schedule) => {
         return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "hh:mm") + " Uhr";
     } else if (schedule.type === "weekly") {
         if (schedule.weekdays.length === 0) {
-            return "wöchentlich: " + "kein Wochentag ausgewählt";
+            return "wöchentlich: kein Wochentag ausgewählt";
         }
         const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
         return "wöchentlich: " + weekdays + ", " + format(schedule.time, "hh:mm") + " Uhr";
