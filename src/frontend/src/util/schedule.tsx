@@ -94,7 +94,6 @@ export const showSchedule = (schedule: Schedule) => {
     }
 }
 
-
 export const getWeekdayLabel = (day: Weekday) => {
     switch (day) {
         case Weekday.MONDAY: return "Mo";
@@ -109,4 +108,8 @@ export const getWeekdayLabel = (day: Weekday) => {
 
 export const showTimeToNextDate = (schedule: Schedule) => {
     return formatDistanceToNowStrict(getNextJobDate(schedule), { locale: de, addSuffix: true });
+}
+
+export const validateSchedule = (schedule: Schedule) => {
+    return schedule.type !== "weekly" || (schedule.type === "weekly" && schedule.weekdays.length > 0);
 }

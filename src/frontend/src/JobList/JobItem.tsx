@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ParamValues, toTypedValues, trimParamValues } from "../util/param";
+import { ParamValues, toTypedValues, trimParamValues, validateParamValues } from "../util/param";
 import { Button, Container, Fade, InputBase, Modal, Paper, withStyles } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles, InputField } from "./style";
@@ -18,7 +18,7 @@ import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { ParamFields } from "../ParamFields";
-import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate } from "../util/schedule";
+import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
 import { Notification, TMessageStates } from "../util/Notification";
 
@@ -65,11 +65,13 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [paramValues, setParamValues] = React.useState<ParamValues>(job.values);
     const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [error, setError] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
     const [success, setSucess] = React.useState<INotification>({
         open: false,
         stateType: "success",
         message: ""
     });
+    const [next, setNext] = React.useState(showTimeToNextDate(selectedSchedule));
 
     const handleSelectSchedule = (schedule: Schedule) => {
         setSelectedSchedule(schedule);
@@ -94,18 +96,16 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
     }
 
-    const [next, setNext] = React.useState(showTimeToNextDate(selectedSchedule));
-
     useEffect(() => {
         const interval = setInterval(() => {
             setNext(showTimeToNextDate(selectedSchedule));
         }, 60000);
         return () => clearInterval(interval);
-    }, []);
+    }, [selectedSchedule]);
 
     useEffect(() => {
         setNext(showTimeToNextDate(selectedSchedule));
-    }, []);
+    }, [selectedSchedule]);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -136,6 +136,17 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
+                setErrorMessage("Jobname nicht ausgefüllt");
+                setError(true);
+                return;
+            }
+            if (!validateParamValues(paramValues, job.params)) {
+                setErrorMessage("Pflichtparameter nicht gesetzt");
+                setError(true);
+                return;
+            }
+            if (!validateSchedule(selectedSchedule)) {
+                setErrorMessage("Es muss mindestens ein Wochentag ausgewählt werden");
                 setError(true);
                 return;
             }
@@ -210,7 +221,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                 onChange={handleJobName}
                             >
                                 {job.jobName}</NameInput></Typography>
-                        <Notification handleClose={handleCloseError} open={error} message={"Job Name nicht ausgefüllt"} type={"error"} />
+                        <Notification handleClose={handleCloseError} open={error} message={errorMessage} type={"error"} />
                         <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message} type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton style={{ display: state.editIcon }} className={classes.button} onClick={handleEditClick}>
