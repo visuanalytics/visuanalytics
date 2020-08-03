@@ -782,32 +782,22 @@
       }
     ]
   },
-  "run_config": [
-    {
-      "name": "stopwords",
+  "run_config": {
+    "stopwords": {
+      "type": "multi_string",
       "display_name": "Aus Wordcloud ausschließen",
-      "possible_values": [],
+      "enum_values": [],
       "default_value": ""
     },
-    {
-      "name": "normalize_words",
+    "normalize_words": {
+      "type": "boolean",
       "display_name": "Wörter normalisieren",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "aktiviert"
-        },
-        {
-          "value": false,
-          "display_value": "deaktiviert"
-        }
-      ],
       "default_value": true
     },
-    {
-      "name": "colormap_words",
+    "colormap_words": {
+      "type": "enum",
       "display_name": "Farben der Wörter",
-      "possible_values": [
+      "enum_values": [
         {
           "value": "magma",
           "display_value": "magma"
@@ -827,25 +817,15 @@
       ],
       "default_value": "viridis"
     },
-    {
-      "name": "color_func",
-      "display_name": "Farbverlauf",
-      "possible_values": [
-        {
-          "value": false,
-          "display_value": "Standard verwenden"
-        },
-        {
-          "value": true,
-          "display_value": "andere Farben auswählen"
-        }
-      ],
-      "default_value": false
+    "color_func": {
+      "type": "boolean",
+      "display_name": "Standardfarbverlauf verwenden",
+      "default_value": true
     },
-    {
-      "name": "color_func_words",
+    "color_func_words": {
+      "type": "enum",
       "display_name": "Farbverlauf der Wörter",
-      "possible_values": [
+      "enum_values": [
         {
           "value": "245 46 5 35",
           "display_value": "Blau"
@@ -877,10 +857,10 @@
       ],
       "default_value": "0 0 0 40"
     },
-    {
-      "name": "shape",
+    "shape": {
+      "type": "enum",
       "display_name": "Form der Wordcloud",
-      "possible_values": [
+      "enum_values": [
         {
           "value": "circle",
           "display_value": "Kreis"
@@ -892,7 +872,7 @@
       ],
       "default_value": "circle"
     }
-  ],
+  },
   "presets": {
   }
 }
