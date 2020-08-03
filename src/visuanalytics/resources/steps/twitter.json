@@ -785,7 +785,7 @@
   "run_config": {
     "stopwords": {
       "type": "multi_string",
-      "display_name": "Aus Wordcloud ausschließen",
+      "display_name": "Stoppwörter",
       "enum_values": [],
       "default_value": ""
     },
