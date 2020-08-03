@@ -1045,7 +1045,7 @@
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day_three",
+          "description": "week_day_3",
           "type": "text",
           "pos_x": 347,
           "pos_y": 285,
@@ -1053,7 +1053,7 @@
           "pattern": "{_req|data|2|weekday}"
         },
         {
-          "description": "week_day_four_five",
+          "description": "week_day_4_5",
           "type": "text_array",
           "pos_x": [
             935,
@@ -1373,7 +1373,7 @@
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day_three_four",
+          "description": "week_day_3_4",
           "type": "text_array",
           "pos_x": [
             347,
@@ -1390,7 +1390,7 @@
           ]
         },
         {
-          "description": "week_day_five",
+          "description": "week_day_5",
           "type": "text",
           "pos_x": 1567,
           "pos_y": 285,
