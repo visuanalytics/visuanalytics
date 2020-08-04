@@ -19,20 +19,22 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
-                <Load data={props.params} />
-                {props.params.length !== 0
-                    ?
-                    <ParamFields
-                        params={props.params}
-                        values={props.values}
-                        selectParamHandler={props.selectParamHandler}
-                        disabled={false}
-                        required={true}
-                    />
-                    :
-                    <div className={classes.paddingSmall} style={{ textAlign: "center" }}>
-                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                <div className={classes.paddingS}>
+                    <Load data={props.params} />
+                    {props.params.length !== 0
+                        ?
+                        <ParamFields
+                            params={props.params}
+                            values={props.values}
+                            selectParamHandler={props.selectParamHandler}
+                            disabled={false}
+                            required={true}
+                        />
+                        :
+                        <div className={classes.paddingM} style={{ textAlign: "center" }}>
+                            Für dieses Thema stehen keine Parameter zur Verfügung.
                     </div>}
+                </div>
             </div>
         </Fade>
 

@@ -1,10 +1,10 @@
 import React from "react";
-import {ListItem, Divider, List, TextField, Fade} from "@material-ui/core";
-import {TopicPanel} from "./TopicPanel";
-import {useStyles} from "../style";
-import {useFetch} from "../../Hooks/useFetch";
-import {Param} from "../../util/param";
-import {Load} from "../../util/Load";
+import { ListItem, Divider, List, TextField, Fade } from "@material-ui/core";
+import { TopicPanel } from "./TopicPanel";
+import { useStyles } from "../style";
+import { useFetch } from "../../Hooks/useFetch";
+import { Param } from "../../util/param";
+import { Load } from "../../util/Load";
 import { getUrl } from "../../util/fetchUtils";
 
 export interface Topic {
@@ -36,8 +36,8 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     topic={topic}
                     topicId={props.topicId}
                     selectTopicHandler={props.selectTopicHandler}
-                    fetchParamHandler={props.fetchParamHandler}/>
-                <Divider/>
+                    fetchParamHandler={props.fetchParamHandler} />
+                <Divider />
             </ListItem>
         );
     }
@@ -45,18 +45,18 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
-                <Load data={topics}/>
+                <Load data={topics} />
                 <List>
                     {topics?.map(t => renderTopicPanel(t))}
                 </List>
-                <Divider/>
-                <div className={classes.paddingSmall}>
+                <Divider />
+                <div className={classes.paddingM}>
                     <TextField className={classes.inputFields}
-                               required
-                               value={props.jobName}
-                               variant="outlined"
-                               label="Job-Name"
-                               onChange={handleInput}
+                        required
+                        value={props.jobName}
+                        variant="outlined"
+                        label="Job-Name"
+                        onChange={handleInput}
                     />
                 </div>
             </div>

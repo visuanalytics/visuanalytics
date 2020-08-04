@@ -23,11 +23,11 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const classes = useStyles();
 
     return (
-        <div>
+        <div >
             {
                 props.params.map(p => (
                     <div key={p.name}>
-                        <div className={classes.paddingSmall}>
+                        <div className={p.type === "boolean" ? classes.paddingXS : classes.paddingS}>
                             <ParamField
                                 param={p}
                                 values={props.values}
@@ -36,7 +36,11 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                 required={props.required}
                             />
                         </div>
-                        {(p.type === "subParams" && (props.values[p.name] || !p.optional)) && <Divider />}
+                        {(p.type === "subParams" && (props.values[p.name] || !p.optional))
+                            &&
+                            <div className={classes.paddingBottomS}>
+                                <Divider />
+                            </div>}
                     </div>
                 ))
             }
@@ -70,7 +74,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         multiline={multiline}
                         onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
                         variant="outlined"
-                        value={props.values[param.name]}
+                        value={props.values[param.name] || ""}
                         disabled={props.disabled}
                         label={param.displayName}
                     />
@@ -98,7 +102,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     onChange={e => handleChange(e, param.name)}
                     variant="outlined"
                     label={param.displayName}
-                    value={props.values[param.name]}
+                    value={props.values[param.name] || ""}
                     disabled={props.disabled}
                     select>
                     {param.enumValues.map((val) => (
@@ -111,9 +115,9 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
         case "subParams":
             return (
                 <div>
-                    {param.optional
-                        ?
-                        <div>
+                    <div className={classes.paddingS}>
+                        {param.optional
+                            ?
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -125,10 +129,10 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
-                        </div>
-                        :
-                        <b>{param.displayName}</b>
-                    }
+                            :
+                            <b>{param.displayName}</b>
+                        }
+                    </div>
                     <Collapse in={!param.optional || props.values[param.name]}>
                         <ParamFields
                             params={param.subParams}
