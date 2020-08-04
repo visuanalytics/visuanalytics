@@ -105,20 +105,14 @@ def wordcloud(values: dict, prev_paths, presets: dict, step_data: StepData):
     if parameter.get("figure", None) is not None:
         figure = step_data.format(parameter["figure"], {})
         if figure == "circle":
-            x0 = step_data.get_data_num(parameter["width"], {})
-            y0 = step_data.get_data_num(parameter["height"], {})
+            x0 = wordcloud_parameter["width"]
+            y0 = wordcloud_parameter["height"]
             x, y = np.ogrid[:x0, :y0]
 
             mask = (x - (x0 / 2)) ** 2 + (y - (y0 / 2)) ** 2 > 500 ** 2
 
             mask = 255 * mask.astype(int)
             wordcloud_parameter["mask"] = mask
-            wordcloud_parameter["width"] = x0
-            wordcloud_parameter["height"] = y0
-
-        elif figure == "square":
-            wordcloud_parameter["width"] = step_data.get_data(parameter["width"], {})
-            wordcloud_parameter["height"] = step_data.get_data(parameter["height"], {})
 
     if values.get("use_global_stopwords", None) is not None:
         try:
