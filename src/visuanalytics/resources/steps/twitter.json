@@ -795,11 +795,6 @@
       "optional": true,
       "default_value": []
     },
-    "normalize_words": {
-      "type": "boolean",
-      "display_name": "Wörter normalisieren",
-      "default_value": true
-    },
     "colormap_words": {
       "type": "enum",
       "display_name": "Farben der Wörter",
@@ -884,15 +879,20 @@
       ],
       "default_value": "circle"
     },
+    "normalize_words": {
+      "type": "boolean",
+      "display_name": "Wörter normalisieren",
+      "default_value": true
+    },
     "width_wordcloud": {
       "type": "number",
-      "display_value": "Breite der Wordcloud (in Pixeln)",
+      "display_name": "Breite der Wordcloud (in Pixeln)",
       "optional": true,
       "default_value": 1000
     },
     "height_wordcloud": {
       "type": "number",
-      "display_value": "Höhe der Wordcloud (in Pixeln)",
+      "display_name": "Höhe der Wordcloud (in Pixeln)",
       "optional": true,
       "default_value": 1000
     }
