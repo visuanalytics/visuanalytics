@@ -1,7 +1,5 @@
 
-# Statusberichte <!-- omit in toc -->
-
-
+# Statusberichte 
 
 ## Statusbericht 05.05.2020 (Planung)
 ### Zusammenfassung

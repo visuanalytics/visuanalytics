@@ -161,7 +161,9 @@ Führt eine **https**-Request durch.
 
 Die zu verwendende `URL`, um die API-Request zu senden.
 
-> Formatted Strings werden unterstützt.
+```note::
+  Formatierte Strings werden unterstützt.
+```
 
 **`api_key_name`** _(Optional)_:
 
