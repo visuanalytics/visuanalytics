@@ -692,3 +692,17 @@ def normalize_words(values: dict, data: StepData):
                 new_value.append(each)
 
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def split_string(values: dict, data: StepData):
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        delimiter = data.format(values.get("delimiter", " "), values)
+        new_key = get_new_keys(values, idx)
+
+        if data.get_data_bool(values.get("ignore_case", False), values):
+            new_value = re.split(delimiter, value, flags=re.IGNORECASE)
+        else:
+            new_value = re.split(delimiter, value)
+        data.insert_data(new_key, new_value, values)
