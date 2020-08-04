@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider } from '@material-ui/core';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues } from '../util/param';
 
@@ -36,7 +36,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                 required={props.required}
                             />
                         </div>
-                        {(p.type === "subParams") && <Divider />}
+                        {(p.type === "subParams" && (props.values[p.name] || !p.optional)) && <Divider />}
                     </div>
                 ))
             }
@@ -47,8 +47,6 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
 const ParamField: React.FC<ParamFieldProps> = (props) => {
     const param = props.param;
     const classes = useStyles();
-
-    const makeSubParamLabel = (name: string) => (<label style={{ fontSize: 18 }}>{name}</label>)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         props.selectParamHandler(name, event.target.value);
@@ -115,23 +113,21 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                 <div>
                     {param.optional
                         ?
-                        <div className={classes.paddingSmall}>
+                        <div>
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={props.values[param.name]}
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
-                                label={makeSubParamLabel(param.displayName)}
+                                label={<b>{param.displayName}</b>}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                         </div>
                         :
-                        <div className={classes.paddingSmall}>
-                            {makeSubParamLabel(param.displayName)}
-                        </div>
+                        <b>{param.displayName}</b>
                     }
                     <Collapse in={!param.optional || props.values[param.name]}>
                         <ParamFields
