@@ -64,6 +64,15 @@ html_theme_options = {
     'style_nav_header_background': 'white'
 }
 
+# Display edit on github
+html_context = {
+    "display_github": True,
+    "github_user": "SWTP-SS20-Kammer-2",
+    "github_repo": "Data-Analytics",
+    "github_version": "master",
+    "conf_py_path": "/Docs/",
+}
+
 html_logo = '_static/images/logo.png'
 html_favicon = '_static/images/favicon.ico'
 
