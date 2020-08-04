@@ -31,7 +31,6 @@ export const Load: React.FC<Props> = ({
         <Grid container item justify="center">
           <ReportProblemOutlinedIcon
             className={classes.waringIcon}
-            color={"disabled"}
             fontSize={"default"}
           />
         </Grid>
