@@ -25,7 +25,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     return (
         <div>
             {
-                props.params.filter(p => props.required || !p.optional).map(p => (
+                props.params.map(p => (
                     <div key={p.name}>
                         <div className={classes.paddingSmall}>
                             <ParamField
