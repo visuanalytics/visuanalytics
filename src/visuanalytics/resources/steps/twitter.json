@@ -783,11 +783,17 @@
     ]
   },
   "run_config": {
+    "hashtags": {
+      "type": "multi_string",
+      "display_name": "Hashtags",
+      "optional": false,
+      "default_value": []
+    },
     "stopwords": {
       "type": "multi_string",
       "display_name": "Stoppwörter",
-      "enum_values": [],
-      "default_value": ""
+      "optional": true,
+      "default_value": []
     },
     "normalize_words": {
       "type": "boolean",
@@ -797,6 +803,7 @@
     "colormap_words": {
       "type": "enum",
       "display_name": "Farben der Wörter",
+      "optional": true,
       "enum_values": [
         {
           "value": "magma",
@@ -818,48 +825,53 @@
       "default_value": "viridis"
     },
     "color_func": {
-      "type": "boolean",
-      "display_name": "Standardfarbverlauf verwenden",
-      "default_value": true
-    },
-    "color_func_words": {
-      "type": "enum",
-      "display_name": "Farbverlauf der Wörter",
-      "enum_values": [
-        {
-          "value": "245 46 5 35",
-          "display_value": "Blau"
-        },
-        {
-          "value": "145 46 5 35",
-          "display_value": "Grün"
-        },
-        {
-          "value": "353 80 20 50",
-          "display_value": "Rot"
-        },
-        {
-          "value": "59 80 45 73",
-          "display_value": "Gelb"
-        },
-        {
-          "value": "0 0 60 100",
-          "display_value": "Grau"
-        },
-        {
-          "value": "0 0 0 40",
-          "display_value": "Schwarz"
-        },
-        {
-          "value": "281 66 25 70",
-          "display_value": "Lila"
+      "type": "sub_params",
+      "display_name": "Farbverlauf",
+      "optional": true,
+      "sub_params": {
+        "color_func_words": {
+          "type": "enum",
+          "display_name": "Farbe",
+          "optional": false,
+          "enum_values": [
+            {
+              "value": "245 46 5 35",
+              "display_value": "Blau"
+            },
+            {
+              "value": "145 46 5 35",
+              "display_value": "Grün"
+            },
+            {
+              "value": "353 80 20 50",
+              "display_value": "Rot"
+            },
+            {
+              "value": "59 80 45 73",
+              "display_value": "Gelb"
+            },
+            {
+              "value": "0 0 60 100",
+              "display_value": "Grau"
+            },
+            {
+              "value": "0 0 0 40",
+              "display_value": "Schwarz"
+            },
+            {
+              "value": "281 66 25 70",
+              "display_value": "Lila"
+            }
+          ],
+          "default_value": "0 0 0 40"
         }
-      ],
-      "default_value": "0 0 0 40"
+      },
+      "default_value": false
     },
-    "shape": {
+    "figure": {
       "type": "enum",
       "display_name": "Form der Wordcloud",
+      "optional": true,
       "enum_values": [
         {
           "value": "circle",
@@ -871,8 +883,19 @@
         }
       ],
       "default_value": "circle"
+    },
+    "width_wordcloud": {
+      "type": "number",
+      "display_value": "Breite der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
+    },
+    "height_wordcloud": {
+      "type": "number",
+      "display_value": "Höhe der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
     }
   },
-  "presets": {
-  }
+  "presets": {}
 }
