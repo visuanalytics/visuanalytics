@@ -1,32 +1,27 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {useStyles} from './style';
-import {ContinueButton} from './ContinueButton';
-import {BackButton} from './BackButton';
-import {ParamSelection} from './ParamSelection';
-import {TopicSelection} from './TopicSelection';
-import {ScheduleSelection} from './ScheduleSelection';
-import {GreyDivider} from './GreyDivider';
-import {Param} from '../util/param';
-import {Fade} from '@material-ui/core';
-import {useCallFetch} from '../Hooks/useCallFetch';
-import {format} from "date-fns";
+import { useStyles } from './style';
+import { ContinueButton } from './ContinueButton';
+import { BackButton } from './BackButton';
+import { ParamSelection } from './ParamSelection';
+import { TopicSelection } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
+import {
+    Param,
+    ParamValues,
+    trimParamValues,
+    validateParamValues,
+    initSelectedValues,
+    toTypedValues
+} from '../util/param';
+import { Fade } from '@material-ui/core';
+import { useCallFetch } from '../Hooks/useCallFetch';
+import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
 import { getUrl } from '../util/fetchUtils';
 
-export enum Weekday {
-    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
-}
-
-export interface Schedule {
-    daily: boolean,
-    weekly: boolean,
-    onDate: boolean,
-    weekdays: Weekday[],
-    date: Date | null,
-    time: Date | null
-}
 
 export default function JobCreate() {
     const classes = useStyles();
@@ -37,19 +32,16 @@ export default function JobCreate() {
     const [finished, setFinished] = React.useState(false);
 
     // states for topic selection logic
-    const [selectedTopicId, setSelectedTopicId] = React.useState(-1);
+    const [topicId, setTopicId] = React.useState(-1);
     const [jobName, setJobName] = React.useState("");
 
     // state for param selection logic
-    const [selectedParams, setSelectedParams] = React.useState<Param[]>([]);
+    const [paramList, setParamList] = React.useState<Param[]>([]);
+    const [paramValues, setParamValues] = React.useState<ParamValues>({});
 
     // state for schedule selection logic
-    const [selectedSchedule, setSelectedSchedule] = React.useState<Schedule>({
-        daily: true,
-        weekly: false,
-        onDate: false,
-        weekdays: [],
-        date: new Date(),
+    const [schedule, setSchedule] = React.useState<Schedule>({
+        type: "daily",
         time: new Date()
     });
 
@@ -60,19 +52,11 @@ export default function JobCreate() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            topicId: selectedTopicId,
+            topicId: topicId,
             jobName: jobName,
-            params: selectedParams,
-            schedule: {
-                daily: selectedSchedule.daily,
-                weekly: selectedSchedule.weekly,
-                onDate: selectedSchedule.onDate,
-                time: selectedSchedule.time?.toLocaleTimeString("de-DE").slice(0, -3),
-                weekdays: selectedSchedule.weekdays,
-                date:  selectedSchedule.onDate && selectedSchedule.date ? format(selectedSchedule.date,"yyyy-MM-dd") : null
-            }
+            values: toTypedValues(trimParamValues(paramValues), paramList),
+            schedule: withFormattedDates(schedule)
         })
-    }, (data) => {
     });
 
     useEffect(() => {
@@ -86,33 +70,26 @@ export default function JobCreate() {
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
         if (activeStep === 0) {
-            const allSet = selectedTopicId !== -1 && jobName.trim() !== "";
+            const allSet = topicId !== -1 && jobName.trim() !== "";
             setSelectComplete(allSet);
         }
-    }, [selectedTopicId, jobName, activeStep])
+    }, [topicId, jobName, activeStep])
 
-    // when a new parameter is selected, check if parameter selection is complete 
+    // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
-        if (activeStep === 1 && selectedParams !== null) {
-            const allSet = selectedParams?.every(p => p.selected.trim() !== "");
-            setSelectComplete(allSet || false);
+        if (activeStep === 1) {
+            const allSet = validateParamValues(paramValues, paramList);
+            setSelectComplete(allSet);
         }
-    }, [selectedParams, activeStep])
+    }, [paramList, paramValues, activeStep])
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
         if (activeStep === 2) {
-            if (selectedSchedule.weekly) {
-                setSelectComplete(selectedSchedule.weekdays.length > 0);
-            } else {
-                setSelectComplete(true);
-            }
+            const allSet = validateSchedule(schedule);
+            setSelectComplete(allSet);
         }
-
-        if (activeStep === 2 && selectedSchedule.weekly) {
-            setSelectComplete(selectedSchedule.weekdays.length > 0);
-        }
-    }, [selectedSchedule, activeStep])
+    }, [schedule, activeStep])
 
     // handlers for stepper logic
     const handleNext = () => {
@@ -124,49 +101,27 @@ export default function JobCreate() {
 
     // handlers for topic selection logic
     const handleSelectTopic = (topicId: number) => {
-        setSelectedTopicId(topicId);
+        setTopicId(topicId);
     }
-    const handleFetchParams = (params: Param[]) => {
-        setSelectedParams(params);
-    }
+
     const handleEnterJobName = (jobName: string) => {
         setJobName(jobName);
     }
 
     // handler for param selection logic
-    const handleSelectParam = (key: string, value: string) => {
-        const newList = selectedParams?.map((e: Param) => {
-            if (e.name === key) {
-                return {...e, selected: value};
-            }
-            return e;
-        })
-        setSelectedParams(newList);
+    const handleFetchParams = (params: Param[]) => {
+        setParamList(params);
+        setParamValues(initSelectedValues(params));
+    }
+    const handleSelectParam = (key: string, value: any) => {
+        const updated = { ...paramValues }
+        updated[key] = value;
+        setParamValues(updated);
     }
 
     // handler for schedule selection logic
-    const handleSelectDaily = () => {
-        setSelectedSchedule({...selectedSchedule, daily: true, weekly: false, onDate: false, weekdays: [],})
-    }
-    const handleSelectWeekly = () => {
-        setSelectedSchedule({...selectedSchedule, daily: false, weekly: true, onDate: false, weekdays: [],})
-    }
-    const handleSelectOnDate = () => {
-        setSelectedSchedule({...selectedSchedule, daily: false, weekly: false, onDate: true, weekdays: [],})
-    }
-    const handleAddWeekDay = (d: Weekday) => {
-        const weekdays: Weekday[] = [...selectedSchedule.weekdays, d];
-        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
-    }
-    const handleRemoveWeekday = (d: Weekday) => {
-        const weekdays: Weekday[] = selectedSchedule.weekdays.filter(e => e !== d);
-        setSelectedSchedule({...selectedSchedule, weekdays: weekdays});
-    }
-    const handleSelectDate = (date: Date | null) => {
-        setSelectedSchedule({...selectedSchedule, date: date})
-    }
-    const handleSelectTime = (time: Date | null) => {
-        setSelectedSchedule({...selectedSchedule, time: time})
+    const handleSelectSchedule = (schedule: Schedule) => {
+        setSchedule(schedule);
     }
 
     // stepper texts
@@ -188,30 +143,25 @@ export default function JobCreate() {
                 return (
                     <TopicSelection
                         fetchParamHandler={handleFetchParams}
-                        selectedTopicId={selectedTopicId}
+                        topicId={topicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName}/>
+                        enterJobNameHandler={handleEnterJobName} />
                 );
             case 1:
                 return (
                     <ParamSelection
-                        topicId={selectedTopicId}
-                        params={selectedParams}
+                        topicId={topicId}
+                        values={paramValues}
+                        params={paramList}
                         fetchParamHandler={handleFetchParams}
-                        selectParamHandler={handleSelectParam}/>
+                        selectParamHandler={handleSelectParam} />
                 )
             case 2:
                 return (
                     <ScheduleSelection
-                        schedule={selectedSchedule}
-                        selectDailyHandler={handleSelectDaily}
-                        selectWeeklyHandler={handleSelectWeekly}
-                        selectOnDateHandler={handleSelectOnDate}
-                        addWeekDayHandler={handleAddWeekDay}
-                        removeWeekDayHandler={handleRemoveWeekday}
-                        selectDateHandler={handleSelectDate}
-                        selectTimeHandler={handleSelectTime}
+                        schedule={schedule}
+                        selectScheduleHandler={handleSelectSchedule}
                     />
                 )
             default:
@@ -222,7 +172,7 @@ export default function JobCreate() {
     return (
         <div className={classes.root}>
             <Stepper activeStep={activeStep}>
-                {steps.map((label, index) => {
+                {steps.map((label) => {
                     const stepProps: { completed?: boolean } = {};
                     const labelProps: { optional?: React.ReactNode } = {};
                     return (
@@ -239,16 +189,16 @@ export default function JobCreate() {
                         <div>
                             <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                         </div>
-                        <GreyDivider/>
+                        <GreyDivider />
                         {getSelectPanel(activeStep)}
-                        <GreyDivider/>
+                        <GreyDivider />
                         <div className={classes.paddingSmall}>
                             <span>
-                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
-                                                disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
+                                    disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>

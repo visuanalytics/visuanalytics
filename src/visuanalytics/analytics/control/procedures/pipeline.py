@@ -109,7 +109,7 @@ class Pipeline(object):
 
                 if isinstance(values["thumbnail"], str):
                     thumbnail_name = os.path.basename(values["thumbnail"])
-                    
+
                     data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
                     data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
                     data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
