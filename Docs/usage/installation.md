@@ -1,4 +1,4 @@
-# VisuAnalytics
+# Installation
 ## Programm Starten
 
 ### Konfiguration
