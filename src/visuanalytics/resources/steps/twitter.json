@@ -902,6 +902,7 @@
     "normalize_words": {
       "type": "boolean",
       "display_name": "Wörter normalisieren",
+      "optional": true,
       "default_value": true
     },
     "size_wordcloud": {
