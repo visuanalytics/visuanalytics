@@ -785,13 +785,13 @@
   "run_config": {
     "hashtags": {
       "type": "multi_string",
-      "display_name": "Hashtags",
+      "display_name": "Hashtags (z. B.: Bundesliga, Fußball)",
       "optional": false,
       "default_value": []
     },
     "stopwords": {
       "type": "multi_string",
-      "display_name": "Stoppwörter",
+      "display_name": "Stoppwörter (z. B.: Bundesliga, Fußball)",
       "optional": true,
       "default_value": []
     },
@@ -885,15 +885,22 @@
       "default_value": true
     },
     "width_wordcloud": {
-      "type": "number",
+      "type": "enum",
       "display_name": "Breite der Wordcloud (in Pixeln)",
       "optional": true,
+      "enum_values": [
+        {
+          "value": 1000,
+          "dispay_value": "1000"
+        }
+      ],
       "default_value": 1000
     },
     "height_wordcloud": {
       "type": "number",
       "display_name": "Höhe der Wordcloud (in Pixeln)",
       "optional": true,
+      "enum_values": [],
       "default_value": 1000
     }
   },
