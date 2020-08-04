@@ -47,9 +47,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
 const ParamField: React.FC<ParamFieldProps> = (props) => {
     const param = props.param;
     const classes = useStyles();
-    const theme = useTheme();
 
-    const makeLabel = (name: string) => (<label style={{ color: theme.palette.text.secondary }}>{name}</label>)
     const makeSubParamLabel = (name: string) => (<label style={{ fontSize: 18 }}>{name}</label>)
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
@@ -89,7 +87,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             onChange={e => handleCheck(e, param.name)}
                         />}
                     disabled={props.disabled}
-                    label={makeLabel(param.displayName)}
+                    label={param.displayName}
                     labelPlacement="start"
                     className={classes.checkboxParam}
                 />
