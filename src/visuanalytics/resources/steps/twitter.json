@@ -24,6 +24,26 @@
   },
   "transform": [
     {
+      "type": "split_string",
+      "keys": [
+        "_conf|size_wordcloud"
+      ],
+      "delimiter": "x",
+      "ignore_case": true
+    },
+    {
+      "type": "convert",
+      "keys": [
+        "_conf|size_wordcloud|0",
+        "_conf|size_wordcloud|1"
+      ],
+      "new_keys": [
+        "_conf|width_wordcloud",
+        "_conf|height_wordcloud"
+      ],
+      "to": "int"
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|statuses",
       "transform": [
@@ -884,24 +904,37 @@
       "display_name": "Wörter normalisieren",
       "default_value": true
     },
-    "width_wordcloud": {
+    "size_wordcloud": {
       "type": "enum",
-      "display_name": "Breite der Wordcloud (in Pixeln)",
+      "display_name": "Größe der Wordcloud (in Pixeln)",
       "optional": true,
       "enum_values": [
         {
-          "value": 1000,
-          "dispay_value": "1000"
+          "value": "426x240",
+          "display_value": "426 x 240 "
+        },
+        {
+          "value": "640x360",
+          "display_value": "640 x 360"
+        },
+        {
+          "value": "854 x 480",
+          "display_value": "854 x 480"
+        },
+        {
+          "value": "1280x720",
+          "display_value": "1.280 x 720"
+        },
+        {
+          "value": "1000x1000",
+          "display_value": "1.000 x 1.000"
+        },
+        {
+          "value": "1920x1080",
+          "display_value": "1.920 x 1.080"
         }
       ],
-      "default_value": 1000
-    },
-    "height_wordcloud": {
-      "type": "number",
-      "display_name": "Höhe der Wordcloud (in Pixeln)",
-      "optional": true,
-      "enum_values": [],
-      "default_value": 1000
+      "default_value": "1000x1000"
     }
   },
   "presets": {}
