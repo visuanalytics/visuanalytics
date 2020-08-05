@@ -2122,7 +2122,7 @@
     },
     "read": {
       "type": "sub_params",
-      "display_name": "Welche Angaben sollen explizit im Video genannt werden?",
+      "display_name": "Zusätzlich im Video genannte Angaben",
       "optional": false,
       "sub_params": {
         "speech_app_temp_2": {
