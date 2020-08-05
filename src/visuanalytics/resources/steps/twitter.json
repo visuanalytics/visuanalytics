@@ -48,8 +48,7 @@
             {
               "type": "append",
               "key": "_loop|text",
-              "new_key": "_req|text",
-              "append_type": "string"
+              "new_key": "_req|text_all"
             }
           ]
         }
@@ -61,13 +60,168 @@
         "_req|search_metadata",
         "_req|statuses"
       ]
+    },
+    {
+      "type": "remove_from_list",
+      "keys": [
+        "_req|text_all"
+      ],
+      "to_remove": "_conf|stopwords",
+      "use_stopwords": true,
+      "ignore_case": true
+    },
+    {
+      "type": "option",
+      "check": "_conf|normalize_words",
+      "on_true": [
+        {
+          "type": "normalize_words",
+          "keys": [
+            "_req|text_all"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "counter",
+      "keys": [
+        "_req|text_all"
+      ],
+      "include_count": true
+    },
+    {
+      "type": "sub_lists",
+      "array_key": "_req|text_all",
+      "sub_lists": [
+        {
+          "new_key": "_req|text_top1",
+          "range_start": 0,
+          "range_end": 1
+        },
+        {
+          "new_key": "_req|text_top2",
+          "range_start": 0,
+          "range_end": 2
+        },
+        {
+          "new_key": "_req|text_top3",
+          "range_start": 0,
+          "range_end": 3
+        },
+        {
+          "new_key": "_req|text_top4",
+          "range_start": 0,
+          "range_end": 4
+        },
+        {
+          "new_key": "_req|text_top5",
+          "range_start": 0,
+          "range_end": 5
+        },
+        {
+          "new_key": "_req|text_top6",
+          "range_start": 0,
+          "range_end": 6
+        },
+        {
+          "new_key": "_req|text_top7",
+          "range_start": 0,
+          "range_end": 7
+        },
+        {
+          "new_key": "_req|text_top8",
+          "range_start": 0,
+          "range_end": 8
+        },
+        {
+          "new_key": "_req|text_top9",
+          "range_start": 0,
+          "range_end": 9
+        },
+        {
+          "new_key": "_req|text_top10",
+          "range_start": 0,
+          "range_end": 10
+        },
+        {
+          "new_key": "_req|text_top15",
+          "range_start": 0,
+          "range_end": 15
+        },
+        {
+          "new_key": "_req|text_top20",
+          "range_start": 0,
+          "range_end": 20
+        },
+        {
+          "new_key": "_req|text_top25",
+          "range_start": 0,
+          "range_end": 25
+        }
+      ]
+    },
+    {
+      "type": "to_dict",
+      "keys": [
+        "_req|text_all",
+        "_req|text_top1",
+        "_req|text_top2",
+        "_req|text_top3",
+        "_req|text_top4",
+        "_req|text_top5",
+        "_req|text_top6",
+        "_req|text_top7",
+        "_req|text_top8",
+        "_req|text_top9",
+        "_req|text_top10",
+        "_req|text_top15",
+        "_req|text_top20",
+        "_req|text_top25"
+      ],
+      "new_keys": [
+        "_req|dict_all",
+        "_req|dict_top1",
+        "_req|dict_top2",
+        "_req|dict_top3",
+        "_req|dict_top4",
+        "_req|dict_top5",
+        "_req|dict_top6",
+        "_req|dict_top7",
+        "_req|dict_top8",
+        "_req|dict_top9",
+        "_req|dict_top10",
+        "_req|dict_top15",
+        "_req|dict_top20",
+        "_req|dict_top25"
+      ]
+    },
+    {
+      "type": "length",
+      "keys": [
+        "_conf|hashtags"
+      ],
+      "new_keys": [
+        "_req|hashtags_len"
+      ]
+    },
+    {
+      "type": "join",
+      "keys": [
+        "_conf|hashtags"
+      ],
+      "new_keys": [
+        "_req|text_hashtags"
+      ],
+      "delimiter": ", "
     }
   ],
   "images": {
-    "football_wordcloud": {
+    "all_words_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text}",
-      "stopwords": "{_conf|stopwords}",
+      "dict": "_req|dict_all",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": false,
+      "color_func_words": "{_conf|color_func_words}",
       "parameter": {
         "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
@@ -77,11 +231,271 @@
         "max_words": 2000,
         "contour_width": 3,
         "contour_color": "white",
-        "color_func": "_conf|color_func_words",
+        "color_func": "_conf|color_func",
         "colormap": "{_conf|colormap_words}"
       }
     },
-    "wordcloud_with_background": {
+    "top1_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top1",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top2_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top2",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top3_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top3",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top4_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top4",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top5_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top5",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top6_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top6",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top7_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top7",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top8_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top8",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top9_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top9",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top10_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top10",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top15_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top15",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top20_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top20",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "top25_wordcloud": {
+      "type": "wordcloud",
+      "dict": "_req|dict_top25",
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": true,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "background_color": "white",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 200,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "wordcloud_all": {
       "type": "pillow",
       "path": "football/background.png",
       "overlay": [
@@ -89,7 +503,176 @@
           "description": "Wordcloud",
           "type": "image",
           "color": "RGBA",
-          "image_name": "football_wordcloud",
+          "image_name": "all_words_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top1": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top1_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top2": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top2_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top3": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top3_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top4": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top4_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top5": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top5_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top6": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top6_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top7": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top7_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top8": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top8_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top9": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top9_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top10": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top10_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top15": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top15_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top20": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top20_wordcloud",
+          "color_transparency": "FFFFFF"
+        }
+      ]
+    },
+    "wordcloud_top25": {
+      "type": "pillow",
+      "path": "football/background.png",
+      "overlay": [
+        {
+          "description": "Wordcloud",
+          "type": "image",
+          "color": "RGBA",
+          "image_name": "top25_wordcloud",
           "color_transparency": "FFFFFF"
         }
       ]
@@ -97,7 +680,7 @@
   },
   "thumbnail": {
     "type": "created",
-    "name": "wordcloud_with_background"
+    "name": "wordcloud_all"
   },
   "audio": {
     "audios": {
@@ -108,8 +691,29 @@
             "pattern": "Twitter-Wordcloud. "
           },
           {
-            "type": "text",
-            "pattern": "Auf Twitter wurden folgende Hashtags neben dem Bundesliga Hashtag verwendet. "
+            "type": "compare",
+            "value_left": "_req|hashtags_len",
+            "value_right": 1,
+            "on_equal": [
+              {
+                "type": "random_text",
+                "pattern": [
+                  "Auf Twitter wurden folgende Hashtags neben dem {_req|text_hashtags} Hashtag verwendet. ",
+                  "Auf Twitter wurden neben {_req|text_hashtags} folgende Hashtags verwendet. ",
+                  "Weitere Begriffe zum Thema {_req|text_hashtags} wurden auf Twitter verwendet. "
+                ]
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "random_text",
+                "pattern": [
+                  "Auf Twitter wurden folgende Hashtags neben den Hashtags {_req|text_hashtags} verwendet. ",
+                  "Auf Twitter wurden neben {_req|text_hashtags} folgende Hashtags verwendet. ",
+                  "Weitere Begriffe zu den Themen {_req|text_hashtags} wurden auf Twitter verwendet. "
+                ]
+              }
+            ]
           }
         ]
       }
@@ -117,25 +721,85 @@
   },
   "sequence": {
     "type": "custom",
+    "transitions": 0.1,
     "pattern": [
       {
-        "image": "wordcloud_with_background",
+        "image": "wordcloud_top1",
         "audio_l": "a1",
-        "time_diff": 10
+        "time_diff": -6
+      },
+      {
+        "image": "wordcloud_top2",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top3",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top4",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top5",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top6",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top7",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top8",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top9",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top10",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top15",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top20",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_top25",
+        "time_diff": 2
+      },
+      {
+        "image": "wordcloud_all",
+        "time_diff": 5
       }
     ]
   },
-  "run_config": [
-    {
-      "name": "stopwords",
-      "display_name": "Aus Wordcloud ausschließen",
-      "possible_values": [],
-      "default_value": ""
+  "run_config": {
+    "hashtags": {
+      "type": "multi_string",
+      "display_name": "Hashtags",
+      "optional": false,
+      "default_value": []
     },
-    {
-      "name": "colormap_words",
+    "stopwords": {
+      "type": "multi_string",
+      "display_name": "Stoppwörter",
+      "optional": true,
+      "default_value": []
+    },
+    "colormap_words": {
+      "type": "enum",
       "display_name": "Farben der Wörter",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "magma",
           "display_value": "magma"
@@ -155,25 +819,55 @@
       ],
       "default_value": "viridis"
     },
-    {
-      "name": "color_func_words",
-      "display_name": "Farbverlauf der Wörter",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "Blau"
-        },
-        {
-          "value": false,
-          "display_value": "Standard"
+    "color_func": {
+      "type": "sub_params",
+      "display_name": "Farbverlauf",
+      "optional": true,
+      "sub_params": {
+        "color_func_words": {
+          "type": "enum",
+          "display_name": "Farbe",
+          "optional": false,
+          "enum_values": [
+            {
+              "value": "245 46 5 35",
+              "display_value": "Blau"
+            },
+            {
+              "value": "145 46 5 35",
+              "display_value": "Grün"
+            },
+            {
+              "value": "353 80 20 50",
+              "display_value": "Rot"
+            },
+            {
+              "value": "59 80 45 73",
+              "display_value": "Gelb"
+            },
+            {
+              "value": "0 0 60 100",
+              "display_value": "Grau"
+            },
+            {
+              "value": "0 0 0 40",
+              "display_value": "Schwarz"
+            },
+            {
+              "value": "281 66 25 70",
+              "display_value": "Lila"
+            }
+          ],
+          "default_value": "0 0 0 40"
         }
-      ],
+      },
       "default_value": false
     },
-    {
-      "name": "shape",
+    "figure": {
+      "type": "enum",
       "display_name": "Form der Wordcloud",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "circle",
           "display_value": "Kreis"
@@ -184,8 +878,24 @@
         }
       ],
       "default_value": "circle"
+    },
+    "normalize_words": {
+      "type": "boolean",
+      "display_name": "Wörter normalisieren",
+      "default_value": true
+    },
+    "width_wordcloud": {
+      "type": "number",
+      "display_name": "Breite der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
+    },
+    "height_wordcloud": {
+      "type": "number",
+      "display_name": "Höhe der Wordcloud (in Pixeln)",
+      "optional": true,
+      "default_value": 1000
     }
-  ],
-  "presets": {
-  }
+  },
+  "presets": {}
 }

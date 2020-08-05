@@ -107,18 +107,6 @@ class StepData(object):
         """
         return self.__data
 
-    def init_data(self, data: dict, key: str = "_req"):
-        """
-        Initialisiert die Daten.
-        
-        Die übergebenen daten werden unter dem übergebenen `key` gespeichert.
-        Ist zur Verwendung im Schritt `API` gedacht.
-
-        :param data: Daten die geschpeichert werden sollen.
-        :param key: Key unter dem die Daten geschpeichert werden sollen. Standart: `_req`.
-        """
-        self.__data[key] = data
-
     def clear_data(self):
         """
         Löscht alle Daten mit Ausnahme von `_conf` und `_pipe_id`.
@@ -138,7 +126,7 @@ class StepData(object):
         Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
         falls der übergebene key eine Zahl ist, diese direkt zurückgegeben wird.
 
-        :param key: fad zu den Daten in self.data,
+        :param key: Pfad zu den Daten in self.data,
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder eine Zahl.
         :param values: Werte aus der JSON-Datei.
         :return: Daten hinter `key_string` oder die Übergebene Zahl.
@@ -154,7 +142,7 @@ class StepData(object):
         Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
         falls der übergebene key ein Boolean ist, diese direkt zurückgegeben wird.
 
-        :param key: fad zu den Daten in self.data,
+        :param key: Pfad zu den Daten in self.data,
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einem Boolean.
         :param values: Werte aus der JSON-Datei.
         :return: Daten hinter `key_string` oder der übergebene Boolean.
@@ -165,12 +153,28 @@ class StepData(object):
 
         return self.get_data(key, values)
 
+    def get_data_dict(self, key, values: dict):
+        """
+        Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
+        falls der übergebene key ein Dictionary ist, dieses direkt zurückgegeben wird.
+
+        :param key: Pfad zu den Daten in self.data,
+            besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einem Boolean.
+        :param values: Werte aus der JSON-Datei.
+        :return: Daten hinter `key_string` oder das übergebene Dictionary.
+        :raises: StepKeyError
+        """
+        if isinstance(key, dict):
+            return key
+
+        return self.get_data(key, values)
+
     def get_data_array(self, key, values: dict):
         """
         Macht das gleiche wie :func:`get_data` mit der Ausnahme, dass
         falls der übergebene key eine Liste ist, diese direkt zurückgegeben wird.
 
-        :param key: fad zu den Daten in self.data,
+        :param key: Pfad zu den Daten in self.data,
             besteht aus den keys zu den Daten, getrennt mit | (Pipe) Symbolen, oder einer Liste.
         :param values: Werte aus der JSON-Datei.
         :return: Daten hinter `key_string` oder die übergebene Liste.

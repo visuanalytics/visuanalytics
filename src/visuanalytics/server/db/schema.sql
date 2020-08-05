@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Do. Juli 2 19:40:04 2020
+-- File generated with SQLiteStudio v3.2.1 on Mo. Aug. 3 20:50:18 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -36,7 +36,9 @@ CREATE TABLE job_config
         ON UPDATE CASCADE
                        NOT NULL,
     [key]         TEXT NOT NULL,
-    value         TEXT NOT NULL
+    value         TEXT NOT NULL,
+    type          VARCHAR CHECK (type IN
+                                 ("string", "number", "multi_string", "multi_number", "boolean", "enum", "sub_params") )
 );
 
 
@@ -50,9 +52,8 @@ CREATE TABLE schedule
                      NOT NULL,
     date        DATE,
     time        TIME NOT NULL,
-    daily       BOOLEAN,
-    weekly      BOOLEAN,
-    on_date     BOOLEAN
+    type        VARCHAR CHECK (type IN ("daily", "weekly", "on_date") )
+                     NOT NULL
 );
 
 

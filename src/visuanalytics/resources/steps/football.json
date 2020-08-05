@@ -5,6 +5,7 @@
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
     "steps_value": [
+      "season_helper",
       "Spiele",
       "Tabelle",
       "Vorherige-Tabelle",
@@ -14,11 +15,30 @@
     "requests": [
       {
         "type": "request",
+        "url_pattern": "https://www.openligadb.de/Webservices/Sportsdata.asmx",
+        "method": "post",
+        "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<GetLastMatch xmlns=\"http://msiggi.de/Sportsdata/Webservices\">\n<leagueShortcut>bl1</leagueShortcut>\n</GetLastMatch>\n</soap12:Body>\n</soap12:Envelope>",
+        "body_type": "other",
+        "body_encoding": "utf-8",
+        "response_format": "xml",
+        "xml_config": {
+          "process_namespaces": true,
+          "namespaces": {
+            "http://www.w3.org/2003/05/soap-envelope": null,
+            "http://msiggi.de/Sportsdata/Webservices": null
+          }
+        },
+        "headers": {
+          "Content-Type": "application/soap+xml; charset=utf-8"
+        }
+      },
+      {
+        "type": "request",
         "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
       },
       {
         "type": "request_memory",
@@ -26,7 +46,7 @@
         "use_last": 1,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
         }
       },
       {
@@ -44,12 +64,27 @@
         "use_last": 2,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
         }
       }
     ]
   },
   "transform": [
+    {
+      "type": "alias",
+      "keys": [
+        "_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison"
+      ],
+      "new_keys": [
+        "_req|league_saison"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|season_helper"
+      ]
+    },
     {
       "type": "alias",
       "keys": [
@@ -76,6 +111,7 @@
         {
           "type": "select",
           "relevant_keys": [
+            "LeagueName",
             "Team1|TeamName",
             "Team1|TeamId",
             "Team2|TeamName",
@@ -125,9 +161,9 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
@@ -141,8 +177,8 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
@@ -156,8 +192,8 @@
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
+                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
                   ]
                 }
               ]
@@ -526,7 +562,7 @@
             "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points}. "
+            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -2678,16 +2714,25 @@
     "type": "new",
     "image": {
       "type": "pillow",
-      "path": "football/Table_1.png",
+      "path": "football/FootballThumbnail.png",
       "overlay": [
+        {
+          "description": "Spieltag",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 400,
+          "preset": "football_7",
+          "pattern": "{_req|Spieltag}"
+        },
         {
           "description": "Liga-Name",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 960,
-          "pos_y": 500,
-          "preset": "football_2",
-          "pattern": "{league_name}"
+          "pos_y": 190,
+          "preset": "football_8",
+          "pattern": "{_req|Spiele|0|LeagueName}"
         }
       ]
     }
@@ -2815,11 +2860,12 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": [
-    {
-      "name": "league",
+  "run_config": {
+    "league": {
+      "type": "enum",
       "display_name": "Liga",
-      "possible_values": [
+      "optional": false,
+      "enum_values": [
         {
           "value": 1,
           "display_value": "1. Bundesliga"
@@ -2834,7 +2880,7 @@
         }
       ]
     }
-  ],
+  },
   "presets": {
     "football_1": {
       "color": "black",
@@ -2864,6 +2910,16 @@
     "football_6": {
       "color": "#858582",
       "font_size": 60,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_7": {
+      "color": "black",
+      "font_size": 180,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "football_8": {
+      "color": "white",
+      "font_size": 100,
       "font": "fonts/Dosis-Bold.ttf"
     }
   }

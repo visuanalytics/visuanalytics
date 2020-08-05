@@ -1,10 +1,10 @@
 import React from 'react';
-import { Param } from "../util/param";
+import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
 import {Fade, Grid, Paper, Typography} from '@material-ui/core';
 import { useFetchMultiple } from '../Hooks/useFetchMultiple';
-import {Schedule} from "../JobCreate";
-import {Load} from "../util/Load"
+import { Load } from "../util/Load"
+import { Schedule } from '../util/schedule';
 import { getUrl } from '../util/fetchUtils';
 import {useStyles} from "../Home/style";
 import {ContinueButton} from "../JobCreate/ContinueButton";
@@ -15,15 +15,16 @@ export interface Job {
     jobId: number;
     jobName: string;
     params: Param[];
+    values: ParamValues;
     schedule: Schedule;
     topicId: number;
     topicName: string;
 }
 
 export const JobList: React.FC = () => {
+    const [jobInfo, getJobs] = useFetchMultiple<Job[]>(getUrl("/jobs"));
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
-    const [jobInfo, getJobs] = useFetchMultiple<Job []>(getUrl("/jobs"));
 
     if (jobInfo?.length === 0) {
         return (
