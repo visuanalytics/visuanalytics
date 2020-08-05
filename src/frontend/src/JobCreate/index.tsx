@@ -24,6 +24,7 @@ import { getUrl } from '../util/fetchUtils';
 import {HintButton} from "../util/HintButton";
 import {DeleteSelection} from "./DeleteSelection";
 import {ComponentContext} from "../ComponentProvider";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 
 
@@ -283,11 +284,26 @@ export default function JobCreate() {
                     :
                     <Fade in={true}>
                         <div className={classes.paddingSmall}>
-                            Job '{jobName}' wurde erstellt!
-                            <p>Sie werden in {counter} Sekunden zur Startseite weitergeleitet.</p>
-                            <ContinueButton onClick={() => components?.setCurrent("home")}>
-                                STARTSEITE
-                            </ContinueButton>
+                            <Grid container spacing={2}>
+                                 <Grid container item justify="center">
+                                    <CheckCircleIcon
+                                        className={classes.checkIcon}
+                                        color={"disabled"}
+                                        fontSize={"default"}
+                                    />
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <Typography>Sie werden in {counter} Sekunden zur Startseite weitergeleitet.</Typography>
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <ContinueButton onClick={() => components?.setCurrent("home")}>
+                                        STARTSEITE
+                                    </ContinueButton>
+                                </Grid>
+                            </Grid>
                         </div>
                     </Fade>
                 }

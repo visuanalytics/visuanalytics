@@ -37,6 +37,10 @@ export const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
         margin: 0
+    },
+    checkIcon: {
+        fontSize: "50px",
+        color: "#00a152",
     }
 }));
 
