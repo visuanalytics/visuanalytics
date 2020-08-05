@@ -89,5 +89,18 @@ CREATE TABLE steps
 );
 
 
+-- Table: job_logs
+CREATE TABLE job_logs
+(
+    job_logs_id INTEGER PRIMARY KEY AUTOINCREMENT                                  NOT NULL UNIQUE,
+    job_id      BIGINT REFERENCES job (job_id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    state       INT                                                                NOT NULL,
+    error_msg   TEXT,
+    duration    INT,
+    start_date  DATETIME
+);
+
+
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
