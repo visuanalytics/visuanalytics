@@ -11,7 +11,7 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 export interface LoadFailedProps {
   hasFailed: boolean;
@@ -61,7 +61,7 @@ export const Load: React.FC<Props> = ({
               {solutions.map((s, idx) => (
                 <ListItem key={idx} className={classes.listItem}>
                   <ListItemIcon className={classes.listBulletItem}>
-                    <FiberManualRecordIcon className={classes.listBulletIcon} />
+                    <ArrowRightIcon className={classes.listBulletIcon} />
                   </ListItemIcon>
                   <ListItemText secondary={s} />
                 </ListItem>

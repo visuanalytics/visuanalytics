@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.warning.light,
     },
     listBulletIcon: {
-      fontSize: "0.8rem",
+      fontSize: "1.5rem",
     },
     listBulletItem: {
       minWidth: "20px",
