@@ -167,7 +167,9 @@ class Pipeline(object):
             self.__on_completion(self.__config, data)
             self.__cleanup()
             return True
-
+        except (KeyboardInterrupt, SystemExit):
+            self.__cleanup()
+            raise
         except Exception:
             self.__current_step = -2
             logger.exception(f"An error occurred: ")
