@@ -790,6 +790,57 @@
       "default_value": ""
     },
     {
+      "name": "background",
+      "display_name": "Hintergrund der Wordcloud",
+      "possible_values": [
+        {
+          "value": "football/background.png",
+          "display_value": "Fußballrasen"
+        },
+        {
+          "value": "weather/DE1Tag.png",
+          "display_value": "Wetter"
+        },
+        {
+          "value": "blue",
+          "display_value": "Blau"
+        },
+        {
+          "value": "red",
+          "display_value": "Rot"
+        },
+        {
+          "value": "green",
+          "display_value": "Grün"
+        },
+        {
+          "value": "yellow",
+          "display_value": "Gelb"
+        },
+        {
+          "value": "white",
+          "display_value": "Weiß"
+        },
+        {
+          "value": "black",
+          "display_value": "Schwarz"
+        },
+        {
+          "value": "grey",
+          "display_value": "Grau"
+        },
+        {
+          "value": "orange",
+          "display_value": "Orange"
+        },
+        {
+          "value": "purple",
+          "display_value": "Lila"
+        }
+      ],
+      "default_value": "black"
+    },
+    {
       "name": "normalize_words",
       "display_name": "Wörter normalisieren",
       "possible_values": [
