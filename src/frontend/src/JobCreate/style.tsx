@@ -36,6 +36,11 @@ export const useStyles = makeStyles((theme) => ({
     inputFields: {
         width: "45%"
     },
+    expIcon: {
+        marginTop: 1,
+        marginRight: 5,
+        float: "left"
+    },
     centerDiv: {
         textAlign: "left",
         margin: "0 auto",

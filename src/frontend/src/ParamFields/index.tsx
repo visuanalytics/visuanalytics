@@ -1,5 +1,7 @@
 import React from 'react';
 import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues } from '../util/param';
 
@@ -124,13 +126,25 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                         checked={props.values[param.name]}
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
-                                label={<b>{param.displayName}</b>}
+                                label={<span>
+                                    {
+                                        props.values[param.name]
+                                            ?
+                                            <div className={classes.expIcon}>
+                                                <ExpandLessIcon />
+                                            </div>
+                                            :
+                                            <div className={classes.expIcon}>
+                                                <ExpandMoreIcon />
+                                            </div>
+                                    }
+                                    {param.displayName} </span>}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                             :
-                            <b>{param.displayName}</b>
+                            param.displayName
                         }
                     </div>
                     <Collapse in={!param.optional || props.values[param.name]}>
