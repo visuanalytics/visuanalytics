@@ -9,6 +9,7 @@ import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
 export interface Topic {
     topicName: string;
     topicId: number;
+    topicInfo: string;
 }
 
 interface TopicSelectionProps {

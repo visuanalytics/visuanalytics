@@ -85,15 +85,15 @@ const getNextJobDate = (schedule: Schedule) => {
 
 export const showSchedule = (schedule: Schedule) => {
     if (schedule.type === "daily") {
-        return "täglich, " + format(schedule.time, "hh:mm") + " Uhr";
+        return "täglich, " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
     } else if (schedule.type === "onDate") {
-        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "hh:mm") + " Uhr";
+        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
     } else if (schedule.type === "weekly") {
         if (schedule.weekdays.length === 0) {
             return "wöchentlich: kein Wochentag ausgewählt";
         }
         const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
-        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "hh:mm") + " Uhr";
+        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
     }
 }
 

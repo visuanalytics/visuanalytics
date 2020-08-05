@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "weather_single",
+  "info": "Der Wetterbericht enthält das Wetter für einen ausgewählten Ort für den aktuellen Tag und die darauffolgenden vier Tage",
   "api": {
     "type": "request",
     "api_key_name": "weatherbit",

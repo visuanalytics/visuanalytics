@@ -9,8 +9,15 @@ STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 
 def get_topic_names():
     con = db.open_con_f()
-    res = con.execute("SELECT steps_id, steps_name FROM steps")
-    return [{"topicId": row["steps_id"], "topicName": row["steps_name"]} for row in res]
+    res = con.execute("SELECT steps_id, steps_name, json_file_name FROM steps")
+    return [{"topicId": row["steps_id"], "topicName": row["steps_name"],
+             "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
+
+
+def _get_topic_steps(json_file_name :str):
+    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+    with open(path_to_json, encoding="utf-8") as fh:
+        return json.loads(fh.read())
 
 
 def get_params(topic_id):
@@ -18,10 +25,8 @@ def get_params(topic_id):
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
     if res is None:
         return None
-    json_file_name = res["json_file_name"]
-    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
-    with open(path_to_json, encoding="utf-8") as fh:
-        steps_json = json.loads(fh.read())
+
+    steps_json = _get_topic_steps(res["json_file_name"])
     run_config = steps_json["run_config"]
     return humps.camelize(_to_param_list(run_config))
 
@@ -83,9 +88,7 @@ def update_job(job_id, updated_data):
 
 def _row_to_job(row):
     values = _get_values((row["params"]))
-    path_to_json = os.path.join(STEPS_LOCATION, row["json_file_name"]) + ".json"
-    with open(path_to_json, encoding="utf-8") as fh:
-        steps_params = json.loads(fh.read())["run_config"]
+    steps_params = _get_topic_steps(row["json_file_name"])["run_config"]
     params = humps.camelize(_to_param_list(steps_params))
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     return {

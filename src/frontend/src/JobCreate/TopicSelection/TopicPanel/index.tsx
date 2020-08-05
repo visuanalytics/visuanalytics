@@ -1,6 +1,7 @@
 import React from "react";
-import { makeStyles, Button } from "@material-ui/core";
+import {makeStyles, Button, Typography, Grid} from "@material-ui/core";
 import { Topic } from "..";
+import {HintButton} from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
@@ -37,7 +38,17 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
                 props.selectTopicHandler(props.topic.topicId);
             }
             }>
-            {props.topic.topicName}
+            <Grid item xs={1}></Grid>
+            <Grid item xs={10}>
+                {props.topic.topicName}
+            </Grid>
+            <Grid item xs={1}>
+            <HintButton content={
+                <Typography gutterBottom>
+                    {props.topic.topicInfo}
+                </Typography>}
+            />
+            </Grid>
         </Button>
     )
 };

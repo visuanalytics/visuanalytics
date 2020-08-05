@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "football",
+  "info": "Der Fußballbericht enthält die Ergebnisse des aktuellen Spieltags und dessen Tabelle",
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
