@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "football",
+  "info": "Das ist Fußball",
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
