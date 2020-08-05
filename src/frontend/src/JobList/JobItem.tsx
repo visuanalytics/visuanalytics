@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles } from "@material-ui/core";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, Tooltip } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles, InputField } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -22,6 +22,7 @@ import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTim
 import { getUrl } from "../util/fetchUtils";
 import { Notification, TMessageStates } from "../util/Notification";
 
+import {HintButton} from "../util/HintButton";
 
 interface Props {
     job: Job,
@@ -172,19 +173,22 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         />
                     </div>
                     <div>
-                        <Button className={classes.inputButton} onClick={handleOpen}>
-                            <InputField
-                                label="Zeitplan"
-                                value={showSchedule(schedule)}
-                                InputProps={{
-                                    disabled: state.edit,
-                                    readOnly: true
-                                }}
-                                required={!state.edit}
-                                variant="outlined"
-                            />
-                        </Button>
-
+                        <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
+                                 arrow
+                        >
+                            <Button className={classes.inputButton} onClick={handleOpen}>
+                                <InputField
+                                    label="Zeitplan"
+                                    value={showSchedule(schedule)}
+                                    InputProps={{
+                                        disabled: state.edit,
+                                        readOnly: true
+                                    }}
+                                    required={!state.edit}
+                                    variant="outlined"
+                                />
+                            </Button>
+                        </Tooltip>
                     </div>
                     <div>
                         <InputField
@@ -225,17 +229,23 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         <Notification handleClose={handleCloseError} open={error} message={errorMessage} type={"error"} />
                         <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message} type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton style={{ display: state.editIcon }} className={classes.button} onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton style={{ display: state.doneIcon }} className={classes.button} onClick={handleCheckClick}>
-                                <CheckCircleIcon />
-                            </IconButton>
+                            <Tooltip title="Job bearbeiten" arrow>
+                                <IconButton style={{ display: state.editIcon }} className={classes.button} onClick={handleEditClick}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Job speichern" arrow>
+                                <IconButton style={{ display: state.doneIcon }} className={classes.button} onClick={handleCheckClick}>
+                                    <CheckCircleIcon />
+                                </IconButton>
+                            </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton onClick={deleteJob} className={classes.button}>
-                                <DeleteIcon />
-                            </IconButton>
+                             <Tooltip title="Job löschen" arrow>
+                                <IconButton onClick={deleteJob} className={classes.button}>
+                                    <DeleteIcon />
+                                </IconButton>
+                             </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -256,6 +266,25 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         >
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
+                                    <Grid container>
+                                        <Grid xs={11}/>
+                                        <Grid container xs={1} justify={"flex-end"}>
+                                            <HintButton content={
+                                                <div>
+                                                    <Typography variant="h5" gutterBottom>Zeitplan auswählen</Typography>
+                                                    <Typography gutterBottom>
+                                                        Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
+                                                    </Typography>
+                                                    <Typography variant="h6" >täglich</Typography>
+                                                    <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
+                                                    <Typography variant="h6" >wöchentlich</Typography>
+                                                    <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+                                                    <Typography variant="h6" >an festem Datum</Typography>
+                                                    <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+                                                </div>
+                                            } />
+                                        </Grid>
+                                    </Grid>
                                     <Paper variant="outlined" className={classes.paper}>
                                         <ScheduleSelection
                                             schedule={schedule}

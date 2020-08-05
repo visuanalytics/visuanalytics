@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "twitter",
+  "info": "Das Video enthält eine Wordcloud zu aus den meist verwendeten Hashtags zu ausgewählten Hashtags",
   "api": {
     "type": "request",
     "api_key_name": "twitter",
