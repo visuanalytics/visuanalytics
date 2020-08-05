@@ -7,7 +7,7 @@ import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {
     topicId: number;
-    params: Param[];
+    params: Param[] | undefined;
     values: ParamValues;
     fetchParamHandler: (params: Param[]) => void;
     selectParamHandler: (key: string, value: any) => void;
@@ -20,7 +20,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
                 <Load data={props.params} />
-                {props.params.length !== 0
+                {props.params?.length !== 0
                     ?
                     <ParamFields
                         params={props.params}

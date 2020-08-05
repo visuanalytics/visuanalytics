@@ -36,7 +36,7 @@ export default function JobCreate() {
     const [jobName, setJobName] = React.useState("");
 
     // state for param selection logic
-    const [paramList, setParamList] = React.useState<Param[]>([]);
+    const [paramList, setParamList] = React.useState<Param[] | undefined>(undefined);
     const [paramValues, setParamValues] = React.useState<ParamValues>({});
 
     // state for schedule selection logic
@@ -54,7 +54,7 @@ export default function JobCreate() {
         body: JSON.stringify({
             topicId: topicId,
             jobName: jobName,
-            values: toTypedValues(trimParamValues(paramValues), paramList),
+            values: toTypedValues(trimParamValues(paramValues), paramList ? paramList : []),
             schedule: withFormattedDates(schedule)
         })
     });

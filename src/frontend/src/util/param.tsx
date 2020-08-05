@@ -58,7 +58,10 @@ interface EnumValue {
 }
 
 // validate parameter values
-export const validateParamValues = (values: ParamValues, params: Param[]): boolean => {
+export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
+    if (params === undefined)
+        return true;
+
     return params.every((p: Param) => {
         switch (p.type) {
             case "subParams":
@@ -107,9 +110,9 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
 
 
 // initialize an object with param names as keys
-export const initSelectedValues = (params: Param[]) => {
+export const initSelectedValues = (params: Param[] | undefined) => {
     let selected: ParamValues = {};
-    params.forEach(p => {
+    params?.forEach(p => {
         switch (p.type) {
             case "string":
             case "number":
@@ -135,9 +138,9 @@ export const initSelectedValues = (params: Param[]) => {
     return selected;
 }
 
-export const toTypedValues = (values: ParamValues, params: Param[]) => {
+export const toTypedValues = (values: ParamValues, params: Param[] | undefined) => {
     let tValues: TypedParamValues = {};
-    params.forEach(p => {
+    params?.forEach(p => {
         if (p.name in values) {
             const v = values[p.name];
             if (p.type === "subParams" && (!p.optional || v)) {
