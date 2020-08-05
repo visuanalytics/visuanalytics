@@ -14,10 +14,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         button: {
             margin: theme.spacing(1),
             color: '#2E97C5'
-        },
-        waringIcon: {
-            fontSize: "50px",
-            color: theme.palette.warning.light
         }
     }),
 );
