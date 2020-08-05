@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import time
+from datetime import datetime
 
 from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -13,8 +14,9 @@ from visuanalytics.analytics.storing.storing import storing
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_video
+from visuanalytics.server.db.job import insert_log, update_log_finish, update_log_error
 from visuanalytics.util import resources
-from visuanalytics.util.resources import get_current_time
+from visuanalytics.util.resources import DATE_FORMAT
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +38,9 @@ class Pipeline(object):
                6: {"name": "Sequence", "call": link},
                7: {"name": "Ready"}}
     __steps_max = 7
+    __log_states = {"running": 0, "finished": 1, "error": -1}
 
-    def __init__(self, pipeline_id: str, step_name: str, steps_config=None):
+    def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False):
         if steps_config is None:
             steps_config = {}
 
@@ -45,9 +48,11 @@ class Pipeline(object):
         self.steps_config = steps_config
         self.__start_time = 0.0
         self.__end_time = 0.0
+        self.__job_id = job_id
         self.__id = pipeline_id
         self.__config = {}
         self.__current_step = -1
+        self.__log_to_db = log_to_db
 
     @property
     def start_time(self):
@@ -83,16 +88,41 @@ class Pipeline(object):
     def __setup(self):
         logger.info(f"Initializing Pipeline {self.id}...")
 
+        self.__start_time = time.time()
+
+        # Insert job into Table
+        log_id = self.__update_db(insert_log, self.__job_id, self.__log_states["running"], self.__start_time)
+        self.__log_id = log_id
+
         # Load json config file
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
+
+        # Init out_time
+        self.__config["out_time"] = datetime.fromtimestamp(self.__start_time).strftime(DATE_FORMAT)
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
         logger.info(f"Inizalization finished!")
 
-    @staticmethod
-    def __on_completion(values: dict, data: StepData):
+    def __update_db(self, func: callable, *args, **kwargs):
+        if self.__log_to_db:
+            return func(*args, **kwargs)
+
+    def __on_completion(self, values: dict, data: StepData):
+        delete_video(self.steps_config, self.__config)
+
+        # Set state to ready
+        self.__current_step = self.__steps_max
+
+        # Set endTime and log
+        self.__end_time = time.time()
+        completion_time = round(self.__end_time - self.__start_time, 2)
+        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
+
+        # Update DB logs
+        self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)
+
         cp_request = data.get_config("on_completion")
 
         # IF ON Completion is in config send Request
@@ -143,8 +173,6 @@ class Pipeline(object):
             self.__setup()
             data = StepData(self.steps_config, self.id)
 
-            self.__config["out_time"] = get_current_time()
-            self.__start_time = time.time()
             logger.info(f"Pipeline {self.id} started!")
 
             for self.__current_step in range(0, self.__steps_max):
@@ -155,23 +183,19 @@ class Pipeline(object):
 
                 logger.info(f"Step finished: {self.current_step_name()}!")
 
-            # Set state to ready
-            self.__current_step = self.__steps_max
-
-            delete_video(self.steps_config, self.__config)
-
-            self.__end_time = time.time()
-            completion_time = round(self.__end_time - self.__start_time, 2)
-            logger.info(f"Pipeline {self.id} finished in {completion_time}s")
-
             self.__on_completion(self.__config, data)
             self.__cleanup()
             return True
         except (KeyboardInterrupt, SystemExit):
             self.__cleanup()
             raise
-        except Exception:
+        except Exception as e:
             self.__current_step = -2
+
+            if not self.__log_id is None:
+                self.__update_db(update_log_error, self.__log_id, self.__log_states["error"],
+                                 f"{e.__class__.__name__}: {e}")
+
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
             self.__cleanup()
