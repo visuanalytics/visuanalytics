@@ -181,6 +181,18 @@ export default function JobCreate() {
             <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
             <Typography variant="h6" >an festem Datum</Typography>
             <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+        </div>,
+        <div>
+            <Typography variant="h5" gutterBottom>Video löschen</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen zu welchem Zeitpunkt das generierte Video gelöscht werden soll.
+            </Typography>
+            <Typography variant="h6" >nicht löschen</Typography>
+            <Typography gutterBottom>Das Video wird nicht gelöscht.</Typography>
+            <Typography variant="h6" >Video bei Neugenerierung löschen</Typography>
+            <Typography gutterBottom>Das Video wird nach gelöscht, nachdem ein neues Video aus dem Job generiert wurde.</Typography>
+            <Typography variant="h6" >nach Tagen</Typography>
+            <Typography gutterBottom>Das Video wird nach den angegebenen Tagen gelöscht</Typography>
         </div>
     ];
 
