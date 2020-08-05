@@ -1,5 +1,6 @@
 import json
 import os
+
 import humps
 
 from visuanalytics.server.db import db
@@ -14,7 +15,7 @@ def get_topic_names():
              "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
 
 
-def _get_topic_steps(json_file_name :str):
+def _get_topic_steps(json_file_name: str):
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
@@ -84,6 +85,15 @@ def update_job(job_id, updated_data):
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
             _insert_param_values(con, job_id, value)
     con.commit()
+
+
+def get_logs():
+    con = db.open_con_f()
+    logs = con.execute(
+        "SELECT job_id, state, error_msg, duration, start_date from job_logs ORDER BY job_logs_id DESC").fetchall()
+    return [{"jobId": log["job_id"], "state": log["state"], "errorMsg": log["error_msg"], "duration": log["duration"],
+             "startDate": log["start_date"]}
+            for log in logs]
 
 
 def _row_to_job(row):
