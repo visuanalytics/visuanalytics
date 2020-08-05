@@ -142,12 +142,6 @@ export default function JobCreate() {
             <Typography gutterBottom>
                 Auf dieser Seite können Sie auswählen zu welchem der Themen Ihnen ein Video generiert werden soll.
             </Typography>
-            <Typography variant="h6" >Bundesliga-Ergebnisse</Typography>
-            <Typography gutterBottom>Video zum aktuellen Spieltag und zur aktuellen Tabelle</Typography>
-            <Typography variant="h6" >Deutschlandweiter Wetterbericht</Typography>
-            <Typography gutterBottom>Deutschlandweiter Wetterbericht für den aktuellen Tag und die darauffolgenden 4 Tage</Typography>
-            <Typography variant="h6" >Ortsbezogener Wetterbericht</Typography>
-            <Typography gutterBottom>Wetterbericht für einen ausgewählten Ort in Deutschland. Für den aktuellen Tag und die darauffolgenden 4 Tage</Typography>
         </div>,
         <div>
             <Typography variant="h5" gutterBottom>Parameterauswahl</Typography>
