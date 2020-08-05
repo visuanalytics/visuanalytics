@@ -39,6 +39,9 @@ export default function JobCreate() {
     const [paramList, setParamList] = React.useState<Param[] | undefined>(undefined);
     const [paramValues, setParamValues] = React.useState<ParamValues>({});
 
+    // state for Load Failed
+    const [loadFailed, setLoadFailed] = React.useState(false);
+
     // state for schedule selection logic
     const [schedule, setSchedule] = React.useState<Schedule>({
         type: "daily",
@@ -59,6 +62,33 @@ export default function JobCreate() {
         })
     });
 
+    // handler for param Load failed
+    const handleLoadParamsFailed = React.useCallback(() => {
+      setLoadFailed(true);
+    }, []);
+
+    // handler for param selection logic
+    const handleFetchParams = React.useCallback((params: Param[]) => {
+        setParamList(params);
+        setParamValues(initSelectedValues(params));
+      }, []);
+    
+    // initialize callback for get params
+    const fetchParams = useCallFetch(
+        getUrl("/params/") + topicId, 
+        undefined, 
+        handleFetchParams, 
+        handleLoadParamsFailed
+    );
+    
+    // handler for RealoadingParms
+    const handleRealoadParms = React.useCallback(() => {
+      setParamList(undefined);
+      setParamValues({});
+      setLoadFailed(false);
+      fetchParams();
+    }, [fetchParams]);
+
     useEffect(() => {
         if (activeStep === 3) {
             setActiveStep(4);
@@ -66,6 +96,13 @@ export default function JobCreate() {
             addJob();
         }
     }, [activeStep, addJob])
+
+    // when a new topic is selected, fetch params
+    useEffect(() => {
+        if (topicId !== -1) {
+            handleRealoadParms();
+        }
+    }, [topicId, handleRealoadParms])
 
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
@@ -109,10 +146,6 @@ export default function JobCreate() {
     }
 
     // handler for param selection logic
-    const handleFetchParams = (params: Param[]) => {
-        setParamList(params);
-        setParamValues(initSelectedValues(params));
-    }
     const handleSelectParam = (key: string, value: any) => {
         const updated = { ...paramValues }
         updated[key] = value;
@@ -142,7 +175,6 @@ export default function JobCreate() {
             case 0:
                 return (
                     <TopicSelection
-                        fetchParamHandler={handleFetchParams}
                         topicId={topicId}
                         jobName={jobName}
                         selectTopicHandler={handleSelectTopic}
@@ -154,7 +186,11 @@ export default function JobCreate() {
                         topicId={topicId}
                         values={paramValues}
                         params={paramList}
-                        fetchParamHandler={handleFetchParams}
+                        loadFailedProps={{
+                            hasFailed: loadFailed, 
+                            name: "Parameter", 
+                            onReload: handleRealoadParms
+                        }}
                         selectParamHandler={handleSelectParam} />
                 )
             case 2:

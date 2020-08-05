@@ -13,7 +13,7 @@ import {
 import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
-interface FailedProps {
+export interface LoadFailedProps {
   hasFailed: boolean;
   name: string;
   onReload: () => void;
@@ -21,7 +21,7 @@ interface FailedProps {
 
 interface Props {
   data: any | undefined;
-  failed?: FailedProps;
+  failed?: LoadFailedProps;
   className?: string;
 }
 

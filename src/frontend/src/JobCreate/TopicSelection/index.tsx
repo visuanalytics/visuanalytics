@@ -2,7 +2,6 @@ import React, { useState, useCallback }  from "react";
 import {ListItem, Divider, List, TextField, Fade} from "@material-ui/core";
 import {TopicPanel} from "./TopicPanel";
 import {useStyles} from "../style";
-import {Param} from "../../util/param";
 import {Load} from "../../Load";
 import { getUrl } from "../../util/fetchUtils";
 import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
@@ -17,7 +16,6 @@ interface TopicSelectionProps {
     jobName: string;
     selectTopicHandler: (topicId: number) => void;
     enterJobNameHandler: (jobName: string) => void;
-    fetchParamHandler: (params: Param[]) => void;
 }
 
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
@@ -46,7 +44,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     topic={topic}
                     topicId={props.topicId}
                     selectTopicHandler={props.selectTopicHandler}
-                    fetchParamHandler={props.fetchParamHandler}/>
+                />
                 <Divider/>
             </ListItem>
         );
