@@ -39,12 +39,20 @@ def text(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: 
     """
     content = step_data.format(overlay["pattern"])
     draw_func = get_type_func(overlay, DRAW_TYPES, "anchor_point")
+    if overlay.get("preset", None) is not None:
+        font_size = presets[overlay["preset"]]["font_size"]
+        color = presets[overlay["preset"]]["color"]
+        font = presets[overlay["preset"]]["font"]
+    else:
+        font_size = overlay["font_size"]
+        color = overlay["color"]
+        font = overlay["font"]
     draw_func(draw,
               (step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])),
               content,
-              step_data.format(presets[overlay["preset"]]["font_size"]),
-              step_data.format(presets[overlay["preset"]]["color"]),
-              step_data.format(presets[overlay["preset"]]["font"]))
+              step_data.format(font_size),
+              step_data.format(color),
+              step_data.format(font))
 
 
 @register_overlay
@@ -62,21 +70,25 @@ def text_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_
     :param step_data: Daten aus der API
     """
     for idx, i in enumerate(overlay["pos_x"]):
-        if isinstance(overlay["preset"], list):
-            preset = overlay["preset"][idx]
+        new_overlay = {}
+        if overlay.get("preset", None) is None:
+            items = ["font_size", "color", "font"]
+            for item in items:
+                _add_to_dict(new_overlay, overlay, item, idx)
         else:
-            preset = overlay["preset"]
-        if isinstance(overlay["pattern"], list):
-            pattern = overlay["pattern"][idx]
-        else:
-            pattern = overlay["pattern"]
-        new_overlay = {
-            "anchor_point": overlay["anchor_point"],
-            "pos_x": overlay["pos_x"][idx],
-            "pos_y": overlay["pos_y"][idx],
-            "pattern": pattern,
-            "preset": preset}
+            _add_to_dict(new_overlay, overlay, "preset", idx)
+        _add_to_dict(new_overlay, overlay, "pattern", idx)
+        _add_to_dict(new_overlay, overlay, "anchor_point", idx)
+        new_overlay.update({"pos_x": overlay["pos_x"][idx]})
+        new_overlay.update({"pos_y": overlay["pos_y"][idx]})
         text(new_overlay, source_img, prev_paths, draw, presets, step_data)
+
+
+def _add_to_dict(new_overlay: dict, overlay: dict, key: str, idx: int):
+    if isinstance(overlay[key], list):
+        new_overlay.update({key: overlay[key][idx]})
+    else:
+        new_overlay.update({key: overlay[key]})
 
 
 @register_overlay
@@ -145,12 +157,20 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
         icon = icon.resize([step_data.format(overlay["size_x"]),
                             step_data.format(overlay["size_y"])], Image.LANCZOS)
-    if overlay.get("transparency", False):
-        source_img.alpha_composite(icon, (step_data.format(overlay["pos_x"]),
-                                          step_data.format(overlay["pos_y"])))
+    if overlay.get("pos_x", None) is not None and overlay.get("pos_y", None) is not None:
+        pos_x = step_data.format(overlay["pos_x"])
+        pos_y = step_data.format(overlay["pos_y"])
     else:
-        source_img.paste(icon, (step_data.format(overlay["pos_x"]),
-                                step_data.format(overlay["pos_y"])), icon)
+        width_b, height_b = source_img.size
+        width_i, height_i = icon.size
+        pos_x = int(round((width_b - width_i) / 2))
+        pos_y = int(round((height_b - height_i) / 2))
+    if overlay.get("transparency", False):
+        source_img.alpha_composite(icon, (pos_x,
+                                          pos_y))
+    else:
+        source_img.paste(icon, (pos_x,
+                                pos_y), icon)
 
 
 @register_overlay

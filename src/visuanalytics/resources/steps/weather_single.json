@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "weather_single",
+  "info": "Der Wetterbericht enthält das Wetter für einen ausgewählten Ort für den aktuellen Tag und die darauffolgenden vier Tage",
   "api": {
     "type": "request",
     "api_key_name": "weatherbit",
@@ -1746,6 +1747,10 @@
       ]
     }
   },
+  "thumbnail": {
+    "type": "created",
+    "name": "weather3"
+  },
   "audio": {
     "audios": {
       "a1": {
@@ -2103,170 +2108,87 @@
       }
     ]
   },
-  "run_config": [
-    {
-      "name": "city_name",
+  "run_config": {
+    "city_name": {
+      "type": "string",
       "display_name": "Ort",
-      "possible_values": [],
+      "optional": false,
       "default_value": "Gießen"
     },
-    {
-      "name": "p_code",
+    "p_code": {
+      "type": "string",
       "display_name": "Postleitzahl",
-      "possible_values": [],
+      "optional": false,
       "default_value": "35394"
     },
-    {
-      "name": "speech_app_temp_2",
-      "display_name": "Gefühlte Temperaturen (2 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+    "read": {
+      "type": "sub_params",
+      "display_name": "Welche Angaben sollen explizit im Video genannt werden?",
+      "optional": false,
+      "sub_params": {
+        "speech_app_temp_2": {
+          "type": "boolean",
+          "display_name": "Gefühlte Temperaturen (2 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_app_temp_3",
-      "display_name": "Gefühlte Temperaturen (3 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_app_temp_3": {
+          "type": "boolean",
+          "display_name": "Gefühlte Temperaturen (3 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_wind_2",
-      "display_name": "Wind-Daten (2 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_wind_2": {
+          "type": "boolean",
+          "display_name": "Wind-Daten (2 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_wind_3",
-      "display_name": "Wind-Daten (3 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_wind_3": {
+          "type": "boolean",
+          "display_name": "Wind-Daten (3 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_rh_2",
-      "display_name": "Relative Luftfeuchtigkeit (2 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_rh_2": {
+          "type": "boolean",
+          "display_name": "Relative Luftfeuchtigkeit (2 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_rh_3",
-      "display_name": "Relative Luftfeuchtigkeit (3 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_rh_3": {
+          "type": "boolean",
+          "display_name": "Relative Luftfeuchtigkeit (3 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_pop_2",
-      "display_name": "Regenwahrscheinlichkeit (2 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_pop_2": {
+          "type": "boolean",
+          "display_name": "Regenwahrscheinlichkeit (2 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_pop_3",
-      "display_name": "Regenwahrscheinlichkeit (3 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_pop_3": {
+          "type": "boolean",
+          "display_name": "Regenwahrscheinlichkeit (3 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_sun_2",
-      "display_name": "Sonnenuntergang/Sonnenaufgang (2 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
+        "speech_sun_2": {
+          "type": "boolean",
+          "display_name": "Sonnenuntergang/Sonnenaufgang (2 Tage)",
+          "optional": false,
+          "default_value": true
         },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
+        "speech_sun_3": {
+          "type": "boolean",
+          "display_name": "Sonnenuntergang/Sonnenaufgang (3 Tage)",
+          "optional": false,
+          "default_value": true
         }
-      ],
-      "default_value": true
-    },
-    {
-      "name": "speech_sun_3",
-      "display_name": "Sonnenuntergang/Sonnenaufgang (3 Tage)",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
-        },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
-        }
-      ],
-      "default_value": true
+      }
     }
-  ],
+  },
   "presets": {
     "weather_white_1": {
       "color": "white",

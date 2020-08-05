@@ -21,7 +21,7 @@ class DbScheduler(Scheduler):
         logger.info(f"Check if something needs to be done at: {now}")
 
         for row in job.get_job_schedules():
-            # Check if time is current Time
+            # check if time is current Time
             if not self._check_time(now, datetime.strptime(row["time"], "%H:%M").time()):
                 continue
 
@@ -31,14 +31,12 @@ class DbScheduler(Scheduler):
                 self.__run_jobs(row["job_id"])
                 continue
 
-            # If weekday is not none check if weekday is same as today
-            if row["weekly"] and now.weekday() in map(int, row["weekdays"].split(",")):
+            # if type is "weekly" check if weekday is same as today
+            if row["type"] == "weekly" and now.weekday() in map(int, row["weekdays"].split(",")):
                 self.__run_jobs(row["job_id"])
                 continue
 
-            print("daily", row["daily"])
-
-            # check if daily is true
-            if row["daily"]:
+            # check if type is "daily"
+            if row["type"] == "daily":
                 self.__run_jobs(row["job_id"])
                 continue

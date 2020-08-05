@@ -1,14 +1,3 @@
-# Build React Frontend
-FROM node:14.5.0-buster-slim as build
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-COPY frontend/package.json ./
-COPY frontend/package-lock.json ./
-RUN npm ci --silent
-RUN npm install react-scripts@3.4.1 -g --silent
-COPY frontend/. ./
-RUN npm run build
-
 # Build Production Container
 FROM jrottenberg/ffmpeg:4.2-nvidia
 
@@ -43,14 +32,8 @@ USER appuser
 # Copy src
 COPY --chown=appuser visuanalytics ./visuanalytics
 
-# -- Copy React Build --
-
-# Copy index.html to templates
-COPY --chown=appuser --from=build /app/build/index.html ./visuanalytics/server/templates/index.html
-# Copy other files to static
-COPY --chown=appuser --from=build /app/build ./visuanalytics/server/static
-# Remove index.html from static files
-RUN rm ./visuanalytics/server/static/index.html
+# -- Copy Logo --
+COPY --chown=appuser frontend/public/visuanalytics ./visuanalytics/server/static/visuanalytics
 
 # Create instance Folder
 RUN mkdir /home/appuser/visuanalytics/instance
