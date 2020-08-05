@@ -49,9 +49,10 @@ def insert_log(job_id: int, state: int, start_date: datetime):
         return id["id"]
 
 
-def update_log_error(id: int, state: int, error_msg: str):
+def update_log_error(id: int, state: int, error_msg: str, error_traceback):
     with db.open_con() as con:
-        con.execute("UPDATE job_logs SET state = (?), error_msg = ? where job_logs_id = (?)", [state, error_msg, id])
+        con.execute("UPDATE job_logs SET state = (?), error_msg = ?, error_traceback = ? where job_logs_id = (?)",
+                    [state, error_msg, error_traceback, id])
         con.commit()
 
 

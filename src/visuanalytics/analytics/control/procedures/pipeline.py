@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 import time
+import traceback
 from datetime import datetime
 
 from visuanalytics.analytics.apis.api import api_request, api
@@ -193,8 +194,11 @@ class Pipeline(object):
             self.__current_step = -2
 
             if not self.__log_id is None:
-                self.__update_db(update_log_error, self.__log_id, self.__log_states["error"],
-                                 f"{e.__class__.__name__}: {e}")
+                self.__update_db(update_log_error,
+                                 self.__log_id,
+                                 self.__log_states["error"],
+                                 f"{e.__class__.__name__}: {e}",
+                                 traceback.format_exc())
 
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
