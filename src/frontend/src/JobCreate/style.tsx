@@ -37,7 +37,6 @@ export const useStyles = makeStyles((theme) => ({
         width: "45%"
     },
     expIcon: {
-        marginTop: 1,
         marginRight: 5,
         float: "left"
     },

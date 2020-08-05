@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
@@ -38,11 +38,6 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                 required={props.required}
                             />
                         </div>
-                        {(p.type === "subParams" && (props.values[p.name] || !p.optional))
-                            &&
-                            <div className={classes.paddingBottomS}>
-                                <Divider />
-                            </div>}
                     </div>
                 ))
             }
@@ -53,6 +48,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
 const ParamField: React.FC<ParamFieldProps> = (props) => {
     const param = props.param;
     const classes = useStyles();
+    const [showSubParams, setShowSubParams] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         props.selectParamHandler(name, event.target.value);
@@ -64,6 +60,25 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
         props.selectParamHandler(name, event.target.checked);
     }
+
+    const withExpIcon = (name: string, expanded: boolean) => {
+        return (
+            <span>
+                {
+                    expanded
+                        ?
+                        <div className={classes.expIcon}>
+                            <ExpandLessIcon />
+                        </div>
+                        :
+                        <div className={classes.expIcon}>
+                            <ExpandMoreIcon />
+                        </div>
+                }
+                {name} </span>
+        )
+    }
+
 
     switch (param.type) {
         case "string": case "number": case "multiString": case "multiNumber":
@@ -91,7 +106,11 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             onChange={e => handleCheck(e, param.name)}
                         />}
                     disabled={props.disabled}
-                    label={param.displayName}
+                    label={
+                        <FormLabel
+                            disabled={props.disabled}>
+                            {param.displayName}
+                        </FormLabel>}
                     labelPlacement="start"
                     className={classes.checkboxParam}
                 />
@@ -126,28 +145,26 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                         checked={props.values[param.name]}
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
-                                label={<span>
-                                    {
-                                        props.values[param.name]
-                                            ?
-                                            <div className={classes.expIcon}>
-                                                <ExpandLessIcon />
-                                            </div>
-                                            :
-                                            <div className={classes.expIcon}>
-                                                <ExpandMoreIcon />
-                                            </div>
-                                    }
-                                    {param.displayName} </span>}
+                                label={
+                                    <FormLabel
+                                        disabled={props.disabled}>
+                                        {withExpIcon(param.displayName, props.values[param.name])}
+                                    </FormLabel>}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                             :
-                            param.displayName
+                            <div>
+                                <FormLabel
+                                    disabled={props.disabled}
+                                    onClick={() => { setShowSubParams(!showSubParams) }}>
+                                    {withExpIcon(param.displayName, showSubParams)}
+                                </FormLabel>
+                            </div>
                         }
                     </div>
-                    <Collapse in={!param.optional || props.values[param.name]}>
+                    <Collapse in={showSubParams || props.values[param.name]}>
                         <ParamFields
                             params={param.subParams}
                             values={props.values}
@@ -156,6 +173,11 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             required={props.required}
                         />
                     </Collapse>
+                    {((props.values[param.name] || showSubParams))
+                        &&
+                        <div className={classes.paddingS}>
+                            <Divider />
+                        </div>}
                 </div >
             )
         default:
