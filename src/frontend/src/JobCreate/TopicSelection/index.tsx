@@ -3,7 +3,7 @@ import {ListItem, Divider, List, TextField, Fade} from "@material-ui/core";
 import {TopicPanel} from "./TopicPanel";
 import {useStyles} from "../style";
 import {Param} from "../../util/param";
-import {Load} from "../../util/Load";
+import {Load} from "../../Load";
 import { getUrl } from "../../util/fetchUtils";
 import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
 

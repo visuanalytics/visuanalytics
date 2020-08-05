@@ -2,7 +2,7 @@ import React from "react";
 import { Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param, ParamValues } from "../../util/param";
-import { Load } from "../../util/Load";
+import { Load } from "../../Load";
 import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {

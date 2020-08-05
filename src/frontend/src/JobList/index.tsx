@@ -3,7 +3,7 @@ import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
 import { Fade } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
-import { Load } from "../util/Load";
+import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
 
