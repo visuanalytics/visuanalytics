@@ -37,7 +37,6 @@ interface INotification {
 
 export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const classes = useStyles();
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
 
     const [state, setState] = React.useState({
         edit: true,

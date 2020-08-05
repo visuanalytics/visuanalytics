@@ -97,6 +97,17 @@ export default function JobCreate() {
         }
     }, [schedule, activeStep])
 
+    useEffect(() => {
+        counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    }, [counter]);
+
+    const delay = () => {
+        setCounter(5);
+        setTimeout(() => {
+            components?.setCurrent("home");
+        }, 5000);
+    }
+
     // handlers for stepper logic
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -204,11 +215,8 @@ export default function JobCreate() {
             case 3:
                 return (
                     <DeleteSelection
-                        schedule={selectedSchedule}
-                        deleteHandler={handleDelete}
-                        deleteOldNewHandler={handleDeleteOldNew}
-                        deleteOnTimeHandler={handleDeleteOnTime}
-                        deleteTimeHandler={handleDeleteTime}
+                        schedule={schedule}
+                        selectScheduleHandler={handleSelectSchedule}
                     />
                 )
             default:

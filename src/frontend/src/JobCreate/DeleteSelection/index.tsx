@@ -1,18 +1,27 @@
 import React from "react";
 import {useStyles} from "../style";
 import {Collapse, Divider, Fade, FormControlLabel, Radio, TextField} from "@material-ui/core";
-import {Schedule} from "../index";
+import {Schedule} from "../../util/schedule";
 
 interface DeleteSelectionProps {
     schedule: Schedule,
-    deleteHandler: () => void;
-    deleteOldNewHandler: () => void;
-    deleteOnTimeHandler: () => void;
-    deleteTimeHandler: (date: Date | null) => void;
+    selectScheduleHandler: (schedule: Schedule) => void;
 }
 
-export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
+export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ schedule, selectScheduleHandler }) => {
     const classes = useStyles();
+
+    const handleSelectNoDelete = () => {
+        selectScheduleHandler({ type: "noDelete", time: schedule.time})
+    }
+
+    const handleSelectOnTimeDelete = () => {
+        selectScheduleHandler({ type: "onTime", removalTime: schedule.time, time: schedule.time})
+    }
+
+    const handleSelectOldOnNew = () => {
+        selectScheduleHandler({ type: "oldOnNew", time: schedule.time})
+    }
 
     return (
         <Fade in={true}>
@@ -20,8 +29,8 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
                 <div className={classes.paddingSmall}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="nodelete" control={<Radio
-                            checked={!props.schedule.delete}
-                            onChange={props.deleteHandler}
+                            checked={schedule.type === "noDelete"}
+                            onChange={handleSelectNoDelete}
                             value="nodelete"
                         />} label="nicht löschen" />
                     </div>
@@ -30,8 +39,8 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
                 <div className={classes.paddingSmall}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="deleteOld" control={<Radio
-                            checked={props.schedule.deleteOldOnNew}
-                            onChange={props.deleteOldNewHandler}
+                            checked={schedule.type === "oldOnNew"}
+                            onChange={handleSelectOldOnNew}
                             value="deleteOld"
                         />} label="Video bei Neugenerierung löschen" />
                     </div>
@@ -40,12 +49,12 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = (props) => {
                 <div className={classes.paddingSmall} >
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="ontime" control={<Radio
-                            checked={props.schedule.onTime}
-                            onChange={props.deleteOnTimeHandler}
+                            checked={schedule.type === "onTime"}
+                            onChange={handleSelectOnTimeDelete}
                             value="ontime"
                         />} label="nach Tagen" />
                     </div>
-                    <Collapse in={props.schedule.onTime}>
+                    <Collapse in={schedule.type === "onTime"}>
                         <TextField
                             label="Tage"
                             type="number"
