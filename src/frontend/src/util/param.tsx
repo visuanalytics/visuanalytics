@@ -59,7 +59,7 @@ interface EnumValue {
 
 // validate parameter values
 export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
-    if (params === undefined)
+    if (params === undefined || Object.keys(values).length === 0)
         return false;
 
     return params.every((p: Param) => {
