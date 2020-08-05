@@ -16,6 +16,7 @@ import {ComponentContext} from "../ComponentProvider";
 import {HintButton} from "../util/HintButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {ExpandMore} from "@material-ui/icons";
 
 export const Home = () => {
     const classes = useStyles();
@@ -64,7 +65,7 @@ export const Home = () => {
                                    </ListItem>
                                     <ListItem>
                                        <ListItemIcon className={classes.hintIcons}>
-                                           <AddCircleIcon/>
+                                           <ExpandMore/>
                                        </ListItemIcon>
                                        <ListItemText primary="Job-Informationen ausklappen"/>
                                    </ListItem>
