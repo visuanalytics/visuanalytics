@@ -43,7 +43,7 @@ export const JobList: React.FC = () => {
                                 Willkommen bei ihrer Job Übersicht!
                             </Typography>
                             <Typography align={"center"}>
-                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                                Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen generieren lassen.<br/> Klicken Sie auf 'Neuen Job erstellen', um Ihren ersten Job anzulegen und ein Video zu einem gewählten Zeitraum generieren zu lassen.
                             </Typography>
                         </Grid>
                         <Grid container item justify="center">
