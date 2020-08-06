@@ -70,20 +70,30 @@ export const validateParamValues = (values: ParamValues, params: Param[] | undef
                 }
                 break;
             case "string":
-            case "number":
             case "enum":
                 if (!p.optional) {
-                    const v = values[p.name];
-                    return v.trim() !== "";
+                    const v = values[p.name].trim();
+                    return v !== "";
+                }
+                break;
+            case "number":
+                if (!p.optional) {
+                    const v = values[p.name].trim();
+                    return v !== "" && !isNaN(Number(v));
                 }
                 break;
             case "multiString":
+                if (!p.optional) {
+                    const vs = values[p.name];
+                    return vs.length > 0 && vs.every((v: string) => v.trim() !== "");
+                }
+                break;
             case "multiNumber":
                 if (!p.optional) {
                     const vs = values[p.name];
-                    return vs.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
+                    return vs.length > 0 && vs.every((v: any) => String(v).trim() !== "" && !isNaN(Number(v)));
                 }
-                break;
+
         }
         return true;
     })
@@ -102,7 +112,7 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
                 cValues[k] = v;
             }
         } else if (cValues[k] instanceof Array) {
-            cValues[k] = cValues[k].map((s: string) => s.trim()).filter((s: string) => s !== "");
+            cValues[k] = cValues[k].map((s: any) => String(s).trim()).filter((s: string) => s !== "");
         }
     })
     return cValues;
@@ -142,10 +152,16 @@ export const toTypedValues = (values: ParamValues, params: Param[] | undefined) 
     let tValues: TypedParamValues = {};
     params?.forEach(p => {
         if (p.name in values) {
-            const v = values[p.name];
+            let v = values[p.name];
             if (p.type === "subParams" && (!p.optional || v)) {
                 const stValues = toTypedValues(values, p.subParams);
                 tValues = { ...tValues, ...stValues };
+            }
+            if (p.type === "number") {
+                v = Number(v);
+            }
+            if (p.type === "multiNumber") {
+                v = v.map((n: any) => Number(n));
             }
             tValues[p.name] = { type: p.type, value: v };
         }
