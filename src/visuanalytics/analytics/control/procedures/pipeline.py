@@ -54,6 +54,7 @@ class Pipeline(object):
         self.__config = {}
         self.__current_step = -1
         self.__log_to_db = log_to_db
+        self.__log_id = None
 
     @property
     def start_time(self):
