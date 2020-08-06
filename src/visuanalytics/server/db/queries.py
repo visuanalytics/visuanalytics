@@ -91,7 +91,7 @@ def get_logs():
     con = db.open_con_f()
     logs = con.execute(
         "SELECT "
-        "job_id, job_name, state, error_msg, error_traceback, duration, start_date "
+        "job_id, job_name, state, error_msg, error_traceback, duration, start_time "
         "from job_logs INNER JOIN job USING (job_id) "
         "ORDER BY job_logs_id DESC").fetchall()
     return [{
@@ -101,8 +101,8 @@ def get_logs():
         "errorMsg": log["error_msg"],
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
-        "startDate": log["start_date"
-        ]}
+        "startTime": log["start_time"]
+        }
         for log in logs]
 
 

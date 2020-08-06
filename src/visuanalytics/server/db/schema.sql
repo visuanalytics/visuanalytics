@@ -98,7 +98,7 @@ CREATE TABLE job_logs
     error_msg       TEXT,
     error_traceback TEXT,
     duration        INT,
-    start_date      DATETIME
+    start_time      DATETIME
 );
 
 

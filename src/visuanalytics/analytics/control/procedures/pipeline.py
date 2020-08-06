@@ -92,7 +92,7 @@ class Pipeline(object):
         self.__start_time = time.time()
 
         # Insert job into Table
-        log_id = self.__update_db(insert_log, self.__job_id, self.__log_states["running"], self.__start_time)
+        log_id = self.__update_db(insert_log, self.__job_id, self.__log_states["running"], round(self.__start_time))
         self.__log_id = log_id
 
         # Load json config file
@@ -188,6 +188,7 @@ class Pipeline(object):
             self.__cleanup()
             return True
         except (KeyboardInterrupt, SystemExit):
+            # TODO (max) db updaten und current_step setzen
             self.__cleanup()
             raise
         except Exception as e:
