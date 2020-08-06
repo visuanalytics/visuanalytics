@@ -32,5 +32,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: "40px",
       color: theme.palette.grey[500],
     },
+    durationText: {
+      height: "max-content",
+      color: "rgba(0, 0, 0, 0.62)",
+    },
+    durationIcon: {
+      color: "#6b6c68",
+    },
   })
 );
