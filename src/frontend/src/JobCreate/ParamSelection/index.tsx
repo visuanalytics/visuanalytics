@@ -2,14 +2,14 @@ import React from "react";
 import { Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param, ParamValues } from "../../util/param";
-import { Load } from "../../util/Load";
+import { Load, LoadFailedProps } from "../../Load";
 import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {
     topicId: number;
-    params: Param[];
+    params: Param[] | undefined;
     values: ParamValues;
-    fetchParamHandler: (params: Param[]) => void;
+    loadFailedProps: LoadFailedProps;
     selectParamHandler: (key: string, value: any) => void;
 }
 
@@ -19,9 +19,8 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
-                <div className={classes.SPaddingTB}>
-                    <Load data={props.params} />
-                    {props.params.length !== 0
+                <Load data={props.params} failed={props.loadFailedProps} className={classes.SPaddingTB}>
+                    {props.params?.length !== 0
                         ?
                         <ParamFields
                             params={props.params}
@@ -33,8 +32,8 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                         :
                         <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
                             Für dieses Thema stehen keine Parameter zur Verfügung.
-                    </div>}
-                </div>
+                        </div>}
+                </Load>
             </div>
         </Fade>
 

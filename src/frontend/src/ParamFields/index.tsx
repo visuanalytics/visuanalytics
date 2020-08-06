@@ -11,7 +11,7 @@ interface ParamFieldProps extends ParamField {
 }
 
 interface ParamFieldsProps extends ParamField {
-    params: Param[],
+    params: Param[] | undefined,
 }
 
 interface ParamField {
@@ -27,7 +27,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     return (
         <div >
             {
-                props.params.map(p => (
+                props.params?.map(p => (
                     <div key={p.name}>
                         <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
                             <ParamField
