@@ -90,9 +90,13 @@ def update_job(job_id, updated_data):
 def get_logs():
     con = db.open_con_f()
     logs = con.execute(
-        "SELECT job_id, state, error_msg, error_traceback, duration, start_date from job_logs ORDER BY job_logs_id DESC").fetchall()
+        "SELECT "
+        "job_id, job_name, state, error_msg, error_traceback, duration, start_date "
+        "from job_logs INNER JOIN job USING (job_id) "
+        "ORDER BY job_logs_id DESC").fetchall()
     return [{
         "jobId": log["job_id"],
+        "jobName": log["job_name"],
         "state": log["state"],
         "errorMsg": log["error_msg"],
         "errorTraceback": log["error_traceback"],
