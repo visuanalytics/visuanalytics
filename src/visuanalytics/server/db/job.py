@@ -40,9 +40,9 @@ def get_job_run_info(job_id):
         return job_name, steps_name, config
 
 
-def insert_log(job_id: int, state: int, start_date: datetime):
+def insert_log(job_id: int, state: int, start_time: datetime):
     with db.open_con() as con:
-        con.execute("INSERT INTO job_logs(job_id, state, start_date) values (?, ?, ?)", [job_id, state, start_date])
+        con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
 
