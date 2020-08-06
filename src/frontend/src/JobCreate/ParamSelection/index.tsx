@@ -19,7 +19,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
-                <div className={classes.paddingS}>
+                <div className={classes.SPaddingTB}>
                     <Load data={props.params} />
                     {props.params.length !== 0
                         ?
@@ -31,7 +31,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                             required={true}
                         />
                         :
-                        <div className={classes.paddingM} style={{ textAlign: "center" }}>
+                        <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
                             Für dieses Thema stehen keine Parameter zur Verfügung.
                     </div>}
                 </div>

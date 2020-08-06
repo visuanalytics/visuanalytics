@@ -15,22 +15,22 @@ export const useStyles = makeStyles((theme) => ({
         fontWeight: "normal",
         fontSize: "large"
     },
-    paddingM: {
-        paddingTop: 15,
-        paddingBottom: 15
+    MPaddingTB: {
+        paddingBottom: 15,
+        paddingTop: 15
     },
-    paddingS: {
-        paddingBottom: 10,
-        paddingTop: 10
-    },
-    paddingXS: {
-        paddingBottom: 5,
-        paddingTop: 5
-    },
-    paddingBottomS: {
+    SPaddingTB: {
+        paddingTop: 10,
         paddingBottom: 10
     },
-    paddingTopS: {
+    XSPaddingTB: {
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    SPaddingB: {
+        paddingBottom: 10
+    },
+    SPaddingT: {
         paddingTop: 10
     },
     inputFields: {

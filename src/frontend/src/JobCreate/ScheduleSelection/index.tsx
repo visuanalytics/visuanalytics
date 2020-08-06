@@ -49,7 +49,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
     return (
         <Fade in={true}>
             <div>
-                <div className={classes.paddingM}>
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="daily" control={<Radio
                             checked={schedule.type === "daily"}
@@ -59,7 +59,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                     </div>
                 </div>
                 <Divider />
-                <div className={classes.paddingM}>
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="weekly" control={<Radio
                             checked={schedule.type === "weekly"}
@@ -78,7 +78,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.paddingM} >
+                <div className={classes.MPaddingTB} >
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="onDate" control={<Radio
                             checked={schedule.type === "onDate"}
@@ -91,7 +91,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.paddingM} >
+                <div className={classes.MPaddingTB} >
                     <TimeInputField date={schedule.time} handler={handleSelectTime} />
                 </div>
             </div >

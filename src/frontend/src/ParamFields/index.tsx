@@ -29,7 +29,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
             {
                 props.params.map(p => (
                     <div key={p.name}>
-                        <div className={p.type === "boolean" ? classes.paddingXS : classes.paddingS}>
+                        <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
                             <ParamField
                                 param={p}
                                 values={props.values}
@@ -136,7 +136,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
         case "subParams":
             return (
                 <div>
-                    <div className={classes.paddingS}>
+                    <div className={classes.SPaddingTB}>
                         {param.optional
                             ?
                             <FormControlLabel
@@ -175,7 +175,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     </Collapse>
                     {((props.values[param.name] || showSubParams))
                         &&
-                        <div className={classes.paddingS}>
+                        <div className={classes.SPaddingTB}>
                             <Divider />
                         </div>}
                 </div >

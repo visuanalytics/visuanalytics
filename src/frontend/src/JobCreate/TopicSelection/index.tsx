@@ -50,7 +50,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     {topics?.map(t => renderTopicPanel(t))}
                 </List>
                 <Divider />
-                <div className={classes.paddingM}>
+                <div className={classes.MPaddingTB}>
                     <TextField className={classes.inputFields}
                         required
                         value={props.jobName}

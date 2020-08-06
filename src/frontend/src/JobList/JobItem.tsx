@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
-import {ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues} from "../util/param";
-import {Button, Container, Fade, InputBase, Modal, Paper, withStyles} from "@material-ui/core";
+import React, { useEffect } from "react";
+import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import {AccordionSummary, useStyles, InputField} from "./style";
+import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -13,11 +13,11 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
-import {ContinueButton} from "../JobCreate/ContinueButton";
-import {Job} from "./index";
-import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
-import {useCallFetch} from "../Hooks/useCallFetch";
-import {ParamFields} from "../ParamFields";
+import { ContinueButton } from "../JobCreate/ContinueButton";
+import { Job } from "./index";
+import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
+import { useCallFetch } from "../Hooks/useCallFetch";
+import { ParamFields } from "../ParamFields";
 import {
     Schedule,
     withFormattedDates,
@@ -26,8 +26,8 @@ import {
     showTimeToNextDate,
     validateSchedule
 } from "../util/schedule";
-import {getUrl} from "../util/fetchUtils";
-import {Notification, TMessageStates} from "../util/Notification";
+import { getUrl } from "../util/fetchUtils";
+import { Notification, TMessageStates } from "../util/Notification";
 
 
 interface Props {
@@ -41,7 +41,7 @@ interface INotification {
     message: string
 }
 
-export const JobItem: React.FC<Props> = ({job, getJobs}) => {
+export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const classes = useStyles();
 
     const [state, setState] = React.useState({
@@ -67,7 +67,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({...initSelectedValues(job.params), ...job.values});
+    const [paramValues, setParamValues] = React.useState<ParamValues>({ ...initSelectedValues(job.params), ...job.values });
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [error, setError] = React.useState(false);
@@ -83,7 +83,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     }
 
     const handleSelectParam = (key: string, value: any) => {
-        const updated = {...paramValues}
+        const updated = { ...paramValues }
         updated[key] = value;
         setParamValues(updated);
     }
@@ -93,15 +93,15 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     }
 
     const handleEditError = () => {
-        setSucess({open: true, stateType: "error", message: "Bearbeitung fehlgeschlagen"})
+        setSucess({ open: true, stateType: "error", message: "Bearbeitung fehlgeschlagen" })
     }
 
     const handleEditSuccess = () => {
         getJobs()
-        setSucess({open: true, stateType: "success", message: "Job erfolgreich geändert"})
+        setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
     }
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, getJobs);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -137,7 +137,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             setExpanded(isExpanded ? panel : false);
         };
         const handleEditClick = () => {
-            setState(state.edit ? {edit: false, editIcon: 'none', doneIcon: 'block'} : {
+            setState(state.edit ? { edit: false, editIcon: 'none', doneIcon: 'block' } : {
                 edit: true,
                 editIcon: 'block',
                 doneIcon: 'none'
@@ -172,19 +172,20 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
         const renderTextField = () => {
             return (
                 <div>
-                    <div>
-                        <InputField
+                    <div className={classes.SPaddingTRB}>
+                        <TextField
                             label="Thema"
                             defaultValue={job.topicName}
                             InputProps={{
                                 disabled: true,
                             }}
                             variant="outlined"
+                            fullWidth
                         />
                     </div>
-                    <div>
+                    <div className={classes.SPaddingTRB}>
                         <Button className={classes.inputButton} onClick={handleOpen}>
-                            <InputField
+                            <TextField
                                 label="Zeitplan"
                                 value={showSchedule(schedule)}
                                 InputProps={{
@@ -193,18 +194,20 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                                 }}
                                 required={!state.edit}
                                 variant="outlined"
+                                fullWidth
                             />
                         </Button>
 
                     </div>
-                    <div>
-                        <InputField
+                    <div className={classes.SPaddingTRB}>
+                        <TextField
                             label="nächstes Video"
                             value={next}
                             InputProps={{
                                 disabled: true,
                             }}
                             variant="outlined"
+                            fullWidth
                         />
                     </div>
                 </div>
@@ -215,15 +218,15 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
             setError(false);
         }
         const handleCloseSuccess = () => {
-            setSucess({open: false, stateType: success.stateType, message: success.message});
+            setSucess({ open: false, stateType: success.stateType, message: success.message });
         }
 
         return (
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
-                        {expanded ? <ExpandLess className={classes.expIcon}/> :
-                            <ExpandMore className={classes.expIcon}/>}
+                        {expanded ? <ExpandLess className={classes.expIcon} /> :
+                            <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>#{job.jobId}
                             <NameInput
                                 // autoFocus={true}
@@ -235,22 +238,22 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                             >
                                 {job.jobName}</NameInput></Typography>
                         <Notification handleClose={handleCloseError} open={error} message={errorMessage}
-                                      type={"error"}/>
+                            type={"error"} />
                         <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message}
-                                      type={success.stateType}/>
+                            type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
-                            <IconButton style={{display: state.editIcon}} className={classes.button}
-                                        onClick={handleEditClick}>
-                                <EditIcon/>
+                            <IconButton style={{ display: state.editIcon }} className={classes.button}
+                                onClick={handleEditClick}>
+                                <EditIcon />
                             </IconButton>
-                            <IconButton style={{display: state.doneIcon}} className={classes.button}
-                                        onClick={handleCheckClick}>
-                                <CheckCircleIcon/>
+                            <IconButton style={{ display: state.doneIcon }} className={classes.button}
+                                onClick={handleCheckClick}>
+                                <CheckCircleIcon />
                             </IconButton>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
                             <IconButton onClick={deleteJob} className={classes.button}>
-                                <DeleteIcon/>
+                                <DeleteIcon />
                             </IconButton>
                         </div>
                     </AccordionSummary>
