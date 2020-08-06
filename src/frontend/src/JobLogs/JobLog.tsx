@@ -6,6 +6,7 @@ import {
   CardContent,
   Grid,
   Typography,
+  IconButton,
 } from "@material-ui/core";
 import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
@@ -14,6 +15,8 @@ import CachedOutlinedIcon from "@material-ui/icons/CachedOutlined";
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import { format, fromUnixTime } from "date-fns";
 import { de } from "date-fns/locale";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { LogErrorDialog } from "./LogErrorDialog";
 
 export interface Log {
   jobId: number;
@@ -30,16 +33,14 @@ interface Props {
 }
 
 type ClassesType = Record<
-  | "header"
   | "runningIcon"
   | "finishedIcon"
   | "unownIcon"
-  | "margin"
-  | "paper"
-  | "card"
   | "errorIcon"
   | "durationText"
-  | "durationIcon",
+  | "durationIcon"
+  | "errorText"
+  | "errorBox",
   string
 >;
 
@@ -65,15 +66,41 @@ interface SateValues {
   infoFC: JSX.Element;
 }
 
-const getStateValues = (log: Log, classes: ClassesType): SateValues => {
+const useStateValues = (log: Log, classes: ClassesType): SateValues => {
+  const [expandError, setExpandError] = React.useState(false);
+
   switch (log.state) {
     case -1:
       // On State Error
       return {
         icon: <HighlightOffOutlinedIcon className={classes.errorIcon} />,
         iconTitle: "Fehler bei der Video generierung",
-        jobNameXS: 9,
-        infoFC: <></>,
+        jobNameXS: 4,
+        infoFC: (
+          <Grid container item md={7} xs className={classes.errorBox}>
+            <Grid item xs>
+              <Typography
+                align="center"
+                className={classes.errorText}
+                variant="subtitle1"
+                color="error"
+              >
+                {log.errorMsg}
+              </Typography>
+            </Grid>
+            <Grid item xs={1} container alignItems="center">
+              <IconButton onClick={() => setExpandError(!expandError)}>
+                <MoreHorizIcon />
+              </IconButton>
+            </Grid>
+            <LogErrorDialog
+              open={expandError}
+              onClose={() => setExpandError(false)}
+              title="Error Traceback"
+              content={log.errorTraceback ? log.errorTraceback : ""}
+            />
+          </Grid>
+        ),
       };
     case 0:
       // On State Running
@@ -118,11 +145,11 @@ const getStateValues = (log: Log, classes: ClassesType): SateValues => {
 
 export const JobLog: React.FC<Props> = ({ log }) => {
   const classes = useStyles();
-  const stateValues = getStateValues(log, classes);
+  const stateValues = useStateValues(log, classes);
 
   return (
-    <Card className={classes.card} variant="outlined">
-      <CardContent>
+    <Card variant="outlined" className={classes.card}>
+      <CardContent className={classes.cardContent}>
         <Grid container spacing={2}>
           <Grid item>{stateValues.icon}</Grid>
           <Grid item xs={stateValues.jobNameXS}>

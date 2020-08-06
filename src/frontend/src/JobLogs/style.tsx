@@ -11,8 +11,15 @@ export const useStyles = makeStyles((theme: Theme) =>
     margin: {
       margin: "30px auto",
     },
+    tableCell: {
+      borderBottom: "none",
+      padding: "6px 10px 6px 10px",
+    },
     card: {
-      margin: theme.spacing(1),
+      borderWidth: "2px",
+    },
+    cardContent: {
+      padding: "18px 16px 18px 16px !important",
     },
     errorIcon: {
       fontSize: "40px",
@@ -21,7 +28,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     runningIcon: {
       fontSize: "40px",
       animation:
-        "MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite",
+        "MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite reverse",
       color: theme.palette.grey[600],
     },
     finishedIcon: {
@@ -38,6 +45,14 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     durationIcon: {
       color: "#6b6c68",
+    },
+    errorBox: {
+      border: "1px solid rgba(0, 0, 0, 0.12)",
+      borderRadius: "4px",
+    },
+    errorText: {
+      borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+      whiteSpace: "pre-wrap",
     },
   })
 );
