@@ -16,13 +16,24 @@ def init(config: dict):
     # if Graphic mode -> init db
     if not config["console_mode"]:
         # init db
-        db.init_db(config["db"].get("topics", []))
+        db.init_db(config["db"].get("topics", []), config["db"]["db_path"])
 
-    # create temp dir
-    os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
-    os.makedirs(resources.get_resource_path("memory"), exist_ok=True)
+    # Init resources locations
+    res_paths = config["resources"]
+    res_sub_paths = res_paths["sub_paths"]
 
-    # create out and instance dir
+    resources.RESOURCES_LOCATION = res_paths["main_path"]
+    resources.TEMP_LOCATION = res_sub_paths["temp"]
+    resources.IMAGES_LOCATION = res_sub_paths["images"]
+    resources.MEMORY_LOCATION = res_sub_paths["memory"]
+
+    # create resources folders
+    os.makedirs(resources.path_from_root(res_paths["main_path"]), exist_ok=True)
+    os.makedirs(resources.get_resource_path(res_sub_paths["temp"]), exist_ok=True)
+    os.makedirs(resources.get_resource_path(res_sub_paths["images"]), exist_ok=True)
+    os.makedirs(resources.get_resource_path(res_sub_paths["memory"]), exist_ok=True)
+
+    # create out and instance folder
     out_dir = config.get("steps_base_config", {}).get("output_path", "out")
     os.makedirs(resources.path_from_root(out_dir), exist_ok=True)
     os.makedirs(resources.path_from_root("instance"), exist_ok=True)

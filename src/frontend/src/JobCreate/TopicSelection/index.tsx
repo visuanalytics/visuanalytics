@@ -10,6 +10,7 @@ import { getUrl } from "../../util/fetchUtils";
 export interface Topic {
     topicName: string;
     topicId: number;
+    topicInfo: string;
 }
 
 interface TopicSelectionProps {

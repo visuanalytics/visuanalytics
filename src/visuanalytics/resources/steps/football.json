@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "football",
+  "info": "Der Fußballbericht enthält die Ergebnisse des aktuellen Spieltags und dessen Tabelle",
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
@@ -55,7 +56,7 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "input": "-1. Spieltag"
+          "data": "-1. Spieltag"
         }
       },
       {
@@ -613,15 +614,14 @@
           "anchor_point": "center",
           "pos_x": 960,
           "pos_y": 0,
-          "preset": "football_1",
+          "color": "black",
+          "font_size": 74,
+          "font": "fonts/Dosis-Bold.ttf",
           "pattern": "{_req|Spieltag}"
         },
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         }
@@ -666,7 +666,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -684,7 +683,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 180,
               "preset": "football_4",
@@ -744,7 +742,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -762,7 +759,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 270,
               "preset": "football_4",
@@ -822,7 +818,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -840,7 +835,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 360,
               "preset": "football_4",
@@ -900,7 +894,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -918,7 +911,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 450,
               "preset": "football_4",
@@ -978,7 +970,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -996,7 +987,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 540,
               "preset": "football_4",
@@ -1056,7 +1046,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1074,7 +1063,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 630,
               "preset": "football_4",
@@ -1134,7 +1122,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1152,7 +1139,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 720,
               "preset": "football_4",
@@ -1212,7 +1198,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1230,7 +1215,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 810,
               "preset": "football_4",
@@ -1290,7 +1274,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1308,7 +1291,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 900,
               "preset": "football_4",
@@ -1336,9 +1318,6 @@
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         },
@@ -1363,7 +1342,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1438,7 +1416,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1513,7 +1490,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1588,7 +1564,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1663,7 +1638,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1738,7 +1712,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1813,7 +1786,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1888,7 +1860,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1963,7 +1934,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2026,9 +1996,6 @@
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         },
@@ -2053,7 +2020,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2128,7 +2094,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2203,7 +2168,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2278,7 +2242,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2353,7 +2316,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2428,7 +2390,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2503,7 +2464,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2578,7 +2538,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2653,7 +2612,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2722,7 +2680,9 @@
           "anchor_point": "center",
           "pos_x": 960,
           "pos_y": 400,
-          "preset": "football_7",
+          "color": "black",
+          "font_size": 180,
+          "font": "fonts/Dosis-Bold.ttf",
           "pattern": "{_req|Spieltag}"
         },
         {
@@ -2731,7 +2691,9 @@
           "anchor_point": "center",
           "pos_x": 960,
           "pos_y": 190,
-          "preset": "football_8",
+          "color": "white",
+          "font_size": 100,
+          "font": "fonts/Dosis-Bold.ttf",
           "pattern": "{_req|Spiele|0|LeagueName}"
         }
       ]
@@ -2882,12 +2844,10 @@
     }
   },
   "presets": {
-    "football_1": {
-      "color": "black",
-      "font_size": 74,
-      "font": "fonts/Dosis-Bold.ttf"
-    },
     "football_2": {
+      "anchor_point": "center",
+      "pos_x": 960,
+      "pos_y": 100,
       "color": "white",
       "font_size": 35,
       "font": "fonts/Dosis-Bold.ttf"
@@ -2898,6 +2858,7 @@
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_4": {
+      "anchor_point": "center",
       "color": "black",
       "font_size": 65,
       "font": "fonts/Dosis-Bold.ttf"
@@ -2908,18 +2869,9 @@
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_6": {
+      "anchor_point": "center",
       "color": "#858582",
       "font_size": 60,
-      "font": "fonts/Dosis-Bold.ttf"
-    },
-    "football_7": {
-      "color": "black",
-      "font_size": 180,
-      "font": "fonts/Dosis-Bold.ttf"
-    },
-    "football_8": {
-      "color": "white",
-      "font_size": 100,
       "font": "fonts/Dosis-Bold.ttf"
     }
   }
