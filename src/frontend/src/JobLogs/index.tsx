@@ -13,6 +13,7 @@ import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
 import { Load } from "../util/Load";
 import { Log, JobLog } from "./JobLog";
+import { GreyDivider } from "../JobCreate/GreyDivider";
 
 export const JobLogs = () => {
   const classes = useStyles();
@@ -25,11 +26,11 @@ export const JobLogs = () => {
           Logs
         </Typography>
         <Load data={logs}>
-          <Table padding="checkbox">
+          <Table>
             <TableBody>
               {logs?.map((log, idx) => (
                 <TableRow key={idx}>
-                  <TableCell>
+                  <TableCell className={classes.tableCell}>
                     <JobLog log={log} />
                   </TableCell>
                 </TableRow>
