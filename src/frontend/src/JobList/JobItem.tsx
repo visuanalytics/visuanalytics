@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField } from "@material-ui/core";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -28,7 +28,7 @@ import {
 } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
 import { Notification, TMessageStates } from "../util/Notification";
-import {HintButton} from "../util/HintButton";
+import { HintButton } from "../util/HintButton";
 
 interface Props {
     job: Job,
@@ -185,22 +185,23 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                     </div>
                     <div className={classes.SPaddingTRB}>
                         <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
-                                 arrow
+                            arrow
                         >
-                        <Button className={classes.inputButton} onClick={handleOpen}>
-                            <TextField
-                                label="Zeitplan"
-                                value={showSchedule(schedule)}
-                                InputProps={{
-                                    disabled: state.edit,
-                                    readOnly: true
-                                }}
-                                required={!state.edit}
-                                variant="outlined"
-                                fullWidth
-                            />
-                        </Button>
+                            <Button className={classes.inputButton} onClick={handleOpen}>
+                                <TextField
+                                    label="Zeitplan"
+                                    value={showSchedule(schedule)}
+                                    InputProps={{
+                                        disabled: state.edit,
+                                        readOnly: true
+                                    }}
+                                    required={!state.edit}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </Button>
                         </Tooltip>
+                    </div>
                     <div>
                     </div>
                     <div className={classes.SPaddingTRB}>
@@ -247,24 +248,24 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job bearbeiten" arrow>
-                            <IconButton style={{ display: state.editIcon }} className={classes.button}
-                                onClick={handleEditClick}>
-                                <EditIcon />
-                            </IconButton>
-                                 </Tooltip>
+                                <IconButton style={{ display: state.editIcon }} className={classes.button}
+                                    onClick={handleEditClick}>
+                                    <EditIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Tooltip title="Job speichern" arrow>
-                            <IconButton style={{ display: state.doneIcon }} className={classes.button}
-                                onClick={handleCheckClick}>
-                                <CheckCircleIcon />
-                            </IconButton>
-                                </Tooltip>
+                                <IconButton style={{ display: state.doneIcon }} className={classes.button}
+                                    onClick={handleCheckClick}>
+                                    <CheckCircleIcon />
+                                </IconButton>
+                            </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                             <Tooltip title="Job löschen" arrow>
+                            <Tooltip title="Job löschen" arrow>
                                 <IconButton onClick={deleteJob} className={classes.button}>
                                     <DeleteIcon />
                                 </IconButton>
-                             </Tooltip>
+                            </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -286,7 +287,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
-                                        <Grid xs={11}/>
+                                        <Grid xs={11} />
                                         <Grid container xs={1} justify={"flex-end"}>
                                             <HintButton content={
                                                 <div>
