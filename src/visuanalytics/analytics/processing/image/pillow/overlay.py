@@ -26,62 +26,53 @@ def register_overlay(func):
 
 
 @register_overlay
-def text(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def text(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode um Text auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
 
     :param overlay: Bauplan des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches geschrieben werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
     content = step_data.format(overlay["pattern"])
     draw_func = get_type_func(overlay, DRAW_TYPES, "anchor_point")
-    if overlay.get("preset", None) is not None:
-        font_size = presets[overlay["preset"]]["font_size"]
-        color = presets[overlay["preset"]]["color"]
-        font = presets[overlay["preset"]]["font"]
-    else:
-        font_size = overlay["font_size"]
-        color = overlay["color"]
-        font = overlay["font"]
+
     draw_func(draw,
               (step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])),
               content,
-              step_data.format(font_size),
-              step_data.format(color),
-              step_data.format(font))
+              step_data.format(overlay["font_size"]),
+              step_data.format(overlay["color"]),
+              step_data.format(overlay["font"]))
 
 
 @register_overlay
-def text_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def text_array(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode um ein Text-Array auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
     Im Bauplan sind mehrere Texte vorgegeben die auf das Bild geschrieben werden sollen, diese werden ausgepackt
     und umformatiert sodass alle einzelnen overlays nacheinander an die Funktion text übergeben werden.
 
     :param overlay: Bauplan des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches geschrieben werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
+    # TODO (Max) preset arrays are not working jet
     for idx, i in enumerate(overlay["pos_x"]):
         new_overlay = {}
-        if overlay.get("preset", None) is None:
-            items = ["font_size", "color", "font"]
-            for item in items:
-                _add_to_dict(new_overlay, overlay, item, idx)
-        else:
-            _add_to_dict(new_overlay, overlay, "preset", idx)
+        items = ["font_size", "color", "font"]
+
+        for item in items:
+            _add_to_dict(new_overlay, overlay, item, idx)
+
         _add_to_dict(new_overlay, overlay, "pattern", idx)
         _add_to_dict(new_overlay, overlay, "anchor_point", idx)
         new_overlay.update({"pos_x": overlay["pos_x"][idx]})
         new_overlay.update({"pos_y": overlay["pos_y"][idx]})
-        text(new_overlay, source_img, prev_paths, draw, presets, step_data)
+        text(new_overlay, step_data, source_img, prev_paths, draw)
 
 
 def _add_to_dict(new_overlay: dict, overlay: dict, key: str, idx: int):
@@ -92,58 +83,55 @@ def _add_to_dict(new_overlay: dict, overlay: dict, key: str, idx: int):
 
 
 @register_overlay
-def option(values: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def option(values: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
     wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
     true oder false ist wird entweder Bauplan A oder Bauplan B ausgeführt.
 
     :param values: Baupläne des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches geschrieben werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
     chosen_text = execute_type_option(values, step_data)
 
     for overlay in chosen_text:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
+        over_func(overlay, step_data, source_img, prev_paths, draw)
 
 
 @register_overlay
-def compare(values: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def compare(values: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
     wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
     true oder false ist wird entweder Bauplan A oder Bauplan B ausgeführt.
 
     :param values: Baupläne des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches geschrieben werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
     chosen_text = execute_type_compare(values, step_data)
 
     for overlay in chosen_text:
         over_func = get_type_func(overlay, OVERLAY_TYPES)
-        over_func(overlay, source_img, prev_paths, draw, presets, step_data)
+        over_func(overlay, step_data, source_img, prev_paths, draw)
 
 
 @register_overlay
-def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def image(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode um ein Bild in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
 
     :param overlay: Bauplan des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches das Bild eingefügt werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
     if overlay.get("path", None) is None:
         path = resources.get_resource_path(prev_paths[overlay["image_name"]])
@@ -174,7 +162,7 @@ def image(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data:
 
 
 @register_overlay
-def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step_data: StepData):
+def image_array(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
     Methode um ein Bild-Array in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
     Im Bauplan sind mehrere Bilder vorgegeben die auf das Bild gesetzt werden sollen, diese werden ausgepackt
@@ -182,11 +170,10 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
 
 
     :param overlay: Bauplan des zu schreibenden Overlays
+    :param step_data: Daten aus der API
     :param source_img: Bild auf welches das Bild eingefügt werden soll
     :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
     :param draw: Draw Objekt
-    :param presets: Preset Part aus der JSON
-    :param step_data: Daten aus der API
     """
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["color"], list):
@@ -211,7 +198,7 @@ def image_array(overlay: dict, source_img, prev_paths, draw, presets: dict, step
             "image_name": image_name,
             "white_transparency": overlay.get("white_transparency", False),
             "color": color}
-        image(new_overlay, source_img, prev_paths, draw, presets, step_data)
+        image(new_overlay, step_data, source_img, prev_paths, draw)
 
 
 def _color_to_transparent(img, color):
