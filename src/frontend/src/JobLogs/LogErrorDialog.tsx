@@ -22,7 +22,7 @@ export const LogErrorDialog: React.FC<Props> = ({
   content,
 }) => {
   return (
-    <Dialog open={open} onClose={onClose} scroll="body">
+    <Dialog fullWidth maxWidth="md" open={open} onClose={onClose} scroll="body">
       {" "}
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>

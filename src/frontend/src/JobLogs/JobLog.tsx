@@ -88,7 +88,7 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
                 {log.errorMsg}
               </Typography>
             </Grid>
-            <Grid item xs={1} container alignItems="center">
+            <Grid item xs={1} container alignItems="flex-start">
               <IconButton onClick={() => setExpandError(!expandError)}>
                 <MoreHorizIcon />
               </IconButton>
@@ -96,7 +96,7 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
             <LogErrorDialog
               open={expandError}
               onClose={() => setExpandError(false)}
-              title="Error Traceback"
+              title="Fehler Traceback"
               content={log.errorTraceback ? log.errorTraceback : ""}
             />
           </Grid>
@@ -116,7 +116,7 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
         icon: (
           <CheckCircleOutlineOutlinedIcon className={classes.finishedIcon} />
         ),
-        iconTitle: "Video wird generiert",
+        iconTitle: "Video wurde generiert",
         jobNameXS: 9,
         infoFC: (
           <Grid item container justify="flex-end" md={2} xs>
@@ -151,7 +151,9 @@ export const JobLog: React.FC<Props> = ({ log }) => {
     <Card variant="outlined" className={classes.card}>
       <CardContent className={classes.cardContent}>
         <Grid container spacing={2}>
-          <Grid item>{stateValues.icon}</Grid>
+          <Grid item>
+            <Tooltip title={stateValues.iconTitle}>{stateValues.icon}</Tooltip>
+          </Grid>
           <Grid item xs={stateValues.jobNameXS}>
             <Typography variant="h6">
               {`#${log.jobId}  ${log.jobName}`}
