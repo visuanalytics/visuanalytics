@@ -79,8 +79,7 @@
         "color_func": true,
         "color_func_words": "145 46 5 35",
         "figure": "circle",
-        "width_wordcloud": 1000,
-        "height_wordcloud": 1000,
+        "size_wordcloud": "1000x1000",
         "fix_names": {
           "count": 3
         }

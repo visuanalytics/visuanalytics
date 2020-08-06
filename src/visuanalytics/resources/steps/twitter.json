@@ -25,6 +25,26 @@
   },
   "transform": [
     {
+      "type": "split_string",
+      "keys": [
+        "_conf|size_wordcloud"
+      ],
+      "delimiter": "x",
+      "ignore_case": true
+    },
+    {
+      "type": "convert",
+      "keys": [
+        "_conf|size_wordcloud|0",
+        "_conf|size_wordcloud|1"
+      ],
+      "new_keys": [
+        "_conf|width_wordcloud",
+        "_conf|height_wordcloud"
+      ],
+      "to": "int"
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|statuses",
       "transform": [
@@ -565,13 +585,13 @@
   "run_config": {
     "hashtags": {
       "type": "multi_string",
-      "display_name": "Hashtags",
+      "display_name": "Hashtags (z. B.: Bundesliga, Fußball)",
       "optional": false,
       "default_value": []
     },
     "stopwords": {
       "type": "multi_string",
-      "display_name": "Stoppwörter",
+      "display_name": "Stoppwörter (z. B.: Bundesliga, Fußball)",
       "optional": true,
       "default_value": []
     },
@@ -662,19 +682,40 @@
     "normalize_words": {
       "type": "boolean",
       "display_name": "Wörter normalisieren",
+      "optional": true,
       "default_value": true
     },
-    "width_wordcloud": {
-      "type": "number",
-      "display_name": "Breite der Wordcloud (in Pixeln)",
+    "size_wordcloud": {
+      "type": "enum",
+      "display_name": "Größe der Wordcloud (in Pixeln)",
       "optional": true,
-      "default_value": 1000
-    },
-    "height_wordcloud": {
-      "type": "number",
-      "display_name": "Höhe der Wordcloud (in Pixeln)",
-      "optional": true,
-      "default_value": 1000
+      "enum_values": [
+        {
+          "value": "426x240",
+          "display_value": "426 x 240 "
+        },
+        {
+          "value": "640x360",
+          "display_value": "640 x 360"
+        },
+        {
+          "value": "854 x 480",
+          "display_value": "854 x 480"
+        },
+        {
+          "value": "1280x720",
+          "display_value": "1.280 x 720"
+        },
+        {
+          "value": "1000x1000",
+          "display_value": "1.000 x 1.000"
+        },
+        {
+          "value": "1920x1080",
+          "display_value": "1.920 x 1.080"
+        }
+      ],
+      "default_value": "1000x1000"
     }
   },
   "presets": {
