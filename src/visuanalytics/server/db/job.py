@@ -1,4 +1,5 @@
 from visuanalytics.server.db import db
+from visuanalytics.server.db import queries
 
 
 def get_job_schedules():
@@ -33,6 +34,6 @@ def get_job_run_info(job_id):
 
         job_name = res[0]["job_name"]
         steps_name = res[0]["json_file_name"]
-        config = {row["key"]: row["value"] for row in res}
+        config = {row["key"]: queries.to_typed_value(row["value"], row["type"]) for row in res}
 
         return job_name, steps_name, config
