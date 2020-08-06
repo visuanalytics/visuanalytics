@@ -32,7 +32,7 @@ export const mainComponents = {
   jobLogs: {
     component: JobLogs,
     icon: DescriptionIcon,
-    navName: "Job Logs",
+    navName: "Logs",
   },
 };
 
