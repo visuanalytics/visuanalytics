@@ -33,7 +33,7 @@ export const Home = () => {
                         </Grid>
                         <Grid item >
                             <Tooltip title="Job erstellen" arrow>
-                                <IconButton className={classes.button} size="small" onClick={() => components?.setCurrent("jobpage")}>
+                                <IconButton className={classes.button} size="small" onClick={() => components?.setCurrent("jobPage")}>
                                     <AddCircleIcon fontSize="large"/>
                                 </IconButton>
                             </Tooltip>

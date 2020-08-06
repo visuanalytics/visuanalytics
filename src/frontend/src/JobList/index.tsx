@@ -47,7 +47,7 @@ export const JobList: React.FC = () => {
                             </Typography>
                         </Grid>
                         <Grid container item justify="center">
-                            <ContinueButton style={{width: "auto"}} onClick={() => components?.setCurrent("jobpage")}>Neuen Job erstellen</ContinueButton>
+                            <ContinueButton style={{width: "auto"}} onClick={() => components?.setCurrent("jobPage")}>Neuen Job erstellen</ContinueButton>
                         </Grid>
                     </Grid>
                 </Paper>
