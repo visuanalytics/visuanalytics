@@ -13,7 +13,6 @@ import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
 import { Load } from "../util/Load";
 import { Log, JobLog } from "./JobLog";
-import { GreyDivider } from "../JobCreate/GreyDivider";
 
 export const JobLogs = () => {
   const classes = useStyles();
