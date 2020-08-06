@@ -14,7 +14,7 @@ def get_topic_names():
              "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
 
 
-def _get_topic_steps(json_file_name :str):
+def _get_topic_steps(json_file_name: str):
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
@@ -112,8 +112,8 @@ def _insert_param_values(con, job_id, values):
         (job_id,
          k,
          _to_untyped_value(v["value"], humps.decamelize(v["type"])),
-         humps.decamelize(v["type"])) for (k, v)
-        in values.items()]
+         humps.decamelize(v["type"]))
+        for (k, v) in values.items()]
     con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
 
 
@@ -121,24 +121,32 @@ def _get_values(param_string):
     if param_string is None:
         return []
     kvts = [kvt.split(":") for kvt in param_string.split(",")]
-    values = {kvt[0]: _to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
+    values = {kvt[0]: to_typed_value(kvt[1], kvt[2]) for kvt in kvts}
     return values
 
 
 def _to_untyped_value(v, t):
-    if t in ["string", "number", "enum"]:
+    if t in ["string", "enum"]:
         return v
-    if t in ["multi_string", "multi_number"]:
+    if t in ["multi_string"]:
         return ";".join(v)
-    if t in ["boolean", "sub_params"]:
+    if t in ["multi_number"]:
+        return ";".join([str(n) for n in v])
+    if t in ["boolean", "sub_params", "number"]:
         return str(v)
 
 
-def _to_typed_value(v, t):
-    if t in ["string", "number", "enum"]:
+def to_typed_value(v, t):
+    if t in ["string", "enum"]:
         return v
-    if t in ["multi_string", "multi_number"]:
+    if t in ["number"]:
+        if "." in v:
+            return float(v)
+        return int(v)
+    if t in ["multi_string"]:
         return v.split(";")
+    if t in ["multi_number"]:
+        return [float(n) if "." in n else int(n) for n in v.split(";")]
     if t in ["boolean", "sub_params"]:
         return v == "True"
 
@@ -160,3 +168,6 @@ def _to_param_list(run_config):
                 if value["type"] != "sub_params"
                 else {**value, "type": "subParams", "sub_params": _to_param_list(value["sub_params"])})}
             for key, value in run_config.items()]
+
+
+print(to_typed_value(_to_untyped_value([1, 2, 3], "multi_number"), "multi_number"))
