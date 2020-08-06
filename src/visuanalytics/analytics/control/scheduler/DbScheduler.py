@@ -26,7 +26,7 @@ class DbScheduler(Scheduler):
                 continue
 
             # check if date is today
-            if row["date"] == now.date():
+            if row["type"] == "on_date" and row["date"] == now.date():
                 # TODO Delete date schedule after run
                 self.__run_jobs(row["job_id"])
                 continue
