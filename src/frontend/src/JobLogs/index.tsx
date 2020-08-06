@@ -7,6 +7,7 @@ import {
   Table,
   TableBody,
   TableRow,
+  TableCell,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -21,14 +22,16 @@ export const JobLogs = () => {
     <Container maxWidth={"md"} className={classes.margin}>
       <Paper variant="outlined" className={classes.paper}>
         <Typography variant={"h4"} className={classes.header}>
-          Job-Logs
+          Logs
         </Typography>
         <Load data={logs}>
           <Table padding="checkbox">
             <TableBody>
-              {logs?.map((log) => (
-                <TableRow key={log.jobId}>
-                  <JobLog log={log} />
+              {logs?.map((log, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>
+                    <JobLog log={log} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
