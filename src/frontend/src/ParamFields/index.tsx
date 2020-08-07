@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel, useTheme } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
