@@ -32,7 +32,6 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     durationText: {
       height: "max-content",
-      color: "rgba(0, 0, 0, 0.62)",
     },
     durationIcon: {
       color: "#6b6c68",

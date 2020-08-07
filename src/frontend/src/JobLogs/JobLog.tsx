@@ -123,7 +123,11 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
             {log.duration ? (
               <>
                 <Tooltip arrow title="Dauer">
-                  <Typography color="textSecondary" variant="subtitle1">
+                  <Typography
+                    color="textSecondary"
+                    variant="subtitle1"
+                    className={classes.durationText}
+                  >
                     {log.duration}s
                   </Typography>
                 </Tooltip>
