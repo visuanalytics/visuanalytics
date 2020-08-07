@@ -2,6 +2,15 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    menuGrid: {
+      marginLeft: "16px",
+      marginRight: "16px",
+      marginTop: "16px",
+      width: "auto",
+    },
+    menuSelect: {
+      maxWidth: "100%",
+    },
     tableCell: {
       borderBottom: "none",
       padding: "6px 10px 6px 10px",

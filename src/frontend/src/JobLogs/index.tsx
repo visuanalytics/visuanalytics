@@ -8,8 +8,9 @@ import {
   TablePagination,
   LabelDisplayedRowsArgs,
   Typography,
-  Select,
   MenuItem,
+  Grid,
+  TextField,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -147,24 +148,53 @@ export const JobLogs = () => {
             onReload: handleReaload,
           }}
         >
-          <Select value={filteredLogs.selected} onChange={handleSelectJob}>
-            <MenuItem value={-1}>Alle</MenuItem>
-            <MenuItem value={5}>Job 5</MenuItem>
-            <MenuItem value={6}>Job 6</MenuItem>
-          </Select>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50, { label: "Alle", value: -1 }]}
-            component="div"
-            count={filteredLogs.logs?.length || 0}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            labelRowsPerPage="Einträge pro Seite:"
-            labelDisplayedRows={handleDisplayRows}
-            nextIconButtonText="Nächste Seite"
-            backIconButtonText="Vorherige Seite"
-          />
+          <Grid container className={classes.menuGrid}>
+            <Grid item lg={6} md={3} xs>
+              <TextField
+                value={filteredLogs.selected}
+                onChange={handleSelectJob}
+                size="small"
+                variant="outlined"
+                select
+                label="Jobs"
+                className={classes.menuSelect}
+              >
+                <MenuItem value={-1}>Alle</MenuItem>
+                {logs
+                  ?.filter(
+                    (v, i, a) => a.map((v) => v.jobId).indexOf(v.jobId) === i
+                  )
+                  .sort((a, b) => a.jobId - b.jobId)
+                  .map((log) => (
+                    <MenuItem
+                      value={log.jobId}
+                    >{`#${log.jobId}  ${log.jobName}`}</MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+            <Grid item container lg={6} md={9} xs justify={"flex-end"}>
+              <TablePagination
+                rowsPerPageOptions={[
+                  5,
+                  10,
+                  25,
+                  50,
+                  { label: "Alle", value: -1 },
+                ]}
+                component="div"
+                count={filteredLogs.logs?.length || 0}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                labelRowsPerPage="Einträge pro Seite:"
+                labelDisplayedRows={handleDisplayRows}
+                nextIconButtonText="Nächste Seite"
+                backIconButtonText="Vorherige Seite"
+                SelectProps={{ variant: "outlined" }}
+              />
+            </Grid>
+          </Grid>
           <Table>
             <TableBody>
               {(rowsPerPage > 0
