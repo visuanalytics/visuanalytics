@@ -14,14 +14,29 @@ import {
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
-import { Load } from "../util/Load";
+import { Load } from "../Load";
 import { Log, JobLog } from "./JobLog";
 
 export const JobLogs = () => {
   const classes = useStyles();
-  const [logs, getLogs] = useFetchMultiple<Log[]>(getUrl("/logs"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [loadFailed, setLoadFailed] = React.useState(false);
+
+  const handleLoadFailed = React.useCallback(() => {
+    setLoadFailed(true);
+  }, [setLoadFailed]);
+
+  const [logs, getLogs] = useFetchMultiple<Log[]>(
+    getUrl("/logs"),
+    undefined,
+    handleLoadFailed
+  );
+
+  const handleReaload = () => {
+    setLoadFailed(false);
+    getLogs();
+  };
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
@@ -44,7 +59,14 @@ export const JobLogs = () => {
         <Typography variant={"h4"} className={classes.header}>
           Logs
         </Typography>
-        <Load data={logs}>
+        <Load
+          data={logs}
+          failed={{
+            hasFailed: loadFailed,
+            name: "Logs",
+            onReload: handleReaload,
+          }}
+        >
           <Table>
             <TableHead>
               <TablePagination
