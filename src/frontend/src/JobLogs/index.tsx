@@ -63,7 +63,7 @@ export const JobLogs = () => {
       hintContent={
         <div>
           <Typography variant="h5" gutterBottom>
-            Log Übersicht
+            Logs
           </Typography>
           <Typography gutterBottom>TODO</Typography>
         </div>
@@ -87,6 +87,8 @@ export const JobLogs = () => {
           onChangeRowsPerPage={handleChangeRowsPerPage}
           labelRowsPerPage="Einträge pro Seite:"
           labelDisplayedRows={handleDisplayRows}
+          nextIconButtonText="Nächste Seite"
+          backIconButtonText="Vorherige Seite"
         />
         <Table>
           <TableBody>
