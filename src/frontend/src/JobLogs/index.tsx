@@ -1,21 +1,20 @@
 import React from "react";
 import { useStyles } from "./style";
 import {
-  Container,
-  Paper,
-  Typography,
   Table,
   TableBody,
   TableRow,
   TableCell,
   TablePagination,
-  TableHead,
   LabelDisplayedRowsArgs,
+  Typography,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
 import { Load } from "../Load";
 import { Log, JobLog } from "./JobLog";
+import { PageTemplate } from "../PageTemplate";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
 export const JobLogs = () => {
   const classes = useStyles();
@@ -54,57 +53,59 @@ export const JobLogs = () => {
   };
 
   return (
-    <Container maxWidth={"md"} className={classes.margin}>
-      <Paper variant="outlined" className={classes.paper}>
-        <Typography variant={"h4"} className={classes.header}>
-          Logs
-        </Typography>
-        <Load
-          data={logs}
-          failed={{
-            hasFailed: loadFailed,
-            name: "Logs",
-            onReload: handleReaload,
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TablePagination
-                rowsPerPageOptions={[
-                  5,
-                  10,
-                  25,
-                  50,
-                  { label: "All", value: -1 },
-                ]}
-                component="div"
-                count={logs?.length || 0}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-                labelRowsPerPage="Einträge pro Seite:"
-                labelDisplayedRows={handleDisplayRows}
-              />
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? logs?.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : logs
-              )?.map((log, idx) => (
-                <TableRow key={idx}>
-                  <TableCell className={classes.tableCell}>
-                    <JobLog log={log} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Load>
-      </Paper>
-    </Container>
+    <PageTemplate
+      heading="Logs"
+      action={{
+        title: "Neuladen",
+        Icon: <RefreshIcon fontSize="large" />,
+        onClick: handleReaload,
+      }}
+      hintContent={
+        <div>
+          <Typography variant="h5" gutterBottom>
+            Log Übersicht
+          </Typography>
+          <Typography gutterBottom>TODO</Typography>
+        </div>
+      }
+    >
+      <Load
+        data={logs}
+        failed={{
+          hasFailed: loadFailed,
+          name: "Logs",
+          onReload: handleReaload,
+        }}
+      >
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+          component="div"
+          count={logs?.length || 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Einträge pro Seite:"
+          labelDisplayedRows={handleDisplayRows}
+        />
+        <Table>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? logs?.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : logs
+            )?.map((log, idx) => (
+              <TableRow key={idx}>
+                <TableCell className={classes.tableCell}>
+                  <JobLog log={log} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Load>
+    </PageTemplate>
   );
 };
