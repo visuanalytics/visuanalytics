@@ -1,5 +1,7 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel, useTheme } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues } from '../util/param';
 
@@ -23,11 +25,11 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const classes = useStyles();
 
     return (
-        <div>
+        <div >
             {
                 props.params?.map(p => (
                     <div key={p.name}>
-                        <div className={classes.paddingSmall}>
+                        <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
                             <ParamField
                                 param={p}
                                 values={props.values}
@@ -36,7 +38,6 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                 required={props.required}
                             />
                         </div>
-                        {(p.type === "subParams" && (props.values[p.name] || !p.optional)) && <Divider />}
                     </div>
                 ))
             }
@@ -47,6 +48,8 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
 const ParamField: React.FC<ParamFieldProps> = (props) => {
     const param = props.param;
     const classes = useStyles();
+    const theme = useTheme();
+    const [showSubParams, setShowSubParams] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         props.selectParamHandler(name, event.target.value);
@@ -59,6 +62,25 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
         props.selectParamHandler(name, event.target.checked);
     }
 
+    const withExpIcon = (name: string, expanded: boolean) => {
+        return (
+            <span>
+                {
+                    expanded
+                        ?
+                        <div className={classes.expIcon}>
+                            <ExpandLessIcon />
+                        </div>
+                        :
+                        <div className={classes.expIcon}>
+                            <ExpandMoreIcon />
+                        </div>
+                }
+                {name} </span>
+        )
+    }
+
+
     switch (param.type) {
         case "string": case "number": case "multiString": case "multiNumber":
             const multiline = param.type === "multiString" || param.type === "multiNumber";
@@ -70,7 +92,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         multiline={multiline}
                         onChange={e => multiline ? handleMultiChange(e, param.name) : handleChange(e, param.name)}
                         variant="outlined"
-                        value={props.values[param.name]}
+                        value={props.values[param.name] || ""}
                         disabled={props.disabled}
                         label={param.displayName}
                     />
@@ -85,7 +107,10 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             onChange={e => handleCheck(e, param.name)}
                         />}
                     disabled={props.disabled}
-                    label={param.displayName}
+                    label={
+                        <div style={{ color: props.disabled ? theme.palette.text.disabled : theme.palette.text.secondary, }}>
+                            {param.displayName}
+                        </div>}
                     labelPlacement="start"
                     className={classes.checkboxParam}
                 />
@@ -98,7 +123,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     onChange={e => handleChange(e, param.name)}
                     variant="outlined"
                     label={param.displayName}
-                    value={props.values[param.name]}
+                    value={props.values[param.name] || ""}
                     disabled={props.disabled}
                     select>
                     {param.enumValues.map((val) => (
@@ -111,25 +136,32 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
         case "subParams":
             return (
                 <div>
-                    {param.optional
-                        ?
-                        <div>
+                    <div className={classes.SPaddingTB}>
+                        {param.optional
+                            ?
                             <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={props.values[param.name]}
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
-                                label={<b>{param.displayName}</b>}
+                                label={
+                                    <div style={{ color: props.disabled ? theme.palette.text.disabled : theme.palette.text.secondary, }}>
+                                        {withExpIcon(param.displayName, props.values[param.name])}
+                                    </div>}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
-                        </div>
-                        :
-                        <b>{param.displayName}</b>
-                    }
-                    <Collapse in={!param.optional || props.values[param.name]}>
+                            :
+                            <div style={{ cursor: "pointer" }} onClick={() => { setShowSubParams(!showSubParams) }}>
+                                <div style={{ color: theme.palette.text.secondary, cursor: "pointer" }}>
+                                    {withExpIcon(param.displayName, false)}
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <Collapse in={showSubParams || props.values[param.name]}>
                         <ParamFields
                             params={param.subParams}
                             values={props.values}
@@ -138,6 +170,11 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             required={props.required}
                         />
                     </Collapse>
+                    {((props.values[param.name] || showSubParams))
+                        &&
+                        <div className={classes.SPaddingTB}>
+                            <Divider />
+                        </div>}
                 </div >
             )
         default:

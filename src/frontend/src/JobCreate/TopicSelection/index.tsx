@@ -61,20 +61,20 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     onReload: handleReaload,
                   }}
                   data={topics}
-                  className={classes.paddingSmall}
+                  className={classes.MPaddingTB}
                 >
                     <List>
                         {topics?.map(t => renderTopicPanel(t))}
                     </List>
                 </Load>
                 <Divider/>
-                <div className={classes.paddingSmall}>
+                <div className={classes.MPaddingTB}>
                     <TextField className={classes.inputFields}
-                               required
-                               value={props.jobName}
-                               variant="outlined"
-                               label="Job-Name"
-                               onChange={handleInput}
+                        required
+                        value={props.jobName}
+                        variant="outlined"
+                        label="Job-Name"
+                        onChange={handleInput}
                     />
                 </div>
             </div>

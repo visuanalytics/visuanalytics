@@ -1,10 +1,9 @@
-import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
-import {withStyles} from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
-import TextField from '@material-ui/core/TextField/TextField';
 
 export const useStyles = makeStyles((theme: Theme) =>
-        createStyles({
+    createStyles({
         root: {
             width: '100%',
         },
@@ -48,15 +47,13 @@ export const useStyles = makeStyles((theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'center',
         },
+        SPaddingTRB: {
+            paddingTop: 10,
+            paddingRight: 15,
+            paddingBottom: 10,
+        }
     }),
 );
-
-export const InputField = withStyles({
-    root: {
-        margin: '5px',
-        width: '90%'
-    }
-})(TextField); 
 
 export const AccordionSummary = withStyles({
     root: {
