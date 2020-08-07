@@ -267,8 +267,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
-                                        <Grid xs={11}/>
-                                        <Grid container xs={1} justify={"flex-end"}>
+                                        <Grid item xs={11}/>
+                                        <Grid item container xs={1} justify={"flex-end"}>
                                             <HintButton content={
                                                 <div>
                                                     <Typography variant="h5" gutterBottom>Zeitplan auswählen</Typography>
