@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel, useTheme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
@@ -48,6 +48,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
 const ParamField: React.FC<ParamFieldProps> = (props) => {
     const param = props.param;
     const classes = useStyles();
+    const theme = useTheme();
     const [showSubParams, setShowSubParams] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
@@ -107,10 +108,9 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         />}
                     disabled={props.disabled}
                     label={
-                        <FormLabel
-                            disabled={props.disabled}>
+                        <div style={{ color: props.disabled ? theme.palette.text.disabled : theme.palette.text.secondary, }}>
                             {param.displayName}
-                        </FormLabel>}
+                        </div>}
                     labelPlacement="start"
                     className={classes.checkboxParam}
                 />
@@ -146,20 +146,17 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                         onChange={e => handleCheck(e, param.name)}
                                     />}
                                 label={
-                                    <FormLabel
-                                        disabled={props.disabled}>
+                                    <div style={{ color: props.disabled ? theme.palette.text.disabled : theme.palette.text.secondary, }}>
                                         {withExpIcon(param.displayName, props.values[param.name])}
-                                    </FormLabel>}
+                                    </div>}
                                 labelPlacement="start"
                                 className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                             :
-                            <div>
-                                <FormLabel
-                                    disabled={props.disabled}
-                                    onClick={() => { setShowSubParams(!showSubParams) }}>
-                                    {withExpIcon(param.displayName, showSubParams)}
+                            <div style={{ cursor: "pointer" }} onClick={() => { setShowSubParams(!showSubParams) }}>
+                                <FormLabel style={{ cursor: "pointer" }} disabled={props.disabled}>
+                                    {withExpIcon(param.displayName, false)}
                                 </FormLabel>
                             </div>
                         }
