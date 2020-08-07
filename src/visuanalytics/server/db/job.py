@@ -25,7 +25,7 @@ def get_job_run_info(job_id):
     """
     with db.open_con() as con:
         res = con.execute("""
-        SELECT job_name, json_file_name, key, value
+        SELECT job_name, json_file_name, key, value, type
         FROM job 
         INNER JOIN steps USING(steps_id) 
         LEFT JOIN job_config USING(job_id) 
