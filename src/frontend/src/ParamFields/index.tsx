@@ -155,9 +155,9 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             />
                             :
                             <div style={{ cursor: "pointer" }} onClick={() => { setShowSubParams(!showSubParams) }}>
-                                <FormLabel style={{ cursor: "pointer" }} disabled={props.disabled}>
+                                <div style={{ color: theme.palette.text.secondary, cursor: "pointer" }}>
                                     {withExpIcon(param.displayName, false)}
-                                </FormLabel>
+                                </div>
                             </div>
                         }
                     </div>
