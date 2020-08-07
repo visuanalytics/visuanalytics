@@ -11,7 +11,7 @@ import {
 import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
 import HelpOutlineOutlinedIcon from "@material-ui/icons/HelpOutlineOutlined";
 import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
-import CachedOutlinedIcon from "@material-ui/icons/CachedOutlined";
+import LoopIcon from "@material-ui/icons/Loop";
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import { format, fromUnixTime } from "date-fns";
 import { de } from "date-fns/locale";
@@ -105,7 +105,7 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
     case 0:
       // On State Running
       return {
-        icon: <CachedOutlinedIcon className={classes.runningIcon} />,
+        icon: <LoopIcon className={classes.runningIcon} />,
         iconTitle: "Video wird generiert",
         jobNameXS: 9,
         infoFC: <></>,
