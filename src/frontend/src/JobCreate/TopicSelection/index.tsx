@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, useCallback }  from "react";
 import {ListItem, Divider, List, TextField, Fade} from "@material-ui/core";
 import {TopicPanel} from "./TopicPanel";
 import {useStyles} from "../style";
-import {useFetch} from "../../Hooks/useFetch";
-import {Param} from "../../util/param";
-import {Load} from "../../util/Load";
+import {Load} from "../../Load";
 import { getUrl } from "../../util/fetchUtils";
+import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
 
 export interface Topic {
     topicName: string;
@@ -18,16 +17,25 @@ interface TopicSelectionProps {
     jobName: string;
     selectTopicHandler: (topicId: number) => void;
     enterJobNameHandler: (jobName: string) => void;
-    fetchParamHandler: (params: Param[]) => void;
 }
 
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     const classes = useStyles();
 
-    const topics: Topic[] = useFetch(getUrl("/topics")) as Topic[]
+    const [loadFailed, setLoadFailed] = useState(false);
+    const handleLoadFailed = useCallback(() => {
+        setLoadFailed(true);
+    }, [setLoadFailed]);
+
+    const [topics, getTopics] = useFetchMultiple<Topic[]>(getUrl("/topics"), undefined, handleLoadFailed)
 
     const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         props.enterJobNameHandler(event.target.value);
+    }
+
+    const handleReaload = () => {
+        setLoadFailed(false)
+        getTopics()
     }
 
     const renderTopicPanel = (topic: Topic) => {
@@ -37,7 +45,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     topic={topic}
                     topicId={props.topicId}
                     selectTopicHandler={props.selectTopicHandler}
-                    fetchParamHandler={props.fetchParamHandler}/>
+                />
                 <Divider/>
             </ListItem>
         );
@@ -46,10 +54,19 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
-                <Load data={topics}/>
-                <List>
-                    {topics?.map(t => renderTopicPanel(t))}
-                </List>
+                <Load
+                  failed={{
+                    hasFailed: loadFailed,
+                    name: "Themen",
+                    onReload: handleReaload,
+                  }}
+                  data={topics}
+                  className={classes.paddingSmall}
+                >
+                    <List>
+                        {topics?.map(t => renderTopicPanel(t))}
+                    </List>
+                </Load>
                 <Divider/>
                 <div className={classes.paddingSmall}>
                     <TextField className={classes.inputFields}

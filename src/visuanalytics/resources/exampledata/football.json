@@ -1,4 +1,15 @@
 {
+  "season_helper": {
+    "Envelope": {
+      "Body": {
+        "GetLastMatchResponse": {
+          "GetLastMatchResult": {
+            "leagueSaison": "2019"
+          }
+        }
+      }
+    }
+  },
   "Spiele": [
     {
       "MatchID": 55574,

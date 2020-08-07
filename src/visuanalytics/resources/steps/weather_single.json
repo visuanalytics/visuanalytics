@@ -464,100 +464,76 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            552,
-            1360
-          ],
-          "pos_y": [
-            213,
-            213
-          ],
-          "preset": [
-            "weather_white_2",
-            "weather_brown_2"
-          ],
-          "pattern": [
-            "{_req|data|0|weekday}",
-            "{_req|data|1|weekday}"
-          ]
+          "description": "week_day_one",
+          "type": "text",
+          "pos_x": 552,
+          "pos_y": 213,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|0|weekday}"
         },
         {
-          "description": "weather_discription",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            520,
-            1350
-          ],
-          "pos_y": [
-            570,
-            570
-          ],
-          "preset": [
-            "weather_white_3",
-            "weather_brown_3"
-          ],
-          "pattern": [
-            "{_req|data|0|weather|str_code_short}",
-            "{_req|data|1|weather|str_code_short}"
-          ]
+          "description": "week_day_two",
+          "type": "text",
+          "pos_x": 1360,
+          "pos_y": 213,
+          "preset": "weather_brown_2",
+          "pattern": "{_req|data|1|weekday}"
         },
         {
-          "description": "max_temp",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            700,
-            1530
-          ],
-          "pos_y": [
-            370,
-            370
-          ],
-          "preset": [
-            "weather_white_4",
-            "weather_brown_4"
-          ],
-          "pattern": [
-            "{_req|data|0|sym_max_temp}",
-            "{_req|data|1|sym_max_temp}"
-          ]
+          "description": "weather_discription_one",
+          "type": "text",
+          "pos_x": 520,
+          "pos_y": 570,
+          "preset": "weather_white_3",
+          "pattern": "{_req|data|0|weather|str_code_short}"
         },
         {
-          "description": "min_temp",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            794,
-            1608
-          ],
-          "pos_y": [
-            480,
-            480
-          ],
-          "preset": [
-            "weather_white_5",
-            "weather_brown_5"
-          ],
-          "pattern": [
-            "{_req|data|0|sym_min_temp}",
-            "{_req|data|1|sym_min_temp}"
-          ]
+          "description": "weather_discription_two",
+          "type": "text",
+          "pos_x": 1350,
+          "pos_y": 570,
+          "preset": "weather_brown_3",
+          "pattern": "{_req|data|1|weather|str_code_short}"
+        },
+        {
+          "description": "max_temp_one",
+          "type": "text",
+          "pos_x": 700,
+          "pos_y": 370,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|0|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_two",
+          "type": "text",
+          "pos_x": 1530,
+          "pos_y": 370,
+          "preset": "weather_brown_4",
+          "pattern": "{_req|data|1|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_one",
+          "type": "text",
+          "pos_x": 794,
+          "pos_y": 480,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|0|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_two",
+          "type": "text",
+          "pos_x": 1608,
+          "pos_y": 480,
+          "preset": "weather_brown_5",
+          "pattern": "{_req|data|1|sym_min_temp}"
         },
         {
           "description": "entry_name_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             260,
             260,
@@ -581,7 +557,6 @@
         {
           "description": "entry_name_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1080,
             1080,
@@ -605,7 +580,6 @@
         {
           "description": "entry_var_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             665,
             665,
@@ -629,7 +603,6 @@
         {
           "description": "entry_var_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1480,
             1480,
@@ -679,100 +652,76 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            552,
-            1360
-          ],
-          "pos_y": [
-            213,
-            213
-          ],
-          "preset": [
-            "weather_brown_2",
-            "weather_white_2"
-          ],
-          "pattern": [
-            "{_req|data|0|weekday}",
-            "{_req|data|1|weekday}"
-          ]
+          "description": "week_day_one",
+          "type": "text",
+          "pos_x": 552,
+          "pos_y": 213,
+          "preset": "weather_brown_2",
+          "pattern": "{_req|data|0|weekday}"
         },
         {
-          "description": "weather_discription",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            520,
-            1350
-          ],
-          "pos_y": [
-            570,
-            570
-          ],
-          "preset": [
-            "weather_brown_3",
-            "weather_white_3"
-          ],
-          "pattern": [
-            "{_req|data|0|weather|str_code_short}",
-            "{_req|data|1|weather|str_code_short}"
-          ]
+          "description": "week_day_two",
+          "type": "text",
+          "pos_x": 1360,
+          "pos_y": 213,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|1|weekday}"
         },
         {
-          "description": "max_temp",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            700,
-            1530
-          ],
-          "pos_y": [
-            370,
-            370
-          ],
-          "preset": [
-            "weather_brown_4",
-            "weather_white_4"
-          ],
-          "pattern": [
-            "{_req|data|0|sym_max_temp}",
-            "{_req|data|1|sym_max_temp}"
-          ]
+          "description": "weather_discription_one",
+          "type": "text",
+          "pos_x": 520,
+          "pos_y": 570,
+          "preset": "weather_brown_3",
+          "pattern": "{_req|data|0|weather|str_code_short}"
         },
         {
-          "description": "min_temp",
-          "type": "text_array",
-          "anchor_point": "center",
-          "pos_x": [
-            794,
-            1608
-          ],
-          "pos_y": [
-            480,
-            480
-          ],
-          "preset": [
-            "weather_brown_5",
-            "weather_white_5"
-          ],
-          "pattern": [
-            "{_req|data|0|sym_min_temp}",
-            "{_req|data|1|sym_min_temp}"
-          ]
+          "description": "weather_discription_two",
+          "type": "text",
+          "pos_x": 1350,
+          "pos_y": 570,
+          "preset": "weather_white_3",
+          "pattern": "{_req|data|1|weather|str_code_short}"
+        },
+        {
+          "description": "max_temp_one",
+          "type": "text",
+          "pos_x": 700,
+          "pos_y": 370,
+          "preset": "weather_brown_4",
+          "pattern": "{_req|data|0|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_two",
+          "type": "text",
+          "pos_x": 1530,
+          "pos_y": 370,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|1|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_one",
+          "type": "text",
+          "pos_x": 794,
+          "pos_y": 480,
+          "preset": "weather_brown_5",
+          "pattern": "{_req|data|0|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_two",
+          "type": "text",
+          "pos_x": 1608,
+          "pos_y": 480,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|1|sym_min_temp}"
         },
         {
           "description": "entry_name_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             260,
             260,
@@ -796,7 +745,6 @@
         {
           "description": "entry_name_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1080,
             1080,
@@ -820,7 +768,6 @@
         {
           "description": "entry_var_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             665,
             665,
@@ -844,7 +791,6 @@
         {
           "description": "entry_var_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1480,
             1480,
@@ -894,16 +840,12 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
           "description": "week_day",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             552,
             1360
@@ -912,10 +854,7 @@
             213,
             213
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_white_2",
           "pattern": [
             "{_req|data|0|weekday}",
             "{_req|data|1|weekday}"
@@ -924,7 +863,6 @@
         {
           "description": "weather_discription",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             520,
             1350
@@ -933,10 +871,7 @@
             570,
             570
           ],
-          "preset": [
-            "weather_white_3",
-            "weather_white_3"
-          ],
+          "preset": "weather_white_3",
           "pattern": [
             "{_req|data|0|weather|str_code_short}",
             "{_req|data|1|weather|str_code_short}"
@@ -945,7 +880,6 @@
         {
           "description": "max_temp",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             700,
             1530
@@ -954,10 +888,7 @@
             370,
             370
           ],
-          "preset": [
-            "weather_white_4",
-            "weather_white_4"
-          ],
+          "preset": "weather_white_4",
           "pattern": [
             "{_req|data|0|sym_max_temp}",
             "{_req|data|1|sym_max_temp}"
@@ -966,7 +897,6 @@
         {
           "description": "min_temp",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             794,
             1608
@@ -975,10 +905,7 @@
             480,
             480
           ],
-          "preset": [
-            "weather_white_5",
-            "weather_white_5"
-          ],
+          "preset": "weather_white_5",
           "pattern": [
             "{_req|data|0|sym_min_temp}",
             "{_req|data|1|sym_min_temp}"
@@ -987,7 +914,6 @@
         {
           "description": "entry_name_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             260,
             260,
@@ -1011,7 +937,6 @@
         {
           "description": "entry_name_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1080,
             1080,
@@ -1035,7 +960,6 @@
         {
           "description": "entry_var_day1",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             665,
             665,
@@ -1059,7 +983,6 @@
         {
           "description": "entry_var_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             1480,
             1480,
@@ -1119,129 +1042,127 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day",
+          "description": "week_day_3",
+          "type": "text",
+          "pos_x": 347,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|2|weekday}"
+        },
+        {
+          "description": "week_day_4_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            347,
             935,
             1567
           ],
           "pos_y": [
             285,
-            285,
             285
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_brown_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
-            "{_req|data|2|weekday}",
             "{_req|data|3|weekday}",
             "{_req|data|4|weekday}"
           ]
         },
         {
-          "description": "max_temp",
+          "description": "max_temp_day3",
+          "type": "text",
+          "pos_x": 462,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|2|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_day4-5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            462,
             1080,
             1673
           ],
           "pos_y": [
             440,
-            440,
             440
           ],
-          "preset": [
-            "weather_white_4",
-            "weather_brown_4",
-            "weather_brown_4"
-          ],
+          "preset": "weather_brown_4",
           "pattern": [
-            "{_req|data|2|sym_max_temp}",
             "{_req|data|3|sym_max_temp}",
             "{_req|data|4|sym_max_temp}"
           ]
         },
         {
-          "description": "min_temp",
+          "description": "min_temp_day3",
+          "type": "text",
+          "pos_x": 540,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|2|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_day4-5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            540,
             1150,
             1765
           ],
           "pos_y": [
             550,
-            550,
             550
           ],
-          "preset": [
-            "weather_white_5",
-            "weather_brown_5",
-            "weather_brown_5"
-          ],
+          "preset": "weather_brown_5",
           "pattern": [
-            "{_req|data|2|sym_min_temp}",
             "{_req|data|3|sym_min_temp}",
             "{_req|data|4|sym_min_temp}"
           ]
         },
         {
-          "description": "entry_name_day3-5",
+          "description": "entry_name_day3",
+          "type": "text",
+          "pos_x": 120,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day4-5",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
-            120,
             730,
             1342
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_white_6",
-            "weather_brown_6",
-            "weather_brown_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": "Regen"
         },
         {
-          "description": "entry_name_day2",
+          "description": "entry_name_day3",
+          "type": "text",
+          "pos_x": 443,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|2|sym_pop}"
+        },
+        {
+          "description": "entry_name_day4-5",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
-            443,
             1055,
             1660
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_white_6",
-            "weather_brown_6",
-            "weather_brown_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": [
-            "{_req|data|2|sym_pop}",
             "{_req|data|3|sym_pop}",
             "{_req|data|4|sym_pop}"
           ]
@@ -1285,132 +1206,130 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day",
+          "description": "week_day3_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             347,
-            935,
             1567
           ],
           "pos_y": [
             285,
-            285,
             285
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_white_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{_req|data|2|weekday}",
-            "{_req|data|3|weekday}",
             "{_req|data|4|weekday}"
           ]
         },
         {
-          "description": "max_temp",
+          "description": "week_day4",
+          "type": "text",
+          "pos_x": 935,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|3|weekday}"
+        },
+        {
+          "description": "max_temp_day3_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             462,
-            1080,
             1673
           ],
           "pos_y": [
             440,
-            440,
             440
           ],
-          "preset": [
-            "weather_brown_4",
-            "weather_white_4",
-            "weather_brown_4"
-          ],
+          "preset": "weather_brown_4",
           "pattern": [
             "{_req|data|2|sym_max_temp}",
-            "{_req|data|3|sym_max_temp}",
             "{_req|data|4|sym_max_temp}"
           ]
         },
         {
-          "description": "min_temp",
+          "description": "max_temp_day4",
+          "type": "text",
+          "pos_x": 1080,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|3|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_day3_4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             540,
-            1150,
             1765
           ],
           "pos_y": [
             550,
-            550,
             550
           ],
-          "preset": [
-            "weather_brown_5",
-            "weather_white_5",
-            "weather_brown_5"
-          ],
+          "preset": "weather_brown_5",
           "pattern": [
             "{_req|data|2|sym_min_temp}",
-            "{_req|data|3|sym_min_temp}",
             "{_req|data|4|sym_min_temp}"
           ]
         },
         {
-          "description": "entry_name_day3-5",
+          "description": "min_temp_day4",
+          "type": "text",
+          "pos_x": 1150,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|3|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day3_4",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             120,
-            730,
             1342
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_brown_6",
-            "weather_white_6",
-            "weather_brown_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": "Regen"
         },
         {
-          "description": "entry_name_day2",
+          "description": "entry_name_day4",
+          "type": "text",
+          "pos_x": 730,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day3_5",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             443,
-            1055,
             1660
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_brown_6",
-            "weather_white_6",
-            "weather_brown_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": [
             "{_req|data|2|sym_pop}",
-            "{_req|data|3|sym_pop}",
             "{_req|data|4|sym_pop}"
           ]
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text",
+          "pos_x": 1055,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|3|sym_pop}"
         }
       ]
     },
@@ -1451,132 +1370,130 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
-          "description": "week_day",
+          "description": "week_day_3_4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             347,
-            935,
-            1567
+            935
           ],
           "pos_y": [
-            285,
             285,
             285
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_brown_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{_req|data|2|weekday}",
-            "{_req|data|3|weekday}",
-            "{_req|data|4|weekday}"
+            "{_req|data|3|weekday}"
           ]
         },
         {
-          "description": "max_temp",
+          "description": "week_day_5",
+          "type": "text",
+          "pos_x": 1567,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|4|weekday}"
+        },
+        {
+          "description": "max_temp3-4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             462,
-            1080,
-            1673
+            1080
           ],
           "pos_y": [
-            440,
             440,
             440
           ],
-          "preset": [
-            "weather_brown_4",
-            "weather_brown_4",
-            "weather_white_4"
-          ],
+          "preset": "weather_brown_4",
           "pattern": [
             "{_req|data|2|sym_max_temp}",
-            "{_req|data|3|sym_max_temp}",
-            "{_req|data|4|sym_max_temp}"
+            "{_req|data|3|sym_max_temp}"
           ]
         },
         {
-          "description": "min_temp",
+          "description": "max_temp5",
+          "type": "text",
+          "pos_x": 1673,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|4|sym_max_temp}"
+        },
+        {
+          "description": "min_temp3-4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             540,
-            1150,
-            1765
+            1150
           ],
           "pos_y": [
-            550,
             550,
             550
           ],
-          "preset": [
-            "weather_brown_5",
-            "weather_brown_5",
-            "weather_white_5"
-          ],
+          "preset": "weather_brown_5",
           "pattern": [
             "{_req|data|2|sym_min_temp}",
-            "{_req|data|3|sym_min_temp}",
-            "{_req|data|4|sym_min_temp}"
+            "{_req|data|3|sym_min_temp}"
           ]
         },
         {
-          "description": "entry_name_day3-5",
+          "description": "min_temp5",
+          "type": "text",
+          "pos_x": 1765,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|4|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day3-4",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             120,
-            730,
-            1342
+            730
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_brown_6",
-            "weather_brown_6",
-            "weather_white_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": "Regen"
         },
         {
-          "description": "entry_name_day2",
+          "description": "entry_name_day5",
+          "type": "text",
+          "pos_x": 1342,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day3-4",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             443,
-            1055,
-            1660
+            1055
           ],
           "pos_y": [
             730,
-            730,
             730
           ],
-          "preset": [
-            "weather_brown_6",
-            "weather_brown_6",
-            "weather_white_6"
-          ],
+          "preset": "weather_brown_6",
           "pattern": [
             "{_req|data|2|sym_pop}",
-            "{_req|data|3|sym_pop}",
-            "{_req|data|4|sym_pop}"
+            "{_req|data|3|sym_pop}"
           ]
+        },
+        {
+          "description": "entry_name_day5",
+          "type": "text",
+          "pos_x": 1660,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|4|sym_pop}"
         }
       ]
     },
@@ -1617,16 +1534,12 @@
         {
           "description": "city_name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 962,
-          "pos_y": 35,
           "preset": "weather_white_1",
           "pattern": "{_conf|city_name}"
         },
         {
           "description": "week_day",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             347,
             935,
@@ -1637,11 +1550,7 @@
             285,
             285
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_white_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_white_2",
           "pattern": [
             "{_req|data|2|weekday}",
             "{_req|data|3|weekday}",
@@ -1651,7 +1560,6 @@
         {
           "description": "max_temp",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             462,
             1080,
@@ -1662,11 +1570,7 @@
             440,
             440
           ],
-          "preset": [
-            "weather_white_4",
-            "weather_white_4",
-            "weather_white_4"
-          ],
+          "preset": "weather_white_4",
           "pattern": [
             "{_req|data|2|sym_max_temp}",
             "{_req|data|3|sym_max_temp}",
@@ -1676,7 +1580,6 @@
         {
           "description": "min_temp",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             540,
             1150,
@@ -1687,11 +1590,7 @@
             550,
             550
           ],
-          "preset": [
-            "weather_white_5",
-            "weather_white_5",
-            "weather_white_5"
-          ],
+          "preset": "weather_white_5",
           "pattern": [
             "{_req|data|2|sym_min_temp}",
             "{_req|data|3|sym_min_temp}",
@@ -1701,7 +1600,6 @@
         {
           "description": "entry_name_day3-5",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             120,
             730,
@@ -1712,17 +1610,12 @@
             730,
             730
           ],
-          "preset": [
-            "weather_white_6",
-            "weather_white_6",
-            "weather_white_6"
-          ],
+          "preset": "weather_white_6",
           "pattern": "Regen"
         },
         {
           "description": "entry_name_day2",
           "type": "text_array",
-          "anchor_point": "left",
           "pos_x": [
             443,
             1055,
@@ -1733,11 +1626,7 @@
             730,
             730
           ],
-          "preset": [
-            "weather_white_6",
-            "weather_white_6",
-            "weather_white_6"
-          ],
+          "preset": "weather_white_6",
           "pattern": [
             "{_req|data|2|sym_pop}",
             "{_req|data|3|sym_pop}",
@@ -2191,21 +2080,27 @@
   },
   "presets": {
     "weather_white_1": {
+      "anchor_point": "center",
+      "pos_x": 962,
+      "pos_y": 35,
       "color": "white",
       "font_size": 120,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_2": {
+      "anchor_point": "center",
       "color": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
+      "anchor_point": "center",
       "color": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_white_4": {
+      "anchor_point": "center",
       "color": "white",
       "font_size": 110,
       "font": "fonts/Dosis-Bold.ttf"
@@ -2213,34 +2108,41 @@
     "weather_white_5": {
       "color": "white",
       "font_size": 80,
-      "font": "fonts/Dosis-Bold.ttf"
+      "font": "fonts/Dosis-Bold.ttf",
+      "anchor_point": "center"
     },
     "weather_white_6": {
+      "anchor_point": "left",
       "color": "white",
       "font_size": 45,
       "font": "fonts/Dosis-Regular.ttf"
     },
     "weather_brown_2": {
+      "anchor_point": "center",
       "color": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_3": {
+      "anchor_point": "center",
       "color": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Medium.ttf"
     },
     "weather_brown_4": {
+      "anchor_point": "center",
       "color": "#949994",
       "font_size": 110,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_5": {
+      "anchor_point": "center",
       "color": "#949994",
       "font_size": 80,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_6": {
+      "anchor_point": "left",
       "color": "#949994",
       "font_size": 45,
       "font": "fonts/Dosis-Regular.ttf"
