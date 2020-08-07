@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStyles } from "./style";
 import {
   Table,
@@ -8,6 +8,8 @@ import {
   TablePagination,
   LabelDisplayedRowsArgs,
   Typography,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -17,11 +19,50 @@ import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 
+type Logs = Log[] | undefined;
+
+interface FilteredLogs {
+  selected: number;
+  logs: Logs;
+}
+
+type FilteredLogsAction =
+  | { type: "updateLogs"; logs: Logs }
+  | { type: "updateFilter"; logs: Logs; selected: number };
+
+const filterLogs = (selected: number, logs: Logs) => {
+  return selected === -1
+    ? logs
+    : logs?.filter((value) => value.jobId === selected);
+};
+
+const logsReducer = (
+  state: FilteredLogs,
+  action: FilteredLogsAction
+): FilteredLogs => {
+  switch (action.type) {
+    case "updateLogs":
+      return {
+        selected: state.selected,
+        logs: filterLogs(state.selected, action.logs),
+      };
+    case "updateFilter":
+      return {
+        selected: action.selected,
+        logs: filterLogs(action.selected, action.logs),
+      };
+  }
+};
+
 export const JobLogs = () => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loadFailed, setLoadFailed] = React.useState(false);
+  const [filteredLogs, dispatchFilteredLogs] = React.useReducer(logsReducer, {
+    selected: -1,
+    logs: undefined,
+  });
 
   const handleLoadFailed = React.useCallback(() => {
     setLoadFailed(true);
@@ -53,6 +94,18 @@ export const JobLogs = () => {
     return `${from}-${to === -1 ? count : to} von ${count}`;
   };
 
+  const handleSelectJob = (event: React.ChangeEvent<{ value: unknown }>) => {
+    dispatchFilteredLogs({
+      type: "updateFilter",
+      selected: event.target.value as number,
+      logs: logs,
+    });
+  };
+
+  useEffect(() => {
+    dispatchFilteredLogs({ type: "updateLogs", logs: logs });
+  }, [logs]);
+
   return (
     <PageTemplate
       heading="Logs"
@@ -71,7 +124,7 @@ export const JobLogs = () => {
       }
     >
       <InfoMessage
-        condition={logs?.length === 0}
+        condition={filteredLogs.logs?.length === 0}
         message={{
           headline: "Willkommen bei ihrer Log Übersicht!",
           text: (
@@ -87,17 +140,22 @@ export const JobLogs = () => {
         }}
       >
         <Load
-          data={logs}
+          data={filteredLogs.logs}
           failed={{
             hasFailed: loadFailed,
             name: "Logs",
             onReload: handleReaload,
           }}
         >
+          <Select value={filteredLogs.selected} onChange={handleSelectJob}>
+            <MenuItem value={-1}>Alle</MenuItem>
+            <MenuItem value={5}>Job 5</MenuItem>
+            <MenuItem value={6}>Job 6</MenuItem>
+          </Select>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+            rowsPerPageOptions={[5, 10, 25, 50, { label: "Alle", value: -1 }]}
             component="div"
-            count={logs?.length || 0}
+            count={filteredLogs.logs?.length || 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
@@ -110,11 +168,11 @@ export const JobLogs = () => {
           <Table>
             <TableBody>
               {(rowsPerPage > 0
-                ? logs?.slice(
+                ? filteredLogs.logs?.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage
                   )
-                : logs
+                : filteredLogs.logs
               )?.map((log, idx) => (
                 <TableRow key={idx}>
                   <TableCell className={classes.tableCell}>
