@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from PIL import Image
+
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.visualization import IMAGE_TYPES
 from visuanalytics.analytics.util.step_errors import raise_step_error, ThumbnailError
@@ -23,11 +25,16 @@ def register_thumbnail(func):
 
 @raise_step_error(ThumbnailError)
 def thumbnail(values: dict, step_data: StepData):
+    size_x = values["thumbnail"].get("size_x", None)
+    size_y = values["thumbnail"].get("size_y", None)
     if step_data.get_config("thumbnail", False) is False:
         return
     seq_func = get_type_func(values["thumbnail"], THUMBNAIL_TYPES)
-
-    return seq_func(values, step_data)
+    seq_func(values, step_data)
+    if size_x is not None and size_y is not None:
+        source_img = Image.open(values["thumbnail"])
+        source_img = source_img.resize([size_x, size_y], Image.LANCZOS)
+        source_img.save(values["thumbnail"])
 
 
 @register_thumbnail
