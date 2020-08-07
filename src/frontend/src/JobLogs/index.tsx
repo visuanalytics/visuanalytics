@@ -70,7 +70,13 @@ export const JobLogs = () => {
           <Table>
             <TableHead>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[
+                  5,
+                  10,
+                  25,
+                  50,
+                  { label: "All", value: -1 },
+                ]}
                 component="div"
                 count={logs?.length || 0}
                 rowsPerPage={rowsPerPage}
