@@ -15,6 +15,7 @@ import { Load } from "../Load";
 import { Log, JobLog } from "./JobLog";
 import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import { InfoMessage } from "../util/InfoMessage";
 
 export const JobLogs = () => {
   const classes = useStyles();
@@ -69,45 +70,62 @@ export const JobLogs = () => {
         </div>
       }
     >
-      <Load
-        data={logs}
-        failed={{
-          hasFailed: loadFailed,
-          name: "Logs",
-          onReload: handleReaload,
+      <InfoMessage
+        condition={logs?.length === 0}
+        message={{
+          headline: "Willkommen bei ihrer Log Übersicht!",
+          text: (
+            <Typography align={"center"} color="textSecondary">
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+              erat, sed diam voluptua. At vero eos et accusam et
+            </Typography>
+          ),
+          button: {
+            text: "TODO",
+          },
         }}
       >
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
-          component="div"
-          count={logs?.length || 0}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-          labelRowsPerPage="Einträge pro Seite:"
-          labelDisplayedRows={handleDisplayRows}
-          nextIconButtonText="Nächste Seite"
-          backIconButtonText="Vorherige Seite"
-        />
-        <Table>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? logs?.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : logs
-            )?.map((log, idx) => (
-              <TableRow key={idx}>
-                <TableCell className={classes.tableCell}>
-                  <JobLog log={log} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Load>
+        <Load
+          data={logs}
+          failed={{
+            hasFailed: loadFailed,
+            name: "Logs",
+            onReload: handleReaload,
+          }}
+        >
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, 50, { label: "All", value: -1 }]}
+            component="div"
+            count={logs?.length || 0}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            labelRowsPerPage="Einträge pro Seite:"
+            labelDisplayedRows={handleDisplayRows}
+            nextIconButtonText="Nächste Seite"
+            backIconButtonText="Vorherige Seite"
+          />
+          <Table>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? logs?.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : logs
+              )?.map((log, idx) => (
+                <TableRow key={idx}>
+                  <TableCell className={classes.tableCell}>
+                    <JobLog log={log} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Load>
+      </InfoMessage>
     </PageTemplate>
   );
 };
