@@ -8,6 +8,9 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TablePagination,
+  TableHead,
+  LabelDisplayedRowsArgs,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -17,6 +20,23 @@ import { Log, JobLog } from "./JobLog";
 export const JobLogs = () => {
   const classes = useStyles();
   const [logs, getLogs] = useFetchMultiple<Log[]>(getUrl("/logs"));
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleChangePage = (_: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleDisplayRows = ({ from, to, count }: LabelDisplayedRowsArgs) => {
+    return `${from}-${to === -1 ? count : to} von ${count}`;
+  };
 
   return (
     <Container maxWidth={"md"} className={classes.margin}>
@@ -26,8 +46,27 @@ export const JobLogs = () => {
         </Typography>
         <Load data={logs}>
           <Table>
+            <TableHead>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                component="div"
+                count={logs?.length || 0}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                labelRowsPerPage="Einträge pro Seite:"
+                labelDisplayedRows={handleDisplayRows}
+              />
+            </TableHead>
             <TableBody>
-              {logs?.map((log, idx) => (
+              {(rowsPerPage > 0
+                ? logs?.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : logs
+              )?.map((log, idx) => (
                 <TableRow key={idx}>
                   <TableCell className={classes.tableCell}>
                     <JobLog log={log} />
