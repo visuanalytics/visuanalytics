@@ -44,5 +44,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       borderRight: "1px solid rgba(0, 0, 0, 0.12)",
       whiteSpace: "pre-wrap",
     },
+    errorButton: {
+      minWidth: "max-content",
+    },
   })
 );

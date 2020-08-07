@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { useStyles } from "./style";
 import {
   Card,
@@ -39,6 +39,7 @@ type ClassesType = Record<
   | "errorIcon"
   | "durationText"
   | "durationIcon"
+  | "errorButton"
   | "errorText"
   | "errorBox",
   string
@@ -88,7 +89,13 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
                 {log.errorMsg}
               </Typography>
             </Grid>
-            <Grid item xs={1} container alignItems="flex-start">
+            <Grid
+              item
+              xs={1}
+              container
+              alignItems="flex-start"
+              className={classes.errorButton}
+            >
               <IconButton onClick={() => setExpandError(!expandError)}>
                 <MoreHorizIcon />
               </IconButton>
