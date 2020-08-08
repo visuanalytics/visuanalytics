@@ -703,7 +703,7 @@ def split_string(values: dict, data: StepData):
         delimiter = data.format(values.get("delimiter", " "), values)
         new_key = get_new_keys(values, idx)
 
-        if data.get_data_bool(values.get("ignore_case", False), values):
+        if data.get_data(values.get("ignore_case", False), values, bool):
             new_value = re.split(delimiter, value, flags=re.IGNORECASE)
         else:
             new_value = re.split(delimiter, value)
