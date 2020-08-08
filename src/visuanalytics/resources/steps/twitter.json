@@ -310,7 +310,7 @@
     },
     "wordcloud_all": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -323,7 +323,7 @@
     },
     "wordcloud_top1": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -335,7 +335,7 @@
     },
     "wordcloud_top2": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -347,7 +347,7 @@
     },
     "wordcloud_top3": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -359,7 +359,7 @@
     },
     "wordcloud_top4": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -371,7 +371,7 @@
     },
     "wordcloud_top5": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -383,7 +383,7 @@
     },
     "wordcloud_top6": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -395,7 +395,7 @@
     },
     "wordcloud_top7": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -407,7 +407,7 @@
     },
     "wordcloud_top8": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -419,7 +419,7 @@
     },
     "wordcloud_top9": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -431,7 +431,7 @@
     },
     "wordcloud_top10": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -443,7 +443,7 @@
     },
     "wordcloud_top15": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -455,7 +455,7 @@
     },
     "wordcloud_top20": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -467,7 +467,7 @@
     },
     "wordcloud_top25": {
       "type": "pillow",
-      "path": "football/background.png",
+      "conf_path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -595,56 +595,69 @@
       "optional": true,
       "default_value": []
     },
-  "background": {
-    "type": "enum",
-      "display_name": "Hintergrund der Wordcloud",
-      "possible_values": [
+    "background_image": {
+      "type": "enum",
+      "display_name": "Hintergrund",
+      "optional": true,
+      "enum_values": [
         {
-          "value": "football/background.png",
+          "value": "backgrounds/white.png",
+          "display_value": "Weiß"
+        },
+        {
+          "value": "backgrounds/black.png",
+          "display_value": "Schwarz"
+        },
+        {
+          "value": "backgrounds/grey.png",
+          "display_value": "Grau"
+        },
+        {
+          "value": "backgrounds/blue.png",
+          "display_value": "Blau"
+        },
+        {
+          "value": "backgrounds/red.png",
+          "display_value": "Rot"
+        },
+        {
+          "value": "backgrounds/green.png",
+          "display_value": "Grün"
+        },
+        {
+          "value": "backgrounds/yellow.png",
+          "display_value": "Gelb"
+        },
+        {
+          "value": "backgrounds/orange.png",
+          "display_value": "Orange"
+        },
+        {
+          "value": "backgrounds/purple.png",
+          "display_value": "Lila"
+        },
+        {
+          "value": "backgrounds/brown.png",
+          "display_value": "Braun"
+        },
+        {
+          "value": "backgrounds/darkred.png",
+          "display_value": "Dunkelrot"
+        },
+        {
+          "value": "backgrounds/lightblue.png",
+          "display_value": "Hellblau"
+        },
+        {
+          "value": "backgrounds/football.png",
           "display_value": "Fußballrasen"
         },
         {
           "value": "weather/DE1Tag.png",
           "display_value": "Wetter"
-        },
-        {
-          "value": "blue",
-          "display_value": "Blau"
-        },
-        {
-          "value": "red",
-          "display_value": "Rot"
-        },
-        {
-          "value": "green",
-          "display_value": "Grün"
-        },
-        {
-          "value": "yellow",
-          "display_value": "Gelb"
-        },
-        {
-          "value": "white",
-          "display_value": "Weiß"
-        },
-        {
-          "value": "black",
-          "display_value": "Schwarz"
-        },
-        {
-          "value": "grey",
-          "display_value": "Grau"
-        },
-        {
-          "value": "orange",
-          "display_value": "Orange"
-        },
-        {
-          "value": "purple",
-          "display_value": "Lila"
         }
       ],
-      "default_value": "black"
+      "default_value": "backgrounds/white.png"
     },
     "colormap_words": {
       "type": "enum",
@@ -750,7 +763,7 @@
           "display_value": "640 x 360"
         },
         {
-          "value": "854 x 480",
+          "value": "854x480",
           "display_value": "854 x 480"
         },
         {
