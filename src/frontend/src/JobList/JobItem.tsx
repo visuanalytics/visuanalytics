@@ -61,7 +61,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({...initSelectedValues(job.params), ...job.values});
+    const [paramValues, setParamValues] = React.useState<ParamValues>({ ...initSelectedValues(job.params), ...job.values });
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [error, setError] = React.useState(false);
@@ -131,7 +131,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             setExpanded(isExpanded ? panel : false);
         };
         const handleEditClick = () => {
-            setState(state.edit ? {edit: false, editIcon: 'none', doneIcon: 'block'} : {
+            setState(state.edit ? { edit: false, editIcon: 'none', doneIcon: 'block' } : {
                 edit: true,
                 editIcon: 'block',
                 doneIcon: 'none'
@@ -146,7 +146,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                 return;
             }
             if (!validateParamValues(paramValues, job.params)) {
-                setErrorMessage("Pflichtparameter unvollständig");
+                setErrorMessage("Parameter nicht korrekt gesetzt");
                 setError(true);
                 return;
             }
@@ -179,7 +179,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                     </div>
                     <div className={classes.SPaddingTRB}>
                         <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
-                                 arrow
+                            arrow
                         >
                             <Button className={classes.inputButton} onClick={handleOpen} disabled={state.edit}>
                                 <TextField
@@ -224,8 +224,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
-                        {expanded ? <ExpandLess className={classes.expIcon}/> :
-                            <ExpandMore className={classes.expIcon}/>}
+                        {expanded ? <ExpandLess className={classes.expIcon} /> :
+                            <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>#{job.jobId}
                             <NameInput
                                 // autoFocus={true}
@@ -237,27 +237,27 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             >
                                 {job.jobName}</NameInput></Typography>
                         <Notification handleClose={handleCloseError} open={error} message={errorMessage}
-                                      type={"error"}/>
+                            type={"error"} />
                         <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message}
-                                      type={success.stateType}/>
+                            type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job bearbeiten" arrow>
-                                <IconButton style={{display: state.editIcon}} className={classes.button}
-                                            onClick={handleEditClick}>
-                                    <EditIcon/>
+                                <IconButton style={{ display: state.editIcon }} className={classes.button}
+                                    onClick={handleEditClick}>
+                                    <EditIcon />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Job speichern" arrow>
-                                <IconButton style={{display: state.doneIcon}} className={classes.button}
-                                            onClick={handleCheckClick}>
-                                    <CheckCircleIcon/>
+                                <IconButton style={{ display: state.doneIcon }} className={classes.button}
+                                    onClick={handleCheckClick}>
+                                    <CheckCircleIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job löschen" arrow>
                                 <IconButton onClick={deleteJob} className={classes.button}>
-                                    <DeleteIcon/>
+                                    <DeleteIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
@@ -296,13 +296,13 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                                         angegebenen Uhrzeit erstellt</Typography>
                                                     <Typography variant="h6">wöchentlich</Typography>
                                                     <Typography gutterBottom>Das Video wird zu den angegebenen
-                                                        Wochentagen wöchentlich zur unten angegebenen Uhrzeit
+                                                    Wochentagen wöchentlich zur unten angegebenen Uhrzeit
                                                         erstellt</Typography>
                                                     <Typography variant="h6">an festem Datum</Typography>
                                                     <Typography gutterBottom>Das Video wird zum angegebenen Datum und
                                                         zur angegebenen Uhrzeit erstellt</Typography>
                                                 </div>
-                                            }/>
+                                            } />
                                         </Grid>
                                     </Grid>
                                     <Paper variant="outlined" className={classes.paper}>
