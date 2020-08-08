@@ -68,38 +68,39 @@ export const validateParamValues = (values: ParamValues, params: Param[] | undef
                 if (!p.optional || values[p.name]) {
                     return p.subParams === null ? true : validateParamValues(values, p.subParams);
                 }
-                break;
+                return true;
             case "string":
             case "enum":
+                const ev = values[p.name].trim();
                 if (!p.optional) {
-                    const v = values[p.name].trim();
-                    return v !== "";
+                    return ev !== "";
                 }
-                break;
+                return true;
             case "number":
+                const nv = values[p.name].trim();
                 if (!p.optional) {
-                    const v = values[p.name].trim();
-                    return v !== "" && !isNaN(Number(v));
+                    return nv !== "" && !isNaN(Number(nv));
                 }
-                break;
+                return nv === "" || !isNaN(Number(nv));
             case "multiString":
+                const msv: string[] = values[p.name].map((v: string) => v.trim());
                 if (!p.optional) {
-                    const vs = values[p.name];
-                    return vs.length > 0 && vs.every((v: string) => v.trim() !== "");
+                    return msv.length > 0 && msv.every(v => v !== "");
                 }
-                break;
+                return true;
             case "multiNumber":
+                const mnv: string[] = values[p.name].map((v: any) => String(v).trim());
                 if (!p.optional) {
-                    const vs = values[p.name];
-                    return vs.length > 0 && vs.every((v: any) => String(v).trim() !== "" && !isNaN(Number(v)));
+                    return mnv.length > 0 && mnv.every(v => v !== "" && !isNaN(Number(v)));
                 }
-
+                console.log(mnv);
+                return mnv.filter(v => v !== "").length === 0 || mnv.every(v => v !== "" && !isNaN(Number(v)));
         }
         return true;
     })
 }
 
-// trim all string / string[] values
+// trim all string / string[] values and remove empty values
 export const trimParamValues = (values: ParamValues): ParamValues => {
     let cValues: ParamValues = { ...values }
     Object.keys(cValues).forEach((k) => {
@@ -112,7 +113,13 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
                 cValues[k] = v;
             }
         } else if (cValues[k] instanceof Array) {
-            cValues[k] = cValues[k].map((s: any) => String(s).trim()).filter((s: string) => s !== "");
+            const v = cValues[k].map((s: any) => String(s).trim()).filter((s: string) => s !== "");
+            if (v.every((s: any) => String(s) === "")) {
+                const { [k]: x, ...r } = cValues;
+                cValues = r;
+            } else {
+                cValues[k] = v;
+            }
         }
     })
     return cValues;
