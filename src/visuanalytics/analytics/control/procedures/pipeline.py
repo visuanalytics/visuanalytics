@@ -89,7 +89,7 @@ class Pipeline(object):
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
-        logger.info(f"Inizalization finished!")
+        logger.info(f"Initialization finished!")
 
     @staticmethod
     def __on_completion(values: dict, data: StepData):
