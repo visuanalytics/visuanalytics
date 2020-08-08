@@ -50,9 +50,8 @@ const filterLogs = (selected: number, logs: Logs) => {
 };
 
 const getJobs = (logs: Logs) => {
-  const jobIds = logs?.map((l) => l.jobId);
   return logs
-    ?.filter((l, idx) => jobIds?.indexOf(l.jobId) === idx)
+    ?.filter((l, idx, a) => a.findIndex((e) => e.jobId === l.jobId) === idx)
     .map((l) => {
       return { id: l.jobId, name: l.jobName };
     })
@@ -102,6 +101,7 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
 
   const handleReaload = () => {
     setLoadFailed(false);
+    dispatchFilteredLogs({ type: "updateLogs", logs: undefined });
     getLogs();
   };
 
@@ -150,7 +150,7 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
       }
     >
       <InfoMessage
-        condition={filteredLogs.logs?.length === 0}
+        condition={logs?.length === 0}
         message={{
           headline: "Willkommen bei ihrer Log Übersicht!",
           text: (
