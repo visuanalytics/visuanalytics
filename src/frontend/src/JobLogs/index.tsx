@@ -51,7 +51,8 @@ const getJobs = (logs: Logs) => {
     ?.filter((l, idx) => jobIds?.indexOf(l.jobId) === idx)
     .map((l) => {
       return { id: l.jobId, name: l.jobName };
-    });
+    })
+    .sort((j1, j2) => j1.id - j2.id);
 };
 
 const logsReducer = (
