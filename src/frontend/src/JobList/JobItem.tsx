@@ -18,6 +18,7 @@ import {Job} from "./index";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {ParamFields} from "../ParamFields";
+import DescriptionIcon from "@material-ui/icons/Description";
 import {
     Schedule,
     withFormattedDates,
@@ -29,6 +30,7 @@ import {
 import {getUrl} from "../util/fetchUtils";
 import {Notification, TMessageStates} from "../util/Notification";
 import {HintButton} from "../util/HintButton";
+import { ComponentContext } from "../ComponentProvider";
 
 interface Props {
     job: Job,
@@ -43,6 +45,7 @@ interface INotification {
 
 export const JobItem: React.FC<Props> = ({job, getJobs}) => {
     const classes = useStyles();
+    const components = React.useContext(ComponentContext);
 
     const [state, setState] = React.useState({
         edit: true,
@@ -257,6 +260,13 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                                 <IconButton style={{display: state.doneIcon}} className={classes.button}
                                             onClick={handleCheckClick}>
                                     <CheckCircleIcon/>
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        <div onClick={(event) => event.stopPropagation()}>
+                            <Tooltip title="Logs öffnen" arrow>
+                                <IconButton onClick={() => components?.setCurrent("jobLogs", {jobId: job.jobId})} className={classes.button}>
+                                    <DescriptionIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
