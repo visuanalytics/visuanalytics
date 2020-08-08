@@ -2,7 +2,7 @@ import React from "react";
 import {useStyles} from "../style";
 import {Collapse, Divider, Fade, FormControlLabel, Radio, TextField} from "@material-ui/core";
 import {DayHour, DeleteSchedule} from "../../util/deleteSchedule";
-import {DayHourInputField} from "../../util/DayHourInput";
+import {DayHourInputField} from "../../util/DayHourInputField";
 
 interface DeleteSelectionProps {
     deleteSchedule: DeleteSchedule,
@@ -12,12 +12,14 @@ interface DeleteSelectionProps {
 export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule, selectDeleteScheduleHandler }) => {
     const classes = useStyles();
 
+    const [dayHour, setDayHour] = React.useState({days: 0, hours: 0});
+
     const handleSelectNoDeletion = () => {
         selectDeleteScheduleHandler({type: "noDeletion"})
     }
 
     const handleSelectOnDayHour = () => {
-        selectDeleteScheduleHandler({type: "onDayHour", removalTime:  {days: 1, hours: 1}})
+        selectDeleteScheduleHandler({type: "onDayHour", removalTime: dayHour })
     }
 
     const handleSelectKeepCount = () => {
@@ -29,8 +31,9 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
     }
 
     const handleAddRemovalTime = (removalTime: DayHour) => {
+        setDayHour(removalTime);
         if (deleteSchedule.type === "onDayHour") {
-            selectDeleteScheduleHandler({...deleteSchedule, removalTime: removalTime})
+            selectDeleteScheduleHandler({...deleteSchedule, removalTime: dayHour})
         }
     }
 
@@ -68,7 +71,10 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                         />} label="Video nach bestimmter Zeit löschen" />
                     </div>
                     <Collapse in={deleteSchedule.type === "onDayHour"}>
-                        <DayHourInputField handler={handleAddRemovalTime} />
+                        <DayHourInputField
+                            dayHour={dayHour}
+                            selectDayHourHandler={handleAddRemovalTime}
+                        />
                     </Collapse>
                 </div>
                 <Divider />

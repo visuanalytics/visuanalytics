@@ -1,10 +1,11 @@
 import React from "react"
 import {DayHour} from "./deleteSchedule";
-import {Grid, InputBase, TextField, Typography, withStyles} from "@material-ui/core";
+import {Grid, TextField, Typography} from "@material-ui/core";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 
 interface DayHourInputProps {
-    handler: ((dayHour: DayHour) => void);
+    dayHour: DayHour;
+    selectDayHourHandler: (dayHour: DayHour) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,8 +28,16 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
-export const DayHourInputField: React.FC<DayHourInputProps> = (props: DayHourInputProps) => {
+export const DayHourInputField: React.FC<DayHourInputProps> = ({dayHour, selectDayHourHandler}) => {
     const classes = useStyles();
+    const handleAddDay = (event: React.ChangeEvent<HTMLInputElement>) => {
+        selectDayHourHandler({...dayHour, days: Number(event.target.value)})
+    }
+
+    const handleAddHour = (event: React.ChangeEvent<HTMLInputElement>) => {
+        selectDayHourHandler({...dayHour, hours: Number(event.target.value)})
+    }
+
     return (
         <div style={{margin: "10px"}}>
             <div className={classes.centerDiv}>
@@ -36,6 +45,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = (props: DayHourInp
                     <Grid container>
                         <TextField
                             className={classes.inputFields}
+                            onChange={handleAddDay}
                             type={'number'}
                             variant={'outlined'}
                             InputProps={{
@@ -49,6 +59,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = (props: DayHourInp
                     <Grid container>
                         <TextField
                             className={classes.inputFields}
+                            onChange={handleAddHour}
                             type={'number'}
                             variant={'outlined'}
                             InputProps={{
