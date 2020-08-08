@@ -10,7 +10,11 @@ export const Main = () => {
   const component = React.useContext(ComponentContext);
   return (
     <Fade in>
-      <>{component ? <component.current.component /> : null}</>
+      <>
+        {component ? (
+          <component.current.component {...component.current.props} />
+        ) : null}
+      </>
     </Fade>
   );
 };

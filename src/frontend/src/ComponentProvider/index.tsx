@@ -10,7 +10,7 @@ const startComponent: ComponentKey = "home";
 
 type ComponentContextType = {
   current: MainComponent;
-  setCurrent: (next: ComponentKey) => void;
+  setCurrent: (next: ComponentKey, props?: Object) => void;
 };
 
 export const ComponentContext = React.createContext<
@@ -28,8 +28,8 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
     mainComponents[startComponent]
   );
 
-  const handleSetCurrent = (next: ComponentKey) => {
-    setCurrent(mainComponents[next]);
+  const handleSetCurrent = (next: ComponentKey, props?: Object) => {
+    setCurrent({ ...mainComponents[next], props: props });
   };
 
   return (
