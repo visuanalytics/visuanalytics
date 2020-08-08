@@ -168,6 +168,3 @@ def _to_param_list(run_config):
                 if value["type"] != "sub_params"
                 else {**value, "type": "subParams", "sub_params": _to_param_list(value["sub_params"])})}
             for key, value in run_config.items()]
-
-
-print(to_typed_value(_to_untyped_value([1, 2, 3], "multi_number"), "multi_number"))
