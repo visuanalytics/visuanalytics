@@ -20,12 +20,20 @@ import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 
-type Logs = Log[] | undefined;
+interface Job {
+  id: number;
+  name: string;
+}
 
 interface FilteredLogs {
   selected: number;
   logs: Logs;
+  jobs: Jobs;
 }
+
+type Logs = Log[] | undefined;
+
+type Jobs = Job[] | undefined;
 
 type FilteredLogsAction =
   | { type: "updateLogs"; logs: Logs }
@@ -37,6 +45,15 @@ const filterLogs = (selected: number, logs: Logs) => {
     : logs?.filter((value) => value.jobId === selected);
 };
 
+const getJobs = (logs: Logs) => {
+  const jobIds = logs?.map((l) => l.jobId);
+  return logs
+    ?.filter((l, idx) => jobIds?.indexOf(l.jobId) === idx)
+    .map((l) => {
+      return { id: l.jobId, name: l.jobName };
+    });
+};
+
 const logsReducer = (
   state: FilteredLogs,
   action: FilteredLogsAction
@@ -46,11 +63,13 @@ const logsReducer = (
       return {
         selected: state.selected,
         logs: filterLogs(state.selected, action.logs),
+        jobs: getJobs(action.logs),
       };
     case "updateFilter":
       return {
         selected: action.selected,
         logs: filterLogs(action.selected, action.logs),
+        jobs: state.jobs,
       };
   }
 };
@@ -63,6 +82,7 @@ export const JobLogs = () => {
   const [filteredLogs, dispatchFilteredLogs] = React.useReducer(logsReducer, {
     selected: -1,
     logs: undefined,
+    jobs: undefined,
   });
 
   const handleLoadFailed = React.useCallback(() => {
@@ -160,16 +180,11 @@ export const JobLogs = () => {
                 className={classes.menuSelect}
               >
                 <MenuItem value={-1}>Alle</MenuItem>
-                {logs
-                  ?.filter(
-                    (v, i, a) => a.map((v) => v.jobId).indexOf(v.jobId) === i
-                  )
-                  .sort((a, b) => a.jobId - b.jobId)
-                  .map((log) => (
-                    <MenuItem
-                      value={log.jobId}
-                    >{`#${log.jobId}  ${log.jobName}`}</MenuItem>
-                  ))}
+                {filteredLogs.jobs?.map((job) => (
+                  <MenuItem
+                    value={job.id}
+                  >{`#${job.id}  ${job.name}`}</MenuItem>
+                ))}
               </TextField>
             </Grid>
             <Grid item container lg={6} md={9} xs justify={"flex-end"}>
