@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues } from "../util/param";
 import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, Tooltip } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
@@ -22,7 +22,7 @@ import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTim
 import { getUrl } from "../util/fetchUtils";
 import { Notification, TMessageStates } from "../util/Notification";
 
-import {HintButton} from "../util/HintButton";
+import { HintButton } from "../util/HintButton";
 
 interface Props {
     job: Job,
@@ -142,7 +142,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                 return;
             }
             if (!validateParamValues(paramValues, job.params)) {
-                setErrorMessage("Pflichtparameter nicht gesetzt");
+                setErrorMessage("Pflichtparameter unvollständig");
                 setError(true);
                 return;
             }
@@ -174,7 +174,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                     </div>
                     <div>
                         <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
-                                 arrow
+                            arrow
                         >
                             <Button className={classes.inputButton} onClick={handleOpen}>
                                 <InputField
@@ -241,11 +241,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
-                             <Tooltip title="Job löschen" arrow>
+                            <Tooltip title="Job löschen" arrow>
                                 <IconButton onClick={deleteJob} className={classes.button}>
                                     <DeleteIcon />
                                 </IconButton>
-                             </Tooltip>
+                            </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -267,7 +267,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
-                                        <Grid xs={11}/>
+                                        <Grid xs={11} />
                                         <Grid container xs={1} justify={"flex-end"}>
                                             <HintButton content={
                                                 <div>
