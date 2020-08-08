@@ -141,7 +141,7 @@ class Pipeline(object):
         """
         try:
             self.__setup()
-            data = StepData(self.steps_config, self.id)
+            data = StepData(self.steps_config, self.id, self.__config.get("presets", None))
 
             self.__config["out_time"] = get_current_time()
             self.__start_time = time.time()
