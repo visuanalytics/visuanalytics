@@ -10,15 +10,20 @@ import DescriptionIcon from "@material-ui/icons/Description";
 
 export type MainComponent = {
   component: FC;
+  props?: any;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   navName: string;
 };
+
+export interface MainComponents {
+  [key: string]: MainComponent;
+}
 
 /**
  * Object das Alle main Componenten mit Icon und Navigations namen beinhalte.
  * Die Keys müssen in ComponentKey eingetragen werden.
  */
-export const mainComponents = {
+export const mainComponents: MainComponents = {
   home: {
     component: Home,
     icon: HomeIcon,
