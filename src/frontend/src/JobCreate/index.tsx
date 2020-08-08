@@ -264,7 +264,7 @@ export default function JobCreate() {
                         <GreyDivider />
                         {getSelectPanel(activeStep)}
                         <GreyDivider />
-                        <div className={classes.paddingSmall}>
+                        <div className={classes.MPaddingTB}>
                             <span>
                                 <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
@@ -278,7 +278,7 @@ export default function JobCreate() {
                     </div>
                     :
                     <Fade in={true}>
-                        <div className={classes.paddingSmall}>
+                        <div className={classes.MPaddingTB}>
                             Job '{jobName}' wurde erstellt!
                         </div>
                     </Fade>
