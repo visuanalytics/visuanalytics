@@ -22,6 +22,10 @@ import { useCallFetch } from '../Hooks/useCallFetch';
 import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
 import { getUrl } from '../util/fetchUtils';
 import {HintButton} from "../util/HintButton";
+import {ComponentContext} from "../ComponentProvider";
+import {DeleteSelection} from "./DeleteSelection";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {DeleteSchedule} from "../util/deleteSchedule";
 
 
 export default function JobCreate() {
@@ -50,6 +54,11 @@ export default function JobCreate() {
         type: "daily",
         time: new Date()
     });
+
+    // state for deleteSchedule selection logic
+    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({
+        type: "noDeletion",
+    })
 
     // initialize callback for add job functionality
     const addJob = useCallFetch(getUrl("/add"), {
@@ -174,6 +183,11 @@ export default function JobCreate() {
         setSchedule(schedule);
     }
 
+    // handler fpr deleteSchedule selection logic
+    const handleSelectDeleteSchedule = (deleteSchedule: DeleteSchedule) => {
+        setDeleteSchedule(deleteSchedule);
+    }
+
     // stepper texts
     const steps = [
         "Thema auswählen",
@@ -260,8 +274,8 @@ export default function JobCreate() {
             case 3:
                 return (
                     <DeleteSelection
-                        schedule={schedule}
-                        selectScheduleHandler={handleSelectSchedule}
+                        deleteSchedule={deleteSchedule}
+                        selectDeleteScheduleHandler={handleSelectDeleteSchedule}
                     />
                 )
             default:

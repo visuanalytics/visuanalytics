@@ -2,7 +2,7 @@ import { format, parse, isPast, addDays, formatDistanceToNowStrict } from "date-
 import { de } from "date-fns/locale";
 
 
-export type Schedule = DailySchedule | WeeklySchedule | DateSchedule | NoDeleteSchedule | OnTimeDeleteSchedule | DeleteOldOnNew
+export type Schedule = DailySchedule | WeeklySchedule | DateSchedule
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
@@ -24,19 +24,6 @@ interface DateSchedule extends ISchedule {
 
 interface ISchedule {
     time: Date
-}
-
-interface NoDeleteSchedule extends ISchedule {
-    type: "noDelete"
-}
-
-interface OnTimeDeleteSchedule extends ISchedule {
-    type: "onTime"
-    removalTime: Date
-}
-
-interface DeleteOldOnNew extends ISchedule{
-    type: "oldOnNew"
 }
 
 export const withFormattedDates = (schedule: Schedule) => {
