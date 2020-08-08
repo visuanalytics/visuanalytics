@@ -61,7 +61,7 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "16:38",
+        "time": "21:19",
         "daily": true
       },
       "config": {
@@ -76,6 +76,7 @@
         "thumbnail": true,
         "normalize_words": true,
         "colormap_words": "viridis",
+        "background_image": "backgrounds/black.png",
         "color_func": true,
         "color_func_words": "145 46 5 35",
         "figure": "circle",
