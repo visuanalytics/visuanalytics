@@ -20,6 +20,10 @@ import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 
+interface Props {
+  jobId?: number;
+}
+
 interface Job {
   id: number;
   name: string;
@@ -75,13 +79,13 @@ const logsReducer = (
   }
 };
 
-export const JobLogs = () => {
+export const JobLogs: React.FC<Props> = ({ jobId }) => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loadFailed, setLoadFailed] = React.useState(false);
   const [filteredLogs, dispatchFilteredLogs] = React.useReducer(logsReducer, {
-    selected: -1,
+    selected: jobId ? jobId : -1,
     logs: undefined,
     jobs: undefined,
   });
@@ -183,6 +187,7 @@ export const JobLogs = () => {
                 <MenuItem value={-1}>Alle</MenuItem>
                 {filteredLogs.jobs?.map((job) => (
                   <MenuItem
+                    key={job.id}
                     value={job.id}
                   >{`#${job.id}  ${job.name}`}</MenuItem>
                 ))}
