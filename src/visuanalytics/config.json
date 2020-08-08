@@ -1,6 +1,9 @@
 {
   "external_programs": [
-    "ffmpeg"
+    {
+      "name": "ffmpeg",
+      "url": "https://ffmpeg.org/"
+    }
   ],
   "db": {
     "db_path": "instance/visuanalytics.db",
@@ -22,6 +25,14 @@
         "file_name": "twitter"
       }
     ]
+  },
+  "resources": {
+    "main_path": "resources",
+    "sub_paths": {
+      "images": "images",
+      "temp": "temp",
+      "memory": "memory"
+    }
   },
   "console_mode": false,
   "steps_base_config": {

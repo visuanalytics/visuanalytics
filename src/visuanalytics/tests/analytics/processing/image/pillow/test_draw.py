@@ -11,8 +11,6 @@ def prepare_draw_test(values, data, config=None):
     if config is None:
         config = {}
 
-    step_data = StepData(config, "0")
-    step_data.insert_data("_req", {"_test": data}, {})
     values = {
         "images": {
             "testbild": {
@@ -38,6 +36,9 @@ def prepare_draw_test(values, data, config=None):
             },
         }
     }
+    
+    step_data = StepData(config, "0", values.get("presets", None))
+    step_data.insert_data("_req", {"_test": data}, {})
     step_data.data["_pipe_id"] = "101"
     generate_all_images(values, step_data)
 
@@ -46,8 +47,7 @@ def prepare_draw_test(values, data, config=None):
 
 class DrawTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../tests/resources"
-        resources.IMAGES_LOCATION = "../tests/resources/images"
+        resources.RESOURCES_LOCATION = "tests/resources"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "101"), exist_ok=True)
 

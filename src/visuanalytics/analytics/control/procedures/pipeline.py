@@ -109,7 +109,7 @@ class Pipeline(object):
 
                 if isinstance(values["thumbnail"], str):
                     thumbnail_name = os.path.basename(values["thumbnail"])
-                    
+
                     data.insert_data("_conf|thumbnail_path", values["thumbnail"], {})
                     data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
                     data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
@@ -141,7 +141,7 @@ class Pipeline(object):
         """
         try:
             self.__setup()
-            data = StepData(self.steps_config, self.id)
+            data = StepData(self.steps_config, self.id, self.__config.get("presets", None))
 
             self.__config["out_time"] = get_current_time()
             self.__start_time = time.time()
@@ -167,7 +167,9 @@ class Pipeline(object):
             self.__on_completion(self.__config, data)
             self.__cleanup()
             return True
-
+        except (KeyboardInterrupt, SystemExit):
+            self.__cleanup()
+            raise
         except Exception:
             self.__current_step = -2
             logger.exception(f"An error occurred: ")
