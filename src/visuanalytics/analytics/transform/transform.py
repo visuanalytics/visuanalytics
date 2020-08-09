@@ -496,7 +496,7 @@ def sort(values: dict, data: StepData):
 
 
 @register_transform
-def counter(values: dict, data: StepData):
+def most_common(values: dict, data: StepData):
     """
 
     :param values: Werte aus der JSON-Datei
