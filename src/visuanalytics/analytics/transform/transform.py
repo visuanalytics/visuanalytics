@@ -490,7 +490,7 @@ def sort(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
         value = data.get_data(key, values)
-        reverse = data.get_data(value.get("reverse", False), values, bool)
+        reverse = data.get_data(values.get("reverse", False), values, bool)
 
         new_value = sorted(value, reverse=reverse)
 
