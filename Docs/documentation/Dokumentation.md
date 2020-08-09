@@ -252,7 +252,7 @@ Folgende transform-Funktionen wurden verwendet:
 |select|Entfernt alle Keys, die nicht in `relevant_keys` stehen aus dem Dictionary.|
 |date_weekday|Wandelt das angegebene Datum in den jeweiligen Wochentag um.|
 |option|Führt die aufgeführten `transform`-Funktionen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist.|
-|compare||
+|compare|Vergleicht zwei |
 |random_string||
 |calculate subtract|Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.|
 |copy|Kopiert einen Wert zu einem neuen Key.|
@@ -296,29 +296,55 @@ Zudem wurden die Funktionen ``copy`` und ``delete`` implementiert.
 ``copy`` dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren.  
 Die Funktion ``delete`` dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
 
-**Twitter-Wordcloud**
+**Wordcloud**
 
 Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet mit Hashtags. Als Antwort erhält man unter anderem alle Posts, die das gesuchte Hashtag innerhalb der letzten 7 Tage verwendet haben.
 Die API-Antwort wird so verkürzt, dass nur noch die Hashtags, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden Wordclouds erstellt.
 
+Mithilfe der Python-Library Wordcloud (Quelle: https://github.com/amueller/word_cloud) wurde der Image-Typ Wordcloud ergänzt. Es ist möglich verschiedene Parameter für die Wordcloud festzulegen. 
+Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square": 
 
-Die zuvor implementierten ``transform``-Typen konnten größtenteils nicht übernommen werden und mussten neu implementiert werden.
-transform_array, select, append und delete konnten verwendet werden.
+<figure>
+  <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
+  <figcaption>Abbildung : Wordcloud mit "figure": "circle"</figcaption>
+</figure>  
+<br> 
+
+<figure>
+  <img width="90%" src="../_static/images/documentation/wordcloud_square.png"/>
+  <figcaption>Abbildung : Wordcloud mit "figure": "square"</figcaption>
+</figure>  
+<br> 
+
+
+Die zuvor implementierten ``transform``-Typen konnten größtenteils nicht weiter verwendet werden und es mussten neue implementiert werden.
+``transform_array``, ``select``, ``append`` und ``delete`` konnten wiederverwendet werden.
 
 Folgende transform-Typen wurden verwendet: 
 
 |        Funktion        |       Beschreibung       |
 |------------------------|--------------------------|
-|transform_array||
-|select||
-|append||
-|delete||
-|normalize_words||
-|counter||
+|split_string|Teilt einen String an der Stelle, an der ein bestimmtes Trennzeichen (delimiter) im String vorkommt.|
+|convert|Konvertiert einen Datentyp in einen anderen Datentyp.|
+|transform_array|Durchläuft ein bestimmtes Array, um bestimmte Daten transformieren zu können.|
+|delete|Entfernt Key/Value-Paare, die nicht relevant für die Erstellung der Wordcloud sind.|
 |remove_from_list|Entfernt Wörter aus einer Liste.|
+|option|transform-Typen, die durchgeführt werden, wenn ein gewisser Wert true bzw. false ist.|
+|most_common|Zählt wie oft ein Wort vorkommt und sortiert diese Liste (mit bzw. ohne die Zahl).|
 |sub_lists|Erstellt aus einer großen Liste, eine (oder mehrere) kleinere Listen, die nur einen Teil der großen Liste repräsentieren.|
-|join||
-|length||
+|to_dict|Wandelt ein Array aus Tupeln in ein Dictionary um.|
+|length|Gibt die Länge eines Ararys bzw. einer Liste aus.|
+|join|Erstellt aus den Elementen einer Liste einen String, indem die Elemente mit dem gewünschten Trennzeichen aufgeführt werden.|
+|select|Wählt die Key/Value-Paare aus, die relevant für die Erstellung oder die Datenverarbeitung für die Wordcloud sind.|
+|append|Fügt den Daten weitere Key/Value-Paare hinzu.|
+|normalize_words|Wörter, die mehrmals in einer Liste vorkommen, werden wenn die Groß- bzw. Kleinschreibung anders it als beim ersten Vorkommen eines Worts so geschrieben wie beim ersten Vorkommen des Worts.|
+
+
+**Wordcloud-Parameter**
+
+Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud beeinflussen kann. Diese betreffen die Größe der Wordcloud und der Schrift. Die Hintergrundfarbe, Schriftfarben. Will man anstatt eines einfarbigen Hintergrunds ein Bild, geht dies durch die JSON und den Overlay-Typ "image" auch.
+Die verschiedenen Parameter werden in der Steps-Config-Doku genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: https://www.datacamp.com/community/tutorials/wordcloud-python).
+Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
 ## Processing
 ### Audio
@@ -340,7 +366,11 @@ Wordclouds sind Images, die erstellt werden können. Der Hintergrund kann einfar
 
 Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
 
-Wordcloud einfügen
+<figure>
+  <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
+  <figcaption>Abbildung : Wordcloud zum Thema Bundesliga</figcaption>
+</figure>  
+<br> 
 
 Die Wörter, die zu sehen sind, sind alles Hashtags, die neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
 Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
