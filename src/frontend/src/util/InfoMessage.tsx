@@ -6,7 +6,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
 interface MessageProps {
   headline: string;
-  text: JSX.Element;
+  text?: JSX.Element;
   button?: {
     text: string;
     onClick?: () => void;
