@@ -19,25 +19,18 @@ import { Log, JobLog } from "./JobLog";
 import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
+import { Job } from "../JobList";
 
 interface Props {
   jobId?: number;
 }
 
-interface Job {
-  id: number;
-  name: string;
-}
-
 interface FilteredLogs {
   selected: number;
   logs: Logs;
-  jobs: Jobs;
 }
 
 type Logs = Log[] | undefined;
-
-type Jobs = Job[] | undefined;
 
 type FilteredLogsAction =
   | { type: "updateLogs"; logs: Logs }
@@ -49,15 +42,6 @@ const filterLogs = (selected: number, logs: Logs) => {
     : logs?.filter((value) => value.jobId === selected);
 };
 
-const getJobs = (logs: Logs) => {
-  return logs
-    ?.filter((l, idx, a) => a.findIndex((e) => e.jobId === l.jobId) === idx)
-    .map((l) => {
-      return { id: l.jobId, name: l.jobName };
-    })
-    .sort((j1, j2) => j1.id - j2.id);
-};
-
 const logsReducer = (
   state: FilteredLogs,
   action: FilteredLogsAction
@@ -67,13 +51,11 @@ const logsReducer = (
       return {
         selected: state.selected,
         logs: filterLogs(state.selected, action.logs),
-        jobs: getJobs(action.logs),
       };
     case "updateFilter":
       return {
         selected: action.selected,
         logs: filterLogs(action.selected, action.logs),
-        jobs: state.jobs,
       };
   }
 };
@@ -84,9 +66,8 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loadFailed, setLoadFailed] = React.useState(false);
   const [filteredLogs, dispatchFilteredLogs] = React.useReducer(logsReducer, {
-    selected: jobId ? jobId : -1,
+    selected: -1,
     logs: undefined,
-    jobs: undefined,
   });
 
   const handleLoadFailed = React.useCallback(() => {
@@ -99,10 +80,17 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
     handleLoadFailed
   );
 
+  const [jobs, getJobs] = useFetchMultiple<Job[]>(
+    getUrl("/jobs"),
+    undefined,
+    handleLoadFailed
+  );
+
   const handleReaload = () => {
     setLoadFailed(false);
     dispatchFilteredLogs({ type: "updateLogs", logs: undefined });
     getLogs();
+    getJobs();
   };
 
   const handleChangePage = (_: unknown, newPage: number) => {
@@ -131,6 +119,20 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
   useEffect(() => {
     dispatchFilteredLogs({ type: "updateLogs", logs: logs });
   }, [logs]);
+
+  useEffect(() => {
+    if (jobs !== undefined && jobId !== undefined) {
+      console.log("init");
+
+      // If Job id is valid init Filter
+      if (jobs.some((j) => j.jobId === jobId))
+        dispatchFilteredLogs({
+          type: "updateFilter",
+          logs: logs,
+          selected: jobId,
+        });
+    }
+  }, [jobs, logs, jobId]);
 
   return (
     <PageTemplate
@@ -166,7 +168,7 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
         }}
       >
         <Load
-          data={filteredLogs.logs}
+          data={filteredLogs.logs && jobs}
           failed={{
             hasFailed: loadFailed,
             name: "Logs",
@@ -185,11 +187,11 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
                 className={classes.menuSelect}
               >
                 <MenuItem value={-1}>Alle</MenuItem>
-                {filteredLogs.jobs?.map((job) => (
+                {jobs?.map((job) => (
                   <MenuItem
-                    key={job.id}
-                    value={job.id}
-                  >{`#${job.id}  ${job.name}`}</MenuItem>
+                    key={job.jobId}
+                    value={job.jobId}
+                  >{`#${job.jobId}  ${job.jobName}`}</MenuItem>
                 ))}
               </TextField>
             </Grid>
@@ -216,23 +218,37 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               />
             </Grid>
           </Grid>
-          <Table>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? filteredLogs.logs?.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : filteredLogs.logs
-              )?.map((log, idx) => (
-                <TableRow key={idx}>
-                  <TableCell className={classes.tableCell}>
-                    <JobLog log={log} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <InfoMessage
+            condition={filteredLogs.logs?.length === 0}
+            message={{
+              headline: "Todo",
+              text: (
+                <Typography align={"center"} color="textSecondary">
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                  diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                </Typography>
+              ),
+            }}
+          >
+            <Table>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? filteredLogs.logs?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : filteredLogs.logs
+                )?.map((log, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell className={classes.tableCell}>
+                      <JobLog log={log} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </InfoMessage>
         </Load>
       </InfoMessage>
     </PageTemplate>
