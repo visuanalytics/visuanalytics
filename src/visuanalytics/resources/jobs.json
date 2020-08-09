@@ -61,17 +61,15 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "16:38",
+        "time": "16:29",
         "daily": true
       },
       "config": {
         "hashtags": [
-          "Bundesliga",
-          "Fußball"
+          "Bundesliga"
         ],
         "stopwords": [
-          "Bundesliga",
-          "Werder"
+          "Bundesliga"
         ],
         "thumbnail": true,
         "normalize_words": true,
