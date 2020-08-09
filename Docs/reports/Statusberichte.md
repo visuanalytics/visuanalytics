@@ -1,7 +1,5 @@
 
-# Statusberichte <!-- omit in toc -->
-
-
+# Statusberichte 
 
 ## Statusbericht 05.05.2020 (Planung)
 ### Zusammenfassung
@@ -250,3 +248,29 @@ Zusätzlich wurde in diesem Sprint ermöglicht das Video einer Twitter-Wordcloud
 ### Ziel für den nächsten Sprint
 - Fertigstellungen der überarbeiteten Parameterauswahl
 - hinzufügen der Zeitintervalle im Scheduler
+
+## Statusbericht 04.08.2020 (Sprint 13)
+
+### Zusammenfassung
+In diesem Sprint würde die überarbeitete Parameterauswahl fertiggestellt.
+
+<img src="../_static/images/reports/ParamAuswahl.png" width="70%" style="border: 1px solid grey">
+
+Sollen nun für ein bestimmtes Thema, bestimmte Parameter zur Auswahl stehen, so können diese nun von jedem Inputtypen sein. Somit ist die Benutzerfreundlichkeit und die Übersicht dieser Auswahl verbessert worden.
+
+Desweiteren wurden im Backend dem Scheduler Zeitintervalle hinzugefügt. Somit ist es nun möglich einen Job auch nach bestimmten Zeitintevallen auszuführen. Im Frontend fehlt diese Funktion noch.
+
+Auch wurde die Funktion hinzugefügt, dass für jedes Video ein repräsentatives Thumbnail generiert wird.
+
+**Beispiel:**
+
+Wetter in Deutschland, ortsbezogener Wetterbericht, Fußball-Bundesliga
+
+<img src="../_static/images/reports/ThumbnailDE.png" width="32%">
+<img src="../_static/images/reports/ThumbnailOrt.png" width="32%">
+<img src="../_static/images/reports/ThumbnailBL.png" width="32%">
+
+### Ziel für den nächsten Sprint
+- Benutzerfreundlickeit der Oberfläche verbessern
+- Intervalle dem Frontend hinzufügen
+- Option zum Löschen der generierten Videos dem Frontend hinzufügen

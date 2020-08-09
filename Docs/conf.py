@@ -12,6 +12,8 @@
 #
 import os
 import sys
+import recommonmark
+from recommonmark.transform import AutoStructify
 
 sys.path.insert(0, os.path.abspath('../src'))
 
@@ -62,5 +64,24 @@ html_theme_options = {
     'style_nav_header_background': 'white'
 }
 
+# Display edit on github
+html_context = {
+    "display_github": True,
+    "github_user": "SWTP-SS20-Kammer-2",
+    "github_repo": "Data-Analytics",
+    "github_version": "master",
+    "conf_py_path": "/Docs/",
+}
+
 html_logo = '_static/images/logo.png'
 html_favicon = '_static/images/favicon.ico'
+
+# app setup hook
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'auto_toc_tree_section': 'Contents',
+        'enable_math': False,
+        'enable_inline_math': False,
+        'enable_eval_rst': True
+    }, True)
+    app.add_transform(AutoStructify)

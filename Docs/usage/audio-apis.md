@@ -56,7 +56,9 @@ Verwendet man den `Configurations` type custom, kann man folgendes einstellen:
 
 Hier können **Requests** angegeben werden, die vor der Generation aller Audios ausgeführt werden sollen. Diese werden also nur **einmal** pro Videogenerierung aufgerufen. Die Syntax für die Definition der Requests befindet sich im Abschnitt [Requests](#Requests).
 
-> Dies kann nützlich sein um z.B. eine Acces Token zu bekommen.
+```note::
+  Dies kann nützlich sein um z.B. eine Acces Token zu bekommen.
+```
 
 `generate`:
 
@@ -128,7 +130,9 @@ Führt einen **Https** Request durch.
 
 Die zu verwendende `url`.
 
-> Format Strings werden unterstützt.
+```note::
+  Format Strings werden unterstützt.
+```
 
 **`api_key_name`** _(Optional)_:
 
@@ -177,7 +181,9 @@ Der Datentype des Response-Bodys.
   - `text`
   - `Other`
 
-> Falls man bei `generate` eine Audiodatei zurückbekommt, muss man diesen Wert auf `Other` setzen.
+```note::
+  Falls man bei `generate` eine Audiodatei zurückbekommt, muss man diesen Wert auf `Other` setzen.
+```
 
 #### request Multiple Custom
 
@@ -197,13 +203,17 @@ Führt mehrere Requests nacheinander durch.
 
 Hier können mehrere [requests](#request) angegeben werden. Diese werden dann nacheinander ausgeführt. Die Responses werden in einem Array an der jeweiligen Position gespeichert. Diese können dann später z.B. so verwendet werden: `_audio|pre|0`.
 
-> Bei den Requests, die in `generate` ausgeführt werden, werden die Daten etwas anders gespeichert. Dort wird ein Json-Objekt (In Python `Dictionoray`) mit zwei Keys gespeichert. Zum einen `headers`, enthält alle response Headers und zum anderen `content`, welches die Response-Body enthält.
+```note::
+  Bei den Requests, die in `generate` ausgeführt werden, werden die Daten etwas anders gespeichert. Dort wird ein Json-Objekt (In Python `Dictionoray`) mit zwei Keys gespeichert. Zum einen `headers`, enthält alle response Headers und zum anderen `content`, welches die Response-Body enthält.
+```
 
 **`audio_key`** _(Bei Prepare Optional)_:
 
 Gibt an, welcher der Requests die Audiodatei enthält.
 
-> Man gibt nur den Index des Requests aus `requests` an.
+```note::
+  Man gibt nur den Index des Requests aus `requests` an.
+```
 
 ### Beispiel
 
@@ -259,4 +269,6 @@ Des Weiteren muss noch der Api Key in der `config.json` hinzugefügt werden:
 }
 ~~~
 
-> `api_key` muss durch den eigentlichen API-Key ersetzt werden
+```note::
+  `api_key` muss durch den eigentlichen API-Key ersetzt werden
+```
