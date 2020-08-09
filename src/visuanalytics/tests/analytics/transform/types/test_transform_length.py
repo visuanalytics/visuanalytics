@@ -17,7 +17,7 @@ class TestTransformLength(unittest.TestCase):
     def test_length_list(self):
         values = [
             {
-                "type": "sort",
+                "type": "length",
                 "keys": ["_req|list"],
                 "new_keys": ["_req|len_list"]
             }
@@ -39,10 +39,10 @@ class TestTransformLength(unittest.TestCase):
         exp, out = prepare_test(values, self.data, expected_data)
         self.assertDictEqual(exp, out, "length list failed")
 
-    def test_length_list(self):
+    def test_length_string(self):
         values = [
             {
-                "type": "sort",
+                "type": "length",
                 "keys": ["_req|string"],
                 "new_keys": ["_req|len_string"]
             }
@@ -67,7 +67,7 @@ class TestTransformLength(unittest.TestCase):
     def test_length_tuple(self):
         values = [
             {
-                "type": "sort",
+                "type": "length",
                 "keys": ["_req|tuple"],
                 "new_keys": ["_req|tuple"]
             }
@@ -92,7 +92,7 @@ class TestTransformLength(unittest.TestCase):
     def test_length_dict(self):
         values = [
             {
-                "type": "sort",
+                "type": "length",
                 "keys": ["_req|dict"],
                 "new_keys": ["_req|len_dict"]
             }
