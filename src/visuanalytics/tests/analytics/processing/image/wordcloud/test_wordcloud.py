@@ -17,29 +17,29 @@ def prepare_wordcloud_test(values, data, config=None):
         "images": {
             "testbild": {
                 "type": "wordcloud",
-                "path": "Test_Bild_1.png",
-                "text": "Test Twitter Fußball Wetter THM Biebertal MachMitTV",
-                "stopwords": [
-                    "Test"
-                ],
-                "use_global_stopwords": True,
+                "text": "_req|dict_all",
+                "preset": "wordcloud"
+            }
+        },
+        "presets": {
+            "wordcloud": {
+                "stopwords": "Cyprus",
+                "use_global_stopwords": False,
                 "color_func_words": "145 46 5 35",
                 "parameter": {
-                    "figure": "circle",
-                    "background_color": "white",
+                    "figure": "square",
                     "width": 1000,
                     "height": 1000,
                     "collocations": False,
                     "max_font_size": 400,
-                    "max_words": 200,
+                    "max_words": 2000,
                     "contour_width": 3,
                     "contour_color": "white",
                     "color_func": True,
                     "colormap": "viridis"
                 }
             }
-        },
-        "presets": {},
+        }
     }
 
     step_data.data["_pipe_id"] = "100"
@@ -59,7 +59,7 @@ class WordcloudTest(unittest.TestCase):
     def test_wordcloud(self):
         values = {}
         data = {
-            "test_1": "Test text"
+            "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina"
         }
         expected = prepare_wordcloud_test(values, data)
         self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
