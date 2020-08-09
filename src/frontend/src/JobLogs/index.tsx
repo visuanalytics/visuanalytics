@@ -62,6 +62,7 @@ const logsReducer = (
 
 export const JobLogs: React.FC<Props> = ({ jobId }) => {
   const classes = useStyles();
+  const initSelectJob = React.useRef(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loadFailed, setLoadFailed] = React.useState(false);
@@ -121,16 +122,19 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
   }, [logs]);
 
   useEffect(() => {
-    if (jobs !== undefined && jobId !== undefined) {
-      console.log("init");
+    if (initSelectJob.current && jobId !== undefined && jobs !== undefined) {
+      // Trigger init job Select only once
+      initSelectJob.current = false;
 
-      // If Job id is valid init Filter
+      // If jobId is valid init Filter
       if (jobs.some((j) => j.jobId === jobId))
         dispatchFilteredLogs({
           type: "updateFilter",
           logs: logs,
           selected: jobId,
         });
+
+      // TODO (Max) display error if JobId is invalid
     }
   }, [jobs, logs, jobId]);
 
