@@ -63,6 +63,8 @@ class Scheduler(object):
                 try:
                     # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
                     self._check_all(datetime.now())
+                except (KeyboardInterrupt, SystemExit):
+                    raise
                 except:
                     logger.exception("An error occurred: ")
 
@@ -76,4 +78,4 @@ class Scheduler(object):
         Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
         einem andern Thread ausgeführt.
         """
-        threading.Thread(target=self.start).start()
+        threading.Thread(target=self.start, daemon=True).start()

@@ -4,7 +4,7 @@ Modul welches die verschieden Typen beeihaltet um Text auf ein Bild zu setzten
 from PIL import ImageFont
 
 from visuanalytics.analytics.util.step_errors import ImageError
-from visuanalytics.analytics.util.type_utils import register_type_func
+from visuanalytics.analytics.util.type_utils import register_type_func_no_data
 from visuanalytics.util import resources
 
 DRAW_TYPES = {}
@@ -18,7 +18,7 @@ def register_draw(func):
     :param func: Eine Funktion
     :return: Die übergebene Funktion
     """
-    return register_type_func(DRAW_TYPES, ImageError, func)
+    return register_type_func_no_data(DRAW_TYPES, ImageError, func)
 
 
 @register_draw

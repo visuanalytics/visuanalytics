@@ -1,15 +1,12 @@
 import React from "react";
-import {makeStyles, Button} from "@material-ui/core";
-import {Topic} from "..";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
-import {Param} from "../../../util/param";
-import { getUrl } from "../../../util/fetchUtils";
+import {makeStyles, Button, Typography, Grid} from "@material-ui/core";
+import { Topic } from "..";
+import {HintButton} from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
-    selectedTopicId: number;
+    topicId: number;
     selectTopicHandler: (topicId: number) => void;
-    fetchParamHandler: (params: Param[]) => void;
 }
 
 const useStyles = makeStyles({
@@ -32,20 +29,26 @@ const useStyles = makeStyles({
 
 export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
-    const fetchParams = useCallFetch(getUrl("/params/") + props.topic.topicId, {}, (data) => {
-        props.fetchParamHandler(data);
-    });
 
     return (
         <Button
             className={classes.panel}
-            style={props.topic.topicId === props.selectedTopicId ? {border: "solid #00638D 7px"} : {border: ""}}
+            style={props.topic.topicId === props.topicId ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
-                fetchParams();
                 props.selectTopicHandler(props.topic.topicId);
             }
             }>
-            {props.topic.topicName}
+            <Grid item xs={1}></Grid>
+            <Grid item xs={10}>
+                {props.topic.topicName}
+            </Grid>
+            <Grid item xs={1}>
+            <HintButton content={
+                <Typography gutterBottom>
+                    {props.topic.topicInfo}
+                </Typography>}
+            />
+            </Grid>
         </Button>
     )
 };

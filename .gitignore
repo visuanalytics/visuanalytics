@@ -161,3 +161,6 @@ fabric.properties
 out
 /src/visuanalytics/tests/resources/temp/
 venv
+Docs/_build/
+Docs/modules/
+.vscode

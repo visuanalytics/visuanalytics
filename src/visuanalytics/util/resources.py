@@ -3,29 +3,33 @@ import contextlib
 import os
 from datetime import datetime, timedelta
 
-RESOURCES_LOCATION = "../resources"
-"""
-Relativer Pfad zu dem resources Ordner.
-"""
-
-IMAGES_LOCATION = "../resources/images"
-"""
-Relativer Pfad zu dem Image Ordner.
-"""
-
 ROOT_LOCATION = "../"
 """
 Relativer Pfad zur root location.
 """
 
+RESOURCES_LOCATION = "resources"
+"""
+Pfad zu dem resources Ordner.
+Wird beim starten mit dem Wert aus der Config datei inizalisiert.
+"""
+
+IMAGES_LOCATION = "images"
+"""
+Bilder Ordner Name.
+Wird beim starten mit dem Wert aus der Config datei inizalisiert.
+"""
+
 TEMP_LOCATION = "temp"
 """ 
-Temporärer Datei Ordner Name
+Temporärer Datei Ordner Name.
+Wird beim starten mit dem Wert aus der Config datei inizalisiert.
 """
 
 MEMORY_LOCATION = "memory"
 """
-Memory Datei Ordner Name, zum abspeichern von vorherigen berechnungen
+Memory Datei Ordner Name, zum abspeichern von vorherigen berechnungen.
+Wird beim starten mit dem Wert aus der Config datei inizalisiert.
 """
 
 DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
@@ -42,6 +46,16 @@ def get_current_time():
     return datetime.now().strftime(DATE_FORMAT)
 
 
+def path_from_root(path):
+    """
+    Erstellt einen pfad relativ zum root ordner (visuanalytics)
+
+    :param path: relativer pfad
+    :return: absoluter pfad zu root/path
+    """
+    return os.path.normpath(os.path.join(os.path.dirname(__file__), ROOT_LOCATION, path))
+
+
 def get_resource_path(path: str):
     """Erstellt einen Absoluten Pfad zu der übergebene Ressource.
 
@@ -50,7 +64,7 @@ def get_resource_path(path: str):
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
     :return: Absoluter Pfad zur übergebener Ressource.
     """
-    return os.path.normpath(os.path.join(os.path.dirname(__file__), RESOURCES_LOCATION, path))
+    return path_from_root(os.path.join(RESOURCES_LOCATION, path))
 
 
 def get_image_path(path: str):
@@ -61,7 +75,7 @@ def get_image_path(path: str):
     :param path: Pfad zur Ressource, relativ zum `resources` Ordner.
     :return: Absoluter Pfad zur übergebener Ressource.
     """
-    return os.path.normpath(os.path.join(os.path.dirname(__file__), IMAGES_LOCATION, path))
+    return get_resource_path(os.path.join(IMAGES_LOCATION, path))
 
 
 def get_temp_resource_path(path: str, pipeline_id: str):
@@ -192,16 +206,6 @@ def delete_resource(path: str):
     """
     with contextlib.suppress(FileNotFoundError):
         os.remove(get_resource_path(path))
-
-
-def path_from_root(path):
-    """
-    Erstellt einen pfad relativ zum root ordner (visuanalytics)
-
-    :param path: relativer pfad
-    :return: absoluter pfad zu root/path
-    """
-    return os.path.normpath(os.path.join(os.path.dirname(__file__), ROOT_LOCATION, path))
 
 
 def get_out_path(time, out_path, job_name, format=".mp4", thumbnail=False):

@@ -19,19 +19,22 @@ logger = logging.getLogger(__name__)
 GENERATE_AUDIO_TYPES = {}
 
 
-def get_audio_config(values: dict, data: StepData):
+def _get_audio_config(values: dict, data: StepData):
     config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
 
     # If Config in Step Json is pressent use That config
     config.update(custom_config)
 
+    # Init _audio with audio config
+    data.insert_data("_audio|_conf", config, {})
+
     return config
 
 
 @raise_step_error(AudioError)
 def generate_audios(values: dict, data: StepData):
-    config: dict = get_audio_config(values, data)
+    config: dict = _get_audio_config(values, data)
 
     audio_func = get_type_func(config, GENERATE_AUDIO_TYPES)
     audio_func(values["audio"]["audios"], data, config)
@@ -46,7 +49,7 @@ def default(values: dict, data: StepData, config: dict):
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
-        sub_pairs = data.format_json(config.get("sub_pairs", None), None, values)
+        sub_pairs = data.deep_format(config.get("sub_pairs", None), values=values)
 
         if sub_pairs:
             for key in sub_pairs:
@@ -79,8 +82,6 @@ def custom(values: dict, data: StepData, config: dict):
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
-    data.data["_audio"] = {}
-
     if values is not None:
         api_request(values, data, "audio", "_audio|pre", True)
 
