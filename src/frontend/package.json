@@ -47,6 +47,6 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "concurrently": "^5.2.0"
+    "concurrently": "^5.3.0"
   }
 }
