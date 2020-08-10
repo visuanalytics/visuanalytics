@@ -57,6 +57,6 @@ export const useStyles = makeStyles((theme) => ({
     },
     checkIcon: {
         fontSize: "50px",
-        color: "#00a152",
+        color: "#81c784",
     }
 }));
