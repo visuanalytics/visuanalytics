@@ -20,6 +20,7 @@ import { PageTemplate } from "../PageTemplate";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 import { Job } from "../JobList";
+import { Notification } from "../util/Notification";
 
 interface Props {
   jobId?: number;
@@ -62,12 +63,13 @@ const logsReducer = (
 
 export const JobLogs: React.FC<Props> = ({ jobId }) => {
   const classes = useStyles();
-  const initSelectJob = React.useRef(true);
+  const jobHasChanged = React.useRef(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [loadFailed, setLoadFailed] = React.useState(false);
+  const [showError, setShowError] = React.useState(false);
   const [filteredLogs, dispatchFilteredLogs] = React.useReducer(logsReducer, {
-    selected: -1,
+    selected: jobId ? jobId : -1,
     logs: undefined,
   });
 
@@ -122,21 +124,29 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
   }, [logs]);
 
   useEffect(() => {
-    if (initSelectJob.current && jobId !== undefined && jobs !== undefined) {
-      // Trigger init job Select only once
-      initSelectJob.current = false;
+    // Check if jobs has changed
+    jobHasChanged.current = true;
+  }, [jobs]);
 
-      // If jobId is valid init Filter
-      if (jobs.some((j) => j.jobId === jobId))
+  useEffect(() => {
+    if (jobHasChanged.current && jobs !== undefined) {
+      // validate Selected id
+      if (
+        filteredLogs.selected !== -1 &&
+        !jobs.some((j) => j.jobId === filteredLogs.selected)
+      ) {
+        // If Selected id is invalide, select -1
         dispatchFilteredLogs({
           type: "updateFilter",
           logs: logs,
-          selected: jobId,
+          selected: -1,
         });
+        setShowError(true);
+      }
 
-      // TODO (Max) display error if JobId is invalid
+      jobHasChanged.current = false;
     }
-  }, [jobs, logs, jobId]);
+  }, [jobs, logs, filteredLogs.selected]);
 
   return (
     <PageTemplate
@@ -255,6 +265,12 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           </InfoMessage>
         </Load>
       </InfoMessage>
+      <Notification
+        open={showError}
+        handleClose={() => setShowError(false)}
+        message="Der ausgewählte Job ist nicht mehr Vorhanden!"
+        type="error"
+      />
     </PageTemplate>
   );
 };
