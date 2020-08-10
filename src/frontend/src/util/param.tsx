@@ -57,6 +57,40 @@ interface EnumValue {
     displayValue: string;
 }
 
+// validate a single paramter value
+export const validateParamValue = (value: any, param: Param) => {
+    const optional = param.optional;
+    switch (param.type) {
+        case "string":
+        case "enum":
+            const ev = value.trim();
+            if (!optional) {
+                return ev !== "";
+            }
+            return true;
+        case "number":
+            const nv = value.trim();
+            if (!optional) {
+                return nv !== "" && !isNaN(Number(nv));
+            }
+            return nv === "" || !isNaN(Number(nv));
+        case "multiString":
+            const msv: string[] = value.map((v: string) => v.trim());
+            if (!optional) {
+                return msv.length > 0 && msv.every(v => v !== "");
+            }
+            return true;
+        case "multiNumber":
+            const mnv: string[] = value.map((v: any) => String(v).trim());
+            if (!optional) {
+                return mnv.length > 0 && mnv.every(v => v !== "" && !isNaN(Number(v)));
+            }
+            return mnv.filter(v => v !== "").length === 0 || mnv.every(v => v !== "" && !isNaN(Number(v)));
+        default:
+            return true;
+    }
+}
+
 // validate parameter values
 export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
     if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
@@ -69,34 +103,9 @@ export const validateParamValues = (values: ParamValues, params: Param[] | undef
                     return p.subParams === null ? true : validateParamValues(values, p.subParams);
                 }
                 return true;
-            case "string":
-            case "enum":
-                const ev = values[p.name].trim();
-                if (!p.optional) {
-                    return ev !== "";
-                }
-                return true;
-            case "number":
-                const nv = values[p.name].trim();
-                if (!p.optional) {
-                    return nv !== "" && !isNaN(Number(nv));
-                }
-                return nv === "" || !isNaN(Number(nv));
-            case "multiString":
-                const msv: string[] = values[p.name].map((v: string) => v.trim());
-                if (!p.optional) {
-                    return msv.length > 0 && msv.every(v => v !== "");
-                }
-                return true;
-            case "multiNumber":
-                const mnv: string[] = values[p.name].map((v: any) => String(v).trim());
-                if (!p.optional) {
-                    return mnv.length > 0 && mnv.every(v => v !== "" && !isNaN(Number(v)));
-                }
-                console.log(mnv);
-                return mnv.filter(v => v !== "").length === 0 || mnv.every(v => v !== "" && !isNaN(Number(v)));
+            default:
+                return validateParamValue(values[p.name], p);
         }
-        return true;
     })
 }
 

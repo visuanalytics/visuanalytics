@@ -192,6 +192,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     required={!state.edit}
                                     variant="outlined"
                                     fullWidth
+                                    error={!validateSchedule(schedule)}
                                 />
                             </Button>
                         </Tooltip>
