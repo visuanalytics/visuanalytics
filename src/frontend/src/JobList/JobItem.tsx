@@ -20,19 +20,13 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { ParamFields } from "../ParamFields";
 import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import { Notification, TMessageStates } from "../util/Notification";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 import { HintButton } from "../util/HintButton";
 
 interface Props {
     job: Job,
     getJobs: () => void;
-}
-
-interface INotification {
-    open: boolean,
-    stateType: TMessageStates,
-    message: string
 }
 
 export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
@@ -64,13 +58,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [paramValues, setParamValues] = React.useState<ParamValues>({ ...initSelectedValues(job.params), ...job.values });
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
-    const [error, setError] = React.useState(false);
     const [confirmDelete, setConfirmDelete] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [success, setSucess] = React.useState<INotification>({
+    const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
         open: false,
-        stateType: "success",
-        message: ""
+        message: "",
+        type: "success",
     });
 
     const handleSelectSchedule = (schedule: Schedule) => {
@@ -88,21 +80,21 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     }
 
     const handleEditError = () => {
-        setSucess({ open: true, stateType: "error", message: "Bearbeitung fehlgeschlagen" })
+        dispatchMessage({type: "reportError", message: "Bearbeitung fehlgeschlagen" })
     }
 
     const handleEditSuccess = () => {
         getJobs()
-        setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
+        dispatchMessage({ type: "reportSuccess", message: "Job erfolgreich geändert" })
     }
 
     const handleDeleteJobSucess = () => {
         getJobs()
-        setSucess({ open: true, stateType: "success", message: "Job erfolgreich gelöscht" })
+        dispatchMessage({ type: "reportSuccess", message: "Job erfolgreich gelöscht" })
     }
 
     const handleDeleteJobFailure = () => {
-        setSucess({ open: true, stateType: "error", message: "Job konnte nicht gelöscht werden" })
+        dispatchMessage({ type: "reportError", message: "Job konnte nicht gelöscht werden" })
     }
 
     const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, handleDeleteJobSucess, handleDeleteJobFailure);
@@ -151,18 +143,15 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
-                setErrorMessage("Jobname nicht ausgefüllt");
-                setError(true);
+                dispatchMessage({type: "reportError", message: "Jobname nicht ausgefüllt"});
                 return;
             }
             if (!validateParamValues(paramValues, job.params)) {
-                setErrorMessage("Parameter nicht korrekt gesetzt");
-                setError(true);
+                dispatchMessage({type: "reportError", message: "Parameter nicht korrekt gesetzt"});
                 return;
             }
             if (!validateSchedule(schedule)) {
-                setErrorMessage("Es muss mindestens ein Wochentag ausgewählt werden");
-                setError(true);
+                dispatchMessage({type: "reportError", message: "Es muss mindestens ein Wochentag ausgewählt werden"});
                 return;
             }
             handleEditClick();
@@ -229,13 +218,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             )
         }
 
-        const handleCloseError = () => {
-            setError(false);
-        }
-        const handleCloseSuccess = () => {
-            setSucess({ open: false, stateType: success.stateType, message: success.message });
-        }
-
         return (
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
@@ -252,10 +234,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                 onChange={handleJobName}
                             >
                                 {job.jobName}</NameInput></Typography>
-                        <Notification handleClose={handleCloseError} open={error} message={errorMessage}
-                            type={"error"} />
-                        <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message}
-                            type={success.stateType} />
+                        <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
+                            type={message.type} />
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job bearbeiten" arrow>
                                 <IconButton style={{ display: state.editIcon }} className={classes.button}
