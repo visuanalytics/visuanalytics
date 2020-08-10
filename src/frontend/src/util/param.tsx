@@ -65,7 +65,7 @@ export const validateParamValue = (value: any, param: Param) => {
         case "enum":
             const ev = value.trim();
             if (!optional) {
-                return ev !== "";
+                return ev !== "" && !ev.includes(",");
             }
             return true;
         case "number":
