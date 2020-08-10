@@ -17,6 +17,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         paper: {
             padding: '20px',
         },
+        modalpaper: {
+            padding: '20px',
+            height: '90%'
+        },
         heading: {
             fontSize: theme.typography.pxToRem(25),
             flexBasis: '77%',
@@ -40,7 +44,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             padding: '20px',
             textAlign: "center",
             borderRadius: '4px',
-            width: '35%'
+            width: '60%'
         },
         modal: {
             display: 'flex',
