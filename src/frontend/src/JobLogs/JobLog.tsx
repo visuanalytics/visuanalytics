@@ -78,7 +78,7 @@ const useStateValues = (log: Log, classes: ClassesType): SateValues => {
         iconTitle: "Fehler bei der Video generierung",
         jobNameXS: 4,
         infoFC: (
-          <Grid container item md={7} xs className={classes.errorBox}>
+          <Grid container item md={7} xs={12} className={classes.errorBox}>
             <Grid item xs>
               <Typography
                 align="center"

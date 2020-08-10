@@ -21,6 +21,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     cardContent: {
       padding: "18px 16px 18px 16px !important",
     },
+    jobName: {
+      wordBreak: "break-word",
+    },
     errorIcon: {
       fontSize: "40px",
       color: theme.palette.error.light,
@@ -51,7 +54,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     errorText: {
       borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+      minHeight: "100%",
       whiteSpace: "pre-wrap",
+      wordBreak: "break-word",
     },
     errorButton: {
       minWidth: "max-content",
