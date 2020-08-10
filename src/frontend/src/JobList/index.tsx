@@ -10,6 +10,7 @@ import {useStyles} from "../Home/style";
 import {ContinueButton} from "../JobCreate/ContinueButton";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {ComponentContext} from "../ComponentProvider";
+import {DeleteSchedule} from "../util/deleteSchedule";
 
 export interface Job {
   jobId: number;
@@ -17,6 +18,7 @@ export interface Job {
   params: Param[];
   values: ParamValues;
   schedule: Schedule;
+  deleteSchedule: DeleteSchedule;
   topicId: number;
   topicName: string;
 }
