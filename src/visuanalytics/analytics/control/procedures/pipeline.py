@@ -87,6 +87,17 @@ class Pipeline(object):
         """
         return self.__steps[self.__current_step]["name"]
 
+    def __get_default_config(self, run_config: dict):
+        default_config = {}
+        for c, v in run_config.items():
+            # If config has sub_params: include all sub_params
+            if v["type"] == "sub_params":
+                default_config.update(self.__get_default_config(v["sub_params"]))
+
+            default_config[c] = v.get("default_value", None)
+
+        return default_config
+
     def __setup(self):
         logger.info(f"Initializing Pipeline {self.id}...")
 
@@ -100,12 +111,17 @@ class Pipeline(object):
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
+        # Init Steps config with default config
+        steps_config = self.__get_default_config(self.__config.get("run_config", {}))
+        steps_config.update(self.steps_config)
+        self.steps_config = steps_config
+
         # Init out_time
         self.__config["out_time"] = datetime.fromtimestamp(self.__start_time).strftime(DATE_FORMAT)
 
         os.mkdir(resources.get_temp_resource_path("", self.id))
 
-        logger.info(f"Inizalization finished!")
+        logger.info(f"Initialization finished!")
 
     def __update_db(self, func: callable, *args, **kwargs):
         if self.__log_to_db:

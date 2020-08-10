@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from visuanalytics.server.db import db
+from visuanalytics.server.db import queries
 
 # This variable is initialized with the value from the config file, 
 # so a change here has no effect. 
@@ -30,7 +31,7 @@ def get_job_run_info(job_id):
     """
     with db.open_con() as con:
         res = con.execute("""
-        SELECT job_name, json_file_name, key, value
+        SELECT job_name, json_file_name, key, value, type
         FROM job 
         INNER JOIN steps USING(steps_id) 
         LEFT JOIN job_config USING(job_id) 
@@ -39,7 +40,7 @@ def get_job_run_info(job_id):
 
         job_name = res[0]["job_name"]
         steps_name = res[0]["json_file_name"]
-        config = {row["key"]: row["value"] for row in res}
+        config = {row["key"]: queries.to_typed_value(row["value"], row["type"]) for row in res}
 
         return job_name, steps_name, config
 
