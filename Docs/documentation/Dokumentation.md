@@ -118,7 +118,7 @@ onClick={() => components?.setCurrent("jobpage")}
 Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
 
 <figure>
-  <img width="100%" src="../_static/images/documentation/stepper.png"/>
+  <img width="100%" src="../_static/images/documentation/stepper.gif"/>
   <figcaption>Abbildung 4</figcaption>
 </figure>
 <br>
