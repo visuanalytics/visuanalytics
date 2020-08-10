@@ -69,7 +69,10 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
     :rtype: str
     """
     wordcloud_parameter = dict(WORDCLOUD_DEFAULT_PARAMETER)
+    print(values)
+    print(step_data)
     parameter = values.get("parameter", {})
+    print(parameter)
 
     for param in parameter:
         if param in wordcloud_parameter:
@@ -82,8 +85,10 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
 
             wordcloud_parameter[param] = value
 
+    print(wordcloud_parameter["font_path"])
     path = resources.get_resource_path(wordcloud_parameter["font_path"])
     wordcloud_parameter["font_path"] = path
+    print(path)
 
     if bool(wordcloud_parameter.get("color_func", False)):
         cfw = list(DEFAULT_COLOR_FUNC_VALUES)
