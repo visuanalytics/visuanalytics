@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip } from "@material-ui/core";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip, Dialog, DialogTitle, DialogActions } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -65,6 +65,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [error, setError] = React.useState(false);
+    const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
     const [success, setSucess] = React.useState<INotification>({
         open: false,
@@ -95,7 +96,16 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
     }
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
+    const handleDeleteJobSucess = () => {
+        getJobs()
+        setSucess({ open: true, stateType: "success", message: "Job erfolgreich gelöscht" })
+    }
+
+    const handleDeleteJobFailure = () => {
+        setSucess({ open: true, stateType: "error", message: "Job konnte nicht gelöscht werden" })
+    }
+
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, handleDeleteJobSucess, handleDeleteJobFailure);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -161,6 +171,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         const handleSaveModal = () => {
             handleCheckClick();
             handleClose();
+        }
+
+        const handleDeleteJob = () => {
+            setConfirmDelete(false)
+            deleteJob()
         }
 
         const renderTextField = () => {
@@ -257,7 +272,10 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job löschen" arrow>
-                                <IconButton onClick={deleteJob} className={classes.button}>
+                                <IconButton 
+                                    onClick={() => setConfirmDelete(true)} 
+                                    className={classes.button}
+                                >
                                     <DeleteIcon />
                                 </IconButton>
                             </Tooltip>
@@ -329,6 +347,22 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
+                <Dialog
+                    open={confirmDelete}
+                    onClose={() => setConfirmDelete(false)}
+                >
+                    <DialogTitle>
+                        {`Job '#${job.jobId} ${job.jobName}' löchen?`}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button autoFocus onClick={() => setConfirmDelete(false)} color="primary">
+                            Abbrechen
+                        </Button>
+                        <Button onClick={handleDeleteJob} color="primary">
+                            Löschen
+                        </Button>
+                </DialogActions>
+                </Dialog>
             </div>
         );
     }
