@@ -57,6 +57,40 @@ interface EnumValue {
     displayValue: string;
 }
 
+// validate a single paramter value
+export const validateParamValue = (value: any, param: Param) => {
+    const optional = param.optional;
+    switch (param.type) {
+        case "string":
+        case "enum":
+            const ev = value.trim();
+            if (!optional) {
+                return ev !== "";
+            }
+            return true;
+        case "number":
+            const nv = value.trim();
+            if (!optional) {
+                return nv !== "" && !isNaN(Number(nv));
+            }
+            return nv === "" || !isNaN(Number(nv));
+        case "multiString":
+            const msv: string[] = value.map((v: string) => v.trim());
+            if (!optional) {
+                return msv.length > 0 && msv.every(v => v !== "");
+            }
+            return true;
+        case "multiNumber":
+            const mnv: string[] = value.map((v: any) => String(v).trim());
+            if (!optional) {
+                return mnv.length > 0 && mnv.every(v => v !== "" && !isNaN(Number(v)));
+            }
+            return mnv.filter(v => v !== "").length === 0 || mnv.every(v => v !== "" && !isNaN(Number(v)));
+        default:
+            return true;
+    }
+}
+
 // validate parameter values
 export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
     if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
@@ -68,28 +102,14 @@ export const validateParamValues = (values: ParamValues, params: Param[] | undef
                 if (!p.optional || values[p.name]) {
                     return p.subParams === null ? true : validateParamValues(values, p.subParams);
                 }
-                break;
-            case "string":
-            case "number":
-            case "enum":
-                if (!p.optional) {
-                    const v = values[p.name];
-                    return v.trim() !== "";
-                }
-                break;
-            case "multiString":
-            case "multiNumber":
-                if (!p.optional) {
-                    const vs = values[p.name];
-                    return vs.map((v: string) => v.trim()).filter((v: string) => v !== "").length > 0;
-                }
-                break;
+                return true;
+            default:
+                return validateParamValue(values[p.name], p);
         }
-        return true;
     })
 }
 
-// trim all string / string[] values
+// trim all string / string[] values and remove empty values
 export const trimParamValues = (values: ParamValues): ParamValues => {
     let cValues: ParamValues = { ...values }
     Object.keys(cValues).forEach((k) => {
@@ -102,7 +122,13 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
                 cValues[k] = v;
             }
         } else if (cValues[k] instanceof Array) {
-            cValues[k] = cValues[k].map((s: string) => s.trim()).filter((s: string) => s !== "");
+            const v = cValues[k].map((s: any) => String(s).trim()).filter((s: string) => s !== "");
+            if (v.every((s: any) => String(s) === "")) {
+                const { [k]: x, ...r } = cValues;
+                cValues = r;
+            } else {
+                cValues[k] = v;
+            }
         }
     })
     return cValues;
@@ -142,10 +168,16 @@ export const toTypedValues = (values: ParamValues, params: Param[] | undefined) 
     let tValues: TypedParamValues = {};
     params?.forEach(p => {
         if (p.name in values) {
-            const v = values[p.name];
+            let v = values[p.name];
             if (p.type === "subParams" && (!p.optional || v)) {
                 const stValues = toTypedValues(values, p.subParams);
                 tValues = { ...tValues, ...stValues };
+            }
+            if (p.type === "number") {
+                v = Number(v);
+            }
+            if (p.type === "multiNumber") {
+                v = v.map((n: any) => Number(n));
             }
             tValues[p.name] = { type: p.type, value: v };
         }
