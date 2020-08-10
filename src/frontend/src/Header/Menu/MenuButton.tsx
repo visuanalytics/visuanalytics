@@ -6,6 +6,7 @@ import {
   createStyles,
   makeStyles,
   Theme,
+  Grid,
 } from "@material-ui/core";
 
 interface Props {
@@ -32,10 +33,12 @@ export const MenuButton: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <Tooltip title={title}>
-      <IconButton size="small" className={classes.root} {...iconButtonProps}>
-        {icon}
-      </IconButton>
-    </Tooltip>
+    <Grid item>
+      <Tooltip title={title}>
+        <IconButton size="small" className={classes.root} {...iconButtonProps}>
+          {icon}
+        </IconButton>
+      </Tooltip>
+    </Grid>
   );
 };

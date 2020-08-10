@@ -8,7 +8,7 @@ export const Menu = () => {
   const components = React.useContext(ComponentContext);
 
   return (
-    <Grid container>
+    <Grid container spacing={1}>
       <MenuButton
         title="Logs"
         iconButtonProps={{ onClick: () => components?.setCurrent("jobLogs") }}
