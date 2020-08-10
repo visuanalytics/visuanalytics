@@ -76,7 +76,7 @@
         "thumbnail": true,
         "normalize_words": true,
         "colormap_words": "viridis",
-        "background_image": "backgrounds/black.png",
+        "background_image": "backgrounds/football.png",
         "color_func": true,
         "color_func_words": "145 46 5 35",
         "figure": "circle",

@@ -310,7 +310,7 @@
     },
     "wordcloud_all": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -323,7 +323,7 @@
     },
     "wordcloud_top1": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -335,7 +335,7 @@
     },
     "wordcloud_top2": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -347,7 +347,7 @@
     },
     "wordcloud_top3": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -359,7 +359,7 @@
     },
     "wordcloud_top4": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -371,7 +371,7 @@
     },
     "wordcloud_top5": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -383,7 +383,7 @@
     },
     "wordcloud_top6": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -395,7 +395,7 @@
     },
     "wordcloud_top7": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -407,7 +407,7 @@
     },
     "wordcloud_top8": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -419,7 +419,7 @@
     },
     "wordcloud_top9": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -431,7 +431,7 @@
     },
     "wordcloud_top10": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -443,7 +443,7 @@
     },
     "wordcloud_top15": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -455,7 +455,7 @@
     },
     "wordcloud_top20": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -467,7 +467,7 @@
     },
     "wordcloud_top25": {
       "type": "pillow",
-      "conf_path": "{_conf|background_image}",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
