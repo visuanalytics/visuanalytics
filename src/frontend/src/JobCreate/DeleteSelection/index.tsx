@@ -95,6 +95,9 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             }}
                             variant="outlined"
                             onChange={handleAddKeepCount}
+                            InputProps={{
+                                inputProps: { min: 0}
+                            }}
                         />
                     </Collapse>
                 </div>
@@ -116,6 +119,9 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             }}
                             variant="outlined"
                             onChange={handleAddFixNames}
+                            InputProps={{
+                                inputProps: { min: 0}
+                            }}
                         />
                     </Collapse>
                 </div>
