@@ -325,7 +325,7 @@ Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Daten
 Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet mit Hashtags. Als Antwort erhält man unter anderem alle Posts, die das gesuchte Hashtag innerhalb der letzten 7 Tage verwendet haben.
 Die API-Antwort wird so verkürzt, dass nur noch die Hashtags, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden Wordclouds erstellt.
 
-Mithilfe der Python-Library Wordcloud (Quelle: https://github.com/amueller/word_cloud) wurde der Image-Typ Wordcloud ergänzt. Es ist möglich verschiedene Parameter für die Wordcloud festzulegen.
+Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt. Es ist möglich verschiedene Parameter für die Wordcloud festzulegen.
 Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square":
 
 <figure>
@@ -365,7 +365,7 @@ Folgende transform-Typen wurden verwendet:
 **Wordcloud-Parameter**
 
 Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud beeinflussen kann. Diese betreffen die Größe der Wordcloud und der Schrift. Die Hintergrundfarbe, Schriftfarben. Will man anstatt eines einfarbigen Hintergrunds ein Bild, geht dies durch die JSON und den Overlay-Typ "image" auch.
-Die verschiedenen Parameter werden in der Steps-Config-Doku genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: https://www.datacamp.com/community/tutorials/wordcloud-python).
+Die verschiedenen Parameter werden in der Steps-Config-Doku genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
 Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
 ## Processing
