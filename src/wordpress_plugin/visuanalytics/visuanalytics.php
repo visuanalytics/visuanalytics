@@ -39,6 +39,10 @@ function init_va_menu() {
 }
 
 function add_va_scripts() {
+  /* Remove forms wp-Styles */
+  wp_deregister_style("forms");
+  wp_enqueue_style("forms", 'common');
+
   // add js files
   $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
   
