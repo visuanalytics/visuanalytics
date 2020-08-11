@@ -1,6 +1,28 @@
 # VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22)
 
-## Programm Starten
+## Einleitung
+
+Im Rahmen der Veranstaltung "Softwaretechnik-Praktikum" im Sommersemester 2020 wurde dieses Projekt zum Thema "Data Analytics" durchgeführt. 
+
+Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge Informatik und Ingenieur-Informatik an der Technischen Hochschule Mittelhessen.
+
+Die Aufgabe war es, Informationen über verschiedene Schnittstellen zu erfassen, diese automatisiert zu verarbeiten und daraus ein Video zu generieren, welches die Informationen in Bild und Ton präsentiert. 
+
+Aktuell gibt es vier mögliche Videos, welche automatisiert erstellt werden können:
+
+- Deutschlandweiter Wetterbericht 
+- Ortsbezogener Wetterbericht
+- Bundesliga-Ergebnisse
+- Twitter-Wordcloud
+
+Neue Schnittstellen sollen schnell zu ergänzen sein, sodass weitere Videos mit anderen Themen erstellt werden können. 
+
+Zudem wurde ein Frontend entwickelt mit welchem es möglich ist Videos in Auftrag zu geben und dass diese zu festgelegten Zeitpunkten automatisch generiert werden. Dies ist auch durch ein Wordpress-Plugin möglich.
+
+Die Software soll nach der Fertigstellung auf der Website https://biebertal.mach-mit.tv/ eingesetzt werden. Biertal.Mach-Mit.TV ist ein Kooperationsprojekt der Gemeinde Biebertal und dem Fachbereich MNI der Technischen Hochschule Mittelhessen.
+
+
+## Programm starten
 
 ### Konfiguration
 
