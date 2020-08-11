@@ -10,6 +10,7 @@ import {useStyles} from "../Home/style";
 import {ContinueButton} from "../JobCreate/ContinueButton";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {ComponentContext} from "../ComponentProvider";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 export interface Job {
   jobId: number;
@@ -24,6 +25,12 @@ export interface Job {
 export const JobList: React.FC = () => {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
+
+  const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
+    open: false,
+    message: "",
+    type: "success"
+});
 
   const [loadFailed, setLoadFailed] = useState(false);
   const handleLoadFailed = useCallback(() => {
@@ -40,6 +47,14 @@ export const JobList: React.FC = () => {
     setLoadFailed(false);
     getJobs();
   };
+
+  const handleReportSuccess = (message: string) => {
+    dispatchMessage({type: "reportSuccess", message: message})
+  }
+
+  const handleReportError = (message: string) => {
+    dispatchMessage({type: "reportError", message: message})
+  }
 
   if (jobInfo?.length === 0) {
       return (
@@ -82,9 +97,16 @@ export const JobList: React.FC = () => {
                   >
                     {jobInfo?.map((j: Job) => (
                       <div key={j.jobId}>
-                        <JobItem job={j} getJobs={handleReaload} />
+                        <JobItem 
+                          job={j} 
+                          getJobs={handleReaload} 
+                          reportError={handleReportError} 
+                          reportSuccess={handleReportSuccess} 
+                        />
                       </div>
                     ))}
+                    <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
+                            type={message.type}/>
                   </Load>
               </div>
           </Fade>

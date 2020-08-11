@@ -20,35 +20,32 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { ParamFields } from "../ParamFields";
 import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import { Notification, notifcationReducer } from "../util/Notification";
 
 import { HintButton } from "../util/HintButton";
 
 interface Props {
     job: Job,
     getJobs: () => void;
+    reportError: (message: string) => void;
+    reportSuccess: (message: string) => void;
 }
 
-export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
+export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSuccess }) => {
     const classes = useStyles();
 
-    const [state, setState] = React.useState({
-        edit: true,
-        editIcon: 'block',
-        doneIcon: 'none'
-    });
+    const [noEdit, setNoEdit] = React.useState(true);
 
     const NameInput = withStyles({
         root: {
             cursor: "pointer",
         },
         input: {
-            cursor: state.edit ? 'pointer' : 'text',
+            cursor: noEdit ? 'pointer' : 'text',
             padding: '0 8px',
             marginLeft: '8px',
             color: 'white',
             fontSize: '1.5625rem',
-            borderBottom: state.edit ? '' : '2px solid #c4c4c4'
+            borderBottom: noEdit ? '' : '2px solid #c4c4c4'
         },
     })(InputBase);
 
@@ -59,11 +56,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [confirmDelete, setConfirmDelete] = React.useState(false);
-    const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
-        open: false,
-        message: "",
-        type: "success",
-    });
 
     const handleSelectSchedule = (schedule: Schedule) => {
         setSchedule(schedule);
@@ -80,21 +72,21 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     }
 
     const handleEditError = () => {
-        dispatchMessage({type: "reportError", message: "Bearbeitung fehlgeschlagen" })
+        reportError("Bearbeitung fehlgeschlagen")
     }
 
     const handleEditSuccess = () => {
         getJobs()
-        dispatchMessage({ type: "reportSuccess", message: "Job erfolgreich geändert" })
+        reportSuccess("Job erfolgreich geändert")
     }
 
     const handleDeleteJobSucess = () => {
         getJobs()
-        dispatchMessage({ type: "reportSuccess", message: "Job erfolgreich gelöscht" })
+        reportSuccess("Job erfolgreich gelöscht")
     }
 
     const handleDeleteJobFailure = () => {
-        dispatchMessage({ type: "reportError", message: "Job konnte nicht gelöscht werden" })
+        reportError("Job konnte nicht gelöscht werden")
     }
 
     const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, handleDeleteJobSucess, handleDeleteJobFailure);
@@ -133,25 +125,21 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             setExpanded(isExpanded ? panel : false);
         };
         const handleEditClick = () => {
-            setState(state.edit ? { edit: false, editIcon: 'none', doneIcon: 'block' } : {
-                edit: true,
-                editIcon: 'block',
-                doneIcon: 'none'
-            });
+            setNoEdit(!noEdit);
             setExpanded(String(job.jobId));
         }
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
-                dispatchMessage({type: "reportError", message: "Jobname nicht ausgefüllt"});
+                reportError("Jobname nicht ausgefüllt")
                 return;
             }
             if (!validateParamValues(paramValues, job.params)) {
-                dispatchMessage({type: "reportError", message: "Parameter nicht korrekt gesetzt"});
+                reportError("Parameter nicht korrekt gesetzt")
                 return;
             }
             if (!validateSchedule(schedule)) {
-                dispatchMessage({type: "reportError", message: "Es muss mindestens ein Wochentag ausgewählt werden"});
+                reportError("Es muss mindestens ein Wochentag ausgewählt werden")
                 return;
             }
             handleEditClick();
@@ -182,18 +170,18 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         />
                     </div>
                     <div className={classes.SPaddingTRB}>
-                        <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
+                        <Tooltip title={noEdit ? "" : "Zeitplan bearbeiten"}
                             arrow
                         >
-                            <Button className={classes.inputButton} onClick={handleOpen} disabled={state.edit}>
+                            <Button className={classes.inputButton} onClick={handleOpen} disabled={noEdit}>
                                 <TextField
                                     label="Zeitplan"
                                     value={showSchedule(schedule)}
-                                    disabled={state.edit}
+                                    disabled={noEdit}
                                     InputProps={{
                                         readOnly: true
                                     }}
-                                    required={!state.edit}
+                                    required={!noEdit}
                                     variant="outlined"
                                     fullWidth
                                     error={!validateSchedule(schedule)}
@@ -228,25 +216,17 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <NameInput
                                 // autoFocus={true}
                                 value={jobName}
-                                readOnly={state.edit}
-                                onClick={state.edit ? () => {
+                                readOnly={noEdit}
+                                onClick={noEdit ? () => {
                                 } : (event) => event.stopPropagation()}
                                 onChange={handleJobName}
                             >
                                 {job.jobName}</NameInput></Typography>
-                        <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
-                            type={message.type} />
                         <div onClick={(event) => event.stopPropagation()}>
-                            <Tooltip title="Job bearbeiten" arrow>
-                                <IconButton style={{ display: state.editIcon }} className={classes.button}
-                                    onClick={handleEditClick}>
-                                    <EditIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Job speichern" arrow>
-                                <IconButton style={{ display: state.doneIcon }} className={classes.button}
-                                    onClick={handleCheckClick}>
-                                    <CheckCircleIcon />
+                            <Tooltip title={noEdit ? "Job bearbeiten" : "Job speichern"} arrow>
+                                <IconButton  className={classes.button}
+                                    onClick={handleCheckClick} >
+                                    {noEdit ? <EditIcon /> : <CheckCircleIcon />}
                                 </IconButton>
                             </Tooltip>
                         </div>
@@ -320,8 +300,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     params={job.params}
                                     values={paramValues}
                                     selectParamHandler={handleSelectParam}
-                                    disabled={state.edit}
-                                    required={!state.edit}
+                                    disabled={noEdit}
+                                    required={!noEdit}
                                 />
                             </div>
                         </Grid>
