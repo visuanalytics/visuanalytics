@@ -2,6 +2,7 @@ import logging
 import os
 
 from visuanalytics.server.db import db
+from visuanalytics.server.db import job
 from visuanalytics.util import external_programs, resources
 
 
@@ -17,6 +18,9 @@ def init(config: dict):
     if not config["console_mode"]:
         # init db
         db.init_db(config["db"].get("topics", []), config["db"]["db_path"])
+
+    # Init Log_limit
+    job.LOG_LIMIT = config["log_limit"]
 
     # Init resources locations
     res_paths = config["resources"]

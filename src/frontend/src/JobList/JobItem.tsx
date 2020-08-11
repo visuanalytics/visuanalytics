@@ -18,11 +18,13 @@ import { Job } from "./index";
 import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { ParamFields } from "../ParamFields";
+import DescriptionIcon from "@material-ui/icons/Description";
 import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
 import {NameInput} from "./NameInput"
 
 import { HintButton } from "../util/HintButton";
+import { ComponentContext } from "../ComponentProvider";
 
 interface Props {
     job: Job,
@@ -33,6 +35,7 @@ interface Props {
 
 export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSuccess }) => {
     const classes = useStyles();
+    const components = React.useContext(ComponentContext);
 
     const [noEdit, setNoEdit] = React.useState(true);
 
@@ -223,6 +226,13 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                             </Tooltip>
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
+                            <Tooltip title="Logs öffnen" arrow>
+                                <IconButton onClick={() => components?.setCurrent("jobLogs", {jobId: job.jobId})} className={classes.button}>
+                                    <DescriptionIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job löschen" arrow>
                                 <IconButton 
                                     onClick={() => setConfirmDelete(true)} 
@@ -252,8 +262,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                             <Fade in={open}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
-                                        <Grid xs={11} />
-                                        <Grid container xs={1} justify={"flex-end"}>
+                                        <Grid item xs={11} />
+                                        <Grid item container xs={1} justify={"flex-end"}>
                                             <HintButton content={
                                                 <div>
                                                     <Typography variant="h5" gutterBottom>Zeitplan
