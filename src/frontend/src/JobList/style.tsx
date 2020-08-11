@@ -19,7 +19,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         heading: {
             fontSize: theme.typography.pxToRem(25),
-            flexBasis: '77%',
+            flexBasis: '72%',
             flexShrink: 0,
             margin: 'auto 20px',
         },

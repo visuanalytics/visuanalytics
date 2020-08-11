@@ -1,5 +1,6 @@
 import json
 import os
+
 import humps
 
 from visuanalytics.server.db import db
@@ -84,6 +85,25 @@ def update_job(job_id, updated_data):
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
             _insert_param_values(con, job_id, value)
     con.commit()
+
+
+def get_logs():
+    con = db.open_con_f()
+    logs = con.execute(
+        "SELECT "
+        "job_id, job_name, state, error_msg, error_traceback, duration, start_time "
+        "from job_logs INNER JOIN job USING (job_id) "
+        "ORDER BY job_logs_id DESC").fetchall()
+    return [{
+        "jobId": log["job_id"],
+        "jobName": log["job_name"],
+        "state": log["state"],
+        "errorMsg": log["error_msg"],
+        "errorTraceback": log["error_traceback"],
+        "duration": log["duration"],
+        "startTime": log["start_time"]
+        }
+        for log in logs]
 
 
 def _row_to_job(row):
