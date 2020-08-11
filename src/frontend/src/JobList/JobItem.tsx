@@ -31,6 +31,7 @@ import {Notification, TMessageStates} from "../util/Notification";
 import {HintButton} from "../util/HintButton";
 import {DeleteSchedule} from "../util/deleteSchedule";
 import {DeleteSelection} from "../JobCreate/DeleteSelection";
+import {SchedulePage} from "../util/SchedulePage";
 
 interface Props {
     job: Job,
@@ -318,27 +319,17 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                                             }/>
                                         </Grid>
                                     </Grid>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={6}>
-                                                <Paper variant="outlined" className={classes.modalpaper}>
-                                                    <ScheduleSelection
-                                                        schedule={schedule}
-                                                        selectScheduleHandler={handleSelectSchedule}
-                                                    />
-                                                </Paper>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Paper variant="outlined" className={classes.modalpaper}>
-                                                    <DeleteSelection
-                                                        deleteSchedule={deleteSchedule}
-                                                        selectDeleteScheduleHandler={handleSelectDeleteSchedule}
-                                                    />
-                                                </Paper>
-                                            </Grid>
-                                        </Grid>
-                                        <div style={{float: "right", margin: "10px"}}>
-                                            <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
-                                        </div>
+                                        <Paper variant="outlined" className={classes.paper}>
+                                            <SchedulePage
+                                                schedule={schedule}
+                                                deleteSchedule={deleteSchedule}
+                                                selectScheduleHandler={handleSelectSchedule}
+                                                selectDeleteScheduleHandler={handleSelectDeleteSchedule}
+                                            />
+                                            <div>
+                                                <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
+                                            </div>
+                                        </Paper>
                                 </Container>
                             </Fade>
                         </Modal>

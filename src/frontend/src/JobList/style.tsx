@@ -44,7 +44,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             padding: '20px',
             textAlign: "center",
             borderRadius: '4px',
-            width: '60%'
+            width: '35%'
         },
         modal: {
             display: 'flex',

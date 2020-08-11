@@ -58,7 +58,7 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             checked={deleteSchedule.type === "noDeletion"}
                             onChange={handleSelectNoDeletion}
                             value="noDeletion"
-                        />} label="nicht löschen" />
+                        />} label="nie" />
                     </div>
                 </div>
                 <Divider />
@@ -68,7 +68,7 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             checked={deleteSchedule.type === "onDayHour"}
                             onChange={handleSelectOnDayHour}
                             value="onDayHour"
-                        />} label="Video nach bestimmter Zeit löschen" />
+                        />} label="nach Zeit" />
                     </div>
                     <Collapse in={deleteSchedule.type === "onDayHour"}>
                         <DayHourInputField
@@ -84,21 +84,23 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             checked={deleteSchedule.type === "keepCount"}
                             onChange={handleSelectKeepCount}
                             value="keepCount"
-                        />} label="nach bestimmter Anzahl von Videos löschen" />
+                        />} label="nach Anzahl" />
                     </div>
                     <Collapse in={deleteSchedule.type === "keepCount"}>
-                        <TextField
-                            label="Tage"
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="outlined"
-                            onChange={handleAddKeepCount}
-                            InputProps={{
-                                inputProps: { min: 0}
-                            }}
-                        />
+                        <div className={classes.MPaddingTB}>
+                            <TextField
+                                label="Anzahl"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="outlined"
+                                onChange={handleAddKeepCount}
+                                InputProps={{
+                                    inputProps: { min: 0}
+                                }}
+                            />
+                        </div>
                     </Collapse>
                 </div>
                 <Divider />
@@ -108,11 +110,13 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                             checked={deleteSchedule.type === "fixNames"}
                             onChange={handleSelectFixNames}
                             value="fixNames"
-                        />} label="bestimmte Anzahl an Videos mit fixem Namen erstellen" />
+                        />} label="feste Namen" />
                     </div>
                     <Collapse in={deleteSchedule.type === "fixNames"}>
+                        <div className={classes.MPaddingTB}>
                         <TextField
-                            label="Tage"
+                            className={classes.MPaddingTB}
+                            label="Anzahl"
                             type="number"
                             InputLabelProps={{
                                 shrink: true,
@@ -123,6 +127,7 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                                 inputProps: { min: 0}
                             }}
                         />
+                        </div>
                     </Collapse>
                 </div>
             </div>
