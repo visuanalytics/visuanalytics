@@ -1,3 +1,6 @@
+Einleitung
+----------
+
 Im Rahmen der Veranstaltung `Softwaretechnik-Praktikum <https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13>`_ im Sommersemester 2020 wurde dieses Projekt zum Thema **Data Analytics** durchgeführt.
 
 Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge Informatik und Ingenieur-Informatik an der `Technischen Hochschule Mittelhessen <https://www.thm.de>`_.

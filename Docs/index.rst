@@ -15,17 +15,11 @@ https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
    :maxdepth: 1
    :caption: Inhalt
 
-   :ref:`einleitung`
    usage/verwendung
    reports/Statusberichte
    mainreport/Projektbericht
    documentation/Dokumentation
    documentation/technische_dokumentation
-
-.. _einleitung:
-
-Einleitung
-----------
 
 .. include:: documentation/introduction.rst
 
