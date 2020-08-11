@@ -115,7 +115,6 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                     <Collapse in={deleteSchedule.type === "fixNames"}>
                         <div className={classes.MPaddingTB}>
                         <TextField
-                            className={classes.MPaddingTB}
                             label="Anzahl"
                             type="number"
                             InputLabelProps={{
