@@ -225,7 +225,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title={noEdit ? "Job bearbeiten" : "Job speichern"} arrow>
                                 <IconButton  className={classes.button}
-                                    onClick={handleCheckClick} >
+                                    onClick={noEdit ? handleEditClick : handleCheckClick} >
                                     {noEdit ? <EditIcon /> : <CheckCircleIcon />}
                                 </IconButton>
                             </Tooltip>
