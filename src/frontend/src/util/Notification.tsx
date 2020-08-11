@@ -70,9 +70,8 @@ export const notifcationReducer = (
       };
     case "close":
       return {
+        ...state,
         open: false,
-        message: state.message,
-        type: state.type,
       };
   }
 };
@@ -98,9 +97,10 @@ export const Notification: React.FC<Props> = ({
 
   return (
     <Snackbar
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       open={open}
       autoHideDuration={3000}
+      resumeHideDuration={3000}
       onClose={handleClose}
     >
       <SnackbarContent
