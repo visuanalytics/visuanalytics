@@ -21,6 +21,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 import { Job } from "../JobList";
 import { Notification } from "../util/Notification";
+import {ComponentContext} from "../ComponentProvider";
 
 interface Props {
   jobId?: number;
@@ -62,6 +63,7 @@ const logsReducer = (
 };
 
 export const JobLogs: React.FC<Props> = ({ jobId }) => {
+  const components = React.useContext(ComponentContext);
   const classes = useStyles();
   const jobHasChanged = React.useRef(true);
   const [page, setPage] = React.useState(0);
@@ -171,13 +173,13 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           headline: "Willkommen bei ihrer Log Übersicht!",
           text: (
             <Typography align={"center"} color="textSecondary">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et
+              Aktuell wurde noch kein Video generiert. <br/>
+              Sobald das erste Video generiert wurde können Sie hier die Log-Informationen sehen.
             </Typography>
           ),
           button: {
-            text: "TODO",
+            text: "Startseite",
+            onClick: () => components?.setCurrent("home"),
           },
         }}
       >
