@@ -1387,7 +1387,7 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
 
 ### convert
 
-<!--TODO-->
+Konvertieren von einem Datentyp in einen anderen Datentyp.
 
 **Beispiel** 
 
@@ -1397,24 +1397,16 @@ In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, 
   "keys": [
       "key"
   ],
-  "to": "",
+  "to": "datatype",
   "new_keys": [
       "new_key" 
   ]
 }
 ```
 
-**`keys`**:
-
-<!--TODO-->
-
 **`to`**:
 
-<!--TODO-->
-
-**`new_keys`**:
-
-<!--TODO-->
+Beispiel: int - Datentyp in den der Wert konvertiert werden soll
 
 ### sort
 
@@ -1440,6 +1432,18 @@ bool - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes
 sortiert werden (kleinste Zahl als Erstes).
 
 Default: False.
+
+**Achtung:** 
+ `USA` wird hier alphabetisch vor `United Kingdom` sortiert, da es andere Groß- und Kleinschreibung verwendet.
+
+```JSON
+{
+"test": 
+    ["Canada", "Argentina", "Cyprus", "Schweden", "Norway", "USA", "Germany", "United Kingdom", "Z"],
+"sort_ascending": 
+    ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
+}
+```
 
 ### most_common
 
@@ -2122,7 +2126,7 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "max_words": 200,
     "contour_width": 0,
     "contour_color": "white",
-    "font_path": None,
+    "font_path": "fonts/Dosis-Regular.ttf",
     "prefer_horizontal": 0.90,
     "scale": 1,
     "min_font_size": 4,
