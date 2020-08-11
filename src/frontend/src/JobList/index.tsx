@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
-import {Fade, Grid, Paper, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
