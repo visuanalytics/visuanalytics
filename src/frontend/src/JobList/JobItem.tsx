@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip, Dialog, DialogTitle, DialogActions } from "@material-ui/core";
+import { Button, Container, Fade, Modal, Paper, TextField, Tooltip, Dialog, DialogTitle, DialogActions } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -20,6 +20,7 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { ParamFields } from "../ParamFields";
 import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
+import {NameInput} from "./NameInput"
 
 import { HintButton } from "../util/HintButton";
 
@@ -34,20 +35,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
     const classes = useStyles();
 
     const [noEdit, setNoEdit] = React.useState(true);
-
-    const NameInput = withStyles({
-        root: {
-            cursor: "pointer",
-        },
-        input: {
-            cursor: noEdit ? 'pointer' : 'text',
-            padding: '0 8px',
-            marginLeft: '8px',
-            color: 'white',
-            fontSize: '1.5625rem',
-            borderBottom: noEdit ? '' : '2px solid #c4c4c4'
-        },
-    })(InputBase);
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
@@ -214,9 +201,14 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                             <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>#{job.jobId}
                             <NameInput
-                                // autoFocus={true}
                                 value={jobName}
                                 readOnly={noEdit}
+                                inputProps={{
+                                    style: {
+                                        cursor: noEdit ? "pointer" : "text",
+                                        borderBottom: noEdit ? "" : "2px solid #c4c4c4",
+                                    }
+                                }}
                                 onClick={noEdit ? () => {
                                 } : (event) => event.stopPropagation()}
                                 onChange={handleJobName}
