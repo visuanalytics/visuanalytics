@@ -3,25 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-VisuAnalytics Dokumentation
+VisuAnalytics Dokumentation 
 =========================================
 
-Git-Repository
---------------
-https://github.com/SWTP-SS20-Kammer-2/Data-Analytics
+.. raw:: html
+   :file: util/githubLink.html
 
+.. include:: documentation/introduction.rst
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Inhalt
+   :maxdepth: 2
+   :titlesonly:
+   :caption: Dokumentation
 
    usage/verwendung
    reports/Statusberichte
    mainreport/Projektbericht
    documentation/Dokumentation
    documentation/technische_dokumentation
-
-.. include:: documentation/introduction.rst
 
 Indizes und Tabellen
 --------------------
