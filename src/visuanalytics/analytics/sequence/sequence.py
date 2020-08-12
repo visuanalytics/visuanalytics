@@ -8,7 +8,7 @@ import subprocess
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util.step_errors import raise_step_error, SeqenceError, FFmpegError
+from visuanalytics.analytics.util.step_errors import raise_step_error, SequenceError, FFmpegError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
 
@@ -23,10 +23,10 @@ def register_sequence(func):
     :param func: Eine Funktion
     :return: Die übergebene Funktion
     """
-    return register_type_func(SEQUENCE_TYPES, SeqenceError, func)
+    return register_type_func(SEQUENCE_TYPES, SequenceError, func)
 
 
-@raise_step_error(SeqenceError)
+@raise_step_error(SequenceError)
 def link(values: dict, step_data: StepData):
     """
     Überprüft welcher Typ der Video generierung vorliegt und ruft die passende Typ Methode auf.
