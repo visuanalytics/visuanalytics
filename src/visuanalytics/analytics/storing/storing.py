@@ -37,7 +37,7 @@ def storing(values: dict, data: StepData):
                       'w') as fp:
                 json.dump(new_data, fp)
             delete_memory_files(data.get_data("_conf|job_name", values),
-                                value["name"], value.get("count", 10))
+                                value["name"], data.format(value.get("count", 10)))
 
 
 def _remove_keys(value, export_data):

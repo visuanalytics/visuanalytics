@@ -113,11 +113,11 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
 
 
 def delete_memory_files(job_name: str, name: str, count: int):
-    """Erstellt einen Absoluten Pfad zu der memory datei im übergebenen Ordner.
+    """Löscht memory files sobald zu viele vorhanden sind.
 
     :param job_name: Job Name, von der die Funktion aufgerufen wurde.
     :param name: Name des dicts das exportiert wurde
-    :param number: Angabe welche Datei ausgewählt werden soll 0= zuletz erstellt, 1 = Zweit zuletzt erstellt etc.
+    :param count: Anzahl an Memory Files die Vorhanden sein sollen (dananch wird gelöscht)
     """
     files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
     files.sort(reverse=True)
