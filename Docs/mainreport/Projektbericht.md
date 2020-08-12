@@ -458,7 +458,7 @@ Zur Verdeutlichung der funktionalen Anforderungen des Programmes wurde es folgen
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Strukturdiagramm.png"/>
-  <figcaption>Abbildung 11</figcaption>
+  <figcaption>Abbildung 12</figcaption>
 </figure>
 <br>
 
@@ -641,12 +641,12 @@ Dem Benutzer stehen die folgenden Themen zur Gernerierung eines Videos zur Verf�
 - Es besteht die Möglichkeit, Videos zu generieren, welche die Daten aus mehreren Themenbereichen zusammenführt.
 <figure style="float: right;">
   <img width="200px" src="../_static/images/mainreport/Wordcloud.png"/>
-  <figcaption>Abbildung 5</figcaption>
+  <figcaption>Abbildung 13</figcaption>
 </figure>
 <br>
 
 - Es können Wordclouds zu beliebigen Themenbereichen mithilfe der Twitter-API erstellt werden.
-(Beispiel: Abbildung 5)
+(Beispiel: Abbildung 13)
 - Ein Docker-Image wurde bereitgestellt
 
 #### Nicht umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
@@ -756,6 +756,10 @@ Das Programm ist um weitere Schnittstellen einfach erweiterbar sein. API-Antwort
 Die Software kann leicht durch weitere API-Schnittstellen erweitert werden, um weitere Themen zu integrieren. Beispielsweise Themen wie Corona oder ein Quiz. 
 Zudem können weitere Funktionen zur Erstellung von Grafiken wie zum Beispiel Diagramme hinzugefügt werden, um die Population der Welt darzustellen oder Tabellen.
 
-Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen.
+Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen. (siehe _Abbildung 14_)
 
-<-- TO DO --> Max
+<figure>
+  <img width="100%" src="../_static/images/mainreport/EditorExample.png" />
+  <figcaption>Abbildung 14</figcaption>
+</figure>
+<br>
