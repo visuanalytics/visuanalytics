@@ -57,9 +57,13 @@ export default function JobCreate() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            topicId: topics,
+            topics: topics.map((t, idx) => {
+                return {
+                    topicId: t.topicId,
+                    values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
+                }
+            }),
             jobName: jobName,
-            values: toTypedValues(trimParamValues(paramValues), paramLists ? paramLists[0] : []),
             schedule: withFormattedDates(schedule)
         })
     });
@@ -124,7 +128,7 @@ export default function JobCreate() {
             const allSet = topics.length > 0 && jobName.trim() !== "";
             setSelectComplete(allSet);
         }
-    }, [topics, jobName, activeStep])
+    }, [topics, jobName, activeStep, paramLists])
 
     useEffect(() => {
         if (!multipleTopics) {
