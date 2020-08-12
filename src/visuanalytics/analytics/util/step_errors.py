@@ -30,7 +30,8 @@ class StepError(Exception):
             'On Type ')
 
         if isinstance(self.__cause__,
-                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError)):
+                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError,
+                       FFmpegError)):
             # Invalid Key
             return f"{pos_msg}{self.__cause__}"
         elif isinstance(self.__cause__, KeyError):
@@ -138,6 +139,11 @@ class InvalidContentTypeError(Exception):
 class PresetError(Exception):
     def __init__(self, key):
         super().__init__(f"Preset '{key}' not Found")
+
+
+class FFmpegError(Exception):
+    def __init__(self, exitCode, output):
+        super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}.")
 
 
 def raise_step_error(error: Type[StepError]):
