@@ -39,7 +39,7 @@ export default function JobCreate() {
 
     // state for param selection logic
     const [paramLists, setParamLists] = React.useState<Param[][] | undefined>(undefined);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({});
+    const [paramValues, setParamValues] = React.useState<ParamValues[]>([]);
 
     // state for Load Failed
     const [loadFailed, setLoadFailed] = React.useState(false);
@@ -73,13 +73,16 @@ export default function JobCreate() {
     const handleFetchParams = React.useCallback((params: Param[]) => {
         setParamLists(p => {
             if (p !== undefined) {
-                console.log([...p, params])
                 return [...p, params];
             }
-            console.log([[params]]);
             return [params];
         })
-        setParamValues(initSelectedValues(params));
+        setParamValues(v => {
+            if (v !== undefined) {
+                return [...v, initSelectedValues(params)];
+            }
+            return [initSelectedValues(params)];
+        })
     }, []);
 
     // initialize callback for get params
@@ -94,11 +97,11 @@ export default function JobCreate() {
     const handleRealoadParms = React.useCallback(() => {
         if (!multipleTopics) {
             setParamLists(undefined);
-            setParamValues({});
+            setParamValues([]);
         }
         setLoadFailed(false);
         fetchParams();
-    }, [fetchParams]);
+    }, [fetchParams, multipleTopics]);
 
     useEffect(() => {
         if (activeStep === 3) {
@@ -126,15 +129,16 @@ export default function JobCreate() {
     useEffect(() => {
         if (!multipleTopics) {
             setTopics([]);
+            setParamLists(undefined);
+            setParamValues([]);
         }
     }, [multipleTopics])
 
     // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
         if (activeStep === 1) {
-            //   const allSet = paramLists?.every(l => validateParamValues(paramValues, l));
-            //    const allSet = validateParamValues(paramValues, paramList);
-            setSelectComplete(false);//allSet || false);
+            const allSet = paramLists?.every((l, idx) => validateParamValues(paramValues[idx], l));
+            setSelectComplete(allSet || false);
         }
     }, [paramLists, paramValues, activeStep])
 
@@ -176,9 +180,9 @@ export default function JobCreate() {
     }
 
     // handler for param selection logic
-    const handleSelectParam = (key: string, value: any) => {
-        const updated = { ...paramValues }
-        updated[key] = value;
+    const handleSelectParam = (key: string, value: any, idx: number) => {
+        const updated = [...paramValues]
+        updated[idx][key] = value;
         setParamValues(updated);
     }
 

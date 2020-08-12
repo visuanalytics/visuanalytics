@@ -324,6 +324,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     selectParamHandler={handleSelectParam}
                                     disabled={state.edit}
                                     required={!state.edit}
+                                    index={2 /* TODO (David) */}
                                 />
                             </div>
                         </Grid>

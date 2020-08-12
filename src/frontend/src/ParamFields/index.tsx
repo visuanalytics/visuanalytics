@@ -15,10 +15,11 @@ interface ParamFieldsProps extends ParamField {
 }
 
 interface ParamField {
-    selectParamHandler: (_s: string, _a: any) => void,
+    selectParamHandler: (_s: string, _a: any, _i: number) => void,
     disabled: boolean,
     required: boolean,
-    values: ParamValues
+    values: ParamValues,
+    index: number
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
@@ -36,6 +37,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                 selectParamHandler={props.selectParamHandler}
                                 disabled={props.disabled}
                                 required={props.required}
+                                index={props.index}
                             />
                         </div>
                     </div>
@@ -54,15 +56,15 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         setInvalid(!validateParamValue(event.target.value, param));
-        props.selectParamHandler(name, event.target.value);
+        props.selectParamHandler(name, event.target.value, props.index);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
         setInvalid(!validateParamValue(values, param));
-        props.selectParamHandler(name, values);
+        props.selectParamHandler(name, values, props.index);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-        props.selectParamHandler(name, event.target.checked);
+        props.selectParamHandler(name, event.target.checked, props.index);
     }
 
     const withExpIcon = (name: string, expanded: boolean) => {
@@ -173,6 +175,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             selectParamHandler={props.selectParamHandler}
                             disabled={props.disabled}
                             required={props.required}
+                            index={props.index}
                         />
                     </Collapse>
                     {((props.values[param.name] || showSubParams))
