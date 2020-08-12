@@ -256,9 +256,7 @@ Hierzu gibt es vier mögliche Einträge:
 
   Beispiel: `10:00`
 
-```warning::
-  Die Uhrzeit muss immer angegeben werden.
-```
+> Die Uhrzeit muss immer angegeben werden.
 
 - `daily`:
 
@@ -276,9 +274,7 @@ Hierzu gibt es vier mögliche Einträge:
 
   Beispiel: `[0, 5, 6]` => Der Job wird montags, samstags und sonntags ausgeführt.
 
-```warning::
-  Die Optionen `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also genau eine Option ausgewählt werden.
-```
+> Die Optionen `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also genau eine Option ausgewählt werden.
 
 `config`: Hier können die Konfigurationen für die Jobs festgelegt werden.
 
