@@ -114,7 +114,7 @@ _TODO_
 
 ### Wordpress Plugin Verwenden
 
-Anstadt das der Backend Server das Frontend ausliefiert kann dieses auch als Wordpress Plugin verwendet werden.
+Anstatt das der Backend Server das Frontend ausliefiert kann dieses auch als Wordpress Plugin verwendet werden.
 
 Um das Wordpress plugin zu erstellen sind Folgende Schritte nötig:
 
