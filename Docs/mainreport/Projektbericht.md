@@ -203,9 +203,9 @@ Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
 2.	Inhalt durch eigenes Script ersetzen
 3.	Namen festlegen
-4.	Den Wert von column_id durch die ID der To do-Spalte ersetzen
-5.	Den Wert von column_id durch die ID der Review-Spalte ersetzen
-6.	`Start commit` klicken, um die Datei zu comitten
+4.	Den Wert von `column_id` durch die ID der `To do`-Spalte ersetzen
+5.	Den Wert von `column_id` durch die ID der `Review`-Spalte ersetzen
+6.	`Start commit` klicken, um die Datei zu committen
 
 Die Datei muss im master(default) branch liegen.
 
@@ -225,11 +225,11 @@ Es müssen zwei Secrets für das Repository angelegt werden:
     1.	Name: APP_ID
 Value: ID der App (zu finden in den App Einstellungen unter `General`)
     2.	Name: APP_DEM
-Value: Private Key der App (wird in den Einstallungen unter `General` erstellt)
+Value: Private Key der App (wird in den Einstellungen unter `General` erstellt)
 ##### Funktionsweise
-Um, wie in der Einrichtung beschrieben, eine GitHub-App für die Authentifikation verwenden zu können, wird die Action `tibdex/GitHub-app-token@v1.0.2` aus dem GitHub Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App ID und dem Private Key der App.
+Um - wie unter Einrichtung beschrieben - eine GitHub-App für die Authentifikation verwenden zu können, wird die Action `tibdex/github-app-token@v1.0.2` aus dem GitHub-Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App-ID und dem Private Key der App.
 
-Im nächsten Schritt werden mithilfe der GitHub Action `actions/github-script@0.9.0` GitHub APi Anfragen gemacht. Dieser App wird ein Script (geschrieben in Java Script) übergeben, welches dann von der App ausgeführt wird. Die GitHub Abfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable GitHub und context. z.B.:
+Im nächsten Schritt werden mithilfe der GitHub-Action `actions/github-script@0.9.0` GitHub-API-Anfragen gesendet. Dieser App wird ein Script übergeben (geschrieben in Java Script), welches dann von der App ausgeführt wird. Die GitHub-Anfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable GitHub und context. z.B.:
 
 ~~~js
 // Create branch
@@ -242,7 +242,7 @@ github.git.createRef({
 });
 ~~~
 
-Eine Dokumentation aller möglichen API Abfragen finden Sie [hier](https://octokit.github.io/rest.js/v17).
+Eine Dokumentation aller möglichen API-Anfragen finden Sie [hier](https://octokit.github.io/rest.js/v17).
 
 Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action die Variable `context` bereit. Mit dieser hat man auf verschiedene Informationen Zugriff.
 
@@ -250,15 +250,15 @@ Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action d
 
 - Benennt man einen _Issue_ um, dessen _Branch_ es schon gibt, so kann kein _Pull Request_ mehr erstellt werden, da der _Branch_ nicht mehr gefunden wird.
 - Durch einen Fehler von GitHub werden die verlinkten _Issues_ bei einem _Pull Request_ erst nach dem Mergen, oder wenn jemand ein Kommentar schreibt, richtig angezeigt.
-- Wenn der Branch keine Änderungen zum Master Branch enthält, kann kein _Pull Request_ erstellt werden.
-- Im Projekt Board sollten keine _Pull Requests_ hinzugefügt werden, da diese in GitHub nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
+- Wenn der Branch keine Änderungen zum Master-Branch enthält, kann kein _Pull Request_ erstellt werden.
+- Im Project Board sollten keine _Pull Requests_ hinzugefügt werden. Da diese in GitHub nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
 
 #### Automatisierte Tests
 Bei einem _Pull Request_ werden automatisierte Tests durchgeführt.
 ##### Einrichtung
 _Docker Dateien erstellen:_
 - Dockerfile für Projekt erstellen (siehe [hier](https://docs.docker.com/engine/reference/builder/))
-- Docker Test Datei erstellen: docker-compose.test.yml (im gleichen Ordner wie das Dockerfile)
+- Docker-Testdatei erstellen: docker-compose.test.yml (im gleichen Ordner wie das Dockerfile)
 - Datei mit folgendem Inhalt ausfüllen:
 
 ```Docker
@@ -272,14 +272,14 @@ _GitHub Action erstellen:_
 
 Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
-2.	Inhalt durch Script ersetzen
+2.	Inhalt durch Skript ersetzen
 3.	Namen festlegen
-4.	In zeile 18 & 19 pfad hinter --file anpassen
-5.	Start commit klicken & Datei Commiten
+4.	In Zeile 18 & 19 den Pfad hinter `--file` anpassen
+5.	`Start commit` klicken & Datei committen
 
-##### Funktionsweiße
+##### Funktionsweise
 
-Nachdem die Action das Repository ausgecheckt hat, wird zuerst der Docker Container erstellt und danach wird die Datei `docker-compose.test.yml` verwendet, um die Tests auszuführen.
+Nachdem die Action das Repository ausgecheckt hat, wird zuerst der Docker-Container erstellt und danach wird die Datei `docker-compose.test.yml` verwendet, um die Tests auszuführen.
 
 ---
 
@@ -292,7 +292,7 @@ Für die Entwicklung des Programmes nutzen wir zwei Entwicklungsumgebungen von *
 
 ## Lastenheft
 ### Zielbestimmung
-Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo, soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
+Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
 
 Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen ein Video generiert werden kann:
 
@@ -300,7 +300,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 - Wetter
     - Wettervorhersage für den aktuellen, den folgenden und die darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
 - Corona-Daten
-    - Zahl der Infizierten, Genesenen und Toten welt- und deutschlandweit
+    - Zahl der Infizierten, Genesenen und Toten welt- und deutschlandweit.
 - Historische Ereignisse
     - Ereignisse zu dem aktuellen Tag vor beliebig vielen Jahren.
 - Sport
@@ -311,7 +311,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 ##### Must-Have
 - Das Programm besitzt die Auswahl aus vier Themenbereichen:
 	- Wetter, Corona, Historische Ereignisse, Fußball-Bundesliga
-- Diese Themen sollen als Video, mithilfe von Grafiken, Diagrammen etc. dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutern, unterlegt werden.
+- Diese Themen sollen als Video mithilfe von Grafiken, Diagrammen etc. dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutert, unterlegt werden.
 - Das Programm soll in die Website [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) integriert werden.
 - Das Programm soll dem Administrator der Website die Möglichkeit geben, die Videos in bestimmten Zyklen generieren und diese auf seiner Website ausgeben zu lassen. 
 ##### Nice-to-Have
@@ -324,7 +324,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 </figure>
 <br>
 
-- Zu den Themenbereiche Sport und Corona sollen Wordclouds mithilfe von Twitter generiert werden, welche die Stimmung zum jeweiligen Thema einfängt.
+- Zu den Themenbereiche Sport und Corona sollen Wordclouds mithilfe von Twitter generiert werden, welche die Stimmung zum jeweiligen Thema einfangen.
 (Beispiel: Abbildung 3)
 - Docker Image bereitstellen
 ##### If-Time-Allows
@@ -339,10 +339,10 @@ Eine genaue Zielgruppe wird bei der Herstellung nicht berücksichtigt, die Theme
 ### Produktübersicht
 #### Benutzeroberfläche/Funktion
 ##### Übersicht
-Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das Klicken auf den Job Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
+Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das Klicken auf den Job-Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
 1.	Einer einzigartigen ID (z.B. #1)
 2.	Einem zugeordneten Thema 
-3.	Dem Zeitpunkt wann das Video neu generiert wird
+3.	Dem Zeitpunkt, wann das Video neu generiert wird
 4.	Der Zeit bis zum nächsten neu generierten Video
 5.	Besonderen Einstellungen, je nach ausgewähltem Thema
 
@@ -363,7 +363,7 @@ Möchte der Benutzer einen Job anlegen, so gelangt er zuerst zu der Themenauswah
 </figure>
 <br>
 
-Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel `Bundesliga - Ergebnisse`), so kommt er als nächstes zu der Parameterauswahl. Die dort zur Auswahl stehenden Parameter sind an das vorher ausgewählte Thema angepasst. Diese Seite sieht je nach Thema unterschiedlich aus. (hier beispielhaft für das Thema `Bundesliga – Ergebnisse`).
+Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel `Bundesliga - Ergebnisse`), so kommt er als nächstes zur Parameterauswahl. Die dort zur Auswahl stehenden Parameter sind an das zuvor ausgewählte Thema angepasst. Diese Seite sieht je nach Thema unterschiedlich aus (hier beispielhaft für das Thema `Bundesliga – Ergebnisse`).
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Param.png"/>
@@ -375,15 +375,15 @@ Danach kann der Benutzer den Zeitplan des Jobs festlegen. Hier hat der Benutzer 
 
 **Täglich**:
 
-wählt er diesen Punkt, so wird das Video täglich generiert.   
+Wählt er diesen Punkt, so wird das Video täglich generiert.   
 
 **Wöchentlich**:
 
-hier kann der Benutzer aus allen sieben Wochentagen auswählen, an denen dann wöchentlich das Video generiert wird.  
+Hier kann der Benutzer aus allen sieben Wochentagen auswählen, an denen dann wöchentlich das Video generiert wird.  
 
 **Datum**:
 
-hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generiert wird  
+Hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generiert wird.
 
 Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhrzeiten festlegen, zu welchen das Video neu generiert werden soll.
 
@@ -395,7 +395,7 @@ Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhr
 
 Abschließend kann der Benutzer noch Einstellungen zu dem Video vornehmen.
 
-Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das Format des Videos und der Audiodatei. Diese Einstellungen kann der Benutzer auch im Nachhinein noch ändern
+Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das Format des Videos und der Audiodatei. Diese Einstellungen kann der Benutzer auch im Nachhinein noch ändern.
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Einstellungen.png"/>
@@ -413,7 +413,7 @@ Zusätzlich zu den `normalen` Einstellungen eines Jobs, soll es dem Benutzer auc
 <br>
 
 #### Ausgabe (Beispiel Wetterbericht)
-Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text und Grafiken verarbeitet werden. Aus diesen Ergebnissen soll ein Video erstellt werden, welches einen Wetterbericht für den nächsten Tag und die darauffolgenden drei Tage darstellt
+Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text und Grafiken verarbeitet werden. Aus diesen Ergebnissen soll ein Video erstellt werden, welches einen Wetterbericht für den nächsten Tag und die darauffolgenden drei Tage darstellt.
 
 <figure>
   <img width="32%" src="../_static/images/reports/WetterIcons.png"/>
@@ -607,3 +607,70 @@ Wir haben uns nach einem genaueren Vergleich der beiden TTS-Programme gTTS und p
 Das Programm soll um weitere Schnittstellen einfach erweiterbar sein, dazu muss die Schnittstelle so designt sein, dass das Hinzufügen einer weiteren ohne großen Aufwand von statten geht.
 ### Abnahmekriterien
 Das Programm muss fehlerfreie Ausgaben zu den zur Auswahl stehenden Themen liefern. 
+
+## Fazit
+
+### Verwendete Technologien
+
+Neben PyCharm und WebStorm noch mehr?
+
+### Zielbestimmung
+
+Das Programm kann verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo präsentiert dem Benutzer Informationen übersichtlich und verständlich mithilfe von Grafiken, Tabellen und Wordclouds die Informationen.
+
+Dem Benutzer stehen die folgenden Themen zur Gernerierung eines Videos zur Verfügung:
+
+**Beispiele:**
+- Wetterbericht deutschlandweit
+    - Wettervorhersage für den aktuellen, den folgenden und die drei darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
+- Ortsbezogener Wetterbericht
+    - Wettervorhersage für den aktuellen, den folgenden und die drei darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
+- Sport
+	- Ergebnisse zu einem Spieltag inklusive Tabelle der Fußball Bundesliga zusammengetragen.
+- Twitter
+	- Wordcloud mit Hashtags zu einem bestimmten Wort
+
+#### Umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
+##### Must-Have
+- Das Programm besitzt die Auswahl aus drei Themenbereichen mit Daten von drei unterschiedlichen APIs:
+	- Wetter, Fußball-Bundesliga, Twitter
+- Das Programm kann verschiedene Text-to-Speech-APIs integrieren 
+- Die obigen Themen werden als Video, mithilfe von Grafiken, Tabellen und Wordclouds dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutert, unterlegt.
+- Der ortsbezogene Wetterbericht für Biebertal ist bereits live auf der Website [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/).
+- Der Administrator der Website hat die Möglichkeit, die Videos in bestimmten Zyklen generieren und diese auf seiner Website ausgeben zu lassen. 
+##### Nice-to-Have
+- Die Einbindung des Programmes in die Website ist als Wordpress-Plugin möglich.
+- Es besteht die Möglichkeit, Videos zu generieren, welche die Daten aus mehreren Themenbereichen zusammenführt.
+<figure style="float: right;">
+  <img width="200px" src="../_static/images/mainreport/Wordcloud.png"/>
+  <figcaption>Abbildung 5</figcaption>
+</figure>
+<br>
+
+- Es können Wordclouds zu beliebigen Themenbereichen mithilfe der Twitter-API erstellt werden.
+(Beispiel: Abbildung 5)
+- Docker Image bereitstellen
+
+
+#### Nicht umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
+##### Must-Have
+Anstelle von vier APIs zu verschieden Themenbereichen, wurde drei APIs verwendet. Jedoch können verschiedene Text-to-Speech-APIs zur Audiogenerierung verwendet werden.
+
+##### Nice-to-Have
+Der Themenbereich Finanzen wurde dem Programm nicht hinzugefügt, da die Zeit nicht ausgereicht hätte und es zudem schwierig ist, Daten von der Börse ohne Erlaubnis zu verändern bzw. verarbeiten und darzustellen. 
+##### If-Time-Allows
+Die Videos sind bisher nur auf Deutsch verfügbar. Da man aber die JSON-Datei später auch selbst schreibt, kann man die Audiodateien und Texte dort leicht selbst schreiben. Das Frontend ist nur auf Deutsch verfügbar.
+
+### Qualitätsanforderungen
+Das Produkt kann ohne großen Aufwand um weitere Funktionen, vor allem aber um weitere Schnittstellen erweitert werden. Möchte man eine neue API-Schnittstelle hinzufügen, ist dies recht einfach möglich. Die JSON-Konfigurationsdatei ist weitestgehend allgemein gehalten in ihren Funktionen, sodass man sie für viele verschiedene Themen und Datenverarbeitungen verwenden kann. 
+
+Das aktuelle Video, welches auf der Website dargestellt wird, wird erst dann durch ein neues ersetzt, wenn dieses schon fertig generiert wurde. Somit soll sichergestellt werden, dass zu jeder Zeit dem Besucher der Website ein Video zur Verfügung steht.
+
+Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Website haben.
+
+### Möglichkeiten der Erweiterung der Software
+
+Die Software kann leicht durch weitere API-Schnittstellen erweitert werden, um weitere Themen zu integrieren. Beispielsweise Themen wie Corona oder ein Quiz. 
+Zudem können weitere Funktionen zur Erstellung von Grafiken wie zum Beispiel Diagramme hinzugefügt werden, um die Population der Welt darzustellen oder Tabellen.
+
+Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen.
