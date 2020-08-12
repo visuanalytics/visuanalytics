@@ -48,10 +48,9 @@ docker run -t ^
 
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
-
 ```note::
-  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>_) verwenden will, kann man beim Starten noch die Option `--runtime="nvidia"` (oder `--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`_)
-```
+  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie`hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich`hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`\_)
+````
 
 ## Ohne Docker (Development)
 
@@ -90,7 +89,7 @@ _Programm starten_:
 ```note::
   Um die Option `h264_nvenc` (siehe `config.json <#config.json>_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
-```
+````
 
 ## Ohne Docker (Produktion)
 
@@ -127,7 +126,7 @@ _Wordpress-Plugin erstellen_:
 Im `build`-Ordner befindet sich eine .zip-Datei, die sich einfach über die Wordpress-Oberfläche installieren lässt.
 
 ```note::
-  Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe `hier <#mit-docker>`_ oder `hier <#ohne-docker>`_). Um vom Plugin requests an das Backend zu senden muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` an den Backend Server weiterleiten.
+  Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe `hier <#mit-docker>`_ oder `hier <#ohne-docker>`_). Um vom Plugin requests an das Backend zu senden, muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` anfangen an den Backendserver weiterleiten.
 ```
 
 ### Konfiguration
@@ -170,7 +169,7 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen, die im F
 - `h264_nvenc`(_optional_):
 
   Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardware-Beschleunigung bei Nvidia-Grafikkarten.
-  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#Ohne-Docker)).
+  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#ohne-docker-development)).
 
 - `thumbnail`(_optional_):
 
@@ -308,7 +307,7 @@ _Twitter Wordcloud (steps: `"twitter"`)_:
 
 - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
 - `normalize_words`: bool - Ob die Wörter normalisiert werden sollen und Doppelungen bei der Zählung der Häufigkeiten zu vermeiden (Beispiel: Bundesliga, bundesliga und BUNDESLIGA (wird einzeln gezählt: je 1x)-> Bundesliga, Bundesliga, Bundesliga (insgesamt: 3x)
-- `colormap_words`: str - Die Farben der Wörter in der Wordcloud 
+- `colormap_words`: str - Die Farben der Wörter in der Wordcloud
 - `color_func`: bool - Ob für den Farbverlauf der Wörter in der Wordcloud ein bestimmter Farbverlauf anstelle einer Colormap verwendet werden soll
 - `color_func_words`: str - Farbe des gewünschten Farbverlaufs der Wörter in der Wordcloud (nur wenn `color_func` auf `true` gesetzt wurde)
 - `figure`: str - Form der Wordcloud (aktuell nur Kreis und Quadrat möglich)
