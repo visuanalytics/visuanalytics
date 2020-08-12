@@ -318,14 +318,17 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </Modal>
                         <Grid item md={6}>
                             <div>
+                                { /* TODO (David)
                                 <ParamFields
                                     params={job.params}
                                     values={paramValues}
                                     selectParamHandler={handleSelectParam}
                                     disabled={state.edit}
                                     required={!state.edit}
-                                    index={2 /* TODO (David) */}
+                                    index={2  TODO (David) }
+                                    topic={}
                                 />
+                                */}
                             </div>
                         </Grid>
                     </AccordionDetails>

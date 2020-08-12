@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues, validateParamValue } from '../util/param';
+import { Topic } from '../JobCreate/TopicSelection';
 
 
 interface ParamFieldProps extends ParamField {
@@ -19,30 +20,46 @@ interface ParamField {
     disabled: boolean,
     required: boolean,
     values: ParamValues,
-    index: number
+    index: number,
+    topic: Topic
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const classes = useStyles();
+    const idx = props.index;
+    const params = props.params;
 
     return (
-        <div >
-            {
-                props.params?.map(p => (
-                    <div key={p.name}>
-                        <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
-                            <ParamField
-                                param={p}
-                                values={props.values}
-                                selectParamHandler={props.selectParamHandler}
-                                disabled={props.disabled}
-                                required={props.required}
-                                index={props.index}
-                            />
+        <div key={idx}>
+            <div className={classes.MPaddingTB} >
+                <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                    {(idx + 1) + ". Parameter für '" + props.topic.topicName + "':"}
+                </div>
+                {
+                    params && params.length > 0
+                        ?
+                        props.params?.map(p => (
+                            <div key={p.name}>
+                                <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
+                                    <ParamField
+                                        param={p}
+                                        values={props.values}
+                                        selectParamHandler={props.selectParamHandler}
+                                        disabled={props.disabled}
+                                        required={props.required}
+                                        index={props.index}
+                                        topic={props.topic}
+                                    />
+                                </div>
+                            </div>
+                        ))
+                        :
+                        <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                            Für dieses Thema stehen keine Parameter zur Verfügung.
                         </div>
-                    </div>
-                ))
-            }
+                }
+            </div>
+            {(idx + 1) !== props.params?.length ? (<Divider />) : ""}
         </div>
     )
 }
@@ -84,7 +101,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                 {name} </span>
         )
     }
-
 
     switch (param.type) {
         case "string": case "number": case "multiString": case "multiNumber":
@@ -176,6 +192,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             disabled={props.disabled}
                             required={props.required}
                             index={props.index}
+                            topic={props.topic}
                         />
                     </Collapse>
                     {((props.values[param.name] || showSubParams))
