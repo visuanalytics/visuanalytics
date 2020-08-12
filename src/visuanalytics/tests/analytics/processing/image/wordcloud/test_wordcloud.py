@@ -38,7 +38,7 @@ def prepare_wordcloud_test(values, data, config=None):
         }
     }
 
-    step_data.data["_pipe_id"] = "113"
+    step_data.data["_pipe_id"] = "213"
 
     generate_all_images(values, step_data)
 
@@ -49,7 +49,7 @@ class WordcloudTest(unittest.TestCase):
     def setUp(self):
         resources.RESOURCES_LOCATION = "tests/resources"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
-        os.makedirs(resources.get_temp_resource_path("", "113"), exist_ok=True)
+        os.makedirs(resources.get_temp_resource_path("", "213"), exist_ok=True)
 
     def test_wordcloud(self):
         values = {
@@ -114,4 +114,4 @@ class WordcloudTest(unittest.TestCase):
         self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
-        shutil.rmtree(resources.get_temp_resource_path("", "113"), ignore_errors=True)
+        shutil.rmtree(resources.get_temp_resource_path("", "213"), ignore_errors=True)
