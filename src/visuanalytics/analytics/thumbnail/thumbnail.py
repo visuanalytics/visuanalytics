@@ -25,13 +25,18 @@ def register_thumbnail(func):
 
 @raise_step_error(ThumbnailError)
 def thumbnail(values: dict, step_data: StepData):
-    size_x = step_data.format(values["thumbnail"].get("size_x", None))
-    size_y = step_data.format(values["thumbnail"].get("size_y", None))
     if step_data.get_config("thumbnail", False) is False:
         return
+
+    thumbnail = values["thumbnail"]
+
     seq_func = get_type_func(values["thumbnail"], THUMBNAIL_TYPES)
     seq_func(values, step_data)
-    if size_x is not None and size_y is not None:
+
+    if "size_x" in thumbnail and "size_y" in thumbnail:
+        size_x = step_data.format(thumbnail["size_x"])
+        size_y = step_data.format(thumbnail["size_y"])
+
         source_img = Image.open(values["thumbnail"])
         source_img = source_img.resize([size_x, size_y], Image.LANCZOS)
         source_img.save(values["thumbnail"])
