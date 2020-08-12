@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from "react"
-import {Checkbox, FormControl, FormControlLabel, FormGroup, Radio, RadioGroup} from "@material-ui/core"
-import {getIntervalLabel, Schedule, TimeInterval} from "../../util/schedule";
+import React, { ChangeEvent } from "react"
+import { FormControl, FormControlLabel, Radio, RadioGroup } from "@material-ui/core"
+import { getIntervalLabel, Schedule, TimeInterval } from "../../util/schedule";
 
 interface IntervalCheckboxProps {
     schedule: Schedule;
