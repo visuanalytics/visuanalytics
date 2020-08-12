@@ -24,10 +24,7 @@ export const Navigation = () => {
   };
 
   return (
-    <Breadcrumbs
-      aria-label="breadcrumb"
-      separator={<NavigateNextIcon fontSize="small" />}
-    >
+    <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
       <StyledBreadcrumb
         label="Home"
         onClick={() => components?.setCurrent("home")}

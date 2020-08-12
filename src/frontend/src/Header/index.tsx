@@ -1,9 +1,10 @@
 import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { Navigation } from "./Navigation";
-import { Box } from "@material-ui/core";
+import { Box, Grid, Toolbar } from "@material-ui/core";
 import { BlueDivider } from "./BlueDivider";
 import { getUrl } from "../util/fetchUtils";
+import { Menu } from "./Menu/Menu";
 
 export const Header = () => {
   return (
@@ -16,9 +17,21 @@ export const Header = () => {
         />
       </Box>
       <BlueDivider />
-      <Box display="flex" alignSelf="center" m={1}>
-        <Navigation />
-      </Box>
+      <Toolbar style={{ minHeight: "40px" }}>
+        <Grid container justify="center">
+          <Grid item md xs></Grid>
+          <Grid md xs={10} item container justify="center" alignItems="center">
+            <Grid item>
+              <Navigation />
+            </Grid>
+          </Grid>
+          <Grid item container md xs justify="flex-end">
+            <Grid item>
+              <Menu />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Toolbar>
       <BlueDivider />
     </AppBar>
   );
