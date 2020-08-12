@@ -57,10 +57,10 @@ def get_color_func(h, s, l_start, l_end):
 
 
 def wordcloud(values: dict, step_data: StepData, prev_paths):
-    """Erstellt ein Wordcloud Bild.
+    """Erstellt ein Wordcloud-Bild.
 
     Der Standard-Farbverlauf bei color_func true ist Grau/Schwarz.
-    Die Standard-Farbe ist generell die Colormap viridis.
+    Die Standard-Farbe ist generell die colormap viridis.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API

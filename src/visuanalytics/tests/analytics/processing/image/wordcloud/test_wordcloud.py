@@ -17,7 +17,7 @@ def prepare_wordcloud_test(values, data, config=None):
         "images": {
             "testbild": {
                 "type": "wordcloud",
-                "text": "{text_all}",
+                "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
                 "preset": "wordcloud"
             }
         },
@@ -61,7 +61,7 @@ class WordcloudTest(unittest.TestCase):
             "images": {
                 "testbild": {
                     "type": "wordcloud",
-                    "text": "{_req|text_all}",
+                    "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
                     "preset": "wordcloud"
                 }
             },
@@ -87,7 +87,7 @@ class WordcloudTest(unittest.TestCase):
             }
         }
         data = {
-            "text_all": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina"
+            
         }
         expected = prepare_wordcloud_test(values, data)
         print(expected)
