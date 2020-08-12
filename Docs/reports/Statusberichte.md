@@ -274,3 +274,14 @@ Wetter in Deutschland, ortsbezogener Wetterbericht, Fußball-Bundesliga
 - Benutzerfreundlickeit der Oberfläche verbessern
 - Intervalle dem Frontend hinzufügen
 - Option zum Löschen der generierten Videos dem Frontend hinzufügen
+
+## Statusbericht 11.08.2020 (Sprint 14)
+
+### Zusammenfassung
+Der Fokus in diesem Sprint lag auf dem Feinschliff des Programms. So wurde die Benutzerfreundlichkeit der Oberfläche z.B. durch kleine Hinweis-Buttons verbessert. 
+
+Ebenso wurde die Option zum Löschen der generierten Videos im Frontend hinzugefügt. Der Benutzer kann nun eingeben, wann ein generiertes Video erstellt werden soll.
+
+Auf Anfrage des Auftraggebers wurde dem Frontend noch eine weitere Seite hinzugefügt auf welcher man sich nun die Log-Informationen zu einem Job anzeigen lassen kann.
+
+<img src="../_static/images/reports/Logs.jpeg" width="70%">
