@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         paper: {
             padding: '20px',
-            height: '450px',
+            height: '500px',
             position: 'relative'
         },
         continue: {
