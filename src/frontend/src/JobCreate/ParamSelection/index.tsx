@@ -7,7 +7,7 @@ import { ParamFields } from "../../ParamFields";
 
 interface ParamSelectionProps {
     topicId: number;
-    params: Param[] | undefined;
+    params: Param[][] | undefined;
     values: ParamValues;
     loadFailedProps: LoadFailedProps;
     selectParamHandler: (key: string, value: any) => void;
@@ -23,7 +23,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                     {props.params?.length !== 0
                         ?
                         <ParamFields
-                            params={props.params}
+                            params={props.params ? props.params[0] : undefined}
                             values={props.values}
                             selectParamHandler={props.selectParamHandler}
                             disabled={false}

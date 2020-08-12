@@ -1,11 +1,11 @@
 import React from "react";
-import {makeStyles, Button, Typography, Grid} from "@material-ui/core";
+import { makeStyles, Button, Typography, Grid } from "@material-ui/core";
 import { Topic } from "..";
-import {HintButton} from "../../../util/HintButton"
+import { HintButton } from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
-    topicId: number;
+    topicIds: number[];
     selectTopicHandler: (topicId: number) => void;
 }
 
@@ -33,7 +33,7 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     return (
         <Button
             className={classes.panel}
-            style={props.topic.topicId === props.topicId ? { border: "solid #00638D 7px" } : { border: "" }}
+            style={props.topicIds.includes(props.topic.topicId) ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
                 props.selectTopicHandler(props.topic.topicId);
             }
@@ -43,11 +43,11 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
                 {props.topic.topicName}
             </Grid>
             <Grid item xs={1}>
-            <HintButton content={
-                <Typography gutterBottom>
-                    {props.topic.topicInfo}
-                </Typography>}
-            />
+                <HintButton content={
+                    <Typography gutterBottom>
+                        {props.topic.topicInfo}
+                    </Typography>}
+                />
             </Grid>
         </Button>
     )
