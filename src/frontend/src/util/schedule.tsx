@@ -94,15 +94,15 @@ const getNextJobDate = (schedule: Schedule) => {
 
 export const showSchedule = (schedule: Schedule) => {
     if (schedule.type === "daily") {
-        return "täglich, " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return "täglich, " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     } else if (schedule.type === "onDate") {
-        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     } else if (schedule.type === "weekly") {
         if (schedule.weekdays.length === 0) {
             return "wöchentlich: kein Wochentag ausgewählt";
         }
         const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
-        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     }
 }
 
@@ -132,7 +132,7 @@ export const getIntervalLabel = (interval: TimeInterval) => {
 
 export const showTimeToNextDate = (schedule: Schedule) => {
     const date = getNextJobDate(schedule);
-    if (date === null) {
+    if (date === null || date === undefined) {
         return "-";
     }
     return formatDistanceToNowStrict(date, { locale: de, addSuffix: true });
