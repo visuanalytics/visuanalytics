@@ -14,7 +14,7 @@ class DbScheduler(Scheduler):
     def __run_jobs(self, job_id):
         job_name, json_file_name, config = job.get_job_run_info(str(job_id))
         logger.info(f"Job {job_id}: '{job_name}' started")
-        self._start_job(job_name, json_file_name, config)
+        self._start_job(job_id, job_name, json_file_name, config, True)
         # todo für db scheduler muss noch delete_old_on_new abgefragt werden (da wo jetzt false steht)
 
     def _check_all(self, now: datetime):
@@ -26,7 +26,7 @@ class DbScheduler(Scheduler):
                 continue
 
             # check if date is today
-            if row["date"] == now.date():
+            if row["type"] == "on_date" and row["date"] == now.date():
                 # TODO Delete date schedule after run
                 self.__run_jobs(row["job_id"])
                 continue

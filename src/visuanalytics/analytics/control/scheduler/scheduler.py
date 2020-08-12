@@ -36,15 +36,18 @@ class Scheduler(object):
     def base_config(self):
         return self._base_config
 
-    def _start_job(self, job_name: str, steps_name: str, config: dict):
+    def _start_job(self, job_id: int, job_name: str, steps_name: str, config: dict, log_to_db=False):
         # Add base_config if exists
         config = {**self._base_config, **config}
         config["job_name"] = job_name
 
         t = threading.Thread(
-            target=Pipeline(uuid.uuid4().hex,
+            target=Pipeline(job_id,
+                            uuid.uuid4().hex,
                             steps_name,
-                            config).start)
+                            config,
+                            log_to_db
+                            ).start)
         t.start()
 
     def _check_all(self, now):

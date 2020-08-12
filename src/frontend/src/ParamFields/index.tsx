@@ -1,9 +1,9 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, FormLabel, useTheme } from '@material-ui/core';
+import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
-import { Param, ParamValues } from '../util/param';
+import { Param, ParamValues, validateParamValue } from '../util/param';
 
 
 interface ParamFieldProps extends ParamField {
@@ -50,12 +50,15 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const [showSubParams, setShowSubParams] = React.useState(false);
+    const [invalid, setInvalid] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
+        setInvalid(!validateParamValue(event.target.value, param));
         props.selectParamHandler(name, event.target.value);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
+        setInvalid(!validateParamValue(values, param));
         props.selectParamHandler(name, values);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
@@ -95,6 +98,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         value={props.values[param.name] || ""}
                         disabled={props.disabled}
                         label={param.displayName}
+                        error={invalid}
                     />
                 </div>
             )
@@ -131,6 +135,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             {val.displayValue}
                         </MenuItem>
                     ))}
+                    error={invalid}
                 </TextField>
             )
         case "subParams":

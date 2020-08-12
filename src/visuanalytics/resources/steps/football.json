@@ -596,11 +596,13 @@
       "exclude": [
         "Text",
         "Rank_diff"
-      ]
+      ],
+      "count": 3
     },
     {
       "name": "spieltag",
-      "key": "_req|Spieltag"
+      "key": "_req|Spieltag",
+      "count": 3
     }
   ],
   "images": {
