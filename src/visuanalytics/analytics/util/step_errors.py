@@ -143,7 +143,10 @@ class PresetError(Exception):
 
 class FFmpegError(Exception):
     def __init__(self, exitCode, output):
-        super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}.")
+        if not output:
+            super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}.")
+        else:
+            super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}: {output}")
 
 
 def raise_step_error(error: Type[StepError]):
