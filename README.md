@@ -27,7 +27,7 @@ Die Software soll nach der Fertigstellung auf der Website [https://biebertal.mac
 
 _Benötigte Software_:
 
-- Docker
+- [Docker](https://www.docker.com/products/docker-desktop)
 
 _Docker-Container erstellen:_
 
@@ -75,10 +75,10 @@ Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
 _Benötigte Software_:
 
-- python >=3.6
-- pip
-- FFmpeg
-- npm
+- [python](https://www.python.org/downloads/) >=3.6
+- [pip](https://pypi.org/)
+- [FFmpeg](https://ffmpeg.org/download.html)
+- [npm](https://www.npmjs.com/get-npm)
 
 _In den `src`-Ordner wechseln_: `cd src`
 
@@ -120,8 +120,8 @@ Um das Wordpress-Plugin zu erstellen sind folgende Schritte nötig:
 
 _Benötigte Software_:
 
-- python >=3.6
-- npm
+- [python](https://www.python.org/downloads/) >=3.6
+- [npm](https://www.npmjs.com/get-npm)
 
 _In den `frontend`-Ordner wechseln_:
 
@@ -329,6 +329,10 @@ _Twitter Wordcloud (steps: `"twitter"`)_:
 Für die Dokumentation wird das Python-Paket [Sphinx](https://www.sphinx-doc.org) verwendet.
 
 ### Installation
+
+_Benötigte Software_:
+
+- [python](https://www.python.org/downloads/) >=3.6
 
 1. dev-dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
