@@ -6,7 +6,7 @@ import { useStyles } from './style';
 import { ContinueButton } from './ContinueButton';
 import { BackButton } from './BackButton';
 import { ParamSelection } from './ParamSelection';
-import { TopicSelection } from './TopicSelection';
+import { TopicSelection, Topic } from './TopicSelection';
 import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import {
@@ -33,7 +33,7 @@ export default function JobCreate() {
     const [finished, setFinished] = React.useState(false);
 
     // states for topic selection logic
-    const [topicIds, setTopicIds] = React.useState<number[]>([]);
+    const [topics, setTopics] = React.useState<Topic[]>([]);
     const [jobName, setJobName] = React.useState("");
     const [multipleTopics, setMultipleTopics] = React.useState(false);
 
@@ -57,7 +57,7 @@ export default function JobCreate() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            topicId: topicIds,
+            topicId: topics,
             jobName: jobName,
             values: toTypedValues(trimParamValues(paramValues), paramLists ? paramLists[0] : []),
             schedule: withFormattedDates(schedule)
@@ -73,8 +73,10 @@ export default function JobCreate() {
     const handleFetchParams = React.useCallback((params: Param[]) => {
         setParamLists(p => {
             if (p !== undefined) {
+                console.log([...p, params])
                 return [...p, params];
             }
+            console.log([[params]]);
             return [params];
         })
         setParamValues(initSelectedValues(params));
@@ -82,7 +84,7 @@ export default function JobCreate() {
 
     // initialize callback for get params
     const fetchParams = useCallFetch(
-        getUrl("/params/") + topicIds[topicIds.length - 1],
+        getUrl("/params/") + topics[topics.length - 1]?.topicId,
         undefined,
         handleFetchParams,
         handleLoadParamsFailed
@@ -90,8 +92,10 @@ export default function JobCreate() {
 
     // handler for RealoadingParms
     const handleRealoadParms = React.useCallback(() => {
-        setParamLists(undefined);
-        setParamValues({});
+        if (!multipleTopics) {
+            setParamLists(undefined);
+            setParamValues({});
+        }
         setLoadFailed(false);
         fetchParams();
     }, [fetchParams]);
@@ -106,31 +110,31 @@ export default function JobCreate() {
 
     // when a new topic is selected, fetch params
     useEffect(() => {
-        if (topicIds.length > 0) {
+        if (topics.length > 0) {
             handleRealoadParms();
         }
-    }, [topicIds, handleRealoadParms])
+    }, [topics, handleRealoadParms])
 
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
         if (activeStep === 0) {
-            const allSet = topicIds.length > 0 && jobName.trim() !== "";
+            const allSet = topics.length > 0 && jobName.trim() !== "";
             setSelectComplete(allSet);
         }
-    }, [topicIds, jobName, activeStep])
+    }, [topics, jobName, activeStep])
 
     useEffect(() => {
         if (!multipleTopics) {
-            setTopicIds([]);
+            setTopics([]);
         }
     }, [multipleTopics])
 
     // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
         if (activeStep === 1) {
-            const allSet = paramLists?.every(l => validateParamValues(paramValues, l));
+            //   const allSet = paramLists?.every(l => validateParamValues(paramValues, l));
             //    const allSet = validateParamValues(paramValues, paramList);
-            setSelectComplete(allSet || false);
+            setSelectComplete(false);//allSet || false);
         }
     }, [paramLists, paramValues, activeStep])
 
@@ -152,15 +156,15 @@ export default function JobCreate() {
 
     // handlers for topic selection logic
     const handleResetTopics = () => {
-        setTopicIds([]);
+        setTopics([]);
     }
 
-    const handleAddTopic = (topicId: number) => {
-        setTopicIds([...topicIds, topicId]);
+    const handleAddTopic = (topic: Topic) => {
+        setTopics([...topics, topic]);
     }
 
-    const handleSetSingleTopic = (topicId: number) => {
-        setTopicIds([topicId]);
+    const handleSetSingleTopic = (topic: Topic) => {
+        setTopics([topic]);
     }
 
     const handleEnterJobName = (jobName: string) => {
@@ -227,7 +231,7 @@ export default function JobCreate() {
             case 0:
                 return (
                     <TopicSelection
-                        topicIds={topicIds}
+                        topics={topics}
                         jobName={jobName}
                         multipleTopics={multipleTopics}
                         toggleMultipleHandler={handleToggleMultiple}
@@ -239,7 +243,7 @@ export default function JobCreate() {
             case 1:
                 return (
                     <ParamSelection
-                        topicId={topicIds[0]}
+                        topics={topics}
                         values={paramValues}
                         params={paramLists}
                         loadFailedProps={{

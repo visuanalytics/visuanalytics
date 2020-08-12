@@ -13,12 +13,12 @@ export interface Topic {
 }
 
 interface TopicSelectionProps {
-    topicIds: number[];
+    topics: Topic[];
     jobName: string;
     multipleTopics: boolean;
     resetTopicsHandler: () => void;
-    setSingleTopicHandler: (topicId: number) => void;
-    addTopicHandler: (topicId: number) => void;
+    setSingleTopicHandler: (topic: Topic) => void;
+    addTopicHandler: (topic: Topic) => void;
     enterJobNameHandler: (jobName: string) => void;
     toggleMultipleHandler: () => void;
 }
@@ -51,7 +51,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
             <ListItem key={topic.topicName}>
                 <TopicPanel
                     topic={topic}
-                    topicIds={props.topicIds}
+                    topics={props.topics}
                     selectTopicHandler={!props.multipleTopics ? props.setSingleTopicHandler : props.addTopicHandler}
                 />
                 <Divider />

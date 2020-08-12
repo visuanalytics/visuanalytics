@@ -1,12 +1,13 @@
 import React from "react";
-import { Fade } from "@material-ui/core";
+import { Fade, Divider } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param, ParamValues } from "../../util/param";
 import { Load, LoadFailedProps } from "../../Load";
 import { ParamFields } from "../../ParamFields";
+import { Topic } from "../TopicSelection";
 
 interface ParamSelectionProps {
-    topicId: number;
+    topics: Topic[];
     params: Param[][] | undefined;
     values: ParamValues;
     loadFailedProps: LoadFailedProps;
@@ -16,23 +17,34 @@ interface ParamSelectionProps {
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     const classes = useStyles();
 
+    const renderParamFields = (params: Param[] | undefined, topic: Topic) => {
+        return (<div className={classes.MPaddingTB}>
+            <div className={classes.MPaddingTB}>
+                {"Parameter für '" + topic.topicName + "':"}
+            </div>
+            {
+                params?.length !== 0
+                    ?
+                    (<ParamFields
+                        params={params}
+                        values={props.values}
+                        selectParamHandler={props.selectParamHandler}
+                        disabled={false}
+                        required={true}
+                    />)
+                    :
+                    (<div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                    </div>)
+            }
+        </div>)
+    }
+
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
                 <Load data={props.params} failed={props.loadFailedProps} className={classes.SPaddingTB}>
-                    {props.params?.length !== 0
-                        ?
-                        <ParamFields
-                            params={props.params ? props.params[0] : undefined}
-                            values={props.values}
-                            selectParamHandler={props.selectParamHandler}
-                            disabled={false}
-                            required={true}
-                        />
-                        :
-                        <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
-                            Für dieses Thema stehen keine Parameter zur Verfügung.
-                        </div>}
+                    {props.params?.map((p, idx) => renderParamFields(p, props.topics[idx]))}
                 </Load>
             </div>
         </Fade>

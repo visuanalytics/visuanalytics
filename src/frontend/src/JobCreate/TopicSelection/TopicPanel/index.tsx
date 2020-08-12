@@ -5,8 +5,8 @@ import { HintButton } from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
-    topicIds: number[];
-    selectTopicHandler: (topicId: number) => void;
+    topics: Topic[];
+    selectTopicHandler: (topic: Topic) => void;
 }
 
 const useStyles = makeStyles({
@@ -29,13 +29,14 @@ const useStyles = makeStyles({
 
 export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
+    const topicIds = props.topics.map(t => t.topicId);
 
     return (
         <Button
             className={classes.panel}
-            style={props.topicIds.includes(props.topic.topicId) ? { border: "solid #00638D 7px" } : { border: "" }}
+            style={topicIds.includes(props.topic.topicId) ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
-                props.selectTopicHandler(props.topic.topicId);
+                props.selectTopicHandler(props.topic);
             }
             }>
             <Grid item xs={1}></Grid>
