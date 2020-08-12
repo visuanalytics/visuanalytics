@@ -2,14 +2,23 @@ import { format, parse, isPast, addDays, formatDistanceToNowStrict } from "date-
 import { de } from "date-fns/locale";
 
 
-export type Schedule = DailySchedule | WeeklySchedule | DateSchedule
+export type Schedule = DailySchedule | WeeklySchedule | DateSchedule | IntervalSchedule
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
 
+export enum TimeInterval {
+    MINUTE, QUARTER, HALF, THREEQUARTER, HOUR, QUARTDAY, HALFDAY
+}
+
 interface DailySchedule extends ISchedule {
     type: "daily"
+}
+
+interface IntervalSchedule extends ISchedule {
+    type: "interval"
+    interval: TimeInterval
 }
 
 interface WeeklySchedule extends ISchedule {
@@ -106,6 +115,18 @@ export const getWeekdayLabel = (day: Weekday) => {
         case Weekday.FRIDAY: return "Fr";
         case Weekday.SATURDAY: return "Sa";
         case Weekday.SUNDAY: return "So"
+    }
+}
+
+export const getIntervalLabel = (interval: TimeInterval) => {
+    switch (interval) {
+        case TimeInterval.MINUTE: return "1min";
+        case TimeInterval.QUARTER: return "15min";
+        case TimeInterval.HALF: return "30min"
+        case TimeInterval.THREEQUARTER: return "45min";
+        case TimeInterval.HOUR: return "1std";
+        case TimeInterval.QUARTDAY: return "6std";
+        case TimeInterval.HALFDAY: return "12std"
     }
 }
 
