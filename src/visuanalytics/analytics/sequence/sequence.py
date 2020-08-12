@@ -136,7 +136,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
         values["sequence"] = output2
 
     except subprocess.CalledProcessError as e:
-        raise FFmpegError(e.returncode, e.output.decode("utf-8"))
+        raise FFmpegError(e.returncode, e.output.decode("utf-8")) from e
 
 
 def _sum_audio_l(audio_l, index):
