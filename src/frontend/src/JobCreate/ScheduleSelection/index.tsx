@@ -1,10 +1,10 @@
 import React from "react";
-import {useStyles} from "../style";
-import {Collapse, Divider, Fade, FormControlLabel, Radio} from "@material-ui/core";
-import {WeekdayCheckboxes} from "./WeekdayCheckboxes";
-import {DateInputField, TimeInputField} from "./DateTimeInput"
-import {Schedule, TimeInterval, Weekday} from "../../util/schedule";
-import {IntervalCheckboxes} from "./IntervalCheckboxes";
+import { useStyles } from "../style";
+import { Collapse, Divider, Fade, FormControlLabel, Radio } from "@material-ui/core";
+import { WeekdayCheckboxes } from "./WeekdayCheckboxes";
+import { DateInputField, TimeInputField } from "./DateTimeInput"
+import { Schedule, TimeInterval, Weekday } from "../../util/schedule";
+import { IntervalCheckboxes } from "./IntervalCheckboxes";
 
 
 interface ScheduleSelectionProps {
@@ -41,7 +41,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
     }
     const handleInterval = (i: TimeInterval) => {
         if (schedule.type === "interval") {
-            selectScheduleHandler({ ...schedule, interval: i});
+            selectScheduleHandler({ ...schedule, interval: i });
         }
     }
     const handleSelectDate = (date: Date | null) => {
@@ -87,13 +87,13 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                     </Collapse>
                 </div>
                 <Divider />
-                 <div className={classes.MPaddingTB}>
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="interval" control={<Radio
                             checked={schedule.type === "interval"}
                             onChange={handleSelectInterval}
                             value="interval"
-                        />} label="intervall" />
+                        />} label="Intervall" />
                     </div>
                     <Collapse in={schedule.type === "interval"}>
                         <div>
