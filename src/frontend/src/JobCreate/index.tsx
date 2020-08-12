@@ -7,7 +7,6 @@ import { ContinueButton } from './ContinueButton';
 import { BackButton } from './BackButton';
 import { ParamSelection } from './ParamSelection';
 import { TopicSelection } from './TopicSelection';
-import { ScheduleSelection } from './ScheduleSelection';
 import { GreyDivider } from './GreyDivider';
 import {
     Param,
@@ -23,7 +22,6 @@ import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule
 import { getUrl } from '../util/fetchUtils';
 import {HintButton} from "../util/HintButton";
 import {ComponentContext} from "../ComponentProvider";
-import {DeleteSelection} from "./DeleteSelection";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {DeleteSchedule} from "../util/deleteSchedule";
 import {SchedulePage} from "../util/SchedulePage";

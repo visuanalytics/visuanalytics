@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Schedule} from "./schedule";
 import {DeleteSchedule} from "./deleteSchedule";
-import {Box, Tab, Tabs, Typography} from "@material-ui/core";
+import {Tab, Tabs} from "@material-ui/core";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {DeleteSelection} from "../JobCreate/DeleteSelection";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
