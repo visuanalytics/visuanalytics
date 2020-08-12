@@ -448,13 +448,13 @@ Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Webs
 
 Die technische Umsetzung der einzelnen Bestimmungen finden Sie [hier](#technische-umsetzung).
 ### Benutzerschnittstellen
-Das Produkt ist Betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
+Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
 
-Die GUI über die der Benutzer seine Eingaben tätigen kann, wird Mithilfe von `React` und `Material-UI` erstellt.
+Die GUI über die der Benutzer seine Eingaben tätigen kann, wird mithilfe von `React` und `MaterialUI` erstellt.
 
 Für die Kommunikation zwischen dem Client und dem Server, wird das Python basierte Web-Framework `Flask` benutzt.
 ### Funktionale Anforderungen
-Um die funktionalen Anforderungen des Programmes zu verdeutlichen, ist unser Programm folgedermaßen strukturiert:
+Zur Verdeutlichung der funktionalen Anforderungen des Programmes wurde es folgendermaßen strukturiert:
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Strukturdiagramm.png"/>
@@ -464,9 +464,9 @@ Um die funktionalen Anforderungen des Programmes zu verdeutlichen, ist unser Pro
 
 1.	Der Client schickt eine Anfrage an das Programm.
 2.	Das Programm schickt eine Anfrage über die Schnittstelle an die gewünschte API.
-3.	Die Antwort der API landet im `Preprocessing`. Dort werten die Daten aufbereitet, so dass jeder Prozess einheitlich darauf zugreifen kann. In unserem Fall ist dies ein Python Dictionary.
-4.	Die einzelnen `Processing` Stationen entnehmen die Daten dem Dictionary und verarbeiten diese (z.B. Diagramme erstellen). 
-5.	Die daraus resultierenden Daten werden im `Linker` zu einem Endergebnis zusammengefügt (z.B. Video)
+3.	Die Antwort der API landet im `Preprocessing`. Dort werten die Daten aufbereitet, so dass jeder Prozess einheitlich darauf zugreifen kann. In unserem Fall ist dies ein Python-Dictionary.
+4.	Die einzelnen `Processing`-Stationen entnehmen dem Dictionary die Daten und verarbeiten diese (z.B. Diagramme erstellen). 
+5.	Die daraus resultierenden Daten werden im `Linker` zu einem Endergebnis zusammengefügt (z.B. Video).
 
 ### Technische Umsetzung
 #### API
@@ -493,17 +493,17 @@ Anhand der Werte welche wir aus der [https://www.weatherbit.io/api](https://www.
 Quelle: [https://www.weatherbit.io/pricing](https://www.weatherbit.io/pricing)
 
 ##### Corona 
-Das Programm soll die aktuellen Daten zur Corona Pandemie ausgeben. Dazu wird die  [https://covid19api.com/](https://covid19api.com/) API verwendet. Diese liefert die aktuelle Corona Statistiken weltweit und für Deutschland.
+Das Programm soll die aktuellen Daten zur Corona Pandemie ausgeben. Dazu wird die [https://covid19api.com/](https://covid19api.com/) API verwendet. Diese liefert die aktuellen Corona-Statistiken weltweit und für Deutschland.
 
 **Technische Details:**  
 - Daten werden mehrfach täglich aktualisiert
-- Die Verwendung der API ist komplett frei
+- Die Verwendung der API ist komplett kostenfrei
 - Antworten kommen im JSON-Format
 
 ##### Historische Ereignisse
 Das Programm soll eine Wordcloud zu historischen Daten ausgeben, in der die wichtigsten Themen den größten Anteil haben.
 
-Als Schnittstelle dafür verwenden wir die [http://developer.zeit.de/index/](http://developer.zeit.de/index/) API. Diese enthält gesamtes Archiv der ZEIT bzw. ZEIT ONLINE.
+Als Schnittstelle dafür verwenden wir die [http://developer.zeit.de/index/](http://developer.zeit.de/index/) API. Diese enthält das gesamte Archiv der ZEIT bzw. ZEIT ONLINE.
 
 **Technische Details:**
 - Öffentliche BETA-Version
@@ -522,7 +522,7 @@ Es sollen die Ergebnisse der Bundesliga für einen Spieltag visuell dargestellt 
 [https://rapidapi.com/apidojo/api/yahoo-finance1](https://rapidapi.com/apidojo/api/yahoo-finance1)
 
 - Zusammenfassung zum angefragten Zeitpunkt
-- Gewinner / Verlierer in einer bestimmten Region
+- Gewinner/Verlierer in einer bestimmten Region
 z.B. Day Gainers - US, Day Losers - US, Most Actives - US
 - Daten, um Diagramme zu bestimmten Akteuren zu erstellen
 - Gewinne in einer bestimmten Region in einem eingegrenzten Zeitraum
@@ -539,41 +539,39 @@ z.B. Day Gainers - US, Day Losers - US, Most Actives - US
 Quelle: [https://rapidapi.com/apidojo/api/yahoo-finance1/pricing](https://rapidapi.com/apidojo/api/yahoo-finance1/pricing)
 
 #### Preprocessing
-Die durch die API gewonnenen Daten, werden zuerst nach den Informationen gefiltert, welche für das Programm wichtig sind. Diese werden dann, in evtl. vereinfachter Struktur, in ein Dictionary geschrieben, so dass im Programm intern, das Dictionary zur Datenverarbeitung genutzt wird.
+Die durch die API gewonnenen Daten werden zuerst nach den Informationen gefiltert, welche für das Programm wichtig sind. Diese werden dann, in evtl. vereinfachter Struktur, in ein Dictionary geschrieben, sodass intern im Programm das Dictionary zur Datenverarbeitung genutzt wird.
 #### Processing
 Textgenerierung
-Die Daten aus dem im Preprocessing angelegtem Dictionary, werde nun ebenfalls in ein Dictionary angelegt, wobei zu jeder einzelnen Information mehrere Satzbausteine gespeichert werden. So kann anhand der gewonnenen Informationen, ein zufällig generierter Text entstehen.
+Die Daten aus dem im `Preprocessing` angelegten Dictionary, werde nun ebenfalls in ein Dictionary angelegt, wobei zu jeder einzelnen Information mehrere Satzbausteine gespeichert werden. So kann anhand der gewonnenen Informationen ein zufällig generierter Text entstehen.
 
-Um aus diesem generierten Text eine mp3-Datei zu erzeugen, benutzen wir die Python-Bibliothek `gTTS`.
+Um aus diesem generierten Text eine .mp3-Datei zu erzeugen, benutzen wir die Python-Bibliothek `gTTS`.
 
 Einen Vergleich zwischen `gTTS` und `pico2wave` finden Sie [hier](#vergleich-von-gtts-mit-pico2wave).
 
 #### Datenvisualisierung
-Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte), können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
+Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte) können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
 
 Um die Daten als Diagramm zu visualisieren, wird NumPy und Matplotlib benutzt. Des Weiteren kann auch Basemap eingesetzt werden, um Verteilungen anhand einer Karte darzustellen.
 
-Für die Erstellung der Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird hauptsächlich verwendet, um die Daten der Twitter API zu visualisieren.
+Für die Erstellung der Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird hauptsächlich verwendet, um die Daten der Twitter-API zu visualisieren.
 #### Linker
 Um am Ende alle Grafiken, Diagramme etc. zu einem Video zusammenzufügen, benutzen wir das Tool `FFMPEG`. Dieses Tool bietet die Möglichkeit, Bilder aneinander zu schneiden und mit einer Audiodatei zu unterlegen. 
 
 Dabei können folgende Einstellungen variabel gehalten werden:
 - Länge der angezeigten Bilder (z.B. an die Länge der Audio-Datei anpassen)
 - Videoauflösung
-- Video- /Audioformat
+- Video-/Audioformat
 - Speicherort des Videos
 
  
 ### Vergleich von gTTS mit pico2wave
-#### Allgemeiner Vergleich:
-- gTTS: Python-Library und Kommandozeilentool, wobei die API von Google Translate verwendet wird
-- pico2wave: Kommandozeilentool für Linux/Unix-User, welches von dem Unternehmen SVOX bereitgestellt wird
-#### Vergleich mögliche Sprachen:
-- gTTS: 78 verschiedene Sprachen, darunter 14 Mal Englisch (z.B. Englisch (Australia) oder Englisch (Ghana)), 3 Mal Spanisch, Deutsch und Sprachen wie Tschechisch oder Japanisch
-- pico2wave: Deutsch, Englisch/Amerikanisch, Italienisch, Französisch und Spanisch
-#### Vergleich Audioformate:
-- gTTS: wav-Datei, mp3-Datei
-- pico2wave: wav-Datei
+
+|        | gTTS| pico2wave  |
+| ---------------- | ---------------- | ---------------- |
+|allgemein|Python-Library und Kommandozeilentool, wobei die API von Google Translate verwendet wird|Kommandozeilentool für Linux/Unix-User, welches von dem Unternehmen SVOX bereitgestellt wird|
+|mögliche Sprachen|78 verschiedene Sprachen, darunter Englisch, Spanisch, Deutsch, Tschechisch, Japanisch|Deutsch, Englisch/Amerikanisch, Italienisch, Französisch und Spanisch
+|Audioformate|wav-Datei, mp3-Datei|wav-Datei|
+
 #### Vorteile gTTS:
 - eine Python-Library, die man direkt einbinden kann, sodass man die Funktionen des Moduls verwenden kann
 - einfaches Erstellen der Audiodateien (Dreizeiler)
@@ -582,7 +580,7 @@ Dabei können folgende Einstellungen variabel gehalten werden:
 - einzelne Wörter werden richtig und gut betont
 - deutliche Aussprache
 - gute Audioqualität
-- intellektuelle (arrogante) Stimme, so wie unser Programm
+- intellektuelle Stimme
 #### Nachteile gTTS:
 - teilweise unnatürlicher, stockender Redefluss
 #### Vorteile pico2wave:
@@ -590,19 +588,19 @@ Dabei können folgende Einstellungen variabel gehalten werden:
 - guter Redefluss
 #### Nachteile pico2wave:
 - keine direkte Python-Library, man müsste ein Skript schreiben, um es einzubinden
-- bringt keine weiteren Einstellungsmöglichkeiten/ Funktionen mit sich
+- bringt keine weiteren Einstellungsmöglichkeiten/Funktionen mit sich
 - Aussprache manchmal etwas monoton, kaum Betonungen
  
 #### Begründung Entscheidung für gTTS:
-Wir haben uns nach einem genaueren Vergleich der beiden TTS-Programme gTTS und pico2wave für das Programm gTTS entschieden. Dieses ließ sich einfach als Python-Library einbinden, sodass wir es direkt verwenden konnten. Ebenso fanden wir es gut, dass die Bibliothek eine umfangreiche Funktionalität aufweist. So lassen sich viele Kleinigkeiten optimal für unsere Zwecke anpassen. Außerdem haben uns im Großen und Ganzen die erzeugten Audiodateien von der Aussprache, der Betonung und der generellen Audioqualität besser gefallen.
+Wir haben uns nach einem genaueren Vergleich der beiden Text-to-Speech-Programme gTTS und pico2wave für das Programm gTTS entschieden. Dieses ließ sich einfach als Python-Library einbinden, sodass wir es direkt verwenden konnten. Ebenso fanden wir es gut, dass die Bibliothek eine umfangreiche Funktionalität aufweist. So lassen sich viele Kleinigkeiten optimal für unsere Zwecke anpassen. Außerdem haben uns im Großen und Ganzen die erzeugten Audiodateien von der Aussprache, der Betonung und der generellen Audioqualität besser gefallen.
 ### Besondere Herausforderungen
-- Programm für Produktionsbetrieb absichern, und zuverlässig machen
+- Programm für Produktionsbetrieb absichern und zuverlässig machen
 - Kompatibilität mit verschiedenen Betriebssystemen
-- Verständliche- und einfach zu bedienendes User Interface
-- Speicherung von Secrets (z.B.: `APi-keys`)
+- Verständliches und einfach zu bedienendes User Interface
+- Speicherung von Secrets (z.B.: `API-Keys`)
 - Umgang mit auftretenden Programmfehlern
 - API-Daten sinnvoll zusammenbauen (individuell auf verschiedene Daten reagieren)
-- Gute Sprachausgabe (Komische Aussprache durch verschiedene Formulierungen vermeiden)
+- Gute Sprachausgabe (komische Aussprache durch verschiedene Formulierungen vermeiden)
 ### Nichtfunktionale Anforderungen
 Das Programm soll um weitere Schnittstellen einfach erweiterbar sein, dazu muss die Schnittstelle so designt sein, dass das Hinzufügen einer weiteren ohne großen Aufwand von statten geht.
 ### Abnahmekriterien
@@ -649,8 +647,7 @@ Dem Benutzer stehen die folgenden Themen zur Gernerierung eines Videos zur Verf�
 
 - Es können Wordclouds zu beliebigen Themenbereichen mithilfe der Twitter-API erstellt werden.
 (Beispiel: Abbildung 5)
-- Docker Image bereitstellen
-
+- Ein Docker-Image wurde bereitgestellt
 
 #### Nicht umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
 ##### Must-Have
@@ -668,9 +665,97 @@ Das aktuelle Video, welches auf der Website dargestellt wird, wird erst dann dur
 
 Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Website haben.
 
+### Produkteinsatz
+Das Produkt steht dem Betreiber der Internetseite [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) zur Verfügung. Auf die dort generierten Videos - aktuell der ortstebzogene Wetterbericht für Biebertal - kann jeder öffentlich zugreifen.
+
+Eine genaue Zielgruppe wurde bei der Herstellung nicht berücksichtigt. Der Wetterbericht ist interessant für die breite Masse.
+
+### Produktübersicht
+#### Benutzeroberfläche/Funktion
+##### Übersicht
+
+<-- TO DO --> Vergleich wie sah es am Anfang aus, wie jetzt 
+
+### Benutzerschnittstellen
+Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
+
+Die GUI über die der Benutzer seine Eingaben tätigen kann, wurde mithilfe von `React` und `MaterialUI` erstellt.
+
+Für die Kommunikation zwischen dem Client und dem Server, wird das Python basierte Web-Framework `Flask` benutzt.
+### Funktionale Anforderungen
+
+1.	Der Client schickt eine Anfrage an das Programm.
+2.	Das Programm schickt eine Anfrage über die Schnittstelle an die gewünschte API.
+3.	Die Antwort der API liegt in einer JSON-Datei vor. 
+4.  Die Daten der JSON-Datei werden in ein Python-Dictionary umgewandelt.
+5.  Mithilfe einer JSON-Struktur mit mehreren Konfigurationsmöglichkeiten wie z.B. `transform`-Typen werden die Daten so weit verarbeitet, dass man aus ihnen Bild- und Audiodateien erstellen kann.
+6.  Generierung der gewünschten Bilder/Grafiken.
+7.  Generierung der gewünschten Audiodateien.
+8.  Die daraus resultierenden Daten werden mithilfe des `Scheduler` zu einem Video zusammengefügt.
+
+### Technische Umsetzung
+#### API
+##### Wetter
+Anhand der Werte welche wir aus der [https://www.weatherbit.io/api](https://www.weatherbit.io/api) API beziehen, soll ein Wetterbericht als Video erstellt werden. Solch ein Bericht kann folgende Informationen beinhalten:
+- Wetter deutschlandweit für heute, morgen und die darauffolgenden drei Tage
+- ortbezogenes Wetter für heute, morgen und die darauffolgenden drei Tage
+- optional: weitere Daten wie Luftfeuchtigkeit, gefühlte Temperaturen, Regenwahrscheinlichkeit o.Ä.
+
+Die Preise für die weatherbit-API finden sie unter [https://www.weatherbit.io/pricing](https://www.weatherbit.io/pricing).
+
+##### Bundesliga
+[https://www.openligadb.de/](https://www.openligadb.de/) 
+
+Es werden die Ergebnisse der Bundesliga für einen Spieltag visuell dargestellt. 
+- Spielergebnisse des aktuellen Spieltags
+- Tabelle des aktuellen Spieltags
+
+##### Twitter
+[Twitter](https://developer.twitter.com)
+
+Es werden alle Hashtags, die mit einem bestimmten Hashtag in einem Tweet verwendet wurden ausgegeben und in einem String gespeichert.
+Nach der Verarbeitung der Wörter, um zum Beispiel gewisse Wörter (wie Beleidigungen) auszuschließen werden die Hashtags mit einer Wordcloud dargestellt.
+Die Wordcloud kann verschiedene Größen, Formen und Farben haben, welche bei der Parameterauswahl ausgewählt werden können.
+
+#### Datenvisualisierung
+Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte) können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
+
+Für die Erstellung einer Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird verwendet, um die Daten der Twitter-API zu visualisieren.
+
+### Audioerstellung
+
+Die Audiodateien werden mithilfe der verarbeiteten Daten erstellt. Es werden Lückentexte vorgegeben, die mit den gewünschten Daten gefüllt werden. Es gibt die Möglichkeit mehrere verschiedene Sätze pro möglichen Satz zu hinterlegen, um daraus zufällig einen auszuwählen, so bekommen die Audiodateien eine gewisse Dynamik und es hört sich nicht immer gleich an. Die Sätze können auch unter `transform` schon erstellt werden, jedoch müssen sie unter `audio` hinzugefügt werden, damit sie in eine Audiodatei umgewandelt werden.
+Die Audiodateien werden standardmäßig mit der gTTS-Library erstellt. Man kann allerdings weitere Audiotools zur Generierung der Audiodateien wie z.B. Azure verwenden, wenn man einen API-Key dafür hat.
+
+#### Zusammenführung von Bildern und Audios
+Um am Ende alle Grafiken, Tabellen und Wordclouds zu einem Video zusammenzufügen, wird das Tool `FFMPEG` verwendet. Dieses Tool bietet die Möglichkeit, Bilder aneinander zu schneiden und mit einer Audiodatei zu unterlegen. 
+
+
+### Umgesetzte besondere Herausforderungen
+
+<-- TO DO --> wurde das alles umgesetzt?
+
+- Programm für Produktionsbetrieb absichern und zuverlässig machen
+- Kompatibilität mit verschiedenen Betriebssystemen
+- Verständliches und einfach zu bedienendes User Interface
+- Speicherung von Secrets (z.B.: `API-Keys`)
+- Umgang mit auftretenden Programmfehlern
+- API-Daten sinnvoll zusammenbauen (individuell auf verschiedene Daten reagieren)
+- Gute Sprachausgabe (komische Aussprache durch verschiedene Formulierungen vermeiden)
+
+### Nicht umgesetzte besondere Herausforderungen
+
+<-- TO DO -->
+
+### Nichtfunktionale Anforderungen
+Das Programm ist um weitere Schnittstellen einfach erweiterbar sein. API-Antworten im JSON-Format können einfach weiterverarbeitet werden.
+
+
 ### Möglichkeiten der Erweiterung der Software
 
 Die Software kann leicht durch weitere API-Schnittstellen erweitert werden, um weitere Themen zu integrieren. Beispielsweise Themen wie Corona oder ein Quiz. 
 Zudem können weitere Funktionen zur Erstellung von Grafiken wie zum Beispiel Diagramme hinzugefügt werden, um die Population der Welt darzustellen oder Tabellen.
 
 Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen.
+
+<-- TO DO --> Max
