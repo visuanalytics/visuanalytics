@@ -18,13 +18,8 @@ def prepare_wordcloud_test(values, data, config=None):
             "testbild": {
                 "type": "wordcloud",
                 "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
-                "preset": "wordcloud"
-            }
-        },
-        "presets": {
-            "wordcloud": {
-                "stopwords": "Cyprus",
-                "use_global_stopwords": False,
+                "use_stopwords": False,
+                "stopwords": ["Cyprus"],
                 "color_func_words": "145 46 5 35",
                 "parameter": {
                     "font_path": "Test_Font.ttf",
@@ -58,39 +53,64 @@ class WordcloudTest(unittest.TestCase):
 
     def test_wordcloud(self):
         values = {
-            "images": {
-                "testbild": {
-                    "type": "wordcloud",
-                    "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
-                    "preset": "wordcloud"
-                }
-            },
-            "presets": {
-                "wordcloud": {
-                    "stopwords": "Cyprus",
-                    "use_global_stopwords": False,
-                    "color_func_words": "145 46 5 35",
-                    "parameter": {
-                        "font_path": "Test_Font.ttf",
-                        "figure": "square",
-                        "width": 1000,
-                        "height": 1000,
-                        "collocations": False,
-                        "max_font_size": 400,
-                        "max_words": 2000,
-                        "contour_width": 3,
-                        "contour_color": "white",
-                        "color_func": True,
-                        "colormap": "viridis"
-                    }
-                }
-            }
-        }
+                     "images": {
+                         "testbild": {
+                             "type": "wordcloud",
+                             "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
+                             "stopwords": ["Cyprus"],
+                             "use_stopwords": False,
+                             "color_func_words": "145 46 5 35",
+                             "parameter": {
+                                 "font_path": "Test_Font.ttf",
+                                 "figure": "circle",
+                                 "width": 1000,
+                                 "height": 1000,
+                                 "collocations": False,
+                                 "max_font_size": 400,
+                                 "max_words": 2000,
+                                 "contour_width": 3,
+                                 "contour_color": "white",
+                                 "color_func": True,
+                                 "colormap": "viridis"
+                             }
+                         }
+                     }
+                 },
         data = {
-            
+
         }
         expected = prepare_wordcloud_test(values, data)
-        print(expected)
+        self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
+
+    def test_wordcloud_2(self):
+        values = {
+                     "images": {
+                         "testbild": {
+                             "type": "wordcloud",
+                             "text": "Canada, Argentina, Cyprus, Schweden, Norway, USA, Germany, United Kingdom, Argentina, Norway, USA, Argentina",
+                             "stopwords": ["Cyprus"],
+                             "use_stopwords": True,
+                             "color_func_words": "145 46 5 35",
+                             "parameter": {
+                                 "font_path": "Test_Font.ttf",
+                                 "figure": "square",
+                                 "width": 1000,
+                                 "height": 1000,
+                                 "collocations": False,
+                                 "max_font_size": 400,
+                                 "max_words": 2000,
+                                 "contour_width": 3,
+                                 "contour_color": "white",
+                                 "color_func": True,
+                                 "colormap": "viridis"
+                             }
+                         }
+                     }
+                 },
+        data = {
+
+        }
+        expected = prepare_wordcloud_test(values, data)
         self.assertEqual(os.path.exists(resources.get_resource_path(expected)), 1)
 
     def tearDown(self):
