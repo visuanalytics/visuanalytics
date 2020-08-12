@@ -1,4 +1,5 @@
 # Installation
+
 ## Programm Starten
 
 ### Konfiguration
@@ -26,6 +27,7 @@ Die Konfigurationsdatei für das Programm hat folgendes Format:
 Die API-Keys für die verwendeten APIs:
 
 - `weatherbit`: API-Key für [weatherbit.io](https://www.weatherbit.io)
+- `twitter`: API-Key für [Twitter](https://developer.twitter.com)
 
 `steps_base_config`:
 
@@ -40,6 +42,17 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen in [jobs.
 
   Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardware-Beschleunigung bei Nvidia-Grafikkarten.
   Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#Ohne-Docker)).
+
+- `thumbnail`:
+
+  Wenn `thumbnail` aktiviert ist, wird zu jedem Video ein `Thumbnail` generiert.
+  Der name des thumbnails hat das format: `{video_name}_thumbnail.png` (Wobei `{video_name}` dem namen des Videos entspricht).
+
+- `fix_names`:
+<!--TODO-->
+
+- `keep_count`:
+<!--TODO-->
 
 `testing`:
 
@@ -84,6 +97,7 @@ Aktuelle Optionen:
 - `"weather_germany"`: Deutschlandweiter Wetterbericht
 - `"weather_single"`: Ortsbezogener Wetterbericht
 - `"football"`: Spieltag-Bericht für die Fußball-Bundesliga
+- `"twitter"`: Twitter Wordcloud
 
 `schedule`: Hier kann der Zeitplan für die Videogenerierung festgelegt werden.
 
@@ -121,6 +135,10 @@ Hierzu gibt es vier mögliche Einträge:
 
 `config`: Hier können die Konfigurationen für die Jobs festgelegt werden.
 
+```note::
+  Alle Hier beschriebenen Konfigurationen sind Optional und werden notfals mit default Werten inizalisiert.
+```
+
 Mögliche Konfigurationen für die verschiedenen Themen:
 
 _Deutschlandweiter Wetterbericht (steps: `"weather_germany"`)_:
@@ -130,16 +148,37 @@ _Deutschlandweiter Wetterbericht (steps: `"weather_germany"`)_:
 _Ortsbezogener Wetterbericht (steps: `"weather_single"`)_:
 
 - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
-- `city_name`: Name des Ortes
-- `p_code`: Postleitzahl des Ortes
+- `city_name`: str - Name des Ortes
+- `p_code`: str - Postleitzahl des Ortes
+- `speech_app_temp_2`: bool - <!--TODO-->
+- `speech_wind_2`: bool - <!--TODO-->
+- `speech_sun_2`: bool - <!--TODO-->
+- `speech_rh_2`: bool - <!--TODO-->
+- `speech_pop_2`: bool - <!--TODO-->
+- `speech_app_temp_3`: bool - <!--TODO-->
+- `speech_wind_3`: bool - <!--TODO-->
+- `speech_sun_3`: bool - <!--TODO-->
+- `speech_rh_3`: bool - <!--TODO-->
+- `speech_pop_3`: bool - <!--TODO-->
 
 ```note::
   Aktuell lassen sich nur Wettervorhersagen für Städte in Deutschland generieren.
 ```
+
 _Spieltag-Bericht für die Fußball-Bundesliga (steps: `"football"`)_:
 
 - alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
-- `liga-name`: Spielklasse (1 ~ 1. Liga, 2 ~ 2. Liga, 3 ~ 3. Liga)
+- `liga-name`: str - Spielklasse (1 ~ 1. Liga, 2 ~ 2. Liga, 3 ~ 3. Liga)
+
+_Twitter Wordcloud (steps: `"twitter"`)_:
+
+- alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+- `normalize_words`: bool - Ob die Wörter Normaliesiert werden sollen
+- `colormap_words`: str - <!--TODO-->
+- `color_func`: bool - <!--TODO-->
+- `color_func_words`: str - <!--TODO-->
+- `figure`: str - <!--TODO-->
+- `size_wordcloud`: str - <!--TODO-->
 
 ### Mit Docker
 
@@ -159,6 +198,7 @@ _Docker-Container starten:_
   Die Pfade hinter `source=` müssen durch Pfade zu den Dateien, die in [Konfiguration](#Konfiguration) beschrieben werden,
   bzw. durch den Pfad zum Output-Ordner ersetzt werden.
 ```
+
 _Linux:_
 
 ```shell
@@ -211,6 +251,7 @@ _Programm starten_: `python -m visuanalytics`
   Um die Option `h264_nvenc` (siehe [config.json](#config.json)) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung befindet sich [hier](https://developer.nvidia.com/ffmpeg).
 ```
+
 ## Dokumentation Generieren
 
 Für die Dokumentation wird das python-Paket [Sphinx](https://www.sphinx-doc.org) verwendet.
