@@ -76,7 +76,7 @@ Der Server kann nun unter `http://localhost:8000` erreicht werden.
 _Benötigte Software_:
 
 - [python](https://www.python.org/downloads/) >=3.6
-- [pip](https://pypi.org/)
+- [pip](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
 - [FFmpeg](https://ffmpeg.org/download.html)
 - [npm](https://www.npmjs.com/get-npm)
 
@@ -333,6 +333,7 @@ Für die Dokumentation wird das Python-Paket [Sphinx](https://www.sphinx-doc.org
 _Benötigte Software_:
 
 - [python](https://www.python.org/downloads/) >=3.6
+- [pip](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
 
 1. dev-dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
