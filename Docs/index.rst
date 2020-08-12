@@ -12,8 +12,7 @@ VisuAnalytics Dokumentation
 .. include:: documentation/introduction.rst
 
 .. toctree::
-   :maxdepth: 2
-   :titlesonly:
+   :maxdepth: 1
    :caption: Dokumentation
 
    usage/verwendung
