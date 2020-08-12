@@ -6,7 +6,7 @@
 **Aufgaben:**  
 - Projekt strukturieren
 - Berichte schreiben
-- Lasten-/Pflichtenheft ausarbeiten
+- Lasten- & Pflichtenheft ausarbeiten
 - Grafiken erstellen 
 - Benutzeroberfläche erstellen
 
@@ -14,6 +14,8 @@
 **Aufgaben:**  
 - Konzepte erstellen für die Darstellung der verschiedenen APIs
 - Strukturen für Dictionaries bzw. Listen erstellen	
+- Datenaufbereitung
+- Wordcloud-Grafiken
 - Daten visualisieren
     - Fließtexte generieren
     - Sprachausgabe generieren (gTTS)
@@ -27,24 +29,24 @@
     - Diagramme
 - FFMPEG
 - Linker implementieren
-- Testen mit Nvidia Grafikkarte
+- Testen mit Nvidia-Grafikkarte
 
 
 ### David Martschenko (Full-Stack-Web-Entwickler)
 - Anfragen für API-Keys verschicken
-- API Schnittstelle implementieren
-- Enstcheiden welche API-Requests relevant sind
+- API-Schnittstelle implementieren
+- Entscheiden, welche API-Requests relevant sind
 - Daten für die Weiterverwendung aufbereiten
 - Implementierung der Benutzeroberfläche
 
 ### Max Stephan (Softwarearchitekt)
 **Aufgaben:**  
-- Github verwalten
+- GitHub verwalten
     - Automatisation
     - Einstellungen
 - Docker
 - Scheduler
-- Steps Config (Json datei)
+- Steps Config (JSON-Datei)
 - Projektstruktur verwalten
     - Flask-Server aufsetzen
     - ReactJS integrieren
@@ -63,7 +65,7 @@ Das Projekt findet vom 23.04. – 23.08.2020 statt.
 
 Inspiriert von der Methode _Scrum_ wird dieser Zeitraum in einwöchige _Sprints_ unterteilt, wobei die ersten eineinhalb Wochen die Planungsphase darstellen. 
 
-Ab Montag dem 04.05.2020 beginnen die wöchentlichen _Sprints_. Dazu findet jeden Montag ein _Sprint-Planning_ statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen _Sprint_ berichten, neue _Issues_ erstellt, und eventuelle neue Herausforderungen besprochen werden.
+Ab Montag, dem 04.05.2020 beginnen die wöchentlichen _Sprints_. Dazu findet jeden Montag ein _Sprint-Planning_ statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen _Sprint_ berichten, neue _Issues_ erstellt und eventuelle neue Herausforderungen besprochen werden.
 
 Hinzu kommen die wöchentlichen Meetings mit dem Auftraggeber. Da dieses Meeting mitten in einem _Sprint_ liegt, kann der Projektleiter dem Auftraggeber eine gute Übersicht über den zuletzt abgeschlossenen _Sprint_, sowie eine Zwischenbilanz des aktuellen _Sprints_, geben.
 
@@ -77,7 +79,7 @@ In der **Abbildung 1** wird die zeitliche Aufteilung des Projektzeitraums grafis
 ### Verwaltung der Arbeitszeiten
 Um die Arbeitszeiten der Teammitglieder zu verwalten, wird eine Excel-Datei benutzt. Die Funktionen dieser werden im folgenden Text erläutert.
 
-Die Excel-Datei besteht aus neun Tabellenblätter. 
+Die Excel-Datei besteht aus neun Tabellenblättern. 
 - Übersicht
 - Sprintübersicht
 - Issues
@@ -96,7 +98,7 @@ Für jedes Teammitglied werden folgende Zeiten angezeigt:
 - Gesamtstunden für diesen Sprint (_Stunden_)
     - Dieser Wert wird auf dem Tabellenblatt des zugehörigen Mitgliedes berechnet.
 - Zielstunden für diesen Sprint (_Soll_)
-    - Für das Projekt sind 270 Stunden vorgesehen. Diese Stundenanzahl wird zu Beginn auf alle Sprints aufgeteilt. Wird nun ein Sprint angeschlossen und in der Übersicht abgehakt, so wird für die folgenden Sprints, anhand der übrigen Gesamtzeit, ein neuer Durchschnitt berechnet.
+    - Für das Projekt sind 270 Stunden vorgesehen. Diese Stundenanzahl wird zu Beginn auf alle Sprints aufgeteilt. Wird nun ein Sprint abgeschlossen und in der Übersicht abgehakt, so wird für die folgenden Sprints, anhand der übrigen Gesamtzeit, ein neuer Durchschnitt berechnet.
 
 - Differenz beider Stunden (_Differenz_)
     - Diese Angabe zeigt, wie stark die Abweichung der tatsächlichen Arbeitszeit in einem Sprint, zu der Durchschnittszeit ist.
@@ -113,11 +115,11 @@ Auf diesem Tabellenblatt werden die Gesamtzeiten jeder Kategorie pro Sprint ange
 Auf diesem Tabellenblatt werden die Eingaben getätigt. Dazu stehen einem drei Funktionen zur Verfügung.
 
 #### Hinzufügen
-Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dieses geschieht auf dem Tabellenblatt **Issues**, sowie auf allen Blättern der Mitglieder. 
+Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dies geschieht auf dem Tabellenblatt **Issues**, sowie auf allen Blättern der Mitglieder. 
 
 Die Tabelle besteht aus dem Namen eines Issues, der Dauer, sowie den Mitgliedern, welche diesen bearbeitet haben.
 #### Entfernen
-Wird dieser Button gedrückt so wird ein Sprint mit all seinen Issues entfernt.
+Wird dieser Button gedrückt, so wird ein Sprint mit all seinen Issues entfernt.
 #### Anwenden
 Hat man einen neuen Sprint hinzugefügt, so füllt man die Tabelle nun mit den neuen Issues, deren Dauer und deren Assignee.
 
@@ -125,24 +127,24 @@ Sobald alle Issues übertragen sind, kann man den Button `Anwenden` drücken. Di
 #### Meeting
 In dieses Tabellenblatt werden alle Meetings des Teams eingetragen. Dazu wird das Datum, die Dauer und die Teilnehmer des Meetings eingetragen.
 #### Mitglieder
-Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jeder Issue mit einem _tag_ (z.B. [Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
+Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jedes Issue mit einem _tag_ (z.B. [Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
 
-### Erweiterbarkeit Excel-Datei
+### Erweiterbarkeit der Excel-Datei
 Um die Excel-Datei für das Zeitmanagement auch für andere Projekte verwenden zu können, sollten die Mitglieder, sowie die Anzahl Sprints einstellbar sein. In der aktuellen Version der Excel-Datei ist dies noch nicht ohne Kenntnisse in VBA möglich.
 
-Die Weiterentwicklung dieser Datei läuft parallel zu dem Projekt ab und ist unter folgendem Link zu erreichen:
+Die Weiterentwicklung dieser Datei läuft parallel zum Projekt ab und ist unter folgendem Link zu erreichen:
 
 [https://github.com/TimonPllkrn/Project_Time_Management](https://github.com/TimonPllkrn/Project_Time_Management)
 
 ---
 
-## Versionsverwaltung: Git und Github
+## Versionsverwaltung: Git und GitHub
 
-Um das Projekt ordentlich zu strukturieren, benutzen wir Github. Dies dient uns zum einen als Versionsverwaltung, da Git dort integriert ist, sowie auch zum managen unseres Projektes. 
+Um das Projekt ordentlich zu strukturieren, benutzen wir GitHub. Dies dient uns zum einen als Versionsverwaltung, da Git dort integriert ist, sowie auch zum managen unseres Projektes. 
 
-Um unser Zeitmanagement in Github umzusetzen, wird in jedem Sprint-Planning ein neuer _Milestone_ mit dem Namen des Sprints (z.B. "Sprint 2") und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im _Sprint-Planning_ _Issues_ gemeinsam mit allen Teammitgliedern erstellt und dem passenden _Milestone_ zugewiesen. Diese _Issues_ werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
+Um unser Zeitmanagement in GitHub umzusetzen, wird in jedem Sprint-Planning ein neuer _Milestone_ mit dem Namen des Sprints (z.B. "Sprint 2") und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im _Sprint-Planning_ _Issues_ gemeinsam mit allen Teammitgliedern erstellt und dem passenden _Milestone_ zugewiesen. Diese _Issues_ werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
 
-Ist das _Sprint-Planning_ abgeschlossen stehen alle erstellten _Issues_ im Project Board in der Spalte `To-Do`. (**Abbildung 4**)
+Ist das _Sprint-Planning_ abgeschlossen, stehen alle erstellten _Issues_ im Project Board in der Spalte `To do`. (**Abbildung 4**)
 
 <figure style="float: right;">
   <img src="../_static/images/mainreport/Projectboard.png" width="70%">
@@ -150,18 +152,18 @@ Ist das _Sprint-Planning_ abgeschlossen stehen alle erstellten _Issues_ im Proje
 </figure>
 <br>
 
-Wird nun ein _Issue_ in die Spalte `In Progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen Issues trägt. 
+Wird nun ein _Issue_ in die Spalte `In progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen _Issues_ trägt. 
 
-Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein _Pull Request_ erstellt. Ebenfalls werden alle Unit-Tests, die Github finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
+Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein _Pull Request_ erstellt. Ebenfalls werden alle Unit-Tests, die GitHub finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
 
-Die _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Diese überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
+Der _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Dieses überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
 
-Link zum Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+Link zum GitHub-Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
 
-### Github Automatisation
+### GitHub Automatisation
 
 #### Project Board
-Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in Github _Actions_ erstellt, welche die Funktionen des Boards erweitern.
+Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in GitHub _Actions_ erstellt, welche die Funktionen des Boards erweitern.
 
 _Issue Branch erstellen_
 
@@ -172,7 +174,7 @@ Der Name des Branches ist wie folgt aufgebaut:
 
 _Pull Request erstellen_
 
-Wird ein _Issue_ in die Spalte `Review` gezogen, wird automatisch ein _Pull Request_ erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim mergen der _Issue_ automatisch geschlossen.
+Wird ein _Issue_ in die Spalte `Review` gezogen, wird automatisch ein _Pull Request_ erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim Mergen der _Issue_ automatisch geschlossen.
 ##### Einrichtung
 
 _Projekt hinzufügen_
@@ -180,13 +182,13 @@ _Projekt hinzufügen_
 - Neues Projekt erstellen
     - Template `Basic kanban`
 - Projekt einrichten
-    - Neue Spalte mit dem Namen `Review` erstellen und zwischen die Spalten `In Progress` und `Done` einordnen.
-    - Die Column ID von `In Progress` und `Review` kopieren
+    - Neue Spalte mit dem Namen `Review` erstellen und zwischen die Spalten `In progress` und `Done` einordnen.
+    - Die Column ID von `In progress` und `Review` kopieren
 
-Zusätzlich kann auch die Github interne Automatisation für `TODO` und `Done` verwendet werden.
+Zusätzlich kann auch die GitHub interne Automatisation für `To do` und `Done` verwendet werden.
 
-- `TODO` (manage automatisation)
-    - Preset: `TODO`
+- `To do` (manage automatisation)
+    - Preset: `To do`
     - `Move Issues here when…`
       - Newly added
       - Reopened
@@ -195,22 +197,22 @@ Zusätzlich kann auch die Github interne Automatisation für `TODO` und `Done` v
     - `Move Issues here when…`
       - Closed
 
-_Github Action erstellen_
+_GitHub Action erstellen_
 
 Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
 2.	Inhalt durch eigenes Script ersetzen
 3.	Namen festlegen
-4.	den Wert von column_id durch die ID der TODO-Spalte ersetzen
-5.	den Wert von column_id durch die ID der Review-Spalte ersetzen
+4.	Den Wert von column_id durch die ID der To do-Spalte ersetzen
+5.	Den Wert von column_id durch die ID der Review-Spalte ersetzen
 6.	`Start commit` klicken, um die Datei zu comitten
 
 Die Datei muss im master(default) branch liegen.
 
-_Github App erstellen_
+_GitHub App erstellen_
 
-Um mit dieser Action auch andere Actions auslösen zu können, muss eine Github App erstellt werden, die dann zur Authentifizierung verwendet wird. 
-1.	Github App erstellen (siehe [hier](https://developer.github.com/apps/building-github-apps/creating-a-github-app/))
+Um mit dieser Action auch andere Actions auslösen zu können, muss eine GitHub-App erstellt werden, die dann zur Authentifizierung verwendet wird. 
+1.	GitHub-App erstellen (siehe [hier](https://developer.github.com/apps/building-github-apps/creating-a-github-app/))
 2.	App Berechtigungen einstellen:
     - Contents: `read & write`
     - Issues: `read & write`
@@ -225,9 +227,9 @@ Value: ID der App (zu finden in den App Einstellungen unter `General`)
     2.	Name: APP_DEM
 Value: Private Key der App (wird in den Einstallungen unter `General` erstellt)
 ##### Funktionsweise
-Um, wie in der Einrichtung beschrieben, eine Github App für die Authentifikation verwenden zu können, wird die Action `tibdex/github-app-token@v1.0.2` aus dem Github Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App ID und dem Private Key der App.
+Um, wie in der Einrichtung beschrieben, eine GitHub-App für die Authentifikation verwenden zu können, wird die Action `tibdex/GitHub-app-token@v1.0.2` aus dem GitHub Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App ID und dem Private Key der App.
 
-Im nächsten Schritt werden mithilfe der Github Action `actions/github-script@0.9.0` Github APi Anfragen gemacht. Dieser App wird ein Script (geschrieben in Java Script) übergeben, welches dann von der App ausgeführt wird. Die Github Abfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable github und context. z.B.:
+Im nächsten Schritt werden mithilfe der GitHub Action `actions/github-script@0.9.0` GitHub APi Anfragen gemacht. Dieser App wird ein Script (geschrieben in Java Script) übergeben, welches dann von der App ausgeführt wird. Die GitHub Abfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable GitHub und context. z.B.:
 
 ~~~js
 // Create branch
@@ -249,7 +251,7 @@ Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action d
 - Benennt man einen _Issue_ um, dessen _Branch_ es schon gibt, so kann kein _Pull Request_ mehr erstellt werden, da der _Branch_ nicht mehr gefunden wird.
 - Durch einen Fehler von GitHub werden die verlinkten _Issues_ bei einem _Pull Request_ erst nach dem Mergen, oder wenn jemand ein Kommentar schreibt, richtig angezeigt.
 - Wenn der Branch keine Änderungen zum Master Branch enthält, kann kein _Pull Request_ erstellt werden.
-- Im Projekt Board sollten keine _Pull Requests_ hinzugefügt werden, da diese in Github nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
+- Im Projekt Board sollten keine _Pull Requests_ hinzugefügt werden, da diese in GitHub nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
 
 #### Automatisierte Tests
 Bei einem _Pull Request_ werden automatisierte Tests durchgeführt.
@@ -266,7 +268,7 @@ sut:
     command: test // Command der die Tests auführt
 ```
 
-_Github Action erstellen:_
+_GitHub Action erstellen:_
 
 Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
