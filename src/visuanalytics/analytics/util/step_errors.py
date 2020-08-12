@@ -38,7 +38,7 @@ class StepError(Exception):
             return f"{pos_msg}Entry {self.__cause__} is missing."
 
         # Other errors
-        return f"{pos_msg}'{type(self.__cause__).__name__}: {self.__cause__}' was raised"
+        return f"{pos_msg}{type(self.__cause__).__name__}: {self.__cause__}"
 
 
 class APIError(StepError):
@@ -114,7 +114,7 @@ class APiRequestError(Exception):
 
     def __init__(self, response: Response):
         super().__init__(
-            f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+            f"Error during the api request to '{response.request.url}':\nResponse-Code: {response.status_code}\nResponse-Body: {response.content}")
 
 
 class TestDataError(IOError):
@@ -123,7 +123,7 @@ class TestDataError(IOError):
     """
 
     def __init__(self, file_name: str):
-        super().__init__(f"test data from 'exampledata/{file_name}.json' could not be loaded")
+        super().__init__(f"Test-data from 'exampledata/{file_name}.json' could not be loaded")
 
 
 class InvalidContentTypeError(Exception):
