@@ -5,12 +5,8 @@ import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import {useStyles} from "../Home/style";
-import {ContinueButton} from "../JobCreate/ContinueButton";
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import {ComponentContext} from "../ComponentProvider";
 import {DeleteSchedule} from "../util/deleteSchedule";
-import { ComponentContext } from "../ComponentProvider";
 import { InfoMessage } from "../util/InfoMessage";
 import { Typography } from "@material-ui/core";
 

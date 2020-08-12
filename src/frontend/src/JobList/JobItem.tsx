@@ -13,36 +13,17 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
-import { ContinueButton } from "../JobCreate/ContinueButton";
-import { Job } from "./index";
-import { ScheduleSelection } from "../JobCreate/ScheduleSelection";
-import { useCallFetch } from "../Hooks/useCallFetch";
-import { ParamFields } from "../ParamFields";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
-import { getUrl } from "../util/fetchUtils";
-import { Notification, TMessageStates } from "../util/Notification";
-
-import { HintButton } from "../util/HintButton";
 import { ComponentContext } from "../ComponentProvider";
 import {ContinueButton} from "../JobCreate/ContinueButton";
 import {Job} from "./index";
-import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {ParamFields} from "../ParamFields";
-import {
-    Schedule,
-    withFormattedDates,
-    showSchedule,
-    fromFormattedDates,
-    showTimeToNextDate,
-    validateSchedule
-} from "../util/schedule";
 import {getUrl} from "../util/fetchUtils";
 import {Notification, TMessageStates} from "../util/Notification";
 import {HintButton} from "../util/HintButton";
 import {DeleteSchedule} from "../util/deleteSchedule";
-import {DeleteSelection} from "../JobCreate/DeleteSelection";
 import {SchedulePage} from "../util/SchedulePage";
 
 interface Props {
