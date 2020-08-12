@@ -16,6 +16,19 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         paper: {
             padding: '20px',
+            height: '450px',
+            position: 'relative'
+        },
+        continue: {
+            position: 'absolute',
+            bottom: 0,
+            left: '50%'
+        },
+        continueButton: {
+            position: 'relative',
+            margin: 'auto',
+            left: '-50%',
+            marginBottom: '15%'
         },
         modalpaper: {
             padding: '20px',
@@ -44,7 +57,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             padding: '20px',
             textAlign: "center",
             borderRadius: '4px',
-            width: '35%'
+            width: '35%',
         },
         modal: {
             display: 'flex',

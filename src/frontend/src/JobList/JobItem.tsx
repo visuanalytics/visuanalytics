@@ -326,8 +326,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs}) => {
                                                 selectScheduleHandler={handleSelectSchedule}
                                                 selectDeleteScheduleHandler={handleSelectDeleteSchedule}
                                             />
-                                            <div>
-                                                <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
+                                            <div className={classes.continue}>
+                                                <div className={classes.continueButton}>
+                                                    <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
+                                                </div>
                                             </div>
                                         </Paper>
                                 </Container>
