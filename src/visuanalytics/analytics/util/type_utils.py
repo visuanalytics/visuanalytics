@@ -20,9 +20,9 @@ def register_type_func(types: dict, error: Type[StepError], func):
     @functools.wraps(func)
     def type_func(values: dict, data: StepData, *args, **kwargs):
         # Replace presets
-        if "presets" in values:
+        if "preset" in values:
             # TODO (Max) may give values a higher prio
-            merge_dict(values, data.get_preset(values["presets"]))
+            merge_dict(values, data.get_preset(values["preset"]))
 
         return func(values, data, *args, **kwargs)
 
