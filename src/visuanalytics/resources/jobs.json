@@ -66,12 +66,10 @@
       },
       "config": {
         "hashtags": [
-          "Bundesliga",
-          "Fußball"
+          "Bundesliga"
         ],
         "stopwords": [
-          "Bundesliga",
-          "Werder"
+          "Bundesliga"
         ],
         "thumbnail": true,
         "normalize_words": true,
