@@ -2,14 +2,23 @@ import { format, parse, isPast, addDays, formatDistanceToNowStrict } from "date-
 import { de } from "date-fns/locale";
 
 
-export type Schedule = DailySchedule | WeeklySchedule | DateSchedule
+export type Schedule = DailySchedule | WeeklySchedule | DateSchedule | IntervalSchedule
 
 export enum Weekday {
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
 
+export enum TimeInterval {
+    MINUTE, QUARTER, HALF, THREEQUARTER, HOUR, QUARTDAY, HALFDAY
+}
+
 interface DailySchedule extends ISchedule {
     type: "daily"
+}
+
+interface IntervalSchedule extends ISchedule {
+    type: "interval"
+    interval: TimeInterval
 }
 
 interface WeeklySchedule extends ISchedule {
@@ -85,15 +94,15 @@ const getNextJobDate = (schedule: Schedule) => {
 
 export const showSchedule = (schedule: Schedule) => {
     if (schedule.type === "daily") {
-        return "täglich, " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return "täglich, " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     } else if (schedule.type === "onDate") {
-        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     } else if (schedule.type === "weekly") {
         if (schedule.weekdays.length === 0) {
             return "wöchentlich: kein Wochentag ausgewählt";
         }
         const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
-        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+        return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
     }
 }
 
@@ -109,9 +118,21 @@ export const getWeekdayLabel = (day: Weekday) => {
     }
 }
 
+export const getIntervalLabel = (interval: TimeInterval) => {
+    switch (interval) {
+        case TimeInterval.MINUTE: return "1min";
+        case TimeInterval.QUARTER: return "15min";
+        case TimeInterval.HALF: return "30min"
+        case TimeInterval.THREEQUARTER: return "45min";
+        case TimeInterval.HOUR: return "1std";
+        case TimeInterval.QUARTDAY: return "6std";
+        case TimeInterval.HALFDAY: return "12std"
+    }
+}
+
 export const showTimeToNextDate = (schedule: Schedule) => {
     const date = getNextJobDate(schedule);
-    if (date === null) {
+    if (date === null || date === undefined) {
         return "-";
     }
     return formatDistanceToNowStrict(date, { locale: de, addSuffix: true });

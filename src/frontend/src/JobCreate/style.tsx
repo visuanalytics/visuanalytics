@@ -36,6 +36,12 @@ export const useStyles = makeStyles((theme) => ({
     inputFields: {
         width: "45%"
     },
+    inputElement: {
+      mozAppearance: "textfield",
+      appearance: "textfield",
+      webkitAppearance: "none",
+      margin: 0,
+    },
     expIcon: {
         marginRight: 5,
         float: "left"
@@ -49,5 +55,14 @@ export const useStyles = makeStyles((theme) => ({
         textAlign: "left",
         margin: "0 auto",
         width: 500,
+    },
+    checkboxParam: {
+        display: "flex",
+        justifyContent: "space-between",
+        margin: 0
+    },
+    checkIcon: {
+        fontSize: "50px",
+        color: "#81c784",
     }
 }));

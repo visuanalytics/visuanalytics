@@ -5,6 +5,7 @@ import { de } from "date-fns/locale"
 
 interface DateInputProps {
     date: Date | null;
+    disabled?: boolean;
     handler: ((date: Date | null) => void);
 }
 
@@ -39,6 +40,7 @@ export const TimeInputField: React.FC<DateInputProps> = (props: DateInputProps) 
                 label="Uhrzeit auswählen"
                 value={props.date}
                 onChange={props.handler}
+                disabled={props.disabled}
             />
         </MuiPickersUtilsProvider>
     )

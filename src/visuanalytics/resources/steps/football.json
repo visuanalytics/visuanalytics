@@ -6,8 +6,8 @@
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
     "steps_value": [
-      "season_helper",
       "Spiele",
+      "season_helper",
       "Tabelle",
       "Vorherige-Tabelle",
       "Vorheriger-Spieltag",
@@ -16,9 +16,13 @@
     "requests": [
       {
         "type": "request",
+        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
+      },
+      {
+        "type": "request",
         "url_pattern": "https://www.openligadb.de/Webservices/Sportsdata.asmx",
         "method": "post",
-        "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n<soap12:Body>\n<GetLastMatch xmlns=\"http://msiggi.de/Sportsdata/Webservices\">\n<leagueShortcut>bl1</leagueShortcut>\n</GetLastMatch>\n</soap12:Body>\n</soap12:Envelope>",
+        "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><GetMatchByMatchID  xmlns=\"http://msiggi.de/Sportsdata/Webservices\"><MatchID>{_req|Spiele|0|MatchID}</MatchID></GetMatchByMatchID ></soap12:Body></soap12:Envelope>",
         "body_type": "other",
         "body_encoding": "utf-8",
         "response_format": "xml",
@@ -35,11 +39,7 @@
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getmatchdata/bl{_conf|league}"
-      },
-      {
-        "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
       },
       {
         "type": "request_memory",
@@ -47,7 +47,7 @@
         "use_last": 1,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       },
       {
@@ -65,7 +65,7 @@
         "use_last": 2,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison}"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       }
     ]
@@ -74,7 +74,7 @@
     {
       "type": "alias",
       "keys": [
-        "_req|season_helper|Envelope|Body|GetLastMatchResponse|GetLastMatchResult|leagueSaison"
+        "_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison"
       ],
       "new_keys": [
         "_req|league_saison"
@@ -596,11 +596,13 @@
       "exclude": [
         "Text",
         "Rank_diff"
-      ]
+      ],
+      "count": 3
     },
     {
       "name": "spieltag",
-      "key": "_req|Spieltag"
+      "key": "_req|Spieltag",
+      "count": 3
     }
   ],
   "images": {

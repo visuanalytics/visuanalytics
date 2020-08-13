@@ -465,7 +465,7 @@ def random_value(values: dict, data: StepData):
 
 @register_transform
 def convert(values: dict, data: StepData):
-    """
+    """Konvertiert ein Datentyp in einen anderen Datentyp.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -481,7 +481,13 @@ def convert(values: dict, data: StepData):
 
 @register_transform
 def sort(values: dict, data: StepData):
-    """
+    """Sortiert Wörter nach dem Alphabet oder Zahlen aufsteigend.
+
+    Ist reverse auf True gesetzt, werden die Wörter zu Z nach A sortiert, bzw. Zahlen absteigend.
+    Achtung: Sortierung von A nach Z
+    ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
+    "USA" ist vor "United Kingdom", weil bei "USA" der zweite Buchstabe auch groß geschrieben ist.
+    Würde dort "Usa" statt "USA" stehen, wäre "United Kingdom" vor "USA".
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -490,7 +496,7 @@ def sort(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
         value = data.get_data(key, values)
-        reverse = data.get_data(value.get("reverse", False), values, bool)
+        reverse = data.get_data(values.get("reverse", False), values, bool)
 
         new_value = sorted(value, reverse=reverse)
 
@@ -499,7 +505,7 @@ def sort(values: dict, data: StepData):
 
 @register_transform
 def most_common(values: dict, data: StepData):
-    """
+    """Sortiert die Wörter nach der Häufigkeit, optional mit Häufigkeit.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -521,7 +527,7 @@ def most_common(values: dict, data: StepData):
 
 @register_transform
 def sub_lists(values: dict, data: StepData):
-    """
+    """Extrahiert aus einem Array (Liste) kleinere Arrays (Listen).
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -541,6 +547,12 @@ def sub_lists(values: dict, data: StepData):
 
 @register_transform
 def to_dict(values: dict, data: StepData):
+    """Wandelt eine Liste aus Tupeln oder Arrays in ein Dictionary um.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -551,7 +563,7 @@ def to_dict(values: dict, data: StepData):
 
 @register_transform
 def join(values: dict, data: StepData):
-    """
+    """Fügt Elemente einer Liste zu einem String zusammen mit jeweils einem Delimiter dazwischen.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -569,7 +581,7 @@ def join(values: dict, data: StepData):
 
 @register_transform
 def length(values: dict, data: StepData):
-    """
+    """Gibt die Länge von Arrays (Listen), Strings, Tupeln und Dictionaries aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

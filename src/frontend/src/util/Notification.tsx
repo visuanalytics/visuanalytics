@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 
 const Message_States = (message: string) => ({
   error: {
-    style: { backgroundColor: "#f44336" },
+    style: { backgroundColor: "#e57373" },
     message: (
       <NotificationContent>
         <ErrorOutlineOutlinedIcon />
@@ -27,7 +27,7 @@ const Message_States = (message: string) => ({
     ),
   },
   success: {
-    style: { backgroundColor: "#4caf50" },
+    style: { backgroundColor: "#81c784" },
     message: (
       <NotificationContent>
         <DoneOutlinedIcon />
