@@ -42,6 +42,14 @@ const theme = createMuiTheme({
                 backgroundColor: '#2E97C5 !important'
             }
         },
+    },
+    palette: {
+        primary: {
+            main: '#2E97C5'
+        },
+        secondary: {
+            main: '#00638D'
+        }
     }
 });
 

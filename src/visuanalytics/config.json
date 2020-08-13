@@ -43,5 +43,6 @@
     "lang": "de",
     "format": "mp3"
   },
+  "log_limit": 100,
   "testing": false
-} 
+}

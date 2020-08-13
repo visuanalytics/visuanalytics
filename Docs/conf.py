@@ -12,8 +12,11 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+import recommonmark
+import sphinx.ext.apidoc
+from recommonmark.transform import AutoStructify
 
+sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
 
@@ -21,14 +24,13 @@ project = 'VisuAnalytics'
 copyright = '2020, David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
 author = 'David Martschenko, Jannik Lapp, Lisa Soboth, Max Stephan, Tanja Gutsche, Timon Pellekoorne'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'recommonmark'
-              ]
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon',
+              'recommonmark', 'sphinx_markdown_tables']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -43,8 +45,9 @@ language = 'de'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**tests**']
 
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -58,11 +61,41 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_css_files = [
+    'css/custom.css',
+]
+
 html_theme_options = {
     'display_version': True,
     'logo_only': True,
     'style_nav_header_background': 'white'
 }
 
-html_logo = 'pictures/logo.png'
-html_favicon = 'pictures/favicon.ico'
+# Display edit on github
+html_context = {
+    "display_github": True,
+    "github_user": "SWTP-SS20-Kammer-2",
+    "github_repo": "Data-Analytics",
+    "github_version": "master",
+    "conf_py_path": "/Docs/",
+}
+
+html_logo = '_static/images/logo.png'
+html_favicon = '_static/images/favicon.ico'
+
+# app setup hook
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        'auto_toc_tree_section': 'Contents',
+        'enable_math': False,
+        'enable_inline_math': False,
+        'enable_eval_rst': True
+    }, True)
+    app.add_transform(AutoStructify)
+    sphinx.ext.apidoc.main(['-f',
+                    '-T',
+                    '-o',
+                    'modules',
+                    '../src/visuanalytics',
+                    '../src/visuanalytics'
+                    ])

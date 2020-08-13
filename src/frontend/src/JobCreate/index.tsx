@@ -21,12 +21,18 @@ import { Fade, Grid, Typography } from '@material-ui/core';
 import { useCallFetch } from '../Hooks/useCallFetch';
 import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
 import { getUrl } from '../util/fetchUtils';
-import { HintButton } from "../util/HintButton";
+import {HintButton} from "../util/HintButton";
+import {ComponentContext} from "../ComponentProvider";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {DeleteSchedule} from "../util/deleteSchedule";
+import {SchedulePage} from "../util/SchedulePage";
 
 
 export default function JobCreate() {
     const classes = useStyles();
+    const components = React.useContext(ComponentContext);
 
+    const [counter, setCounter] = React.useState(5);
     // states for stepper logic
     const [activeStep, setActiveStep] = React.useState(0);
     const [selectComplete, setSelectComplete] = React.useState(false);
@@ -49,6 +55,13 @@ export default function JobCreate() {
         type: "daily",
         time: new Date()
     });
+
+    // state for deleteSchedule selection logic
+    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({
+        type: "noDeletion",
+    })
+
+    const [hintState, setHintState] = React.useState(0);
 
     // initialize callback for add job functionality
     const addJob = useCallFetch(getUrl("/add"), {
@@ -154,9 +167,25 @@ export default function JobCreate() {
         }
     }, [schedule, activeStep])
 
+    useEffect(() => {
+        counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    }, [counter]);
+
+    const delay = () => {
+        setCounter(5);
+        setTimeout(() => {
+            components?.setCurrent("home");
+        }, 5000);
+    }
+
     // handlers for stepper logic
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        handleHintState(activeStep + 1);
+        console.log(activeStep);
+        if (activeStep === 2) {
+            delay();
+        }
     };
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -195,6 +224,15 @@ export default function JobCreate() {
         setSchedule(schedule);
     }
 
+    // handler fpr deleteSchedule selection logic
+    const handleSelectDeleteSchedule = (deleteSchedule: DeleteSchedule) => {
+        setDeleteSchedule(deleteSchedule);
+    }
+
+    const handleHintState = (hint: number) => {
+        setHintState(hint);
+    }
+
     // stepper texts
     const steps = [
         "Thema auswählen",
@@ -204,7 +242,7 @@ export default function JobCreate() {
     const descriptions = [
         "Zu welchem Thema sollen Videos generiert werden?",
         "Parameter auswählen für: '" + jobName + "'",
-        "Wann sollen neue Videos generiert werden?"
+        "Wann sollen neue Videos generiert/gelöscht werden?"
     ];
     const hintContent = [
         <div>
@@ -226,12 +264,27 @@ export default function JobCreate() {
             </Typography>
             <Typography variant="h6">täglich</Typography>
             <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
-            <Typography variant="h6">wöchentlich</Typography>
-            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen
-                Uhrzeit erstellt</Typography>
-            <Typography variant="h6">an festem Datum</Typography>
-            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit
-                erstellt</Typography>
+            <Typography variant="h6" >wöchentlich</Typography>
+            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >Intervall</Typography>
+            <Typography gutterBottom>Das Video wird nach dem angegebenen Intervall generiert</Typography>
+            <Typography variant="h6" >an festem Datum</Typography>
+            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+        </div>,
+
+        <div>
+            <Typography variant="h5" gutterBottom>Löschen</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video gelöscht werden soll.
+            </Typography>
+            <Typography variant="h6" >nie</Typography>
+            <Typography gutterBottom>Das Video wird nie gelöscht</Typography>
+            <Typography variant="h6" >nach Zeit</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht</Typography>
+            <Typography variant="h6" >nach Anzahl</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht</Typography>
+            <Typography variant="h6" >feste Namen</Typography>
+            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen <i>jobName</i>_1 besitzt</Typography>
         </div>
     ];
 
@@ -265,9 +318,13 @@ export default function JobCreate() {
                 )
             case 2:
                 return (
-                    <ScheduleSelection
+                    <SchedulePage
+                        offset={1}
                         schedule={schedule}
+                        deleteSchedule={deleteSchedule}
                         selectScheduleHandler={handleSelectSchedule}
+                        selectDeleteScheduleHandler={handleSelectDeleteSchedule}
+                        handleHintState={handleHintState}
                     />
                 )
             default:
@@ -300,7 +357,7 @@ export default function JobCreate() {
                                     <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                                 </Grid>
                                 <Grid container xs={1}>
-                                    <HintButton content={hintContent[activeStep]} />
+                                    <HintButton content={hintContent[hintState]} />
                                 </Grid>
                             </Grid>
                         </div>
@@ -322,7 +379,26 @@ export default function JobCreate() {
                     :
                     <Fade in={true}>
                         <div className={classes.MPaddingTB}>
-                            Job '{jobName}' wurde erstellt!
+                            <Grid container spacing={2}>
+                                 <Grid container item justify="center">
+                                    <CheckCircleIcon
+                                        className={classes.checkIcon}
+                                        color={"disabled"}
+                                        fontSize={"default"}
+                                    />
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <Typography>Sie werden in {counter} Sekunden zur Startseite weitergeleitet.</Typography>
+                                </Grid>
+                                <Grid container item justify="center">
+                                    <ContinueButton onClick={() => components?.setCurrent("home")}>
+                                        STARTSEITE
+                                    </ContinueButton>
+                                </Grid>
+                            </Grid>
                         </div>
                     </Fade>
                 }

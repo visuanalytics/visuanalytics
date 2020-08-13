@@ -1,5 +1,6 @@
 import React from "react";
 import { ComponentContext } from "../ComponentProvider";
+import Fade from "@material-ui/core/Fade";
 
 /**
  * Component das, das Aktuelle Component des ComponentContextes Anzeigt
@@ -7,5 +8,13 @@ import { ComponentContext } from "../ComponentProvider";
  */
 export const Main = () => {
   const component = React.useContext(ComponentContext);
-  return <>{component ? <component.current.component /> : null}</>;
+  return (
+    <Fade in>
+      <>
+        {component ? (
+          <component.current.component {...component.current.props} />
+        ) : null}
+      </>
+    </Fade>
+  );
 };

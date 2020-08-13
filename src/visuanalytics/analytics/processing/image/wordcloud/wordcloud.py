@@ -57,10 +57,10 @@ def get_color_func(h, s, l_start, l_end):
 
 
 def wordcloud(values: dict, step_data: StepData, prev_paths):
-    """Erstellt ein Wordcloud Bild.
+    """Erstellt ein Wordcloud-Bild.
 
     Der Standard-Farbverlauf bei color_func true ist Grau/Schwarz.
-    Die Standard-Farbe ist generell die Colormap viridis.
+    Die Standard-Farbe ist generell die colormap viridis.
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API
@@ -113,7 +113,7 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
             mask = 255 * mask.astype(int)
             wordcloud_parameter["mask"] = mask
 
-    if values.get("use_global_stopwords", None) is not None:
+    if values.get("use_stopwords", None) is not None:
         try:
             file = resources.get_resource_path("stopwords/stopwords.txt")
             with open(file, "r", encoding='utf-8') as f:
@@ -129,7 +129,6 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
     else:
         dont_use = step_data.get_data(values.get("stopwords", []), {}, list)
         wordcloud_parameter["stopwords"] = set(dont_use)
-
     if values.get("text", None) is not None:
         wordcloud_image = WordCloud(**wordcloud_parameter).generate(step_data.format(values["text"], {}))
     elif values.get("dict", None) is not None:

@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 from visuanalytics.server.db.db import logger
 from visuanalytics.util import resources
+from visuanalytics.util.resources import get_resource_path, MEMORY_LOCATION
 
 
 def delete_video(steps_config, __config):
@@ -109,3 +110,19 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
     if thumbnail:
         os.rename(values["thumbnail"], os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png"))
         values["thumbnail"] = os.path.join(out, f"{job_name}{fix_names[0]}_thumbnail.png")
+
+
+def delete_memory_files(job_name: str, name: str, count: int):
+    """Löscht memory files sobald zu viele vorhanden sind.
+
+    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
+    :param name: Name des dicts das exportiert wurde
+    :param count: Anzahl an Memory Files die Vorhanden sein sollen (dananch wird gelöscht)
+    """
+    files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
+    files.sort(reverse=True)
+    for idx, file in enumerate(files):
+        if idx >= count:
+            os.remove(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, file)))
+            logger.info(
+                f"old memory file {file} has been deleted")

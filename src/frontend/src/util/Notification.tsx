@@ -3,7 +3,8 @@ import {
   Snackbar,
   IconButton,
   SnackbarContent,
-  makeStyles, Typography,
+  makeStyles,
+  Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneOutlinedIcon from "@material-ui/icons/DoneOutlined";
@@ -18,26 +19,62 @@ const useStyles = makeStyles({
 
 const Message_States = (message: string) => ({
   error: {
-    style: { backgroundColor: "#f44336" },
+    style: { backgroundColor: "#e57373" },
     message: (
       <NotificationContent>
         <ErrorOutlineOutlinedIcon />
-        <Typography style={{marginLeft: "5px"}}>{message}</Typography>
+        <Typography style={{ marginLeft: "5px" }}>{message}</Typography>
       </NotificationContent>
     ),
   },
   success: {
-    style: { backgroundColor: "#4caf50" },
+    style: { backgroundColor: "#81c784" },
     message: (
       <NotificationContent>
         <DoneOutlinedIcon />
-        <Typography style={{marginLeft: "5px"}}>{message}</Typography>
+        <Typography style={{ marginLeft: "5px" }}>{message}</Typography>
       </NotificationContent>
     ),
   },
 });
 
 export type TMessageStates = "error" | "success";
+
+export interface NotificationState {
+  open: boolean;
+  message: string;
+  type: TMessageStates;
+}
+
+export type NotificationAction =
+  | { type: "reportSuccess"; message: string }
+  | { type: "reportError"; message: string }
+  | { type: "close" };
+
+export const notifcationReducer = (
+  state: NotificationState,
+  action: NotificationAction
+): NotificationState => {
+  switch (action.type) {
+    case "reportSuccess":
+      return {
+        open: true,
+        message: action.message,
+        type: "success",
+      };
+    case "reportError":
+      return {
+        open: true,
+        message: action.message,
+        type: "error",
+      };
+    case "close":
+      return {
+        ...state,
+        open: false,
+      };
+  }
+};
 
 interface Props {
   handleClose: (
@@ -60,9 +97,10 @@ export const Notification: React.FC<Props> = ({
 
   return (
     <Snackbar
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       open={open}
       autoHideDuration={3000}
+      resumeHideDuration={3000}
       onClose={handleClose}
     >
       <SnackbarContent
