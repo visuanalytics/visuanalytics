@@ -288,11 +288,20 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                 </IconButton>
                             </Tooltip>
                         </div>
+
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Grid item md={6}>
-                            {renderTextField()}
+                        <Grid md={1} />
+                        <Grid md={10}>
+                            <div>
+                                {renderTextField()}
+                            </div>
+                            <div>
+                                {job.topics.map((t: any, i: number) => renderParamFields(t.params, t.topicName, i))}
+                            </div>
                         </Grid>
+                        <Grid md={1} />
+
                         <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
@@ -342,26 +351,12 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                 </Container>
                             </Fade>
                         </Modal>
-                        <Grid item md={6}>
-                            <div>
-                                {
-                                    job.topics.map((t: any, i: number) => renderParamFields(t.params, t.topicName, i))
-                                /* TODO (David)
-                                <ParamFields
-                                    params={job.params}
-                                    values={paramValues}
-                                    selectParamHandler={handleSelectParam}
-                                    disabled={state.edit}
-                                    required={!state.edit}
-                                    index={2  TODO (David) }
-                                    topic={}
-                                />
-                                */}
-                            </div>
-                        </Grid>
+
+
+
                     </AccordionDetails>
-                </Accordion>
-            </div>
+                </Accordion >
+            </div >
         );
     }
 
