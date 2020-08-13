@@ -15,23 +15,17 @@ interface ScheduleSelectionProps {
 export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, selectScheduleHandler }) => {
     const classes = useStyles();
 
-    const [showTime, setShowTime] = React.useState(false)
-
     const handleSelectDaily = () => {
         selectScheduleHandler({ type: "daily", time: schedule.time })
-        setShowTime(false)
     }
     const handleSelectWeekly = () => {
         selectScheduleHandler({ type: "weekly", time: schedule.time, weekdays: [] })
-        setShowTime(false)
     }
     const handleSelectInterval = () => {
         selectScheduleHandler({ type: "interval", time: schedule.time, interval: TimeInterval.MINUTE })
-        setShowTime(true)
     }
     const handleSelectOnDate = () => {
         selectScheduleHandler({ type: "onDate", time: schedule.time, date: new Date() })
-        setShowTime(false)
     }
     const handleAddWeekDay = (d: Weekday) => {
         if (schedule.type === "weekly") {
@@ -125,7 +119,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                 </div>
                 <Divider />
                 <div className={classes.MPaddingTB} >
-                    <TimeInputField date={schedule.time} disabled={showTime} handler={handleSelectTime} />
+                    <TimeInputField date={schedule.time} disabled={schedule.type === "interval"} handler={handleSelectTime} />
                 </div>
             </div >
         </Fade>

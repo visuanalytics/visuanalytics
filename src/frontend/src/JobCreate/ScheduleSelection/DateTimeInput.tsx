@@ -5,7 +5,7 @@ import { de } from "date-fns/locale"
 
 interface DateInputProps {
     date: Date | null;
-    disabled: boolean;
+    disabled?: boolean;
     handler: ((date: Date | null) => void);
 }
 
