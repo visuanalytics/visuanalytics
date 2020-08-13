@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
+import {Typography} from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
@@ -8,7 +9,7 @@ import { getUrl } from "../util/fetchUtils";
 import {ComponentContext} from "../ComponentProvider";
 import {DeleteSchedule} from "../util/deleteSchedule";
 import { InfoMessage } from "../util/InfoMessage";
-import { Typography } from "@material-ui/core";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 export interface Job {
   jobId: number;
@@ -23,6 +24,12 @@ export interface Job {
 
 export const JobList: React.FC = () => {
   const components = React.useContext(ComponentContext);
+
+  const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
+    open: false,
+    message: "",
+    type: "success"
+});
 
   const [loadFailed, setLoadFailed] = useState(false);
   const handleLoadFailed = useCallback(() => {
@@ -39,6 +46,14 @@ export const JobList: React.FC = () => {
     setLoadFailed(false);
     getJobs();
   };
+
+  const handleReportSuccess = (message: string) => {
+    dispatchMessage({type: "reportSuccess", message: message})
+  }
+
+  const handleReportError = (message: string) => {
+    dispatchMessage({type: "reportError", message: message})
+  }
 
   return (
     <InfoMessage
@@ -69,10 +84,17 @@ export const JobList: React.FC = () => {
         data={jobInfo}
       >
         {jobInfo?.map((j: Job) => (
-          <div key={j.jobId}>
-            <JobItem job={j} getJobs={handleReaload} />
-          </div>
+              <div key={j.jobId}>
+                   <JobItem
+                      job={j}
+                       getJobs={handleReaload}
+                       reportError={handleReportError}
+                       reportSuccess={handleReportSuccess}
+                   />
+              </div>
         ))}
+        <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
+                            type={message.type}/>
       </Load>
     </InfoMessage>
   );
