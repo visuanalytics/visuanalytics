@@ -1,5 +1,5 @@
 import React from "react";
-import { Fade, Divider } from "@material-ui/core";
+import { Fade } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param, ParamValues } from "../../util/param";
 import { Load, LoadFailedProps } from "../../Load";
@@ -16,12 +16,15 @@ interface ParamSelectionProps {
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     const classes = useStyles();
+    const params = props.params;
+    const values = props.values;
+    const topics = props.topics;
 
     const renderParamFields = (params: Param[] | undefined, topic: Topic, idx: number) => {
         return (
             <ParamFields
                 params={params}
-                values={props.values[idx]}
+                values={values[idx]}
                 selectParamHandler={props.selectParamHandler}
                 disabled={false}
                 required={true}
@@ -34,8 +37,9 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div className={classes.centerDivMedium}>
-                <Load data={props.params} failed={props.loadFailedProps} className={classes.SPaddingTB}>
-                    {props.params?.map((p, idx) => renderParamFields(p, props.topics[idx], idx))}
+                <Load data={params && (params.length === (topics.length))} failed={props.loadFailedProps}
+                    className={classes.SPaddingTB}>
+                    {params?.map((p, idx) => renderParamFields(p, topics[idx], idx))}
                 </Load>
             </div>
         </Fade>
