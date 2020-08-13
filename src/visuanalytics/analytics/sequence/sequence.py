@@ -66,10 +66,10 @@ def link(values: dict, step_data: StepData):
 
                 sequence_out.append(pipeline.config["sequence"])
 
-                _combine(sequence_out, step_data, values)
+            _combine(sequence_out, step_data, values)
 
-                for file in sequence_out:
-                    os.remove(file)
+            for file in sequence_out:
+                os.remove(file)
     else:
         if attach_mode == "combined":
             values["sequence"] = {
