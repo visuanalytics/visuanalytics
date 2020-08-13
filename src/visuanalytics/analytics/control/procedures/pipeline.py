@@ -43,8 +43,7 @@ class Pipeline(object):
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
-                 no_sequence=False,
-                 no_cleanup=False):
+                 attach_mode=False, no_tmp_dir=False):
         if steps_config is None:
             steps_config = {}
 
@@ -58,12 +57,8 @@ class Pipeline(object):
         self.__current_step = -1
         self.__log_to_db = log_to_db
         self.__log_id = None
-
-        if no_sequence:
-            self.__steps_max = 6
-            self.cleanup = [False, False]
-        if no_cleanup:
-            self.cleanup = [True, False]
+        self.__attach_mode = attach_mode
+        self.__no_tmp_dir = no_tmp_dir
 
     @property
     def start_time(self):
@@ -130,7 +125,7 @@ class Pipeline(object):
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
-        if self.cleanup:
+        if not self.__no_tmp_dir:
             os.mkdir(resources.get_temp_resource_path("", self.id))
 
         # Init Steps config with default config
@@ -148,7 +143,6 @@ class Pipeline(object):
             return func(*args, **kwargs)
 
     def __on_completion(self, values: dict, data: StepData):
-
         # Set state to ready
         self.__current_step = self.__steps_max
 
@@ -156,8 +150,16 @@ class Pipeline(object):
         self.__end_time = time.time()
         completion_time = round(self.__end_time - self.__start_time, 2)
 
+        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
+
         # Update DB logs
         self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)
+
+        if self.__attach_mode:
+            return
+
+        # Check and Delete Video
+        delete_video(self.steps_config, self.__config)
 
         cp_request = data.get_config("on_completion")
 
@@ -188,10 +190,28 @@ class Pipeline(object):
                 logger.exception("Completion report could not be sent: ")
 
     def __cleanup(self):
-        # delete Directory
+        if self.__no_tmp_dir:
+            return
+
+            # delete Directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
         logger.info("Finished cleanup!")
+
+    def __error_cleanup(self, e: Exception):
+        self.__current_step = -2
+
+        if not self.__log_id is None:
+            self.__update_db(update_log_error,
+                             self.__log_id,
+                             self.__log_states["error"],
+                             f"{e.__class__.__name__}: {e}",
+                             traceback.format_exc())
+
+        logger.exception(f"An error occurred: ")
+        logger.info(f"Pipeline {self.id} could not be finished.")
+
+        self.__cleanup()
 
     def start(self):
         """Führt alle Schritte, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind, aus.
@@ -219,37 +239,17 @@ class Pipeline(object):
 
                 logger.info(f"Step finished: {self.current_step_name()}!")
 
-            # Set state to ready
-            self.__current_step = self.__steps_max
-
-            if self.cleanup[1]:
-                delete_video(self.steps_config, self.__config)
-
-            self.__end_time = time.time()
-            completion_time = round(self.__end_time - self.__start_time, 2)
-            logger.info(f"Pipeline {self.id} finished in {completion_time}s")
-
-            if self.cleanup[1]:
-                self.__on_completion(self.__config, data)
-            if self.cleanup[0]:
-                self.__cleanup()
-            return True
-        except (KeyboardInterrupt, SystemExit):
-            # TODO (max) db updaten und current_step setzen
+            self.__on_completion(self.__config, data)
             self.__cleanup()
+
+            return True
+        except (KeyboardInterrupt, SystemExit) as e:
+            self.__error_cleanup(e)
             raise
         except Exception as e:
-            self.__current_step = -2
+            self.__error_cleanup(e)
 
-            if not self.__log_id is None:
-                self.__update_db(update_log_error,
-                                 self.__log_id,
-                                 self.__log_states["error"],
-                                 f"{e.__class__.__name__}: {e}",
-                                 traceback.format_exc())
+            if self.__attach_mode:
+                raise
 
-            logger.exception(f"An error occurred: ")
-            logger.info(f"Pipeline {self.id} could not be finished.")
-            if self.cleanup:
-                self.__cleanup()
             return False
