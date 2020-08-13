@@ -59,6 +59,7 @@ class Pipeline(object):
         self.__log_id = None
         self.__attach_mode = attach_mode
         self.__no_tmp_dir = no_tmp_dir
+        self.__log_name = 'Pipeline' if not attach_mode else 'Attached Pipeline'
 
     @property
     def start_time(self):
@@ -113,7 +114,7 @@ class Pipeline(object):
         return default_config
 
     def __setup(self):
-        logger.info(f"Initializing Pipeline {self.id}...")
+        logger.info(f"Initializing {self.__log_name} {self.id}...")
 
         self.__start_time = time.time()
 
@@ -150,7 +151,7 @@ class Pipeline(object):
         self.__end_time = time.time()
         completion_time = round(self.__end_time - self.__start_time, 2)
 
-        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
+        logger.info(f"{self.__log_name}  {self.id} finished in {completion_time}s")
 
         # Update DB logs
         self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)
@@ -209,7 +210,7 @@ class Pipeline(object):
                              traceback.format_exc())
 
         logger.exception(f"An error occurred: ")
-        logger.info(f"Pipeline {self.id} could not be finished.")
+        logger.info(f"{self.__log_name}  {self.id} could not be finished.")
 
         self.__cleanup()
 
@@ -229,7 +230,7 @@ class Pipeline(object):
             self.__setup()
             data = StepData(self.steps_config, self.id, self.__job_id, self.__config.get("presets", None))
 
-            logger.info(f"Pipeline {self.id} started!")
+            logger.info(f"{self.__log_name}  {self.id} started!")
 
             for self.__current_step in range(0, self.__steps_max):
                 logger.info(f"Next step: {self.current_step_name()}")
