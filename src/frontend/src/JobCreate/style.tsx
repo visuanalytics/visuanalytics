@@ -11,13 +11,16 @@ export const useStyles = makeStyles((theme) => ({
         borderRadius: "10px",
         width: '100%',
     },
-    jobCreateHeader: {
+    header: {
         fontWeight: "normal",
         fontSize: "large"
     },
     MPaddingTB: {
         paddingBottom: 15,
         paddingTop: 15
+    },
+    MPaddingB: {
+        paddingBottom: 15,
     },
     SPaddingTB: {
         paddingTop: 10,
