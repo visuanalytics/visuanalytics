@@ -148,7 +148,6 @@ class Pipeline(object):
             return func(*args, **kwargs)
 
     def __on_completion(self, values: dict, data: StepData):
-        delete_video(self.steps_config, self.__config)
 
         # Set state to ready
         self.__current_step = self.__steps_max
