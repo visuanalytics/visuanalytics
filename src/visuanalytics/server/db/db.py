@@ -4,10 +4,11 @@ import sqlite3
 
 import flask
 
+from visuanalytics.util import resources
+
 logger = logging.getLogger(__name__)
 
-# TODO(max) vtl. move to someware else
-DATABASE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../instance/visuanalytics.db"))
+DATABASE_LOCATION = ""
 
 
 def open_con():
@@ -45,12 +46,15 @@ def close_con_f(e=None):
         db.close()
 
 
-def init_db(topics: list):
+def init_db(topics: list, db_path: str):
     """ Initialisiert DB außerhalb von Flask-Kontext.
 
     Nur, wenn noch keine Datenbank im "instance"-Ordner angelegt ist, wird eine neue erstellt.
     :param topics: Liste mit allen Themen
     """
+    global DATABASE_LOCATION
+    DATABASE_LOCATION = resources.path_from_root(db_path)
+
     if not os.path.exists(DATABASE_LOCATION):
         logger.info("Initialize Database ...")
 

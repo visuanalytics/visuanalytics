@@ -1,4 +1,5 @@
 import functools
+from typing import Type
 
 from requests import Response
 
@@ -12,19 +13,32 @@ class StepError(Exception):
     """
 
     def __init__(self, values):
+        # Make sure that values is a dictonary
+        if not isinstance(values, dict):
+            values = {}
+
         self.type = values.get("type", None)
+        self.desc = values.get("description", None)
         self.values = values
 
+    def __type_msg(self, msg: str):
+        return f"{msg}'{self.type}', " if self.type is not None else ""
+
     def __str__(self):
-        if isinstance(self.__cause__, (StepKeyError, StepTypeError)):
+        # Build Post messages
+        pos_msg = f"On '{self.desc}' {self.__type_msg('with Type ')}" if self.desc is not None else self.__type_msg(
+            'On Type ')
+
+        if isinstance(self.__cause__,
+                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError)):
             # Invalid Key
-            return f"On Type '{self.type}', {self.__cause__}"
+            return f"{pos_msg}{self.__cause__}"
         elif isinstance(self.__cause__, KeyError):
             # Field for type is missing
-            return f"On Type '{self.type}', Entry {self.__cause__} is missing."
+            return f"{pos_msg}Entry {self.__cause__} is missing."
 
         # Other errors
-        return f"On Type '{self.type}', \"{type(self.__cause__).__name__}: {self.__cause__}\" was raised"
+        return f"{pos_msg}'{type(self.__cause__).__name__}: {self.__cause__}' was raised"
 
 
 class APIError(StepError):
@@ -94,9 +108,22 @@ class APIKeyError(Exception):
 
 
 class APiRequestError(Exception):
+    """
+    Fehlerklasse für einen Fehlgeschlagenen Http/s request
+    """
+
     def __init__(self, response: Response):
         super().__init__(
             f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+
+
+class TestDataError(IOError):
+    """
+    FehlerKlasse für das laden von TestDaten
+    """
+
+    def __init__(self, file_name: str):
+        super().__init__(f"test data from 'exampledata/{file_name}.json' could not be loaded")
 
 
 class InvalidContentTypeError(Exception):
@@ -108,7 +135,12 @@ class InvalidContentTypeError(Exception):
                 f"Error on respone from '{url}': Invalid Content Type '{content_type}' only {expected_type} is Suported")
 
 
-def raise_step_error(error):
+class PresetError(Exception):
+    def __init__(self, key):
+        super().__init__(f"Preset '{key}' not Found")
+
+
+def raise_step_error(error: Type[StepError]):
     """
     Gibt einen Decorator zurück der die Orginal Funktion
     mit einem `try`, `expect` Block umschließt. Die in `error` übergebene Exception
@@ -123,7 +155,7 @@ def raise_step_error(error):
         def new_func(values, *args, **kwargs):
             try:
                 return func(values, *args, **kwargs)
-            # Not raise TransformError Twice
+            # Not raise the Same Error Twice
             except error:
                 raise
             except BaseException as e:

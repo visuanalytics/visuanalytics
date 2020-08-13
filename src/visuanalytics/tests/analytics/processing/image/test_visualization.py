@@ -11,8 +11,6 @@ def prepare_image_test(values, data, config=None):
     if config is None:
         config = {}
 
-    step_data = StepData(config, "1")
-    step_data.insert_data("_req", {"_test": data}, {})
     values = {
         "images": values,
         "presets": {
@@ -23,6 +21,9 @@ def prepare_image_test(values, data, config=None):
             }
         }
     }
+
+    step_data = StepData(config, "1", values.get("presets", None))
+    step_data.insert_data("_req", {"_test": data}, {})
     step_data.data["_pipe_id"] = "102"
     generate_all_images(values, step_data)
 
@@ -31,8 +32,7 @@ def prepare_image_test(values, data, config=None):
 
 class VisualizationTest(unittest.TestCase):
     def setUp(self):
-        resources.RESOURCES_LOCATION = "../tests/resources"
-        resources.IMAGES_LOCATION = "../tests/resources/images"
+        resources.RESOURCES_LOCATION = "tests/resources"
         os.makedirs(resources.get_resource_path("temp"), exist_ok=True)
         os.makedirs(resources.get_temp_resource_path("", "102"), exist_ok=True)
 

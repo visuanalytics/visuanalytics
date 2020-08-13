@@ -1,38 +1,77 @@
-import React from 'react';
-import { Param } from "../util/param";
+import React, { useState, useCallback } from "react";
+import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
-import { Fade } from '@material-ui/core';
-import { useFetchMultiple } from '../Hooks/useFetchMultiple';
-import {Schedule} from "../JobCreate";
-import {Load} from "../util/Load"
-import { getUrl } from '../util/fetchUtils';
+import { useFetchMultiple } from "../Hooks/useFetchMultiple";
+import { Load } from "../Load";
+import { Schedule } from "../util/schedule";
+import { getUrl } from "../util/fetchUtils";
+import { ComponentContext } from "../ComponentProvider";
+import { InfoMessage } from "../util/InfoMessage";
+import { Typography } from "@material-ui/core";
 
 export interface Job {
-    jobId: number;
-    jobName: string;
-    params: Param[];
-    schedule: Schedule;
-    topicId: number;
-    topicName: string;
+  jobId: number;
+  jobName: string;
+  params: Param[];
+  values: ParamValues;
+  schedule: Schedule;
+  topicId: number;
+  topicName: string;
 }
 
 export const JobList: React.FC = () => {
-    const [jobInfo, getJobs] = useFetchMultiple<Job []>(getUrl("/jobs"));
+  const components = React.useContext(ComponentContext);
 
-    return (
-        <Fade in={true}>
-            <div>
-                <Load data={jobInfo}>
-                {jobInfo?.map((j : Job) =>
-                    <div key={j.jobId}>
-                        <JobItem
-                            job={j}
-                            getJobs={getJobs}
-                        />
-                    </div>)
-                }
-                </Load>
-            </div>
-        </Fade>
-    )
-}
+  const [loadFailed, setLoadFailed] = useState(false);
+  const handleLoadFailed = useCallback(() => {
+    setLoadFailed(true);
+  }, [setLoadFailed]);
+
+  const [jobInfo, getJobs] = useFetchMultiple<Job[]>(
+    getUrl("/jobs"),
+    undefined,
+    handleLoadFailed
+  );
+
+  const handleReaload = () => {
+    setLoadFailed(false);
+    getJobs();
+  };
+
+  return (
+    <InfoMessage
+      condition={jobInfo?.length === 0}
+      message={{
+        headline: "Willkommen bei ihrer Job Übersicht!",
+        text: (
+          <Typography align={"center"} color="textSecondary">
+            Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
+            generieren lassen.
+            <br /> Klicken Sie auf 'Neuen Job erstellen', um Ihren ersten Job
+            anzulegen und ein Video zu einem gewählten Zeitraum generieren zu
+            lassen.
+          </Typography>
+        ),
+        button: {
+          text: "Neuen Job erstellen",
+          onClick: () => components?.setCurrent("jobPage"),
+        },
+      }}
+    >
+      <Load
+        failed={{
+          hasFailed: loadFailed,
+          name: "Jobs",
+          onReload: handleReaload,
+        }}
+        data={jobInfo}
+      >
+        {jobInfo?.map((j: Job) => (
+          <div key={j.jobId}>
+            <JobItem job={j} getJobs={handleReaload} />
+          </div>
+        ))}
+      </Load>
+    </InfoMessage>
+  );
+};

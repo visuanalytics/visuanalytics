@@ -5,15 +5,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         paper: {
             padding: '20px',
         },
-        header: {
-            margin: '7px',
-        },
         margin: {
             margin: '30px auto',
         },
-        button: {
-            margin: theme.spacing(1),
-            color: '#2E97C5'
+        infoIcon: {
+            fontSize: "50px",
         },
+        hintIcons: {
+            color: "white"
+        }
     }),
 );
