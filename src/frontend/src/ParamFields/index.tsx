@@ -1,9 +1,10 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
+import { MenuItem, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues, validateParamValue } from '../util/param';
+import {BooleanParam} from './BooleanParam'
 
 
 interface ParamFieldProps extends ParamField {
@@ -104,7 +105,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
             )
         case "boolean":
             return (
-                <FormControlLabel
+                <BooleanParam
                     control={
                         < Checkbox
                             checked={props.values[param.name]}
@@ -116,7 +117,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             {param.displayName}
                         </div>}
                     labelPlacement="start"
-                    className={classes.checkboxParam}
                 />
             )
         case "enum":
@@ -144,7 +144,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     <div className={classes.SPaddingTB}>
                         {param.optional
                             ?
-                            <FormControlLabel
+                            <BooleanParam
                                 control={
                                     <Checkbox
                                         checked={props.values[param.name]}
@@ -155,7 +155,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                         {withExpIcon(param.displayName, props.values[param.name])}
                                     </div>}
                                 labelPlacement="start"
-                                className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                             :

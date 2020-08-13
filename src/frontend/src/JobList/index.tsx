@@ -5,7 +5,8 @@ import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import { ComponentContext } from "../ComponentProvider";
+import {ComponentContext} from "../ComponentProvider";
+import {DeleteSchedule} from "../util/deleteSchedule";
 import { InfoMessage } from "../util/InfoMessage";
 import { Typography } from "@material-ui/core";
 
@@ -15,6 +16,7 @@ export interface Job {
   params: Param[];
   values: ParamValues;
   schedule: Schedule;
+  deleteSchedule: DeleteSchedule;
   topicId: number;
   topicName: string;
 }
