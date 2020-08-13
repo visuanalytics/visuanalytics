@@ -13,6 +13,7 @@ from visuanalytics.analytics.sequence.util.attach_utils import init_pipeline, ex
 from visuanalytics.analytics.util.step_errors import raise_step_error, SequenceError, FFmpegError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
+from visuanalytics.util.resources import get_relative_temp_resource_path
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
@@ -57,7 +58,15 @@ def link(values: dict, step_data: StepData):
 
             _generate(out_images, out_audios, out_audio_l, step_data, values)
         else:
+            # Save and Manipulate out Path (To save video to tmp dir)
+            out_path = step_data.get_config("output_path")
+            step_data.data["_conf"]["output_path"] = get_relative_temp_resource_path("", step_data.data["_pipe_id"])
+
             _generate(out_images, out_audios, out_audio_l, step_data, values)
+
+            # Resote out_path
+            step_data.data["_conf"]["output_path"] = out_path
+
             sequence_out = [values["sequence"]]
 
             for idx, item in enumerate(step_data.get_config("attach", None)):
@@ -65,11 +74,10 @@ def link(values: dict, step_data: StepData):
                 pipeline.start()
 
                 sequence_out.append(pipeline.config["sequence"])
+                print(pipeline.config["sequence"])
 
             _combine(sequence_out, step_data, values)
 
-            for file in sequence_out:
-                os.remove(file)
     else:
         if attach_mode == "combined":
             values["sequence"] = {

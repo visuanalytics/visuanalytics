@@ -1,15 +1,17 @@
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.util.resources import get_relative_temp_resource_path
 
 
 def init_pipeline(data: StepData, pipeline_id: str, step_name: str, idx=None, config=None,
                   no_tmp_dir=False):
     config["job_name"] = data.get_config("job_name")
-    config["out_path"] = data.get_config("output_path")
 
     if no_tmp_dir:
         config["attach_mode"] = "combined"
+        config["output_path"] = data.get_config("output_path")
     else:
         config["attach_mode"] = "separate"
+        config["output_path"] = get_relative_temp_resource_path("", data.data["_pipe_id"])
 
     if not idx is None:
         config["job_name"] = f"{config['job_name']}_subtask_{idx}"
