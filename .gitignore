@@ -161,6 +161,10 @@ fabric.properties
 out
 /src/visuanalytics/tests/resources/temp/
 venv
-Docs/_build/
-Docs/modules/
+
+# Sphinx documentation
+Docs/_build
+Docs/modules
+
+# vscode
 .vscode

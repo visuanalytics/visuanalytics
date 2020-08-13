@@ -1,29 +1,8 @@
-# VisuAnalytics [![Tests](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/workflows/Automated%20Testing/badge.svg)](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/actions?query=workflow%3A%22Automated+Testing%22)
+# Installation
 
-## Einleitung
+## Programm starten
 
-Im Rahmen der Veranstaltung [**Softwaretechnik-Praktikum**](https://www.thm.de/organizer/index.php?option=com_organizer&view=subject_item&id=13) im Sommersemester 2020 wurde dieses Projekt zum Thema **Data Analytics** durchgeführt.
-
-Die Veranstaltung gehört zum Curriculum der Bachelorstudiengänge der Informatik an der [Technischen Hochschule Mittelhessen](https://www.thm.de).
-
-Die Aufgabe war es, Informationen über verschiedene Schnittstellen zu erfassen, diese automatisiert zu verarbeiten und daraus ein Video zu generieren, welches die Informationen in Bild und Ton präsentiert.
-
-Aktuell gibt es vier mögliche Videos, welche automatisiert erstellt werden können:
-
-- **Deutschlandweiter Wetterbericht**
-- **Ortsbezogener Wetterbericht**
-- **Bundesliga-Ergebnisse**
-- **Twitter-Wordcloud**
-
-Neue Schnittstellen sollen schnell zu ergänzen sein, sodass weitere Videos mit anderen Themen erstellt werden können.
-
-Zudem wurde ein Frontend entwickelt mit welchem es möglich ist Videos in Auftrag zu geben und diese zu festgelegten Zeitpunkten automatisch zu generieren. Dies ist auch durch ein Wordpress-Plugin möglich.
-
-Die Software soll nach der Fertigstellung auf der Website [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) eingesetzt werden. Biertal.Mach-Mit.TV ist ein Kooperationsprojekt der Gemeinde Biebertal und dem Fachbereich MNI der [Technischen Hochschule Mittelhessen](https://www.thm.de).
-
-## Programm Verwenden
-
-### Mit Docker
+## Mit Docker
 
 _Benötigte Software_:
 
@@ -69,9 +48,11 @@ docker run -t ^
 
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
-> Wenn man die Option `h264_nvenc` (siehe [config.json](#config.json) verwenden will, kann man beim Starten noch die Option `--runtime="nvidia"` (oder `--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie [hier](https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html) (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich [hier](https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>))
+```note::
+  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie`hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich`hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`\_)
+````
 
-### Ohne Docker (Development)
+## Ohne Docker (Development)
 
 _Benötigte Software_:
 
@@ -105,8 +86,10 @@ _Programm starten_:
 - Nur Backend starten: `npm run start:server`
 - Backend ohne npm starten: `python -m visuanalytics` (Dafür muss man sich im src-Ordner befinden)
 
-> Um die Option `h264_nvenc` (siehe [config.json](#config.json)) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
-> Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
+```note::
+  Um die Option `h264_nvenc` (siehe `config.json <#config.json>_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
+  Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
+````
 
 ## Ohne Docker (Produktion)
 
@@ -142,7 +125,9 @@ _Wordpress-Plugin erstellen_:
 
 Im `build`-Ordner befindet sich eine .zip-Datei, die sich einfach über die Wordpress-Oberfläche installieren lässt.
 
-> Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe [hier](#mit-docker) oder [hier](#ohne-docker-development)). Um vom Plugin requests an das Backend zu senden, muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` anfangen an den Backendserver weiterleiten.
+```warning::
+  Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe `hier <#mit-docker>`_ oder `hier <#ohne-docker>`_). Um vom Plugin requests an das Backend zu senden, muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` anfangen an den Backendserver weiterleiten.
+```
 
 ### Konfiguration
 
@@ -184,7 +169,7 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen, die im F
 - `h264_nvenc`(_optional_):
 
   Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardware-Beschleunigung bei Nvidia-Grafikkarten.
-  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#Ohne-Docker)).
+  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#ohne-docker-development)).
 
 - `thumbnail`(_optional_):
 
@@ -256,7 +241,9 @@ Hierzu gibt es vier mögliche Einträge:
 
   Beispiel: `10:00`
 
-> Die Uhrzeit muss immer angegeben werden.
+```warning::
+  Die Uhrzeit muss immer angegeben werden.
+```
 
 - `daily`:
 
@@ -274,11 +261,15 @@ Hierzu gibt es vier mögliche Einträge:
 
   Beispiel: `[0, 5, 6]` => Der Job wird montags, samstags und sonntags ausgeführt.
 
-> Die Optionen `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also genau eine Option ausgewählt werden.
+```warning::
+  Die Optionen `daily`, `date` und `weekdays` schließen sich gegenseitig aus. Es muss also genau eine Option ausgewählt werden.
+```
 
 `config`: Hier können die Konfigurationen für die Jobs festgelegt werden.
 
-> Alle hier beschriebenen Konfigurationen sind optional und werden notfals mit default-Werten initalisiert.
+```note::
+  Alle hier beschriebenen Konfigurationen sind optional und werden notfalls mit default-Werten initialisiert.
+```
 
 Mögliche Konfigurationen für die verschiedenen Themen:
 
@@ -303,7 +294,9 @@ _Ortsbezogener Wetterbericht (steps: `"weather_single"`)_:
 - `speech_rh_3`: bool - Ob eine Audiodatei zur relativen Luftfeuchtigkeit bei der 3-Tage-Übersicht erstellt und im Video abgespielt werden soll
 - `speech_pop_3`: bool - Ob eine Audiodatei zur Regenwahrscheinlichkeit bei der 2-Tage-Übersicht erstellt und im Video abgespielt werden soll
 
-> Aktuell lassen sich nur Wettervorhersagen für Städte in Deutschland generieren.
+```note::
+  Aktuell lassen sich nur Wettervorhersagen für Städte in Deutschland generieren.
+```
 
 _Spieltag-Bericht für die Fußball-Bundesliga (steps: `"football"`)_:
 
@@ -333,7 +326,9 @@ _Benötigte Software_:
 
 1. dev-dependencies installieren: `pip install -r src/visuanalytics/requirements-dev.txt`
 
-> Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
+```note::
+ Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
+```
 
 ### HTML generieren
 
