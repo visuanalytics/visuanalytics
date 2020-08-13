@@ -33,27 +33,42 @@ def get_params(topic_id):
 
 def get_job_list():
     con = db.open_con_f()
+
     res = con.execute("""
-    SELECT DISTINCT 
-    job_id, job_name, schedule.type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name, job_config.type,
-    group_concat(DISTINCT weekday) AS weekdays,
-    group_concat(DISTINCT key || ":"  || value || ":" || job_config.type) AS params
-    FROM job 
-    INNER JOIN steps USING (steps_id)
-    LEFT JOIN job_config USING (job_id)
-    INNER JOIN schedule USING (schedule_id) 
-    LEFT JOIN schedule_weekday USING (schedule_id) 
-    GROUP BY (job_id);
+        SELECT job_id, job_name, schedule.type, time, date,
+        GROUP_CONCAT(DISTINCT weekday) AS weekdays,
+        COUNT(distinct position_id) AS topic_count,
+        GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
+        GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
+        FROM job 
+        INNER JOIN schedule USING (schedule_id)
+        LEFT JOIN schedule_weekday USING (schedule_id)
+        INNER JOIN job_topic_position USING (job_id) 
+        LEFT JOIN job_config USING (position_id) 
+        INNER JOIN steps USING (steps_id)
+        GROUP BY (job_id)
     """)
     return [_row_to_job(row) for row in res]
+
+
+#   SELECT DISTINCT
+#   job_id, job_name, schedule.type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name, job_config.type,
+#   group_concat(DISTINCT weekday) AS weekdays,
+#   group_concat(DISTINCT key || ":"  || value || ":" || job_config.type) AS params
+#   FROM job
+#  INNER JOIN steps USING (steps_id)
+# LEFT JOIN job_config USING (job_id)
+#   INNER JOIN schedule USING (schedule_id)
+#  LEFT JOIN schedule_weekday USING (schedule_id)
+# GROUP BY (job_id);
 
 
 def insert_job(job):
     con = db.open_con_f()
     schedule_id = _insert_schedule(con, job["schedule"])
-    job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
-                         [job["jobName"], job["topicId"], schedule_id]).lastrowid
-    _insert_param_values(con, job_id, job["values"])
+    job_id = con.execute("INSERT INTO job(job_name, schedule_id) VALUES(?, ?)",
+                         [job["jobName"], schedule_id]).lastrowid
+    _insert_param_values(con, job_id, job["topics"])
     con.commit()
 
 
@@ -87,34 +102,62 @@ def update_job(job_id, updated_data):
 
 
 def _row_to_job(row):
-    values = _get_values((row["params"]))
-    steps_params = _get_topic_steps(row["json_file_name"])["run_config"]
-    params = humps.camelize(_to_param_list(steps_params))
+    job_id = row["job_id"]
+    job_name = row["job_name"]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
-    return {
-        "jobId": row["job_id"],
-        "jobName": row["job_name"],
-        "topicName": row["steps_name"],
-        "topicId": row["steps_id"],
-        "params": params,
-        "values": values,
-        "schedule": {
-            "type": humps.camelize(row["type"]),
-            "date": row["date"],
-            "time": row["time"],
-            "weekdays": [int(w) for w in weekdays]
+    param_values = row["param_values"]
+    schedule = {
+        "type": humps.camelize(row["type"]),
+        "date": row["date"],
+        "time": row["time"],
+        "weekdays": weekdays
+    }
+    topics = [{}] * (int(row["topic_count"]))
+    for tp_s in row["topic_positions"].split(","):
+        tp = tp_s.split(":")
+        topic_id = tp[0]
+        topic_name = tp[1]
+        json_file_name = tp[2]
+        position = int(tp[3])
+        run_config = _get_topic_steps(json_file_name)["run_config"]
+        params = humps.camelize(_to_param_list(run_config))
+        topics[position] = {
+            "topicId": topic_id,
+            "topicName": topic_name,
+            "params": params,
+            "values": {}
         }
+    if param_values is not None:
+        for vals_s in param_values.split(","):
+            vals = vals_s.split(":")
+            position = int(vals[0])
+            name = vals[1]
+            u_val = vals[2]
+            type = vals[3]
+            t_val = to_typed_value(u_val, type)
+            topics[position]["values"] = {
+                **topics[position]["values"],
+                name: t_val
+            }
+
+    return {
+        "jobId": job_id,
+        "jobName": job_name,
+        "schedule": schedule,
+        "topics": topics
     }
 
 
-def _insert_param_values(con, job_id, values):
-    id_key_values = [
-        (job_id,
-         k,
-         _to_untyped_value(v["value"], humps.decamelize(v["type"])),
-         humps.decamelize(v["type"]))
-        for (k, v) in values.items()]
-    con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
+def _insert_param_values(con, job_id, topic_values):
+    for pos, t in enumerate(topic_values):
+        position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
+                                  [job_id, t["topicId"], pos]).lastrowid
+        jtkvt = [(position_id,
+                  k,
+                  _to_untyped_value(v["value"], humps.decamelize(v["type"])),
+                  humps.decamelize(v["type"]))
+                 for k, v in t["values"].items()]
+        con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
 
 
 def _get_values(param_string):
