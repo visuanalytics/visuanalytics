@@ -156,7 +156,6 @@ class Pipeline(object):
         # Set endTime and log
         self.__end_time = time.time()
         completion_time = round(self.__end_time - self.__start_time, 2)
-        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
 
         # Update DB logs
         self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)

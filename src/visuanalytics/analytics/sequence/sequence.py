@@ -45,7 +45,8 @@ def link(values: dict, step_data: StepData):
         if step_data.get_config("separate_rendering", False) is False:
             for item in step_data.get_config("attach", None):
                 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-                pipeline = Pipeline(step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
+                # todo @ Max set corect PipelinID
+                pipeline = Pipeline(0, step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
                 pipeline.start()
                 if pipeline.current_step != -2:
                     seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
@@ -59,7 +60,8 @@ def link(values: dict, step_data: StepData):
                 config = item.get("config", {})
                 config["output_path"] = step_data.get_config("output_path", "")
                 config["job_name"] = f"subtask{idx}"
-                pipeline = Pipeline(uuid.uuid4().hex, item["steps"], config, no_cleanup=True)
+                # todo @ Max set corect PipelinID
+                pipeline = Pipeline(0, uuid.uuid4().hex, item["steps"], config, no_cleanup=True)
                 pipeline.start()
                 if pipeline.current_step != -2:
                     sequence_out.append(pipeline.config["sequence"])
