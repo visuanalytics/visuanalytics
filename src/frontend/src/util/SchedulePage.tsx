@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
+    offset: number
     schedule: Schedule
     deleteSchedule: DeleteSchedule
     selectScheduleHandler: (schedule: Schedule) => void;
@@ -27,13 +28,13 @@ interface Props {
     handleHintState: (hintState: number) => void;
 }
 
-export const SchedulePage: React.FC<Props> = ({schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState}) => {
+export const SchedulePage: React.FC<Props> = ({offset, schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState}) => {
     const classes = useStyles();
 
     const [value, setValue] = React.useState("1");
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
-        handleHintState(Number(newValue)+1)
+        handleHintState(Number(newValue)+offset)
         setValue(newValue);
     };
 
