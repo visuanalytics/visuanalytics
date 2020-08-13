@@ -207,7 +207,7 @@ class Pipeline(object):
         """
         try:
             self.__setup()
-            data = StepData(self.steps_config, self.id, self.__config.get("presets", None))
+            data = StepData(self.steps_config, self.id, self.__job_id, self.__config.get("presets", None))
 
             logger.info(f"Pipeline {self.id} started!")
 

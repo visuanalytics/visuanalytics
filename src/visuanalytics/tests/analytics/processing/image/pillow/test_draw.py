@@ -36,8 +36,8 @@ def prepare_draw_test(values, data, config=None):
             },
         }
     }
-    
-    step_data = StepData(config, "0", values.get("presets", None))
+
+    step_data = StepData(config, "0", 0, values.get("presets", None))
     step_data.insert_data("_req", {"_test": data}, {})
     step_data.data["_pipe_id"] = "101"
     generate_all_images(values, step_data)

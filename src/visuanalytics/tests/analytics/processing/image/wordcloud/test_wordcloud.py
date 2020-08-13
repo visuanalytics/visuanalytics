@@ -11,7 +11,7 @@ def prepare_wordcloud_test(values, data, config=None):
     if config is None:
         config = {}
 
-    step_data = StepData(config, "0")
+    step_data = StepData(config, "0", 0)
     step_data.insert_data("_req", {"_test": data}, {})
     values = {
         "images": {
