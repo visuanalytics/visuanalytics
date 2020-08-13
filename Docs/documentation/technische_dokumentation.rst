@@ -1,6 +1,8 @@
 Technische Dokumentation
 ========================
 
+.. currentmodule:: visuanalytics
+
 .. toctree::
    :maxdepth: 4
 

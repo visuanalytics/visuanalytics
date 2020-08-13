@@ -13,6 +13,7 @@
 import os
 import sys
 import recommonmark
+import sphinx.ext.apidoc
 from recommonmark.transform import AutoStructify
 
 sys.path.insert(0, os.path.abspath('../src'))
@@ -91,3 +92,10 @@ def setup(app):
         'enable_eval_rst': True
     }, True)
     app.add_transform(AutoStructify)
+    sphinx.ext.apidoc.main(['-f',
+                    '-T',
+                    '-o',
+                    'modules',
+                    '../src/visuanalytics',
+                    '../src/visuanalytics'
+                    ])
