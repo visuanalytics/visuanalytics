@@ -333,9 +333,6 @@ _Benötigte Software_:
 ### HTML generieren
 
 1. in den Dokumentationsordner wechseln: `cd Docs`
-2. Dokumentation generieren:
-
-- _Linux:_ `./build.sh`
-- _Windows:_ `build.bat`
+2. Dokumentation generieren: `make html`
 
 Die Dokumentation befindet sich dann im Ordner `_build/html`.
