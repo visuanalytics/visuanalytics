@@ -1,5 +1,5 @@
 import React from "react";
-import { Fade } from "@material-ui/core";
+import { Fade, Divider } from "@material-ui/core";
 import { useStyles } from "../style";
 import { Param, ParamValues } from "../../util/param";
 import { Load, LoadFailedProps } from "../../Load";
@@ -22,15 +22,22 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     const renderParamFields = (params: Param[] | undefined, topic: Topic, idx: number) => {
         return (
-            <ParamFields
-                params={params}
-                values={values[idx]}
-                selectParamHandler={props.selectParamHandler}
-                disabled={false}
-                required={true}
-                index={idx}
-                topic={topic}
-            />
+            <div key={idx}>
+                <div className={classes.MPaddingTB} >
+                    <div style={{ textAlign: "center" }}>
+                        <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topic.topicName + "':"} </h3>
+                    </div>
+                </div>
+                <ParamFields
+                    params={params}
+                    values={values[idx]}
+                    selectParamHandler={props.selectParamHandler}
+                    disabled={false}
+                    required={true}
+                    index={idx}
+                />
+                <Divider></Divider>
+            </div>
         )
     }
 

@@ -20,8 +20,7 @@ interface ParamField {
     disabled: boolean,
     required: boolean,
     values: ParamValues,
-    index: number,
-    topic: Topic
+    index: number
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
@@ -30,36 +29,29 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const params = props.params;
 
     return (
-        <div key={idx}>
-            <div className={classes.MPaddingTB} >
-                <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
-                    {(idx + 1) + ". Parameter für '" + props.topic.topicName + "':"}
-                </div>
-                {
-                    params && params.length > 0
-                        ?
-                        props.params?.map(p => (
-                            <div key={p.name}>
-                                <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
-                                    <ParamField
-                                        param={p}
-                                        values={props.values}
-                                        selectParamHandler={props.selectParamHandler}
-                                        disabled={props.disabled}
-                                        required={props.required}
-                                        index={props.index}
-                                        topic={props.topic}
-                                    />
-                                </div>
+        <div key={idx} className={classes.MPaddingB}>
+            {
+                params && params.length > 0
+                    ?
+                    props.params?.map(p => (
+                        <div key={p.name}>
+                            <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
+                                <ParamField
+                                    param={p}
+                                    values={props.values}
+                                    selectParamHandler={props.selectParamHandler}
+                                    disabled={props.disabled}
+                                    required={props.required}
+                                    index={props.index}
+                                />
                             </div>
-                        ))
-                        :
-                        <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
-                            Für dieses Thema stehen keine Parameter zur Verfügung.
                         </div>
-                }
-            </div>
-            {(idx + 1) !== props.params?.length ? (<Divider />) : ""}
+                    ))
+                    :
+                    <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                        </div>
+            }
         </div>
     )
 }
@@ -192,7 +184,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             disabled={props.disabled}
                             required={props.required}
                             index={props.index}
-                            topic={props.topic}
                         />
                     </Collapse>
                     {((props.values[param.name] || showSubParams))

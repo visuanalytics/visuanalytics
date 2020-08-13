@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {useStyles} from './style';
-import {ContinueButton} from './ContinueButton';
-import {BackButton} from './BackButton';
-import {ParamSelection} from './ParamSelection';
-import {TopicSelection, Topic} from './TopicSelection';
-import {ScheduleSelection} from './ScheduleSelection';
-import {GreyDivider} from './GreyDivider';
+import { useStyles } from './style';
+import { ContinueButton } from './ContinueButton';
+import { BackButton } from './BackButton';
+import { ParamSelection } from './ParamSelection';
+import { TopicSelection, Topic } from './TopicSelection';
+import { ScheduleSelection } from './ScheduleSelection';
+import { GreyDivider } from './GreyDivider';
 import {
     Param,
     ParamValues,
@@ -17,11 +17,11 @@ import {
     initSelectedValues,
     toTypedValues
 } from '../util/param';
-import {Fade, Grid, Typography} from '@material-ui/core';
-import {useCallFetch} from '../Hooks/useCallFetch';
-import {Schedule, withFormattedDates, validateSchedule} from '../util/schedule';
-import {getUrl} from '../util/fetchUtils';
-import {HintButton} from "../util/HintButton";
+import { Fade, Grid, Typography } from '@material-ui/core';
+import { useCallFetch } from '../Hooks/useCallFetch';
+import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
+import { getUrl } from '../util/fetchUtils';
+import { HintButton } from "../util/HintButton";
 
 
 export default function JobCreate() {
@@ -248,7 +248,7 @@ export default function JobCreate() {
                         resetTopicsHandler={handleResetTopics}
                         setSingleTopicHandler={handleSetSingleTopic}
                         addTopicHandler={handleAddTopic}
-                        enterJobNameHandler={handleEnterJobName}/>
+                        enterJobNameHandler={handleEnterJobName} />
                 );
             case 1:
                 return (
@@ -261,7 +261,7 @@ export default function JobCreate() {
                             name: "Parameter",
                             onReload: handleRealoadParms
                         }}
-                        selectParamHandler={handleSelectParam}/>
+                        selectParamHandler={handleSelectParam} />
                 )
             case 2:
                 return (
@@ -297,23 +297,23 @@ export default function JobCreate() {
                                 <Grid item xs={1}>
                                 </Grid>
                                 <Grid item xs={10}>
-                                    <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
+                                    <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                                 </Grid>
                                 <Grid container xs={1}>
-                                    <HintButton content={hintContent[activeStep]}/>
+                                    <HintButton content={hintContent[activeStep]} />
                                 </Grid>
                             </Grid>
                         </div>
-                        <GreyDivider/>
+                        <GreyDivider />
                         {getSelectPanel(activeStep)}
-                        <GreyDivider/>
+                        <GreyDivider />
                         <div className={classes.MPaddingTB}>
                             <span>
-                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
-                                                disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
+                                    disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
