@@ -7,8 +7,8 @@ import subprocess
 import uuid
 
 from mutagen.mp3 import MP3
+
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.control.scheduler import scheduler
 from visuanalytics.analytics.util.step_errors import raise_step_error, SequenceError, FFmpegError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
@@ -137,7 +137,7 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
                                          step_data.get_config("job_name", ""))
         if step_data.get_config("separate_rendering", False):
             output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
-                                         step_data.get_config("job_name", "") + "_0")
+                                             step_data.get_config("job_name", "") + "_0")
 
         args2 = ["ffmpeg", "-loglevel", "8", "-y"]
         for i in range(0, len(images)):
@@ -173,29 +173,34 @@ def _link(images, audios, audio_l, step_data: StepData, values: dict):
 
 
 def _combine(sequence_out: list, step_data: StepData, values: dict):
-    args = ["ffmpeg", "-i"]
-    concat = "concat:"
-    file_temp = []
-    output = resources.get_temp_resource_path(f"file.mkv", step_data.data["_pipe_id"])
-    for idx, file in enumerate(sequence_out):
-        temp_file = resources.get_temp_resource_path(f"temp{idx}.ts", step_data.data["_pipe_id"])
-        args2 = ["ffmpeg", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts", temp_file]
-        proc2 = subprocess.run(args2, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        proc2.check_returncode()
-        file_temp.append(temp_file)
-    for idx, file in enumerate(file_temp):
-        if idx != 0:
-            concat += "|"
-        concat += file
-    args.extend((concat, "-codec", "copy", output))
-    proc2 = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    proc2.check_returncode()
-    new_output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
-                                        step_data.get_config("job_name", ""))
-    args = ["ffmpeg", "-i", output, new_output]
-    proc2 = subprocess.run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    proc2.check_returncode()
-    values["sequence"] = output
+    try:
+        args = ["ffmpeg", "-i"]
+        concat = "concat:"
+        file_temp = []
+        output = resources.get_temp_resource_path(f"file.mkv", step_data.data["_pipe_id"])
+        for idx, file in enumerate(sequence_out):
+            temp_file = resources.get_temp_resource_path(f"temp{idx}.ts", step_data.data["_pipe_id"])
+            args2 = ["ffmpeg", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts", temp_file]
+
+            subprocess.run(args2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+
+            file_temp.append(temp_file)
+        for idx, file in enumerate(file_temp):
+            if idx != 0:
+                concat += "|"
+            concat += file
+        args.extend((concat, "-codec", "copy", output))
+
+        subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+
+        new_output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
+                                            step_data.get_config("job_name", ""))
+        args = ["ffmpeg", "-i", output, new_output]
+
+        subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+        values["sequence"] = output
+    except subprocess.CalledProcessError as e:
+        raise FFmpegError(e.returncode, e.output.decode("utf-8")) from e
 
 
 def _sum_audio_l(audio_l, index):
