@@ -99,7 +99,7 @@ def select(values: dict, data: StepData):
         try:
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
-            if values.get("ignore_errors", False):
+            if values.get("ignore_errors", False) is False:
                 raise
 
 
@@ -222,7 +222,7 @@ def alias(values: dict, data: StepData):
             if not data.get_data(values.get("keep_old", False), {}, bool):
                 data.remove_data(key, values)
         except:
-            if values.get("ignore_errors", False):
+            if values.get("ignore_errors", False) is False:
                 raise
 
 
