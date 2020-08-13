@@ -47,6 +47,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         doneIcon: 'none'
     });
 
+    const [hintState, setHintState] = React.useState(0);
+
     const NameInput = withStyles({
         root: {
             cursor: "pointer",
@@ -76,6 +78,37 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         message: ""
     });
 
+    const hintContent = [
+        <div>
+            <Typography variant="h5" gutterBottom>Zeitplan auswählen</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
+            </Typography>
+            <Typography variant="h6" >täglich</Typography>
+            <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >wöchentlich</Typography>
+            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >Intervall</Typography>
+            <Typography gutterBottom>Das Video wird nach dem angegebenen Intervall generiert</Typography>
+            <Typography variant="h6" >an festem Datum</Typography>
+            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+        </div>,
+        <div>
+            <Typography variant="h5" gutterBottom>Löschen</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video gelöscht werden soll.
+            </Typography>
+            <Typography variant="h6" >nie</Typography>
+            <Typography gutterBottom>Das Video wird nie gelöscht</Typography>
+            <Typography variant="h6" >nach Zeit</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht</Typography>
+            <Typography variant="h6" >nach Anzahl</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht</Typography>
+            <Typography variant="h6" >feste Namen</Typography>
+            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen <i>jobName</i>_1 besitzt</Typography>
+        </div>
+    ]
+
     const handleSelectSchedule = (schedule: Schedule) => {
         setSchedule(schedule);
     }
@@ -101,6 +134,10 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const handleEditSuccess = () => {
         getJobs()
         setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
+    }
+
+    const handleHintState = (hint: number) => {
+        setHintState(hint);
     }
 
     const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
@@ -299,34 +336,17 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     <Grid container>
                                         <Grid item xs={11} />
                                         <Grid item container xs={1} justify={"flex-end"}>
-                                            <HintButton content={
-                                                <div>
-                                                    <Typography variant="h5" gutterBottom>Zeitplan
-                                                        auswählen</Typography>
-                                                    <Typography gutterBottom>
-                                                        Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das
-                                                        Video generiert werden soll.
-                                                    </Typography>
-                                                    <Typography variant="h6">täglich</Typography>
-                                                    <Typography gutterBottom>Das Video wird täglich zur unten
-                                                        angegebenen Uhrzeit erstellt</Typography>
-                                                    <Typography variant="h6">wöchentlich</Typography>
-                                                    <Typography gutterBottom>Das Video wird zu den angegebenen
-                                                    Wochentagen wöchentlich zur unten angegebenen Uhrzeit
-                                                        erstellt</Typography>
-                                                    <Typography variant="h6">an festem Datum</Typography>
-                                                    <Typography gutterBottom>Das Video wird zum angegebenen Datum und
-                                                        zur angegebenen Uhrzeit erstellt</Typography>
-                                                </div>
-                                            } />
+                                            <HintButton content={hintContent[hintState]} />
                                         </Grid>
                                     </Grid>
                                         <Paper variant="outlined" className={classes.paper}>
                                             <SchedulePage
+                                                offset={-1}
                                                 schedule={schedule}
                                                 deleteSchedule={deleteSchedule}
                                                 selectScheduleHandler={handleSelectSchedule}
                                                 selectDeleteScheduleHandler={handleSelectDeleteSchedule}
+                                                handleHintState={handleHintState}
                                             />
                                             <div className={classes.continue}>
                                                 <div className={classes.continueButton}>
