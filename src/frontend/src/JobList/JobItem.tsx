@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip } from "@material-ui/core";
+import { Button, Container, Fade, Modal, Paper, TextField, Tooltip, Dialog, DialogTitle, DialogActions } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -20,8 +20,8 @@ import {ContinueButton} from "../JobCreate/ContinueButton";
 import {Job} from "./index";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {ParamFields} from "../ParamFields";
-import {getUrl} from "../util/fetchUtils";
-import {Notification, TMessageStates} from "../util/Notification";
+import  { getUrl } from "../util/fetchUtils";
+import {NameInput} from "./NameInput"
 import {HintButton} from "../util/HintButton";
 import {DeleteSchedule} from "../util/deleteSchedule";
 import {SchedulePage} from "../util/SchedulePage";
@@ -29,39 +29,16 @@ import {SchedulePage} from "../util/SchedulePage";
 interface Props {
     job: Job,
     getJobs: () => void;
+    reportError: (message: string) => void;
+    reportSuccess: (message: string) => void;
 }
 
-interface INotification {
-    open: boolean,
-    stateType: TMessageStates,
-    message: string
-}
-
-export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
+export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSuccess }) => {
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
-    const [state, setState] = React.useState({
-        edit: true,
-        editIcon: 'block',
-        doneIcon: 'none'
-    });
-
+    const [noEdit, setNoEdit] = React.useState(true);
     const [hintState, setHintState] = React.useState(0);
-
-    const NameInput = withStyles({
-        root: {
-            cursor: "pointer",
-        },
-        input: {
-            cursor: state.edit ? 'pointer' : 'text',
-            padding: '0 8px',
-            marginLeft: '8px',
-            color: 'white',
-            fontSize: '1.5625rem',
-            borderBottom: state.edit ? '' : '2px solid #c4c4c4'
-        },
-    })(InputBase);
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
@@ -70,13 +47,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({type: "noDeletion"})
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
-    const [error, setError] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [success, setSucess] = React.useState<INotification>({
-        open: false,
-        stateType: "success",
-        message: ""
-    });
+    const [confirmDelete, setConfirmDelete] = React.useState(false);
 
     const hintContent = [
         <div>
@@ -128,19 +99,28 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
     }
 
     const handleEditError = () => {
-        setSucess({ open: true, stateType: "error", message: "Bearbeitung fehlgeschlagen" })
+        reportError("Bearbeitung fehlgeschlagen")
     }
 
     const handleEditSuccess = () => {
         getJobs()
-        setSucess({ open: true, stateType: "success", message: "Job erfolgreich geändert" })
+        reportSuccess("Job erfolgreich geändert")
+    }
+
+    const handleDeleteJobSucess = () => {
+        getJobs()
+        reportSuccess("Job erfolgreich gelöscht")
+    }
+
+    const handleDeleteJobFailure = () => {
+        reportError("Job konnte nicht gelöscht werden")
     }
 
     const handleHintState = (hint: number) => {
         setHintState(hint);
     }
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, getJobs);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, handleDeleteJobSucess, handleDeleteJobFailure);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -176,28 +156,21 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             setExpanded(isExpanded ? panel : false);
         };
         const handleEditClick = () => {
-            setState(state.edit ? { edit: false, editIcon: 'none', doneIcon: 'block' } : {
-                edit: true,
-                editIcon: 'block',
-                doneIcon: 'none'
-            });
+            setNoEdit(!noEdit);
             setExpanded(String(job.jobId));
         }
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
-                setErrorMessage("Jobname nicht ausgefüllt");
-                setError(true);
+                reportError("Jobname nicht ausgefüllt")
                 return;
             }
             if (!validateParamValues(paramValues, job.params)) {
-                setErrorMessage("Parameter nicht korrekt gesetzt");
-                setError(true);
+                reportError("Parameter nicht korrekt gesetzt")
                 return;
             }
             if (!validateSchedule(schedule)) {
-                setErrorMessage("Es muss mindestens ein Wochentag ausgewählt werden");
-                setError(true);
+                reportError("Es muss mindestens ein Wochentag ausgewählt werden")
                 return;
             }
             handleEditClick();
@@ -206,6 +179,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         const handleSaveModal = () => {
             handleCheckClick();
             handleClose();
+        }
+
+        const handleDeleteJob = () => {
+            setConfirmDelete(false)
+            deleteJob()
         }
 
         const renderTextField = () => {
@@ -223,18 +201,18 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         />
                     </div>
                     <div className={classes.SPaddingTRB}>
-                        <Tooltip title={state.edit ? "" : "Zeitplan bearbeiten"}
+                        <Tooltip title={noEdit ? "" : "Zeitplan bearbeiten"}
                             arrow
                         >
-                            <Button className={classes.inputButton} onClick={handleOpen} disabled={state.edit}>
+                            <Button className={classes.inputButton} onClick={handleOpen} disabled={noEdit}>
                                 <TextField
                                     label="Zeitplan"
                                     value={showSchedule(schedule)}
-                                    disabled={state.edit}
+                                    disabled={noEdit}
                                     InputProps={{
                                         readOnly: true
                                     }}
-                                    required={!state.edit}
+                                    required={!noEdit}
                                     variant="outlined"
                                     fullWidth
                                     error={!validateSchedule(schedule)}
@@ -259,13 +237,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
             )
         }
 
-        const handleCloseError = () => {
-            setError(false);
-        }
-        const handleCloseSuccess = () => {
-            setSucess({ open: false, stateType: success.stateType, message: success.message });
-        }
-
         return (
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
@@ -274,29 +245,24 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                             <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>#{job.jobId}
                             <NameInput
-                                // autoFocus={true}
                                 value={jobName}
-                                readOnly={state.edit}
-                                onClick={state.edit ? () => {
+                                readOnly={noEdit}
+                                inputProps={{
+                                    style: {
+                                        cursor: noEdit ? "pointer" : "text",
+                                        borderBottom: noEdit ? "" : "2px solid #c4c4c4",
+                                    }
+                                }}
+                                onClick={noEdit ? () => {
                                 } : (event) => event.stopPropagation()}
                                 onChange={handleJobName}
                             >
                                 {job.jobName}</NameInput></Typography>
-                        <Notification handleClose={handleCloseError} open={error} message={errorMessage}
-                            type={"error"} />
-                        <Notification handleClose={handleCloseSuccess} open={success.open} message={success.message}
-                            type={success.stateType} />
                         <div onClick={(event) => event.stopPropagation()}>
-                            <Tooltip title="Job bearbeiten" arrow>
-                                <IconButton style={{ display: state.editIcon }} className={classes.button}
-                                    onClick={handleEditClick}>
-                                    <EditIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Job speichern" arrow>
-                                <IconButton style={{ display: state.doneIcon }} className={classes.button}
-                                    onClick={handleCheckClick}>
-                                    <CheckCircleIcon />
+                            <Tooltip title={noEdit ? "Job bearbeiten" : "Job speichern"} arrow>
+                                <IconButton  className={classes.button}
+                                    onClick={noEdit ? handleEditClick : handleCheckClick} >
+                                    {noEdit ? <EditIcon /> : <CheckCircleIcon />}
                                 </IconButton>
                             </Tooltip>
                         </div>
@@ -309,7 +275,10 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </div>
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job löschen" arrow>
-                                <IconButton onClick={deleteJob} className={classes.button}>
+                                <IconButton
+                                    onClick={() => setConfirmDelete(true)}
+                                    className={classes.button}
+                                >
                                     <DeleteIcon />
                                 </IconButton>
                             </Tooltip>
@@ -363,13 +332,29 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                                     params={job.params}
                                     values={paramValues}
                                     selectParamHandler={handleSelectParam}
-                                    disabled={state.edit}
-                                    required={!state.edit}
+                                    disabled={noEdit}
+                                    required={!noEdit}
                                 />
                             </div>
                         </Grid>
                     </AccordionDetails>
                 </Accordion>
+                <Dialog
+                    open={confirmDelete}
+                    onClose={() => setConfirmDelete(false)}
+                >
+                    <DialogTitle>
+                        {`Job '#${job.jobId} ${job.jobName}' löchen?`}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button autoFocus onClick={() => setConfirmDelete(false)} color="primary">
+                            Abbrechen
+                        </Button>
+                        <Button onClick={handleDeleteJob} color="primary">
+                            Löschen
+                        </Button>
+                </DialogActions>
+                </Dialog>
             </div>
         );
     }
