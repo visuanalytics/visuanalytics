@@ -39,7 +39,6 @@ class Pipeline(object):
                6: {"name": "Sequence", "call": link},
                7: {"name": "Ready"}}
     __steps_max = 7
-    cleanup = [True, True]
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
