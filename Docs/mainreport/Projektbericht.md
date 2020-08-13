@@ -6,7 +6,7 @@
 **Aufgaben:**  
 - Projekt strukturieren
 - Berichte schreiben
-- Lasten-/Pflichtenheft ausarbeiten
+- Lasten- & Pflichtenheft ausarbeiten
 - Grafiken erstellen 
 - Benutzeroberfläche erstellen
 
@@ -14,6 +14,8 @@
 **Aufgaben:**  
 - Konzepte erstellen für die Darstellung der verschiedenen APIs
 - Strukturen für Dictionaries bzw. Listen erstellen	
+- Datenaufbereitung
+- Wordcloud-Grafiken
 - Daten visualisieren
     - Fließtexte generieren
     - Sprachausgabe generieren (gTTS)
@@ -27,24 +29,24 @@
     - Diagramme
 - FFMPEG
 - Linker implementieren
-- Testen mit Nvidia Grafikkarte
+- Testen mit Nvidia-Grafikkarte
 
 
 ### David Martschenko (Full-Stack-Web-Entwickler)
 - Anfragen für API-Keys verschicken
-- API Schnittstelle implementieren
-- Enstcheiden welche API-Requests relevant sind
+- API-Schnittstelle implementieren
+- Entscheiden, welche API-Requests relevant sind
 - Daten für die Weiterverwendung aufbereiten
 - Implementierung der Benutzeroberfläche
 
 ### Max Stephan (Softwarearchitekt)
 **Aufgaben:**  
-- Github verwalten
+- GitHub verwalten
     - Automatisation
     - Einstellungen
 - Docker
 - Scheduler
-- Steps Config (Json datei)
+- Steps Config (JSON-Datei)
 - Projektstruktur verwalten
     - Flask-Server aufsetzen
     - ReactJS integrieren
@@ -63,7 +65,7 @@ Das Projekt findet vom 23.04. – 23.08.2020 statt.
 
 Inspiriert von der Methode _Scrum_ wird dieser Zeitraum in einwöchige _Sprints_ unterteilt, wobei die ersten eineinhalb Wochen die Planungsphase darstellen. 
 
-Ab Montag dem 04.05.2020 beginnen die wöchentlichen _Sprints_. Dazu findet jeden Montag ein _Sprint-Planning_ statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen _Sprint_ berichten, neue _Issues_ erstellt, und eventuelle neue Herausforderungen besprochen werden.
+Ab Montag, dem 04.05.2020 beginnen die wöchentlichen _Sprints_. Dazu findet jeden Montag ein _Sprint-Planning_ statt, in welchem alle Teammitglieder über ihre Arbeit in dem vergangenen _Sprint_ berichten, neue _Issues_ erstellt und eventuelle neue Herausforderungen besprochen werden.
 
 Hinzu kommen die wöchentlichen Meetings mit dem Auftraggeber. Da dieses Meeting mitten in einem _Sprint_ liegt, kann der Projektleiter dem Auftraggeber eine gute Übersicht über den zuletzt abgeschlossenen _Sprint_, sowie eine Zwischenbilanz des aktuellen _Sprints_, geben.
 
@@ -77,7 +79,7 @@ In der **Abbildung 1** wird die zeitliche Aufteilung des Projektzeitraums grafis
 ### Verwaltung der Arbeitszeiten
 Um die Arbeitszeiten der Teammitglieder zu verwalten, wird eine Excel-Datei benutzt. Die Funktionen dieser werden im folgenden Text erläutert.
 
-Die Excel-Datei besteht aus neun Tabellenblätter. 
+Die Excel-Datei besteht aus neun Tabellenblättern. 
 - Übersicht
 - Sprintübersicht
 - Issues
@@ -96,7 +98,7 @@ Für jedes Teammitglied werden folgende Zeiten angezeigt:
 - Gesamtstunden für diesen Sprint (_Stunden_)
     - Dieser Wert wird auf dem Tabellenblatt des zugehörigen Mitgliedes berechnet.
 - Zielstunden für diesen Sprint (_Soll_)
-    - Für das Projekt sind 270 Stunden vorgesehen. Diese Stundenanzahl wird zu Beginn auf alle Sprints aufgeteilt. Wird nun ein Sprint angeschlossen und in der Übersicht abgehakt, so wird für die folgenden Sprints, anhand der übrigen Gesamtzeit, ein neuer Durchschnitt berechnet.
+    - Für das Projekt sind 270 Stunden vorgesehen. Diese Stundenanzahl wird zu Beginn auf alle Sprints aufgeteilt. Wird nun ein Sprint abgeschlossen und in der Übersicht abgehakt, so wird für die folgenden Sprints, anhand der übrigen Gesamtzeit, ein neuer Durchschnitt berechnet.
 
 - Differenz beider Stunden (_Differenz_)
     - Diese Angabe zeigt, wie stark die Abweichung der tatsächlichen Arbeitszeit in einem Sprint, zu der Durchschnittszeit ist.
@@ -113,11 +115,11 @@ Auf diesem Tabellenblatt werden die Gesamtzeiten jeder Kategorie pro Sprint ange
 Auf diesem Tabellenblatt werden die Eingaben getätigt. Dazu stehen einem drei Funktionen zur Verfügung.
 
 #### Hinzufügen
-Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dieses geschieht auf dem Tabellenblatt **Issues**, sowie auf allen Blättern der Mitglieder. 
+Drückt man diesen Button, so wird die Tabelle um den nächsten Sprint erweitert. Dies geschieht auf dem Tabellenblatt **Issues**, sowie auf allen Blättern der Mitglieder. 
 
 Die Tabelle besteht aus dem Namen eines Issues, der Dauer, sowie den Mitgliedern, welche diesen bearbeitet haben.
 #### Entfernen
-Wird dieser Button gedrückt so wird ein Sprint mit all seinen Issues entfernt.
+Wird dieser Button gedrückt, so wird ein Sprint mit all seinen Issues entfernt.
 #### Anwenden
 Hat man einen neuen Sprint hinzugefügt, so füllt man die Tabelle nun mit den neuen Issues, deren Dauer und deren Assignee.
 
@@ -125,24 +127,24 @@ Sobald alle Issues übertragen sind, kann man den Button `Anwenden` drücken. Di
 #### Meeting
 In dieses Tabellenblatt werden alle Meetings des Teams eingetragen. Dazu wird das Datum, die Dauer und die Teilnehmer des Meetings eingetragen.
 #### Mitglieder
-Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jeder Issue mit einem _tag_ (z.B. [Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
+Jedes Mitglied hat sein eigenes Tabellenblatt. Nachdem ein neuer Sprint hinzugefügt wurde und die passenden Issues kopiert wurden, werden diese Zeiten pro Kategorie und Sprint in eine Tabelle eingetragen. Da jedes Issue mit einem _tag_ (z.B. [Entwurf]) versehen ist, können die kumulierten Zeiten einer Kategorie einfach dort übernommen werden.
 
-### Erweiterbarkeit Excel-Datei
+### Erweiterbarkeit der Excel-Datei
 Um die Excel-Datei für das Zeitmanagement auch für andere Projekte verwenden zu können, sollten die Mitglieder, sowie die Anzahl Sprints einstellbar sein. In der aktuellen Version der Excel-Datei ist dies noch nicht ohne Kenntnisse in VBA möglich.
 
-Die Weiterentwicklung dieser Datei läuft parallel zu dem Projekt ab und ist unter folgendem Link zu erreichen:
+Die Weiterentwicklung dieser Datei läuft parallel zum Projekt ab und ist unter folgendem Link zu erreichen:
 
 [https://github.com/TimonPllkrn/Project_Time_Management](https://github.com/TimonPllkrn/Project_Time_Management)
 
 ---
 
-## Versionsverwaltung: Git und Github
+## Versionsverwaltung: Git und GitHub
 
-Um das Projekt ordentlich zu strukturieren, benutzen wir Github. Dies dient uns zum einen als Versionsverwaltung, da Git dort integriert ist, sowie auch zum managen unseres Projektes. 
+Um das Projekt ordentlich zu strukturieren, benutzen wir GitHub. Dies dient uns zum einen als Versionsverwaltung, da Git dort integriert ist, sowie auch zum managen unseres Projektes. 
 
-Um unser Zeitmanagement in Github umzusetzen, wird in jedem Sprint-Planning ein neuer _Milestone_ mit dem Namen des Sprints (z.B. "Sprint 2") und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im _Sprint-Planning_ _Issues_ gemeinsam mit allen Teammitgliedern erstellt und dem passenden _Milestone_ zugewiesen. Diese _Issues_ werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
+Um unser Zeitmanagement in GitHub umzusetzen, wird in jedem Sprint-Planning ein neuer _Milestone_ mit dem Namen des Sprints (z.B. "Sprint 2") und dem Ende des Sprints (darauffolgender Montag) angelegt. Danach werden ebenfalls im _Sprint-Planning_ _Issues_ gemeinsam mit allen Teammitgliedern erstellt und dem passenden _Milestone_ zugewiesen. Diese _Issues_ werden den Teammitgliedern zugeordnet, welche sie bearbeiten sollen. 
 
-Ist das _Sprint-Planning_ abgeschlossen stehen alle erstellten _Issues_ im Project Board in der Spalte `To-Do`. (**Abbildung 4**)
+Ist das _Sprint-Planning_ abgeschlossen, stehen alle erstellten _Issues_ im Project Board in der Spalte `To do`. (**Abbildung 4**)
 
 <figure style="float: right;">
   <img src="../_static/images/mainreport/Projectboard.png" width="70%">
@@ -150,18 +152,18 @@ Ist das _Sprint-Planning_ abgeschlossen stehen alle erstellten _Issues_ im Proje
 </figure>
 <br>
 
-Wird nun ein _Issue_ in die Spalte `In Progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen Issues trägt. 
+Wird nun ein _Issue_ in die Spalte `In progress` gezogen, so wird automatisch ein Branch erstellt, welcher den Namen des zugehörigen _Issues_ trägt. 
 
-Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein _Pull Request_ erstellt. Ebenfalls werden alle Unit-Tests, die Github finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
+Hat ein Teammitglied den _Issue_ erledigt, so zieht er diesen in die Spalte `Review`. Nun wird automatisch ein _Pull Request_ erstellt. Ebenfalls werden alle Unit-Tests, die GitHub finden kann automatisch ausgeführt. Verlaufen diese fehlerfrei, so wird dieses dem Entwickler angezeigt. 
 
-Die _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Diese überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
+Der _Pull Request_ wird dann einem anderen Teammitglied zum reviewen zugeteilt. Dieses überprüft noch einmal manuell den Code. Wenn alles in Ordnung ist, wird der Code gemerged, also dem Hauptcode hinzugefügt.
 
-Link zum Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+Link zum GitHub-Repository: [https://github.com/SWTP-SS20-Kammer-2/Data-Analytics](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
 
-### Github Automatisation
+### GitHub Automatisation
 
 #### Project Board
-Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in Github _Actions_ erstellt, welche die Funktionen des Boards erweitern.
+Um das Arbeiten mit dem Project Board einfacher zu gestalten, wurden in GitHub _Actions_ erstellt, welche die Funktionen des Boards erweitern.
 
 _Issue Branch erstellen_
 
@@ -172,7 +174,7 @@ Der Name des Branches ist wie folgt aufgebaut:
 
 _Pull Request erstellen_
 
-Wird ein _Issue_ in die Spalte `Review` gezogen, wird automatisch ein _Pull Request_ erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim mergen der _Issue_ automatisch geschlossen.
+Wird ein _Issue_ in die Spalte `Review` gezogen, wird automatisch ein _Pull Request_ erstellt. Dieser beinhaltet die Nachricht `resolves #[issueNummer]`, somit wird beim Mergen der _Issue_ automatisch geschlossen.
 ##### Einrichtung
 
 _Projekt hinzufügen_
@@ -180,13 +182,13 @@ _Projekt hinzufügen_
 - Neues Projekt erstellen
     - Template `Basic kanban`
 - Projekt einrichten
-    - Neue Spalte mit dem Namen `Review` erstellen und zwischen die Spalten `In Progress` und `Done` einordnen.
-    - Die Column ID von `In Progress` und `Review` kopieren
+    - Neue Spalte mit dem Namen `Review` erstellen und zwischen die Spalten `In progress` und `Done` einordnen.
+    - Die Column ID von `In progress` und `Review` kopieren
 
-Zusätzlich kann auch die Github interne Automatisation für `TODO` und `Done` verwendet werden.
+Zusätzlich kann auch die GitHub interne Automatisation für `To do` und `Done` verwendet werden.
 
-- `TODO` (manage automatisation)
-    - Preset: `TODO`
+- `To do` (manage automatisation)
+    - Preset: `To do`
     - `Move Issues here when…`
       - Newly added
       - Reopened
@@ -195,22 +197,22 @@ Zusätzlich kann auch die Github interne Automatisation für `TODO` und `Done` v
     - `Move Issues here when…`
       - Closed
 
-_Github Action erstellen_
+_GitHub Action erstellen_
 
 Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
 2.	Inhalt durch eigenes Script ersetzen
 3.	Namen festlegen
-4.	den Wert von column_id durch die ID der TODO-Spalte ersetzen
-5.	den Wert von column_id durch die ID der Review-Spalte ersetzen
-6.	`Start commit` klicken, um die Datei zu comitten
+4.	Den Wert von `column_id` durch die ID der `To do`-Spalte ersetzen
+5.	Den Wert von `column_id` durch die ID der `Review`-Spalte ersetzen
+6.	`Start commit` klicken, um die Datei zu committen
 
 Die Datei muss im master(default) branch liegen.
 
-_Github App erstellen_
+_GitHub App erstellen_
 
-Um mit dieser Action auch andere Actions auslösen zu können, muss eine Github App erstellt werden, die dann zur Authentifizierung verwendet wird. 
-1.	Github App erstellen (siehe [hier](https://developer.github.com/apps/building-github-apps/creating-a-github-app/))
+Um mit dieser Action auch andere Actions auslösen zu können, muss eine GitHub-App erstellt werden, die dann zur Authentifizierung verwendet wird. 
+1.	GitHub-App erstellen (siehe [hier](https://developer.github.com/apps/building-github-apps/creating-a-github-app/))
 2.	App Berechtigungen einstellen:
     - Contents: `read & write`
     - Issues: `read & write`
@@ -223,11 +225,11 @@ Es müssen zwei Secrets für das Repository angelegt werden:
     1.	Name: APP_ID
 Value: ID der App (zu finden in den App Einstellungen unter `General`)
     2.	Name: APP_DEM
-Value: Private Key der App (wird in den Einstallungen unter `General` erstellt)
+Value: Private Key der App (wird in den Einstellungen unter `General` erstellt)
 ##### Funktionsweise
-Um, wie in der Einrichtung beschrieben, eine Github App für die Authentifikation verwenden zu können, wird die Action `tibdex/github-app-token@v1.0.2` aus dem Github Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App ID und dem Private Key der App.
+Um - wie unter Einrichtung beschrieben - eine GitHub-App für die Authentifikation verwenden zu können, wird die Action `tibdex/github-app-token@v1.0.2` aus dem GitHub-Marketplace verwendet. Diese generiert den Authentifizierungsschlüssel aus der App-ID und dem Private Key der App.
 
-Im nächsten Schritt werden mithilfe der Github Action `actions/github-script@0.9.0` Github APi Anfragen gemacht. Dieser App wird ein Script (geschrieben in Java Script) übergeben, welches dann von der App ausgeführt wird. Die Github Abfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable github und context. z.B.:
+Im nächsten Schritt werden mithilfe der GitHub-Action `actions/github-script@0.9.0` GitHub-API-Anfragen gesendet. Dieser App wird ein Script übergeben (geschrieben in Java Script), welches dann von der App ausgeführt wird. Die GitHub-Anfragen sind in diesem Script ganz einfach möglich, man verwendet einfach die vordefinierte Variable GitHub und context. z.B.:
 
 ~~~js
 // Create branch
@@ -240,7 +242,7 @@ github.git.createRef({
 });
 ~~~
 
-Eine Dokumentation aller möglichen API Abfragen finden Sie [hier](https://octokit.github.io/rest.js/v17).
+Eine Dokumentation aller möglichen API-Anfragen finden Sie [hier](https://octokit.github.io/rest.js/v17).
 
 Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action die Variable `context` bereit. Mit dieser hat man auf verschiedene Informationen Zugriff.
 
@@ -248,15 +250,15 @@ Um den Namen des Repository, des Owners etc. herauszufinden, stellt die Action d
 
 - Benennt man einen _Issue_ um, dessen _Branch_ es schon gibt, so kann kein _Pull Request_ mehr erstellt werden, da der _Branch_ nicht mehr gefunden wird.
 - Durch einen Fehler von GitHub werden die verlinkten _Issues_ bei einem _Pull Request_ erst nach dem Mergen, oder wenn jemand ein Kommentar schreibt, richtig angezeigt.
-- Wenn der Branch keine Änderungen zum Master Branch enthält, kann kein _Pull Request_ erstellt werden.
-- Im Projekt Board sollten keine _Pull Requests_ hinzugefügt werden, da diese in Github nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
+- Wenn der Branch keine Änderungen zum Master-Branch enthält, kann kein _Pull Request_ erstellt werden.
+- Im Project Board sollten keine _Pull Requests_ hinzugefügt werden. Da diese in GitHub nur eine Unterkategorie von Issues sind, kann die Action nicht zwischen ihnen unterscheiden und würde für die _Pull Requests_ auch _Branches_ usw. erstellen.
 
 #### Automatisierte Tests
 Bei einem _Pull Request_ werden automatisierte Tests durchgeführt.
 ##### Einrichtung
 _Docker Dateien erstellen:_
 - Dockerfile für Projekt erstellen (siehe [hier](https://docs.docker.com/engine/reference/builder/))
-- Docker Test Datei erstellen: docker-compose.test.yml (im gleichen Ordner wie das Dockerfile)
+- Docker-Testdatei erstellen: docker-compose.test.yml (im gleichen Ordner wie das Dockerfile)
 - Datei mit folgendem Inhalt ausfüllen:
 
 ```Docker
@@ -266,18 +268,18 @@ sut:
     command: test // Command der die Tests auführt
 ```
 
-_Github Action erstellen:_
+_GitHub Action erstellen:_
 
 Im Repository auf den Reiter `Actions` klicken:
 1.	`new workflow` -> `set up a workflow yourself`
-2.	Inhalt durch Script ersetzen
+2.	Inhalt durch Skript ersetzen
 3.	Namen festlegen
-4.	In zeile 18 & 19 pfad hinter --file anpassen
-5.	Start commit klicken & Datei Commiten
+4.	In Zeile 18 & 19 den Pfad hinter `--file` anpassen
+5.	`Start commit` klicken & Datei committen
 
-##### Funktionsweiße
+##### Funktionsweise
 
-Nachdem die Action das Repository ausgecheckt hat, wird zuerst der Docker Container erstellt und danach wird die Datei `docker-compose.test.yml` verwendet, um die Tests auszuführen.
+Nachdem die Action das Repository ausgecheckt hat, wird zuerst der Docker-Container erstellt und danach wird die Datei `docker-compose.test.yml` verwendet, um die Tests auszuführen.
 
 ---
 
@@ -290,7 +292,7 @@ Für die Entwicklung des Programmes nutzen wir zwei Entwicklungsumgebungen von *
 
 ## Lastenheft
 ### Zielbestimmung
-Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo, soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
+Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
 
 Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen ein Video generiert werden kann:
 
@@ -298,7 +300,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 - Wetter
     - Wettervorhersage für den aktuellen, den folgenden und die darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
 - Corona-Daten
-    - Zahl der Infizierten, Genesenen und Toten welt- und deutschlandweit
+    - Zahl der Infizierten, Genesenen und Toten welt- und deutschlandweit.
 - Historische Ereignisse
     - Ereignisse zu dem aktuellen Tag vor beliebig vielen Jahren.
 - Sport
@@ -309,7 +311,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 ##### Must-Have
 - Das Programm besitzt die Auswahl aus vier Themenbereichen:
 	- Wetter, Corona, Historische Ereignisse, Fußball-Bundesliga
-- Diese Themen sollen als Video, mithilfe von Grafiken, Diagrammen etc. dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutern, unterlegt werden.
+- Diese Themen sollen als Video mithilfe von Grafiken, Diagrammen etc. dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutert, unterlegt werden.
 - Das Programm soll in die Website [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) integriert werden.
 - Das Programm soll dem Administrator der Website die Möglichkeit geben, die Videos in bestimmten Zyklen generieren und diese auf seiner Website ausgeben zu lassen. 
 ##### Nice-to-Have
@@ -322,7 +324,7 @@ Dafür sollen dem Benutzer verschiedene Themen zur Verfügung stehen, aus denen 
 </figure>
 <br>
 
-- Zu den Themenbereiche Sport und Corona sollen Wordclouds mithilfe von Twitter generiert werden, welche die Stimmung zum jeweiligen Thema einfängt.
+- Zu den Themenbereiche Sport und Corona sollen Wordclouds mithilfe von Twitter generiert werden, welche die Stimmung zum jeweiligen Thema einfangen.
 (Beispiel: Abbildung 3)
 - Docker Image bereitstellen
 ##### If-Time-Allows
@@ -337,10 +339,10 @@ Eine genaue Zielgruppe wird bei der Herstellung nicht berücksichtigt, die Theme
 ### Produktübersicht
 #### Benutzeroberfläche/Funktion
 ##### Übersicht
-Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das Klicken auf den Job Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
+Zu Beginn des Programms befindet sich der Benutzer auf der Übersichtsseite. Dort hat er eine Übersicht über seine angelegten Jobs. Durch das Klicken auf den Job-Namen, werden die dazugehörigen Informationen ausgeklappt. Ein Job besteht aus:
 1.	Einer einzigartigen ID (z.B. #1)
 2.	Einem zugeordneten Thema 
-3.	Dem Zeitpunkt wann das Video neu generiert wird
+3.	Dem Zeitpunkt, wann das Video neu generiert wird
 4.	Der Zeit bis zum nächsten neu generierten Video
 5.	Besonderen Einstellungen, je nach ausgewähltem Thema
 
@@ -361,7 +363,7 @@ Möchte der Benutzer einen Job anlegen, so gelangt er zuerst zu der Themenauswah
 </figure>
 <br>
 
-Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel `Bundesliga - Ergebnisse`), so kommt er als nächstes zu der Parameterauswahl. Die dort zur Auswahl stehenden Parameter sind an das vorher ausgewählte Thema angepasst. Diese Seite sieht je nach Thema unterschiedlich aus. (hier beispielhaft für das Thema `Bundesliga – Ergebnisse`).
+Hat sich der Benutzer für ein Thema entschieden (in diesem Beispiel `Bundesliga - Ergebnisse`), so kommt er als nächstes zur Parameterauswahl. Die dort zur Auswahl stehenden Parameter sind an das zuvor ausgewählte Thema angepasst. Diese Seite sieht je nach Thema unterschiedlich aus (hier beispielhaft für das Thema `Bundesliga – Ergebnisse`).
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Param.png"/>
@@ -373,15 +375,15 @@ Danach kann der Benutzer den Zeitplan des Jobs festlegen. Hier hat der Benutzer 
 
 **Täglich**:
 
-wählt er diesen Punkt, so wird das Video täglich generiert.   
+Wählt er diesen Punkt, so wird das Video täglich generiert.   
 
 **Wöchentlich**:
 
-hier kann der Benutzer aus allen sieben Wochentagen auswählen, an denen dann wöchentlich das Video generiert wird.  
+Hier kann der Benutzer aus allen sieben Wochentagen auswählen, an denen dann wöchentlich das Video generiert wird.  
 
 **Datum**:
 
-hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generiert wird  
+Hier kann der Benutzer ein genaues Datum auswählen, an welchem ein Video generiert wird.
 
 Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhrzeiten festlegen, zu welchen das Video neu generiert werden soll.
 
@@ -393,7 +395,7 @@ Als letztes kann er noch zusätzlich zu einer der drei Auswahlmöglichkeiten Uhr
 
 Abschließend kann der Benutzer noch Einstellungen zu dem Video vornehmen.
 
-Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das Format des Videos und der Audiodatei. Diese Einstellungen kann der Benutzer auch im Nachhinein noch ändern
+Dort kann er den Speicherort und die Auflösung des Videos festlegen, sowie das Format des Videos und der Audiodatei. Diese Einstellungen kann der Benutzer auch im Nachhinein noch ändern.
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Einstellungen.png"/>
@@ -411,7 +413,7 @@ Zusätzlich zu den `normalen` Einstellungen eines Jobs, soll es dem Benutzer auc
 <br>
 
 #### Ausgabe (Beispiel Wetterbericht)
-Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text und Grafiken verarbeitet werden. Aus diesen Ergebnissen soll ein Video erstellt werden, welches einen Wetterbericht für den nächsten Tag und die darauffolgenden drei Tage darstellt
+Aus dem Internet sollen die aktuellen Wetterdaten erfasst werden, diese zu Text und Grafiken verarbeitet werden. Aus diesen Ergebnissen soll ein Video erstellt werden, welches einen Wetterbericht für den nächsten Tag und die darauffolgenden drei Tage darstellt.
 
 <figure>
   <img width="32%" src="../_static/images/reports/WetterIcons.png"/>
@@ -446,25 +448,25 @@ Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Webs
 
 Die technische Umsetzung der einzelnen Bestimmungen finden Sie [hier](#technische-umsetzung).
 ### Benutzerschnittstellen
-Das Produkt ist Betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
+Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
 
-Die GUI über die der Benutzer seine Eingaben tätigen kann, wird Mithilfe von `React` und `Material-UI` erstellt.
+Die GUI über die der Benutzer seine Eingaben tätigen kann, wird mithilfe von `React` und `MaterialUI` erstellt.
 
 Für die Kommunikation zwischen dem Client und dem Server, wird das Python basierte Web-Framework `Flask` benutzt.
 ### Funktionale Anforderungen
-Um die funktionalen Anforderungen des Programmes zu verdeutlichen, ist unser Programm folgedermaßen strukturiert:
+Zur Verdeutlichung der funktionalen Anforderungen des Programmes wurde es folgendermaßen strukturiert:
 
 <figure>
   <img width="70%" src="../_static/images/mainreport/Strukturdiagramm.png"/>
-  <figcaption>Abbildung 11</figcaption>
+  <figcaption>Abbildung 12</figcaption>
 </figure>
 <br>
 
 1.	Der Client schickt eine Anfrage an das Programm.
 2.	Das Programm schickt eine Anfrage über die Schnittstelle an die gewünschte API.
-3.	Die Antwort der API landet im `Preprocessing`. Dort werten die Daten aufbereitet, so dass jeder Prozess einheitlich darauf zugreifen kann. In unserem Fall ist dies ein Python Dictionary.
-4.	Die einzelnen `Processing` Stationen entnehmen die Daten dem Dictionary und verarbeiten diese (z.B. Diagramme erstellen). 
-5.	Die daraus resultierenden Daten werden im `Linker` zu einem Endergebnis zusammengefügt (z.B. Video)
+3.	Die Antwort der API landet im `Preprocessing`. Dort werten die Daten aufbereitet, so dass jeder Prozess einheitlich darauf zugreifen kann. In unserem Fall ist dies ein Python-Dictionary.
+4.	Die einzelnen `Processing`-Stationen entnehmen dem Dictionary die Daten und verarbeiten diese (z.B. Diagramme erstellen). 
+5.	Die daraus resultierenden Daten werden im `Linker` zu einem Endergebnis zusammengefügt (z.B. Video).
 
 ### Technische Umsetzung
 #### API
@@ -491,17 +493,17 @@ Anhand der Werte welche wir aus der [https://www.weatherbit.io/api](https://www.
 Quelle: [https://www.weatherbit.io/pricing](https://www.weatherbit.io/pricing)
 
 ##### Corona 
-Das Programm soll die aktuellen Daten zur Corona Pandemie ausgeben. Dazu wird die  [https://covid19api.com/](https://covid19api.com/) API verwendet. Diese liefert die aktuelle Corona Statistiken weltweit und für Deutschland.
+Das Programm soll die aktuellen Daten zur Corona Pandemie ausgeben. Dazu wird die [https://covid19api.com/](https://covid19api.com/) API verwendet. Diese liefert die aktuellen Corona-Statistiken weltweit und für Deutschland.
 
 **Technische Details:**  
 - Daten werden mehrfach täglich aktualisiert
-- Die Verwendung der API ist komplett frei
+- Die Verwendung der API ist komplett kostenfrei
 - Antworten kommen im JSON-Format
 
 ##### Historische Ereignisse
 Das Programm soll eine Wordcloud zu historischen Daten ausgeben, in der die wichtigsten Themen den größten Anteil haben.
 
-Als Schnittstelle dafür verwenden wir die [http://developer.zeit.de/index/](http://developer.zeit.de/index/) API. Diese enthält gesamtes Archiv der ZEIT bzw. ZEIT ONLINE.
+Als Schnittstelle dafür verwenden wir die [http://developer.zeit.de/index/](http://developer.zeit.de/index/) API. Diese enthält das gesamte Archiv der ZEIT bzw. ZEIT ONLINE.
 
 **Technische Details:**
 - Öffentliche BETA-Version
@@ -520,7 +522,7 @@ Es sollen die Ergebnisse der Bundesliga für einen Spieltag visuell dargestellt 
 [https://rapidapi.com/apidojo/api/yahoo-finance1](https://rapidapi.com/apidojo/api/yahoo-finance1)
 
 - Zusammenfassung zum angefragten Zeitpunkt
-- Gewinner / Verlierer in einer bestimmten Region
+- Gewinner/Verlierer in einer bestimmten Region
 z.B. Day Gainers - US, Day Losers - US, Most Actives - US
 - Daten, um Diagramme zu bestimmten Akteuren zu erstellen
 - Gewinne in einer bestimmten Region in einem eingegrenzten Zeitraum
@@ -537,41 +539,39 @@ z.B. Day Gainers - US, Day Losers - US, Most Actives - US
 Quelle: [https://rapidapi.com/apidojo/api/yahoo-finance1/pricing](https://rapidapi.com/apidojo/api/yahoo-finance1/pricing)
 
 #### Preprocessing
-Die durch die API gewonnenen Daten, werden zuerst nach den Informationen gefiltert, welche für das Programm wichtig sind. Diese werden dann, in evtl. vereinfachter Struktur, in ein Dictionary geschrieben, so dass im Programm intern, das Dictionary zur Datenverarbeitung genutzt wird.
+Die durch die API gewonnenen Daten werden zuerst nach den Informationen gefiltert, welche für das Programm wichtig sind. Diese werden dann, in evtl. vereinfachter Struktur, in ein Dictionary geschrieben, sodass intern im Programm das Dictionary zur Datenverarbeitung genutzt wird.
 #### Processing
 Textgenerierung
-Die Daten aus dem im Preprocessing angelegtem Dictionary, werde nun ebenfalls in ein Dictionary angelegt, wobei zu jeder einzelnen Information mehrere Satzbausteine gespeichert werden. So kann anhand der gewonnenen Informationen, ein zufällig generierter Text entstehen.
+Die Daten aus dem im `Preprocessing` angelegten Dictionary, werde nun ebenfalls in ein Dictionary angelegt, wobei zu jeder einzelnen Information mehrere Satzbausteine gespeichert werden. So kann anhand der gewonnenen Informationen ein zufällig generierter Text entstehen.
 
-Um aus diesem generierten Text eine mp3-Datei zu erzeugen, benutzen wir die Python-Bibliothek `gTTS`.
+Um aus diesem generierten Text eine .mp3-Datei zu erzeugen, benutzen wir die Python-Bibliothek `gTTS`.
 
 Einen Vergleich zwischen `gTTS` und `pico2wave` finden Sie [hier](#vergleich-von-gtts-mit-pico2wave).
 
 #### Datenvisualisierung
-Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte), können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
+Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte) können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
 
 Um die Daten als Diagramm zu visualisieren, wird NumPy und Matplotlib benutzt. Des Weiteren kann auch Basemap eingesetzt werden, um Verteilungen anhand einer Karte darzustellen.
 
-Für die Erstellung der Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird hauptsächlich verwendet, um die Daten der Twitter API zu visualisieren.
+Für die Erstellung der Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird hauptsächlich verwendet, um die Daten der Twitter-API zu visualisieren.
 #### Linker
 Um am Ende alle Grafiken, Diagramme etc. zu einem Video zusammenzufügen, benutzen wir das Tool `FFMPEG`. Dieses Tool bietet die Möglichkeit, Bilder aneinander zu schneiden und mit einer Audiodatei zu unterlegen. 
 
 Dabei können folgende Einstellungen variabel gehalten werden:
 - Länge der angezeigten Bilder (z.B. an die Länge der Audio-Datei anpassen)
 - Videoauflösung
-- Video- /Audioformat
+- Video-/Audioformat
 - Speicherort des Videos
 
  
 ### Vergleich von gTTS mit pico2wave
-#### Allgemeiner Vergleich:
-- gTTS: Python-Library und Kommandozeilentool, wobei die API von Google Translate verwendet wird
-- pico2wave: Kommandozeilentool für Linux/Unix-User, welches von dem Unternehmen SVOX bereitgestellt wird
-#### Vergleich mögliche Sprachen:
-- gTTS: 78 verschiedene Sprachen, darunter 14 Mal Englisch (z.B. Englisch (Australia) oder Englisch (Ghana)), 3 Mal Spanisch, Deutsch und Sprachen wie Tschechisch oder Japanisch
-- pico2wave: Deutsch, Englisch/Amerikanisch, Italienisch, Französisch und Spanisch
-#### Vergleich Audioformate:
-- gTTS: wav-Datei, mp3-Datei
-- pico2wave: wav-Datei
+
+|        | gTTS| pico2wave  |
+| ---------------- | ---------------- | ---------------- |
+|allgemein|Python-Library und Kommandozeilentool, wobei die API von Google Translate verwendet wird|Kommandozeilentool für Linux/Unix-User, welches von dem Unternehmen SVOX bereitgestellt wird|
+|mögliche Sprachen|78 verschiedene Sprachen, darunter Englisch, Spanisch, Deutsch, Tschechisch, Japanisch|Deutsch, Englisch/Amerikanisch, Italienisch, Französisch und Spanisch
+|Audioformate|wav-Datei, mp3-Datei|wav-Datei|
+
 #### Vorteile gTTS:
 - eine Python-Library, die man direkt einbinden kann, sodass man die Funktionen des Moduls verwenden kann
 - einfaches Erstellen der Audiodateien (Dreizeiler)
@@ -580,7 +580,7 @@ Dabei können folgende Einstellungen variabel gehalten werden:
 - einzelne Wörter werden richtig und gut betont
 - deutliche Aussprache
 - gute Audioqualität
-- intellektuelle (arrogante) Stimme, so wie unser Programm
+- intellektuelle Stimme
 #### Nachteile gTTS:
 - teilweise unnatürlicher, stockender Redefluss
 #### Vorteile pico2wave:
@@ -588,20 +588,178 @@ Dabei können folgende Einstellungen variabel gehalten werden:
 - guter Redefluss
 #### Nachteile pico2wave:
 - keine direkte Python-Library, man müsste ein Skript schreiben, um es einzubinden
-- bringt keine weiteren Einstellungsmöglichkeiten/ Funktionen mit sich
+- bringt keine weiteren Einstellungsmöglichkeiten/Funktionen mit sich
 - Aussprache manchmal etwas monoton, kaum Betonungen
  
 #### Begründung Entscheidung für gTTS:
-Wir haben uns nach einem genaueren Vergleich der beiden TTS-Programme gTTS und pico2wave für das Programm gTTS entschieden. Dieses ließ sich einfach als Python-Library einbinden, sodass wir es direkt verwenden konnten. Ebenso fanden wir es gut, dass die Bibliothek eine umfangreiche Funktionalität aufweist. So lassen sich viele Kleinigkeiten optimal für unsere Zwecke anpassen. Außerdem haben uns im Großen und Ganzen die erzeugten Audiodateien von der Aussprache, der Betonung und der generellen Audioqualität besser gefallen.
+Wir haben uns nach einem genaueren Vergleich der beiden Text-to-Speech-Programme gTTS und pico2wave für das Programm gTTS entschieden. Dieses ließ sich einfach als Python-Library einbinden, sodass wir es direkt verwenden konnten. Ebenso fanden wir es gut, dass die Bibliothek eine umfangreiche Funktionalität aufweist. So lassen sich viele Kleinigkeiten optimal für unsere Zwecke anpassen. Außerdem haben uns im Großen und Ganzen die erzeugten Audiodateien von der Aussprache, der Betonung und der generellen Audioqualität besser gefallen.
 ### Besondere Herausforderungen
-- Programm für Produktionsbetrieb absichern, und zuverlässig machen
+- Programm für Produktionsbetrieb absichern und zuverlässig machen
 - Kompatibilität mit verschiedenen Betriebssystemen
-- Verständliche- und einfach zu bedienendes User Interface
-- Speicherung von Secrets (z.B.: `APi-keys`)
+- Verständliches und einfach zu bedienendes User Interface
+- Speicherung von Secrets (z.B.: `API-Keys`)
 - Umgang mit auftretenden Programmfehlern
 - API-Daten sinnvoll zusammenbauen (individuell auf verschiedene Daten reagieren)
-- Gute Sprachausgabe (Komische Aussprache durch verschiedene Formulierungen vermeiden)
+- Gute Sprachausgabe (komische Aussprache durch verschiedene Formulierungen vermeiden)
 ### Nichtfunktionale Anforderungen
 Das Programm soll um weitere Schnittstellen einfach erweiterbar sein, dazu muss die Schnittstelle so designt sein, dass das Hinzufügen einer weiteren ohne großen Aufwand von statten geht.
 ### Abnahmekriterien
 Das Programm muss fehlerfreie Ausgaben zu den zur Auswahl stehenden Themen liefern. 
+
+## Fazit
+
+### Verwendete Technologien
+
+Neben PyCharm und WebStorm noch mehr?
+
+### Zielbestimmung
+
+Das Programm kann verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo präsentiert dem Benutzer Informationen übersichtlich und verständlich mithilfe von Grafiken, Tabellen und Wordclouds die Informationen.
+
+Dem Benutzer stehen die folgenden Themen zur Gernerierung eines Videos zur Verfügung:
+
+**Beispiele:**
+- Wetterbericht deutschlandweit
+    - Wettervorhersage für den aktuellen, den folgenden und die drei darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
+- Ortsbezogener Wetterbericht
+    - Wettervorhersage für den aktuellen, den folgenden und die drei darauffolgenden Tage zusammengefasst in einem übersichtlichen Video.
+- Sport
+	- Ergebnisse zu einem Spieltag inklusive Tabelle der Fußball Bundesliga zusammengetragen.
+- Twitter
+	- Wordcloud mit Hashtags zu einem bestimmten Wort
+
+#### Umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
+##### Must-Have
+- Das Programm besitzt die Auswahl aus drei Themenbereichen mit Daten von drei unterschiedlichen APIs:
+	- Wetter, Fußball-Bundesliga, Twitter
+- Das Programm kann verschiedene Text-to-Speech-APIs integrieren 
+- Die obigen Themen werden als Video, mithilfe von Grafiken, Tabellen und Wordclouds dargestellt und mit einer Audiospur, welche die dargestellten Informationen erläutert, unterlegt.
+- Der ortsbezogene Wetterbericht für Biebertal ist bereits live auf der Website [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/).
+- Der Administrator der Website hat die Möglichkeit, die Videos in bestimmten Zyklen generieren und diese auf seiner Website ausgeben zu lassen. 
+##### Nice-to-Have
+- Die Einbindung des Programmes in die Website ist als Wordpress-Plugin möglich.
+- Es besteht die Möglichkeit, Videos zu generieren, welche die Daten aus mehreren Themenbereichen zusammenführt.
+<figure style="float: right;">
+  <img width="200px" src="../_static/images/mainreport/Wordcloud.png"/>
+  <figcaption>Abbildung 13</figcaption>
+</figure>
+<br>
+
+- Es können Wordclouds zu beliebigen Themenbereichen mithilfe der Twitter-API erstellt werden.
+(Beispiel: Abbildung 13)
+- Ein Docker-Image wurde bereitgestellt
+
+#### Nicht umgesetzte Must-Have/Nice-to-Have/If-Time-Allows
+##### Must-Have
+Anstelle von vier APIs zu verschieden Themenbereichen, wurde drei APIs verwendet. Jedoch können verschiedene Text-to-Speech-APIs zur Audiogenerierung verwendet werden.
+
+##### Nice-to-Have
+Der Themenbereich Finanzen wurde dem Programm nicht hinzugefügt, da die Zeit nicht ausgereicht hätte und es zudem schwierig ist, Daten von der Börse ohne Erlaubnis zu verändern bzw. verarbeiten und darzustellen. 
+##### If-Time-Allows
+Die Videos sind bisher nur auf Deutsch verfügbar. Da man aber die JSON-Datei später auch selbst schreibt, kann man die Audiodateien und Texte dort leicht selbst schreiben. Das Frontend ist nur auf Deutsch verfügbar.
+
+### Qualitätsanforderungen
+Das Produkt kann ohne großen Aufwand um weitere Funktionen, vor allem aber um weitere Schnittstellen erweitert werden. Möchte man eine neue API-Schnittstelle hinzufügen, ist dies recht einfach möglich. Die JSON-Konfigurationsdatei ist weitestgehend allgemein gehalten in ihren Funktionen, sodass man sie für viele verschiedene Themen und Datenverarbeitungen verwenden kann. 
+
+Das aktuelle Video, welches auf der Website dargestellt wird, wird erst dann durch ein neues ersetzt, wenn dieses schon fertig generiert wurde. Somit soll sichergestellt werden, dass zu jeder Zeit dem Besucher der Website ein Video zur Verfügung steht.
+
+Die Ausführung des Programms soll keine Auswirkung auf die Stabilität der Website haben.
+
+### Produkteinsatz
+Das Produkt steht dem Betreiber der Internetseite [https://biebertal.mach-mit.tv/](https://biebertal.mach-mit.tv/) zur Verfügung. Auf die dort generierten Videos - aktuell der ortstebzogene Wetterbericht für Biebertal - kann jeder öffentlich zugreifen.
+
+Eine genaue Zielgruppe wurde bei der Herstellung nicht berücksichtigt. Der Wetterbericht ist interessant für die breite Masse.
+
+### Produktübersicht
+#### Benutzeroberfläche/Funktion
+##### Übersicht
+
+<-- TO DO --> Vergleich wie sah es am Anfang aus, wie jetzt 
+
+### Benutzerschnittstellen
+Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
+
+Die GUI über die der Benutzer seine Eingaben tätigen kann, wurde mithilfe von `React` und `MaterialUI` erstellt.
+
+Für die Kommunikation zwischen dem Client und dem Server, wird das Python basierte Web-Framework `Flask` benutzt.
+### Funktionale Anforderungen
+
+1.	Der Client schickt eine Anfrage an das Programm.
+2.	Das Programm schickt eine Anfrage über die Schnittstelle an die gewünschte API.
+3.	Die Antwort der API liegt in einer JSON-Datei vor. 
+4.  Die Daten der JSON-Datei werden in ein Python-Dictionary umgewandelt.
+5.  Mithilfe einer JSON-Struktur mit mehreren Konfigurationsmöglichkeiten wie z.B. `transform`-Typen werden die Daten so weit verarbeitet, dass man aus ihnen Bild- und Audiodateien erstellen kann.
+6.  Generierung der gewünschten Bilder/Grafiken.
+7.  Generierung der gewünschten Audiodateien.
+8.  Die daraus resultierenden Daten werden mithilfe des `Scheduler` zu einem Video zusammengefügt.
+
+### Technische Umsetzung
+#### API
+##### Wetter
+Anhand der Werte welche wir aus der [https://www.weatherbit.io/api](https://www.weatherbit.io/api) API beziehen, soll ein Wetterbericht als Video erstellt werden. Solch ein Bericht kann folgende Informationen beinhalten:
+- Wetter deutschlandweit für heute, morgen und die darauffolgenden drei Tage
+- ortbezogenes Wetter für heute, morgen und die darauffolgenden drei Tage
+- optional: weitere Daten wie Luftfeuchtigkeit, gefühlte Temperaturen, Regenwahrscheinlichkeit o.Ä.
+
+Die Preise für die weatherbit-API finden sie unter [https://www.weatherbit.io/pricing](https://www.weatherbit.io/pricing).
+
+##### Bundesliga
+[https://www.openligadb.de/](https://www.openligadb.de/) 
+
+Es werden die Ergebnisse der Bundesliga für einen Spieltag visuell dargestellt. 
+- Spielergebnisse des aktuellen Spieltags
+- Tabelle des aktuellen Spieltags
+
+##### Twitter
+[Twitter](https://developer.twitter.com)
+
+Es werden alle Hashtags, die mit einem bestimmten Hashtag in einem Tweet verwendet wurden ausgegeben und in einem String gespeichert.
+Nach der Verarbeitung der Wörter, um zum Beispiel gewisse Wörter (wie Beleidigungen) auszuschließen werden die Hashtags mit einer Wordcloud dargestellt.
+Die Wordcloud kann verschiedene Größen, Formen und Farben haben, welche bei der Parameterauswahl ausgewählt werden können.
+
+#### Datenvisualisierung
+Um die Daten grafisch darzustellen, wird die Python-Bibliothek `Pillow` zur Bildbearbeitung genutzt. Auf eine vorgefertigte Grafik (z.B. leere Deutschlandkarte) können mithilfe von Pillow, die aus der API gewonnenen Daten, eingetragen werden. 
+
+Für die Erstellung einer Wordcloud wird die Python-Bibliothek `wordcloud` verwendet. Diese wird verwendet, um die Daten der Twitter-API zu visualisieren.
+
+### Audioerstellung
+
+Die Audiodateien werden mithilfe der verarbeiteten Daten erstellt. Es werden Lückentexte vorgegeben, die mit den gewünschten Daten gefüllt werden. Es gibt die Möglichkeit mehrere verschiedene Sätze pro möglichen Satz zu hinterlegen, um daraus zufällig einen auszuwählen, so bekommen die Audiodateien eine gewisse Dynamik und es hört sich nicht immer gleich an. Die Sätze können auch unter `transform` schon erstellt werden, jedoch müssen sie unter `audio` hinzugefügt werden, damit sie in eine Audiodatei umgewandelt werden.
+Die Audiodateien werden standardmäßig mit der gTTS-Library erstellt. Man kann allerdings weitere Audiotools zur Generierung der Audiodateien wie z.B. Azure verwenden, wenn man einen API-Key dafür hat.
+
+#### Zusammenführung von Bildern und Audios
+Um am Ende alle Grafiken, Tabellen und Wordclouds zu einem Video zusammenzufügen, wird das Tool `FFMPEG` verwendet. Dieses Tool bietet die Möglichkeit, Bilder aneinander zu schneiden und mit einer Audiodatei zu unterlegen. 
+
+
+### Umgesetzte besondere Herausforderungen
+
+<-- TO DO --> wurde das alles umgesetzt?
+
+- Programm für Produktionsbetrieb absichern und zuverlässig machen
+- Kompatibilität mit verschiedenen Betriebssystemen
+- Verständliches und einfach zu bedienendes User Interface
+- Speicherung von Secrets (z.B.: `API-Keys`)
+- Umgang mit auftretenden Programmfehlern
+- API-Daten sinnvoll zusammenbauen (individuell auf verschiedene Daten reagieren)
+- Gute Sprachausgabe (komische Aussprache durch verschiedene Formulierungen vermeiden)
+
+### Nicht umgesetzte besondere Herausforderungen
+
+<-- TO DO -->
+
+### Nichtfunktionale Anforderungen
+Das Programm ist um weitere Schnittstellen einfach erweiterbar sein. API-Antworten im JSON-Format können einfach weiterverarbeitet werden.
+
+
+### Möglichkeiten der Erweiterung der Software
+
+Die Software kann leicht durch weitere API-Schnittstellen erweitert werden, um weitere Themen zu integrieren. Beispielsweise Themen wie Corona oder ein Quiz. 
+Zudem können weitere Funktionen zur Erstellung von Grafiken wie zum Beispiel Diagramme hinzugefügt werden, um die Population der Welt darzustellen oder Tabellen.
+
+Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen. (siehe _Abbildung 14_)
+
+<figure>
+  <img width="100%" src="../_static/images/mainreport/EditorExample.png" />
+  <figcaption>Abbildung 14</figcaption>
+</figure>
+<br>
