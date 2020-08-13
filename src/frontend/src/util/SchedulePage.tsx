@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Schedule} from "./schedule";
 import {DeleteSchedule} from "./deleteSchedule";
-import {Box, Tab, Tabs, Typography} from "@material-ui/core";
+import {Tab, Tabs} from "@material-ui/core";
 import {ScheduleSelection} from "../JobCreate/ScheduleSelection";
 import {DeleteSelection} from "../JobCreate/DeleteSelection";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
@@ -24,14 +24,16 @@ interface Props {
     deleteSchedule: DeleteSchedule
     selectScheduleHandler: (schedule: Schedule) => void;
     selectDeleteScheduleHandler: (deleteSchedule: DeleteSchedule) => void;
+    handleHintState: (hintState: number) => void;
 }
 
-export const SchedulePage: React.FC<Props> = ({schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler}) => {
+export const SchedulePage: React.FC<Props> = ({schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState}) => {
     const classes = useStyles();
 
     const [value, setValue] = React.useState("1");
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+        handleHintState(Number(newValue)+1)
         setValue(newValue);
     };
 
