@@ -21,11 +21,11 @@ import { Fade, Grid, Typography } from '@material-ui/core';
 import { useCallFetch } from '../Hooks/useCallFetch';
 import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
 import { getUrl } from '../util/fetchUtils';
-import {HintButton} from "../util/HintButton";
-import {ComponentContext} from "../ComponentProvider";
+import { HintButton } from "../util/HintButton";
+import { ComponentContext } from "../ComponentProvider";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import {DeleteSchedule} from "../util/deleteSchedule";
-import {SchedulePage} from "../util/SchedulePage";
+import { DeleteSchedule } from "../util/deleteSchedule";
+import { SchedulePage } from "../util/SchedulePage";
 
 
 export default function JobCreate() {
@@ -182,7 +182,6 @@ export default function JobCreate() {
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         handleHintState(activeStep + 1);
-        console.log(activeStep);
         if (activeStep === 2) {
             delay();
         }
@@ -306,7 +305,7 @@ export default function JobCreate() {
             case 1:
                 return (
                     <ParamSelection
-                        topics={topics}
+                        topicNames={topics.map(t => t.topicName)}
                         values={paramValues}
                         params={paramLists}
                         loadFailedProps={{
@@ -325,6 +324,7 @@ export default function JobCreate() {
                         selectScheduleHandler={handleSelectSchedule}
                         selectDeleteScheduleHandler={handleSelectDeleteSchedule}
                         handleHintState={handleHintState}
+                        paramSelectionProps={undefined}
                     />
                 )
             default:
@@ -380,7 +380,7 @@ export default function JobCreate() {
                     <Fade in={true}>
                         <div className={classes.MPaddingTB}>
                             <Grid container spacing={2}>
-                                 <Grid container item justify="center">
+                                <Grid container item justify="center">
                                     <CheckCircleIcon
                                         className={classes.checkIcon}
                                         color={"disabled"}
