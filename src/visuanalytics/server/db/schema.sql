@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Mo. Aug. 3 20:50:18 2020
+-- File generated with SQLiteStudio v3.2.1 on Do. Aug. 13 19:40:57 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -14,9 +14,6 @@ CREATE TABLE job
     job_id      INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
                         NOT NULL,
-    steps_id    INTEGER NOT NULL
-        REFERENCES steps (steps_id) ON DELETE CASCADE
-            ON UPDATE CASCADE,
     job_name    VARCHAR NOT NULL,
     schedule_id INTEGER NOT NULL
         UNIQUE
@@ -32,13 +29,32 @@ CREATE TABLE job_config
     job_config_id INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
                        NOT NULL,
-    job_id        INTEGER REFERENCES job ON DELETE CASCADE
-        ON UPDATE CASCADE
-                       NOT NULL,
     [key]         TEXT NOT NULL,
     value         TEXT NOT NULL,
-    type          VARCHAR CHECK (type IN
-                                 ("string", "number", "multi_string", "multi_number", "boolean", "enum", "sub_params") )
+    type          VARCHAR CHECK (type IN ("string", "number", "multi_string", "multi_number", "boolean", "enum",
+                                          "sub_params") ),
+    position_id   INTEGER REFERENCES job_topic_position (position_id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+                       NOT NULL
+);
+
+
+-- Table: job_topic_position
+DROP TABLE IF EXISTS job_topic_position;
+
+CREATE TABLE job_topic_position
+(
+    position_id INTEGER PRIMARY KEY
+        UNIQUE
+        NOT NULL,
+    job_id      INTEGER REFERENCES job (job_id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+        NOT NULL,
+    steps_id    INTEGER REFERENCES steps (steps_id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+        NOT NULL,
+    position    INTEGER CHECK (position >= 0)
+        NOT NULL
 );
 
 
