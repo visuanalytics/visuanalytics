@@ -191,6 +191,8 @@ export default function JobCreate() {
             <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
             <Typography variant="h6" >wöchentlich</Typography>
             <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6" >Intervall</Typography>
+            <Typography gutterBottom>Das Video wird nach dem angegebenen Intervall generiert</Typography>
             <Typography variant="h6" >an festem Datum</Typography>
             <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
         </div>
