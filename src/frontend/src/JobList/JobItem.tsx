@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip } from "@material-ui/core";
+import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues, Param } from "../util/param";
+import { Button, Container, Fade, InputBase, Modal, Paper, withStyles, TextField, Tooltip, Divider } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -58,10 +58,14 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         },
     })(InputBase);
 
+    const initParamValues = (topics: any) => {
+        return topics.map((t: any) => { return { ...initSelectedValues(t.params), ...t.values } })
+    }
+
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
     const [open, setOpen] = React.useState(false);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({ ...initSelectedValues(job.params), ...job.values });
+    const [paramValues, setParamValues] = React.useState<ParamValues[]>(initParamValues(job.topics));
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [error, setError] = React.useState(false);
@@ -76,9 +80,9 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         setSchedule(schedule);
     }
 
-    const handleSelectParam = (key: string, value: any) => {
-        const updated = { ...paramValues }
-        updated[key] = value;
+    const handleSelectParam = (key: string, value: any, idx: number) => {
+        const updated = [...paramValues]
+        updated[idx][key] = value;
         setParamValues(updated);
     }
 
@@ -104,7 +108,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         },
         body: JSON.stringify({
             jobName: jobName.trim(),
-            values: toTypedValues(trimParamValues(paramValues), job.params),
+            //    values: toTypedValues(trimParamValues(paramValues), job.params), TODO (David)
             schedule: withFormattedDates(schedule)
         })
     }, handleEditSuccess, handleEditError);
@@ -145,7 +149,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                 setError(true);
                 return;
             }
-            if (!validateParamValues(paramValues, job.params)) {
+            if (!job.topics.every((t: any) => validateParamValues(t.values, t.params))) {
                 setErrorMessage("Parameter nicht korrekt gesetzt");
                 setError(true);
                 return;
@@ -169,10 +173,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                     <div className={classes.SPaddingTRB}>
                         <TextField
                             label="Thema"
-                            defaultValue={job.topicName}
+                            defaultValue={String(job.topics.map((t: any) => t.topicName)).split(",").join(", ")}
                             InputProps={{
                                 disabled: true,
                             }}
+                            multiline
                             variant="outlined"
                             fullWidth
                         />
@@ -219,6 +224,27 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
         }
         const handleCloseSuccess = () => {
             setSucess({ open: false, stateType: success.stateType, message: success.message });
+        }
+
+        const renderParamFields = (params: Param[] | undefined, topicName: string, idx: number) => {
+            return (
+                <div key={idx}>
+                    <div className={classes.MPaddingTB} >
+                        <div style={{ textAlign: "center" }}>
+                            <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
+                        </div>
+                    </div>
+                    <ParamFields
+                        params={params}
+                        values={paramValues[idx]}
+                        selectParamHandler={handleSelectParam}
+                        disabled={false}
+                        required={true}
+                        index={idx}
+                    />
+                    <Divider />
+                </div>
+            )
         }
 
         return (
@@ -318,7 +344,9 @@ export const JobItem: React.FC<Props> = ({ job, getJobs }) => {
                         </Modal>
                         <Grid item md={6}>
                             <div>
-                                { /* TODO (David)
+                                {
+                                    job.topics.map((t: any, i: number) => renderParamFields(t.params, t.topicName, i))
+                                /* TODO (David)
                                 <ParamFields
                                     params={job.params}
                                     values={paramValues}
