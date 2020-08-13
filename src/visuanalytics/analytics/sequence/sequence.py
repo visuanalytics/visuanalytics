@@ -9,6 +9,7 @@ import uuid
 from mutagen.mp3 import MP3
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.sequence.util.attach_utils import init_pipeline, extend_out_config
 from visuanalytics.analytics.util.step_errors import raise_step_error, SequenceError, FFmpegError
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
@@ -38,41 +39,46 @@ def link(values: dict, step_data: StepData):
     :rtype: str
     """
     out_images, out_audios, out_audio_l = [], [], []
+    attach_mode = step_data.get_config("attach_mode", "")
+
     seq_func = get_type_func(values["sequence"], SEQUENCE_TYPES)
     seq_func(values, step_data, out_images, out_audios, out_audio_l)
 
-    if step_data.get_config("attach", None) is not None:
-        if step_data.get_config("separate_rendering", False) is False:
+    if step_data.get_config("attach", None) is not None and not attach_mode:
+        if not step_data.get_config("separate_rendering", False):
             for item in step_data.get_config("attach", None):
-                from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-                # todo @ Max set corect PipelinID
-                pipeline = Pipeline(0, step_data.data["_pipe_id"], item["steps"], item.get("config", {}), True)
+                pipeline = init_pipeline(step_data, step_data.data["_pipe_id"], item["steps"],
+                                         config=item.get("config", {}),
+                                         no_tmp_dir=True)
                 pipeline.start()
-                if pipeline.current_step != -2:
-                    seq_func = get_type_func(pipeline.config["sequence"], SEQUENCE_TYPES)
-                    seq_func(pipeline.config, step_data, out_images, out_audios, out_audio_l)
-            _link(out_images, out_audios, out_audio_l, step_data, values)
+
+                # Add images and audios from the Pipeline
+                extend_out_config(pipeline.config["sequence"], out_images, out_audios, out_audio_l)
+
+            _generate(out_images, out_audios, out_audio_l, step_data, values)
         else:
-            _link(out_images, out_audios, out_audio_l, step_data, values)
+            _generate(out_images, out_audios, out_audio_l, step_data, values)
             sequence_out = [values["sequence"]]
+
             for idx, item in enumerate(step_data.get_config("attach", None)):
-                from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-                config = item.get("config", {})
-                config["output_path"] = step_data.get_config("output_path", "")
-                config["job_name"] = f"subtask{idx}"
-                # todo @ Max set corect PipelinID
-                pipeline = Pipeline(0, uuid.uuid4().hex, item["steps"], config, no_cleanup=True)
+                pipeline = init_pipeline(step_data, uuid.uuid4().hex, item["steps"], idx, item.get("config", {}))
                 pipeline.start()
-                if pipeline.current_step != -2:
-                    sequence_out.append(pipeline.config["sequence"])
-            try:
+
+                sequence_out.append(pipeline.config["sequence"])
+
                 _combine(sequence_out, step_data, values)
-            except:
-                pass
-            for file in sequence_out:
-                os.remove(file)
+
+                for file in sequence_out:
+                    os.remove(file)
     else:
-        _link(out_images, out_audios, out_audio_l, step_data, values)
+        if attach_mode == "combined":
+            values["sequence"] = {
+                "out_images": out_images,
+                "out_audios": out_audios,
+                "out_audio_l": out_audio_l
+            }
+        else:
+            _generate(out_images, out_audios, out_audio_l, step_data, values)
 
 
 @register_sequence
@@ -114,7 +120,7 @@ def custom(values: dict, step_data: StepData, out_images, out_audios, out_audio_
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
 
 
-def _link(images, audios, audio_l, step_data: StepData, values: dict):
+def _generate(images, audios, audio_l, step_data: StepData, values: dict):
     try:
         if step_data.get_config("h264_nvenc", False):
             os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
