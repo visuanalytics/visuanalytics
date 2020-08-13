@@ -5,7 +5,7 @@ import requests
 import xmltodict
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError
+from visuanalytics.analytics.util.step_errors import APIError, raise_step_error, APiRequestError, TestDataError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 from visuanalytics.util import resources
 
@@ -45,7 +45,7 @@ def request(values: dict, data: StepData, name: str, save_key, ignore_testing=Fa
 
 @register_api
 def input(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
-    res = data.format_api(values["input"], values.get("api_key_name", None), values)
+    res = data.deep_format(values["data"], values=values)
     data.insert_data(save_key, res, values)
 
 
@@ -115,10 +115,11 @@ def request_multiple_custom(values: dict, data: StepData, name: str, save_key, i
 
 def _load_test_data(values: dict, data: StepData, name, save_key):
     logger.info(f"Loading test data from 'exampledata/{name}.json'")
-    with resources.open_resource(f"exampledata/{name}.json") as fp:
-        data.insert_data(save_key, json.loads(fp.read()), values)
-
-    # TODO(max) Catch possible errors
+    try:
+        with resources.open_resource(f"exampledata/{name}.json") as fp:
+            data.insert_data(save_key, json.loads(fp.read()), values)
+    except IOError as e:
+        raise TestDataError(name) from e
 
 
 def _fetch(values: dict, data: StepData, save_key):
@@ -137,7 +138,7 @@ def _fetch(values: dict, data: StepData, save_key):
     s = requests.session()
     response = s.send(req.prepare())
 
-    if response.status_code != 200:
+    if not response.ok:
         raise APiRequestError(response)
 
     # Get the Right Return Format
@@ -162,13 +163,13 @@ def _create_query(values: dict, data: StepData):
 
     # Get/Format Method and Headers
     req["method"] = data.format(values.get("method", "get"))
-    req["headers"] = data.format_json(values.get("headers", None), api_key_name, values)
+    req["headers"] = data.deep_format(values.get("headers", None), api_key_name, values)
 
     # Get/Format Body Data
     req["body_type"] = data.format(values.get("body_type", "json"), values)
 
     if req["body_type"].__eq__("json"):
-        req[req["body_type"]] = data.format_json(values.get("body", None), api_key_name, values)
+        req[req["body_type"]] = data.deep_format(values.get("body", None), api_key_name, values)
     else:
         req[req["body_type"]] = data.format(values.get("body", None))
 
@@ -179,7 +180,7 @@ def _create_query(values: dict, data: StepData):
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
 
     # Get/Format Params
-    req["params"] = data.format_json(values.get("params", None), api_key_name, values)
+    req["params"] = data.deep_format(values.get("params", None), api_key_name, values)
     if values.get("params_array", None) is not None:
         _build_params_array(values, data, api_key_name, req)
 
@@ -197,8 +198,8 @@ def _build_params_array(values: dict, data: StepData, api_key_name: str, req: di
         req["params"] = {}
 
     for params in values["params_array"]:
-        params_array = data.get_data_array(params["array"], values)
-        data.format_array(params_array, api_key_name, values)
+        params_array = data.get_data(params["array"], values, list)
+        data.deep_format(params_array, api_key_name, values)
 
         param = "".join(
             [

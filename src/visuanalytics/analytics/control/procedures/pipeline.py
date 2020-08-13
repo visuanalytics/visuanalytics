@@ -3,6 +3,8 @@ import logging
 import os
 import shutil
 import time
+import traceback
+from datetime import datetime
 
 from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -13,8 +15,9 @@ from visuanalytics.analytics.storing.storing import storing
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
 from visuanalytics.analytics.transform.transform import transform
 from visuanalytics.analytics.util.video_delete import delete_video
+from visuanalytics.server.db.job import insert_log, update_log_finish, update_log_error
 from visuanalytics.util import resources
-from visuanalytics.util.resources import get_current_time
+from visuanalytics.util.resources import DATE_FORMAT
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +40,11 @@ class Pipeline(object):
                7: {"name": "Ready"}}
     __steps_max = 7
     cleanup = [True, True]
+    __log_states = {"running": 0, "finished": 1, "error": -1}
 
-    def __init__(self, pipeline_id: str, step_name: str, steps_config=None, no_sequence=False, no_cleanup=False):
+    def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
+                 no_sequence=False,
+                 no_cleanup=False):
         if steps_config is None:
             steps_config = {}
 
@@ -46,9 +52,12 @@ class Pipeline(object):
         self.steps_config = steps_config
         self.__start_time = 0.0
         self.__end_time = 0.0
+        self.__job_id = job_id
         self.__id = pipeline_id
         self.__config = {}
         self.__current_step = -1
+        self.__log_to_db = log_to_db
+        self.__log_id = None
 
         if no_sequence:
             self.__steps_max = 6
@@ -97,8 +106,25 @@ class Pipeline(object):
         """
         return self.__steps[self.__current_step]["name"]
 
+    def __get_default_config(self, run_config: dict):
+        default_config = {}
+        for c, v in run_config.items():
+            # If config has sub_params: include all sub_params
+            if v["type"] == "sub_params":
+                default_config.update(self.__get_default_config(v["sub_params"]))
+
+            default_config[c] = v.get("default_value", None)
+
+        return default_config
+
     def __setup(self):
         logger.info(f"Initializing Pipeline {self.id}...")
+
+        self.__start_time = time.time()
+
+        # Insert job into Table
+        log_id = self.__update_db(insert_log, self.__job_id, self.__log_states["running"], round(self.__start_time))
+        self.__log_id = log_id
 
         # Load json config file
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
@@ -107,10 +133,34 @@ class Pipeline(object):
         if self.cleanup:
             os.mkdir(resources.get_temp_resource_path("", self.id))
 
-        logger.info(f"Inizalization finished!")
+        # Init Steps config with default config
+        steps_config = self.__get_default_config(self.__config.get("run_config", {}))
+        steps_config.update(self.steps_config)
+        self.steps_config = steps_config
 
-    @staticmethod
-    def __on_completion(values: dict, data: StepData):
+        # Init out_time
+        self.__config["out_time"] = datetime.fromtimestamp(self.__start_time).strftime(DATE_FORMAT)
+
+        logger.info(f"Initialization finished!")
+
+    def __update_db(self, func: callable, *args, **kwargs):
+        if self.__log_to_db:
+            return func(*args, **kwargs)
+
+    def __on_completion(self, values: dict, data: StepData):
+        delete_video(self.steps_config, self.__config)
+
+        # Set state to ready
+        self.__current_step = self.__steps_max
+
+        # Set endTime and log
+        self.__end_time = time.time()
+        completion_time = round(self.__end_time - self.__start_time, 2)
+        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
+
+        # Update DB logs
+        self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)
+
         cp_request = data.get_config("on_completion")
 
         # IF ON Completion is in config send Request
@@ -159,10 +209,8 @@ class Pipeline(object):
         """
         try:
             self.__setup()
-            data = StepData(self.steps_config, self.id)
+            data = StepData(self.steps_config, self.id, self.__config.get("presets", None))
 
-            self.__config["out_time"] = get_current_time()
-            self.__start_time = time.time()
             logger.info(f"Pipeline {self.id} started!")
 
             for self.__current_step in range(0, self.__steps_max):
@@ -188,9 +236,20 @@ class Pipeline(object):
             if self.cleanup[0]:
                 self.__cleanup()
             return True
-
-        except Exception:
+        except (KeyboardInterrupt, SystemExit):
+            # TODO (max) db updaten und current_step setzen
+            self.__cleanup()
+            raise
+        except Exception as e:
             self.__current_step = -2
+
+            if not self.__log_id is None:
+                self.__update_db(update_log_error,
+                                 self.__log_id,
+                                 self.__log_states["error"],
+                                 f"{e.__class__.__name__}: {e}",
+                                 traceback.format_exc())
+
             logger.exception(f"An error occurred: ")
             logger.info(f"Pipeline {self.id} could not be finished.")
             if self.cleanup:

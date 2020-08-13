@@ -6,6 +6,7 @@ import traceback
 
 import flask
 from flask import (Blueprint, request)
+
 from visuanalytics.server.db import db, queries
 
 api = Blueprint('api', __name__)
@@ -124,3 +125,13 @@ def remove(job_id):
         traceback.print_exc()  # For debugging, should be removed later
         err = flask.jsonify({"err_msg": "An error occurred while deleting the job"})
         return err, 400
+
+
+@api.route("/logs", methods=["GET"])
+def logs():
+    """
+    Endpunkt `/logs`.
+
+    Gibt die logs der jobs zurück
+    """
+    return flask.jsonify(queries.get_logs())

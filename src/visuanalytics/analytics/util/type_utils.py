@@ -1,9 +1,12 @@
+import functools
 from typing import Type
 
-from visuanalytics.analytics.util.step_errors import StepTypeError, raise_step_error
+from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.util.step_errors import StepTypeError, raise_step_error, StepError
+from visuanalytics.util.dict_utils import merge_dict
 
 
-def register_type_func(types: dict, error: Type[Exception], func):
+def register_type_func(types: dict, error: Type[StepError], func):
     """ Registriert die Übergebene Funktion,
     und versieht sie mit einem try except block
 
@@ -12,6 +15,22 @@ def register_type_func(types: dict, error: Type[Exception], func):
     :param func: Zu registrierende Funktion.
     :return: funktion mit try, catch block.
     """
+    func = raise_step_error(error)(func)
+
+    @functools.wraps(func)
+    def type_func(values: dict, data: StepData, *args, **kwargs):
+        # Replace presets
+        if "preset" in values:
+            # TODO (Max) may give values a higher prio
+            merge_dict(values, data.get_preset(values["preset"]))
+
+        return func(values, data, *args, **kwargs)
+
+    types[func.__name__] = type_func
+    return type_func
+
+
+def register_type_func_no_data(types: dict, error: Type[StepError], func):
     func = raise_step_error(error)(func)
 
     types[func.__name__] = func
