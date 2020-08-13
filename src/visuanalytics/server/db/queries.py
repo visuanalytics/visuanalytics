@@ -35,7 +35,7 @@ def get_job_list():
     con = db.open_con_f()
 
     res = con.execute("""
-        SELECT job_id, job_name, schedule.type, time, date,
+        SELECT job_id, job_name, schedule.type, time, STRFTIME('%Y-%m-%d', date) as date,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(distinct position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
