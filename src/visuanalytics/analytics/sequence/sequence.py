@@ -180,13 +180,14 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
 
 def _combine(sequence_out: list, step_data: StepData, values: dict):
     try:
-        args = ["ffmpeg", "-i"]
+        args = ["ffmpeg", "-loglevel", "8", "-i"]
         concat = "concat:"
         file_temp = []
         output = resources.get_temp_resource_path(f"file.mkv", step_data.data["_pipe_id"])
         for idx, file in enumerate(sequence_out):
             temp_file = resources.get_temp_resource_path(f"temp{idx}.ts", step_data.data["_pipe_id"])
-            args2 = ["ffmpeg", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts", temp_file]
+            args2 = ["ffmpeg", "-loglevel", "8", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts",
+                     temp_file]
 
             subprocess.run(args2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
@@ -201,7 +202,7 @@ def _combine(sequence_out: list, step_data: StepData, values: dict):
 
         new_output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
                                             step_data.get_config("job_name", ""))
-        args = ["ffmpeg", "-i", output, new_output]
+        args = ["ffmpeg", "-loglevel", "8", "-i", output, new_output]
 
         subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
         values["sequence"] = output
