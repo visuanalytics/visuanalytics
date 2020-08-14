@@ -8,7 +8,6 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TabContext, TabPanel } from "@material-ui/lab";
 import { ParamSelectionProps, ParamSelection } from "../JobCreate/ParamSelection";
 
-// TODO: rename
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +31,7 @@ interface Props {
     paramSelectionProps: ParamSelectionProps | undefined
 }
 
-export const SchedulePage: React.FC<Props> = ({ offset, schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState, paramSelectionProps }) => {
+export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState, paramSelectionProps }) => {
     const classes = useStyles();
 
     const [value, setValue] = React.useState("1");

@@ -4,8 +4,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues, validateParamValue } from '../util/param';
-import {BooleanParam} from './BooleanParam'
-import { Topic } from '../JobCreate/TopicSelection';
+import { BooleanParam } from './BooleanParam'
 
 
 interface ParamFieldProps extends ParamField {
