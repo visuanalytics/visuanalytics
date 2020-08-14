@@ -7,8 +7,8 @@ export const useStyles = makeStyles((theme) => ({
     jobCreateBox: {
         backgroundColor: 'white',
         textAlign: "center",
-        border: "solid #b4b4b4 1px",
-        borderRadius: "10px",
+        border: "solid rgba(0, 0, 0, 0.12) 1px",
+        borderRadius: "4px",
         width: '100%',
     },
     header: {
