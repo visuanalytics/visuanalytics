@@ -75,7 +75,7 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "data": "2019"
+          "data": "{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       }
     ]
