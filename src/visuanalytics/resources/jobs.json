@@ -5,12 +5,34 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "14:50",
+        "time": "14:02",
         "daily": true
       },
       "config": {
         "thumbnail": true,
-        "keep_count": 3
+        "attach": [
+          {
+            "steps": "twitter",
+            "config": {
+              "hashtags": [
+                "Bundesliga",
+                "Fußball"
+              ],
+              "stopwords": [
+                "Bundesliga",
+                "Werder"
+              ],
+              "normalize_words": true,
+              "colormap_words": "viridis",
+              "color_func": true,
+              "color_func_words": "145 46 5 35",
+              "figure": "circle",
+              "width_wordcloud": 1000,
+              "height_wordcloud": 1000
+            }
+          }
+        ],
+        "separate_rendering": true
       }
     },
     {
@@ -47,7 +69,7 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "14:46",
+        "time": "10:25",
         "daily": true
       },
       "config": {

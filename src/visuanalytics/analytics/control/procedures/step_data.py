@@ -18,13 +18,13 @@ class StepData(object):
     aus dem Modul :py:mod:`step_pattern` verwendet.
     """
 
-    def __init__(self, run_config, pipeline_id, presets: dict = None):
+    def __init__(self, run_config, pipeline_id, job_id, presets: dict = None):
         super().__init__()
 
         if presets is None:
             presets = {}
 
-        self.__data = {"_conf": run_config, "_pipe_id": pipeline_id}
+        self.__data = {"_conf": run_config, "_pipe_id": pipeline_id, "_job_id": job_id}
         self.__formatter = StepPatternFormatter()
         self.__presets = presets
 
@@ -133,15 +133,17 @@ class StepData(object):
         """
         Löscht alle Daten mit Ausnahme von `_conf` und `_pipe_id`.
         """
-        # Save Config and Pipe id
+        # Save Config, Pipe_id and Job_id
         _conf = self.__data["_conf"]
         _pipe_id = self.__data["_pipe_id"]
+        _job_id = self.__data["_job_id"]
 
         self.__data.clear()
 
-        # Restore Config and Pipe id
+        # Restore Config, Pipe_id and Job_id
         self.__data["_conf"] = _conf
         self.__data["_pipe_id"] = _pipe_id
+        self.__data["_job_id"] = _job_id
 
     def get_data(self, key, values: dict, return_on_type=None):
         """
