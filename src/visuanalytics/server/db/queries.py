@@ -56,9 +56,7 @@ def insert_job(job):
     con = db.open_con_f()
     job_name = job["jobName"]
     schedule = job["schedule"]
-    type = humps.decamelize(schedule["type"])
-    time = schedule["time"] if type != "interval" else None
-    date = schedule["date"] if type == "on_date" else None
+    type, time, date = _unpack_schedule(schedule)
     job_id = con.execute("INSERT INTO job(job_name, type, time, date) VALUES(?, ?, ?, ?)",
                          [job_name, type, time, date]).lastrowid
     if type == "weekly":
@@ -81,11 +79,9 @@ def update_job(job_id, updated_data):
         if key == "jobName":
             con.execute("UPDATE job SET job_name=? WHERE job_id =?", [value, job_id])
         if key == "schedule":
-            schedule_id = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()["schedule_id"]
-            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
-            con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
-            new_schedule_id = _insert_schedule(con, value)
-            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [new_schedule_id, job_id])
+            type, time, date = _unpack_schedule(value)
+            con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
+            con.execute("UPDATE job SET type=?, time=?, date=? WHERE job_id=?", [type, time, date, job_id])
         if key == "values":
             # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
             con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
@@ -205,15 +201,11 @@ def to_typed_value(v, t):
         return v == "True"
 
 
-def _insert_schedule(con, schedule):
-    schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
-                              [humps.decamelize(schedule["type"]),
-                               schedule["date"] if schedule["type"] == "onDate" else None,
-                               schedule["time"]]).lastrowid
-    if schedule["type"] == "weekly":
-        id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
-        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
-    return schedule_id
+def _unpack_schedule(schedule):
+    type = humps.decamelize(schedule["type"])
+    time = schedule["time"]
+    date = schedule["date"] if type == "on_date" else None
+    return type, time, date
 
 
 def _to_param_list(run_config):
