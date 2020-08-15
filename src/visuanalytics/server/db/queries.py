@@ -36,14 +36,14 @@ def get_job_list():
     con = db.open_con_f()
 
     res = con.execute("""
-        SELECT job_id, job_name, schedule.type, time, STRFTIME('%Y-%m-%d', date) as date,
+        SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(distinct position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
         GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
         FROM job 
-        INNER JOIN schedule USING (schedule_id)
-        LEFT JOIN schedule_weekday USING (schedule_id)
+        
+        LEFT JOIN schedule_weekday USING (job_id)
         INNER JOIN job_topic_position USING (job_id) 
         LEFT JOIN job_config USING (position_id) 
         INNER JOIN steps USING (steps_id)
@@ -52,34 +52,25 @@ def get_job_list():
     return [_row_to_job(row) for row in res]
 
 
-#   SELECT DISTINCT
-#   job_id, job_name, schedule.type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name, job_config.type,
-#   group_concat(DISTINCT weekday) AS weekdays,
-#   group_concat(DISTINCT key || ":"  || value || ":" || job_config.type) AS params
-#   FROM job
-#  INNER JOIN steps USING (steps_id)
-# LEFT JOIN job_config USING (job_id)
-#   INNER JOIN schedule USING (schedule_id)
-#  LEFT JOIN schedule_weekday USING (schedule_id)
-# GROUP BY (job_id);
-
-
 def insert_job(job):
     con = db.open_con_f()
-    schedule_id = _insert_schedule(con, job["schedule"])
-    job_id = con.execute("INSERT INTO job(job_name, schedule_id) VALUES(?, ?)",
-                         [job["jobName"], schedule_id]).lastrowid
+    job_name = job["jobName"]
+    schedule = job["schedule"]
+    type = humps.decamelize(schedule["type"])
+    time = schedule["time"] if type != "interval" else None
+    date = schedule["date"] if type == "on_date" else None
+    job_id = con.execute("INSERT INTO job(job_name, type, time, date) VALUES(?, ?, ?, ?)",
+                         [job_name, type, time, date]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(job_id, d) for d in schedule["weekdays"]]
+        con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
     _insert_param_values(con, job_id, job["topics"])
     con.commit()
 
 
 def delete_job(job_id):
     con = db.open_con_f()
-    job = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()
-    schedule_id = job["schedule_id"]
-    con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
-    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
-    con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
+    con.execute("PRAGMA foreign_keys = ON")
     con.execute("DELETE FROM job WHERE job_id=?", [job_id])
     con.commit()
 
