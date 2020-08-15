@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Do. Aug. 13 19:40:57 2020
+-- File generated with SQLiteStudio v3.2.1 on Sa. Aug. 15 15:27:09 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -11,13 +11,14 @@ DROP TABLE IF EXISTS job;
 
 CREATE TABLE job
 (
-    job_id      INTEGER PRIMARY KEY AUTOINCREMENT
+    job_id   INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
-                        NOT NULL,
-    job_name    VARCHAR NOT NULL,
-    schedule_id INTEGER NOT NULL
-        UNIQUE
-        REFERENCES schedule (schedule_id)
+                     NOT NULL,
+    job_name VARCHAR NOT NULL,
+    type     VARCHAR CHECK (type IN ("daily", "weekly", "interval", "on_date") )
+                     NOT NULL,
+    date     DATE,
+    time     TIME
 );
 
 
@@ -36,6 +37,25 @@ CREATE TABLE job_config
     position_id   INTEGER REFERENCES job_topic_position (position_id) ON DELETE CASCADE
         ON UPDATE CASCADE
                        NOT NULL
+);
+
+
+-- Table: job_logs
+DROP TABLE IF EXISTS job_logs;
+
+CREATE TABLE job_logs
+(
+    job_logs_id     INTEGER PRIMARY KEY AUTOINCREMENT
+                        NOT NULL
+        UNIQUE,
+    job_id          BIGINT REFERENCES job (job_id) ON DELETE CASCADE
+        ON UPDATE CASCADE
+                        NOT NULL,
+    state           INT NOT NULL,
+    error_msg       TEXT,
+    error_traceback TEXT,
+    duration        INT,
+    start_time      DATETIME
 );
 
 
@@ -84,7 +104,7 @@ CREATE TABLE schedule_weekday
     weekday             INTEGER(1) NOT NULL
         CHECK (weekday >= 0 AND
                weekday <= 6),
-    schedule_id REFERENCES schedule (schedule_id) ON DELETE CASCADE
+    job_id REFERENCES job (job_id) ON DELETE CASCADE
         ON UPDATE CASCADE
                                    NOT NULL
 );
@@ -103,20 +123,6 @@ CREATE TABLE steps
     json_file_name VARCHAR UNIQUE
                            NOT NULL
 );
-
-
--- Table: job_logs
-CREATE TABLE job_logs
-(
-    job_logs_id     INTEGER PRIMARY KEY AUTOINCREMENT                                  NOT NULL UNIQUE,
-    job_id          BIGINT REFERENCES job (job_id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    state           INT                                                                NOT NULL,
-    error_msg       TEXT,
-    error_traceback TEXT,
-    duration        INT,
-    start_time      DATETIME
-);
-
 
 
 COMMIT TRANSACTION;
