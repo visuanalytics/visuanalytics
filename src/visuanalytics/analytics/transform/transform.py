@@ -448,7 +448,7 @@ def random_value(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     if "array" in values:
-        for idx, key in data.loop_array(values["new_keys"], values):
+        for key in values["new_keys"]:
             array = data.get_data(values["array"], values, list)
             length = len(array)
 
