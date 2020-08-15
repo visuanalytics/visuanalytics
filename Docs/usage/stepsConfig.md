@@ -52,7 +52,7 @@ Es gibt einen Ordner "resources" in dem alle Bilder, Audiodateien, die API-Antwo
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
 Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
-**Beispiel**:
+**Beispiel**
 ```JSON
 {
 "path": "football/Matchday.png"
@@ -62,7 +62,7 @@ Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde
 ### string
 Um auf einen String in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
 
-Beispiel:
+**Beispiel**
 ```JSON
 {
 "text": "{_req|text}",
@@ -72,7 +72,7 @@ Beispiel:
 
 ### boolean
 Um auf einen boolean-Wert in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
+**Beispiel**
 ```JSON
 {
 "collocations": "_conf|collocations",
@@ -81,7 +81,7 @@ Beispiel:
 ```
 ### number
 Um auf einen Zahlenwert (int, double, float) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
+**Beispiel**
 ```JSON
 {
 "width": "_conf|width_wordcloud",
@@ -91,7 +91,7 @@ Beispiel:
 
 ### dict
 Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
+**Beispiel**
 ```JSON
 {
 "dict": "_conf|value"
@@ -100,7 +100,7 @@ Beispiel:
 
 ### list
 Um auf ein Array/eine Liste (list) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
+**Beispiel**
 ```JSON
 {
 "list": "_conf|value"
@@ -119,7 +119,7 @@ Key `text1` abgespeichert. Den modifizierten Text kann man nun wieder unter `tex
 Dann ist der default-Speicherplatz an der Stelle `text1`. Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
 Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verwendet, z.B. mit dem Wert `text_transformed`.
 
-**Beispiel**:
+**Beispiel**
 ```JSON
 {
     "type": "append",
@@ -1019,8 +1019,9 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
   "zeropaded_off": true
 }
 ```
-
+```warning::
 Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
+```
 
 #### date_weekday
 
@@ -1040,8 +1041,9 @@ Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
   "given_format": "%Y-%m-%d"
 }
 ```
-
+```warning::
 Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+```
 
 #### date_now
 
@@ -1056,9 +1058,10 @@ Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
   "format": "%Y-%m-%d"
 }
 ```
-
+```warning::
 Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
 Diese haben immer dasselbe Format.
+```
 
 ### wind_direction
 
@@ -1429,7 +1432,7 @@ bool - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes
 sortiert werden (kleinste Zahl als Erstes).
 
 Default: False.
-
+```warning::
 **Achtung:** 
  `USA` wird hier alphabetisch vor `United Kingdom` sortiert, da es andere Groß- und Kleinschreibung verwendet.
 
@@ -1441,7 +1444,7 @@ Default: False.
     ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
 }
 ```
-
+```
 ### most_common
 
 `most_common` betrachtet ein Array oder einen String und zählt die Häufigkeit der jeweils darin vorkommenden Wörter.
@@ -1680,11 +1683,11 @@ Der erste Buchstabe jedes Worts in dem Array wird groß geschrieben.
 
 ### normalize_words
 
-Wörter, welche öfter in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen
-für die Zählung der Häufigkeit und der Darstellung in der Wordcloud vereinheitlicht werden.
+Wörter, welche mehrmals in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen
+für die Zählung der Häufigkeit und zur Darstellung in der Wordcloud vereinheitlicht werden.
 
 Ein Array wird durchlaufen und jedes Wort, welches beim zweiten Vorkommen anders geschrieben wurde als das Wort beim
-ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vorgekommen ist.
+ersten Vorkommen, wird dann so geschrieben wie als es das erste Mal im Array vorgekommen ist.
 
 **Beispiel**
 
@@ -1694,7 +1697,6 @@ ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vor
 
 
 **Beispiel**
-
 ```JSON
 {
   "type": "normalize_words",
@@ -1710,8 +1712,8 @@ ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vor
 
 ## Storing
 
-Mit Hilfe von Storing können ganze Dictionarys oder auch einzelne Werte in Dateien gespeichert werden
-und in einem späterem Durchlauf des Programms wieder eingelesen werden
+Mit Hilfe von `storing` können ganze Dictionaries oder auch einzelne Werte in Dateien gespeichert werden
+und bei einem späterem Durchlauf des Programms wieder eingelesen werden.
 
 ```JSON
 {
@@ -1734,14 +1736,14 @@ und in einem späterem Durchlauf des Programms wieder eingelesen werden
 ```
 
 **`name`**:  
-str - Frei zu wähender Name des zu Exportierenden Dicts oder values (dieser Name wird später wieder zum importieren benötigt)
+str - Frei zu wählender Name des zu exportierenden Dictionaries oder Values (dieser Name wird später wieder zum importieren benötigt).
 
 **`key`**:  
-str - Angabe des Keys welcher exportiert werden soll
+str - Angabe des Keys, welcher exportiert werden soll.
 
 **`exclude`** _(optional)_:  
-list - Angabe von Keys welche beim exportieren nicht mit exportiert werden soll
-(Macht logischerweiße nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
+list - Angabe von Keys, welche beim exportieren nicht mit exportiert werden sollen.
+(Macht logischerweise nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
 
 ## Images
 
@@ -1906,8 +1908,8 @@ Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn
 
 Der Typ Image setzt ein Bild in das zuvor definierte source image
 
+**Beispiel**
 ```JSON
-
  {
   "description": "icon",
   "type": "image",
@@ -1956,8 +1958,8 @@ Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Wer
 
 Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 
+**Beispiel**
 ```JSON
-
 {
   "description": "icon",
   "type": "image_array",
@@ -1976,11 +1978,11 @@ Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 **`description`** _(optional)_:  
 Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
 
-**`pos_x`** :  
+**`pos_x`**:  
 X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
 (obere linke Ecke des Bildes)
 
-**`pos_y`** :  
+**`pos_y`**:  
 X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
 (obere linke Ecke des Bildes)
 
@@ -2008,8 +2010,8 @@ Kann ebenfalls wieder Liste oder String sein
 
 Der Typ `text` setzt einen Text in das zuvor definierte source image.
 
+**Beispiel**
 ```JSON
-
 {
    "description": "week_day",
    "type": "text",
@@ -2027,10 +2029,10 @@ Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur
 **`anchor_point`**:  
 Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
 
-**`pos_x`** :  
+**`pos_x`**:  
 X Koordinate des zu setztenden Textes
 
-**`pos_y`** :  
+**`pos_y`**:  
 Y Koordinate des zu setztenden Textes
 
 **`pattern`**:  
@@ -2056,8 +2058,8 @@ str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
 
 Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 
+**Beispiel**
 ```JSON
-
 {
  "description": "min_temp",
  "type": "text_array",
@@ -2081,10 +2083,10 @@ Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur
 **`anchor_point`**:  
 Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
 
-**`pos_x`** :  
+**`pos_x`**:  
 X Koordinate der zu setztenden Texte
 
-**`pos_y`** :  
+**`pos_y`**:  
 Y Koordinate der zu setztenden Texte
 
 **`pattern`**:  
@@ -2113,6 +2115,7 @@ str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
 Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
 eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
 
+**Default-Parameter für die Wordcloud**:
 ```PYTHON
 WORDCLOUD_DEFAULT_PARAMETER = {
     "background_color": "white",
@@ -2206,7 +2209,6 @@ set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dar
 bool - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
 
 **Beispiel** 
-
 ```JSON
 {
     "type": "wordcloud",
@@ -2245,12 +2247,12 @@ Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes an
 **Alternativ für `square` und `circle` möglich**:
 
 Erstellen einer Wordcloud mit weißem Hintergrund.
-"mode": "RGB" (default),
-"background_color": "white" (default)
+`"mode": "RGB"` (default),
+`"background_color": "white"` (default)
 
 Im Image-Overlay:
-"color": "RGBA",
-"color_transparency": "FFFFFF"
+`"color": "RGBA",
+"color_transparency": "FFFFFF"`
 
 Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
 und `circle`empfohlen.
@@ -2286,34 +2288,36 @@ Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann si
 
 ## Thumbnail
 
-In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann,
-sofern in der config angegeben neben dem Video zusätzlich erstellt
+In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann -
+sofern in der Konfiguration angegeben - neben dem Video zusätzlich erstellt.
 
+**Beispiel**
 ```JSON
 {
   "thumbnail": {
     "type": "new"
   }
 }
-
 ```
 
 ### created
+Das gewünschte Thumbnail-Bild, wurde schon zuvor schonals Bild erstellt.
 
+**Beispiel**
 ```JSON
 {
  "type": "created",
  "name": "wordcloud_all"   
 }
-
 ```
 
 **`name`**:  
-str - Angabe des Internen Namen des bereits erstellten Bildes
+str - Angabe des internen Namens des bereits erstellten Bildes
 
 
 ### new
-
+Das gewünschte Thumbnail-Bild soll neu erstellt werden.
+**Beispiel**
 ```JSON
 {
   "type": "new",
@@ -2324,11 +2328,10 @@ str - Angabe des Internen Namen des bereits erstellten Bildes
      ]
   } 
 }
-
 ```
 
 **`image`**:  
-dict - Hier wird ein Bild spezifiziert wie unter `images` erläutert
+dict - Hier wird ein Bild spezifiziert wie unter `images` erläutert.
 
 ## Audios
 
@@ -2337,6 +2340,7 @@ Der Abschnitt `audios` beinhaltet die Texte, die in eine Audio-Datei umgewandelt
 Video zusammengeschnitten. Die verschiedenen `parts`-Typen können mehrere Male hintereinander mit ihren Parametern
 angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede Audiodatei erhält noch einen Key als Dateinamen:
 
+**Beispiel**
 ```JSON
 {
   "audio": {
@@ -2354,7 +2358,6 @@ angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede 
 Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2379,7 +2382,6 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert größer, klein
 String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2437,7 +2439,6 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2479,7 +2480,6 @@ callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird 
 Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "type": "random_text",
@@ -2497,8 +2497,9 @@ Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
 ## Sequence
 
-Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
+Im `sequence`-Abschnitt der JSON-Konfigurationsdatei kann angegeben werden wie das Video auszusehen hat.
 
+**Beispiel**
 ```JSON
 {
  "sequence": {
@@ -2509,15 +2510,16 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 ```
 
 **`transitions`**:  
-float - wie lange das Bildübergängsintervall ist.
+float - Länge des Bildübergangsintervalls 
 
 ### successively
 
-Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
-und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
-definiert wurden. Jedes Bild wird so lange gezeigt wie die dazu geordnete Audio datei ist.
-Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Audios gibt
+`successively` ist der einfachste Typ der Videoerzeugung, es werden alle Bilder
+und alle Audiodateien in derselben Reihenfolge aneinandergehängt wie sie vorher in der JSON 
+definiert wurden. Jedes Bild wird so lange gezeigt wie die zugeordnete Audiodatei lang ist.
+Dies setzt voraus, dass es eine identische Anzahl von Bildern und Audiodateien gibt.
 
+**Beispiel**
 ```JSON
 {
   "type": "successively"
@@ -2527,17 +2529,17 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
 ### custom
 
 `custom` ist ein etwas schwierigerer sequence-Typ, dieser setzt nicht voraus, dass es dieselbe
-Anzahl an Bildern und Audios gibt. Das heißt man kann bestimmte Bilder doppelt oder auch gar nicht verwenden.
+Anzahl an Bildern und Audiodateien gibt. Das heißt man kann bestimmte Bilder doppelt oder auch gar nicht verwenden.
 `custom` funktioniert wie folgt:  
-Die Audios werden in der Reihenfolge aneinander gehängt wie in `audio_l` vorgegeben.  
-Die Bilder werden ebenfalls in der Reihenfolge wie in `image` angeben aneinander gehängt.  
-Jedes Bild wird solange gezeigt wie `time_diff` + Länge des Audios `audio_l`.
-Sollte kein Audio angegeben werden, wird dies als + 0 betrachtet.
+Die Audiodateien werden in der Reihenfolge aneinander gehängt wie in `audio_l` vorgegeben.  
+Die Bilder werden ebenfalls in der Reihenfolge wie in `image` angeben aneinandergehängt.  
+Jedes Bild wird solange gezeigt wie `time_diff` + Länge der Audiodaatei `audio_l`.
+Sollte keine Audiodatei angegeben werden, wird dies als + 0 betrachtet.
 Das heißt alle `time_diff`-Werte aufaddiert, müssen 0 ergeben,
 ansonsten passt die gesamte Audiolänge nicht auf alle Bilder.
 
+**Beispiel**
 ```JSON
-
 {
    "type": "custom",
    "pattern": [
@@ -2562,7 +2564,7 @@ ansonsten passt die gesamte Audiolänge nicht auf alle Bilder.
 str - Name des internen Bildes.
 
 **`time_diff`**_(optional)_:  
-int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer als die Audiodatei angezeigt werden soll.
+int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer, als die Audiodatei lang, ist angezeigt werden soll.
 
 **`audio_l`**_(optional)_:  
 str - Name der internen Audiodatei.
@@ -2663,7 +2665,7 @@ Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser
     }
 }
 ```
-**default_value**_(optional)_:
+**`default_value`**_(optional)_:
 [] - String-Array, z.B. ein leeres String-Array, das übergeben wird, wenn kein String eingegeben wurde..
 
 ### boolean
@@ -2679,7 +2681,7 @@ Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. 
      }
 }
 ```
-**default_value**
+**`default_value`**:
 bool - Wenn nichts ausgewählt wird, übergebe den hier angegebenen Parameter.
 
 
@@ -2741,10 +2743,11 @@ Wenn `"optional": true`, dann wird `default_value` nicht benötigt.
 
 ## Presets
 
-Presets werden verwendet, um z.B. Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben. 
+`presets` werden verwendet, um z.B. Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben. 
 Man kann hier auch Parameter wie Weite/Höhe etc. angeben, um es leichter zu haben, wenn man mehrmals Bilder erstellen möchte, die sich nur in wenigen Parametern unterscheiden.
 Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf. Erst ein Wort, dann zwei, dann drei, usw.
 
+**Beispiel**
 ```JSON
 {
  "presets": {
@@ -2763,16 +2766,16 @@ Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf
 ```
 
 **`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+str/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 **`font_size`**:  
-int - Größe des Textes
+int - Schriftgröße
 
 **`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei (Schriftart-Datei).
 
 **`"test_preset_1"`, `"test_preset_2":`**  
-str - Die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
+str - Die internen Namen der `presets`, sodass man sie in `images` mit dem Name, der hier angegeben wurde, verwenden kann.
 
 **Parameter**:
 Siehe außerdem die Parameter unter [`images`](#images).
