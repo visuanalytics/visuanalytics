@@ -9,7 +9,7 @@
     "params": {
       "postal_code": "{_conf|p_code}",
       "key": "{_api_key}",
-      "country": "DE"
+      "country": "{_conf|country}"
     }
   },
   "transform": [
@@ -2009,6 +2009,142 @@
       "display_name": "Postleitzahl",
       "optional": false,
       "default_value": "35394"
+    },
+    "country": {
+      "type": "enum",
+      "optional": true,
+      "display_name": "Land",
+      "enum_values": [
+        {
+          "display_value": "Belgien",
+          "value": "BE"
+        },
+        {
+          "display_value": "Griechenland",
+          "value": "EL"
+        },
+        {
+          "display_value": "Litauen",
+          "value": "LT"
+        },
+        {
+          "display_value": "Portugal",
+          "value": "PT"
+        },
+        {
+          "display_value": "Bulgarien",
+          "value": "BG"
+        },
+        {
+          "display_value": "Spanien",
+          "value": "ES"
+        },
+        {
+          "display_value": "Luxemburg",
+          "value": "LU"
+        },
+        {
+          "display_value": "Rumänien",
+          "value": "RO"
+        },
+        {
+          "display_value": "Tschechien",
+          "value": "CZ"
+        },
+        {
+          "display_value": "Frankreich",
+          "value": "FR"
+        },
+        {
+          "display_value": "Ungarn",
+          "value": "HU"
+        },
+        {
+          "display_value": "Slowenien",
+          "value": "SI"
+        },
+        {
+          "display_value": "Dänemark",
+          "value": "DK"
+        },
+        {
+          "display_value": "Kroatien",
+          "value": "HR"
+        },
+        {
+          "display_value": "Malta",
+          "value": "MT"
+        },
+        {
+          "display_value": "Slowakei",
+          "value": "SK"
+        },
+        {
+          "display_value": "Deutschland",
+          "value": "DE"
+        },
+        {
+          "display_value": "Italien",
+          "value": "IT"
+        },
+        {
+          "display_value": "Niederlande",
+          "value": "NL"
+        },
+        {
+          "display_value": "Finnland",
+          "value": "FI"
+        },
+        {
+          "display_value": "Estland",
+          "value": "EE"
+        },
+        {
+          "display_value": "Zypern",
+          "value": "CY"
+        },
+        {
+          "display_value": "Österreich",
+          "value": "AT"
+        },
+        {
+          "display_value": "Schweden",
+          "value": "SE"
+        },
+        {
+          "display_value": "Irland",
+          "value": "IE"
+        },
+        {
+          "display_value": "Lettland",
+          "value": "LV"
+        },
+        {
+          "display_value": "Polen",
+          "value": "PL"
+        },
+        {
+          "display_value": "Island",
+          "value": "IS"
+        },
+        {
+          "display_value": "Norwegen",
+          "value": "NO"
+        },
+        {
+          "display_value": "Liechtenstein",
+          "value": "LI"
+        },
+        {
+          "display_value": "Schweiz",
+          "value": "CH"
+        },
+        {
+          "display_value": "Vereinigtes Königreich",
+          "value": "uk"
+        }
+      ],
+      "default_value": "DE"
     },
     "read": {
       "type": "sub_params",
