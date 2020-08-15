@@ -75,7 +75,6 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
-    //  const [open, setOpen] = React.useState(false);
     const [openSettings, setOpenSettings] = React.useState(false);
     const [noEdit, setNoEdit] = React.useState(true);
     const [paramValues, setParamValues] = React.useState<ParamValues[]>(initParamValues(job.topics));
@@ -149,6 +148,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
     }
 
     const handleEditSuccess = () => {
+        setOpenSettings(false);
         getJobs()
         reportSuccess("Job erfolgreich geändert")
     }
@@ -175,7 +175,12 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
         },
         body: JSON.stringify({
             jobName: jobName.trim(),
-            //    values: toTypedValues(trimParamValues(paramValues), job.params), TODO (David)
+            topics: job.topics.map((t: any, idx: number) => {
+                return {
+                    topicId: t.topicId,
+                    values: toTypedValues(trimParamValues(paramValues[idx]), t.params)
+                }
+            }),
             schedule: withFormattedDates(schedule)
         })
     }, handleEditSuccess, handleEditError);
@@ -192,16 +197,10 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
     }, [schedule]);
 
     const renderJobItem = (job: Job) => {
-        const handleCloseSettings = () => {
-            setOpenSettings(false);
-        };
+
         const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
         };
-        const handleEditClick = () => {
-            setNoEdit(!noEdit);
-            setExpanded(String(job.jobId));
-        }
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
@@ -220,7 +219,6 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
         }
         const handleSaveModal = () => {
             handleCheckClick();
-            handleCloseSettings();
         }
 
         const handleDeleteJob = () => {
@@ -244,21 +242,17 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                         />
                     </div>
                     <div className={classes.SPaddingTRB}>
-                        <Tooltip title={noEdit ? "" : "Zeitplan bearbeiten"}
-                                 arrow
-                        >
-                            <TextField
-                                label="Zeitplan"
-                                value={showSchedule(schedule)}
-                                InputProps={{
-                                    disabled: true,
-                                }}
-                                required={!noEdit}
-                                variant="outlined"
-                                fullWidth
-                                error={!validateSchedule(schedule)}
-                            />
-                        </Tooltip>
+                        <TextField
+                            label="Zeitplan"
+                            value={showSchedule(schedule)}
+                            InputProps={{
+                                disabled: true,
+                            }}
+                            required={!noEdit}
+                            variant="outlined"
+                            fullWidth
+                            error={!validateSchedule(schedule)}
+                        />
                     </div>
                     <div>
                     </div>
@@ -283,21 +277,19 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon}/> :
                             <ExpandMore className={classes.expIcon}/>}
-                        <Typography component="span" className={classes.heading}>#{job.jobId}
+                        <Typography component="span" className={classes.heading}>
+                            #{job.jobId}
                             <NameInput
-                                value={jobName}
-                                readOnly={noEdit}
+                                defaultValue={jobName}
+                                readOnly
                                 inputProps={{
                                     style: {
-                                        cursor: noEdit ? "pointer" : "text",
-                                        borderBottom: noEdit ? "" : "2px solid #c4c4c4",
+                                        cursor: "pointer",
                                     }
-                                }}
-                                onClick={noEdit ? () => {
-                                } : (event) => event.stopPropagation()}
-                                onChange={handleJobName}
-                            >
-                                {job.jobName}</NameInput></Typography>
+                                }}>
+                                {job.jobName}
+                            </NameInput>
+                        </Typography>
 
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
@@ -340,7 +332,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                             aria-describedby="transition-modal-description"
                             className={classes.modal}
                             open={openSettings}
-                            onClose={handleCloseSettings}
+                            onClose={() => setOpenSettings(false)}
                             closeAfterTransition
                             BackdropComponent={Backdrop}
                             BackdropProps={{
@@ -366,9 +358,11 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                                     ?
                                                     (<InputBase
                                                         fullWidth
+                                                        disabled
                                                         value={jobName}
                                                         inputProps={{
                                                             style: {
+                                                                color: "black",
                                                                 textAlign: "center",
                                                                 fontSize: 20,
                                                                 cursor: "default"
@@ -378,6 +372,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                                     :
                                                     (<TextField
                                                         fullWidth
+                                                        onChange={handleJobName}
                                                         value={jobName}
                                                         inputProps={{
                                                             style: {textAlign: "center", fontSize: 20}
