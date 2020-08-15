@@ -16,8 +16,7 @@ def get_job_schedules():
         res = con.execute("""
         SELECT DISTINCT job_id, type, date, time, group_concat(DISTINCT weekday) AS weekdays
         FROM job 
-        INNER JOIN schedule USING(schedule_id) 
-        LEFT JOIN schedule_weekday USING(schedule_id)
+        LEFT JOIN schedule_weekday USING(job_id)
         GROUP BY(job_id)
         """).fetchall()
 
@@ -50,7 +49,7 @@ def insert_log(job_id: int, state: int, start_time: datetime):
         con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
-        
+
         # Only keep LOG_LIMMIT logs 
         con.execute(
             "DELETE FROM job_logs WHERE job_logs_id NOT IN (SELECT job_logs_id FROM job_logs ORDER BY job_logs_id DESC limit ?)",
