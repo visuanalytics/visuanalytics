@@ -18,7 +18,7 @@ class StepData(object):
     aus dem Modul :py:mod:`step_pattern` verwendet.
     """
 
-    def __init__(self, run_config, pipeline_id, job_id, presets: dict = None):
+    def __init__(self, run_config, pipeline_id, job_id, presets: dict = None, data_prefix="$"):
         super().__init__()
 
         if presets is None:
@@ -27,6 +27,7 @@ class StepData(object):
         self.__data = {"_conf": run_config, "_pipe_id": pipeline_id, "_job_id": job_id}
         self.__formatter = StepPatternFormatter()
         self.__presets = presets
+        self.__data_prefix = data_prefix
 
     @staticmethod
     def get_api_key(api_key_name):
@@ -191,7 +192,8 @@ class StepData(object):
         Ersetzt in allen Strings alle Werte in `{}` duch den Wert, dem man aus :func:`get_data` bekommt.
 
         Es werden alle elemente des Dictionaries/Arrays durchlaufen und bei debarf ersetzt.
-        Hierzu wird die Funktion :func:`format_api` verwendet.
+        Hierzu wird die Funktion :func:`format_api` verwendet. Beginn ein string mit einem $ symbol,
+        wird der restliche string alles key interpretiert, hierfür würd :func:`get_data` verwendet.
 
         :param config: Configurations Dict/Array/String/Num
         :param api_key_name: Name des ApiKeys
@@ -199,7 +201,7 @@ class StepData(object):
         :return: Formattierter input
         :raises: StepKeyError
         """
-        if config is None or isinstance(config, numbers.Number):
+        if config is None or isinstance(config, (numbers.Number, bool)):
             return config
 
         if values is None:
@@ -213,6 +215,12 @@ class StepData(object):
             for idx, value in enumerate(config):
                 config[idx] = self.deep_format(value, api_key_name, values)
             return config
+        if isinstance(config, str) and config.startswith(self.__data_prefix):
+            self.get_data(config[1:], values)
+
+        # Remove escape char for $
+        if config.startswith(f"~{self.__data_prefix}"):
+            config = config[1:]
 
         return self.format_api(config, api_key_name, values)
 
