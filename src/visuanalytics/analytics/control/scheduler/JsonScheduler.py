@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class JsonScheduler(Scheduler):
-    def __init__(self, file_path, base_config=None):
-        super().__init__(base_config)
+    def __init__(self, file_path):
+        super().__init__()
         self.__file_path = file_path
 
     @staticmethod

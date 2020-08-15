@@ -8,9 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class DbScheduler(Scheduler):
-    def __init__(self, base_config=None):
-        super().__init__(base_config)
-
     def __run_jobs(self, job_id):
         job_name, json_file_name, config = job.get_job_run_info(str(job_id))
         logger.info(f"Job {job_id}: '{job_name}' started")
