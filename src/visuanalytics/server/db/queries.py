@@ -117,7 +117,7 @@ def get_logs():
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
         "startTime": log["start_time"]
-        }
+    }
         for log in logs]
 
 
@@ -130,7 +130,7 @@ def _row_to_job(row):
         "type": humps.camelize(row["type"]),
         "date": row["date"],
         "time": row["time"],
-        "weekdays": weekdays
+        "weekdays": [int(d) for d in weekdays]
     }
     topics = [{}] * (int(row["topic_count"]))
     for tp_s in row["topic_positions"].split(","):
