@@ -172,9 +172,6 @@
               "on_equal": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
@@ -188,9 +185,6 @@
               "on_higher": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
@@ -203,9 +197,6 @@
               "on_lower": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
@@ -220,9 +211,6 @@
           "on_false": [
             {
               "type": "random_value",
-              "keys": [
-                "_loop"
-              ],
               "array": [
                 "Am {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
                 "Am {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
@@ -428,9 +416,6 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
             "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -445,9 +430,6 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
             "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -462,9 +444,6 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
             "{_key|TeamName} übernimmt die Führung. ",
             "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -484,9 +463,6 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
             "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
@@ -501,9 +477,6 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
             "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
@@ -520,9 +493,6 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
             "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
             "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
@@ -543,9 +513,6 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -559,9 +526,6 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -575,9 +539,6 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
             "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
             "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -597,9 +558,6 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
             "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -613,9 +571,6 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
             "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
@@ -630,9 +585,6 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
             "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
             "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
