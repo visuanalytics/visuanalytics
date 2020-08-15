@@ -459,7 +459,7 @@ def random_value(values: dict, data: StepData):
         for idx, key in data.loop_key(values["keys"], values):
             new_key = get_new_keys(values, idx)
             new_values = data.get_data(values.get("dict", None), values, dict)
-            value = data.get_data(key, values)
+            value = str(data.get_data(key, values))
             length = len(new_values[value])
 
             rand = randint(0, length - 1)
