@@ -17,9 +17,6 @@ class TestTransformRandomValue(unittest.TestCase):
         values = [
             {
                 "type": "random_value",
-                "keys": [
-                    "_req|test1"
-                ],
                 "array": [
                     "Text 1",
                     "Text 2",

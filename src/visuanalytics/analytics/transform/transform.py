@@ -123,8 +123,8 @@ def select_range(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     value_array = data.get_data(values["array_key"], values)
-    range_start = data.format(values.get("range_start", 0), values)
-    range_end = data.format(values["range_end"], values)
+    range_start = data.get_data(values.get("range_start", 0), values, int)
+    range_end = data.get_data(values["range_end"], values, int)
 
     data.insert_data(values["array_key"], value_array[range_start:range_end], values)
 
@@ -186,12 +186,12 @@ def replace(values: dict, data: StepData):
 
         new_value = value.replace(data.format(values["old_value"], values),
                                   data.format(values["new_value"], values),
-                                  data.format(values.get("count", -1), values))
+                                  data.get_data(values.get("count", -1), values, int))
         data.insert_data(new_key, new_value, values)
 
 
 @register_transform
-def translate_key(values: dict, data: StepData):
+def translate(values: dict, data: StepData):
     """Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON.
 
     :param values: Werte aus der JSON-Datei
@@ -200,8 +200,9 @@ def translate_key(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
+        translation = data.get_data(values["dict"], values, dict)
 
-        new_value = data.format(values["dict"][value], values)
+        new_value = data.format(translation[value], values)
         data.insert_data(new_key, new_value, values)
 
 
@@ -262,8 +263,8 @@ def date_format(values: dict, data: StepData):
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
         new_key = get_new_keys(values, idx)
-        zeropaded_off = values.get("zeropaded_off", None)
-        if (zeropaded_off is not None) and (zeropaded_off == True):
+        zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+        if zeropaded_off:
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
         else:
             new_value = date.strftime(data.format(values["format"], values))
@@ -284,8 +285,8 @@ def timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
-        zeropaded_off = values.get("zeropaded_off", None)
-        if (zeropaded_off is not None) and (zeropaded_off == True):
+        zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+        if zeropaded_off:
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
         else:
             new_value = date.strftime(data.format(values["format"], values))
@@ -331,8 +332,8 @@ def date_now(values: dict, data: StepData):
     """
     new_key = values["new_key"]
     value = datetime.now()
-    zeropaded_off = values.get("zeropaded_off", None)
-    if (zeropaded_off is not None) and (zeropaded_off == True):
+    zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+    if zeropaded_off:
         new_value = value.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
     else:
         new_value = value.strftime(data.format(values["format"], values))
@@ -370,12 +371,12 @@ def loop(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    loop_values = values.get("values", None)
+    loop_values = data.deep_format(values.get("values", None), values=values)
 
     # is Values is none use range
     if loop_values is None:
-        start = data.format(values.get("range_start", 0), values)
-        stop = data.format(values["range_stop"], values)
+        start = data.get_data(values.get("range_start", 0), values, int)
+        stop = data.get_data(values["range_stop"], values, int)
         loop_values = range(start, stop)
 
     for _ in data.loop_array(loop_values, values):
@@ -446,21 +447,24 @@ def random_value(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    array = values.get("array", None)
-    dict = values.get("dict", None)
-    for idx, key in data.loop_key(values["keys"], values):
-        new_key = get_new_keys(values, idx)
-        new_value = ""
-        if array is not None:
-            length = len(values["array"])
+    if "array" in values:
+        for idx, key in data.loop_array(values["new_keys"], values):
+            array = data.get_data(values["array"], values, list)
+            length = len(array)
+
             rand = randint(0, length - 1)
-            new_value = data.format(values["array"][rand], values)
-        elif dict is not None:
-            value = str(data.get_data(key, values))
-            length = len(values["dict"][value])
+            new_value = data.format(array[rand], values)
+            data.insert_data(key, new_value, values)
+    elif "dict" in values:
+        for idx, key in data.loop_key(values["keys"], values):
+            new_key = get_new_keys(values, idx)
+            new_values = data.get_data(values.get("dict", None), values, dict)
+            value = data.get_data(key, values)
+            length = len(new_values[value])
+
             rand = randint(0, length - 1)
-            new_value = data.format(values["dict"][value][rand], values)
-        data.insert_data(new_key, new_value, values)
+            new_value = data.format(new_values[value][rand], values)
+            data.insert_data(new_key, new_value, values)
 
 
 @register_transform

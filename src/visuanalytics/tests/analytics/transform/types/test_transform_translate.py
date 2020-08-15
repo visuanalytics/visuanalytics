@@ -3,7 +3,7 @@ import unittest
 from visuanalytics.tests.analytics.transform.transform_test_helper import prepare_test
 
 
-class TestTransformTranslateKey(unittest.TestCase):
+class TestTransformTranslate(unittest.TestCase):
     def setUp(self):
         self.data = {
             "test1": "250",
@@ -11,10 +11,10 @@ class TestTransformTranslateKey(unittest.TestCase):
             "test3": "550"
         }
 
-    def test_transform_translate_key_all(self):
+    def test_transform_translate_all(self):
         values = [
             {
-                "type": "translate_key",
+                "type": "translate",
                 "keys": [
                     "_req|test1",
                     "_req|test2",
@@ -45,4 +45,4 @@ class TestTransformTranslateKey(unittest.TestCase):
         }
 
         exp, out = prepare_test(values, self.data, expected_data)
-        self.assertDictEqual(exp, out, "translate key Failed")
+        self.assertDictEqual(exp, out, "translate Failed")

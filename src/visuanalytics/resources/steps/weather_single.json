@@ -182,7 +182,7 @@
           "delimiter": "-"
         },
         {
-          "type": "translate_key",
+          "type": "translate",
           "keys": [
             "_loop|weather|code"
           ],
