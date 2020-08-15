@@ -149,6 +149,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
 
     const handleEditSuccess = () => {
         setOpenSettings(false);
+        setNoEdit(true);
         getJobs()
         reportSuccess("Job erfolgreich geändert")
     }
@@ -221,9 +222,17 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
             handleCheckClick();
         }
 
+        const handleCloseModal = () => {
+            setNoEdit(true);
+            setOpenSettings(false);
+            setParamValues(initParamValues(job.topics));
+            setJobName(job.jobName);
+            setSchedule(fromFormattedDates(job.schedule));
+        }
+
         const handleDeleteJob = () => {
-            setConfirmDelete(false)
-            deleteJob()
+            setConfirmDelete(false);
+            deleteJob();
         }
 
         const renderTextField = () => {
@@ -244,14 +253,13 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                     <div className={classes.SPaddingTRB}>
                         <TextField
                             label="Zeitplan"
-                            value={showSchedule(schedule)}
+                            value={showSchedule(fromFormattedDates(job.schedule))}
                             InputProps={{
                                 disabled: true,
                             }}
                             required={!noEdit}
                             variant="outlined"
                             fullWidth
-                            error={!validateSchedule(schedule)}
                         />
                     </div>
                     <div>
@@ -280,7 +288,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                         <Typography component="span" className={classes.heading}>
                             #{job.jobId}
                             <NameInput
-                                defaultValue={jobName}
+                                value={job.jobName}
                                 readOnly
                                 inputProps={{
                                     style: {
@@ -290,7 +298,6 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                 {job.jobName}
                             </NameInput>
                         </Typography>
-
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
                                 <IconButton onClick={() => components?.setCurrent("jobLogs", {jobId: job.jobId})}
@@ -332,7 +339,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                             aria-describedby="transition-modal-description"
                             className={classes.modal}
                             open={openSettings}
-                            onClose={() => setOpenSettings(false)}
+                            onClose={handleCloseModal}
                             closeAfterTransition
                             BackdropComponent={Backdrop}
                             BackdropProps={{
@@ -416,7 +423,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                     onClose={() => setConfirmDelete(false)}
                 >
                     <DialogTitle>
-                        {`Job '#${job.jobId} ${job.jobName}' löchen?`}
+                        {`Job '#${job.jobId} ${job.jobName}' löschen?`}
                     </DialogTitle>
                     <DialogActions>
                         <Button autoFocus onClick={() => setConfirmDelete(false)} color="primary">
