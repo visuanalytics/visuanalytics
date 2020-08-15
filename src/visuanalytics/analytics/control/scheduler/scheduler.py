@@ -1,4 +1,5 @@
 import logging
+import re
 import threading
 import time
 import uuid
@@ -39,7 +40,7 @@ class Scheduler(object):
     def _start_job(self, job_id: int, job_name: str, steps_name: str, config: dict, log_to_db=False):
         # Add base_config if exists
         config = {**self._base_config, **config}
-        config["job_name"] = job_name
+        config["job_name"] = re.sub(r'\s+', '-', job_name.strip())
 
         t = threading.Thread(
             target=Pipeline(job_id,
