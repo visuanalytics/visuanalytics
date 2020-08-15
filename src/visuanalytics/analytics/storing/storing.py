@@ -24,7 +24,7 @@ def storing(values: dict, data: StepData):
     """
     if values.get("storing", None):
         for value in values["storing"]:
-            new_data = _remove_keys(values, data, value, data.get_data(value["key"], values))
+            new_data = _remove_keys(value, data, data.get_data(value["key"], values))
             name = data.format(value["name"])
             if value.get("safe_only_on_change", True):
                 try:
@@ -42,11 +42,11 @@ def storing(values: dict, data: StepData):
                                 value["name"], data.get_data(value.get("count", 10), values, int))
 
 
-def _remove_keys(values, data, value, export_data):
+def _remove_keys(value, data: StepData, export_data):
     if value.get("exclude", None) is not None:
         export_data = copy.deepcopy(export_data)
         for key in value["exclude"]:
-            key = data.format(key, value, values)
+            key = data.format(key)
             try:
                 data_remove_pattern(key, export_data)
             except StepKeyError:
