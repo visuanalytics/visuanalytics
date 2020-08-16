@@ -217,17 +217,13 @@ def alias(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for key, new_key in zip(values["keys"], values["new_keys"]):
-        try:
-            value = data.get_data(key, values)
-            new_key = data.format(new_key, values)
+        value = data.get_data(key, values)
+        new_key = data.format(new_key, values)
 
-            data.insert_data(new_key, value, values)
+        data.insert_data(new_key, value, values)
 
-            if not data.get_data(values.get("keep_old", False), {}, bool):
-                data.remove_data(key, values)
-        except:
-            if values.get("ignore_errors", False) is False:
-                raise
+        if not data.get_data(values.get("keep_old", False), {}, bool):
+            data.remove_data(key, values)
 
 
 @register_transform
@@ -739,7 +735,7 @@ def check_key(values: dict, data: StepData):
             if "init_with" in values:
                 init = data.deep_format(values["init_with"], values=values)
                 data.insert_data(key, init, values)
-            
+
             value = False
         if "new_keys" in values:
             data.insert_data(values["new_keys"][idx], value, values)
