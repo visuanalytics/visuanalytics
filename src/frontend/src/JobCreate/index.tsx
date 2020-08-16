@@ -156,7 +156,6 @@ export default function JobCreate() {
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
         handleHintState(activeStep + 1);
-        console.log(activeStep);
         if (activeStep === 2) {
             delay();
         }
@@ -314,7 +313,7 @@ export default function JobCreate() {
                                 <Grid item xs={10}>
                                     <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
                                 </Grid>
-                                <Grid container xs={1}>
+                                <Grid container item xs={1}>
                                     <HintButton content={hintContent[hintState]} />
                                 </Grid>
                             </Grid>
