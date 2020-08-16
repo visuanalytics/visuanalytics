@@ -200,6 +200,12 @@ class Pipeline(object):
         logger.info("Finished cleanup!")
 
     def __error_cleanup(self, e: Exception):
+        # If thumbnail was created and the video wasn`t generatet -> remove thumbnail
+        if isinstance(self.__config.get("thumbnail", None), str) and self.__current_step != self.__steps_max:
+            print(self.__config["thumbnail"])
+            with contextlib.suppress(FileNotFoundError):
+                os.remove(self.__config["thumbnail"])
+
         self.__current_step = -2
 
         if not self.__log_id is None:
@@ -211,12 +217,6 @@ class Pipeline(object):
 
         logger.exception(f"An error occurred: ")
         logger.info(f"{self.__log_name}  {self.id} could not be finished.")
-
-        # If thumbnail was created and the video wasn`t generatet -> remove thumbnail
-        if isinstance(self.__config.get("thumbnail", None), str) and self.__current_step != self.__steps_max:
-            print(self.__config["thumbnail"])
-            with contextlib.suppress(FileNotFoundError):
-                os.remove(self.__config["thumbnail"])
 
         self.__cleanup()
 
