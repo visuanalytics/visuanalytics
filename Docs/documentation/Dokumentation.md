@@ -4,11 +4,11 @@
 
 ### Gui
 
-Die grafische Benutzeroberfläche ist mit mithilfe des Web-Frameworks ReactJS in TypeScript geschrieben und mit der Erweiterung Material-UI designt.
+Die grafische Benutzeroberfläche wurde mithilfe des Web-Frameworks ReactJS in TypeScript geschrieben und mit der Erweiterung Material-UI designt.
 
 ### Struktur
 
-Die Oberfläche besteht aus mehreren Components, welche je nach Bedarf geladen und angezeigt werden. So wird Beispielsweise bei einem Klick auf einen Button keine neue html-Datei geladen, sondern in die aktuelle, der neue `Component`.
+Die Oberfläche besteht aus mehreren Komponenten (Components), welche je nach Bedarf geladen und angezeigt werden. So wird beispielsweise bei einem Klick auf einen Button keine neue html-Datei geladen, sondern in die aktuelle, der neue `Component` hinzugefügt.
 
 <figure>
   <img width="90%" src="../_static/images/documentation/ReactDiagramm.png"/>
@@ -24,7 +24,7 @@ Die `index.html` wird vom Browser geladen. Diese beinhaltet den div-Container `r
 <div id="root"></div>
 ```
 
-In der `index.tsx` wird mit Hilfe der ID, der Component `App` in den Container geladen
+In der `index.tsx` wird mithilfe der ID, der Component `App` in den Container geladen.
 
 ```tsx
 ReactDOM.render(
@@ -37,9 +37,9 @@ ReactDOM.render(
 
 #### App
 
-Der Component `App` besteht aus einem `Header` und einem `Main` Component.
+Der Component `App` besteht aus einem `Header`- und einem `Main`-Component.
 
-Der `Header` steht immer am Oberen Bildschirmrand daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
+Der `Header` steht immer am oberen Bildschirmrand, daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
 
 ```html
 <ComponentProvider>
@@ -56,7 +56,7 @@ Der `Header` steht immer am Oberen Bildschirmrand daher liegt dieser über `Main
 </figure>  
 <br>
 
-Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programmes man sich befindet.
+Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programms man sich befindet.
 
 #### Main
 
@@ -95,7 +95,7 @@ export const Main = () => {
 }
 ```
 
-In dem Component `JobList` wird pro angelegten Job ein Component von `JobItem` generiert.
+In dem Component `JobList` wird für jeden angelegten Job ein Component von `JobItem` generiert.
 
 #### JobItem
 
@@ -105,11 +105,11 @@ In dem Component `JobList` wird pro angelegten Job ein Component von `JobItem` g
 </figure>  
 <br>
 
-Ein JobItem besteht aus den genaueren Informationen zu einem Job.
+Ein `JobItem` beinhaltet die genaueren Informationen zu einem Job.
 
 #### JobCreate
 
-Möchte man einen neuen Job erstellen, so wird bei dem klicken auf den dazugehörigen Button der Component `JobCreate` in den Main-Component geladen.
+Möchte man einen neuen Job erstellen, so wird beim klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
 
 ```ts
 onClick={() => components?.setCurrent("jobpage")}
@@ -135,7 +135,7 @@ Die erste Seite `TopicSelection` dient zur Auswahl des Themas. Dort kann man sic
 
 #### ParamSelection
 
-Die zweite Seite des Steppers gibt einem die Möglichkeit je nach Thema individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden.
+Die zweite Seite des Steppers gibt einem die Möglichkeit - je nach Thema - individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/param.png"/>
@@ -143,12 +143,12 @@ Die zweite Seite des Steppers gibt einem die Möglichkeit je nach Thema individu
 </figure>  
 <br>
 
-ScheduleSelection
+#### ScheduleSelection
 Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generiert werden soll.
 
-**täglich:** Das Video wird täglich zu einer bestimmten Uhrzeit generiert  
-**wöchentlich:** Das Video wird an bestimmten Wochentagen wöchentlich generiert  
-**an festem Datum:** Das Video wird einmalig an einem Datum generiert.
+**täglich:** Das Video wird täglich zu einer bestimmten Uhrzeit generiert.
+**wöchentlich:** Das Video wird an bestimmten Wochentagen wöchentlich generiert.
+**an festem Datum:** Das Video wird einmalig an einem bestimmten Datum generiert.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/schedule.png"/>
@@ -160,20 +160,20 @@ Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generi
 
 ### Datenbank
 
-Für die Datenbank wird eine SQLite Datenbank verwendet.
+Für die Datenbank wird eine SQLite-Datenbank verwendet.
 
 _(Eine spätere Anbindung an einen SQL-Server ist aber einfach möglich.)_
 
-Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Diese hat die ID für seine Schritte gespeichert. In der Tabelle `schedule` wird die Zeit gespeichert, an welcher der Job ausgeführt werden soll. z.B.: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank,
+Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Diese hat die ID für seine Schritte gespeichert. In der Tabelle `schedule` wird die Zeit gespeichert, an welcher der Job ausgeführt werden soll. z.B.: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
 
 date = null,  
 time = 12:00,  
 weekday = null,  
 daily = True.
 
-Es sind auch mehrere Schedule-einträge für einen Job möglich.
+Es sind auch mehrere Schedule-Einträge für einen Job möglich.
 
-In der Tabelle job_config stehen die Configwerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus key, value paaren.
+In der Tabelle `job_config` stehen die Konfigurationswerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus Key/Value-Paaren.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
@@ -197,13 +197,13 @@ Der Scheduler prüft minütlich, ob ein neuer Job ausgeführt werden soll (_Abbi
 </figure>  
 <br>
 
-Es gibt zwei Varianten des Schedulers. Der JsonScheduler prüft anhand einer Json-Datei, ob ein Job ausgeführt werden soll. Der DbScheduler hingegen entnimmt die Informationen einer Datenbank und prüft anhand diesen, ob ein Job ausgeführt werden soll.
+Es gibt zwei Varianten des Schedulers. Der JsonScheduler prüft anhand einer Json-Datei, ob ein Job ausgeführt werden soll. Der DbScheduler hingegen entnimmt die Informationen einer Datenbank und prüft anhand von diesen, ob ein Job ausgeführt werden soll.
 
 `start()`  
 Diese Methode startet den Scheduler.
 
 `_check_all()`  
-Nachdem der Scheduler gestartet wurde, wird in dieser Methode jede Minute geprüft, ob ein Job auszuführen ist. Ist dies der Fall, so wird die Methode \_start_job() aufgerufen.
+Nachdem der Scheduler gestartet wurde, wird in dieser Methode jede Minute geprüft, ob ein Job auszuführen ist. Ist dies der Fall, so wird die Methode `\_start_job()` aufgerufen.
 
 `_start_job()`  
 Diese Methode startet den Job in einem neuen Thread.
@@ -225,7 +225,26 @@ Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
 `request_multiple_custom`  
 Fragt unterschiedliche Daten einer API ab.
 
-Für die Wetterberichte werden die ersten beiden Funktionen verwendet.
+Für die Wetterberichte werden die folgenden API-Typen verwendet:
+
+| API-Typ              | Beschreibung                                                                                                                        |
+| -------------------- | ------------------------------------------------ |
+|request_multiple      |Anfrage für die Wetterdaten von mehreren Städten  |
+|request               |Anfrage für die Wetterdaten von einer Stadt       |
+
+Für den Fußballbericht werden die folgenden API-Typen verwendet:
+
+| API-Typ               | Beschreibung                                                                                                                        |
+| --------------------  | ----------------------------------------------------------------------------------------------------------------------------------- |
+|request_multiple_custom|Anfrage für mehrere unterschiedliche Daten, die jeweils noch andere Parameter haben.       |
+|request                |Anfrage, um z.B. die Tabelleneinträge oder die Spielergebnisse eines Spieltages abzufragen.|
+|request_memory         |Zugriff auf in der internen Datenbank abgespeichertes Dictionary                           |
+
+Für die Twitter-Wordcloud werden die folgenden API-Typen verwendet:
+
+| API-Typ              | Beschreibung                                                                                                                        |
+| -------------------- | ------------------------------------------ |
+|request               |Anfrage für die Twitter-Daten zu einem Thema|
 
 ## Transform
 
@@ -234,7 +253,7 @@ Mit den `transform`-Typen werden Funktionen implementiert, mit denen man die aus
 **Wetterbericht**  
 Für den Wetterbericht werden folgende Funktionen verwendet:
 
-| Funktion             | Beschreibung                                                                                                                        |
+| transform-Typ        | Beschreibung                                                                                                                        |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | transform_dict       | Führt alle angegebenen `transform`-Funktionen für alle Werte eines Dictionaries aus.                                                |
 | select               | Entfernt alle Keys, die nicht in `relevant_keys` stehen aus dem Dictionary.                                                         |
@@ -242,14 +261,14 @@ Für den Wetterbericht werden folgende Funktionen verwendet:
 | transform_array      | Führt alle angegebenen `transform`-Funktionen für alle Werte eines Arrays aus.                                                      |
 | calculate(round)     | Rundet gegebene Werte auf eine gewünschte Nachkommastelle.                                                                          |
 | append               | Speichert den Wert unter `key` in einem Array.                                                                                      |
-| calculate(ms_to_kmh) |                                                                                                                                     |
+| calculate(ms_to_kmh) | Wandelt die gegebenen Werte mit der Einheit m/s in km/h pro Stunde um -> Multiplikation mit 3.6                                                                                                                                    |
 | add_symbol           | Fügt ein Zeichen, Symbol, Wort oder einen Satz zu einem Wert hinzu.                                                                 |
 | replace              | Ersetzt ein Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text in einem String.                                                |
 | date_weekday         | Wandelt das angegebene Datum in den jeweiligen Wochentag um.                                                                        |
 | timestamp            | Wandelt einen UNIX-Zeitstempel in ein anderes Format um.                                                                            |
 | wind_direction       | Wandelt einen String von Windrichtungen um. (geht nur für dieses Format und nur für die Weatherbit-API)                             |
 | translate_key        | Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. (wählt aus dict einen Code als Key und gibt dazu den Value aus) |
-| choose_random        | (wählt Text aus dict ..dort sind pro key mehrere Wahlmöglichkeiten -> random)                                                       |
+| choose_random        | Wählt einen Text aus mehreren gegebenen Texten aus                                                        |
 | date_now             | Generiert das heutige Datum und gibt es im gewünschten Format aus.                                                                  |
 
 Für den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städtenabgefragt, um eine Tendenz berechnen zu können wie die Durchschnittswerte an einem Tag in ganz Deutschland sind.  
@@ -269,7 +288,7 @@ Die zuvor implementierten `transform`-Funktionen konnten größtenteils übernom
 
 Folgende transform-Funktionen wurden verwendet:
 
-| Funktion           | Beschreibung                                                                                                  |
+| transform-Typ      | Beschreibung                                                                                                  |
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
 | alias              | Erstzt einen Key durch einen neuen Key.                                                                       |
 | transform_array    | Führt alle angegebenen `transform`-Funktionen für alle Werte eines Arrays aus.                                |
@@ -277,9 +296,9 @@ Folgende transform-Funktionen wurden verwendet:
 | date_weekday       | Wandelt das angegebene Datum in den jeweiligen Wochentag um.                                                  |
 | option             | Führt die aufgeführten `transform`-Funktionen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist. |
 | compare            | Vergleicht zwei                                                                                               |
-| random_string      |                                                                                                               |
+| random_string      | Wählt einen Text aus mehreren gegebenen Texten aus                                                                                                 |
 | calculate subtract | Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.          |
-| copy               | Kopiert einen Wert zu einem neuen Key.                                                                        |
+| copy               | Kopiert einen Wert zu einem neuen Key                                                                        |
 | delete             | Löscht die angegebenen Keys aus den Daten                                                                     |
 
 Folgende Änderungen wurden durchgeführt, um die Funktionen allgemeiner und modularer zu gestalten:
@@ -345,7 +364,7 @@ Die zuvor implementierten `transform`-Typen konnten größtenteils nicht weiter 
 
 Folgende transform-Typen wurden verwendet:
 
-| Funktion         | Beschreibung                                                                                                                                                                                  |
+| transform-Typ    | Beschreibung                                                                                                                                                                                  |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | split_string     | Teilt einen String an der Stelle, an der ein bestimmtes Trennzeichen (delimiter) im String vorkommt.                                                                                          |
 | convert          | Konvertiert einen Datentyp in einen anderen Datentyp.                                                                                                                                         |
@@ -378,7 +397,7 @@ Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein
 
 `generate_audios()`
 
-### Image
+### Images
 
 **`pillow`**
 
@@ -408,6 +427,23 @@ Man kann auch Stopwords mit nur einen Wort, welches sich wiederholt, darstellen.
 Möchte man einen Verlauf von dem am häufigsten genannten Hashtag zu dem immer das nächsthäufigste hinzu kommt, muss man einzelne Wordclouds erstellen und diese aneinanderhängen, damit man einen Verlauf als Video hat.
 Dies geschieht dann mit dem Sequencer.
 
+## Storing
+
+Der Abschnitt `storing` ist dafür da, dass man z. B. die Tabelle eines jeden Spieltags im gleichen Zug abspeichert wie man sie aus der API erhält.
+Der Abschnitt wurde hinzugefügt, weil die openligadb-API nur die Bundesliga-Tabelle des aktuellen Spieltags bereitstellt und nicht auch die der vorherigen Spieltage.
+Um jedoch herauszufinden, ob sich eine Mannschaft im Vergleich zum vorherigen Spieltag verbessert oder verschlechtert hat oder auf dem gleichen Tabellenplatz ist wie zuvor, wurde auch die Tabelle vom vorherigen Spieltag benötigt. 
+
+Zuerst wurden transform-Typen geschrieben, welche die vorherigen Tabelle anhand der Spielergebnisse des aktuellen Spieltags rekonstruiert haben (darunter gehörte u.A. `subtract`).
+Dies war recht aufwändig, also kam die Idee mit dem Speichern von Dictionaries bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere API-Schnittstellen bzw. weitere Video-Ideen verwendet werden.
+
+## Thumbnail
+
+Für ein Video, welches erstellt wird, kann man - wenn man das möchte - einen Thumbnail erstellen. Dieser kann zum Beispiel in einer Übersicht angezeigt werden.
+Man kann einen Thumbnail aus einem bereits für das Video erstellten Bild generieren oder ein neues Bild erstellen, welches dann als Thumbnail abgespeichert wird.  
+
+Nützlich ist dies zum Beispiel bei einer Übersichtsseite wie z.B. [hier](https://biebertal.mach-mit.tv/gemeinde/).
+Es ist eine Art Vorschau für das, was im Video gezeigt wird. 
+
 ## Sequence
 
 `link(values: dict, step_data: StepData)`
@@ -417,3 +453,24 @@ Dies geschieht dann mit dem Sequencer.
 `custom(values: dict, step_data: StepData)`
 
 `_link(images, audios, audio_l, step_data: StepData, values: dict)`
+
+## run_config
+
+Hier werden Parameter angegeben, die bei der Themen-Konfiguration im Frontend angegeben werden können.
+Unter dem Abschnitt `run_config` werden die Konfigurationen eingefügt, die zur Laufzeit noch angegeben werden können.
+
+| Name | Beschreibung | Frontend |
+|----|----| ---- |
+|`enum`|Auswahl an verschiedenen Werten vorgeben|Dropdown-Menü|
+|`string`|Nutzereingabe eines Strings|Textfeld|
+|`multi_string`|Nutzereingabe mehrerer Strings|Textfeld (komma-separierte Eingabe)|
+|`number`|Nutzereingabe einer Zahl|Textfeld|
+|`multi_number`|Nutzereingabe mehrerer Zahlen|Textfeld (komma-separierte Eingabe)|
+|`boolean`|`true` oder `false`|Checkbox|
+|`sub_params`|Wenn ein Parameter ausgewählt wurde, gibt es weitere Auswahlmöglichkeiten, die dann angezeigt werden, um ausgewählt zu werden| Je nachdem welchen Typ, der Unterparameter bzw. die Unterparameter haben (siehe vorherige Typen).|
+
+## presets
+
+Unter dem Abschnitt `presets` können Einstellungen vorgenommen werden für Images, die sich sonst bei der Konfiguration oft wiederholen.
+
+Um diese Code-Mehrfachnennungen zu vermeiden, kann man diese als Preset anlegen indem man einem Set an Parametern einen Namen gibt, welcher dann z.B. bei der Image-Generierung als Einzeiler angegeben wird.
