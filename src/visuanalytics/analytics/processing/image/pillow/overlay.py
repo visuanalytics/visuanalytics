@@ -1,6 +1,7 @@
 """
 Modul welches die Pillow Image Funktionen zum erstellen und bearbeiten von Bildern beinhaltet.
 """
+import numbers
 
 from PIL import Image
 
@@ -40,9 +41,10 @@ def text(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     draw_func = get_type_func(overlay, DRAW_TYPES, "anchor_point")
 
     draw_func(draw,
-              (step_data.format(overlay["pos_x"]), step_data.format(overlay["pos_y"])),
+              (step_data.get_data(overlay["pos_x"], None, numbers.Number),
+               step_data.get_data(overlay["pos_y"], None, numbers.Number)),
               content,
-              step_data.format(overlay["font_size"]),
+              step_data.get_data(overlay["font_size"], None, numbers.Number),
               step_data.format(overlay["color"]),
               step_data.format(overlay["font"]))
 
@@ -134,26 +136,27 @@ def image(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     :param draw: Draw Objekt
     """
     if overlay.get("path", None) is None:
-        path = resources.get_resource_path(prev_paths[overlay["image_name"]])
+        image_name = step_data.format(overlay["image_name"])
+        path = resources.get_resource_path(prev_paths[image_name])
     else:
         path = resources.get_image_path(step_data.format(overlay["path"]))
     icon = Image.open(path).convert("RGBA")
     if overlay.get("color_transparency", None) is not None:
-        _color_to_transparent(icon, overlay["color_transparency"])
+        _color_to_transparent(icon, step_data.format(overlay["color_transparency"]))
     if step_data.format(overlay.get("color", "RGBA")) != "RGBA":
         icon = icon.convert(step_data.format(overlay["color"]))
     if overlay.get("size_x", None) is not None and overlay.get("size_y", None) is not None:
-        icon = icon.resize([step_data.format(overlay["size_x"]),
-                            step_data.format(overlay["size_y"])], Image.LANCZOS)
+        icon = icon.resize([step_data.get_data(overlay["size_x"], None, numbers.Number),
+                            step_data.get_data(overlay["size_y"], None, numbers.Number)], Image.LANCZOS)
     if overlay.get("pos_x", None) is not None and overlay.get("pos_y", None) is not None:
-        pos_x = step_data.format(overlay["pos_x"])
-        pos_y = step_data.format(overlay["pos_y"])
+        pos_x = step_data.get_data(overlay["pos_x"], None, numbers.Number)
+        pos_y = step_data.get_data(overlay["pos_y"], None, numbers.Number)
     else:
         width_b, height_b = source_img.size
         width_i, height_i = icon.size
         pos_x = int(round((width_b - width_i) / 2))
         pos_y = int(round((height_b - height_i) / 2))
-    if overlay.get("transparency", False):
+    if step_data.get_data(overlay.get("transparency", False), None, bool):
         source_img.alpha_composite(icon, (pos_x,
                                           pos_y))
     else:

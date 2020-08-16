@@ -80,7 +80,7 @@ def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_t
     if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(values, data, name, save_key)
 
-    if data.format(values.get("use_loop_as_key", False), values):
+    if data.get_data(values.get("use_loop_as_key", False), values, bool):
         data.insert_data(save_key, {}, values)
         for _, key in data.loop_array(values["steps_value"], values):
             _fetch(values, data, f"{save_key}|{key}")
@@ -169,9 +169,9 @@ def _create_query(values: dict, data: StepData):
     req["body_type"] = data.format(values.get("body_type", "json"), values)
 
     if req["body_type"].__eq__("json"):
-        req[req["body_type"]] = data.deep_format(values.get("body", None), api_key_name, values)
+        req["json"] = data.deep_format(values.get("body", None), api_key_name, values)
     else:
-        req[req["body_type"]] = data.format(values.get("body", None))
+        req["other"] = data.format(values["body"]) if "body" in values else None
 
         if values.get("body_encoding", None) is not None:
             req[req["body_type"]] = req[req["body_type"]].encode(values["body_encoding"])
@@ -187,8 +187,8 @@ def _create_query(values: dict, data: StepData):
     # Get/Format Response, Format
     req["res_format"] = data.format(values.get("response_format", "json"))
     # TODO use Format
-    req["xml_config"] = values.get("xml_config", {})
-    req["include_headers"] = values.get("include_headers", False)
+    req["xml_config"] = data.deep_format(values.get("xml_config", {}), values=values)
+    req["include_headers"] = data.get_data(values.get("include_headers", False), values, bool)
 
     return req
 

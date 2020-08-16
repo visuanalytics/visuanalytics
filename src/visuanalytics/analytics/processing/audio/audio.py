@@ -92,7 +92,7 @@ def _save_audio(response, data: StepData, config: dict):
                                                                                   None) is not None else None
     # If Multiple request were Used, get just the Request with the audio file
     if config["generate"]["type"].startswith("request_multiple"):
-        audio_idx = data.format(config["generate"]["audio_idx"], {})
+        audio_idx = data.format(config["generate"]["audio_idx"])
         response = response[audio_idx]
 
     content_type = response["headers"]["content-type"]

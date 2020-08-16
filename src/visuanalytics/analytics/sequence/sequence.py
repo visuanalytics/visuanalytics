@@ -1,7 +1,7 @@
 """
 Modul welches Bilder und Audios kombiniert zu einem fertigem Video.
 """
-
+import numbers
 import os
 import subprocess
 import uuid
@@ -121,10 +121,10 @@ def custom(values: dict, step_data: StepData, out_images, out_audios, out_audio_
     for s in values["sequence"]["pattern"]:
         out_images.append(values["images"][step_data.format(s["image"])])
         if s.get("audio_l", None) is None:
-            out_audio_l.append(step_data.format(s.get("time_diff", 0)))
+            out_audio_l.append(step_data.get_data(s.get("time_diff", 0), None, numbers.Number))
         else:
             out_audios.append(values["audio"]["audios"][step_data.format(s["audio_l"])])
-            out_audio_l.append(step_data.format(s.get("time_diff", 0)) + MP3(
+            out_audio_l.append(step_data.get_data(s.get("time_diff", 0), None, numbers.Number) + MP3(
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
 
 

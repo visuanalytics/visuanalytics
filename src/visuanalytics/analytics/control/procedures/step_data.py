@@ -146,7 +146,7 @@ class StepData(object):
         self.__data["_pipe_id"] = _pipe_id
         self.__data["_job_id"] = _job_id
 
-    def get_data(self, key, values: dict, return_on_type=None):
+    def get_data(self, key, values: dict = None, return_on_type=None):
         """
         Gibt die daten zurück, die hinter `key_string` stehen.
 
@@ -161,6 +161,9 @@ class StepData(object):
         if return_on_type is not None:
             if isinstance(key, return_on_type):
                 return key
+        
+        if values is None:
+            values = {}
 
         data = {**self.__data, **values.get("_loop_states", {})}
         key = self.__formatter.format(key, data)
