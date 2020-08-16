@@ -2,13 +2,10 @@ import json
 import os
 
 import humps
-import logging
 
 from visuanalytics.server.db import db
 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
-
-logger = logging.getLogger()
 
 
 def get_topic_names():
@@ -34,7 +31,7 @@ def get_job_list():
     res = con.execute("""
         SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
-        COUNT(distinct position_id) AS topic_count,
+        COUNT(DISTINCT position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
         GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
         FROM job 
@@ -78,7 +75,6 @@ def update_job(job_id, updated_data):
         if key == "schedule":
             type, time, date, weekdays = _unpack_schedule(value)
             con.execute("UPDATE job SET type=?, time=?, date=? WHERE job_id=?", [type, time, date, job_id])
-            logger.warning("Delete weekdays from " + job_id)
             con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
             # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
             # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
