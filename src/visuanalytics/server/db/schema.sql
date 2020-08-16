@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Sa. Aug. 15 15:27:09 2020
+-- File generated with SQLiteStudio v3.2.1 on So. Aug. 16 13:43:38 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -64,7 +64,7 @@ DROP TABLE IF EXISTS job_topic_position;
 
 CREATE TABLE job_topic_position
 (
-    position_id INTEGER PRIMARY KEY
+    position_id INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
         NOT NULL,
     job_id      INTEGER REFERENCES job (job_id) ON DELETE CASCADE
@@ -78,27 +78,12 @@ CREATE TABLE job_topic_position
 );
 
 
--- Table: schedule
-DROP TABLE IF EXISTS schedule;
-
-CREATE TABLE schedule
-(
-    schedule_id INTEGER PRIMARY KEY AUTOINCREMENT
-        UNIQUE
-                     NOT NULL,
-    date        DATE,
-    time        TIME NOT NULL,
-    type        VARCHAR CHECK (type IN ("daily", "weekly", "on_date") )
-                     NOT NULL
-);
-
-
 -- Table: schedule_weekday
 DROP TABLE IF EXISTS schedule_weekday;
 
 CREATE TABLE schedule_weekday
 (
-    schedule_weekday_id INTEGER PRIMARY KEY
+    schedule_weekday_id INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
                                    NOT NULL,
     weekday             INTEGER(1) NOT NULL
