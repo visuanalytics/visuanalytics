@@ -1747,11 +1747,12 @@ list - Angabe von Keys, welche beim exportieren nicht mit exportiert werden soll
 
 ## Images
 
-Der Abschnitt `images` beinhaltet die Konfigurationen, für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
+Der Abschnitt `images` beinhaltet die Konfigurationen für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
 `sequence` mit den generierten Audiodateien zu einem Video zusammengeschnitten werden.
 Die verschiedenen Typen können mehrere Male hintereinander mit ihren Parametern angegeben werden, je nachdem wie viele
-Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
+Bilder generiert werden sollen. Jedes Bild erhält noch einen Key als Bildnamen:
 
+**Beispiel**
 ```JSON
 {
     "images": {
@@ -1762,18 +1763,16 @@ Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
 
 ### pillow
 
-Pillow ist eine Image Library für Python.
-In unserem projekt nutzen wir grundlegend 3 Funktionen:
-Ein Bild öffnen um es zu bearbeiten.
-Ein Bild in ein Bild einfügen.
-Text in ein Bild einfügen.
+Pillow ist eine Image Library für Python. In unserem Projekt nutzen wir grundlegend 3 Funktionen:
+- Ein Bild öffnen, um es zu bearbeiten.
+- Ein Bild in ein Bild einfügen.
+- Text in ein Bild einfügen.
 
-Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen, die aus den angegebenen
+Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen werden, die aus den angegebenen
 Parametern Bilddateien generieren.
 
-In diesem Part der JSON werden Bilder spezifiziert, welche dann später in Sequence  
-verwendet werden können
-Bilder lassen sich in der JSOn wie folgt darstellen:
+In diesem Abschnitt der JSON-Konfigurationsdatei werden Bilder spezifiziert, welche dann später in Sequence  
+aneinandergeschnitten werden können. Bilder lassen sich in der JSON wie folgt darstellen:
 
 ```JSON
 {
@@ -1788,8 +1787,8 @@ Bilder lassen sich in der JSOn wie folgt darstellen:
 }
 ```
 
-**`"test1"`, `"test2":`**  
-sind die internen Bildnamen der erstellten Bilder
+**`"test1"`, `"test2":`**:
+str - Die internen Bildnamen der erstellten Bilder
 
 ```JSON
 
@@ -1809,25 +1808,23 @@ sind die internen Bildnamen der erstellten Bilder
 ```
 
 **`path`**:  
-Der Pfad zum Bild welches geöffnet werden soll,
-hier kann auch ein Bild verwendet werden was vorher bereits erstellt wurde,  
-dazu muss lediglich der interne Bildname angegeben werden
+Der Pfad zum Bild, welches geöffnet werden soll. Hier kann auch ein Bild verwendet werden, welches vorher bereits erstellt wurde. 
+Dazu muss der interne Bildname angegeben werden.
 
 **`already_created`** _(optional)_:  
-Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss dies true sein
+Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen, so muss dieser Wert `true` sein.
 
 **`overlay`**  
-Eine Liste mit Overlays welche alle auf das Bild angewendet werden
+Eine Liste mit Overlays, welche alle auf das Bild angewendet werden sollen.
 
 ### Overlay
 
-Es gibt 6 verschiedene Overlay-Arten:
+Es gibt 6 verschiedene Overlay-Typen:
 
 
 #### option
 
-Werted den boolean Wert aus der in `check` angegeben wurde, 
-und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` aus
+Wertet den boolean-Wert aus, der in `check` angegeben wurde, und führt je nachdem dann die angegebenen Overlay-Typen in `on_true` oder `on_false` aus.
 
 ```JSON
 
@@ -1845,22 +1842,27 @@ und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` 
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`check`**  
-Der Wert anhand dem entschieden wird ob `on_true` oder `on_false` ausgeführt wird
+str - Der Wert anhand dem entschieden wird, ob `on_true` oder `on_false` ausgeführt wird.
 
 **`on_true`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert True ergab
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn der Wert `true` ist.
 
 **`on_false`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert False ergab
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn der Wert `false` ist.
 
 #### compare
 
-Vergleicht die beiden Werte in `value_left` und `value_right`, 
-und führt jenachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus
-oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower` verwendet
+Vergleicht die beiden Werte in `value_left` und `value_right` und führt je nachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus.
+Sofern `on_not_equals` nicht angegeben wurde, wird `on_higher` und `on_lower` verwendet.
+
+
+- `value_left = value_right` -> `on_equal`
+- `value_left != value_right` -> `on_not_equal`
+- `value_left > value_right` -> `on_higher`
+- `value_left < value_right` -> `on_lower`
 
 ```JSON
 
@@ -1882,31 +1884,31 @@ oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`value_left`**  
-Der Erste Wert der verglichen werden soll
+str - Wert, der auf der linken Seite der Gleichung steht. 
 
 **`value_right`**  
-Der Zweite Wert der verglichen werden soll
+str - Wert, der auf der rechten Seite der Gleichung steht. 
 
 **`on_equals`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte identisch sind
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn die beiden Werte identisch sind.
 
 **`on_not_equals`**  _(optional)_  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte nicht identisch sind
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn die beiden Werte nicht identisch sind.
 
 **`on_higher`**  _(optional)_  
-Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
-Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite wert größer wie der erste ist.
+Sollte `on_not_equals` nicht angegeben worden sein, so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus Overlay-Typen, welche angewendet werden, wenn value_left größer ist als value_right.
 
 **`on_lower`**  _(optional)_  
-Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
-Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite Wert kleiner wie der erste ist.
+Sollte `on_not_equals` nicht angegeben worden sein, so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus Overlay-Typen, welche angewendet werden, wenn value_left kleiner ist als value_right.
 
 #### image
 
-Der Typ Image setzt ein Bild in das zuvor definierte source image
+Der Typ `image` setzt ein Bild in das zuvor definierte `source_image`.
 
 **Beispiel**
 ```JSON
@@ -1923,30 +1925,30 @@ Der Typ Image setzt ein Bild in das zuvor definierte source image
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`pos_x`** _(optional)_:  
-X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
+int - X-Koordinate des zu setzenden Bildes (Ausgangspunkt: obere linke Ecke des Bildes)
 
 **`pos_y`** _(optional)_:  
-Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
+int - Y-Koordinate des zu setzenden Bildes (Ausgangspunkt: obere linke Ecke des Bildes)
 
 **`size_x`** _(optional)_:  
-X Größe des zu setzende Bildes  
-(wird nichts angeben wird das zu setzende Bild nicht skalliert)
+int - Breite des zu setzende Bildes  
+(wenn nichts angeben, wird das zu setzende Bild nicht skaliert)
 
 **`size_y`** _(optional)_:  
-Y Größe des zu setzende Bildes  
-(wird nichts angeben wird das zu setzende Bild nicht skalliert)
+int - Höhe des zu setzende Bildes  
+(wenn nichts angeben, wird das zu setzende Bild nicht skaliert)
 
 **`colour`**:  
-Farbe in welche das Bild konvertiert werden soll  
+str - Farbe in welche das Bild konvertiert werden soll  
 (RGBA = bunt, L = schwarz-weiß)
 
 **`pattern`**:  
-Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
+str - Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
 
-######## Bild mittig vor Hintergrund platzieren
+###### Bild mittig vor Hintergrund platzieren
 
 Um ein Bild mittig vor dem Hintergrund zu platzieren, sollten die Felder `pos_x` und `pos_y` nicht mit Werten 
 versehen werden. Die Position wird automatisch berechnet unter Berücksichtigung der Größe des Hintergrundbildes und 
@@ -1956,7 +1958,7 @@ Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Wer
 
 #### image_array
 
-Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
+Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte `source_image`.
 
 **Beispiel**
 ```JSON
@@ -1976,39 +1978,34 @@ Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`pos_x`**:  
-X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
-(obere linke Ecke des Bildes)
+X-Koordinaten der zu setzenden Bilder (muss eine Liste sein) (Ausgangspunkt: obere linke Ecke des Bildes)
 
 **`pos_y`**:  
-X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
-(obere linke Ecke des Bildes)
+Y-Koordinaten der zu setzenden Bilder (muss eine Liste sein) (Ausgangspunkt: obere linke Ecke des Bildes)
 
 **`size_x`** _(optional)_:  
-X Größe der zu setzenden Bilder (muss ein String sein)  
-(wird nichts angeben werden die Bilder nicht skaliert)
+Breite der jeweils zu setzenden Bilder (muss ein String sein)  
+(wenn nichts angeben, werden die Bilder nicht skaliert)
 
 **`size_y`** _(optional)_:  
-Y Größe der zu setzenden Bilder (muss ein String sein)  
-(wird nichts angeben werden die Bilder nicht skaliert)
+Höhe der jeweils zu setzenden Bilder (muss ein String sein)  
+(wenn nichts angeben, werden die Bilder nicht skaliert)
 
 **`colour`**:  
 Farbe in welche die Bilder konvertiert werden sollen.
 Kann ein String sein, dann wird die Farbe für alle verwendet oder eine Liste,
-dann wird jeder Eintrag einer Koordinate zu geordnet
-(Liste muss dann lgischerweiße identisch lang sein wie pos_x)  
+dann wird jeder Eintrag einer Koordinate zu geordnet (Liste muss dann genauso lang sein wie pos_x)  
 (RGBA = bunt, L = schwarz-weiß)
 
 **`pattern`**:  
-Pfad der zu setzenden Bilder
-Kann ebenfalls wieder Liste oder String sein  
-(kann sich auch auf Daten aus der API beziehen)
+str - Pfad, der zu setzenden Bilder. Kann ebenfalls wieder Liste oder String sein (kann sich auch auf Daten aus der API beziehen)
 
 #### text
 
-Der Typ `text` setzt einen Text in das zuvor definierte source image.
+Der Typ `text` setzt einen Text in das zuvor definierte `source_image`.
 
 **Beispiel**
 ```JSON
@@ -2024,39 +2021,39 @@ Der Typ `text` setzt einen Text in das zuvor definierte source image.
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`anchor_point`**:  
-Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
+Legt fest, ob der Text zentriert oder linksbündig dargestellt werden soll.
 
 **`pos_x`**:  
-X Koordinate des zu setztenden Textes
+int - X-Koordinate des zu setzenden Textes
 
 **`pos_y`**:  
-Y Koordinate des zu setztenden Textes
+int - Y-Koordinate des zu setzenden Textes
 
 **`pattern`**:  
-Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+str - Text, der auf das Bild geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
 **`preset`**:  
-Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
-Presets sind weiter unten in der JSON spezifiziert
+Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)  
+[Presets](#Presets) sind weiter unten in der JSON spezifiziert
 
-**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+**Sollte man kein neues `preset` angeben wollen, so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
 **`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+str/hex - Farbe des Textes. Kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 **`font_size`**:  
 int - Größe des Textes
 
 **`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+str - Name des relativen Pfads vom `resource`-Ordner zu der Font-Datei.
 
 
 #### text_array
 
-Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
+Der Typ `text_array` setzt mehrere Texte in das zuvor definierte `source_image`.
 
 **Beispiel**
 ```JSON
@@ -2078,37 +2075,35 @@ Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 ```
 
 **`description`** _(optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+str - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
 **`anchor_point`**:  
-Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
+Legt fest, ob der Text zentriert oder linksbündig dargestellt werden soll.
 
 **`pos_x`**:  
-X Koordinate der zu setztenden Texte
+X-Koordinaten der zu setzenden Texte (eine Liste)
 
 **`pos_y`**:  
-Y Koordinate der zu setztenden Texte
+Y-Koordinaten der zu setzenden Texte (eine Liste)
 
 **`pattern`**:  
-Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
-(kann sich auch auf Daten aus der API beziehen)
+Texte, die auf das Bild geschrieben werden sollen. Liste sowie String sind möglich (kann sich auch auf Daten aus der API beziehen)
 
 **`preset`**:  
-Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
-Dies kann wieder eine Liste oder ein String sein  
-Presets sind weiter unten in der JSON spezifiziert
+Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)   Liste oder String möglich
+[Presets](#Presets) sind weiter unten in der JSON spezifiziert
 
 
-**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+**Sollte man kein neues `preset` angeben wollen ,so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
 **`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+str/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 **`font_size`**:  
 int - Größe des Textes
 
 **`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+str - Name des relativen Pfads vom `resource`-Ordner zu der Font-Datei.
 
 ### wordcloud
 
@@ -2133,17 +2128,19 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "font_step": 1,
     "mode": "RGB",
     "relative_scaling": 0.5,
-    "color_func": None,
+    "color_func": False,
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
     "stopwords": None,
-    "repeat": False
+    "repeat": False,
+    "mask": None
 }
 ```
 
 Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
-der jeweilige default-Wert verwendet.
+der jeweilige default-Wert verwendet. Die default-Parameter wurden mithilfe dieser [default-Parameter](https://www.datacamp.com/community/tutorials/wordcloud-python) festgelegt.
+Die Erläuterungen der einzelnen Parameter stammen von der eben genannten Quelle.
 
 **`background_color`**: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
 muss hier `None` angegeben werden und bei `mode` `RGBA`
@@ -2155,7 +2152,7 @@ int - Breite der Wordcloud in Pixeln
 int - Höhe der Wordcloud in Pixeln
 
 **`collocations`**: 
-bool - <!--TODO-->
+bool - Ob Kollokationen (Bigramme) von zwei Wörtern einbezogen werden sollen
 
 **`max_font_size`**: 
 int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
@@ -2173,10 +2170,11 @@ color value - Farbe der Kontur/Umrandung
 str - Relativer Pfad zur Schriftart (Default: Dosis-Medium.ttf)
 
 **`prefer_horizontal`**: 
-float - <!--TODO-->
+float - Verhältnis der Zeiten für den Versuch einer horizontalen Anpassung im Gegensatz zu einer vertikalen Anpassung.
+<1: Der Algorithmus rotiert das Wort, wenn es nicht passt.
 
 **`scale`**: 
-float/int - <!--TODO-->
+float - Skalierung zwischen Berechnung und Darstellung. Für große Wordclouds sollte `scale` anstelle einer größeren `width`/`height` verwendet werden, da `scale` schneller ist, könnte jedoch zu einer gröberen Anpassung der Wörter führen.
 
 **`min_font_size`**: 
 int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
@@ -2188,19 +2186,22 @@ int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorko
 `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
 
 **`relative_scaling`**: 
-float - <!--TODO-->
+float - Bedeutung der relativen Worthäufigkeiten für die Schriftgröße.
+0: es werden nur Wortfolgen berücksichtigt
+1: ein Wort, das doppelt so häufig vorkommt, hat die doppelte Schriftgröße
+.5: Berücksichtigung der Worthäufigkeiten und nicht nur des Rangs
 
 **`color_func`**: 
 callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
 
 **`regexp`**: 
-None, <!--TODO-->
+None - Regulärer Ausdruck zum Aufteilen des Eingabetextes (None verwendet: `r"\w[\w']+"`). Bleibt None, da JSON nicht gut mit regulären Ausdrücken klarkommt. 
 
 **`colormap`**: 
 colormap (callable) von matplotlib - viridis, magma, inferno, plasma
 
 **`normalize_plurals`**: 
-bool - <!--TODO-->
+bool - Wenn `true` wird bei Wörtern das hintere "s" entfernt, wenn das Wort mit und ohne "s" am Ende des Wortes vorkommt. Zählung der Häufigkeit zu der Version ohne "s" am Ende, es sei denn, das Wort hat am Ende "ss".
 
 **`stopwords`**: 
 set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
@@ -2241,8 +2242,8 @@ soll nur das Wort enthalten, welches wiederholt werden soll.
 #### Wordcloud transparent
 Möchte man eine Wordcloud mit transparentem Hintergrund, so hat man mehrere Möglichkeiten.
 Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes angeben:
-"mode": "RGBA",
-"background_color": None
+`"mode": "RGBA",
+"background_color": None`
 
 **Alternativ für `square` und `circle` möglich**:
 
@@ -2265,9 +2266,16 @@ Um eine Wordcloud zu erstellen kann man zwei verschiedene Datenstrukturen angebe
 
 Der Key `text` wird angegeben und dahinter muss ein Verweis auf einen String stehen.
 
+**Beispiel 1**
 ```JSON
 {
 "text": "{_req|text}"
+}
+```
+**Beispiel 2**
+```JSON
+{
+"text": "Dieser Text dient der Erstellung einer Wordcloud und enthält Wörter für die Wordcloud."
 }
 ```
 
@@ -2275,9 +2283,17 @@ Der Key `text` wird angegeben und dahinter muss ein Verweis auf einen String ste
 
 Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary stehen.
 
+**Beispiel 1**
 ```JSON
 {
 "dict": "_req|dict"
+}
+```
+
+**Beispiel 2**
+```JSON
+{
+"dict": {"Hund": 4, "Katze":  2, "Maus":  13, "Haus":  2, "Garten": 5, "Wiese":  1}
 }
 ```
 
@@ -2285,6 +2301,7 @@ Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary s
 #### Stopwords
 
 Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann sie bei der Joberstellung angeben. 
+Des Weiteren können generelle verbotene Wörter zur Textdatei `stopwords.txt` im Ordner `resources/stopwords` hinzugefügt werden.
 
 ## Thumbnail
 
