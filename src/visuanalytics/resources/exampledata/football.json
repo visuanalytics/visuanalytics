@@ -2,8 +2,8 @@
   "season_helper": {
     "Envelope": {
       "Body": {
-        "GetLastMatchResponse": {
-          "GetLastMatchResult": {
+        "GetMatchByMatchIDResponse": {
+          "GetMatchByMatchIDResult": {
             "leagueSaison": "2019"
           }
         }
