@@ -2,10 +2,13 @@ import json
 import os
 
 import humps
+import logging
 
 from visuanalytics.server.db import db
 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
+
+logger = logging.getLogger()
 
 
 def get_topic_names():
@@ -15,18 +18,11 @@ def get_topic_names():
              "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
 
 
-def _get_topic_steps(json_file_name: str):
-    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
-    with open(path_to_json, encoding="utf-8") as fh:
-        return json.loads(fh.read())
-
-
 def get_params(topic_id):
     con = db.open_con_f()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
     if res is None:
         return None
-
     steps_json = _get_topic_steps(res["json_file_name"])
     run_config = steps_json["run_config"]
     return humps.camelize(_to_param_list(run_config))
@@ -56,13 +52,14 @@ def insert_job(job):
     con = db.open_con_f()
     job_name = job["jobName"]
     schedule = job["schedule"]
-    type, time, date = _unpack_schedule(schedule)
+    topic_values = job["topics"]
+    type, time, date, weekdays = _unpack_schedule(schedule)
     job_id = con.execute("INSERT INTO job(job_name, type, time, date) VALUES(?, ?, ?, ?)",
                          [job_name, type, time, date]).lastrowid
     if type == "weekly":
-        id_weekdays = [(job_id, d) for d in schedule["weekdays"]]
+        id_weekdays = [(job_id, d) for d in weekdays]
         con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
-    _insert_param_values(con, job_id, job["topics"])
+    _insert_param_values(con, job_id, topic_values)
     con.commit()
 
 
@@ -77,14 +74,24 @@ def update_job(job_id, updated_data):
     con = db.open_con_f()
     for key, value in updated_data.items():
         if key == "jobName":
-            con.execute("UPDATE job SET job_name=? WHERE job_id =?", [value, job_id])
+            con.execute("UPDATE job SET job_name=? WHERE job_id=?", [value, job_id])
         if key == "schedule":
-            type, time, date = _unpack_schedule(value)
-            con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
+            type, time, date, weekdays = _unpack_schedule(value)
             con.execute("UPDATE job SET type=?, time=?, date=? WHERE job_id=?", [type, time, date, job_id])
-        if key == "values":
-            # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
-            con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
+            logger.warning("Delete weekdays from " + job_id)
+            con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
+            # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
+            # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
+            # mit dieser Methode ändern)
+            # Wenn der type im Nachhinein der type eines Jobs zu "weekly" geändert wird, tritt das Problem nicht auf
+            if type == "weekly":
+                id_weekdays = [(job_id, d) for d in weekdays]
+                con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+        if key == "topics":
+            pos_id_rows = con.execute("SELECT position_id FROM job_topic_position WHERE job_id=?", [job_id])
+            pos_ids = [(row["position_id"],) for row in pos_id_rows]
+            con.execute("DELETE FROM job_topic_position WHERE job_id=?", [job_id])
+            con.executemany("DELETE FROM job_config WHERE position_id=?", pos_ids)
             _insert_param_values(con, job_id, value)
     con.commit()
 
@@ -155,6 +162,12 @@ def _row_to_job(row):
     }
 
 
+def _get_topic_steps(json_file_name: str):
+    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+    with open(path_to_json, encoding="utf-8") as fh:
+        return json.loads(fh.read())
+
+
 def _insert_param_values(con, job_id, topic_values):
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
@@ -205,7 +218,8 @@ def _unpack_schedule(schedule):
     type = humps.decamelize(schedule["type"])
     time = schedule["time"]
     date = schedule["date"] if type == "on_date" else None
-    return type, time, date
+    weekdays = schedule["weekdays"] if type == "weekly" else None
+    return type, time, date, weekdays
 
 
 def _to_param_list(run_config):
