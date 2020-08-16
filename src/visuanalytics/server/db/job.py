@@ -30,17 +30,28 @@ def get_job_run_info(job_id):
     """
     with db.open_con() as con:
         res = con.execute("""
-        SELECT job_name, json_file_name, key, value, type
+        SELECT job_name, json_file_name, key, value, job_config.type, position
         FROM job 
-        INNER JOIN steps USING(steps_id) 
-        LEFT JOIN job_config USING(job_id) 
+        INNER JOIN job_topic_position USING(job_id)
+        LEFT JOIN job_config USING(position_id) 
+        INNER JOIN steps USING(steps_id)
         WHERE job_id=?
+        ORDER BY(position)
         """, [job_id]).fetchall()
 
         job_name = res[0]["job_name"]
         steps_name = res[0]["json_file_name"]
-        config = {row["key"]: queries.to_typed_value(row["value"], row["type"]) for row in res}
-
+        topic_count = 0 if len(res) == 0 else int(res[len(res) - 1]["position"] + 1)
+        configs = [{"config": {}, "steps": ""}] * topic_count
+        for row in res:
+            key = row["key"]
+            value = row["value"]
+            type = row["type"]
+            steps_name = row["json_file_name"]
+            position = int(row["position"])
+            config = {**configs[position]["config"], key: queries.to_typed_value(value, type)}
+            configs[position] = {**configs[position], "config": config, "steps": steps_name}
+        config = {"attach": configs}
         return job_name, steps_name, config
 
 
