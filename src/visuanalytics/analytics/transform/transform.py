@@ -136,23 +136,26 @@ def append(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    # TODO(Max) improve
-    new_key_format = data.format(values.get("append_type", "list"))
-    try:
-        result = data.get_data(values["new_key"], values)
-    except StepKeyError:
-        if new_key_format == "string":
-            data.insert_data(values["new_key"], "", values)
-        else:
-            data.insert_data(values["new_key"], [], values)
-        result = data.get_data(values["new_key"], values)
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = data.format(values["new_keys"][idx], values)
+        new_key_format = data.format(values.get("append_type", "list"))
 
-    value = data.get_data(values["key"], values)
-    if new_key_format == "string":
-        result = result + data.format(values.get("delimiter", " ")) + value
-        data.insert_data(values["new_key"], result, values)
-    else:
-        result.append(value)
+        try:
+            result = data.get_data(new_key, values)
+        except StepKeyError:
+            if new_key_format == "string":
+                data.insert_data(new_key, "", values)
+            else:
+                data.insert_data(new_key, [], values)
+
+            result = data.get_data(new_key, values)
+
+        if new_key_format == "string":
+            result = result + data.format(values.get("delimiter", " ")) + value
+            data.insert_data(new_key, result, values)
+        else:
+            result.append(value)
 
 
 @register_transform

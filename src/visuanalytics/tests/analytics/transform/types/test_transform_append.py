@@ -19,8 +19,8 @@ class TestTransformAppend(unittest.TestCase):
         values = [
             {
                 "type": "append",
-                "key": "_req|test|0|test",
-                "new_key": "_req|hallo"
+                "keys": ["_req|test|0|test"],
+                "new_keys": ["_req|hallo"]
             }
         ]
 
@@ -39,8 +39,8 @@ class TestTransformAppend(unittest.TestCase):
                 "transform": [
                     {
                         "type": "append",
-                        "key": "_loop|test",
-                        "new_key": "_req|hallo"
+                        "keys": ["_loop|test"],
+                        "new_keys": ["_req|hallo"]
                     }
                 ]
             }

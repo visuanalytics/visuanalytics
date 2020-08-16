@@ -46,8 +46,8 @@ class TestTransformLoop(unittest.TestCase):
                 "transform": [
                     {
                         "type": "append",
-                        "key": "_loop",
-                        "new_key": "_req|values"
+                        "keys": ["_loop"],
+                        "new_keys": ["_req|values"]
                     }
                 ]
             }

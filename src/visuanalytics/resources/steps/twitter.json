@@ -68,8 +68,12 @@
             },
             {
               "type": "append",
-              "key": "_loop|text",
-              "new_key": "_req|text_all"
+              "keys": [
+                "_loop|text"
+              ],
+              "new_keys": [
+                "_req|text_all"
+              ]
             }
           ]
         }
