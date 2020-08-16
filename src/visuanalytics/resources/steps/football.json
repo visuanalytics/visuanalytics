@@ -142,14 +142,28 @@
           "ignore_errors": true
         },
         {
-          "type": "alias",
+          "type": "check_key",
           "keys": [
             "_loop|MatchResults|0"
           ],
           "new_keys": [
-            "_loop|MatchResults"
-          ],
-          "ignore_errors": true
+            "_loop|MatchHasResults"
+          ]
+        },
+        {
+          "type": "option",
+          "check": "_loop|MatchHasResults",
+          "on_true": [
+            {
+              "type": "alias",
+              "keys": [
+                "_loop|MatchResults|0"
+              ],
+              "new_keys": [
+                "_loop|MatchResults"
+              ]
+            }
+          ]
         },
         {
           "type": "date_weekday",

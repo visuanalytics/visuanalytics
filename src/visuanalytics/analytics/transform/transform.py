@@ -138,7 +138,7 @@ def append(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        new_key = data.format(values["new_keys"][idx], values)
+        new_key = values["new_keys"][idx]
         new_key_format = data.format(values.get("append_type", "list"))
 
         try:
@@ -727,3 +727,19 @@ def split_string(values: dict, data: StepData):
         else:
             new_value = re.split(delimiter, value)
         data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def check_key(values: dict, data: StepData):
+    for idx, key in enumerate(values["keys"]):
+        try:
+            data.get_data(key, values)
+            value = True
+        except StepKeyError:
+            if "init_with" in values:
+                init = data.deep_format(values["init_with"], values=values)
+                data.insert_data(key, init, values)
+            
+            value = False
+        if "new_keys" in values:
+            data.insert_data(values["new_keys"][idx], value, values)
