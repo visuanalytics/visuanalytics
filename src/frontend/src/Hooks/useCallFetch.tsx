@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from "react";
-import { handleResponse } from "../util/fetchUtils";
+import { handleResponse, fetchTimeOut } from "../util/fetchUtils";
 
 /**
  * Funktion um Json daten von einer URL zu bekommen.
@@ -19,7 +19,7 @@ export const useCallFetch = (
   const isMounted = useRef(true);
 
   const cb = useCallback(() => {
-    fetch(url, parms)
+    fetchTimeOut(url, parms, 5000)
       .then(handleResponse)
       .then((data) => {
         if (isMounted && callBack) callBack(data);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { handleResponse } from "../util/fetchUtils";
+import { handleResponse, fetchTimeOut } from "../util/fetchUtils";
 
 /**
  * Funktion um Json daten beim laden eines React Components zu bekommen.
@@ -19,7 +19,7 @@ export const useFetch = (
   useEffect(() => {
     let isMounted = true;
 
-    fetch(url, parms)
+    fetchTimeOut(url, parms, 5000)
       .then(handleResponse)
       .then((newData: any) => {
         if (isMounted) setData(newData);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { handleResponse } from "../util/fetchUtils";
+import { handleResponse, fetchTimeOut } from "../util/fetchUtils";
 
 // TODO Merge with useFetch (most code ist the same)
 export function useFetchMultiple<T>(
@@ -17,7 +17,7 @@ export function useFetchMultiple<T>(
   useEffect(() => {
     let isMounted = true;
 
-    fetch(url, parms)
+    fetchTimeOut(url, parms, 5000)
       .then(handleResponse)
       .then((newData: any) => {
         if (isMounted) setData(newData);

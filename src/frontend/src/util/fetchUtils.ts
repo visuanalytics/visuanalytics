@@ -12,3 +12,16 @@ export function getUrl(url: string) {
 
   return "/visuanalytics" + url;
 }
+
+export function fetchTimeOut(
+  url: RequestInfo,
+  parms: RequestInit | undefined,
+  timeout: number
+) {
+  const abort = new AbortController();
+  parms = { ...parms, signal: abort.signal };
+
+  const timer = setTimeout(() => abort.abort(), timeout);
+
+  return fetch(url, parms).finally(() => clearTimeout(timer));
+}
