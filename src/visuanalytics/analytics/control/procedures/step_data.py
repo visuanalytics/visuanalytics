@@ -161,7 +161,7 @@ class StepData(object):
         if return_on_type is not None:
             if isinstance(key, return_on_type):
                 return key
-        
+
         if values is None:
             values = {}
 
@@ -218,14 +218,15 @@ class StepData(object):
             for idx, value in enumerate(config):
                 config[idx] = self.deep_format(value, api_key_name, values)
             return config
-        if isinstance(config, str) and config.startswith(self.__data_prefix):
-            self.get_data(config[1:], values)
+        if isinstance(config, str):
+            if config.startswith(self.__data_prefix):
+                return self.get_data(config[1:], values)
 
-        # Remove escape char for $
-        if config.startswith(f"~{self.__data_prefix}"):
-            config = config[1:]
+            # Remove escape char for $
+            if config.startswith(f"~{self.__data_prefix}"):
+                config = config[1:]
 
-        return self.format_api(config, api_key_name, values)
+            return self.format_api(config, api_key_name, values)
 
     def format(self, value_string, values=None):
         """
