@@ -33,7 +33,7 @@ export const PageTemplate: React.FC<Props> = ({
     <Container maxWidth={"md"} className={classes.margin}>
       <Paper variant="outlined" className={classes.paper}>
         <Grid container spacing={1}>
-          <Grid item container xs={3}>
+          <Grid item container sm={5} xs={10}>
             <Grid item>
               <Typography variant={"h4"} className={classes.header}>
                 {heading}
@@ -51,7 +51,7 @@ export const PageTemplate: React.FC<Props> = ({
               </Tooltip>
             </Grid>
           </Grid>
-          <Grid item container xs={9} justify={"flex-end"}>
+          <Grid item container sm={7} xs={2} justify={"flex-end"}>
             <HintButton content={hintContent} />
           </Grid>
         </Grid>
