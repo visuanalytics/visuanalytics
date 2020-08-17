@@ -56,6 +56,7 @@ class Scheduler(object):
                             ).start)
         t.start()
 
+    @ignore_errors
     def _check_all(self, now):
         assert False, "Not implemented"
 
@@ -68,13 +69,8 @@ class Scheduler(object):
         logger.info("Scheduler started")
         while True:
             while True:
-                try:
-                    # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
-                    self._check_all(datetime.now())
-                except (KeyboardInterrupt, SystemExit):
-                    raise
-                except:
-                    logger.exception("An error occurred: ")
+                # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
+                self._check_all(datetime.now())
 
                 now = datetime.now().second
 

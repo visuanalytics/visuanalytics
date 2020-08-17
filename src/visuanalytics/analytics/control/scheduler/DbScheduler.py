@@ -36,6 +36,7 @@ class DbScheduler(Scheduler):
             self.__run_jobs(row["job_id"])
             return
 
+    @ignore_errors
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
 

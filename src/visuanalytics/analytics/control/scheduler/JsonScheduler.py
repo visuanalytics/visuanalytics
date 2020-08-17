@@ -40,9 +40,9 @@ class JsonScheduler(Scheduler):
         logger.info(f"Job {job['id']}:'{job['name']}' started")
         self._start_job(job['id'], job['name'], job["steps"], job.get("config", {}))
 
+    @ignore_errors
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
-
         jobs = self.__get_jobs()
 
         if int(now.strftime("%M")) == 00:
