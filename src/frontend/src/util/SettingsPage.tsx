@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         tabPanel: {
             padding: '0 24px'
+        },
+        tabPanelParams: {
+            padding: "0px"
         }
     })
 );
@@ -45,7 +48,7 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
         <div>
             <TabContext value={value}>
                 <Tabs
-                    classes={{ root: classes.tabs }}
+                    classes={{root: classes.tabs}}
                     value={value}
                     onChange={handleChange}
                     centered
@@ -69,7 +72,7 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
                     />
                 </TabPanel>
                 {paramSelectionProps && (
-                    <TabPanel value={"3"} className={classes.tabPanel}>
+                    <TabPanel value={"3"} className={classes.tabPanelParams}>
                         <ParamSelection
                             topicNames={paramSelectionProps.topicNames}
                             values={paramSelectionProps.values}
