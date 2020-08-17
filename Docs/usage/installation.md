@@ -88,7 +88,7 @@ _Programm starten_:
 
 ```note::
   Um die Option `h264_nvenc` (siehe `config.json <#config.json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
-  Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
+  Eine gute Anleitung finden Sie `hier <https://developer.nvidia.com/ffmpeg>`_.
 ````
 
 ## Ohne Docker (Produktion)
