@@ -87,6 +87,13 @@
       ]
     },
     {
+      "type": "check_key",
+      "keys": [
+        "_req|text_all"
+      ],
+      "init_with": "$_conf|hashtags"
+    },
+    {
       "type": "remove_from_list",
       "keys": [
         "_req|text_all"
