@@ -36,9 +36,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         heading: {
             fontSize: theme.typography.pxToRem(25),
-            flexBasis: '72%',
-            flexShrink: 0,
-            margin: 'auto 20px',
         },
         expIcon: {
             margin: 'auto 20px'
@@ -56,8 +53,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: 'white',
             padding: '20px',
             textAlign: "center",
-            borderRadius: '4px',
-            width: '35%',
+            borderRadius: '4px'
         },
         modal: {
             display: 'flex',

@@ -9,8 +9,6 @@ import {
 import {
     Button,
     Container,
-    Fade,
-    Modal,
     Paper,
     TextField,
     Tooltip,
@@ -45,7 +43,6 @@ import { ContinueButton } from "../JobCreate/ContinueButton";
 import { Job } from "./index";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { getUrl } from "../util/fetchUtils";
-import { NameInput } from "./NameInput"
 import { HintButton } from "../util/HintButton";
 import { DeleteSchedule } from "../util/deleteSchedule";
 import { SettingsPage } from "../util/SettingsPage";
@@ -279,30 +276,28 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
-                        {expanded ? <ExpandLess className={classes.expIcon} /> :
-                            <ExpandMore className={classes.expIcon} />}
-                        <Typography component="span" className={classes.heading}>
-                            #{job.jobId}
-                            <NameInput
-                                value={job.jobName}
-                                readOnly
-                                inputProps={{
-                                    style: {
-                                        cursor: "pointer",
+                        <Grid container>
+                            <Grid item container sm={8} xs={12} alignItems="center">
+                                <Grid item>
+                                    {expanded ? 
+                                        <ExpandLess className={classes.expIcon} /> 
+                                        :
+                                        <ExpandMore className={classes.expIcon} />
                                     }
-                                }}>
-                                {job.jobName}
-                            </NameInput>
-                        </Typography>
-                        <div onClick={(event) => event.stopPropagation()}>
+                                </Grid>
+                                <Grid item>
+                                    <Typography component="span" className={classes.heading}>
+                                        #{job.jobId} {job.jobName}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        <Grid item sm={4} xs container justify="flex-end" onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
                                 <IconButton onClick={() => components?.setCurrent("jobLogs", { jobId: job.jobId })}
                                     className={classes.button}>
                                     <DescriptionIcon />
                                 </IconButton>
                             </Tooltip>
-                        </div>
-                        <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Job löschen" arrow>
                                 <IconButton
                                     onClick={() => setConfirmDelete(true)}
@@ -310,8 +305,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                                     <DeleteIcon />
                                 </IconButton>
                             </Tooltip>
-                        </div>
-                        <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Konfiguration" arrow>
                                 <IconButton
                                     onClick={() => setOpenSettings(true)}
@@ -319,7 +312,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                                     <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
-                        </div>
+                        </Grid>
+                        </Grid>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Grid xs={1} item />
@@ -328,9 +322,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                         </Grid>
                         <Grid xs={1} item />
 
-                        <Modal
-                            aria-labelledby="transition-modal-title"
-                            aria-describedby="transition-modal-description"
+                        <Dialog
                             className={classes.modal}
                             open={openSettings}
                             onClose={handleCloseModal}
@@ -340,7 +332,6 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                                 timeout: 500,
                             }}
                         >
-                            <Fade in={openSettings}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
                                         <Grid item container xs={1} justify={"flex-end"}>
@@ -408,8 +399,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                                         </div>
                                     </div>
                                 </Container>
-                            </Fade>
-                        </Modal>
+                        </Dialog>
                     </AccordionDetails>
                 </Accordion>
                 <Dialog
