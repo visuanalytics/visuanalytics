@@ -155,7 +155,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
 
         args2 = ["ffmpeg", "-loglevel", "8", "-y"]
         for i in range(0, len(images)):
-            args2.extend(("-loop", "1", "-t", str(audio_l[i]), "-i", images[i]))
+            args2.extend(("-loop", "1", "-t", str(round(audio_l[i], 2)), "-i", images[i]))
 
         args2.extend(("-i", output, "-c:a", "copy"))
 
