@@ -1,3 +1,4 @@
+import numbers
 import os
 import shutil
 
@@ -34,8 +35,8 @@ def thumbnail(values: dict, step_data: StepData):
     seq_func(values, step_data)
 
     if "size_x" in thumbnail and "size_y" in thumbnail:
-        size_x = step_data.format(thumbnail["size_x"])
-        size_y = step_data.format(thumbnail["size_y"])
+        size_x = step_data.get_data(thumbnail["size_x"], None, numbers.Number)
+        size_y = step_data.get_data(thumbnail["size_y"], None, numbers.Number)
 
         source_img = Image.open(values["thumbnail"])
         source_img = source_img.resize([size_x, size_y], Image.LANCZOS)

@@ -48,7 +48,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = ({
   return (
     <div style={{ margin: "10px" }}>
       <div className={classes.centerDiv}>
-        <Grid spacing={4}>
+        <Grid container spacing={4}>
           <Grid container>
             <TextField
               className={classes.inputFields}

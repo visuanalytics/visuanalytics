@@ -1,3 +1,4 @@
+import contextlib
 import json
 import logging
 import os
@@ -125,6 +126,12 @@ class Pipeline(object):
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
+        # Load and merge global presets
+        with resources.open_resource(f"steps/global_presets.json") as fp:
+            global_presets = json.loads(fp.read())
+
+        self.__config["presets"] = {**global_presets.get("presets", {}), **self.__config.get("presets", {})}
+
         if not self.__no_tmp_dir:
             os.mkdir(resources.get_temp_resource_path("", self.id))
 
@@ -199,6 +206,12 @@ class Pipeline(object):
         logger.info("Finished cleanup!")
 
     def __error_cleanup(self, e: Exception):
+        # If thumbnail was created and the video wasn`t generatet -> remove thumbnail
+        if isinstance(self.__config.get("thumbnail", None), str) and self.__current_step != self.__steps_max:
+            print(self.__config["thumbnail"])
+            with contextlib.suppress(FileNotFoundError):
+                os.remove(self.__config["thumbnail"])
+
         self.__current_step = -2
 
         if not self.__log_id is None:

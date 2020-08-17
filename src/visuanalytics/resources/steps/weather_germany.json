@@ -83,23 +83,18 @@
             },
             {
               "type": "append",
-              "key": "_loop|min_temp",
-              "new_key": "summaries|{_idx}|min_temp"
-            },
-            {
-              "type": "append",
-              "key": "_loop|max_temp",
-              "new_key": "summaries|{_idx}|max_temp"
-            },
-            {
-              "type": "append",
-              "key": "_loop|weather|icon",
-              "new_key": "summaries|{_idx}|icon"
-            },
-            {
-              "type": "append",
-              "key": "_loop|weather|code",
-              "new_key": "summaries|{_idx}|code"
+              "keys": [
+                "_loop|min_temp",
+                "_loop|max_temp",
+                "_loop|weather|icon",
+                "_loop|weather|code"
+              ],
+              "new_keys": [
+                "summaries|{_idx}|min_temp",
+                "summaries|{_idx}|max_temp",
+                "summaries|{_idx}|icon",
+                "summaries|{_idx}|code"
+              ]
             },
             {
               "type": "calculate",
@@ -211,7 +206,7 @@
               "delimiter": "-"
             },
             {
-              "type": "translate_key",
+              "type": "translate",
               "keys": [
                 "_loop|weather|code"
               ],
@@ -435,8 +430,12 @@
         },
         {
           "type": "append",
-          "key": "_idx",
-          "new_key": "cities"
+          "keys": [
+            "_idx"
+          ],
+          "new_keys": [
+            "cities"
+          ]
         }
       ]
     },

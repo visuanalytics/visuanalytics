@@ -363,8 +363,8 @@ export default function JobCreate() {
                                 <Grid item xs={10}>
                                     <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                                 </Grid>
-                                <Grid container xs={1}>
-                                    <HintButton content={hintContent[hintState]}/>
+                                <Grid container item xs={1}>
+                                    <HintButton content={hintContent[hintState]} />
                                 </Grid>
                             </Grid>
                         </div>

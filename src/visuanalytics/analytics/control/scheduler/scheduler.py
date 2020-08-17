@@ -1,10 +1,12 @@
 import logging
+import re
 import threading
 import time
 import uuid
 from datetime import datetime, time as dt_time
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+from visuanalytics.util import config_manager
 
 logger = logging.getLogger(__name__)
 
@@ -22,24 +24,14 @@ class Scheduler(object):
     :type steps: dict
     """
 
-    def __init__(self, base_config=None):
-        super().__init__()
-        if base_config is None:
-            base_config = {}
-        self._base_config = base_config
-
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
 
-    @property
-    def base_config(self):
-        return self._base_config
-
     def _start_job(self, job_id: int, job_name: str, steps_name: str, config: dict, log_to_db=False):
         # Add base_config if exists
-        config = {**self._base_config, **config}
-        config["job_name"] = job_name
+        config = {**config_manager.STEPS_BASE_CONFIG, **config}
+        config["job_name"] = re.sub(r'\s+', '-', job_name.strip())
 
         t = threading.Thread(
             target=Pipeline(job_id,

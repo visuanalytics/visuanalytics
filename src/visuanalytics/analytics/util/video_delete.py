@@ -3,6 +3,7 @@ Modul welches die erstellten Videos nach einem angegebenem zeitraum wieder entfe
 """
 
 import os
+import re
 from datetime import datetime, timedelta
 
 from visuanalytics.server.db.db import logger
@@ -38,6 +39,7 @@ def delete_on_time(jobs: dict, output_path: str):
     files = os.listdir(resources.path_from_root(output_path))
     for file in files:
         for job in jobs["jobs"]:
+            job["name"] = re.sub(r'\s+', '-', job["name"].strip())
             if file.startswith(job["name"]):
                 try:
                     file_without_thumb = file.replace("_thumbnail", "")

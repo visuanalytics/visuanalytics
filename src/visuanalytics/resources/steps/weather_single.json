@@ -9,7 +9,7 @@
     "params": {
       "postal_code": "{_conf|p_code}",
       "key": "{_api_key}",
-      "country": "DE"
+      "country": "{_conf|country}"
     }
   },
   "transform": [
@@ -142,6 +142,42 @@
           "zeropaded_off": true
         },
         {
+          "type": "split_string",
+          "keys": [
+            "_loop|str_sunset_ts",
+            "_loop|str_sunrise_ts"
+          ],
+          "delimiter": " Uhr ",
+          "new_keys": [
+            "_loop|sunset",
+            "_loop|sunrise"
+          ]
+        },
+        {
+          "type": "convert",
+          "keys": [
+            "_loop|sunset|0",
+            "_loop|sunset|1",
+            "_loop|sunrise|0",
+            "_loop|sunrise|1"
+          ],
+          "new_keys": [
+            "_loop|sunset_hour",
+            "_loop|sunset_minute",
+            "_loop|sunrise_hour",
+            "_loop|sunrise_minute"
+          ],
+          "to": "int"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|sunset_hour",
+            "_loop|sunrise_hour"
+          ],
+          "pattern": "{_key} Uhr"
+        },
+        {
           "type": "wind_direction",
           "key": "_loop|wind_cdir_full",
           "new_key": "_loop|str_wind_cdir_full",
@@ -182,7 +218,7 @@
           "delimiter": "-"
         },
         {
-          "type": "translate_key",
+          "type": "translate",
           "keys": [
             "_loop|weather|code"
           ],
@@ -1697,8 +1733,38 @@
             "check": "_conf|speech_sun_2",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter und geht morgen um {_req|data|1|str_sunrise_ts} wieder auf. "
+                "type": "compare",
+                "value_left": "_req|data|0|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht heute um {_req|data|0|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|1|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht morgen um {_req|data|1|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht morgen um {_req|data|1|str_sunrise_ts} wieder auf. "
+                  }
+                ]
               }
             ]
           }
@@ -1759,8 +1825,21 @@
             "check": "_conf|speech_sun_2",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "Die Sonne geht morgen um {_req|data|1|str_sunset_ts} unter.  "
+                "type": "compare",
+                "value_left": "_req|data|1|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht morgen um {_req|data|1|sunset_hour} unter. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht morgen um {_req|data|1|str_sunset_ts} unter. "
+                  }
+                ]
               }
             ]
           }
@@ -1770,11 +1849,24 @@
         "parts": [
           {
             "type": "option",
-            "check": "_conf|speech_sun_2",
+            "check": "_conf|speech_sun_3",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "und am {_req|data|2|weekday} um {_req|data|2|str_sunset_ts} wieder auf.  "
+                "type": "compare",
+                "value_left": "_req|data|2|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht am {_req|data|2|weekday} um {_req|data|2|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht am {_req|data|2|weekday} um {_req|data|2|str_sunrise_ts} wieder auf. "
+                  }
+                ]
               }
             ]
           },
@@ -1827,8 +1919,38 @@
             "check": "_conf|speech_sun_3",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter und geht am {_req|data|3|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
+                "type": "compare",
+                "value_left": "_req|data|2|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|2|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|3|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|3|weekday} um {_req|data|3|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|3|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
+                  }
+                ]
               }
             ]
           }
@@ -1885,8 +2007,38 @@
             "check": "_conf|speech_sun_3",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter und geht am {_req|data|4|weekday} um {_req|data|4|str_sunrise_ts} wieder auf. "
+                "type": "compare",
+                "value_left": "_req|data|3|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|3|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|4|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|4|weekday} um {_req|data|4|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|4|weekday} um {_req|data|4|str_sunrise_ts} wieder auf. "
+                  }
+                ]
               }
             ]
           }
@@ -1943,8 +2095,21 @@
             "check": "_conf|speech_sun_3",
             "on_true": [
               {
-                "type": "text",
-                "pattern": "Die Sonne geht um {_req|data|4|str_sunset_ts} unter.  "
+                "type": "compare",
+                "value_left": "_req|data|4|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|4|sunset_hour} unter. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|4|str_sunset_ts} unter. "
+                  }
+                ]
               }
             ]
           }
@@ -2009,6 +2174,142 @@
       "display_name": "Postleitzahl",
       "optional": false,
       "default_value": "35394"
+    },
+    "country": {
+      "type": "enum",
+      "optional": true,
+      "display_name": "Land",
+      "enum_values": [
+        {
+          "display_value": "Belgien",
+          "value": "BE"
+        },
+        {
+          "display_value": "Griechenland",
+          "value": "EL"
+        },
+        {
+          "display_value": "Litauen",
+          "value": "LT"
+        },
+        {
+          "display_value": "Portugal",
+          "value": "PT"
+        },
+        {
+          "display_value": "Bulgarien",
+          "value": "BG"
+        },
+        {
+          "display_value": "Spanien",
+          "value": "ES"
+        },
+        {
+          "display_value": "Luxemburg",
+          "value": "LU"
+        },
+        {
+          "display_value": "Rumänien",
+          "value": "RO"
+        },
+        {
+          "display_value": "Tschechien",
+          "value": "CZ"
+        },
+        {
+          "display_value": "Frankreich",
+          "value": "FR"
+        },
+        {
+          "display_value": "Ungarn",
+          "value": "HU"
+        },
+        {
+          "display_value": "Slowenien",
+          "value": "SI"
+        },
+        {
+          "display_value": "Dänemark",
+          "value": "DK"
+        },
+        {
+          "display_value": "Kroatien",
+          "value": "HR"
+        },
+        {
+          "display_value": "Malta",
+          "value": "MT"
+        },
+        {
+          "display_value": "Slowakei",
+          "value": "SK"
+        },
+        {
+          "display_value": "Deutschland",
+          "value": "DE"
+        },
+        {
+          "display_value": "Italien",
+          "value": "IT"
+        },
+        {
+          "display_value": "Niederlande",
+          "value": "NL"
+        },
+        {
+          "display_value": "Finnland",
+          "value": "FI"
+        },
+        {
+          "display_value": "Estland",
+          "value": "EE"
+        },
+        {
+          "display_value": "Zypern",
+          "value": "CY"
+        },
+        {
+          "display_value": "Österreich",
+          "value": "AT"
+        },
+        {
+          "display_value": "Schweden",
+          "value": "SE"
+        },
+        {
+          "display_value": "Irland",
+          "value": "IE"
+        },
+        {
+          "display_value": "Lettland",
+          "value": "LV"
+        },
+        {
+          "display_value": "Polen",
+          "value": "PL"
+        },
+        {
+          "display_value": "Island",
+          "value": "IS"
+        },
+        {
+          "display_value": "Norwegen",
+          "value": "NO"
+        },
+        {
+          "display_value": "Liechtenstein",
+          "value": "LI"
+        },
+        {
+          "display_value": "Schweiz",
+          "value": "CH"
+        },
+        {
+          "display_value": "Vereinigtes Königreich",
+          "value": "uk"
+        }
+      ],
+      "default_value": "DE"
     },
     "read": {
       "type": "sub_params",

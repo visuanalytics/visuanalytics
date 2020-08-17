@@ -75,7 +75,7 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "data": "2019"
+          "data": "{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       }
     ]
@@ -142,14 +142,28 @@
           "ignore_errors": true
         },
         {
-          "type": "alias",
+          "type": "check_key",
           "keys": [
             "_loop|MatchResults|0"
           ],
           "new_keys": [
-            "_loop|MatchResults"
-          ],
-          "ignore_errors": true
+            "_loop|MatchHasResults"
+          ]
+        },
+        {
+          "type": "option",
+          "check": "_loop|MatchHasResults",
+          "on_true": [
+            {
+              "type": "alias",
+              "keys": [
+                "_loop|MatchResults|0"
+              ],
+              "new_keys": [
+                "_loop|MatchResults"
+              ]
+            }
+          ]
         },
         {
           "type": "date_weekday",
@@ -172,46 +186,37 @@
               "on_equal": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
-                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
-                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
+                    "{_loop|Team1|TeamName} und {_loop|Team2|TeamName} trennten sich mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "Zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "Ein Unentschieden zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
               "on_higher": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
-                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
+                    "{_loop|Team1|TeamName} gewann gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "{_loop|Team1|TeamName} gewann Zuhause gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
               "on_lower": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . ",
-                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2} . "
+                    "{_loop|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "{_loop|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ]
@@ -220,15 +225,12 @@
           "on_false": [
             {
               "type": "random_value",
-              "keys": [
-                "_loop"
-              ],
               "array": [
-                "Am {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
-                "Am {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
-                "Am kommenden {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
-                "Am kommenden {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
-                "{_key|Team1|TeamName} gegen {_key|Team2|TeamName} am {_key|weekday}. "
+                "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
               ],
               "new_keys": [
                 "_loop|MatchResults|Text"
@@ -428,14 +430,11 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
-            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+            "{_req|Tabelle|0|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
+            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|0|Text"
@@ -445,14 +444,11 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
-            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+            "{_req|Tabelle|0|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
+            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|0|Text"
@@ -462,14 +458,11 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
-            "{_key|TeamName} übernimmt die Führung. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+            "{_req|Tabelle|0|TeamName} übernimmt die Führung. ",
+            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
+            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|0|Text"
@@ -484,14 +477,11 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. "
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -501,16 +491,13 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} übernimmt den zweiten Platz mit {_key|Points} Punkten.",
-            "{_key|TeamName} nun auf dem zweiten Platz mit {_key|Points} Punkten."
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} übernimmt den zweiten Platz mit {_req|Tabelle|1|Points} Punkten.",
+            "{_req|Tabelle|1|TeamName} nun auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -520,15 +507,12 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} ist auf den zweiten Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} ist auf den zweiten Platz abgestiegen mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -543,13 +527,10 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|3|Text"
@@ -559,13 +540,10 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|3|Text"
@@ -575,14 +553,11 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
           "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. ",
-            "Auf den 4. Platz abgestiegen ist {_key|TeamName} mit {_key|Points}. "
+            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+            "Auf den 4. Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
           ],
           "new_keys": [
             "_req|Tabelle|3|Text"
@@ -597,13 +572,10 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -613,14 +585,11 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points} Punkten. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} steigt auf dem Relegationsplatz mit {_req|Tabelle|15|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -630,14 +599,11 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf den Relegationsplatz ab. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} steigt auf den Relegationsplatz ab. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
