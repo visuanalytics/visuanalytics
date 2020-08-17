@@ -5,7 +5,6 @@ import {
     trimParamValues,
     validateParamValues,
     initSelectedValues,
-    Param
 } from "../util/param";
 import {
     Button,
@@ -18,7 +17,6 @@ import {
     Dialog,
     DialogTitle,
     DialogActions,
-    Divider,
     InputBase
 } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
@@ -30,7 +28,6 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import SettingsIcon from "@material-ui/icons/Settings";
 import DeleteIcon from '@material-ui/icons/Delete';
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -47,7 +44,6 @@ import { ComponentContext } from "../ComponentProvider";
 import { ContinueButton } from "../JobCreate/ContinueButton";
 import { Job } from "./index";
 import { useCallFetch } from "../Hooks/useCallFetch";
-import { ParamFields } from "../ParamFields";
 import { getUrl } from "../util/fetchUtils";
 import { NameInput } from "./NameInput"
 import { HintButton } from "../util/HintButton";
@@ -326,11 +322,11 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Grid md={1} />
-                        <Grid md={10}>
+                        <Grid xs={1} item />
+                        <Grid xs={10} item >
                             {renderTextField()}
                         </Grid>
-                        <Grid md={1} />
+                        <Grid xs={1} item />
 
                         <Modal
                             aria-labelledby="transition-modal-title"
