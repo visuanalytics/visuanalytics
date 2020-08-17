@@ -8,6 +8,7 @@ from visuanalytics.util.dict_utils import merge_dict
 
 CONFIG_LOCATION = "../config.json"
 CONFIG_PRIVATE_LOCATION = "../instance/config.json"
+STEPS_BASE_CONFIG = {}
 
 
 def _get_config_path(config_location):
@@ -40,6 +41,7 @@ def get_config():
                 private_config.pop("api_keys", "")
 
         merge_dict(public_config, private_config)
+
         return public_config
 
     except (FileNotFoundError, JSONDecodeError) as e:

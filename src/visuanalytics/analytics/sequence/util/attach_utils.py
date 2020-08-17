@@ -1,4 +1,5 @@
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.util.config_manager import STEPS_BASE_CONFIG
 from visuanalytics.util.resources import get_relative_temp_resource_path
 
 
@@ -16,7 +17,7 @@ def init_pipeline(data: StepData, pipeline_id: str, step_name: str, idx=None, co
     if not idx is None:
         config["job_name"] = f"{config['job_name']}_subtask_{idx}"
 
-    config = {**{}, **config}
+    config = {**STEPS_BASE_CONFIG, **config}
 
     # Avoid mutual imports
     from visuanalytics.analytics.control.procedures.pipeline import Pipeline

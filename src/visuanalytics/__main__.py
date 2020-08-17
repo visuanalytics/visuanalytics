@@ -12,7 +12,7 @@ def main():
         config = config_manager.get_config()
         init(config)
 
-        JsonScheduler("resources/jobs.json", config["steps_base_config"]).start()
+        JsonScheduler("resources/jobs.json").start()
     else:
         # Runt with Flask Server and DBScheduler
         app = server.create_app()
