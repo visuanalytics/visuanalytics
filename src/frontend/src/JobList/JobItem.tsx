@@ -178,7 +178,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                     values: toTypedValues(trimParamValues(paramValues[idx]), t.params)
                 }
             }),
-            schedule: withFormattedDates(schedule)
+            schedule: withFormattedDates(schedule),
+            deleteSchedule: deleteSchedule
         })
     }, handleEditSuccess, handleEditError);
 
