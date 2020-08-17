@@ -1,3 +1,7 @@
+"""
+Modul mit transform-Typen zur Berechnung und Umwandlung von Daten aus einer API.
+
+"""
 import numbers
 import re
 from collections import Counter
@@ -105,8 +109,7 @@ def select(values: dict, data: StepData):
 
 @register_transform
 def delete(values: dict, data: StepData):
-    """
-    Löscht die angegebenen Keys aus den daten
+    """Löscht die angegebenen Keys aus den daten
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -428,7 +431,12 @@ def option(values: dict, data: StepData):
 
 @register_transform
 def compare(values: dict, data: StepData):
-    """
+    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, !=, < oder > die "transform"-Typen aus.
+
+    Wenn `value_left` gleich `value_right`, führe "transform"-Typen aus on_equal durch.
+    Wenn `value_left` ungleich `value_right`, führe "transform"-Typen aus on_not_equal durch.
+    Wenn `value_left` größer `value_right`, führe "transform"-Typen aus on_higher durch.
+    Wenn `value_left` kleiner `value_right`, führe "transform"-Typen aus on_lower durch.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -713,6 +721,14 @@ def normalize_words(values: dict, data: StepData):
 
 @register_transform
 def split_string(values: dict, data: StepData):
+    """Teilt einen String am angegebenen Trennzeichen.
+
+    Das Trennzeichen können auc mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         delimiter = data.format(values.get("delimiter", " "), values)
@@ -727,6 +743,12 @@ def split_string(values: dict, data: StepData):
 
 @register_transform
 def check_key(values: dict, data: StepData):
+    """Überprüft, ob ein Key vorhanden ist und setzt den dazugehörigen `key` bzw. den `new_keys` auf `true`.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in enumerate(values["keys"]):
         try:
             data.get_data(key, values)
