@@ -49,7 +49,7 @@ docker run -t ^
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
 ```note::
-  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie`hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich`hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`\_)
+  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>`_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`\_)
 ````
 
 ## Ohne Docker (Development)
