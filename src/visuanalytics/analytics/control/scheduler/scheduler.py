@@ -1,3 +1,4 @@
+import functools
 import logging
 import re
 import threading
@@ -9,6 +10,19 @@ from visuanalytics.analytics.control.procedures.pipeline import Pipeline
 from visuanalytics.util import config_manager
 
 logger = logging.getLogger(__name__)
+
+
+def ignore_errors(func):
+    @functools.wraps(func)
+    def ignore_error_func(*kwargs, **args):
+        try:
+            func(*kwargs, **args)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except BaseException:
+            logger.exception("An error occurred: ")
+
+    return ignore_error_func
 
 
 class Scheduler(object):
@@ -54,7 +68,6 @@ class Scheduler(object):
         logger.info("Scheduler started")
         while True:
             while True:
-                # TODO(max) vtl move try catch in for Loop to continue looping and not skip all jobs
                 try:
                     # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
                     self._check_all(datetime.now())
