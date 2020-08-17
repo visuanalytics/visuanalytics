@@ -29,7 +29,10 @@ def get_job_list():
     con = db.open_con_f()
 
     res = con.execute("""
-        SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date, delete_type, days, hours, k_count, fix_names_count,
+        SELECT 
+        job_id, job_name, 
+        job.type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
+        delete_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
@@ -51,12 +54,12 @@ def insert_job(job):
     schedule = job["schedule"]
     delete_schedule = job["deleteSchedule"]
     topic_values = job["topics"]
-    type, time, date, weekdays = _unpack_schedule(schedule)
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
     delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(delete_schedule)
     job_id = con.execute(
-        "INSERT INTO job(job_name, type, time, date, delete_type, days, hours, k_count, fix_names_count) "
-        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [job_name, type, time, date, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
+        "INSERT INTO job(job_name, type, time, date, time_interval, delete_type, days, hours, k_count, fix_names_count) "
+        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [job_name, type, time, date, time_interval, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
     if type == "weekly":
         id_weekdays = [(job_id, d) for d in weekdays]
         con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
@@ -78,8 +81,9 @@ def update_job(job_id, updated_data):
         if key == "jobName":
             con.execute("UPDATE job SET job_name=? WHERE job_id=?", [value, job_id])
         if key == "schedule":
-            type, time, date, weekdays = _unpack_schedule(value)
-            con.execute("UPDATE job SET type=?, time=?, date=? WHERE job_id=?", [type, time, date, job_id])
+            type, time, date, weekdays, time_interval = _unpack_schedule(value)
+            con.execute("UPDATE job SET type=?, time=?, date=?, time_interval=? WHERE job_id=?",
+                        [type, time, date, time_interval, job_id])
             con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
             # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
             # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
@@ -125,12 +129,22 @@ def _row_to_job(row):
     job_name = row["job_name"]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     param_values = row["param_values"]
+
+    type = row["type"]
+    time = row["time"]
     schedule = {
-        "type": humps.camelize(row["type"]),
-        "date": row["date"],
-        "time": row["time"],
-        "weekdays": [int(d) for d in weekdays]
+        "type": humps.camelize(row["type"])
     }
+
+    if type == "daily":
+        schedule = {**schedule, "time": time}
+    if type == "weekly":
+        schedule = {**schedule, "time": time, "weekdays": [int(d) for d in weekdays]}
+    if type == "on_date":
+        schedule = {**schedule, "time": time, "date": row["date"]}
+    if type == "interval":
+        schedule = {**schedule, "interval": row["time_interval"]}
+
     delete_type = row["delete_type"]
     delete_schedule = {
         "type": humps.camelize(delete_type)
@@ -141,6 +155,7 @@ def _row_to_job(row):
         delete_schedule = {**delete_schedule, "keepCount": int(row["k_count"])}
     if delete_type == "fix_names":
         delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
+
     topics = [{}] * (int(row["topic_count"]))
     for tp_s in row["topic_positions"].split(","):
         tp = tp_s.split(":")
@@ -232,10 +247,11 @@ def to_typed_value(v, t):
 
 def _unpack_schedule(schedule):
     type = humps.decamelize(schedule["type"])
-    time = schedule["time"]
+    time = schedule["time"] if type != "interval" else None
     date = schedule["date"] if type == "on_date" else None
+    time_interval = schedule["timeInterval"] if type == "interval" else None
     weekdays = schedule["weekdays"] if type == "weekly" else None
-    return type, time, date, weekdays
+    return type, time, date, weekdays, time_interval
 
 
 def _unpack_delete_schedule(delete_schedule):
