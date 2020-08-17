@@ -29,7 +29,7 @@ def get_job_list():
     con = db.open_con_f()
 
     res = con.execute("""
-        SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date,
+        SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date, delete_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
@@ -49,13 +49,18 @@ def insert_job(job):
     con = db.open_con_f()
     job_name = job["jobName"]
     schedule = job["schedule"]
+    delete_schedule = job["deleteSchedule"]
     topic_values = job["topics"]
     type, time, date, weekdays = _unpack_schedule(schedule)
-    job_id = con.execute("INSERT INTO job(job_name, type, time, date) VALUES(?, ?, ?, ?)",
-                         [job_name, type, time, date]).lastrowid
+    delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(delete_schedule)
+    job_id = con.execute(
+        "INSERT INTO job(job_name, type, time, date, delete_type, days, hours, k_count, fix_names_count) "
+        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [job_name, type, time, date, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
     if type == "weekly":
         id_weekdays = [(job_id, d) for d in weekdays]
         con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+
     _insert_param_values(con, job_id, topic_values)
     con.commit()
 
@@ -83,6 +88,10 @@ def update_job(job_id, updated_data):
             if type == "weekly":
                 id_weekdays = [(job_id, d) for d in weekdays]
                 con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+        if key == "deleteSchedule":
+            delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(value)
+            con.execute("UPDATE job SET delete_type=?, days=?, hours=?, k_count=?, fix_names_count=? WHERE job_id=?",
+                        [delete_type, days, hours, keep_count, fix_names_count, job_id])
         if key == "topics":
             pos_id_rows = con.execute("SELECT position_id FROM job_topic_position WHERE job_id=?", [job_id])
             pos_ids = [(row["position_id"],) for row in pos_id_rows]
@@ -122,6 +131,16 @@ def _row_to_job(row):
         "time": row["time"],
         "weekdays": [int(d) for d in weekdays]
     }
+    delete_type = row["delete_type"]
+    delete_schedule = {
+        "type": humps.camelize(delete_type)
+    }
+    if delete_type == "on_day_hour":
+        delete_schedule = {**delete_schedule, "removalTime": {"days": int(row["days"]), "hours": int(row["hours"])}}
+    if delete_type == "keep_count":
+        delete_schedule = {**delete_schedule, "keepCount": int(row["k_count"])}
+    if delete_type == "fix_names":
+        delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
     topics = [{}] * (int(row["topic_count"]))
     for tp_s in row["topic_positions"].split(","):
         tp = tp_s.split(":")
@@ -154,6 +173,7 @@ def _row_to_job(row):
         "jobId": job_id,
         "jobName": job_name,
         "schedule": schedule,
+        "deleteSchedule": delete_schedule,
         "topics": topics
     }
 
@@ -216,6 +236,15 @@ def _unpack_schedule(schedule):
     date = schedule["date"] if type == "on_date" else None
     weekdays = schedule["weekdays"] if type == "weekly" else None
     return type, time, date, weekdays
+
+
+def _unpack_delete_schedule(delete_schedule):
+    delete_type = humps.decamelize(delete_schedule["type"])
+    days = delete_schedule["removalTime"]["days"] if delete_type == "on_day_hour" else None
+    hours = delete_schedule["removalTime"]["hours"] if delete_type == "on_day_hour" else None
+    keep_count = delete_schedule["keepCount"] if delete_type == "keep_count" else None
+    fix_names_count = delete_schedule["count"] if delete_type == "fix_names" else None
+    return delete_type, days, hours, keep_count, fix_names_count
 
 
 def _to_param_list(run_config):
