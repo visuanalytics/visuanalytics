@@ -15,18 +15,11 @@ def get_topic_names():
              "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
 
 
-def _get_topic_steps(json_file_name: str):
-    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
-    with open(path_to_json, encoding="utf-8") as fh:
-        return json.loads(fh.read())
-
-
 def get_params(topic_id):
     con = db.open_con_f()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
     if res is None:
         return None
-
     steps_json = _get_topic_steps(res["json_file_name"])
     run_config = steps_json["run_config"]
     return humps.camelize(_to_param_list(run_config))
@@ -34,37 +27,42 @@ def get_params(topic_id):
 
 def get_job_list():
     con = db.open_con_f()
+
     res = con.execute("""
-    SELECT DISTINCT 
-    job_id, job_name, schedule.type, strftime('%Y-%m-%d', date) as date, time, steps_id, steps_name, json_file_name, job_config.type,
-    group_concat(DISTINCT weekday) AS weekdays,
-    group_concat(DISTINCT key || ":"  || value || ":" || job_config.type) AS params
-    FROM job 
-    INNER JOIN steps USING (steps_id)
-    LEFT JOIN job_config USING (job_id)
-    INNER JOIN schedule USING (schedule_id) 
-    LEFT JOIN schedule_weekday USING (schedule_id) 
-    GROUP BY (job_id);
+        SELECT job_id, job_name, job.type, time, STRFTIME('%Y-%m-%d', date) as date,
+        GROUP_CONCAT(DISTINCT weekday) AS weekdays,
+        COUNT(DISTINCT position_id) AS topic_count,
+        GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
+        GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
+        FROM job 
+        
+        LEFT JOIN schedule_weekday USING (job_id)
+        INNER JOIN job_topic_position USING (job_id) 
+        LEFT JOIN job_config USING (position_id) 
+        INNER JOIN steps USING (steps_id)
+        GROUP BY (job_id)
     """)
     return [_row_to_job(row) for row in res]
 
 
 def insert_job(job):
     con = db.open_con_f()
-    schedule_id = _insert_schedule(con, job["schedule"])
-    job_id = con.execute("INSERT INTO job(job_name, steps_id, schedule_id) VALUES(?, ?, ?)",
-                         [job["jobName"], job["topicId"], schedule_id]).lastrowid
-    _insert_param_values(con, job_id, job["values"])
+    job_name = job["jobName"]
+    schedule = job["schedule"]
+    topic_values = job["topics"]
+    type, time, date, weekdays = _unpack_schedule(schedule)
+    job_id = con.execute("INSERT INTO job(job_name, type, time, date) VALUES(?, ?, ?, ?)",
+                         [job_name, type, time, date]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(job_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+    _insert_param_values(con, job_id, topic_values)
     con.commit()
 
 
 def delete_job(job_id):
     con = db.open_con_f()
-    job = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()
-    schedule_id = job["schedule_id"]
-    con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
-    con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
-    con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
+    con.execute("PRAGMA foreign_keys = ON")
     con.execute("DELETE FROM job WHERE job_id=?", [job_id])
     con.commit()
 
@@ -73,16 +71,23 @@ def update_job(job_id, updated_data):
     con = db.open_con_f()
     for key, value in updated_data.items():
         if key == "jobName":
-            con.execute("UPDATE job SET job_name=? WHERE job_id =?", [value, job_id])
+            con.execute("UPDATE job SET job_name=? WHERE job_id=?", [value, job_id])
         if key == "schedule":
-            schedule_id = con.execute("SELECT schedule_id FROM job where job_id=?", [job_id]).fetchone()["schedule_id"]
-            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [schedule_id])
-            con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
-            new_schedule_id = _insert_schedule(con, value)
-            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [new_schedule_id, job_id])
-        if key == "values":
-            # TODO (David): Nur wenn die übergebenen Parameter zum Job passen, DB-Anfrage ausführen
-            con.execute("DELETE FROM job_config WHERE job_id=?", [job_id])
+            type, time, date, weekdays = _unpack_schedule(value)
+            con.execute("UPDATE job SET type=?, time=?, date=? WHERE job_id=?", [type, time, date, job_id])
+            con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
+            # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
+            # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
+            # mit dieser Methode ändern)
+            # Wenn der type im Nachhinein der type eines Jobs zu "weekly" geändert wird, tritt das Problem nicht auf
+            if type == "weekly":
+                id_weekdays = [(job_id, d) for d in weekdays]
+                con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+        if key == "topics":
+            pos_id_rows = con.execute("SELECT position_id FROM job_topic_position WHERE job_id=?", [job_id])
+            pos_ids = [(row["position_id"],) for row in pos_id_rows]
+            con.execute("DELETE FROM job_topic_position WHERE job_id=?", [job_id])
+            con.executemany("DELETE FROM job_config WHERE position_id=?", pos_ids)
             _insert_param_values(con, job_id, value)
     con.commit()
 
@@ -102,39 +107,73 @@ def get_logs():
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
         "startTime": log["start_time"]
-        }
+    }
         for log in logs]
 
 
 def _row_to_job(row):
-    values = _get_values((row["params"]))
-    steps_params = _get_topic_steps(row["json_file_name"])["run_config"]
-    params = humps.camelize(_to_param_list(steps_params))
+    job_id = row["job_id"]
+    job_name = row["job_name"]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
-    return {
-        "jobId": row["job_id"],
-        "jobName": row["job_name"],
-        "topicName": row["steps_name"],
-        "topicId": row["steps_id"],
-        "params": params,
-        "values": values,
-        "schedule": {
-            "type": humps.camelize(row["type"]),
-            "date": row["date"],
-            "time": row["time"],
-            "weekdays": [int(w) for w in weekdays]
+    param_values = row["param_values"]
+    schedule = {
+        "type": humps.camelize(row["type"]),
+        "date": row["date"],
+        "time": row["time"],
+        "weekdays": [int(d) for d in weekdays]
+    }
+    topics = [{}] * (int(row["topic_count"]))
+    for tp_s in row["topic_positions"].split(","):
+        tp = tp_s.split(":")
+        topic_id = tp[0]
+        topic_name = tp[1]
+        json_file_name = tp[2]
+        position = int(tp[3])
+        run_config = _get_topic_steps(json_file_name)["run_config"]
+        params = humps.camelize(_to_param_list(run_config))
+        topics[position] = {
+            "topicId": topic_id,
+            "topicName": topic_name,
+            "params": params,
+            "values": {}
         }
+    if param_values is not None:
+        for vals_s in param_values.split(","):
+            vals = vals_s.split(":")
+            position = int(vals[0])
+            name = vals[1]
+            u_val = vals[2]
+            type = vals[3]
+            t_val = to_typed_value(u_val, type)
+            topics[position]["values"] = {
+                **topics[position]["values"],
+                name: t_val
+            }
+
+    return {
+        "jobId": job_id,
+        "jobName": job_name,
+        "schedule": schedule,
+        "topics": topics
     }
 
 
-def _insert_param_values(con, job_id, values):
-    id_key_values = [
-        (job_id,
-         k,
-         _to_untyped_value(v["value"], humps.decamelize(v["type"])),
-         humps.decamelize(v["type"]))
-        for (k, v) in values.items()]
-    con.executemany("INSERT INTO job_config(job_id, key, value, type) VALUES(?, ?, ?, ?)", id_key_values)
+def _get_topic_steps(json_file_name: str):
+    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+    with open(path_to_json, encoding="utf-8") as fh:
+        return json.loads(fh.read())
+
+
+def _insert_param_values(con, job_id, topic_values):
+    for pos, t in enumerate(topic_values):
+        position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
+                                  [job_id, t["topicId"], pos]).lastrowid
+        jtkvt = [(position_id,
+                  k,
+                  _to_untyped_value(v["value"], humps.decamelize(v["type"])),
+                  humps.decamelize(v["type"]))
+                 for k, v in t["values"].items()]
+        con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
 
 
 def _get_values(param_string):
@@ -171,15 +210,12 @@ def to_typed_value(v, t):
         return v == "True"
 
 
-def _insert_schedule(con, schedule):
-    schedule_id = con.execute("INSERT INTO schedule(type, date, time) VALUES(?, ?, ?)",
-                              [humps.decamelize(schedule["type"]),
-                               schedule["date"] if schedule["type"] == "onDate" else None,
-                               schedule["time"]]).lastrowid
-    if schedule["type"] == "weekly":
-        id_weekdays = [(schedule_id, d) for d in schedule["weekdays"]]
-        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
-    return schedule_id
+def _unpack_schedule(schedule):
+    type = humps.decamelize(schedule["type"])
+    time = schedule["time"]
+    date = schedule["date"] if type == "on_date" else None
+    weekdays = schedule["weekdays"] if type == "weekly" else None
+    return type, time, date, weekdays
 
 
 def _to_param_list(run_config):

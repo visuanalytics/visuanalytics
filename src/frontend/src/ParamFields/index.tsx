@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
 import { Param, ParamValues, validateParamValue } from '../util/param';
-import {BooleanParam} from './BooleanParam'
+import { BooleanParam } from './BooleanParam'
 
 
 interface ParamFieldProps extends ParamField {
@@ -16,31 +16,41 @@ interface ParamFieldsProps extends ParamField {
 }
 
 interface ParamField {
-    selectParamHandler: (_s: string, _a: any) => void,
+    selectParamHandler: (_s: string, _a: any, _i: number) => void,
     disabled: boolean,
     required: boolean,
-    values: ParamValues
+    values: ParamValues,
+    index: number
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const classes = useStyles();
+    const idx = props.index;
+    const params = props.params;
 
     return (
-        <div >
+        <div key={idx} className={classes.MPaddingB}>
             {
-                props.params?.map(p => (
-                    <div key={p.name}>
-                        <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
-                            <ParamField
-                                param={p}
-                                values={props.values}
-                                selectParamHandler={props.selectParamHandler}
-                                disabled={props.disabled}
-                                required={props.required}
-                            />
+                params && params.length > 0
+                    ?
+                    props.params?.map(p => (
+                        <div key={p.name}>
+                            <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
+                                <ParamField
+                                    param={p}
+                                    values={props.values}
+                                    selectParamHandler={props.selectParamHandler}
+                                    disabled={props.disabled}
+                                    required={props.required}
+                                    index={props.index}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))
+                    ))
+                    :
+                    <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                        </div>
             }
         </div>
     )
@@ -55,15 +65,15 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         setInvalid(!validateParamValue(event.target.value, param));
-        props.selectParamHandler(name, event.target.value);
+        props.selectParamHandler(name, event.target.value, props.index);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
         setInvalid(!validateParamValue(values, param));
-        props.selectParamHandler(name, values);
+        props.selectParamHandler(name, values, props.index);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-        props.selectParamHandler(name, event.target.checked);
+        props.selectParamHandler(name, event.target.checked, props.index);
     }
 
     const withExpIcon = (name: string, expanded: boolean) => {
@@ -172,6 +182,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             selectParamHandler={props.selectParamHandler}
                             disabled={props.disabled}
                             required={props.required}
+                            index={props.index}
                         />
                     </Collapse>
                     {((props.values[param.name] || showSubParams))

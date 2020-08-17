@@ -1,25 +1,27 @@
 import React, { useState, useCallback } from "react";
 import { Param, ParamValues } from "../util/param";
 import { JobItem } from "./JobItem";
-import {Typography} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Load } from "../Load";
 import { Schedule } from "../util/schedule";
 import { getUrl } from "../util/fetchUtils";
-import {ComponentContext} from "../ComponentProvider";
-import {DeleteSchedule} from "../util/deleteSchedule";
+import { ComponentContext } from "../ComponentProvider";
+import { DeleteSchedule } from "../util/deleteSchedule";
 import { InfoMessage } from "../util/InfoMessage";
 import { Notification, notifcationReducer } from "../util/Notification";
 
 export interface Job {
   jobId: number;
   jobName: string;
-  params: Param[];
-  values: ParamValues;
+  topics: [{
+    topicName: string,
+    topicId: number,
+    params: Param[],
+    values: ParamValues
+  }]
   schedule: Schedule;
   deleteSchedule: DeleteSchedule;
-  topicId: number;
-  topicName: string;
 }
 
 export const JobList: React.FC = () => {
@@ -29,7 +31,7 @@ export const JobList: React.FC = () => {
     open: false,
     message: "",
     type: "success"
-});
+  });
 
   const [loadFailed, setLoadFailed] = useState(false);
   const handleLoadFailed = useCallback(() => {
@@ -48,18 +50,18 @@ export const JobList: React.FC = () => {
   };
 
   const handleReportSuccess = (message: string) => {
-    dispatchMessage({type: "reportSuccess", message: message})
+    dispatchMessage({ type: "reportSuccess", message: message })
   }
 
   const handleReportError = (message: string) => {
-    dispatchMessage({type: "reportError", message: message})
+    dispatchMessage({ type: "reportError", message: message })
   }
 
   return (
     <InfoMessage
       condition={jobInfo?.length === 0}
       message={{
-        headline: "Willkommen bei ihrer Job Übersicht!",
+        headline: "Willkommen bei Ihrer Job Übersicht!",
         text: (
           <Typography align={"center"} color="textSecondary">
             Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
@@ -84,17 +86,17 @@ export const JobList: React.FC = () => {
         data={jobInfo}
       >
         {jobInfo?.map((j: Job) => (
-              <div key={j.jobId}>
-                   <JobItem
-                      job={j}
-                       getJobs={handleReaload}
-                       reportError={handleReportError}
-                       reportSuccess={handleReportSuccess}
-                   />
-              </div>
+          <div key={j.jobId}>
+            <JobItem
+              job={j}
+              getJobs={handleReaload}
+              reportError={handleReportError}
+              reportSuccess={handleReportSuccess}
+            />
+          </div>
         ))}
         <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
-                            type={message.type}/>
+          type={message.type} />
       </Load>
     </InfoMessage>
   );

@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import { useStyles } from './style';
-import { ContinueButton } from './ContinueButton';
-import { BackButton } from './BackButton';
-import { ParamSelection } from './ParamSelection';
-import { TopicSelection } from './TopicSelection';
-import { GreyDivider } from './GreyDivider';
+import {useStyles} from './style';
+import {ContinueButton} from './ContinueButton';
+import {BackButton} from './BackButton';
+import {ParamSelection} from './ParamSelection';
+import {TopicSelection, Topic} from './TopicSelection';
+import {GreyDivider} from './GreyDivider';
 import {
     Param,
     ParamValues,
@@ -17,14 +17,14 @@ import {
     toTypedValues
 } from '../util/param';
 import {Fade, Grid, Typography} from '@material-ui/core';
-import { useCallFetch } from '../Hooks/useCallFetch';
-import { Schedule, withFormattedDates, validateSchedule } from '../util/schedule';
-import { getUrl } from '../util/fetchUtils';
+import {useCallFetch} from '../Hooks/useCallFetch';
+import {Schedule, withFormattedDates, validateSchedule} from '../util/schedule';
+import {getUrl} from '../util/fetchUtils';
 import {HintButton} from "../util/HintButton";
 import {ComponentContext} from "../ComponentProvider";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {DeleteSchedule} from "../util/deleteSchedule";
-import {SchedulePage} from "../util/SchedulePage";
+import {SettingsPage} from "../util/SettingsPage";
 
 
 export default function JobCreate() {
@@ -38,12 +38,14 @@ export default function JobCreate() {
     const [finished, setFinished] = React.useState(false);
 
     // states for topic selection logic
-    const [topicId, setTopicId] = React.useState(-1);
+    const [topics, setTopics] = React.useState<Topic[]>([]);
     const [jobName, setJobName] = React.useState("");
+    const [multipleTopics, setMultipleTopics] = React.useState(false);
+    const multipleRef = React.useRef(false);
 
     // state for param selection logic
-    const [paramList, setParamList] = React.useState<Param[] | undefined>(undefined);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({});
+    const [paramLists, setParamLists] = React.useState<Param[][] | undefined>(undefined);
+    const [paramValues, setParamValues] = React.useState<ParamValues[]>([]);
 
     // state for Load Failed
     const [loadFailed, setLoadFailed] = React.useState(false);
@@ -68,38 +70,54 @@ export default function JobCreate() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            topicId: topicId,
+            topics: topics.map((t, idx) => {
+                return {
+                    topicId: t.topicId,
+                    values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
+                }
+            }),
             jobName: jobName,
-            values: toTypedValues(trimParamValues(paramValues), paramList ? paramList : []),
             schedule: withFormattedDates(schedule)
         })
     });
 
     // handler for param Load failed
     const handleLoadParamsFailed = React.useCallback(() => {
-      setLoadFailed(true);
+        setLoadFailed(true);
     }, []);
 
     // handler for param selection logic
     const handleFetchParams = React.useCallback((params: Param[]) => {
-        setParamList(params);
-        setParamValues(initSelectedValues(params));
-      }, []);
+        setParamLists(p => {
+            if (p !== undefined) {
+                return [...p, params];
+            }
+            return [params];
+        })
+        setParamValues(v => {
+            if (v !== undefined) {
+                return [...v, initSelectedValues(params)];
+            }
+            return [initSelectedValues(params)];
+        })
+    }, []);
 
     // initialize callback for get params
     const fetchParams = useCallFetch(
-        getUrl("/params/") + topicId,
+        getUrl("/params/") + topics[topics.length - 1]?.topicId,
         undefined,
         handleFetchParams,
         handleLoadParamsFailed
     );
 
-    // handler for RealoadingParms
-    const handleRealoadParms = React.useCallback(() => {
-      setParamList(undefined);
-      setParamValues({});
-      setLoadFailed(false);
-      fetchParams();
+    // handler for reloading params
+    const handleReloadParams = React.useCallback(() => {
+        if (!multipleRef.current) {
+            setParamLists(undefined);
+            setParamValues([]);
+        }
+        setLoadFailed(false);
+        fetchParams();
     }, [fetchParams]);
 
     useEffect(() => {
@@ -112,26 +130,36 @@ export default function JobCreate() {
 
     // when a new topic is selected, fetch params
     useEffect(() => {
-        if (topicId !== -1) {
-            handleRealoadParms();
+        if (topics.length > 0) {
+            handleReloadParams();
         }
-    }, [topicId, handleRealoadParms])
+    }, [topics, handleReloadParams])
 
     // when a new topic or job name is selected, check if topic selection is complete
     useEffect(() => {
         if (activeStep === 0) {
-            const allSet = topicId !== -1 && jobName.trim() !== "";
+            const allSet = topics.length > 0 && jobName.trim() !== "";
             setSelectComplete(allSet);
         }
-    }, [topicId, jobName, activeStep])
+    }, [topics, jobName, activeStep, paramLists])
+
+
+    useEffect(() => {
+        multipleRef.current = multipleTopics;
+        if (!multipleTopics) {
+            setTopics([]);
+            setParamLists(undefined);
+            setParamValues([]);
+        }
+    }, [multipleTopics])
 
     // when a new parameter value is entered, check if parameter selection is complete
     useEffect(() => {
         if (activeStep === 1) {
-            const allSet = validateParamValues(paramValues, paramList);
-            setSelectComplete(allSet);
+            const allSet = paramLists?.every((l, idx) => validateParamValues(paramValues[idx], l));
+            setSelectComplete(allSet || false);
         }
-    }, [paramList, paramValues, activeStep])
+    }, [paramLists, paramValues, activeStep])
 
     // when a weekly schedule is selected, check if at least one weekday checkbox is checked
     useEffect(() => {
@@ -165,18 +193,30 @@ export default function JobCreate() {
     };
 
     // handlers for topic selection logic
-    const handleSelectTopic = (topicId: number) => {
-        setTopicId(topicId);
+    const handleResetTopics = () => {
+        setTopics([]);
+    }
+
+    const handleAddTopic = (topic: Topic) => {
+        setTopics([...topics, topic]);
+    }
+
+    const handleSetSingleTopic = (topic: Topic) => {
+        setTopics([topic]);
     }
 
     const handleEnterJobName = (jobName: string) => {
         setJobName(jobName);
     }
 
+    const handleToggleMultiple = () => {
+        setMultipleTopics(!multipleTopics);
+    }
+
     // handler for param selection logic
-    const handleSelectParam = (key: string, value: any) => {
-        const updated = { ...paramValues }
-        updated[key] = value;
+    const handleSelectParam = (key: string, value: any, idx: number) => {
+        const updated = [...paramValues]
+        updated[idx][key] = value;
         setParamValues(updated);
     }
 
@@ -223,14 +263,16 @@ export default function JobCreate() {
             <Typography gutterBottom>
                 Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
             </Typography>
-            <Typography variant="h6" >täglich</Typography>
+            <Typography variant="h6">täglich</Typography>
             <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
-            <Typography variant="h6" >wöchentlich</Typography>
-            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
-            <Typography variant="h6" >Intervall</Typography>
+            <Typography variant="h6">wöchentlich</Typography>
+            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen
+                Uhrzeit erstellt</Typography>
+            <Typography variant="h6">Intervall</Typography>
             <Typography gutterBottom>Das Video wird nach dem angegebenen Intervall generiert</Typography>
-            <Typography variant="h6" >an festem Datum</Typography>
-            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6">an festem Datum</Typography>
+            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit
+                erstellt</Typography>
         </div>,
 
         <div>
@@ -238,14 +280,17 @@ export default function JobCreate() {
             <Typography gutterBottom>
                 Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video gelöscht werden soll.
             </Typography>
-            <Typography variant="h6" >nie</Typography>
+            <Typography variant="h6">nie</Typography>
             <Typography gutterBottom>Das Video wird nie gelöscht</Typography>
-            <Typography variant="h6" >nach Zeit</Typography>
-            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht</Typography>
-            <Typography variant="h6" >nach Anzahl</Typography>
-            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht</Typography>
-            <Typography variant="h6" >feste Namen</Typography>
-            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen <i>jobName</i>_1 besitzt</Typography>
+            <Typography variant="h6">nach Zeit</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden
+                gelöscht</Typography>
+            <Typography variant="h6">nach Anzahl</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos
+                gelöscht</Typography>
+            <Typography variant="h6">feste Namen</Typography>
+            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den
+                Namen <i>jobName</i>_1 besitzt</Typography>
         </div>
     ];
 
@@ -255,33 +300,38 @@ export default function JobCreate() {
             case 0:
                 return (
                     <TopicSelection
-                        topicId={topicId}
+                        topics={topics}
                         jobName={jobName}
-                        selectTopicHandler={handleSelectTopic}
-                        enterJobNameHandler={handleEnterJobName} />
+                        multipleTopics={multipleTopics}
+                        toggleMultipleHandler={handleToggleMultiple}
+                        resetTopicsHandler={handleResetTopics}
+                        setSingleTopicHandler={handleSetSingleTopic}
+                        addTopicHandler={handleAddTopic}
+                        enterJobNameHandler={handleEnterJobName}/>
                 );
             case 1:
                 return (
                     <ParamSelection
-                        topicId={topicId}
+                        topicNames={topics.map(t => t.topicName)}
                         values={paramValues}
-                        params={paramList}
+                        params={paramLists}
                         loadFailedProps={{
                             hasFailed: loadFailed,
                             name: "Parameter",
-                            onReload: handleRealoadParms
+                            onReload: handleReloadParams
                         }}
-                        selectParamHandler={handleSelectParam} />
+                        selectParamHandler={handleSelectParam}/>
                 )
             case 2:
                 return (
-                    <SchedulePage
+                    <SettingsPage
                         offset={1}
                         schedule={schedule}
                         deleteSchedule={deleteSchedule}
                         selectScheduleHandler={handleSelectSchedule}
                         selectDeleteScheduleHandler={handleSelectDeleteSchedule}
                         handleHintState={handleHintState}
+                        paramSelectionProps={undefined}
                     />
                 )
             default:
@@ -311,23 +361,23 @@ export default function JobCreate() {
                                 <Grid item xs={1}>
                                 </Grid>
                                 <Grid item xs={10}>
-                                    <h3 className={classes.jobCreateHeader}>{descriptions[activeStep]}</h3>
+                                    <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                                 </Grid>
                                 <Grid container item xs={1}>
                                     <HintButton content={hintContent[hintState]} />
                                 </Grid>
                             </Grid>
                         </div>
-                        <GreyDivider />
+                        <GreyDivider/>
                         {getSelectPanel(activeStep)}
-                        <GreyDivider />
+                        <GreyDivider/>
                         <div className={classes.MPaddingTB}>
                             <span>
-                                <BackButton onClick={handleBack} style={{ marginRight: 20 }} disabled={activeStep <= 0}>
+                                <BackButton onClick={handleBack} style={{marginRight: 20}} disabled={activeStep <= 0}>
                                     {"Zurück"}
                                 </BackButton>
-                                <ContinueButton onClick={handleNext} style={{ marginLeft: 20 }}
-                                    disabled={!selectComplete}>
+                                <ContinueButton onClick={handleNext} style={{marginLeft: 20}}
+                                                disabled={!selectComplete}>
                                     {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                                 </ContinueButton>
                             </span>
@@ -337,7 +387,7 @@ export default function JobCreate() {
                     <Fade in={true}>
                         <div className={classes.MPaddingTB}>
                             <Grid container spacing={2}>
-                                 <Grid container item justify="center">
+                                <Grid container item justify="center">
                                     <CheckCircleIcon
                                         className={classes.checkIcon}
                                         color={"disabled"}
@@ -348,7 +398,8 @@ export default function JobCreate() {
                                     <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
                                 </Grid>
                                 <Grid container item justify="center">
-                                    <Typography>Sie werden in {counter} Sekunden zur Startseite weitergeleitet.</Typography>
+                                    <Typography>Sie werden in {counter} Sekunden zur Startseite
+                                        weitergeleitet.</Typography>
                                 </Grid>
                                 <Grid container item justify="center">
                                     <ContinueButton onClick={() => components?.setCurrent("home")}>

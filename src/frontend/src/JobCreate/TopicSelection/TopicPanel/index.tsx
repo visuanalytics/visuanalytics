@@ -1,12 +1,12 @@
 import React from "react";
-import {makeStyles, Button, Typography, Grid} from "@material-ui/core";
+import { makeStyles, Button, Typography, Grid } from "@material-ui/core";
 import { Topic } from "..";
-import {HintButton} from "../../../util/HintButton"
+import { HintButton } from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
-    topicId: number;
-    selectTopicHandler: (topicId: number) => void;
+    topics: Topic[];
+    selectTopicHandler: (topic: Topic) => void;
 }
 
 const useStyles = makeStyles({
@@ -27,27 +27,39 @@ const useStyles = makeStyles({
     }
 });
 
+type IndexedTopic = [Topic, number];
+const toIndexedTopic = (topic: Topic, idx: number): IndexedTopic => {
+    return [topic, idx];
+}
+
 export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
+    const topicIds = props.topics.map(t => t.topicId);
+    const topic = props.topic;
+
+    const pos = props.topics
+        .map((t, idx) => toIndexedTopic(t, idx))
+        .filter(ti => ti[0].topicId === topic.topicId)
+        .map(ti => ti[1] + 1);
 
     return (
         <Button
             className={classes.panel}
-            style={props.topic.topicId === props.topicId ? { border: "solid #00638D 7px" } : { border: "" }}
+            style={topicIds.includes(topic.topicId) ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
-                props.selectTopicHandler(props.topic.topicId);
+                props.selectTopicHandler(topic);
             }
             }>
-            <Grid item xs={1}></Grid>
+            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>{String(pos).split(",").join(", ")}</Grid>
             <Grid item xs={10}>
-                {props.topic.topicName}
+                {topic.topicName}
             </Grid>
-            <Grid item xs={1}>
-            <HintButton content={
-                <Typography gutterBottom>
-                    {props.topic.topicInfo}
-                </Typography>}
-            />
+            <Grid item xs={2} style={{ textAlign: "right", fontSize: 15 }}>
+                <HintButton content={
+                    <Typography gutterBottom>
+                        {topic.topicInfo}
+                    </Typography>}
+                />
             </Grid>
         </Button>
     )

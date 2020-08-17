@@ -1,6 +1,24 @@
 import React, { useEffect } from "react";
-import { ParamValues, toTypedValues, trimParamValues, validateParamValues, initSelectedValues } from "../util/param";
-import { Button, Container, Fade, Modal, Paper, TextField, Tooltip, Dialog, DialogTitle, DialogActions } from "@material-ui/core";
+import {
+    ParamValues,
+    toTypedValues,
+    trimParamValues,
+    validateParamValues,
+    initSelectedValues,
+} from "../util/param";
+import {
+    Button,
+    Container,
+    Fade,
+    Modal,
+    Paper,
+    TextField,
+    Tooltip,
+    Dialog,
+    DialogTitle,
+    DialogActions,
+    InputBase
+} from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -8,23 +26,29 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import SettingsIcon from "@material-ui/icons/Settings";
 import DeleteIcon from '@material-ui/icons/Delete';
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
 import DescriptionIcon from "@material-ui/icons/Description";
-import { Schedule, withFormattedDates, showSchedule, fromFormattedDates, showTimeToNextDate, validateSchedule } from "../util/schedule";
+import {
+    Schedule,
+    withFormattedDates,
+    showSchedule,
+    fromFormattedDates,
+    showTimeToNextDate,
+    validateSchedule
+} from "../util/schedule";
 import { ComponentContext } from "../ComponentProvider";
-import {ContinueButton} from "../JobCreate/ContinueButton";
-import {Job} from "./index";
-import {useCallFetch} from "../Hooks/useCallFetch";
-import {ParamFields} from "../ParamFields";
-import  { getUrl } from "../util/fetchUtils";
-import {NameInput} from "./NameInput"
-import {HintButton} from "../util/HintButton";
-import {DeleteSchedule} from "../util/deleteSchedule";
-import {SchedulePage} from "../util/SchedulePage";
+import { ContinueButton } from "../JobCreate/ContinueButton";
+import { Job } from "./index";
+import { useCallFetch } from "../Hooks/useCallFetch";
+import { getUrl } from "../util/fetchUtils";
+import { NameInput } from "./NameInput"
+import { HintButton } from "../util/HintButton";
+import { DeleteSchedule } from "../util/deleteSchedule";
+import { SettingsPage } from "../util/SettingsPage";
 
 interface Props {
     job: Job,
@@ -37,15 +61,21 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
-    const [noEdit, setNoEdit] = React.useState(true);
     const [hintState, setHintState] = React.useState(0);
+
+    const initParamValues = (topics: any) => {
+        return topics.map((t: any) => {
+            return { ...initSelectedValues(t.params), ...t.values }
+        })
+    }
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [jobName, setJobName] = React.useState(job.jobName);
-    const [open, setOpen] = React.useState(false);
-    const [paramValues, setParamValues] = React.useState<ParamValues>({ ...initSelectedValues(job.params), ...job.values });
+    const [openSettings, setOpenSettings] = React.useState(false);
+    const [noEdit, setNoEdit] = React.useState(true);
+    const [paramValues, setParamValues] = React.useState<ParamValues[]>(initParamValues(job.topics));
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
-    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({type: "noDeletion"})
+    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({ type: "noDeletion" })
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -55,29 +85,40 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
             <Typography gutterBottom>
                 Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video generiert werden soll.
             </Typography>
-            <Typography variant="h6" >täglich</Typography>
+            <Typography variant="h6">täglich</Typography>
             <Typography gutterBottom>Das Video wird täglich zur unten angegebenen Uhrzeit erstellt</Typography>
-            <Typography variant="h6" >wöchentlich</Typography>
-            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen Uhrzeit erstellt</Typography>
-            <Typography variant="h6" >Intervall</Typography>
+            <Typography variant="h6">wöchentlich</Typography>
+            <Typography gutterBottom>Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten angegebenen
+                Uhrzeit erstellt</Typography>
+            <Typography variant="h6">Intervall</Typography>
             <Typography gutterBottom>Das Video wird nach dem angegebenen Intervall generiert</Typography>
-            <Typography variant="h6" >an festem Datum</Typography>
-            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit erstellt</Typography>
+            <Typography variant="h6">an festem Datum</Typography>
+            <Typography gutterBottom>Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit
+                erstellt</Typography>
         </div>,
         <div>
             <Typography variant="h5" gutterBottom>Löschen</Typography>
             <Typography gutterBottom>
                 Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video gelöscht werden soll.
             </Typography>
-            <Typography variant="h6" >nie</Typography>
+            <Typography variant="h6">nie</Typography>
             <Typography gutterBottom>Das Video wird nie gelöscht</Typography>
-            <Typography variant="h6" >nach Zeit</Typography>
-            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht</Typography>
-            <Typography variant="h6" >nach Anzahl</Typography>
-            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht</Typography>
-            <Typography variant="h6" >feste Namen</Typography>
-            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen <i>jobName</i>_1 besitzt</Typography>
-        </div>
+            <Typography variant="h6">nach Zeit</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden
+                gelöscht</Typography>
+            <Typography variant="h6">nach Anzahl</Typography>
+            <Typography gutterBottom>Das Video wird nach einer bestimmten Anzahl an generierten Videos
+                gelöscht</Typography>
+            <Typography variant="h6">feste Namen</Typography>
+            <Typography gutterBottom>Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den
+                Namen <i>jobName</i>_1 besitzt</Typography>
+        </div>,
+        <div>
+            <Typography variant="h5" gutterBottom>Parameter bearbeiten</Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie die Parameter für das Video bearbeiten.
+            </Typography>
+        </div>,
     ]
 
     const handleSelectSchedule = (schedule: Schedule) => {
@@ -88,9 +129,9 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
         setDeleteSchedule(deleteSchedule);
     }
 
-    const handleSelectParam = (key: string, value: any) => {
-        const updated = { ...paramValues }
-        updated[key] = value;
+    const handleSelectParam = (key: string, value: any, idx: number) => {
+        const updated = [...paramValues]
+        updated[idx][key] = value;
         setParamValues(updated);
     }
 
@@ -103,6 +144,8 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
     }
 
     const handleEditSuccess = () => {
+        setOpenSettings(false);
+        setNoEdit(true);
         getJobs()
         reportSuccess("Job erfolgreich geändert")
     }
@@ -129,7 +172,12 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
         },
         body: JSON.stringify({
             jobName: jobName.trim(),
-            values: toTypedValues(trimParamValues(paramValues), job.params),
+            topics: job.topics.map((t: any, idx: number) => {
+                return {
+                    topicId: t.topicId,
+                    values: toTypedValues(trimParamValues(paramValues[idx]), t.params)
+                }
+            }),
             schedule: withFormattedDates(schedule)
         })
     }, handleEditSuccess, handleEditError);
@@ -146,26 +194,17 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
     }, [schedule]);
 
     const renderJobItem = (job: Job) => {
-        const handleOpen = () => {
-            setOpen(true);
-        };
-        const handleClose = () => {
-            setOpen(false);
-        };
+
         const handleChange = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
         };
-        const handleEditClick = () => {
-            setNoEdit(!noEdit);
-            setExpanded(String(job.jobId));
-        }
 
         const handleCheckClick = () => {
             if (jobName.trim() === "") {
                 reportError("Jobname nicht ausgefüllt")
                 return;
             }
-            if (!validateParamValues(paramValues, job.params)) {
+            if (!job.topics.every((t: any, idx: number) => validateParamValues(paramValues[idx], t.params))) {
                 reportError("Parameter nicht korrekt gesetzt")
                 return;
             }
@@ -173,17 +212,23 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                 reportError("Es muss mindestens ein Wochentag ausgewählt werden")
                 return;
             }
-            handleEditClick();
             editJob();
         }
         const handleSaveModal = () => {
             handleCheckClick();
-            handleClose();
+        }
+
+        const handleCloseModal = () => {
+            setNoEdit(true);
+            setOpenSettings(false);
+            setParamValues(initParamValues(job.topics));
+            setJobName(job.jobName);
+            setSchedule(fromFormattedDates(job.schedule));
         }
 
         const handleDeleteJob = () => {
-            setConfirmDelete(false)
-            deleteJob()
+            setConfirmDelete(false);
+            deleteJob();
         }
 
         const renderTextField = () => {
@@ -192,33 +237,26 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                     <div className={classes.SPaddingTRB}>
                         <TextField
                             label="Thema"
-                            defaultValue={job.topicName}
+                            defaultValue={String(job.topics.map((t: any) => t.topicName)).split(",").join(", ")}
                             InputProps={{
                                 disabled: true,
                             }}
+                            multiline
                             variant="outlined"
                             fullWidth
                         />
                     </div>
                     <div className={classes.SPaddingTRB}>
-                        <Tooltip title={noEdit ? "" : "Zeitplan bearbeiten"}
-                            arrow
-                        >
-                            <Button className={classes.inputButton} onClick={handleOpen} disabled={noEdit}>
-                                <TextField
-                                    label="Zeitplan"
-                                    value={showSchedule(schedule)}
-                                    disabled={noEdit}
-                                    InputProps={{
-                                        readOnly: true
-                                    }}
-                                    required={!noEdit}
-                                    variant="outlined"
-                                    fullWidth
-                                    error={!validateSchedule(schedule)}
-                                />
-                            </Button>
-                        </Tooltip>
+                        <TextField
+                            label="Zeitplan"
+                            value={showSchedule(fromFormattedDates(job.schedule))}
+                            InputProps={{
+                                disabled: true,
+                            }}
+                            required={!noEdit}
+                            variant="outlined"
+                            fullWidth
+                        />
                     </div>
                     <div>
                     </div>
@@ -243,32 +281,23 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                     <AccordionSummary>
                         {expanded ? <ExpandLess className={classes.expIcon} /> :
                             <ExpandMore className={classes.expIcon} />}
-                        <Typography component="span" className={classes.heading}>#{job.jobId}
+                        <Typography component="span" className={classes.heading}>
+                            #{job.jobId}
                             <NameInput
-                                value={jobName}
-                                readOnly={noEdit}
+                                value={job.jobName}
+                                readOnly
                                 inputProps={{
                                     style: {
-                                        cursor: noEdit ? "pointer" : "text",
-                                        borderBottom: noEdit ? "" : "2px solid #c4c4c4",
+                                        cursor: "pointer",
                                     }
-                                }}
-                                onClick={noEdit ? () => {
-                                } : (event) => event.stopPropagation()}
-                                onChange={handleJobName}
-                            >
-                                {job.jobName}</NameInput></Typography>
-                        <div onClick={(event) => event.stopPropagation()}>
-                            <Tooltip title={noEdit ? "Job bearbeiten" : "Job speichern"} arrow>
-                                <IconButton  className={classes.button}
-                                    onClick={noEdit ? handleEditClick : handleCheckClick} >
-                                    {noEdit ? <EditIcon /> : <CheckCircleIcon />}
-                                </IconButton>
-                            </Tooltip>
-                        </div>
+                                }}>
+                                {job.jobName}
+                            </NameInput>
+                        </Typography>
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
-                                <IconButton onClick={() => components?.setCurrent("jobLogs", {jobId: job.jobId})} className={classes.button}>
+                                <IconButton onClick={() => components?.setCurrent("jobLogs", { jobId: job.jobId })}
+                                    className={classes.button}>
                                     <DescriptionIcon />
                                 </IconButton>
                             </Tooltip>
@@ -277,66 +306,110 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                             <Tooltip title="Job löschen" arrow>
                                 <IconButton
                                     onClick={() => setConfirmDelete(true)}
-                                    className={classes.button}
-                                >
+                                    className={classes.button}>
                                     <DeleteIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                        <div onClick={(event) => event.stopPropagation()}>
+                            <Tooltip title="Konfiguration" arrow>
+                                <IconButton
+                                    onClick={() => setOpenSettings(true)}
+                                    className={classes.button}>
+                                    <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Grid item md={6}>
+                        <Grid xs={1} item />
+                        <Grid xs={10} item >
                             {renderTextField()}
                         </Grid>
+                        <Grid xs={1} item />
+
                         <Modal
                             aria-labelledby="transition-modal-title"
                             aria-describedby="transition-modal-description"
                             className={classes.modal}
-                            open={open}
-                            onClose={handleClose}
+                            open={openSettings}
+                            onClose={handleCloseModal}
                             closeAfterTransition
                             BackdropComponent={Backdrop}
                             BackdropProps={{
                                 timeout: 500,
                             }}
                         >
-                            <Fade in={open}>
+                            <Fade in={openSettings}>
                                 <Container className={classes.backdropContent}>
                                     <Grid container>
-                                        <Grid item xs={11} />
+                                        <Grid item container xs={1} justify={"flex-end"}>
+                                            <Tooltip title="Job-Name bearbeiten" arrow>
+                                                <IconButton
+                                                    onClick={() => setNoEdit((b => !b))}
+                                                    className={classes.button}
+                                                >
+                                                    <EditIcon color="primary" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            {
+                                                noEdit
+                                                    ?
+                                                    (<InputBase
+                                                        fullWidth
+                                                        disabled
+                                                        value={jobName}
+                                                        inputProps={{
+                                                            style: {
+                                                                color: "black",
+                                                                textAlign: "center",
+                                                                fontSize: 20,
+                                                                cursor: "default"
+                                                            }
+                                                        }}
+                                                    />)
+                                                    :
+                                                    (<TextField
+                                                        fullWidth
+                                                        onChange={handleJobName}
+                                                        value={jobName}
+                                                        inputProps={{
+                                                            style: { textAlign: "center", fontSize: 20 }
+                                                        }} />)
+                                            }
+                                        </Grid>
                                         <Grid item container xs={1} justify={"flex-end"}>
                                             <HintButton content={hintContent[hintState]} />
                                         </Grid>
                                     </Grid>
-                                        <Paper variant="outlined" className={classes.paper}>
-                                            <SchedulePage
-                                                offset={-1}
-                                                schedule={schedule}
-                                                deleteSchedule={deleteSchedule}
-                                                selectScheduleHandler={handleSelectSchedule}
-                                                selectDeleteScheduleHandler={handleSelectDeleteSchedule}
-                                                handleHintState={handleHintState}
-                                            />
-                                            <div className={classes.continue}>
-                                                <div className={classes.continueButton}>
-                                                    <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
-                                                </div>
-                                            </div>
-                                        </Paper>
+                                    <Paper variant="outlined" className={classes.paper}
+                                        style={{ maxHeight: 600, overflow: 'auto' }}>
+                                        <SettingsPage
+                                            offset={-1}
+                                            schedule={schedule}
+                                            deleteSchedule={deleteSchedule}
+                                            selectScheduleHandler={handleSelectSchedule}
+                                            selectDeleteScheduleHandler={handleSelectDeleteSchedule}
+                                            handleHintState={handleHintState}
+                                            paramSelectionProps={{
+                                                topicNames: job.topics.map((t: any) => t.topicName),
+                                                values: paramValues,
+                                                params: job.topics.map((t: any) => t.params),
+                                                loadFailedProps: undefined,
+                                                selectParamHandler: handleSelectParam
+                                            }}
+                                        />
+                                    </Paper>
+                                    <div>
+                                        <div style={{ textAlign: "center", paddingTop: 15 }}>
+                                            <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
+                                        </div>
+                                    </div>
                                 </Container>
                             </Fade>
                         </Modal>
-                        <Grid item md={6}>
-                            <div>
-                                <ParamFields
-                                    params={job.params}
-                                    values={paramValues}
-                                    selectParamHandler={handleSelectParam}
-                                    disabled={noEdit}
-                                    required={!noEdit}
-                                />
-                            </div>
-                        </Grid>
                     </AccordionDetails>
                 </Accordion>
                 <Dialog
@@ -344,7 +417,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                     onClose={() => setConfirmDelete(false)}
                 >
                     <DialogTitle>
-                        {`Job '#${job.jobId} ${job.jobName}' löchen?`}
+                        {`Job '#${job.jobId} ${job.jobName}' löschen?`}
                     </DialogTitle>
                     <DialogActions>
                         <Button autoFocus onClick={() => setConfirmDelete(false)} color="primary">
@@ -353,7 +426,7 @@ export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSucc
                         <Button onClick={handleDeleteJob} color="primary">
                             Löschen
                         </Button>
-                </DialogActions>
+                    </DialogActions>
                 </Dialog>
             </div>
         );

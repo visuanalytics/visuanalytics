@@ -68,6 +68,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             paddingTop: 10,
             paddingRight: 15,
             paddingBottom: 10,
+        },
+        MPaddingTB: {
+            paddingBottom: 15,
+            paddingTop: 15
+        },
+        header: {
+            fontWeight: "normal",
+            fontSize: "large"
         }
     }),
 );
