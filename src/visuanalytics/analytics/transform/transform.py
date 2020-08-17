@@ -1,5 +1,5 @@
 """
-Modul mit transform-Typen zur Berechnung und Umwandlung von Daten aus einer API.
+Modul mit Funktionen zur Berechnung und Umwandlung von Daten aus einer API.
 
 """
 import numbers
