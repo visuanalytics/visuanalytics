@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
     ParamValues,
     toTypedValues,
@@ -22,7 +22,7 @@ import {
     InputBase
 } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
-import {AccordionSummary, useStyles} from "./style";
+import { AccordionSummary, useStyles } from "./style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
@@ -43,16 +43,16 @@ import {
     showTimeToNextDate,
     validateSchedule
 } from "../util/schedule";
-import {ComponentContext} from "../ComponentProvider";
-import {ContinueButton} from "../JobCreate/ContinueButton";
-import {Job} from "./index";
-import {useCallFetch} from "../Hooks/useCallFetch";
-import {ParamFields} from "../ParamFields";
-import {getUrl} from "../util/fetchUtils";
-import {NameInput} from "./NameInput"
-import {HintButton} from "../util/HintButton";
-import {DeleteSchedule} from "../util/deleteSchedule";
-import {SettingsPage} from "../util/SettingsPage";
+import { ComponentContext } from "../ComponentProvider";
+import { ContinueButton } from "../JobCreate/ContinueButton";
+import { Job } from "./index";
+import { useCallFetch } from "../Hooks/useCallFetch";
+import { ParamFields } from "../ParamFields";
+import { getUrl } from "../util/fetchUtils";
+import { NameInput } from "./NameInput"
+import { HintButton } from "../util/HintButton";
+import { DeleteSchedule } from "../util/deleteSchedule";
+import { SettingsPage } from "../util/SettingsPage";
 
 interface Props {
     job: Job,
@@ -61,7 +61,7 @@ interface Props {
     reportSuccess: (message: string) => void;
 }
 
-export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSuccess}) => {
+export const JobItem: React.FC<Props> = ({ job, getJobs, reportError, reportSuccess }) => {
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
@@ -69,7 +69,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
 
     const initParamValues = (topics: any) => {
         return topics.map((t: any) => {
-            return {...initSelectedValues(t.params), ...t.values}
+            return { ...initSelectedValues(t.params), ...t.values }
         })
     }
 
@@ -79,7 +79,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
     const [noEdit, setNoEdit] = React.useState(true);
     const [paramValues, setParamValues] = React.useState<ParamValues[]>(initParamValues(job.topics));
     const [schedule, setSchedule] = React.useState<Schedule>(fromFormattedDates(job.schedule));
-    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({type: "noDeletion"})
+    const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({ type: "noDeletion" })
     const [next, setNext] = React.useState(showTimeToNextDate(schedule));
     const [confirmDelete, setConfirmDelete] = React.useState(false);
 
@@ -167,7 +167,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
         setHintState(hint);
     }
 
-    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), {method: 'DELETE'}, handleDeleteJobSucess, handleDeleteJobFailure);
+    const deleteJob = useCallFetch(getUrl(`/remove/${job.jobId}`), { method: 'DELETE' }, handleDeleteJobSucess, handleDeleteJobFailure);
 
     const editJob = useCallFetch(getUrl(`/edit/${job.jobId}`), {
         method: "PUT",
@@ -283,8 +283,8 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
             <div className={classes.root}>
                 <Accordion expanded={expanded === String(job.jobId)} onChange={handleChange(String(job.jobId))}>
                     <AccordionSummary>
-                        {expanded ? <ExpandLess className={classes.expIcon}/> :
-                            <ExpandMore className={classes.expIcon}/>}
+                        {expanded ? <ExpandLess className={classes.expIcon} /> :
+                            <ExpandMore className={classes.expIcon} />}
                         <Typography component="span" className={classes.heading}>
                             #{job.jobId}
                             <NameInput
@@ -300,9 +300,9 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                         </Typography>
                         <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
-                                <IconButton onClick={() => components?.setCurrent("jobLogs", {jobId: job.jobId})}
-                                            className={classes.button}>
-                                    <DescriptionIcon/>
+                                <IconButton onClick={() => components?.setCurrent("jobLogs", { jobId: job.jobId })}
+                                    className={classes.button}>
+                                    <DescriptionIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
@@ -310,9 +310,8 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                             <Tooltip title="Job löschen" arrow>
                                 <IconButton
                                     onClick={() => setConfirmDelete(true)}
-                                    className={classes.button}
-                                >
-                                    <DeleteIcon/>
+                                    className={classes.button}>
+                                    <DeleteIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
@@ -320,19 +319,18 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                             <Tooltip title="Konfiguration" arrow>
                                 <IconButton
                                     onClick={() => setOpenSettings(true)}
-                                    className={classes.button}
-                                >
-                                    <SettingsIcon/>
+                                    className={classes.button}>
+                                    <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <Grid md={1}/>
+                        <Grid md={1} />
                         <Grid md={10}>
                             {renderTextField()}
                         </Grid>
-                        <Grid md={1}/>
+                        <Grid md={1} />
 
                         <Modal
                             aria-labelledby="transition-modal-title"
@@ -355,7 +353,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                                     onClick={() => setNoEdit((b => !b))}
                                                     className={classes.button}
                                                 >
-                                                    <EditIcon color="primary"/>
+                                                    <EditIcon color="primary" />
                                                 </IconButton>
                                             </Tooltip>
                                         </Grid>
@@ -382,16 +380,16 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                                         onChange={handleJobName}
                                                         value={jobName}
                                                         inputProps={{
-                                                            style: {textAlign: "center", fontSize: 20}
-                                                        }}/>)
+                                                            style: { textAlign: "center", fontSize: 20 }
+                                                        }} />)
                                             }
                                         </Grid>
                                         <Grid item container xs={1} justify={"flex-end"}>
-                                            <HintButton content={hintContent[hintState]}/>
+                                            <HintButton content={hintContent[hintState]} />
                                         </Grid>
                                     </Grid>
                                     <Paper variant="outlined" className={classes.paper}
-                                           style={{maxHeight: 600, overflow: 'auto'}}>
+                                        style={{ maxHeight: 600, overflow: 'auto' }}>
                                         <SettingsPage
                                             offset={-1}
                                             schedule={schedule}
@@ -409,7 +407,7 @@ export const JobItem: React.FC<Props> = ({job, getJobs, reportError, reportSucce
                                         />
                                     </Paper>
                                     <div>
-                                        <div style={{textAlign: "center", paddingTop: 15}}>
+                                        <div style={{ textAlign: "center", paddingTop: 15 }}>
                                             <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
                                         </div>
                                     </div>
