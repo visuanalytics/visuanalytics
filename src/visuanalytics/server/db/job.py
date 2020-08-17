@@ -38,20 +38,29 @@ def get_job_run_info(job_id):
         WHERE job_id=?
         ORDER BY(position)
         """, [job_id]).fetchall()
-
+        
         job_name = res[0]["job_name"]
         steps_name = res[0]["json_file_name"]
-        topic_count = 0 if len(res) == 0 else int(res[len(res) - 1]["position"] + 1)
-        configs = [{"config": {}, "steps": ""}] * topic_count
-        for row in res:
-            key = row["key"]
-            value = row["value"]
-            type = row["type"]
-            steps_name = row["json_file_name"]
-            position = int(row["position"])
-            config = {**configs[position]["config"], key: queries.to_typed_value(value, type)}
-            configs[position] = {**configs[position], "config": config, "steps": steps_name}
-        config = {"attach": configs}
+        config = {}
+        if len(res) > 0:
+            topic_count = int(res[len(res) - 1]["position"] + 1)
+            attach = [{"config": {}, "steps": ""}] * (topic_count - 1)
+            for row in res:
+                key = row["key"]
+                type = row["type"]
+                value = queries.to_typed_value(row["value"], type)
+                sub_steps_name = row["json_file_name"]
+                position = int(row["position"]) - 1
+                if position < 0:
+                    if key is not None:
+                        config = {**config, key: value}
+                else:
+                    attach_config = {**attach[position]["config"]}
+                    if key is not None:
+                        attach_config = {**attach_config, key: value}
+                    attach[position] = {**attach[position], "config": attach_config, "steps": sub_steps_name}
+        if len(attach) > 0:
+            config = {**config, "attach": attach}
         return job_name, steps_name, config
 
 
