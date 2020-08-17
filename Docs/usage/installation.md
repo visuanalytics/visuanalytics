@@ -87,7 +87,7 @@ _Programm starten_:
 - Backend ohne npm starten: `python -m visuanalytics` (Dafür muss man sich im src-Ordner befinden)
 
 ```note::
-  Um die Option `h264_nvenc` (siehe `config.json <#config.json>_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
+  Um die Option `h264_nvenc` (siehe `config.json <#config.json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
 ````
 
