@@ -9,14 +9,14 @@ interface IntervalCheckboxProps {
 
 export const IntervalCheckboxes: React.FC<IntervalCheckboxProps> = (props) => {
     const schedule = props.schedule;
-    const intervals = [
-        TimeInterval.MINUTE,
-        TimeInterval.QUARTER,
-        TimeInterval.HALF,
-        TimeInterval.THREEQUARTER,
-        TimeInterval.HOUR,
-        TimeInterval.QUARTDAY,
-        TimeInterval.HALFDAY
+    const intervals: TimeInterval[] = [
+        "minute",
+        "quarter",
+        "half",
+        "threequarter",
+        "hour",
+        "quartday",
+        "halfday"
     ]
 
     const renderCheckBox = (interval: TimeInterval) => {
@@ -35,7 +35,7 @@ export const IntervalCheckboxes: React.FC<IntervalCheckboxProps> = (props) => {
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const interval = parseInt(event.target.value);
+        const interval = event.target.value as TimeInterval;
         props.intervalHandler(interval);
     }
 
