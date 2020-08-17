@@ -1,5 +1,5 @@
 """
-Modul schreibt Dicts in JSON Files
+Modul, welches Dictionaries in JSON-Dateien schreibt.
 """
 
 import copy
@@ -14,10 +14,9 @@ from visuanalytics.util import resources
 
 @raise_step_error(StoringError)
 def storing(values: dict, data: StepData):
-    """
-    Schreibt Die Api Daten nach ausführung der Transform Methoden in eine JSON Datei
+    """Schreibt die API-Daten nach Ausführung der `transform`-Typen in eine JSON-Datei.
 
-    als Dateiname wird der jobname sowie das heutige datum verwendet
+    Als Dateiname wird der Jobname sowie das heutige Datum verwendet.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
