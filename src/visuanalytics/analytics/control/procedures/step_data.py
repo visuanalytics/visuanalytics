@@ -2,6 +2,7 @@
 Modul das die Klasse :class:`StepData` beinhaltet.
 """
 import numbers
+from copy import copy
 
 from visuanalytics.analytics.util.step_errors import APIKeyError, PresetError
 from visuanalytics.analytics.util.step_pattern import StepPatternFormatter, data_insert_pattern, data_get_pattern, \
@@ -161,7 +162,7 @@ class StepData(object):
         if return_on_type is not None:
             if isinstance(key, return_on_type):
                 return key
-        
+
         if values is None:
             values = {}
 
@@ -206,6 +207,9 @@ class StepData(object):
         """
         if config is None or isinstance(config, (numbers.Number, bool)):
             return config
+
+        # Make copy to ensure that original config stays the same
+        config = copy(config)
 
         if values is None:
             values = {}
