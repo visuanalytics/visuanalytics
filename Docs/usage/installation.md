@@ -26,7 +26,7 @@ docker build -f Dockerfile.wordpress -t visuanalytics src
 
 _Docker-Container starten:_
 
-Die Pfade hinter `-v` müssen durch Pfade zu den Dateien, welche in [Konfiguration](#Konfiguration) beschrieben werden
+Die Pfade hinter `-v` müssen durch Pfade zu den Dateien, welche in [Konfiguration](#konfiguration) beschrieben werden
 - bzw. durch den Pfad zum Output-Ordner - ersetzt werden.
 
 _Linux:_
@@ -70,7 +70,7 @@ _Pakete installieren_:
 
 - `pip install -r visuanalytics/requiraments.txt`
 
-- Konfigurations-Dateien anlegen bzw. anpassen (diese werden unter [Konfiguration](#Configuration) beschrieben):
+- Konfigurations-Dateien anlegen bzw. anpassen (diese werden unter [Konfiguration](#konfiguration) beschrieben):
   - Die Datei `config.json` muss sich im Ordner `visuanalytics/instance` befinden.
 
 _In den `frontend`-Ordner wechseln_:
@@ -129,7 +129,7 @@ _Wordpress-Plugin erstellen_:
 Im `build`-Ordner befindet sich eine .zip-Datei, die sich einfach über die Wordpress-Oberfläche installieren lässt.
 
 ```warning::
-  Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe `hier <#mit-docker>`_ oder `hier <#ohne-docker>`_). Um vom Plugin requests an das Backend zu senden, muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` anfangen an den Backendserver weiterleiten.
+  Damit das Plugin vollständig funktioniert, muss das Backend laufen (siehe `hier <#mit-docker>`_ oder `hier <#ohne-docker-development>`_). Um vom Plugin requests an das Backend zu senden, muss ein Reverse Proxy eingerichtet werden, dieser sollte dann alle requests die mit `/visuanalytics` anfangen an den Backendserver weiterleiten.
 ```
 
 ### Konfiguration
@@ -172,7 +172,7 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen, die im F
 - `h264_nvenc`(_optional_):
 
   Wenn `h264_nvenc` aktiviert ist, wird diese Option bei `FFmpeg` verwendet. Diese aktiviert die Hardware-Beschleunigung bei Nvidia-Grafikkarten.
-  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#Mit-Docker) sowie [Ohne Docker](#ohne-docker-development)).
+  Damit dies funktioniert, müssen diverse Sachen beachtet werden (weitere Informationen unter [Mit Docker](#mit-Docker) sowie [Ohne Docker](#ohne-docker-development)).
 
 - `thumbnail`(_optional_):
 
@@ -191,7 +191,7 @@ Wenn `testing` aktiviert ist, wird die _logging Ausgabe_ auf das "Info"-Level ge
 
 `audio`(_optional_):
 
-Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Erklärung dafür befindet sich [hier](Docs/usage/audio-apis.md).
+Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Erklärung dafür befindet sich [hier](audio-apis.md).
 
 `console_mode`(_optional_):
 
