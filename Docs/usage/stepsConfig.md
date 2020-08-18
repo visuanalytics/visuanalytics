@@ -101,6 +101,12 @@ Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verw
 }
 ```
 
+Ist ein angegebener `new_key` nicht vorhanden wir der erstellt bzw. alle keys die fehlen.
+
+```warning::
+  Aktuelle ist es nicht möglich das durch die angabe von `new_key` ein Array erstellt wird, oder ein Array was zu klein ist Vergrößert wird.
+```
+
 ### Special Variablen
 
 Es gibt einge vor definierte Special Variablen mit folgenden Keys.
@@ -2841,12 +2847,15 @@ Die werte die der Benutzer dann eingibt werden unter dem key `_conf|key` gespeic
 Die folgenden drei Keys müssen immer angegeben werden.
 
 **type**:
-str - Hier steht der Type der Konfiguration, möglich sind: `string`, `multi_string`, `enum`, `number`, `multi_number`
+
+str - Hier steht der Type der Konfiguration, möglich sind: `enum`, `string`, `multi_string`, `sub_params`, `number`, `multi_number`
 
 **display_name**:
+
 str - Name des Parameters wie er im Frontend stehen soll.
 
 **optional**:
+
 bool - Dieser Parameter gibt an, ob das Feld im Frontend ausgefüllt werden muss oder nicht. Ist der Parameter true, so 
 wird ein Sternchen nach dem Display-Namen angezeigt, um zu markieren, dass dies ein Pflichtparameter ist, bei dem auf jeden Fall ein Parameter ausgewählt werden muss.
 
@@ -2854,7 +2863,7 @@ Je nachdem welcher Typ gewählt wurde, werden die Werte aus denen ausgewählt we
 
 **default_value**:
 
-Wert mit dem nicht optionale Paramter im Frontend inizalisiert werden. (Wenn `optional` `false` ist kann diese Angabe auch weggelassen werden).
+Wert mit dem nicht optionale Paramter im Frontend inizalisiert werden. (Wenn optional `true` ist kann diese Angabe auch weggelassen werden).
 
 ### enum
 
@@ -2982,7 +2991,14 @@ Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend
       "type": "sub_params",
       "display_name": "Farbverlauf",
       "optional": true,
-      "sub_params": {},
+      "sub_params": {
+        "color": {
+          "type": "string",
+          "display_name": "Farbe",
+          "optional": false,
+          "default_value": "black"
+        }
+      },
       "default_value": false
     }
 }
@@ -2991,13 +3007,13 @@ Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend
 Alle [Basis Angaben](#basis-angaben).
 
 **sub_params**
-{} - weitere [Parametertypen](#run_config), die ausgewählt werden können.
+weitere [Parametertypen](#run_config), die ausgewählt werden können.
 
 **Frontend Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_sub_params.png)
 
-```node::
+```note::
   Wenn optional `true` ist wird Zusätzlich eine Checkbox angezeigt.
 ```
 
