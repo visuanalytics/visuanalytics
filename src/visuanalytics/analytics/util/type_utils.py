@@ -7,13 +7,13 @@ from visuanalytics.util.dict_utils import merge_dict
 
 
 def register_type_func(types: dict, error: Type[StepError], func):
-    """ Registriert die Übergebene Funktion,
-    und versieht sie mit einem try except block
+    """ Registriert die übergebene Funktion,
+    und versieht sie mit einem try-except-Block.
 
-    :param types: Dict wo der type registriert werden soll.
-    :param error: fehler der geworfen werden soll.
-    :param func: Zu registrierende Funktion.
-    :return: funktion mit try, catch block.
+    :param types: Dictionary, in dem der Typ registriert werden soll
+    :param error: Fehler, der geworfen werden soll
+    :param func: zu registrierende Funktion
+    :return: Funktion mit try-catch-Block
     """
     func = raise_step_error(error)(func)
 
@@ -38,15 +38,14 @@ def register_type_func_no_data(types: dict, error: Type[StepError], func):
 
 
 def get_type_func(values: dict, types: dict, key="type"):
-    """
-    Hilfsfunktion um die Typefunktion aus einem Dictonary zu bekommen.
+    """ Hilfsfunktion um die Typ-Funktion aus einem Dictonary zu bekommen.
 
-    Ist der Type (eintrag in `types`) nicht vorhanden wirde ein `StepTypeError` geworfen.
+    Ist der Typ (Eintrag in `types`) nicht vorhanden, wird ein `StepTypeError` geworfen.
 
     :param values: Werte aus der JSON-Datei.
     :param types: Dictionary mit `type: func`
     :param key: Key des Typen in values
-    :return: gesuchte funktion
+    :return: gesuchte Funktion
     :raises: StepTypeError
     """
     func = types.get(values.get(key, ""), None)

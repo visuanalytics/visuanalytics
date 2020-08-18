@@ -1,5 +1,5 @@
 """
-Modul welches Bilder und Audios kombiniert zu einem fertigem Video.
+Modul, welches Bilder und Audios kombiniert zu einem fertigem Video.
 """
 import numbers
 import os
@@ -16,7 +16,7 @@ from visuanalytics.util import resources
 from visuanalytics.util.resources import get_relative_temp_resource_path
 
 SEQUENCE_TYPES = {}
-"""Ein Dictionary bestehende aus allen Sequence Typ Methoden."""
+"""Ein Dictionary bestehend aus allen Sequence-Typ-Methoden."""
 
 
 def register_sequence(func):
@@ -31,12 +31,11 @@ def register_sequence(func):
 
 @raise_step_error(SequenceError)
 def link(values: dict, step_data: StepData):
-    """
-    Überprüft welcher Typ der Video generierung vorliegt und ruft die passende Typ Methode auf.
+    """Überprüft, welcher Typ der Video-Generierung vorliegt und ruft die passende Typ-Methode auf.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
-    :return: Den Pfad zum OutputVideo
+    :return: Pfad zum Output-Video
     :rtype: str
     """
     out_images, out_audios, out_audio_l = [], [], []
@@ -53,12 +52,12 @@ def link(values: dict, step_data: StepData):
                                          no_tmp_dir=True)
                 pipeline.start()
 
-                # Add images and audios from the Pipeline
+                # Add images and audios from the pipeline
                 extend_out_config(pipeline.config["sequence"], out_images, out_audios, out_audio_l)
 
             _generate(out_images, out_audios, out_audio_l, step_data, values)
         else:
-            # Save and Manipulate out Path (To save video to tmp dir)
+            # Save and manipulate out path (to save video to tmp dir)
             out_path = step_data.get_config("output_path")
             step_data.data["_conf"]["output_path"] = get_relative_temp_resource_path("", step_data.data["_pipe_id"])
 
@@ -91,13 +90,14 @@ def link(values: dict, step_data: StepData):
 
 @register_sequence
 def successively(values: dict, step_data: StepData, out_images, out_audios, out_audio_l):
-    """
-    Generiert das Output Video, dazu werden dediglich alle Bilder und alle Video Datein in der
-    Reihenfolge wie sie in values(also in der JSON) vorliegen aneinander gereiht.
+    """Generierung des Output-Videos aus allen Bild- und Audiodateien.
+
+    Generiert das Output-Video. Dazu werden alle Bild- und alle Audiodateien - in der
+    Reihenfolge wie sie in values (in der JSON) vorliegen - aneinandergereiht.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
-    :return: Den Pfad zum OutputVideo
+    :return: Pfad zum Output-Video
     :rtype: str
     """
     for image in values["images"]:
@@ -109,13 +109,14 @@ def successively(values: dict, step_data: StepData, out_images, out_audios, out_
 
 @register_sequence
 def custom(values: dict, step_data: StepData, out_images, out_audios, out_audio_l):
-    """
-    Generiert das Output Video, in values(also in der JSON) muss angegeben sein in welcher Reihenfolge und wie lange jedes Bild
-    und die passenden Audio Datei aneinander gereiht werden sollen.
+    """Generierung des Output-Videos aus ausgewählten Bild- und Audiodateien.
+
+    Generiert das Output-Video. In values (in der JSON) muss angegeben sein in welcher Reihenfolge und wie lange jedes Bild
+    und die passenden Audiodatei aneinandergereiht werden sollen.
 
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
-    :return: Den Pfad zum OutputVideo
+    :return: Pfad zum Output-Video
     :rtype: str
     """
     for s in values["sequence"]["pattern"]:
@@ -133,7 +134,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
         if step_data.get_config("h264_nvenc", False):
             os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
-        # Concat Audio FIles
+        # Concatenate audio files
 
         with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
             for i in audios:
@@ -145,7 +146,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
                  output]
         subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
-        # Generate Video
+        # Generate video
 
         output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
                                          step_data.get_config("job_name", ""))

@@ -1,5 +1,5 @@
 """
-Modul welches die verschieden Typen beeihaltet um Text auf ein Bild zu setzten
+Modul, welches die verschieden Typen beeihaltet, um Text auf ein Bild zu setzen.
 """
 from PIL import ImageFont
 
@@ -8,15 +8,14 @@ from visuanalytics.analytics.util.type_utils import register_type_func_no_data
 from visuanalytics.util import resources
 
 DRAW_TYPES = {}
-"""Ein Dictionary bestehende aus allen Draw Typ Methoden  """
+"""Ein Dictionary bestehende aus allen Draw-Typ-Methoden  """
 
 
 def register_draw(func):
-    """
-    Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu
+    """ Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu.
 
-    :param func: Eine Funktion
-    :return: Die übergebene Funktion
+    :param func: eine Funktion
+    :return: die übergebene Funktion
     """
     return register_type_func_no_data(DRAW_TYPES, ImageError, func)
 
@@ -24,19 +23,19 @@ def register_draw(func):
 @register_draw
 def center(draw, position, content, font_size, font_colour, font_path):
     """
-    Methode um Text an einem fixem Punkt in ein Bild zu schreiben
+    Methode, um Text an einem fixem Punkt in ein Bild zu schreiben
 
-    :param draw: Draw Object auf welches geschrieben werden soll
+    :param draw: Draw-Object, auf welches geschrieben werden soll
     :type draw: PIL.ImageDraw.Draw()
-    :param position: Position an welche geschrieben werden soll
+    :param position: Position, an welche geschrieben werden soll
     :type position: tuple
-    :param content: Text der geschrieben werden soll
+    :param content: Text, der geschrieben werden soll
     :type content: str
     :param font_size: Größe des Texts, Standard Größe = 70
     :type font_size: int
-    :param font_colour: Farbe in welcher geschrieben werden soll (Kann textfarbe als string aber auch Hexwert sein)
+    :param font_colour: Farbe, in welcher geschrieben werden soll (Textfarbe als string oder Hexadezimalwert)
     :type font_colour: str
-    :param font_path: Pfad zur Schriftart in welches geschrieben werden soll
+    :param font_path: Pfad zur Schriftart, in welcher geschrieben werden soll
     :type font_path: str
 
     """
@@ -50,21 +49,21 @@ def center(draw, position, content, font_size, font_colour, font_path):
 @register_draw
 def left(draw, position, content, font_size, font_colour, font_path):
     """
-    Methode um Text in ein Bild mittig zu schreiben.
-    Ort an dem angefangen wird zu schreiben ist variable und wird berechnet
-    an der Größe des zu schreibenden Textes.
+    Methode, um Text mittig auf ein Bild zu schreiben.
+    Ort, an dem angefangen wird zu schreiben ,ist variabel und wird berechnet
+    anhand der Größe des zu schreibenden Textes.
 
-    :param draw: Draw Object auf welches geschrieben werden soll
+    :param draw: Draw-Object, auf welches geschrieben werden soll
     :type draw: PIL.ImageDraw.Draw()
-    :param position: Position an welche geschrieben werden soll
+    :param position: Position, an welche geschrieben werden soll
     :type position: tuple
-    :param content: Text der geschrieben werden soll
+    :param content: Text, der geschrieben werden soll
     :type content: str
     :param font_size: Größe des Texts, Standard Größe = 70
     :type font_size: int
-    :param font_colour: Farbe in welcher geschrieben werden soll (Kann textfarbe als string aber auch Hexwert sein)
+    :param font_colour: Farbe, in welcher geschrieben werden soll (Textfarbe als string oder Hexadezimalwert)
     :type font_colour: str
-    :param font_path: Pfad zur Schriftart in welches geschrieben werden soll
+    :param font_path: Pfad zur Schriftart, in welcher geschrieben werden soll
     :type font_path: str
     """
     draw.text(position, content,
