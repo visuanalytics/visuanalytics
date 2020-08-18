@@ -69,24 +69,24 @@ export default function JobCreate() {
 
   const [hintState, setHintState] = React.useState(0);
 
-    // initialize callback for add job functionality
-    const addJob = useCallFetch(getUrl("/add"), {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            topics: topics.map((t, idx) => {
-                return {
-                    topicId: t.topicId,
-                    values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
-                }
-            }),
-            jobName: jobName,
-            schedule: withFormattedDates(schedule),
-            deleteSchedule: deleteSchedule
-        })
-    });
+  // initialize callback for add job functionality
+  const addJob = useCallFetch(getUrl("/add"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      topics: topics.map((t, idx) => {
+        return {
+          topicId: t.topicId,
+          values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
+        }
+      }),
+      jobName: jobName,
+      schedule: withFormattedDates(schedule),
+      deleteSchedule: deleteSchedule
+    })
+  });
 
   // handler for param Load failed
   const handleLoadParamsFailed = React.useCallback(() => {
@@ -275,51 +275,50 @@ export default function JobCreate() {
     hintContents.delete,
   ];
 
-    // based on active step, render specific selection panel
-    const getSelectPanel = (step: number) => {
-        switch (step) {
-            case 0:
-                return (
-                    <TopicSelection
-                        topics={topics}
-                        jobName={jobName}
-                        multipleTopics={multipleTopics}
-                        toggleMultipleHandler={handleToggleMultiple}
-                        resetTopicsHandler={handleResetTopics}
-                        setSingleTopicHandler={handleSetSingleTopic}
-                        addTopicHandler={handleAddTopic}
-                        enterJobNameHandler={handleEnterJobName} />
-                );
-            case 1:
-                return (
-                    <ParamSelection
-                        topicNames={topics.map(t => t.topicName)}
-                        values={paramValues}
-                        params={paramLists}
-                        loadFailedProps={{
-                            hasFailed: loadFailed,
-                            name: "Parameter",
-                            onReload: handleReloadParams
-                        }}
-                        selectParamHandler={handleSelectParam} />
-                )
-            case 2:
-                return (
-                    <SettingsPage
-                        offset={1}
-                        schedule={schedule}
-                        deleteSchedule={deleteSchedule}
-                        selectScheduleHandler={handleSelectSchedule}
-                        selectDeleteScheduleHandler={handleSelectDeleteSchedule}
-                        handleHintState={handleHintState}
-                        paramSelectionProps={undefined}
-                    />
-                )
-            default:
-                return "";
-        }
+  // based on active step, render specific selection panel
+  const getSelectPanel = (step: number) => {
+    switch (step) {
+      case 0:
+        return (
+          <TopicSelection
+            topics={topics}
+            jobName={jobName}
+            multipleTopics={multipleTopics}
+            toggleMultipleHandler={handleToggleMultiple}
+            resetTopicsHandler={handleResetTopics}
+            setSingleTopicHandler={handleSetSingleTopic}
+            addTopicHandler={handleAddTopic}
+            enterJobNameHandler={handleEnterJobName} />
+        );
+      case 1:
+        return (
+          <ParamSelection
+            topicNames={topics.map(t => t.topicName)}
+            values={paramValues}
+            params={paramLists}
+            loadFailedProps={{
+              hasFailed: loadFailed,
+              name: "Parameter",
+              onReload: handleReloadParams
+            }}
+            selectParamHandler={handleSelectParam} />
+        )
+      case 2:
+        return (
+          <SettingsPage
+            offset={1}
+            schedule={schedule}
+            deleteSchedule={deleteSchedule}
+            selectScheduleHandler={handleSelectSchedule}
+            selectDeleteScheduleHandler={handleSelectDeleteSchedule}
+            handleHintState={handleHintState}
+            paramSelectionProps={undefined}
+          />
+        )
+      default:
+        return "";
     }
-  };
+  }
 
   return (
     <div className={classes.root}>
@@ -371,36 +370,36 @@ export default function JobCreate() {
             </div>
           </div>
         ) : (
-          <Fade in={true}>
-            <div className={classes.MPaddingTB}>
-              <Grid container spacing={2}>
-                <Grid container item justify="center">
-                  <CheckCircleIcon
-                    className={classes.checkIcon}
-                    color={"disabled"}
-                    fontSize={"default"}
-                  />
-                </Grid>
-                <Grid container item justify="center">
-                  <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
-                </Grid>
-                <Grid container item justify="center">
-                  <Typography>
-                    Sie werden in {counter} Sekunden zur Startseite
+            <Fade in={true}>
+              <div className={classes.MPaddingTB}>
+                <Grid container spacing={2}>
+                  <Grid container item justify="center">
+                    <CheckCircleIcon
+                      className={classes.checkIcon}
+                      color={"disabled"}
+                      fontSize={"default"}
+                    />
+                  </Grid>
+                  <Grid container item justify="center">
+                    <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
+                  </Grid>
+                  <Grid container item justify="center">
+                    <Typography>
+                      Sie werden in {counter} Sekunden zur Startseite
                     weitergeleitet.
                   </Typography>
-                </Grid>
-                <Grid container item justify="center">
-                  <ContinueButton
-                    onClick={() => components?.setCurrent("home")}
-                  >
-                    STARTSEITE
+                  </Grid>
+                  <Grid container item justify="center">
+                    <ContinueButton
+                      onClick={() => components?.setCurrent("home")}
+                    >
+                      STARTSEITE
                   </ContinueButton>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </div>
-          </Fade>
-        )}
+              </div>
+            </Fade>
+          )}
       </div>
     </div>
   );
