@@ -14,12 +14,14 @@ import { Notification, notifcationReducer } from "../util/Notification";
 export interface Job {
   jobId: number;
   jobName: string;
-  topics: [{
-    topicName: string,
-    topicId: number,
-    params: Param[],
-    values: ParamValues
-  }]
+  topics: [
+    {
+      topicName: string;
+      topicId: number;
+      params: Param[];
+      values: ParamValues;
+    }
+  ];
   schedule: Schedule;
   deleteSchedule: DeleteSchedule;
 }
@@ -30,7 +32,7 @@ export const JobList: React.FC = () => {
   const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
     open: false,
     message: "",
-    type: "success"
+    severity: "success",
   });
 
   const [loadFailed, setLoadFailed] = useState(false);
@@ -50,12 +52,12 @@ export const JobList: React.FC = () => {
   };
 
   const handleReportSuccess = (message: string) => {
-    dispatchMessage({ type: "reportSuccess", message: message })
-  }
+    dispatchMessage({ type: "reportSuccess", message: message });
+  };
 
   const handleReportError = (message: string) => {
-    dispatchMessage({ type: "reportError", message: message })
-  }
+    dispatchMessage({ type: "reportError", message: message });
+  };
 
   return (
     <InfoMessage
@@ -95,8 +97,12 @@ export const JobList: React.FC = () => {
             />
           </div>
         ))}
-        <Notification handleClose={() => dispatchMessage({ type: "close" })} open={message.open} message={message.message}
-          type={message.type} />
+        <Notification
+          handleClose={() => dispatchMessage({ type: "close" })}
+          open={message.open}
+          message={message.message}
+          severity={message.severity}
+        />
       </Load>
     </InfoMessage>
   );

@@ -48,8 +48,8 @@ export const DayHourInputField: React.FC<DayHourInputProps> = ({
   return (
     <div style={{ margin: "10px" }}>
       <div className={classes.centerDiv}>
-        <Grid container spacing={4}>
-          <Grid container>
+        <Grid container spacing={2}>
+          <Grid item container>
             <TextField
               className={classes.inputFields}
               onChange={handleAddDay}
@@ -62,8 +62,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = ({
             />
             <Typography className={classes.margin}>Tage</Typography>
           </Grid>
-          <br />
-          <Grid container>
+          <Grid item container>
             <TextField
               className={classes.inputFields}
               onChange={handleAddHour}

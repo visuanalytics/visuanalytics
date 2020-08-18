@@ -21,7 +21,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import { InfoMessage } from "../util/InfoMessage";
 import { Job } from "../JobList";
 import { Notification } from "../util/Notification";
-import {ComponentContext} from "../ComponentProvider";
+import { ComponentContext } from "../ComponentProvider";
 
 interface Props {
   jobId?: number;
@@ -173,8 +173,9 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           headline: "Willkommen bei ihrer Log Übersicht!",
           text: (
             <Typography align={"center"} color="textSecondary">
-              Aktuell wurde noch kein Video generiert. <br/>
-              Sobald das erste Video generiert wurde können Sie hier die Log-Informationen sehen.
+              Aktuell wurde noch kein Video generiert. <br />
+              Sobald das erste Video generiert wurde können Sie hier die
+              Log-Informationen sehen.
             </Typography>
           ),
           button: {
@@ -271,7 +272,7 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
         open={showError}
         handleClose={() => setShowError(false)}
         message="Der ausgewählte Job ist nicht mehr Vorhanden!"
-        type="error"
+        severity="error"
       />
     </PageTemplate>
   );

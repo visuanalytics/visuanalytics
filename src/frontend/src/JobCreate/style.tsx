@@ -52,12 +52,12 @@ export const useStyles = makeStyles((theme) => ({
     centerDiv: {
         textAlign: "left",
         margin: "0 auto",
-        width: 180
+        maxWidth: "180px"
     },
     centerDivMedium: {
         textAlign: "left",
         margin: "0 auto",
-        width: 500,
+        maxWidth: "500px"
     },
     checkboxParam: {
         display: "flex",
