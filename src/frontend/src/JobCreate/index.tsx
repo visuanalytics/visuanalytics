@@ -195,17 +195,18 @@ export default function JobCreate() {
     components?.setCurrent("home");
   }
 
-  // handlers for stepper logic
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    handleHintState(activeStep + 1);
-    if (activeStep === 2) {
-      delay();
-    }
-  };
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    // handlers for stepper logic
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        handleHintState(activeStep + 1);
+        if (activeStep === 2) {
+            delay();
+        }
+    };
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        handleHintState(activeStep - 1);
+    };
 
   // handlers for topic selection logic
   const handleResetTopics = () => {
