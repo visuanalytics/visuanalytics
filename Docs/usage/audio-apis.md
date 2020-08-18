@@ -1,4 +1,4 @@
-# Audio Configuration
+# Audio Konfiguration
 
 Die Audioeinstellungen können in der Datei `instance/config.json` angegeben werden.
 

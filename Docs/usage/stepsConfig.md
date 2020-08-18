@@ -36,13 +36,13 @@ abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur
 Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
 ```note::
-  Der `resources` Ordner befindet sin in `src/visuanalytics/` (bzw. inerhalb des Docker-Containers in `/home/appuser/visuanalytics/`)
+  Der `resources` Ordner befindet sich in `src/visuanalytics/` (bzw. innerhalb des Docker-Containers in `/home/appuser/visuanalytics/`)
 ```
 
-**Unter Ordner**:
+**Unterordner**:
 
-- _Bilder_: `images` (Dieser muss bei der Pfad angabe nicht angegeben werden)
-- _Schriftarten_: `fonts` (Diesr muss bei der Pfad angabe angegeben werden)
+- _Bilder_: `images` (Dieser muss bei der Angabe des Pfads nicht angegeben werden)
+- _Schriftarten_: `fonts` (Dieser muss bei der Angabe des Pfads angegeben werden)
 - _Themen_: `steps` (Hier befinden sich alle JSON-StepsConfig-Dateien)
 - _Stopwords_:  `stopwords` (Hier befindet sich die Datei für die Globalen Stopwords)
 
@@ -67,7 +67,7 @@ resources
         stopwords.txt
 ~~~
 
-_Bilder_:
+_Verwendung der Bilder in einer JSON-StepsConfig-Datei_:
 
 ```JSON
 {
@@ -75,7 +75,7 @@ _Bilder_:
 }
 ```
 
-_Schriftarten_:
+_Verwendung der Schriftart in einer JSON-StepsConfig-Datei_:
 
 ```JSON
 {
@@ -85,8 +85,8 @@ _Schriftarten_:
 
 ### Key/New Key
 
-Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet kann die key/new_key-Syntax.
-Man hat einen Text, den man verändern und neu abspeichern möchte. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
+Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet man die key/new_key-Syntax.
+Diese dient dazu einen Textzu verändern und neu abzuspeichern. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
 Key `text1` abgespeichert. Den modifizierten Text kann man nun wieder unter `text1` abspeichern, indem man keinen neuen Key mit `new_key` angibt. 
 Dann ist der default-Speicherplatz an der Stelle `text1`. Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
 Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verwendet, z.B. mit dem Wert `text_transformed`.
@@ -103,12 +103,12 @@ Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verw
 Ist ein angegebener `new_key` nicht vorhanden wir der erstellt bzw. alle keys die fehlen.
 
 ```warning::
-  Aktuelle ist es nicht möglich das durch die angabe von `new_key` ein Array erstellt wird, oder ein Array was zu klein ist Vergrößert wird.
+  Aktuelle ist es nicht möglich, dass durch die Angabe von `new_key` ein Array erstellt wird, oder ein Array was zu klein ist vergrößert wird.
 ```
 
-### Special Variablen
+### Spezial Variablen
 
-Es gibt einge vor definierte Special Variablen mit folgenden Keys.
+Es gibt einge vordefinierte Spezial-Variablen mit folgenden Keys.
 
 **`_req`**:
 
@@ -116,23 +116,23 @@ Hier werden alle Daten aus den Requests gespeichert (siehe [api](#api)).
 
 **`_conf`**:
 
-Hier werden alle Konfigurations Variablen gespeichert (siehe [run_config](#run_config)).
+Hier werden alle Konfigurations Variablen gespeichert (siehe [run_config](#run-config)).
 
 **`_audio`**:
 
-Hier werden alle Konfigurationen und Daten für eine Benutzerdefiniert Audio generation gespeichert (siehe [Audio Configuration](./audio-apis.md)).
+Hier werden alle Konfigurationen und Daten für eine Benutzerdefiniert Audio generation gespeichert (siehe [Audio Konfiguration](./audio-apis.md)).
 
 **`_key`**:
 
-Hier wird der wert des Keys gespeichert. Diese variable ist nur in den meisten [transform](#transform) typen gesetzt.
+Hier wird der Wert des Keys gespeichert. Diese variable ist nur in den meisten [transform](#transform) typen gesetzt.
 
 **`_loop`**:
 
-Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen [loop](#loop), [transform_array](#transform_array), [transform_dict](#transform_dict) und bei den [api]-Typen [request_multiple](#request_multiple) und [request_multiple_custom](#request_multiple_custom).
+Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen [loop](#loop), [transform_array](#transform-array), [transform_dict](#transform-dict) und bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
 
 **`_idx`**:
 
-Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict) und bei den [api]-Typen [request_multiple](#request_multiple) und [request_multiple_custom](#request_multiple_custom).
+Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict) und bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
 
 **`_pipe_id`**:
 
@@ -271,7 +271,7 @@ Führt eine **https**-Request durch.
 
 [any](#any) - Die URL-Paramter des Requests. Die Angabe erfolg als key, value Paare.
 
-_Beispiel__
+_Beispiel_
 
 In der JSON:
 
@@ -316,7 +316,7 @@ URL nach dem Zusammenbauen:
 [str](#string) - Die Encodierung mit welcher der Wert in `body_type` encodiert werden soll (z.B.: `utf-8`).
 
 ```note::
-  Diese ist nur für den `body_type` `ohter` möglich.
+  Diese ist nur für den `body_type` `other` möglich.
 ```
 
 **`response_format`** _(optional)_:
@@ -329,7 +329,7 @@ URL nach dem Zusammenbauen:
   - `other`
 
 ```note::
-  Der wert `Other` sollte nur bei der `Audio Konfiguration <./audio-apis.md>`_ verwendet werden
+  Der wert `Other` sollte nur bei der `Audio Konfiguration <./audio-apis.html>`_ verwendet werden
 ```
 
 ### request_multiple
@@ -1649,18 +1649,19 @@ Es kann auch alphabetisch sortiert werden, wenn die Einträge keine Zahlen sind.
 sortiert werden (kleinste Zahl als Erstes).
 
 Default: False.
+
 ```warning::
-**Achtung:** 
+
  `USA` wird hier alphabetisch vor `United Kingdom` sortiert, da es andere Groß- und Kleinschreibung verwendet.
 
-```JSON
-{
-"test": 
-    ["Canada", "Argentina", "Cyprus", "Schweden", "Norway", "USA", "Germany", "United Kingdom", "Z"],
-"sort_ascending": 
-    ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
-}
-```
+    .. code-block:: JSON
+
+        {
+        "test": 
+            ["Canada", "Argentina", "Cyprus", "Schweden", "Norway", "USA", "Germany", "United Kingdom", "Z"],
+        "sort_ascending": 
+            ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
+        }
 ```
 ### most_common
 
@@ -2283,7 +2284,7 @@ int - Y-Koordinate des zu setzenden Textes
 
 **`preset`**:  
 Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)  
-[Presets](#Presets) sind weiter unten in der JSON spezifiziert
+[Presets](#presets) sind weiter unten in der JSON spezifiziert
 
 **Sollte man kein neues `preset` angeben wollen, so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
@@ -2839,7 +2840,7 @@ Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der
 Wie z.B. Optionen, was die Stimme genau vorlesen soll und was nicht oder Einstellungen wie z.B. die Farbe der Wörter 
 bei der Wordcloud. Dies kann mithilfe der `transform`-Typen `option` und `compare` erreicht werden. Man gibt mögliche Werte an. 
 
-Die werte die der Benutzer dann eingibt werden unter dem key `_conf|key` gespeichert (siehe [Special Variablen](#special-variablen)). Wobei `key` dem in der Konfig angegebenen key entspricht also z. B.: `name`.
+Die werte die der Benutzer dann eingibt werden unter dem key `_conf|key` gespeichert (siehe [Spezial Variablen](#spezial-variablen)). Wobei `key` dem in der Konfig angegebenen key entspricht also z. B.: `name`.
 
 ### Basis Angaben
 
@@ -3006,7 +3007,7 @@ Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend
 Alle [Basis Angaben](#basis-angaben).
 
 **sub_params**
-weitere [Parametertypen](#run_config), die ausgewählt werden können.
+weitere [Parametertypen](#run-config), die ausgewählt werden können.
 
 **Frontend Beispiel**
 

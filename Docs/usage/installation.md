@@ -52,7 +52,7 @@ docker run -t ^
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
 ```note::
-  Wenn man die Option `h264_nvenc` (siehe `config.json <#config.json>`_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`_)
+  Wenn man die Option `h264_nvenc` (siehe `config.json <#config-json>`_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`_)
 ````
 
 ## Ohne Docker (Development)
@@ -90,7 +90,7 @@ _Programm starten_:
 - Backend ohne npm starten: `python -m visuanalytics` (Dafür muss man sich im src-Ordner befinden)
 
 ```note::
-  Um die Option `h264_nvenc` (siehe `config.json <#config.json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
+  Um die Option `h264_nvenc` (siehe `config.json <#config-json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung finden Sie `hier <https://developer.nvidia.com/ffmpeg>`_.
 ````
 
@@ -195,11 +195,11 @@ Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Er
 
 `console_mode`(_optional_):
 
-Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#jobsjson)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
+Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#jobs-json)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
 
 #### jobs.json
 
-Wenn man den `console_mode` (siehe [hier](#configjson)) aktiviert hat, kann man die Jobs in der Datei `jobs.json` wie folgt definieren:
+Wenn man den `console_mode` (siehe [hier](#config-json)) aktiviert hat, kann man die Jobs in der Datei `jobs.json` wie folgt definieren:
 
 ```JSON
 {
@@ -278,11 +278,11 @@ Mögliche Konfigurationen für die verschiedenen Themen:
 
 _Deutschlandweiter Wetterbericht (steps: `"weather_germany"`)_:
 
-- alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+- alle Einstellungen, die auch in der [config.json](#config-json) unter `steps_base_config` zur Verfügung stehen
 
 _Ortsbezogener Wetterbericht (steps: `"weather_single"`)_:
 
-- alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+- alle Einstellungen, die auch in der [config.json](#config-json) unter `steps_base_config` zur Verfügung stehen
 - `city_name`: str - Name des Ortes
 - `p_code`: str - Postleitzahl des Ortes
 - `speech_app_temp_2`: bool - Ob eine Audiodatei zu den gefühlten Temperaturen bei der 2-Tage-Übersicht erstellt und im Video abgespielt werden soll
@@ -303,12 +303,12 @@ _Ortsbezogener Wetterbericht (steps: `"weather_single"`)_:
 
 _Spieltag-Bericht für die Fußball-Bundesliga (steps: `"football"`)_:
 
-- alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+- alle Einstellungen, die auch in der [config.json](#config-json) unter `steps_base_config` zur Verfügung stehen
 - `liga-name`: str - Spielklasse (`1 ~ 1. Liga`, `2 ~ 2. Liga`, `3 ~ 3. Liga`)
 
 _Twitter Wordcloud (steps: `"twitter"`)_:
 
-- alle Einstellungen, die auch in der [config.json](#config.json) unter `steps_base_config` zur Verfügung stehen
+- alle Einstellungen, die auch in der [config.json](#config-json) unter `steps_base_config` zur Verfügung stehen
 - `normalize_words`: bool - Ob die Wörter normalisiert werden sollen und Doppelungen bei der Zählung der Häufigkeiten zu vermeiden (Beispiel: Bundesliga, bundesliga und BUNDESLIGA (wird einzeln gezählt: je 1x)-> Bundesliga, Bundesliga, Bundesliga (insgesamt: 3x)
 - `colormap_words`: str - Die Farben der Wörter in der Wordcloud
 - `color_func`: bool - Ob für den Farbverlauf der Wörter in der Wordcloud ein bestimmter Farbverlauf anstelle einer Colormap verwendet werden soll
