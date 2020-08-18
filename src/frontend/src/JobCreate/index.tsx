@@ -31,6 +31,8 @@ import { DeleteSchedule } from "../util/deleteSchedule";
 import { SettingsPage } from "../util/SettingsPage";
 import { hintContents } from "../util/hintContents";
 
+let timeout:  NodeJS.Timeout;
+
 export default function JobCreate() {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
@@ -183,10 +185,15 @@ export default function JobCreate() {
 
   const delay = () => {
     setCounter(5);
-    setTimeout(() => {
+    timeout = setTimeout(() => {
       components?.setCurrent("home");
     }, 5000);
   };
+
+  const handleStartPage = () => {
+    clearTimeout(timeout);
+    components?.setCurrent("home");
+  }
 
   // handlers for stepper logic
   const handleNext = () => {
@@ -391,7 +398,7 @@ export default function JobCreate() {
                   </Grid>
                   <Grid container item justify="center">
                     <ContinueButton
-                      onClick={() => components?.setCurrent("home")}
+                      onClick={handleStartPage}
                     >
                       STARTSEITE
                   </ContinueButton>
