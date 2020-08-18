@@ -88,7 +88,7 @@ def update_job(job_id, updated_data):
             # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
             # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
             # mit dieser Methode ändern)
-            # Wenn der type im Nachhinein der type eines Jobs zu "weekly" geändert wird, tritt das Problem nicht auf
+            # Wenn der type eines Jobs erst im Nachhinein zu "weekly" geändert wird, tritt das Problem nicht auf
             if type == "weekly":
                 id_weekdays = [(job_id, d) for d in weekdays]
                 con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
