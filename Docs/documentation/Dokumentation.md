@@ -339,6 +339,20 @@ Zudem wurden die Funktionen `copy` und `delete` implementiert.
 `copy` dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren.  
 Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
 
+```note::
+    Mit der JSON-Konfigurationsdatei kann aktuell nur ein Video zur 1. Fußball-Bundesliga erstellt werden.
+    Wenn die neue Saison anfängt, können auch Videos zur 2. Fußball-Bundesliga erstellt werden.
+    
+    Aktuell können die Testdaten nur zur Generierung eines Videoszur 1. Fußball-Bundesliga erstellt werden, da keine Testdaten 
+    der 2. Fußball-Bundesliga vorliegen.
+
+    Bei der Erstellung des Videos zur 1. Fußball-Bundesliga kann aktuell nur der Spielplan für den 1. Spieltag dargestellt werden, die Tabelle ist zunächst nur alphabetisch sortiert.
+    Bei der Erstellung des Videos zur 2. Fußball-Bundesliga tritt ein Fehler auf, da in openligadb noch nicht alle Mannschaften aufgeführt sind.
+    Wenn der 1. Spieltag allerdings gespielt wurde, sollte auch ein Video, der 2. Fußball-Bundesliga erstellt werden können.
+
+    Da die Datei `football.json` bisher nur auf 18 Mannschaften ausgelegt ist, können keine Videos zu Ligen mit mehr oder 
+    weniger Mannschaften erstellt werden. Sollen auch Videos für andere Ligen erstellt werden können, so muss dafür eine eigene JSON-Datei zusammengestellt werden.
+```
 **Wordcloud**
 
 Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet mit Hashtags. Als Antwort erhält man unter anderem alle Posts, die das gesuchte Hashtag innerhalb der letzten 7 Tage verwendet haben.
