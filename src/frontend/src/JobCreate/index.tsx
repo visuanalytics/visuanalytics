@@ -73,21 +73,19 @@ export default function JobCreate() {
   const addJob = useCallFetch(getUrl("/add"), {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       topics: topics.map((t, idx) => {
         return {
           topicId: t.topicId,
-          values: toTypedValues(
-            trimParamValues(paramValues[idx]),
-            paramLists ? paramLists[idx] : []
-          ),
-        };
+          values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
+        }
       }),
       jobName: jobName,
       schedule: withFormattedDates(schedule),
-    }),
+      deleteSchedule: deleteSchedule
+    })
   });
 
   // handler for param Load failed
@@ -290,24 +288,21 @@ export default function JobCreate() {
             resetTopicsHandler={handleResetTopics}
             setSingleTopicHandler={handleSetSingleTopic}
             addTopicHandler={handleAddTopic}
-            enterJobNameHandler={handleEnterJobName}
-          />
+            enterJobNameHandler={handleEnterJobName} />
         );
       case 1:
         return (
           <ParamSelection
-            topicNames={topics.map((t) => t.topicName)}
+            topicNames={topics.map(t => t.topicName)}
             values={paramValues}
             params={paramLists}
             loadFailedProps={{
               hasFailed: loadFailed,
               name: "Parameter",
-              onReload: handleReloadParams,
+              onReload: handleReloadParams
             }}
-            selectParamHandler={handleSelectParam}
-            style={{padding: "0px 24px"}}
-          />
-        );
+            selectParamHandler={handleSelectParam} />
+        )
       case 2:
         return (
           <SettingsPage
@@ -319,11 +314,11 @@ export default function JobCreate() {
             handleHintState={handleHintState}
             paramSelectionProps={undefined}
           />
-        );
+        )
       default:
         return "";
     }
-  };
+  }
 
   return (
     <div className={classes.root}>
@@ -375,36 +370,36 @@ export default function JobCreate() {
             </div>
           </div>
         ) : (
-          <Fade in={true}>
-            <div className={classes.MPaddingTB}>
-              <Grid container spacing={2}>
-                <Grid container item justify="center">
-                  <CheckCircleIcon
-                    className={classes.checkIcon}
-                    color={"disabled"}
-                    fontSize={"default"}
-                  />
-                </Grid>
-                <Grid container item justify="center">
-                  <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
-                </Grid>
-                <Grid container item justify="center">
-                  <Typography>
-                    Sie werden in {counter} Sekunden zur Startseite
+            <Fade in={true}>
+              <div className={classes.MPaddingTB}>
+                <Grid container spacing={2}>
+                  <Grid container item justify="center">
+                    <CheckCircleIcon
+                      className={classes.checkIcon}
+                      color={"disabled"}
+                      fontSize={"default"}
+                    />
+                  </Grid>
+                  <Grid container item justify="center">
+                    <Typography>Job '{jobName}' erfolgreich erstellt!</Typography>
+                  </Grid>
+                  <Grid container item justify="center">
+                    <Typography>
+                      Sie werden in {counter} Sekunden zur Startseite
                     weitergeleitet.
                   </Typography>
-                </Grid>
-                <Grid container item justify="center">
-                  <ContinueButton
-                    onClick={() => components?.setCurrent("home")}
-                  >
-                    STARTSEITE
+                  </Grid>
+                  <Grid container item justify="center">
+                    <ContinueButton
+                      onClick={() => components?.setCurrent("home")}
+                    >
+                      STARTSEITE
                   </ContinueButton>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </div>
-          </Fade>
-        )}
+              </div>
+            </Fade>
+          )}
       </div>
     </div>
   );
