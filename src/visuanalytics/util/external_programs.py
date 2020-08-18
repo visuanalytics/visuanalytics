@@ -12,8 +12,8 @@ def all_installed(programs: list):
         _check_installed(prog)
 
 
-def _check_installed(name: str):
-    if which(name) is None:
-        # TODO(max) improve error message
-        print(f"External program '{name}' is required please install!", file=sys.stderr)
+def _check_installed(prog: dict):
+    if which(prog["name"]) is None:
+        url = f": {prog['url']}" if 'url' in prog else ''
+        print(f"External program '{prog['name']}{url}' is required, please install!", file=sys.stderr)
         exit(1)

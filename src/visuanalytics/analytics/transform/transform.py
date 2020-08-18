@@ -1,3 +1,8 @@
+"""
+Modul mit Funktionen zur Berechnung und Umwandlung von Daten aus einer API.
+
+"""
+import numbers
 import re
 from collections import Counter
 from datetime import datetime
@@ -12,6 +17,7 @@ from visuanalytics.analytics.util.step_errors import TransformError, \
 from visuanalytics.analytics.util.step_pattern import data_insert_pattern, data_get_pattern
 from visuanalytics.analytics.util.step_utils import execute_type_option, execute_type_compare
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
+from visuanalytics.util import resources
 
 TRANSFORM_TYPES = {}
 
@@ -97,14 +103,13 @@ def select(values: dict, data: StepData):
         try:
             data_insert_pattern(key, root, data_get_pattern(key, old_root))
         except:
-            if values.get("ignore_errors", False):
+            if values.get("ignore_errors", False) is False:
                 raise
 
 
 @register_transform
 def delete(values: dict, data: StepData):
-    """
-    Löscht die angegebenen Keys aus den daten
+    """Löscht die angegebenen Keys aus den daten
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -121,8 +126,8 @@ def select_range(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     value_array = data.get_data(values["array_key"], values)
-    range_start = data.format(values.get("range_start", 0), values)
-    range_end = data.format(values["range_end"], values)
+    range_start = data.get_data(values.get("range_start", 0), values, int)
+    range_end = data.get_data(values["range_end"], values, int)
 
     data.insert_data(values["array_key"], value_array[range_start:range_end], values)
 
@@ -134,23 +139,26 @@ def append(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    # TODO(Max) improve
-    new_key_format = data.format(values.get("append_type", "list"))
-    try:
-        result = data.get_data(values["new_key"], values)
-    except StepKeyError:
-        if new_key_format == "string":
-            data.insert_data(values["new_key"], "", values)
-        else:
-            data.insert_data(values["new_key"], [], values)
-        result = data.get_data(values["new_key"], values)
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = values["new_keys"][idx]
+        new_key_format = data.format(values.get("append_type", "list"))
 
-    value = data.get_data(values["key"], values)
-    if new_key_format == "string":
-        result = result + data.format(values.get("delimiter", " ")) + value
-        data.insert_data(values["new_key"], result, values)
-    else:
-        result.append(value)
+        try:
+            result = data.get_data(new_key, values)
+        except StepKeyError:
+            if new_key_format == "string":
+                data.insert_data(new_key, "", values)
+            else:
+                data.insert_data(new_key, [], values)
+
+            result = data.get_data(new_key, values)
+
+        if new_key_format == "string":
+            result = result + data.format(values.get("delimiter", " ")) + value
+            data.insert_data(new_key, result, values)
+        else:
+            result.append(value)
 
 
 @register_transform
@@ -184,12 +192,12 @@ def replace(values: dict, data: StepData):
 
         new_value = value.replace(data.format(values["old_value"], values),
                                   data.format(values["new_value"], values),
-                                  data.format(values.get("count", -1), values))
+                                  data.get_data(values.get("count", -1), values, int))
         data.insert_data(new_key, new_value, values)
 
 
 @register_transform
-def translate_key(values: dict, data: StepData):
+def translate(values: dict, data: StepData):
     """Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON.
 
     :param values: Werte aus der JSON-Datei
@@ -198,8 +206,9 @@ def translate_key(values: dict, data: StepData):
     for idx, key in data.loop_key(values["keys"], values):
         value = str(data.get_data(key, values))
         new_key = get_new_keys(values, idx)
+        translation = data.get_data(values["dict"], values, dict)
 
-        new_value = data.format(values["dict"][value], values)
+        new_value = data.format(translation[value], values)
         data.insert_data(new_key, new_value, values)
 
 
@@ -211,16 +220,13 @@ def alias(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     for key, new_key in zip(values["keys"], values["new_keys"]):
-        try:
-            value = data.get_data(key, values)
-            new_key = data.format(new_key, values)
+        value = data.get_data(key, values)
+        new_key = data.format(new_key, values)
 
-            # TODO(max) maybe just replace key not insert and delete
-            data.insert_data(new_key, value, values)
+        data.insert_data(new_key, value, values)
+
+        if not data.get_data(values.get("keep_old", False), {}, bool):
             data.remove_data(key, values)
-        except:
-            if values.get("ignore_errors", False):
-                raise
 
 
 @register_transform
@@ -259,8 +265,8 @@ def date_format(values: dict, data: StepData):
         given_format = data.format(values["given_format"], values)
         date = datetime.strptime(value, given_format).date()
         new_key = get_new_keys(values, idx)
-        zeropaded_off = values.get("zeropaded_off", None)
-        if (zeropaded_off is not None) and (zeropaded_off == True):
+        zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+        if zeropaded_off:
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
         else:
             new_value = date.strftime(data.format(values["format"], values))
@@ -281,8 +287,8 @@ def timestamp(values: dict, data: StepData):
         value = data.get_data(key, values)
         date = datetime.fromtimestamp(value)
         new_key = get_new_keys(values, idx)
-        zeropaded_off = values.get("zeropaded_off", None)
-        if (zeropaded_off is not None) and (zeropaded_off == True):
+        zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+        if zeropaded_off:
             new_value = date.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
         else:
             new_value = date.strftime(data.format(values["format"], values))
@@ -328,8 +334,8 @@ def date_now(values: dict, data: StepData):
     """
     new_key = values["new_key"]
     value = datetime.now()
-    zeropaded_off = values.get("zeropaded_off", None)
-    if (zeropaded_off is not None) and (zeropaded_off == True):
+    zeropaded_off = data.get_data(values.get("zeropaded_off", False), values, bool)
+    if zeropaded_off:
         new_value = value.strftime(data.format(values["format"], values)).lstrip("0").replace(" 0", " ")
     else:
         new_value = value.strftime(data.format(values["format"], values))
@@ -367,12 +373,12 @@ def loop(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    loop_values = values.get("values", None)
+    loop_values = data.deep_format(values.get("values", None), values=values)
 
     # is Values is none use range
     if loop_values is None:
-        start = data.format(values.get("range_start", 0), values)
-        stop = data.format(values["range_stop"], values)
+        start = data.get_data(values.get("range_start", 0), values, int)
+        stop = data.get_data(values["range_stop"], values, int)
         loop_values = range(start, stop)
 
     for _ in data.loop_array(loop_values, values):
@@ -383,13 +389,13 @@ def loop(values: dict, data: StepData):
 def add_data(values: dict, data: StepData):
     """Fügt Daten zu einem neuen Key hinzu.
 
-    Fügt die unter `"pattern"` angegebenen Daten zu einem neuen Key hinzu.
+    Fügt die unter `"data"` angegebenen Daten zu einem neuen Key hinzu.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
     for new_key in values["new_keys"]:
-        value = data.format(values["pattern"], values)
+        value = data.deep_format(values["data"], values=values)
         data.insert_data(new_key, value, values)
 
 
@@ -425,6 +431,17 @@ def option(values: dict, data: StepData):
 
 @register_transform
 def compare(values: dict, data: StepData):
+    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, !=, < oder > die "transform"-Typen aus.
+
+    Wenn `value_left` gleich `value_right`, führe "transform"-Typen aus on_equal durch.
+    Wenn `value_left` ungleich `value_right`, führe "transform"-Typen aus on_not_equal durch.
+    Wenn `value_left` größer `value_right`, führe "transform"-Typen aus on_higher durch.
+    Wenn `value_left` kleiner `value_right`, führe "transform"-Typen aus on_lower durch.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     values["transform"] = execute_type_compare(values, data)
 
     transform(values, data)
@@ -437,25 +454,34 @@ def random_value(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    array = values.get("array", None)
-    dict = values.get("dict", None)
-    for idx, key in data.loop_key(values["keys"], values):
-        new_key = get_new_keys(values, idx)
-        new_value = ""
-        if array is not None:
-            length = len(values["array"])
+    if "array" in values:
+        for key in values["new_keys"]:
+            array = data.get_data(values["array"], values, list)
+            length = len(array)
+
             rand = randint(0, length - 1)
-            new_value = data.format(values["array"][rand], values)
-        elif dict is not None:
+            new_value = data.format(array[rand], values)
+            data.insert_data(key, new_value, values)
+    elif "dict" in values:
+        for idx, key in data.loop_key(values["keys"], values):
+            new_key = get_new_keys(values, idx)
+            new_values = data.get_data(values.get("dict", None), values, dict)
             value = str(data.get_data(key, values))
-            length = len(values["dict"][value])
+            length = len(new_values[value])
+
             rand = randint(0, length - 1)
-            new_value = data.format(values["dict"][value][rand], values)
-        data.insert_data(new_key, new_value, values)
+            new_value = data.format(new_values[value][rand], values)
+            data.insert_data(new_key, new_value, values)
 
 
 @register_transform
 def convert(values: dict, data: StepData):
+    """Konvertiert ein Datentyp in einen anderen Datentyp.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     new_type = locate(values["to"])
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
@@ -466,10 +492,22 @@ def convert(values: dict, data: StepData):
 
 @register_transform
 def sort(values: dict, data: StepData):
+    """Sortiert Wörter nach dem Alphabet oder Zahlen aufsteigend.
+
+    Ist reverse auf True gesetzt, werden die Wörter zu Z nach A sortiert, bzw. Zahlen absteigend.
+    Achtung: Sortierung von A nach Z
+    ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
+    "USA" ist vor "United Kingdom", weil bei "USA" der zweite Buchstabe auch groß geschrieben ist.
+    Würde dort "Usa" statt "USA" stehen, wäre "United Kingdom" vor "USA".
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         new_key = get_new_keys(values, idx)
         value = data.get_data(key, values)
-        reverse = data.get_data_bool(value.get("reverse", False), values)
+        reverse = data.get_data(values.get("reverse", False), values, bool)
 
         new_value = sorted(value, reverse=reverse)
 
@@ -477,28 +515,40 @@ def sort(values: dict, data: StepData):
 
 
 @register_transform
-def counter(values: dict, data: StepData):
+def most_common(values: dict, data: StepData):
+    """Sortiert die Wörter nach der Häufigkeit, optional mit Häufigkeit.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
-        most_common = Counter(value).most_common()
+        most_c_list = Counter(value).most_common()
 
-        if data.get_data_bool(values.get("include_count", False), values):
-            new_value = most_common
+        if data.get_data(values.get("include_count", False), values, bool):
+            new_value = most_c_list
         else:
-            new_value = [elm[0] for elm in most_common]
+            new_value = [elm[0] for elm in most_c_list]
 
         data.insert_data(new_key, new_value, values)
 
 
 @register_transform
 def sub_lists(values: dict, data: StepData):
+    """Extrahiert aus einem Array (Liste) kleinere Arrays (Listen).
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     value = data.get_data(values["array_key"], values)
 
     for sub_list in values["sub_lists"]:
-        start = data.get_data_num(sub_list.get("range_start", 0), values)
-        end = data.get_data_num(sub_list.get("range_end", -1), values)
+        start = data.get_data(sub_list.get("range_start", 0), values, numbers.Number)
+        end = data.get_data(sub_list.get("range_end", -1), values, numbers.Number)
         new_key = get_new_key(sub_list)
 
         new_value = value[start:end]
@@ -507,7 +557,29 @@ def sub_lists(values: dict, data: StepData):
 
 
 @register_transform
+def to_dict(values: dict, data: StepData):
+    """Wandelt eine Liste aus Tupeln oder Arrays in ein Dictionary um.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = dict(value)
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
 def join(values: dict, data: StepData):
+    """Fügt Elemente einer Liste zu einem String zusammen mit jeweils einem Delimiter dazwischen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
@@ -520,8 +592,172 @@ def join(values: dict, data: StepData):
 
 @register_transform
 def length(values: dict, data: StepData):
+    """Gibt die Länge von Arrays (Listen), Strings, Tupeln und Dictionaries aus.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         new_key = get_new_keys(values, idx)
 
         data.insert_data(new_key, len(value), values)
+
+
+@register_transform
+def remove_from_list(values: dict, data: StepData):
+    """Bekommt Stopwords und wandelt die jeweiligen Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
+
+    Bekommt eine Stopword-Liste aus der Textdatei resources/stopwords/stopwords.txt und ggf. die bei der Job-Erstellung
+    eingegebenen wurden und wandelt die jeweiligen Wörter so um, dass Groß- und Kleinschreibung unwichtig ist.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        to_remove = data.get_data(values.get("to_remove", []), values, list)
+
+        if data.get_data(values.get("use_stopwords", False), values, bool):
+            try:
+                file = resources.get_resource_path("stopwords/stopwords.txt")
+                with open(file, "r", encoding='utf-8') as f:
+                    list_stopwords = f.read().splitlines()
+
+                to_remove = to_remove + list_stopwords
+            except IOError:
+                pass
+
+        if data.get_data(values.get("ignore_case", False), values, bool):
+            to_remove = [r.lower() for r in to_remove]
+            new_value = [v for v in value if v.lower() not in to_remove]
+        else:
+            new_value = [v for v in value if v not in to_remove]
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def lower_case(values: dict, data: StepData):
+    """Jedes Wort in der Liste wird komplett in Kleinbuchstaben geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+
+        new_value = [each.lower() for each in value]
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def upper_case(values: dict, data: StepData):
+    """Jedes Wort in der Liste wird komplett in Großbuchstaben geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+
+        new_value = [each.upper() for each in value]
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def capitalize(values: dict, data: StepData):
+    """Der erste Buchstabe jedes Worts in der Liste wird groß geschrieben.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+
+        new_value = [each.capitalize() for each in value]
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def normalize_words(values: dict, data: StepData):
+    """Wörter, die öfter vorkommen und unterschiedliche cases besitzen, werden normalisiert.
+
+    Eine Liste wird durchlaufen und jedes Wort welches bei zweiten Vorkommen anders geschrieben wurde als das erste
+    vorgekommene wird dann so ersetzt, dass es so geschrieben wird wie das zuerst vorgekommene. Z.B. Bundesliga und
+    bundesliga. Aus bundesliga wird Bundesliga.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        already_there = []
+        new_value = []
+        for each in value:
+            if each.upper() in already_there:
+                new_value.append(each.upper())
+            elif each.lower() in already_there:
+                new_value.append(each.lower())
+            elif each.capitalize() in already_there:
+                new_value.append(each.capitalize())
+            else:
+                already_there.append(each)
+                new_value.append(each)
+
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def split_string(values: dict, data: StepData):
+    """Teilt einen String am angegebenen Trennzeichen.
+
+    Das Trennzeichen können auc mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        delimiter = data.format(values.get("delimiter", " "), values)
+        new_key = get_new_keys(values, idx)
+
+        if data.get_data(values.get("ignore_case", False), values, bool):
+            new_value = re.split(delimiter, value, flags=re.IGNORECASE)
+        else:
+            new_value = re.split(delimiter, value)
+        data.insert_data(new_key, new_value, values)
+
+
+@register_transform
+def check_key(values: dict, data: StepData):
+    """Überprüft, ob ein Key vorhanden ist und setzt den dazugehörigen `key` bzw. den `new_keys` auf `true`.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :return:
+    """
+    for idx, key in enumerate(values["keys"]):
+        try:
+            data.get_data(key, values)
+            value = True
+        except StepKeyError:
+            if "init_with" in values:
+                init = data.deep_format(values["init_with"], values=values)
+                data.insert_data(key, init, values)
+
+            value = False
+        if "new_keys" in values:
+            data.insert_data(values["new_keys"][idx], value, values)

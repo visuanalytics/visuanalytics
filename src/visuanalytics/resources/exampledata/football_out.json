@@ -1,15 +1,19 @@
 {
   "_conf": {
+    "league": "1",
     "output_path": "out",
     "testing": true,
     "h264_nvenc": false,
-    "liga-name": "1. Fußball Bundesliga",
+    "thumbnail": true,
+    "keep_count": 3,
     "job_name": "Fußballbericht"
   },
-  "_pipe_id": "b37f8849641b4e42a70515b9e6b46467",
+  "_pipe_id": "de97c59fb4bc4436a8af236fe6302e7a",
+  "_job_id": 1,
   "_req": {
     "Spiele": [
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "Borussia Dortmund",
           "TeamId": 7
@@ -23,11 +27,13 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 4,
-          "Text": "Borussia Dortmund unterlag Zuhause TSG 1899 Hoffenheim mit einem 0 zu 4. "
+          "Text": "Borussia Dortmund unterlag Zuhause TSG 1899 Hoffenheim mit einem 0 zu 4 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "Bayer Leverkusen",
           "TeamId": 6
@@ -41,11 +47,13 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 0,
-          "Text": "Bayer Leverkusen gewann gegen 1. FSV Mainz 05 1 zu 0. "
+          "Text": "Bayer Leverkusen gewann gegen 1. FSV Mainz 05 1 zu 0 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "Borussia Mönchengladbach",
           "TeamId": 87
@@ -59,11 +67,13 @@
         "MatchResults": {
           "PointsTeam1": 2,
           "PointsTeam2": 1,
-          "Text": "Borussia Mönchengladbach gewann gegen Hertha BSC 2 zu 1. "
+          "Text": "Borussia Mönchengladbach gewann gegen Hertha BSC 2 zu 1 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "VfL Wolfsburg",
           "TeamId": 131
@@ -77,11 +87,13 @@
         "MatchResults": {
           "PointsTeam1": 0,
           "PointsTeam2": 4,
-          "Text": "VfL Wolfsburg unterlag FC Bayern mit einem 0 zu 4. "
+          "Text": "VfL Wolfsburg unterlag FC Bayern mit einem 0 zu 4 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "Eintracht Frankfurt",
           "TeamId": 91
@@ -95,11 +107,13 @@
         "MatchResults": {
           "PointsTeam1": 3,
           "PointsTeam2": 2,
-          "Text": "Eintracht Frankfurt gewann gegen SC Paderborn 07 3 zu 2. "
+          "Text": "Eintracht Frankfurt gewann Zuhause gegen SC Paderborn 07 3 zu 2 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "Werder Bremen",
           "TeamId": 134
@@ -113,11 +127,13 @@
         "MatchResults": {
           "PointsTeam1": 6,
           "PointsTeam2": 1,
-          "Text": "Werder Bremen gewann gegen 1. FC Köln 6 zu 1. "
+          "Text": "Werder Bremen gewann gegen 1. FC Köln 6 zu 1 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "SC Freiburg",
           "TeamId": 112
@@ -131,11 +147,13 @@
         "MatchResults": {
           "PointsTeam1": 4,
           "PointsTeam2": 0,
-          "Text": "SC Freiburg gewann Zuhause gegen FC Schalke 04 4 zu 0. "
+          "Text": "SC Freiburg gewann gegen FC Schalke 04 4 zu 0 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "FC Augsburg",
           "TeamId": 95
@@ -149,11 +167,13 @@
         "MatchResults": {
           "PointsTeam1": 1,
           "PointsTeam2": 2,
-          "Text": "FC Augsburg unterlag RB Leipzig mit einem 1 zu 2. "
+          "Text": "FC Augsburg unterlag Zuhause RB Leipzig mit einem 1 zu 2 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       },
       {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
         "Team1": {
           "TeamName": "1. FC Union Berlin",
           "TeamId": 80
@@ -167,8 +187,9 @@
         "MatchResults": {
           "PointsTeam1": 3,
           "PointsTeam2": 0,
-          "Text": "1. FC Union Berlin gewann gegen Fortuna Düsseldorf 3 zu 0. "
+          "Text": "1. FC Union Berlin gewann gegen Fortuna Düsseldorf 3 zu 0 . "
         },
+        "MatchHasResults": true,
         "weekday": "Samstag"
       }
     ],
@@ -193,9 +214,9 @@
         "OpponentGoals": 41,
         "GoalDiff": 43,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -13,
+        "PointsDiffToFirstPlace": 13,
         "Rank_diff": 0,
-        "Text": "Gefolgt von Borussia Dortmund auf dem zweiten Platz. "
+        "Text": "Borussia Dortmund liegt auf dem zweiten Platz mit 69 Punkten. "
       },
       {
         "TeamName": "RB Leipzig",
@@ -205,7 +226,7 @@
         "OpponentGoals": 37,
         "GoalDiff": 44,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -16,
+        "PointsDiffToFirstPlace": 16,
         "Rank_diff": 0
       },
       {
@@ -216,7 +237,7 @@
         "OpponentGoals": 40,
         "GoalDiff": 26,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -17,
+        "PointsDiffToFirstPlace": 17,
         "Rank_diff": 0,
         "Text": "Borussia Mönchengladbach liegt auf dem vierten Platz mit 65 Punkten. "
       },
@@ -228,7 +249,7 @@
         "OpponentGoals": 44,
         "GoalDiff": 17,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -19,
+        "PointsDiffToFirstPlace": 19,
         "Rank_diff": 0
       },
       {
@@ -239,8 +260,8 @@
         "OpponentGoals": 53,
         "GoalDiff": 0,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -30,
-        "Rank_diff": 0
+        "PointsDiffToFirstPlace": 30,
+        "Rank_diff": 1
       },
       {
         "TeamName": "VfL Wolfsburg",
@@ -250,8 +271,8 @@
         "OpponentGoals": 46,
         "GoalDiff": 2,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -33,
-        "Rank_diff": 0
+        "PointsDiffToFirstPlace": 33,
+        "Rank_diff": -1
       },
       {
         "TeamName": "SC Freiburg",
@@ -261,7 +282,7 @@
         "OpponentGoals": 47,
         "GoalDiff": 1,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -34,
+        "PointsDiffToFirstPlace": 34,
         "Rank_diff": 0
       },
       {
@@ -272,7 +293,7 @@
         "OpponentGoals": 60,
         "GoalDiff": -1,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -37,
+        "PointsDiffToFirstPlace": 37,
         "Rank_diff": 0
       },
       {
@@ -283,7 +304,7 @@
         "OpponentGoals": 59,
         "GoalDiff": -11,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -41,
+        "PointsDiffToFirstPlace": 41,
         "Rank_diff": 0
       },
       {
@@ -294,8 +315,8 @@
         "OpponentGoals": 58,
         "GoalDiff": -17,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -41,
-        "Rank_diff": 0
+        "PointsDiffToFirstPlace": 41,
+        "Rank_diff": 1
       },
       {
         "TeamName": "FC Schalke 04",
@@ -305,8 +326,8 @@
         "OpponentGoals": 58,
         "GoalDiff": -20,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -43,
-        "Rank_diff": 0
+        "PointsDiffToFirstPlace": 43,
+        "Rank_diff": -1
       },
       {
         "TeamName": "1. FSV Mainz 05",
@@ -316,7 +337,7 @@
         "OpponentGoals": 65,
         "GoalDiff": -21,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -45,
+        "PointsDiffToFirstPlace": 45,
         "Rank_diff": 0
       },
       {
@@ -327,7 +348,7 @@
         "OpponentGoals": 69,
         "GoalDiff": -18,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -46,
+        "PointsDiffToFirstPlace": 46,
         "Rank_diff": 0
       },
       {
@@ -338,7 +359,7 @@
         "OpponentGoals": 63,
         "GoalDiff": -18,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -46,
+        "PointsDiffToFirstPlace": 46,
         "Rank_diff": 0
       },
       {
@@ -349,9 +370,9 @@
         "OpponentGoals": 69,
         "GoalDiff": -27,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -51,
-        "Rank_diff": 0,
-        "Text": "Werder Bremen liegt auf dem 16ten Platz mit 31 Punkten. "
+        "PointsDiffToFirstPlace": 51,
+        "Rank_diff": 1,
+        "Text": "Auf dem 16ten Platz liegt Werder Bremen mit 31 Punkten. "
       },
       {
         "TeamName": "Fortuna Düsseldorf",
@@ -361,8 +382,8 @@
         "OpponentGoals": 67,
         "GoalDiff": -31,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -52,
-        "Rank_diff": 0
+        "PointsDiffToFirstPlace": 52,
+        "Rank_diff": -1
       },
       {
         "TeamName": "SC Paderborn 07",
@@ -372,11 +393,13 @@
         "OpponentGoals": 74,
         "GoalDiff": -37,
         "Matches": 34,
-        "PointsDiffToFirstPlace": -62,
-        "Rank_diff": 0,
-        "Text": "Auf dem letzten Platz liegt SC Paderborn 07 mit 20 Punkten. "
+        "PointsDiffToFirstPlace": 62,
+        "Rank_diff": 0
       }
     ],
+    "Vorherige-Season": "2019",
+    "league_saison": "2019",
     "Spieltag": "34. Spieltag"
-  }
+  },
+  "league_name": "1. Fußball Bundesliga"
 }

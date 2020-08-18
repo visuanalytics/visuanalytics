@@ -1,6 +1,7 @@
 {
   "id": 0,
   "name": "weather_germany",
+  "info": "Der Wetterbericht enthält das deutschlandweite Wetter für den aktuellen Tag und die darauffolgenden vier Tage",
   "api": {
     "type": "request_multiple",
     "api_key_name": "weatherbit",
@@ -82,23 +83,18 @@
             },
             {
               "type": "append",
-              "key": "_loop|min_temp",
-              "new_key": "summaries|{_idx}|min_temp"
-            },
-            {
-              "type": "append",
-              "key": "_loop|max_temp",
-              "new_key": "summaries|{_idx}|max_temp"
-            },
-            {
-              "type": "append",
-              "key": "_loop|weather|icon",
-              "new_key": "summaries|{_idx}|icon"
-            },
-            {
-              "type": "append",
-              "key": "_loop|weather|code",
-              "new_key": "summaries|{_idx}|code"
+              "keys": [
+                "_loop|min_temp",
+                "_loop|max_temp",
+                "_loop|weather|icon",
+                "_loop|weather|code"
+              ],
+              "new_keys": [
+                "summaries|{_idx}|min_temp",
+                "summaries|{_idx}|max_temp",
+                "summaries|{_idx}|icon",
+                "summaries|{_idx}|code"
+              ]
             },
             {
               "type": "calculate",
@@ -210,7 +206,7 @@
               "delimiter": "-"
             },
             {
-              "type": "translate_key",
+              "type": "translate",
               "keys": [
                 "_loop|weather|code"
               ],
@@ -434,8 +430,12 @@
         },
         {
           "type": "append",
-          "key": "_idx",
-          "new_key": "cities"
+          "keys": [
+            "_idx"
+          ],
+          "new_keys": [
+            "cities"
+          ]
         }
       ]
     },
@@ -718,7 +718,6 @@
         {
           "description": "week_day",
           "type": "text",
-          "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 33,
           "preset": "weather_white_2",
@@ -776,7 +775,6 @@
         {
           "description": "week_day",
           "type": "text",
-          "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 33,
           "preset": "weather_white_2",
@@ -817,7 +815,6 @@
         {
           "description": "temperatur",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             950,
             1130,
@@ -865,7 +862,6 @@
         {
           "description": "week_day",
           "type": "text",
-          "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 33,
           "preset": "weather_white_2",
@@ -923,7 +919,6 @@
         {
           "description": "week_day",
           "type": "text",
-          "anchor_point": "center",
           "pos_x": 305,
           "pos_y": 33,
           "preset": "weather_white_2",
@@ -964,7 +959,6 @@
         {
           "description": "temperatur",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             950,
             1130,
@@ -1010,26 +1004,26 @@
       "path": "weather/DE3Tage0.png",
       "overlay": [
         {
-          "description": "week_day",
+          "description": "week_day3",
+          "type": "text",
+          "pos_x": 342,
+          "pos_y": 52,
+          "preset": "weather_white_2",
+          "pattern": "{_req|Kiel|data|2|today}"
+        },
+        {
+          "description": "week_day4-5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            342,
             960,
             1585
           ],
           "pos_y": [
             52,
-            52,
             52
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_brown_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
-            "{_req|Kiel|data|2|today}",
             "{_req|Kiel|data|3|today}",
             "{_req|Kiel|data|4|today}"
           ]
@@ -1097,51 +1091,51 @@
           ]
         },
         {
-          "description": "temp_max",
+          "description": "temp_max_day3",
+          "type": "text",
+          "pos_x": 483,
+          "pos_y": 931,
+          "preset": "weather_white_2",
+          "pattern": "{summaries|2|sym_max_temp}"
+        },
+        {
+          "description": "temp_max_day4-5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            483,
             1102,
             1730
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_brown_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
-            "{summaries|2|sym_max_temp}",
             "{summaries|3|sym_max_temp}",
             "{summaries|4|sym_max_temp}"
           ]
         },
         {
+          "description": "temp_min_day3",
+          "type": "text",
+          "pos_x": 213,
+          "pos_y": 931,
+          "preset": "weather_white_2",
+          "pattern": "{summaries|2|sym_min_temp}"
+        },
+        {
           "description": "temp_min",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
-            213,
             833,
             1455
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_brown_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
-            "{summaries|2|sym_min_temp}",
             "{summaries|3|sym_min_temp}",
             "{summaries|4|sym_min_temp}"
           ]
@@ -1153,29 +1147,29 @@
       "path": "weather/DE3Tage1.png",
       "overlay": [
         {
-          "description": "week_day",
+          "description": "week_day3_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             342,
-            960,
             1585
           ],
           "pos_y": [
             52,
-            52,
             52
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_white_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{_req|Kiel|data|2|today}",
-            "{_req|Kiel|data|3|today}",
             "{_req|Kiel|data|4|today}"
           ]
+        },
+        {
+          "description": "week_day4",
+          "type": "text",
+          "pos_x": 960,
+          "pos_y": 52,
+          "preset": "weather_white_2",
+          "pattern": "{_req|Kiel|data|3|today}"
         },
         {
           "description": "icon",
@@ -1240,54 +1234,54 @@
           ]
         },
         {
-          "description": "temp_max",
+          "description": "temp_max_day3_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             483,
-            1102,
             1730
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_white_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{summaries|2|sym_max_temp}",
-            "{summaries|3|sym_max_temp}",
             "{summaries|4|sym_max_temp}"
           ]
         },
         {
-          "description": "temp_min",
+          "description": "temp_max_day5",
+          "type": "text",
+          "pos_x": 1102,
+          "pos_y": 931,
+          "preset": "weather_white_2",
+          "pattern": "{summaries|3|sym_max_temp}"
+        },
+        {
+          "description": "temp_min_day3_5",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             213,
-            833,
             1455
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_white_2",
-            "weather_brown_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{summaries|2|sym_min_temp}",
-            "{summaries|3|sym_min_temp}",
             "{summaries|4|sym_min_temp}"
           ]
+        },
+        {
+          "description": "temp_min_day4",
+          "type": "text",
+          "pos_x": 833,
+          "pos_y": 931,
+          "preset": "weather_brown_2",
+          "pattern": "{summaries|3|sym_min_temp}"
         }
       ]
     },
@@ -1296,29 +1290,29 @@
       "path": "weather/DE3Tage2.png",
       "overlay": [
         {
-          "description": "week_day",
+          "description": "week_day3-4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             342,
-            960,
-            1585
+            960
           ],
           "pos_y": [
             52,
-            52,
             52
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_brown_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{_req|Kiel|data|2|today}",
-            "{_req|Kiel|data|3|today}",
-            "{_req|Kiel|data|4|today}"
+            "{_req|Kiel|data|3|today}"
           ]
+        },
+        {
+          "description": "week_day5",
+          "type": "text",
+          "pos_x": 1585,
+          "pos_y": 52,
+          "preset": "weather_white_2",
+          "pattern": "{_req|Kiel|data|4|today}"
         },
         {
           "description": "icon",
@@ -1383,54 +1377,54 @@
           ]
         },
         {
-          "description": "temp_max",
+          "description": "temp_max_day3-4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             483,
-            1102,
-            1730
+            1102
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_brown_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{summaries|2|sym_max_temp}",
-            "{summaries|3|sym_max_temp}",
-            "{summaries|4|sym_max_temp}"
+            "{summaries|3|sym_max_temp}"
           ]
         },
         {
-          "description": "temp_min",
+          "description": "temp_max5",
+          "type": "text",
+          "pos_x": 1730,
+          "pos_y": 931,
+          "preset": "weather_white_2",
+          "pattern": "{summaries|4|sym_max_temp}"
+        },
+        {
+          "description": "temp_min_day3-4",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             213,
-            833,
-            1455
+            833
           ],
           "pos_y": [
             931,
-            931,
             931
           ],
-          "preset": [
-            "weather_brown_2",
-            "weather_brown_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_brown_2",
           "pattern": [
             "{summaries|2|sym_min_temp}",
-            "{summaries|3|sym_min_temp}",
-            "{summaries|4|sym_min_temp}"
+            "{summaries|3|sym_min_temp}"
           ]
+        },
+        {
+          "description": "temp_min_day5",
+          "type": "text",
+          "pos_x": 1455,
+          "pos_y": 931,
+          "preset": "weather_white_2",
+          "pattern": "{summaries|4|sym_min_temp}"
         }
       ]
     },
@@ -1441,7 +1435,6 @@
         {
           "description": "week_day",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             342,
             960,
@@ -1512,7 +1505,6 @@
         {
           "description": "temp_max",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             483,
             1102,
@@ -1523,11 +1515,7 @@
             931,
             931
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_white_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_white_2",
           "pattern": [
             "{summaries|2|sym_max_temp}",
             "{summaries|3|sym_max_temp}",
@@ -1537,7 +1525,6 @@
         {
           "description": "temp_min",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             213,
             833,
@@ -1548,11 +1535,7 @@
             931,
             931
           ],
-          "preset": [
-            "weather_white_2",
-            "weather_white_2",
-            "weather_white_2"
-          ],
+          "preset": "weather_white_2",
           "pattern": [
             "{summaries|2|sym_min_temp}",
             "{summaries|3|sym_min_temp}",
@@ -1689,19 +1672,22 @@
       }
     ]
   },
-  "run_config": [],
+  "run_config": {},
   "presets": {
     "weather_white_2": {
+      "anchor_point": "center",
       "color": "white",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_white_3": {
+      "anchor_point": "center",
       "color": "white",
       "font_size": 50,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "weather_brown_2": {
+      "anchor_point": "center",
       "color": "#949994",
       "font_size": 70,
       "font": "fonts/Dosis-Bold.ttf"

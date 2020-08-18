@@ -1,71 +1,126 @@
 import React from "react";
 import { useStyles } from "../style";
-import { Divider, FormControlLabel, Radio, Fade, Collapse } from "@material-ui/core";
+import { Collapse, Divider, Fade, FormControlLabel, Radio } from "@material-ui/core";
 import { WeekdayCheckboxes } from "./WeekdayCheckboxes";
 import { DateInputField, TimeInputField } from "./DateTimeInput"
-import { Schedule, Weekday } from "..";
+import { Schedule, TimeInterval, Weekday } from "../../util/schedule";
+import { IntervalCheckboxes } from "./IntervalCheckboxes";
+
 
 interface ScheduleSelectionProps {
     schedule: Schedule,
-    selectDailyHandler: () => void;
-    selectWeeklyHandler: () => void;
-    selectOnDateHandler: () => void;
-    addWeekDayHandler: (day: Weekday) => void;
-    removeWeekDayHandler: (day: Weekday) => void;
-    selectDateHandler: (date: Date | null) => void;
-    selectTimeHandler: (date: Date | null) => void;
+    selectScheduleHandler: (schedule: Schedule) => void;
 }
 
-export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
+export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, selectScheduleHandler }) => {
     const classes = useStyles();
+    const time = schedule.type !== "interval" ? schedule.time : new Date();
+
+    const handleSelectDaily = () => {
+        selectScheduleHandler({ type: "daily", time: time })
+    }
+    const handleSelectWeekly = () => {
+        selectScheduleHandler({ type: "weekly", time: time, weekdays: [] })
+    }
+    const handleSelectInterval = () => {
+        selectScheduleHandler({ type: "interval", interval: "minute" })
+    }
+    const handleSelectOnDate = () => {
+        selectScheduleHandler({ type: "onDate", time: time, date: new Date() })
+    }
+    const handleAddWeekDay = (d: Weekday) => {
+        if (schedule.type === "weekly") {
+            const weekdays = [...schedule.weekdays, d];
+            selectScheduleHandler({ ...schedule, weekdays: weekdays });
+        }
+    }
+    const handleRemoveWeekday = (d: Weekday) => {
+        if (schedule.type === "weekly") {
+            const weekdays: Weekday[] = schedule.weekdays.filter(e => e !== d);
+            selectScheduleHandler({ ...schedule, weekdays: weekdays });
+        }
+    }
+    const handleInterval = (i: TimeInterval) => {
+        if (schedule.type === "interval") {
+            selectScheduleHandler({ ...schedule, interval: i });
+        }
+    }
+    const handleSelectDate = (date: Date | null) => {
+        if (date !== null && schedule.type === "onDate") {
+            selectScheduleHandler({ ...schedule, date: date })
+        }
+    }
+    const handleSelectTime = (time: Date | null) => {
+        if (time !== null && schedule.type !== "interval") {
+            selectScheduleHandler({ ...schedule, time: time })
+        }
+    }
 
     return (
         <Fade in={true}>
             <div>
-                <div className={classes.paddingSmall}>
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="daily" control={<Radio
-                            checked={props.schedule.daily}
-                            onChange={props.selectDailyHandler}
+                            checked={schedule.type === "daily"}
+                            onChange={handleSelectDaily}
                             value="daily"
                         />} label="täglich" />
                     </div>
                 </div>
                 <Divider />
-                <div className={classes.paddingSmall}>
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="weekly" control={<Radio
-                            checked={props.schedule.weekly}
-                            onChange={props.selectWeeklyHandler}
+                            checked={schedule.type === "weekly"}
+                            onChange={handleSelectWeekly}
                             value="weekly"
                         />} label="wöchentlich" />
                     </div>
-                    <Collapse in={props.schedule.weekly}>
+                    <Collapse in={schedule.type === "weekly"}>
                         <div>
                             <WeekdayCheckboxes
-                                schedule={props.schedule}
-                                addWeekDayHandler={props.addWeekDayHandler}
-                                removeWeekDayHandler={props.removeWeekDayHandler}
+                                schedule={schedule}
+                                addWeekDayHandler={handleAddWeekDay}
+                                removeWeekDayHandler={handleRemoveWeekday}
                             />
                         </div>
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.paddingSmall} >
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
-                        <FormControlLabel value="onDate" control={<Radio
-                            checked={props.schedule.onDate}
-                            onChange={props.selectOnDateHandler}
-                            value="onDate"
-                        />} label="an festem Datum" />
+                        <FormControlLabel value="interval" control={<Radio
+                            checked={schedule.type === "interval"}
+                            onChange={handleSelectInterval}
+                            value="interval"
+                        />} label="Intervall" />
                     </div>
-                    <Collapse in={props.schedule.onDate}>
-                        <DateInputField date={props.schedule.date} handler={props.selectDateHandler} />
+                    <Collapse in={schedule.type === "interval"}>
+                        <div>
+                            <IntervalCheckboxes
+                                schedule={schedule}
+                                intervalHandler={handleInterval}
+                            />
+                        </div>
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.paddingSmall} >
-                    <TimeInputField date={props.schedule.time} handler={props.selectTimeHandler} />
+                <div className={classes.MPaddingTB} >
+                    <div className={classes.centerDiv}>
+                        <FormControlLabel value="onDate" control={<Radio
+                            checked={schedule.type === "onDate"}
+                            onChange={handleSelectOnDate}
+                            value="onDate"
+                        />} label="an festem Datum" />
+                    </div>
+                    <Collapse in={schedule.type === "onDate"}>
+                        <DateInputField date={schedule.type === "onDate" ? schedule.date : null} handler={handleSelectDate} />
+                    </Collapse>
+                </div>
+                <Divider />
+                <div className={classes.MPaddingTB} >
+                    <TimeInputField date={schedule.type !== "interval" ? time : new Date()} disabled={schedule.type === "interval"} handler={handleSelectTime} />
                 </div>
             </div >
         </Fade>

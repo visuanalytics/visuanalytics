@@ -1,6 +1,9 @@
 {
   "external_programs": [
-    "ffmpeg"
+    {
+      "name": "ffmpeg",
+      "url": "https://ffmpeg.org/"
+    }
   ],
   "db": {
     "db_path": "instance/visuanalytics.db",
@@ -16,8 +19,20 @@
       {
         "name": "Bundesliga-Ergebnisse",
         "file_name": "football"
+      },
+      {
+        "name": "Twitter-Wordcloud",
+        "file_name": "twitter"
       }
     ]
+  },
+  "resources": {
+    "main_path": "resources",
+    "sub_paths": {
+      "images": "images",
+      "temp": "temp",
+      "memory": "memory"
+    }
   },
   "console_mode": false,
   "steps_base_config": {
@@ -28,5 +43,6 @@
     "lang": "de",
     "format": "mp3"
   },
+  "log_limit": 100,
   "testing": false
-} 
+}

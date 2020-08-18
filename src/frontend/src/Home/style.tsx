@@ -2,18 +2,22 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        stepPaper: {
+            padding: '0 0 20px',
+            zIndex: 0,
+            position: 'relative'
+        },
         paper: {
             padding: '20px',
         },
-        header: {
-            margin: '7px',
-        },
         margin: {
-            margin: '30px auto',
+            margin: '0 auto',
         },
-        button: {
-            margin: theme.spacing(1),
-            color: '#2E97C5'
+        infoIcon: {
+            fontSize: "50px",
         },
+        hintIcons: {
+            color: "white"
+        }
     }),
 );

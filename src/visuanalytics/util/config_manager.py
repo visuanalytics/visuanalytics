@@ -4,22 +4,15 @@ import json
 import os
 from json import JSONDecodeError
 
+from visuanalytics.util.dict_utils import merge_dict
+
 CONFIG_LOCATION = "../config.json"
 CONFIG_PRIVATE_LOCATION = "../instance/config.json"
+STEPS_BASE_CONFIG = {}
 
 
 def _get_config_path(config_location):
     return os.path.normpath(os.path.join(os.path.dirname(__file__), config_location))
-
-
-def _merge_config(public_config: dict, private_config: dict):
-    # merge sub dict steps_base_config and audio
-    public_config.get("steps_base_config").update(private_config.get("steps_base_config", {}))
-    public_config.get("audio").update(private_config.get("audio", {}))
-    private_config.pop("steps_base_config", None)
-    private_config.pop("audio", None)
-
-    public_config.update(private_config)
 
 
 def get_config():
@@ -47,7 +40,8 @@ def get_config():
                 private_config = json.loads(fh.read())
                 private_config.pop("api_keys", "")
 
-        _merge_config(public_config, private_config)
+        merge_dict(public_config, private_config)
+
         return public_config
 
     except (FileNotFoundError, JSONDecodeError) as e:

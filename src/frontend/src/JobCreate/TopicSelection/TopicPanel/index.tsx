@@ -1,15 +1,12 @@
 import React from "react";
-import {makeStyles, Button} from "@material-ui/core";
-import {Topic} from "..";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
-import {Param} from "../../../util/param";
-import { getUrl } from "../../../util/fetchUtils";
+import { makeStyles, Button, Typography, Grid } from "@material-ui/core";
+import { Topic } from "..";
+import { HintButton } from "../../../util/HintButton"
 
 interface TopicPanelProps {
     topic: Topic;
-    selectedTopicId: number;
-    selectTopicHandler: (topicId: number) => void;
-    fetchParamHandler: (params: Param[]) => void;
+    topics: Topic[];
+    selectTopicHandler: (topic: Topic) => void;
 }
 
 const useStyles = makeStyles({
@@ -30,22 +27,40 @@ const useStyles = makeStyles({
     }
 });
 
+type IndexedTopic = [Topic, number];
+const toIndexedTopic = (topic: Topic, idx: number): IndexedTopic => {
+    return [topic, idx];
+}
+
 export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
     const classes = useStyles();
-    const fetchParams = useCallFetch(getUrl("/params/") + props.topic.topicId, {}, (data) => {
-        props.fetchParamHandler(data);
-    });
+    const topicIds = props.topics.map(t => t.topicId);
+    const topic = props.topic;
+
+    const pos = props.topics
+        .map((t, idx) => toIndexedTopic(t, idx))
+        .filter(ti => ti[0].topicId === topic.topicId)
+        .map(ti => ti[1] + 1);
 
     return (
         <Button
             className={classes.panel}
-            style={props.topic.topicId === props.selectedTopicId ? {border: "solid #00638D 7px"} : {border: ""}}
+            style={topicIds.includes(topic.topicId) ? { border: "solid #00638D 7px" } : { border: "" }}
             onClick={() => {
-                fetchParams();
-                props.selectTopicHandler(props.topic.topicId);
+                props.selectTopicHandler(topic);
             }
             }>
-            {props.topic.topicName}
+            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>{String(pos).split(",").join(", ")}</Grid>
+            <Grid item xs={10}>
+                {topic.topicName}
+            </Grid>
+            <Grid item xs={2} style={{ textAlign: "right", fontSize: 15 }}>
+                <HintButton content={
+                    <Typography gutterBottom>
+                        {topic.topicInfo}
+                    </Typography>}
+                />
+            </Grid>
         </Button>
     )
 };

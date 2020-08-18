@@ -1,15 +1,18 @@
 {
   "id": 1,
   "name": "football",
+  "info": "Der Fußballbericht enthält die Ergebnisse des aktuellen Spieltags und dessen Tabelle",
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
     "steps_value": [
       "Spiele",
+      "season_helper",
       "Tabelle",
       "Vorherige-Tabelle",
       "Vorheriger-Spieltag",
-      "Vorherige-Vorherige-Tabelle"
+      "Vorherige-Vorherige-Tabelle",
+      "Vorherige-Season"
     ],
     "requests": [
       {
@@ -18,7 +21,26 @@
       },
       {
         "type": "request",
-        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+        "url_pattern": "https://www.openligadb.de/Webservices/Sportsdata.asmx",
+        "method": "post",
+        "body": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\"><soap12:Body><GetMatchByMatchID  xmlns=\"http://msiggi.de/Sportsdata/Webservices\"><MatchID>{_req|Spiele|0|MatchID}</MatchID></GetMatchByMatchID ></soap12:Body></soap12:Envelope>",
+        "body_type": "other",
+        "body_encoding": "utf-8",
+        "response_format": "xml",
+        "xml_config": {
+          "process_namespaces": true,
+          "namespaces": {
+            "http://www.w3.org/2003/05/soap-envelope": null,
+            "http://msiggi.de/Sportsdata/Webservices": null
+          }
+        },
+        "headers": {
+          "Content-Type": "application/soap+xml; charset=utf-8"
+        }
+      },
+      {
+        "type": "request",
+        "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
       },
       {
         "type": "request_memory",
@@ -26,7 +48,7 @@
         "use_last": 1,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       },
       {
@@ -35,7 +57,7 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "input": "-1. Spieltag"
+          "data": "-1. Spieltag"
         }
       },
       {
@@ -44,12 +66,43 @@
         "use_last": 2,
         "alternative": {
           "type": "request",
-          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/2019"
+          "url_pattern": "https://www.openligadb.de/api/getbltable/bl{_conf|league}/{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "season",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "data": "{_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison}"
         }
       }
     ]
   },
   "transform": [
+    {
+      "type": "alias",
+      "keys": [
+        "_req|season_helper|Envelope|Body|GetMatchByMatchIDResponse|GetMatchByMatchIDResult|leagueSaison"
+      ],
+      "new_keys": [
+        "_req|league_saison"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_req|season_helper"
+      ]
+    },
+    {
+      "type": "add_data",
+      "new_keys": [
+        "_req|spieltag_helper"
+      ],
+      "data": "1. Spieltag"
+    },
     {
       "type": "alias",
       "keys": [
@@ -70,12 +123,23 @@
       "pattern": "{_conf|league}. Fußball Bundesliga"
     },
     {
+      "type": "convert",
+      "keys": [
+        "_conf|league"
+      ],
+      "new_keys": [
+        "_conf|league_int"
+      ],
+      "to": "int"
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
         {
           "type": "select",
           "relevant_keys": [
+            "LeagueName",
             "Team1|TeamName",
             "Team1|TeamId",
             "Team2|TeamName",
@@ -88,14 +152,28 @@
           "ignore_errors": true
         },
         {
-          "type": "alias",
+          "type": "check_key",
           "keys": [
             "_loop|MatchResults|0"
           ],
           "new_keys": [
-            "_loop|MatchResults"
-          ],
-          "ignore_errors": true
+            "_loop|MatchHasResults"
+          ]
+        },
+        {
+          "type": "option",
+          "check": "_loop|MatchHasResults",
+          "on_true": [
+            {
+              "type": "alias",
+              "keys": [
+                "_loop|MatchResults|0"
+              ],
+              "new_keys": [
+                "_loop|MatchResults"
+              ]
+            }
+          ]
         },
         {
           "type": "date_weekday",
@@ -118,46 +196,37 @@
               "on_equal": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} und {_key|Team2|TeamName} trennten sich mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} gab es keinen Sieger. Sie spielten {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "Ein Unentschieden zwischen {_key|Team1|TeamName} und {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_loop|Team1|TeamName} und {_loop|Team2|TeamName} trennten sich mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "Zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gab es keinen Sieger. Sie spielten {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "Ein Unentschieden zwischen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
               "on_higher": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} gewann gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} gewann Zuhause gegen {_key|Team2|TeamName} {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_loop|Team1|TeamName} gewann gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "{_loop|Team1|TeamName} gewann Zuhause gegen {_loop|Team2|TeamName} {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ],
               "on_lower": [
                 {
                   "type": "random_value",
-                  "keys": [
-                    "_loop"
-                  ],
                   "new_keys": [
                     "_loop|MatchResults|Text"
                   ],
                   "array": [
-                    "{_key|Team1|TeamName} unterlag {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. ",
-                    "{_key|Team1|TeamName} unterlag Zuhause {_key|Team2|TeamName} mit einem {_key|MatchResults|PointsTeam1} zu {_key|MatchResults|PointsTeam2}. "
+                    "{_loop|Team1|TeamName} unterlag {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . ",
+                    "{_loop|Team1|TeamName} unterlag Zuhause {_loop|Team2|TeamName} mit einem {_loop|MatchResults|PointsTeam1} zu {_loop|MatchResults|PointsTeam2} . "
                   ]
                 }
               ]
@@ -166,18 +235,15 @@
           "on_false": [
             {
               "type": "random_value",
-              "keys": [
-                "_loop"
-              ],
               "array": [
-                "Am {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
-                "Am {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
-                "Am kommenden {_key|weekday} treffen {_key|Team1|TeamName} und {_key|Team2|TeamName} aufeinander. ",
-                "Am kommenden {_key|weekday} spielen {_key|Team1|TeamName} und {_key|Team2|TeamName} gegeneinander. ",
-                "{_key|Team1|TeamName} gegen {_key|Team2|TeamName} am {_key|weekday}. "
+                "Am {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "Am kommenden {_loop|weekday} treffen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} aufeinander. ",
+                "Am kommenden {_loop|weekday} spielen {_loop|Team1|TeamName} und {_loop|Team2|TeamName} gegeneinander. ",
+                "{_loop|Team1|TeamName} gegen {_loop|Team2|TeamName} am {_loop|weekday}. "
               ],
               "new_keys": [
-                "_loop|MatchText"
+                "_loop|MatchResults|Text"
               ]
             }
           ]
@@ -231,40 +297,111 @@
         },
         {
           "type": "compare",
-          "value_left": "_req|Spieltag",
-          "value_right": "_req|Vorheriger-Spieltag",
+          "value_left": "_req|Vorherige-Season",
+          "value_right": "_req|league_saison",
           "on_equal": [
             {
+              "type": "add_data",
+              "new_keys": [
+                "_loop|Rank_diff"
+              ],
+              "data": 0
+            },
+            {
               "type": "compare",
-              "value_left": "_temp|TeamInfoId",
-              "value_right": "_loop|TeamInfoId",
+              "value_left": "_req|Spieltag",
+              "value_right": "_req|spieltag_helper",
               "on_equal": [
                 {
-                  "type": "transform_array",
-                  "array_key": "_req|Vorherige-Vorherige-Tabelle",
-                  "transform": [
-                    {
-                      "type": "select",
-                      "relevant_keys": [
-                        "TeamInfoId"
-                      ]
-                    },
+                  "type": "add_data",
+                  "new_keys": [
+                    "_loop|Rank_diff"
+                  ],
+                  "data": 0
+                }
+              ],
+              "on_not_equal": [
+                {
+                  "type": "compare",
+                  "value_left": "_req|Spieltag",
+                  "value_right": "_req|Vorheriger-Spieltag",
+                  "on_equal": [
                     {
                       "type": "compare",
                       "value_left": "_temp|TeamInfoId",
                       "value_right": "_loop|TeamInfoId",
                       "on_equal": [
                         {
-                          "type": "calculate",
-                          "action": "subtract",
-                          "keys": [
-                            "_idx"
-                          ],
-                          "keys_right": [
-                            "_temp|TeamPos"
-                          ],
-                          "new_keys": [
-                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                          "type": "transform_array",
+                          "array_key": "_req|Vorherige-Vorherige-Tabelle",
+                          "transform": [
+                            {
+                              "type": "select",
+                              "relevant_keys": [
+                                "TeamInfoId"
+                              ]
+                            },
+                            {
+                              "type": "compare",
+                              "value_left": "_temp|TeamInfoId",
+                              "value_right": "_loop|TeamInfoId",
+                              "on_equal": [
+                                {
+                                  "type": "calculate",
+                                  "action": "subtract",
+                                  "keys": [
+                                    "_idx"
+                                  ],
+                                  "keys_right": [
+                                    "_temp|TeamPos"
+                                  ],
+                                  "new_keys": [
+                                    "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "on_not_equal": [
+                    {
+                      "type": "compare",
+                      "value_left": "_temp|TeamInfoId",
+                      "value_right": "_loop|TeamInfoId",
+                      "on_equal": [
+                        {
+                          "type": "transform_array",
+                          "array_key": "_req|Vorherige-Tabelle",
+                          "transform": [
+                            {
+                              "type": "select",
+                              "relevant_keys": [
+                                "TeamInfoId"
+                              ]
+                            },
+                            {
+                              "type": "compare",
+                              "value_left": "_temp|TeamInfoId",
+                              "value_right": "_loop|TeamInfoId",
+                              "on_equal": [
+                                {
+                                  "type": "calculate",
+                                  "action": "subtract",
+                                  "keys": [
+                                    "_idx"
+                                  ],
+                                  "keys_right": [
+                                    "_temp|TeamPos"
+                                  ],
+                                  "new_keys": [
+                                    "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
+                                  ]
+                                }
+                              ]
+                            }
                           ]
                         }
                       ]
@@ -276,43 +413,11 @@
           ],
           "on_not_equal": [
             {
-              "type": "compare",
-              "value_left": "_temp|TeamInfoId",
-              "value_right": "_loop|TeamInfoId",
-              "on_equal": [
-                {
-                  "type": "transform_array",
-                  "array_key": "_req|Vorherige-Tabelle",
-                  "transform": [
-                    {
-                      "type": "select",
-                      "relevant_keys": [
-                        "TeamInfoId"
-                      ]
-                    },
-                    {
-                      "type": "compare",
-                      "value_left": "_temp|TeamInfoId",
-                      "value_right": "_loop|TeamInfoId",
-                      "on_equal": [
-                        {
-                          "type": "calculate",
-                          "action": "subtract",
-                          "keys": [
-                            "_idx"
-                          ],
-                          "keys_right": [
-                            "_temp|TeamPos"
-                          ],
-                          "new_keys": [
-                            "_req|Tabelle|{_temp|TeamPos}|Rank_diff"
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+              "type": "add_data",
+              "new_keys": [
+                "_loop|Rank_diff"
+              ],
+              "data": 0
             }
           ]
         }
@@ -324,7 +429,8 @@
         "_temp",
         "_req|Vorherige-Tabelle",
         "_req|Vorherige-Vorherige-Tabelle",
-        "_req|Vorheriger-Spieltag"
+        "_req|Vorheriger-Spieltag",
+        "_req|spieltag_helper"
       ]
     },
     {
@@ -334,14 +440,11 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
-            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+            "{_req|Tabelle|0|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
+            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|0|Text"
@@ -351,31 +454,11 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
           "array": [
-            "{_key|TeamName} ist weiterhin an der Tabellenspitze. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
-          ],
-          "new_keys": [
-            "_req|Tabelle|0|Text"
-          ]
-        }
-      ],
-      "on_lower": [
-        {
-          "type": "random_value",
-          "keys": [
-            "_req|Tabelle|0"
-          ],
-          "array": [
-            "{_key|TeamName} übernimmt die Führung. ",
-            "Auf Platz 1 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem ersten Platz mit {_key|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_key|TeamName} mit {_key|Points} Punkten."
+            "{_req|Tabelle|0|TeamName} ist weiterhin an der Tabellenspitze. ",
+            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
+            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
+            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|0|Text"
@@ -390,14 +473,11 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. "
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem 2. Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -407,16 +487,13 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} übernimmt den zweiten Platz mit {_key|Points} Punkten.",
-            "{_key|TeamName} nun auf dem zweiten Platz mit {_key|Points} Punkten."
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} übernimmt den zweiten Platz mit {_req|Tabelle|1|Points} Punkten.",
+            "{_req|Tabelle|1|TeamName} nun auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten."
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -426,15 +503,12 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|1"
-          ],
           "array": [
-            "{_key|TeamName} liegt mit {_key|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
-            "Gefolgt von {_key|TeamName} auf dem zweiten Platz. ",
-            "Auf Platz 2 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem zweiten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} ist auf den zweiten Platz abgestiegen mit {_key|PointsDiffToFirstPlace} Punkten Rückstand. "
+            "{_req|Tabelle|1|TeamName} liegt mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand auf dem zweiten Platz.",
+            "Gefolgt von {_req|Tabelle|1|TeamName} auf dem zweiten Platz. ",
+            "Auf Platz 2 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} liegt auf dem zweiten Platz mit {_req|Tabelle|1|Points} Punkten. ",
+            "{_req|Tabelle|1|TeamName} ist auf den zweiten Platz abgestiegen mit {_req|Tabelle|1|PointsDiffToFirstPlace} Punkten Rückstand. "
           ],
           "new_keys": [
             "_req|Tabelle|1|Text"
@@ -448,50 +522,127 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ],
       "on_higher": [
         {
-          "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} ist aufgestiegen auf den vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Gefolgt von {_req|Tabelle|1|TeamName} auf dem vierten Platz. ",
+                "Auf Platz 4 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} übernimmt den vierten Platz mit {_req|Tabelle|3|Points} Punkten.",
+                "{_req|Tabelle|3|TeamName} nun auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten."
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} ist aufgestiegen auf den vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Gefolgt von {_req|Tabelle|1|TeamName} auf dem vierten Platz. ",
+                "Auf Platz 4 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} übernimmt den vierten Platz mit {_req|Tabelle|3|Points} Punkten.",
+                "{_req|Tabelle|3|TeamName} nun auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten."
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ],
       "on_lower": [
         {
-          "type": "random_value",
-          "keys": [
-            "_req|Tabelle|3"
-          ],
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_key|TeamName}. ",
-            "Auf Platz 4 liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem vierten Platz mit {_key|Points} Punkten. ",
-            "Auf den 4. Platz abgestiegen ist {_key|TeamName} mit {_key|Points}. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Auf den vierten Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Auf den vierten Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ]
@@ -503,13 +654,10 @@
       "on_equal": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -519,14 +667,11 @@
       "on_higher": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf dem Relegationsplatz mit {_key|Points}. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} steigt auf dem Relegationsplatz mit {_req|Tabelle|15|Points} Punkten. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -536,14 +681,11 @@
       "on_lower": [
         {
           "type": "random_value",
-          "keys": [
-            "_req|Tabelle|15"
-          ],
           "array": [
-            "Auf dem Relegationsplatz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "Auf dem 16ten Platz liegt {_key|TeamName} mit {_key|Points} Punkten. ",
-            "{_key|TeamName} liegt auf dem 16ten Platz mit {_key|Points} Punkten. ",
-            "{_key|TeamName} steigt auf den Relegationsplatz ab. "
+            "Auf dem Relegationsplatz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "Auf dem 16ten Platz liegt {_req|Tabelle|15|TeamName} mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} liegt auf dem 16ten Platz mit {_req|Tabelle|15|Points} Punkten. ",
+            "{_req|Tabelle|15|TeamName} steigt auf den Relegationsplatz ab. "
           ],
           "new_keys": [
             "_req|Tabelle|15|Text"
@@ -559,11 +701,18 @@
       "exclude": [
         "Text",
         "Rank_diff"
-      ]
+      ],
+      "count": 3
     },
     {
       "name": "spieltag",
-      "key": "_req|Spieltag"
+      "key": "_req|Spieltag",
+      "count": 3
+    },
+    {
+      "name": "season",
+      "key": "_req|league_saison",
+      "count": 2
     }
   ],
   "images": {
@@ -577,15 +726,14 @@
           "anchor_point": "center",
           "pos_x": 960,
           "pos_y": 0,
-          "preset": "football_1",
+          "color": "black",
+          "font_size": 74,
+          "font": "fonts/Dosis-Bold.ttf",
           "pattern": "{_req|Spieltag}"
         },
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         }
@@ -630,7 +778,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -648,7 +795,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 180,
               "preset": "football_4",
@@ -661,7 +807,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 180,
+              "pos_y": 204,
               "preset": "football_3",
               "pattern": "{_req|Spiele|0|weekday}"
             }
@@ -708,7 +854,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -726,7 +871,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 270,
               "preset": "football_4",
@@ -739,7 +883,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 270,
+              "pos_y": 294,
               "preset": "football_3",
               "pattern": "{_req|Spiele|1|weekday}"
             }
@@ -786,7 +930,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -804,7 +947,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 360,
               "preset": "football_4",
@@ -817,7 +959,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 360,
+              "pos_y": 384,
               "preset": "football_3",
               "pattern": "{_req|Spiele|2|weekday}"
             }
@@ -864,7 +1006,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -882,7 +1023,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 450,
               "preset": "football_4",
@@ -895,7 +1035,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 450,
+              "pos_y": 474,
               "preset": "football_3",
               "pattern": "{_req|Spiele|3|weekday}"
             }
@@ -942,7 +1082,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -960,7 +1099,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 540,
               "preset": "football_4",
@@ -973,7 +1111,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 540,
+              "pos_y": 564,
               "preset": "football_3",
               "pattern": "{_req|Spiele|4|weekday}"
             }
@@ -1020,7 +1158,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1038,7 +1175,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 630,
               "preset": "football_4",
@@ -1051,7 +1187,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 630,
+              "pos_y": 654,
               "preset": "football_3",
               "pattern": "{_req|Spiele|5|weekday}"
             }
@@ -1098,7 +1234,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1116,7 +1251,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 720,
               "preset": "football_4",
@@ -1129,7 +1263,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 720,
+              "pos_y": 744,
               "preset": "football_3",
               "pattern": "{_req|Spiele|6|weekday}"
             }
@@ -1176,7 +1310,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1194,7 +1327,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 810,
               "preset": "football_4",
@@ -1207,7 +1339,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 810,
+              "pos_y": 834,
               "preset": "football_3",
               "pattern": "{_req|Spiele|7|weekday}"
             }
@@ -1254,7 +1386,6 @@
             {
               "description": "TeamErgebnisse",
               "type": "text_array",
-              "anchor_point": "center",
               "pos_x": [
                 900,
                 1014
@@ -1272,7 +1403,6 @@
             {
               "description": ":",
               "type": "text",
-              "anchor_point": "center",
               "pos_x": 960,
               "pos_y": 900,
               "preset": "football_4",
@@ -1285,7 +1415,7 @@
               "type": "text",
               "anchor_point": "center",
               "pos_x": 960,
-              "pos_y": 900,
+              "pos_y": 924,
               "preset": "football_3",
               "pattern": "{_req|Spiele|8|weekday}"
             }
@@ -1300,9 +1430,6 @@
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         },
@@ -1327,7 +1454,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1402,7 +1528,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1477,7 +1602,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1552,7 +1676,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1627,7 +1750,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1702,7 +1824,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1777,7 +1898,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1852,7 +1972,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1927,7 +2046,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -1990,9 +2108,6 @@
         {
           "description": "Liga-Name",
           "type": "text",
-          "anchor_point": "center",
-          "pos_x": 960,
-          "pos_y": 100,
           "preset": "football_2",
           "pattern": "{league_name}"
         },
@@ -2017,7 +2132,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2092,7 +2206,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2167,7 +2280,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2242,7 +2354,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2317,7 +2428,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2392,7 +2502,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2467,7 +2576,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2542,7 +2650,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2617,7 +2724,6 @@
         {
           "description": "Teamtoordiff",
           "type": "text_array",
-          "anchor_point": "center",
           "pos_x": [
             1293,
             1373,
@@ -2678,16 +2784,29 @@
     "type": "new",
     "image": {
       "type": "pillow",
-      "path": "football/Table_1.png",
+      "path": "football/FootballThumbnail.png",
       "overlay": [
+        {
+          "description": "Spieltag",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 400,
+          "color": "black",
+          "font_size": 180,
+          "font": "fonts/Dosis-Bold.ttf",
+          "pattern": "{_req|Spieltag}"
+        },
         {
           "description": "Liga-Name",
           "type": "text",
           "anchor_point": "center",
           "pos_x": 960,
-          "pos_y": 500,
-          "preset": "football_2",
-          "pattern": "{league_name}"
+          "pos_y": 190,
+          "color": "white",
+          "font_size": 100,
+          "font": "fonts/Dosis-Bold.ttf",
+          "pattern": "{_req|Spiele|0|LeagueName}"
         }
       ]
     }
@@ -2777,24 +2896,54 @@
       "a10": {
         "parts": [
           {
-            "type": "text",
-            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+            "type": "compare",
+            "value_left": "_conf|league_int",
+            "value_right": 1,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|0|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|1|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|3|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "Auf den Europaleague Plätzen liegen {_req|Tabelle|4|TeamName} mit {_req|Tabelle|4|Points} Punkten und {_req|Tabelle|5|TeamName} mit {_req|Tabelle|5|Points} Punkten.  "
+              }
+            ]
           },
           {
-            "type": "text",
-            "pattern": "{_req|Tabelle|0|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "{_req|Tabelle|1|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "{_req|Tabelle|3|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "Auf den Europaleague Plätzen liegen {_req|Tabelle|4|TeamName} mit {_req|Tabelle|4|Points} Punkten und {_req|Tabelle|5|TeamName} mit {_req|Tabelle|5|Points} Punkten.  "
+            "type": "compare",
+            "value_left": "_conf|league_int",
+            "value_right": 2,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|0|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|1|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|3|Text} "
+              }
+            ]
           }
         ]
       },
@@ -2806,7 +2955,7 @@
           },
           {
             "type": "text",
-            "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} und {_req|Tabelle|17|TeamName} mit jeweils {_req|Tabelle|16|Points} und {_req|Tabelle|17|Points} Punkten. "
+            "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} mit {_req|Tabelle|16|Points} Punkten und {_req|Tabelle|17|TeamName} mit {_req|Tabelle|17|Points} Punkten. "
           }
         ]
       }
@@ -2815,11 +2964,12 @@
   "sequence": {
     "type": "successively"
   },
-  "run_config": [
-    {
-      "name": "league",
+  "run_config": {
+    "league": {
+      "type": "enum",
       "display_name": "Liga",
-      "possible_values": [
+      "optional": false,
+      "enum_values": [
         {
           "value": 1,
           "display_value": "1. Bundesliga"
@@ -2827,21 +2977,15 @@
         {
           "value": 2,
           "display_value": "2. Bundesliga"
-        },
-        {
-          "value": 3,
-          "display_value": "3. Bundesliga"
         }
       ]
     }
-  ],
+  },
   "presets": {
-    "football_1": {
-      "color": "black",
-      "font_size": 74,
-      "font": "fonts/Dosis-Bold.ttf"
-    },
     "football_2": {
+      "anchor_point": "center",
+      "pos_x": 960,
+      "pos_y": 100,
       "color": "white",
       "font_size": 35,
       "font": "fonts/Dosis-Bold.ttf"
@@ -2852,6 +2996,7 @@
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_4": {
+      "anchor_point": "center",
       "color": "black",
       "font_size": 65,
       "font": "fonts/Dosis-Bold.ttf"
@@ -2862,6 +3007,7 @@
       "font": "fonts/Dosis-Bold.ttf"
     },
     "football_6": {
+      "anchor_point": "center",
       "color": "#858582",
       "font_size": 60,
       "font": "fonts/Dosis-Bold.ttf"

@@ -1,6 +1,7 @@
 {
   "id": 1,
   "name": "twitter",
+  "info": "Das Video enthält eine Wordcloud zu aus den meist verwendeten Hashtags zu ausgewählten Hashtags",
   "api": {
     "type": "request",
     "api_key_name": "twitter",
@@ -23,6 +24,26 @@
     }
   },
   "transform": [
+    {
+      "type": "split_string",
+      "keys": [
+        "_conf|size_wordcloud"
+      ],
+      "delimiter": "x",
+      "ignore_case": true
+    },
+    {
+      "type": "convert",
+      "keys": [
+        "_conf|size_wordcloud|0",
+        "_conf|size_wordcloud|1"
+      ],
+      "new_keys": [
+        "_conf|width_wordcloud",
+        "_conf|height_wordcloud"
+      ],
+      "to": "int"
+    },
     {
       "type": "transform_array",
       "array_key": "_req|statuses",
@@ -47,8 +68,12 @@
             },
             {
               "type": "append",
-              "key": "_loop|text",
-              "new_key": "_req|text_all"
+              "keys": [
+                "_loop|text"
+              ],
+              "new_keys": [
+                "_req|text_all"
+              ]
             }
           ]
         }
@@ -62,10 +87,32 @@
       ]
     },
     {
-      "type": "counter",
+      "type": "remove_from_list",
       "keys": [
         "_req|text_all"
+      ],
+      "to_remove": "_conf|stopwords",
+      "use_stopwords": true,
+      "ignore_case": true
+    },
+    {
+      "type": "option",
+      "check": "_conf|normalize_words",
+      "on_true": [
+        {
+          "type": "normalize_words",
+          "keys": [
+            "_req|text_all"
+          ]
+        }
       ]
+    },
+    {
+      "type": "most_common",
+      "keys": [
+        "_req|text_all"
+      ],
+      "include_count": true
     },
     {
       "type": "sub_lists",
@@ -139,7 +186,7 @@
       ]
     },
     {
-      "type": "join",
+      "type": "to_dict",
       "keys": [
         "_req|text_all",
         "_req|text_top1",
@@ -156,7 +203,22 @@
         "_req|text_top20",
         "_req|text_top25"
       ],
-      "delimiter": " "
+      "new_keys": [
+        "_req|dict_all",
+        "_req|dict_top1",
+        "_req|dict_top2",
+        "_req|dict_top3",
+        "_req|dict_top4",
+        "_req|dict_top5",
+        "_req|dict_top6",
+        "_req|dict_top7",
+        "_req|dict_top8",
+        "_req|dict_top9",
+        "_req|dict_top10",
+        "_req|dict_top15",
+        "_req|dict_top20",
+        "_req|dict_top25"
+      ]
     },
     {
       "type": "length",
@@ -181,272 +243,78 @@
   "images": {
     "all_words_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_all}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 2000,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_all",
+      "preset": "wordcloud"
     },
     "top1_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top1}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top1",
+      "preset": "wordcloud"
     },
     "top2_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top2}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top2",
+      "preset": "wordcloud"
     },
     "top3_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top3}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top3",
+      "preset": "wordcloud"
     },
     "top4_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top4}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top4",
+      "preset": "wordcloud"
     },
     "top5_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top5}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top5",
+      "preset": "wordcloud"
     },
     "top6_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top6}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top6",
+      "preset": "wordcloud"
     },
     "top7_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top7}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top7",
+      "preset": "wordcloud"
     },
     "top8_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top8}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top8",
+      "preset": "wordcloud"
     },
     "top9_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top9}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top9",
+      "preset": "wordcloud"
     },
     "top10_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top10}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top10",
+      "preset": "wordcloud"
     },
     "top15_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top15}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top15",
+      "stopwords": "_conf|stopwords",
+      "preset": "wordcloud"
     },
     "top20_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top20}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top20",
+      "preset": "wordcloud"
     },
     "top25_wordcloud": {
       "type": "wordcloud",
-      "text": "{_req|text_top25}",
-      "stopwords": "{_conf|stopwords}",
-      "color_func_words": "{_conf|color_func_words}",
-      "parameter": {
-        "figure": "{_conf|figure}",
-        "background_color": "white",
-        "width": "_conf|width_wordcloud",
-        "height": "_conf|height_wordcloud",
-        "collocations": false,
-        "max_font_size": 400,
-        "max_words": 200,
-        "contour_width": 3,
-        "contour_color": "white",
-        "color_func": "_conf|color_func",
-        "colormap": "{_conf|colormap_words}"
-      }
+      "dict": "_req|dict_top25",
+      "preset": "wordcloud"
     },
     "wordcloud_all": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
@@ -459,170 +327,157 @@
     },
     "wordcloud_top1": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top1_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top2": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top2_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top3": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top3_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top4": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top4_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top5": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top5_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top6": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top6_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top7": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top7_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top8": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top8_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top9": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top9_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top10": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top10_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top15": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top15_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top20": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top20_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     },
     "wordcloud_top25": {
       "type": "pillow",
-      "path": "football/background.png",
+      "path": "{_conf|background_image}",
       "overlay": [
         {
           "description": "Wordcloud",
           "type": "image",
-          "color": "RGBA",
           "image_name": "top25_wordcloud",
-          "color_transparency": "FFFFFF"
+          "preset": "wordcloud_overlay"
         }
       ]
     }
@@ -670,11 +525,16 @@
   },
   "sequence": {
     "type": "custom",
+    "transitions": 0.1,
     "pattern": [
       {
         "image": "wordcloud_top1",
         "audio_l": "a1",
         "time_diff": -6
+      },
+      {
+        "image": "wordcloud_top2",
+        "time_diff": 2
       },
       {
         "image": "wordcloud_top3",
@@ -726,17 +586,88 @@
       }
     ]
   },
-  "run_config": [
-    {
-      "name": "stopwords",
-      "display_name": "Aus Wordcloud ausschließen",
-      "possible_values": [],
-      "default_value": ""
+  "run_config": {
+    "hashtags": {
+      "type": "multi_string",
+      "display_name": "Hashtags (z. B.: Bundesliga, Fußball)",
+      "optional": false,
+      "default_value": []
     },
-    {
-      "name": "colormap_words",
+    "stopwords": {
+      "type": "multi_string",
+      "display_name": "Stoppwörter (z. B.: Bundesliga, Fußball)",
+      "optional": true,
+      "default_value": []
+    },
+    "background_image": {
+      "type": "enum",
+      "display_name": "Hintergrund",
+      "optional": true,
+      "enum_values": [
+        {
+          "value": "backgrounds/white.png",
+          "display_value": "Weiß"
+        },
+        {
+          "value": "backgrounds/black.png",
+          "display_value": "Schwarz"
+        },
+        {
+          "value": "backgrounds/grey.png",
+          "display_value": "Grau"
+        },
+        {
+          "value": "backgrounds/blue.png",
+          "display_value": "Blau"
+        },
+        {
+          "value": "backgrounds/red.png",
+          "display_value": "Rot"
+        },
+        {
+          "value": "backgrounds/green.png",
+          "display_value": "Grün"
+        },
+        {
+          "value": "backgrounds/yellow.png",
+          "display_value": "Gelb"
+        },
+        {
+          "value": "backgrounds/orange.png",
+          "display_value": "Orange"
+        },
+        {
+          "value": "backgrounds/purple.png",
+          "display_value": "Lila"
+        },
+        {
+          "value": "backgrounds/brown.png",
+          "display_value": "Braun"
+        },
+        {
+          "value": "backgrounds/darkred.png",
+          "display_value": "Dunkelrot"
+        },
+        {
+          "value": "backgrounds/lightblue.png",
+          "display_value": "Hellblau"
+        },
+        {
+          "value": "backgrounds/football.png",
+          "display_value": "Fußballrasen"
+        },
+        {
+          "value": "weather/DE1Tag.png",
+          "display_value": "Wetter"
+        }
+      ],
+      "default_value": "backgrounds/white.png"
+    },
+    "colormap_words": {
+      "type": "enum",
       "display_name": "Farben der Wörter",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "magma",
           "display_value": "magma"
@@ -756,60 +687,55 @@
       ],
       "default_value": "viridis"
     },
-    {
-      "name": "color_func",
+    "color_func": {
+      "type": "sub_params",
       "display_name": "Farbverlauf",
-      "possible_values": [
-        {
-          "value": false,
-          "display_value": "Standard verwenden"
-        },
-        {
-          "value": true,
-          "display_value": "andere Farben auswählen"
+      "optional": true,
+      "sub_params": {
+        "color_func_words": {
+          "type": "enum",
+          "display_name": "Farbe",
+          "optional": false,
+          "enum_values": [
+            {
+              "value": "245 46 5 35",
+              "display_value": "Blau"
+            },
+            {
+              "value": "145 46 5 35",
+              "display_value": "Grün"
+            },
+            {
+              "value": "353 80 20 50",
+              "display_value": "Rot"
+            },
+            {
+              "value": "59 80 45 73",
+              "display_value": "Gelb"
+            },
+            {
+              "value": "0 0 60 100",
+              "display_value": "Grau"
+            },
+            {
+              "value": "0 0 0 40",
+              "display_value": "Schwarz"
+            },
+            {
+              "value": "281 66 25 70",
+              "display_value": "Lila"
+            }
+          ],
+          "default_value": "0 0 0 40"
         }
-      ],
+      },
       "default_value": false
     },
-    {
-      "name": "color_func_words",
-      "display_name": "Farbverlauf der Wörter",
-      "possible_values": [
-        {
-          "value": "245 46 5 35",
-          "display_value": "Blau"
-        },
-        {
-          "value": "145 46 5 35",
-          "display_value": "Grün"
-        },
-        {
-          "value": "353 80 20 50",
-          "display_value": "Rot"
-        },
-        {
-          "value": "59 80 45 73",
-          "display_value": "Gelb"
-        },
-        {
-          "value": "0 0 60 100",
-          "display_value": "Grau"
-        },
-        {
-          "value": "0 0 0 40",
-          "display_value": "Schwarz"
-        },
-        {
-          "value": "281 66 25 70",
-          "display_value": "Lila"
-        }
-      ],
-      "default_value": "0 0 0 40"
-    },
-    {
-      "name": "shape",
+    "figure": {
+      "type": "enum",
       "display_name": "Form der Wordcloud",
-      "possible_values": [
+      "optional": true,
+      "enum_values": [
         {
           "value": "circle",
           "display_value": "Kreis"
@@ -820,8 +746,67 @@
         }
       ],
       "default_value": "circle"
+    },
+    "normalize_words": {
+      "type": "boolean",
+      "display_name": "Wörter normalisieren",
+      "optional": true,
+      "default_value": true
+    },
+    "size_wordcloud": {
+      "type": "enum",
+      "display_name": "Größe der Wordcloud (in Pixeln)",
+      "optional": true,
+      "enum_values": [
+        {
+          "value": "426x240",
+          "display_value": "426 x 240 "
+        },
+        {
+          "value": "640x360",
+          "display_value": "640 x 360"
+        },
+        {
+          "value": "854x480",
+          "display_value": "854 x 480"
+        },
+        {
+          "value": "1280x720",
+          "display_value": "1.280 x 720"
+        },
+        {
+          "value": "1000x1000",
+          "display_value": "1.000 x 1.000"
+        },
+        {
+          "value": "1920x1080",
+          "display_value": "1.920 x 1.080"
+        }
+      ],
+      "default_value": "1000x1000"
     }
-  ],
+  },
   "presets": {
+    "wordcloud": {
+      "stopwords": "_conf|stopwords",
+      "use_global_stopwords": false,
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 2000,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "wordcloud_overlay": {
+      "color": "RGBA",
+      "color_transparency": "FFFFFF"
+    }
   }
 }

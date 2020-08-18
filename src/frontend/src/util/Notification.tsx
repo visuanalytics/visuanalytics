@@ -1,43 +1,42 @@
 import React from "react";
-import {
-  Snackbar,
-  IconButton,
-  SnackbarContent,
-  makeStyles,
-} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import DoneOutlinedIcon from "@material-ui/icons/DoneOutlined";
-import { NotificationContent } from "./NotificationContent";
-import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
+import { Snackbar } from "@material-ui/core";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
-const useStyles = makeStyles({
-  message: {
-    padding: "0px",
-  },
-});
+export interface NotificationState {
+  open: boolean;
+  message: string;
+  severity: AlertProps["severity"];
+}
 
-const Message_States = (message: string) => ({
-  error: {
-    style: { backgroundColor: "#f44336" },
-    message: (
-      <NotificationContent>
-        <ErrorOutlineOutlinedIcon />
-        {message}
-      </NotificationContent>
-    ),
-  },
-  success: {
-    style: { backgroundColor: "#4caf50" },
-    message: (
-      <NotificationContent>
-        <DoneOutlinedIcon />
-        {message}
-      </NotificationContent>
-    ),
-  },
-});
+export type NotificationAction =
+  | { type: "reportSuccess"; message: string }
+  | { type: "reportError"; message: string }
+  | { type: "close" };
 
-export type TMessageStates = "error" | "success";
+export const notifcationReducer = (
+  state: NotificationState,
+  action: NotificationAction
+): NotificationState => {
+  switch (action.type) {
+    case "reportSuccess":
+      return {
+        open: true,
+        message: action.message,
+        severity: "success",
+      };
+    case "reportError":
+      return {
+        open: true,
+        message: action.message,
+        severity: "error",
+      };
+    case "close":
+      return {
+        ...state,
+        open: false,
+      };
+  }
+};
 
 interface Props {
   handleClose: (
@@ -46,37 +45,26 @@ interface Props {
   ) => void;
   open: boolean;
   message: string;
-  type: TMessageStates;
+  severity: AlertProps["severity"];
 }
 
 export const Notification: React.FC<Props> = ({
   message,
   handleClose,
   open,
-  type,
+  severity,
 }) => {
-  const classes = useStyles();
-  const settings = Message_States(message)[type];
-
   return (
     <Snackbar
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       open={open}
       autoHideDuration={3000}
+      resumeHideDuration={3000}
       onClose={handleClose}
     >
-      <SnackbarContent
-        style={settings.style}
-        message={settings.message}
-        classes={classes}
-        action={
-          <React.Fragment>
-            <IconButton size="small" color="inherit" onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
+      <MuiAlert severity={severity} elevation={6} variant="filled">
+        {message}
+      </MuiAlert>
     </Snackbar>
   );
 };

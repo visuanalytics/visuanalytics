@@ -1,42 +1,67 @@
 import React from "react";
-import { Fade } from "@material-ui/core";
-import { useStyles, InputField } from "../style";
-import { Param } from "../../util/param";
-import { renderParamField } from "../../util/renderParamFields";
-import { Load } from "../../util/Load";
+import {Fade, Divider} from "@material-ui/core";
+import {useStyles} from "../style";
+import {Param, ParamValues} from "../../util/param";
+import {Load, LoadFailedProps} from "../../Load";
+import {ParamFields} from "../../ParamFields";
 
-interface ParamSelectionProps {
-    topicId: number;
-    params: Param[];
-    fetchParamHandler: (params: Param[]) => void;
-    selectParamHandler: (key: string, value: string) => void;
+export interface ParamSelectionProps {
+    topicNames: string[];
+    params: Param[][] | undefined;
+    values: ParamValues;
+    loadFailedProps: LoadFailedProps | undefined;
+    selectParamHandler: (key: string, value: any, idx: number) => void;
+    style?: React.CSSProperties;
 }
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     const classes = useStyles();
+    const params = props.params;
+    const values = props.values;
+    const topicNames = props.topicNames;
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        props.selectParamHandler(name, event.target.value);
+    const renderParamFields = (params: Param[] | undefined, topicName: string, idx: number) => {
+        return (
+            <div key={idx}>
+                <div className={classes.MPaddingTB}>
+                    <div style={{textAlign: "center"}}>
+                        <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
+                    </div>
+                </div>
+                <ParamFields
+                    params={params}
+                    values={values[idx]}
+                    selectParamHandler={props.selectParamHandler}
+                    disabled={false}
+                    required={true}
+                    index={idx}
+                />
+                <Divider/>
+            </div>
+        )
     }
-
 
     return (
         <Fade in={true}>
-            <div>
-                <Load data={props.params} />
-                {props.params.length !== 0
-                    ?
-                    props.params.map((p: Param) =>
-                        <div className={classes.paddingSmall} key={p.name}>
-                            {renderParamField(p, InputField, false, true, (e) => {
-                                handleChange(e, p.name)
-                            })}
-                        </div>
-                    )
-                    :
-                    <div className={classes.paddingSmall}>
-                        Für dieses Thema stehen keine Parameter zur Verfügung.
-                    </div>}
+            <div className={classes.centerDivMedium} style={props.style}>
+                {
+                    props.loadFailedProps
+                        ?
+                        (
+                            <Load data={params && (params.length === (topicNames.length))}
+                                  failed={props.loadFailedProps}
+                                  className={classes.SPaddingTB}>
+                                {params?.map((p, idx) => renderParamFields(p, topicNames[idx], idx))}
+                            </Load>
+                        )
+                        :
+                        (
+                            <div className={classes.SPaddingTB}>
+                                {params?.map((p, idx) => renderParamFields(p, topicNames[idx], idx))}
+                            </div>
+                        )
+                }
+
             </div>
         </Fade>
 

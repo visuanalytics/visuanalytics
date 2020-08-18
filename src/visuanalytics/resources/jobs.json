@@ -6,13 +6,35 @@
       "steps": "weather_germany",
       "schedule": {
         "times": [
-          "14:50"
+          "14:02"
         ],
         "daily": true
       },
       "config": {
         "thumbnail": true,
-        "keep_count": 3
+        "attach": [
+          {
+            "steps": "twitter",
+            "config": {
+              "hashtags": [
+                "Bundesliga",
+                "Fußball"
+              ],
+              "stopwords": [
+                "Bundesliga",
+                "Werder"
+              ],
+              "normalize_words": true,
+              "colormap_words": "viridis",
+              "color_func": true,
+              "color_func_words": "145 46 5 35",
+              "figure": "circle",
+              "width_wordcloud": 1000,
+              "height_wordcloud": 1000
+            }
+          }
+        ],
+        "separate_rendering": true
       }
     },
     {
@@ -74,18 +96,22 @@
       },
       "config": {
         "hashtags": [
-          "Bundesliga",
-          "Fußball"
+          "Bundesliga"
         ],
-        "stopwords": " ",
+        "stopwords": [
+          "Bundesliga"
+        ],
         "thumbnail": true,
+        "normalize_words": true,
         "colormap_words": "viridis",
+        "background_image": "backgrounds/football.png",
         "color_func": true,
         "color_func_words": "145 46 5 35",
         "figure": "circle",
-        "width_wordcloud": 1000,
-        "height_wordcloud": 1000,
-        "keep_count": 3
+        "size_wordcloud": "1000x1000",
+        "fix_names": {
+          "count": 3
+        }
       }
     }
   ]

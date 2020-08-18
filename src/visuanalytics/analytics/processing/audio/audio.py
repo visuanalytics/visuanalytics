@@ -19,19 +19,22 @@ logger = logging.getLogger(__name__)
 GENERATE_AUDIO_TYPES = {}
 
 
-def get_audio_config(values: dict, data: StepData):
+def _get_audio_config(values: dict, data: StepData):
     config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
 
-    # If Config in Step Json is pressent use That config
+    # If config in step-JSON is present, use that config
     config.update(custom_config)
+
+    # Init _audio with audio config
+    data.insert_data("_audio|_conf", config, {})
 
     return config
 
 
 @raise_step_error(AudioError)
 def generate_audios(values: dict, data: StepData):
-    config: dict = get_audio_config(values, data)
+    config: dict = _get_audio_config(values, data)
 
     audio_func = get_type_func(config, GENERATE_AUDIO_TYPES)
     audio_func(values["audio"]["audios"], data, config)
@@ -46,7 +49,7 @@ def default(values: dict, data: StepData, config: dict):
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
-        sub_pairs = data.format_json(config.get("sub_pairs", None), None, values)
+        sub_pairs = data.deep_format(config.get("sub_pairs", None), values=values)
 
         if sub_pairs:
             for key in sub_pairs:
@@ -63,7 +66,7 @@ def default(values: dict, data: StepData, config: dict):
 
 @register_generate_audio
 def custom(values: dict, data: StepData, config: dict):
-    logger.info("Generate Audio with Custom Audio Config")
+    logger.info("Generate audio with custom audio config")
 
     _prepare_custom(config.get("prepare", None), data, config)
 
@@ -71,46 +74,42 @@ def custom(values: dict, data: StepData, config: dict):
         text = part.audio_parts(values[key]["parts"], data)
 
         data.data["_audio"]["text"] = text
-        # TODO set Testing to false
         generate = config["generate"]
         generate["include_headers"] = True
-        response = api_request(generate, data, "audio", True)
+        api_request(generate, data, "audio", "_audio|gen", True)
 
-        values[key] = _save_audio(response, data, config)
+        values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
-    data.data["_audio"] = {}
-
     if values is not None:
-        # TODO(Max) Solve better
-        data.data["_audio"]["pre"] = api_request(values, data, "audio", True)
+        api_request(values, data, "audio", "_audio|pre", True)
 
 
 def _save_audio(response, data: StepData, config: dict):
     post_generate = config.get("post_generate", {})
     extension = data.format(post_generate["file_extension"]) if post_generate.get("file_extension",
                                                                                   None) is not None else None
-    # If Multiple request were Used, get just the Request with the audio file
+    # If multiple requests were used, get only the request with the audio file
     if config["generate"]["type"].startswith("request_multiple"):
-        audio_idx = data.format(config["generate"]["audio_idx"], {})
+        audio_idx = data.format(config["generate"]["audio_idx"])
         response = response[audio_idx]
 
     content_type = response["headers"]["content-type"]
     audio = response["content"]
 
-    # If Content Type is json Try to decode json String with base64
+    # If content type is JSON, try to decode JSON-String with base64
     if content_type.startswith("application/json"):
-        # Get Audio String
+        # Get audio string
         audio = data_get_pattern(data.format(post_generate["audio_key"]), audio)
         # decode Audio Key with base64
         audio = base64.b64decode(audio)
     elif extension is None:
-        # Check if Content type is an audio Type
+        # Check if content type is an audio type
         if not content_type.startswith("audio"):
             raise InvalidContentTypeError(None, content_type, "'audio/*'")
 
-        # Get File Extention from Mime Type:
+        # Get file extention from mime type:
         extension = mimetypes.guess_all_extensions(content_type)[0].replace(".", "")
 
     audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension)
