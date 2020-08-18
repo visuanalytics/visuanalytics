@@ -24,10 +24,7 @@ verarbeitet und visualisiert werden sollen.
 In der JSON-StepsConfig-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
 Die Daten aus der API und die Konfigurationen, welche bei der Job-Erstellung festgelegt wurden, werden in einer JSON-Ausgabe-Datei gespeichert.
 Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-StepsConfig-Datei "transform"-Typen verwendet.
-Des Weiteren können auch Daten mit "images"-Typen visualisiert werden. 
-
-Um auf die Daten der JSON-Ausgabe-Datei zuzugreifen und diese modifizieren zu können, gibt es verschiedene Methoden, 
-je nachdem welche Datentypen, die jeweils benötigten Daten besitzen. 
+Des Weiteren können auch Daten mit "images"-Typen visualisiert werden.
 
 Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
@@ -39,16 +36,16 @@ Es gibt einen Ordner `resources` in dem alle Bilder, Audiodateien, die API-Antwo
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
 Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
-```info::
+```note::
   Der `resources` Ordner befindet sin in `src/visuanalytics/` (bzw. inerhalb des Docker-Containers in `/home/appuser/visuanalytics/`)
 ```
 
 **Unter Ordner**:
 
-- **`Bilder`**: `images` (Dieser muss bei der Pfad angabe nicht angegeben werden)
-- **`Schriftarten`**: `fonts` (Diesr muss bei der Pfad angabe angegeben werden)
-- **`Themen`**: `steps` (Hier befinden sich alle JSON-StepsConfig-Dateien)
-- **`Stopwords`**:  `stopwords` (Hier befindet sich die Datei für die Globalen Stopwords)
+- _Bilder_: `images` (Dieser muss bei der Pfad angabe nicht angegeben werden)
+- _Schriftarten_: `fonts` (Diesr muss bei der Pfad angabe angegeben werden)
+- _Themen_: `steps` (Hier befinden sich alle JSON-StepsConfig-Dateien)
+- _Stopwords_:  `stopwords` (Hier befindet sich die Datei für die Globalen Stopwords)
 
 **Beispiele**
 
@@ -126,11 +123,11 @@ Hier wird der wert des Keys gespeichert. Diese variable ist nur in den meisten [
 
 **`_loop`**:
 
-Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform) typen [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict).
+Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen [loop](#loop), [transform_array](#transform_array), [transform_dict](#transform_dict) und bei den [api]-Typen [request_multiple](#request_multiple) und [request_multiple_custom](#request_multiple_custom).
 
 **`_idx`**:
 
-Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform) typen: [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict).
+Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict) und bei den [api]-Typen [request_multiple](#request_multiple) und [request_multiple_custom](#request_multiple_custom).
 
 **`_pipe_id`**:
 
@@ -222,7 +219,7 @@ Um auf einen Wert mit nicht festgelegten Daten type zuzugreifen, verwendet man f
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
-Daten der API. Die Responses können auch .csv-Dateien sein.
+Daten der API. Die Responses können auch XML-Daten enthalten.
 
 ### request
 
@@ -247,11 +244,11 @@ Führt eine **https**-Request durch.
 
 **`url_pattern`**:
 
-Die zu verwendende `URL`, um die API-Request zu senden.
+str - Die zu verwendende `URL`, um die API-Request zu senden.
 
 **`api_key_name`** _(optional)_:
 
-Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
+str - Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
 
 - _Fehler_:
 
@@ -260,6 +257,75 @@ Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurati
 - _Special Variablen_:
 
   - `api_key` -> Beinhaltet den Api-Key hinter `api_key_name`.
+
+**`headers`** _(optional)_:
+
+any - Die [Http Header](https://developer.mozilla.org/de/docs/Web/HTTP/Headers) für den request.
+
+**`params`** _(optional)_:
+
+any - Die URL-Paramter des Requests. Die Angabe erfolg als key, value Paare.
+
+_Beispiel__
+
+In der JSON:
+
+~~~JSON
+{
+  "url_pattern": "https://test.de",
+  "params": {
+    "test": "test_value",
+    "test1": "test_value_1"
+  }
+}
+~~~
+
+URL nach dem Zusammenbauen:
+
+`https://test.de?test=test_value&test1=test_value_1`
+
+**`body`** _(Optional)_:
+
+any - Der zu verwendende Request-Body. Dieser kann entweder ein Json-Objekt oder ein String sein (Für Definition des Typen siehe `body_type`).
+
+**`body_type`** _(Optional)_:
+
+str - Der Datentype des Bodys.
+
+- _mögliche Werte_:
+  - `json` (Standart)
+  - `other`
+
+**`method`** _(Optional)_:
+
+str - Die zu verwendende [HTTP-Request methode](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
+
+- _mögliche Werte`_:
+  - `GET` (Standart)
+  - `POST`
+  - `PUT`
+  - `DELETE`
+
+**`body_encoding`** _(Optional)_:
+
+str - Die Encodierung mit welcher der Wert in `body_type` encodiert werden soll (z.B.: `utf-8`).
+
+```note::
+  Diese ist nur für den `body_type` `ohter` möglich.
+```
+
+**`response_format`** _(optional)_:
+
+str - Der Datentype des Response-Bodys.
+
+- _mögliche Werte`_:
+  - `json` (Standart)
+  - `text`
+  - `other`
+
+```note::
+  Der wert `Other` sollte nur bei der `Audio Konfiguration <./audio-apis.md>`_ verwendet werden
+```
 
 <!--TODO-->
 
