@@ -8,6 +8,9 @@ _Benötigte Software_:
 
 - [Docker](https://www.docker.com/products/docker-desktop)
 
+Unter Windows muss ggf. noch ein Windows Subsystem for Linux installiert werden. 
+Weitere Informationen [hier](https://docs.docker.com/docker-for-windows/wsl/)
+
 _Docker-Container erstellen:_
 
 ```shell
