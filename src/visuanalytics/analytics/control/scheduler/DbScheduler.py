@@ -18,7 +18,7 @@ class DbScheduler(Scheduler):
         logger.info(f"Check if something needs to be done at: {now}")
 
         for row in job.get_job_schedules():
-            # check if time is current Time
+            # check if time is current time
             if not self._check_time(now, datetime.strptime(row["time"], "%H:%M").time()):
                 continue
 

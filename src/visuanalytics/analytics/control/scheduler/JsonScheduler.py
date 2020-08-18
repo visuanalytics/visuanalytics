@@ -28,7 +28,7 @@ class JsonScheduler(Scheduler):
             delete_on_time(jobs, config_manager.STEPS_BASE_CONFIG["output_path"])
 
         for job in jobs.get("jobs", []):
-            # if Time is not current continue
+            # if time is not current continue
             # TODO error if time is not set
             if not self._check_time(now, datetime.strptime(job["schedule"]["time"], "%H:%M").time()):
                 continue
@@ -41,10 +41,10 @@ class JsonScheduler(Scheduler):
             if "weekday" in job and not now.weekday() in job["schedule"]["weekday"]:
                 continue
 
-            # if daily is set and not True continue
+            # if daily is set and not true continue
             if "daily" in job and not job["schedule"]["daily"]:
                 continue
 
-            # If Step id is valid run
+            # If step id is valid run
             logger.info(f"Job {job['id']}:'{job['name']}' started")
             self._start_job(job['id'], job['name'], job["steps"], job.get("config", {}))
