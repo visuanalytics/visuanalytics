@@ -1,10 +1,11 @@
 # Steps Config 
 
-Die JSON-Datei zu einem Job hat folgende Abschnitte:
+Die JSON-Datei zu einem Thema hat folgende Abschnitte:
 ```JSON
 {
 "id": 1,
 "name": "name_des_videos",
+"info": "",
 "api": {},
 "transform": [],
 "storing": [],
@@ -16,25 +17,10 @@ Die JSON-Datei zu einem Job hat folgende Abschnitte:
 "presets": {}
 }
 ```
-Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id` und `name` gibt es mehrere Typen, aus denen bei 
+Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id`, `name` und`info` gibt es mehrere Typen, aus denen bei 
 den einzelnen Abschnitten ausgewählt werden kann, je nachdem wie das Video am Ende aussehen soll und wie die Daten 
 verarbeitet und visualisiert werden sollen.
 
-Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
-
-## Datenzugriffe
-
-### JSON-Ausgabe-Datei
-Die JSON-Ausgabe-Datei enthält die ggf. modifizierte API-Antwort und die Konfigurationsparameter. D.h. sie stellt alle für 
-die Video-Generierung benötigten und relevanten Daten bereit. Sie hat die folgenden zwei Abschnitte:
-
-**`_req`**: 
-In der JSON-Datei stehen die Daten aus der API-Antwort unter dem Abschnitt `_req`.
-
-**`_conf`**: 
-In der JSON-Datei stehen die Konfigurationsdaten, die bei der Job-Erstellung festgelegt und ausgewählt wurden unter dem Abschnitt `_conf`.
-
-### JSON-StepsConfig-Datei
 In der JSON-StepsConfig-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
 Die Daten aus der API und die Konfigurationen, welche bei der Job-Erstellung festgelegt wurden, werden in einer JSON-Ausgabe-Datei gespeichert.
 Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-StepsConfig-Datei "transform"-Typen verwendet.
@@ -43,76 +29,66 @@ Des Weiteren können auch Daten mit "images"-Typen visualisiert werden.
 Um auf die Daten der JSON-Ausgabe-Datei zuzugreifen und diese modifizieren zu können, gibt es verschiedene Methoden, 
 je nachdem welche Datentypen, die jeweils benötigten Daten besitzen. 
 
-Die verschiedenen Datenzugriffe werden im Folgenden aufgeführt und erläutert.
+Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
+## Datenzugriffe
 
 ### Pfade
 
-Es gibt einen Ordner "resources" in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
+Es gibt einen Ordner `resources` in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
 Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
-**Beispiel**
+```info::
+  Der `resources` Ordner befindet sin in `src/visuanalytics/` (bzw. inerhalb des Docker-Containers in `/home/appuser/visuanalytics/`)
+```
+
+**Unter Ordner**:
+
+- **`Bilder`**: `images` (Dieser muss bei der Pfad angabe nicht angegeben werden)
+- **`Schriftarten`**: `fonts` (Diesr muss bei der Pfad angabe angegeben werden)
+- **`Themen`**: `steps` (Hier befinden sich alle JSON-StepsConfig-Dateien)
+- **`Stopwords`**:  `stopwords` (Hier befindet sich die Datei für die Globalen Stopwords)
+
+**Beispiele**
+
+_Ordnerstrucktur_:
+
+~~~
+resources
+|   
++---fonts
+|       Dosis-Bold.ttf
+|       
++---images
+|   \---football
+|           Matchday.png
+|           
++---steps
+|       (...)
+|
+\---stopwords
+        stopwords.txt
+~~~
+
+_Bilder_:
+
 ```JSON
 {
 "path": "football/Matchday.png"
 }
 ```
 
-### string
-Um auf einen String in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+_Schriftarten_:
 
-**Beispiel**
 ```JSON
 {
-"text": "{_req|text}",
-"stopwords": "{_conf|stopwords}"
+  "font": "fonts/Dosis-Bold.ttf"
 }
 ```
-
-### boolean
-Um auf einen boolean-Wert in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-**Beispiel**
-```JSON
-{
-"collocations": "_conf|collocations",
-"color_func": "_conf|color_func"
-}
-```
-### number
-Um auf einen Zahlenwert (int, double, float) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-**Beispiel**
-```JSON
-{
-"width": "_conf|width_wordcloud",
-"height": "_conf|height_wordcloud"
-}
-```
-
-### dict
-Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-**Beispiel**
-```JSON
-{
-"dict": "_conf|value"
-}
-```
-
-### list
-Um auf ein Array/eine Liste (list) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-**Beispiel**
-```JSON
-{
-"list": "_conf|value"
-}
-```
-
-### Typen
-
-In der JSON-StepsConfig-Datei gibt es Typen zu den - zu Beginn dieser Seite genannten - Abschnitten:
-`api`, `transform`, `images`, `thumbnail`, `audio` und `sequence`.
 
 ### Key/New Key
+
 Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet kann die key/new_key-Syntax.
 Man hat einen Text, den man verändern und neu abspeichern möchte. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
 Key `text1` abgespeichert. Den modifizierten Text kann man nun wieder unter `text1` abspeichern, indem man keinen neuen Key mit `new_key` angibt. 
@@ -127,6 +103,85 @@ Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verw
     "new_key": "_req|text_transformed"
 }
 ```
+
+### Daten Typen 
+
+In der JSON-StepsConfig-Datei gibt es Typen zu den - zu Beginn dieser Seite genannten - Abschnitten:
+`api`, `transform`, `images`, `thumbnail`, `audio` und `sequence`.
+
+#### string
+Um auf einen String zuzugreifen, verwendet man folgende Syntax. 
+
+**Beispiel**
+```JSON
+{
+"text": "{_req|text}",
+"stopwords": "{_conf|stopwords}"
+}
+```
+
+**TODO**: {} beschreibung
+
+#### boolean
+Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax. 
+
+**Beispiel**
+```JSON
+{
+  "collocations": "_conf|collocations",
+  "color_func": true
+}
+```
+#### number
+Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende Syntax. 
+
+**Beispiel**
+```JSON
+{
+  "width": "_conf|width_wordcloud",
+  "height": 10
+}
+```
+
+#### dict
+Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+
+**Beispiel**
+```JSON
+{
+  "dict": "_conf|value",
+  "dict": {
+      "test": "hallo"
+    }
+}
+```
+
+#### list
+Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax.
+
+**Beispiel**
+```JSON
+{
+  "list": "_conf|value",
+  "list2": [
+    "test",
+    "test"
+  ]
+}
+```
+
+#### any
+Um auf einen Wert mit nicht festgelegten Daten type zuzugreifen, verwendet man folgende Syntax.
+
+**Beispiel**:
+```JSON
+{
+  "any": "$_conf|value"
+}
+```
+
+**TODO**
+
 ## Api
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
