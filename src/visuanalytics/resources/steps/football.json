@@ -123,6 +123,16 @@
       "pattern": "{_conf|league}. Fußball Bundesliga"
     },
     {
+      "type": "convert",
+      "keys": [
+        "_conf|league"
+      ],
+      "new_keys": [
+        "_conf|league_int"
+      ],
+      "to": "int"
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|Spiele",
       "transform": [
@@ -454,20 +464,6 @@
             "_req|Tabelle|0|Text"
           ]
         }
-      ],
-      "on_lower": [
-        {
-          "type": "random_value",
-          "array": [
-            "{_req|Tabelle|0|TeamName} übernimmt die Führung. ",
-            "Auf Platz 1 liegt {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten. ",
-            "{_req|Tabelle|0|TeamName} liegt auf dem ersten Platz mit {_req|Tabelle|0|Points} Punkten. ",
-            "Tabellenführer ist aktuell {_req|Tabelle|0|TeamName} mit {_req|Tabelle|0|Points} Punkten."
-          ],
-          "new_keys": [
-            "_req|Tabelle|0|Text"
-          ]
-        }
       ]
     },
     {
@@ -526,41 +522,127 @@
       "value_right": 0,
       "on_equal": [
         {
-          "type": "random_value",
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
-            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
-            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ],
       "on_higher": [
         {
-          "type": "random_value",
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
-            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
-            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} ist aufgestiegen auf den vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Gefolgt von {_req|Tabelle|1|TeamName} auf dem vierten Platz. ",
+                "Auf Platz 4 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} übernimmt den vierten Platz mit {_req|Tabelle|3|Points} Punkten.",
+                "{_req|Tabelle|3|TeamName} nun auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten."
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} ist aufgestiegen auf den vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Gefolgt von {_req|Tabelle|1|TeamName} auf dem vierten Platz. ",
+                "Auf Platz 4 liegt {_req|Tabelle|1|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} übernimmt den vierten Platz mit {_req|Tabelle|3|Points} Punkten.",
+                "{_req|Tabelle|3|TeamName} nun auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten."
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ],
       "on_lower": [
         {
-          "type": "random_value",
-          "array": [
-            "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
-            "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
-            "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
-            "Auf den 4. Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
-          ],
-          "new_keys": [
-            "_req|Tabelle|3|Text"
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 1,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang - und damit aktuell für die Championsleague qualifiziert - liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Auf den vierten Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_conf|league_int",
+          "value_right": 2,
+          "on_equal": [
+            {
+              "type": "random_value",
+              "array": [
+                "Auf dem vierten Rang liegt {_req|Tabelle|3|TeamName}. ",
+                "Auf Platz 4 liegt {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points} Punkten. ",
+                "{_req|Tabelle|3|TeamName} liegt auf dem vierten Platz mit {_req|Tabelle|3|Points} Punkten. ",
+                "Auf den vierten Platz abgestiegen ist {_req|Tabelle|3|TeamName} mit {_req|Tabelle|3|Points}. "
+              ],
+              "new_keys": [
+                "_req|Tabelle|3|Text"
+              ]
+            }
           ]
         }
       ]
@@ -2814,24 +2896,54 @@
       "a10": {
         "parts": [
           {
-            "type": "text",
-            "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+            "type": "compare",
+            "value_left": "_conf|league_int",
+            "value_right": 1,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|0|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|1|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|3|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "Auf den Europaleague Plätzen liegen {_req|Tabelle|4|TeamName} mit {_req|Tabelle|4|Points} Punkten und {_req|Tabelle|5|TeamName} mit {_req|Tabelle|5|Points} Punkten.  "
+              }
+            ]
           },
           {
-            "type": "text",
-            "pattern": "{_req|Tabelle|0|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "{_req|Tabelle|1|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "{_req|Tabelle|3|Text} "
-          },
-          {
-            "type": "text",
-            "pattern": "Auf den Europaleague Plätzen liegen {_req|Tabelle|4|TeamName} mit {_req|Tabelle|4|Points} Punkten und {_req|Tabelle|5|TeamName} mit {_req|Tabelle|5|Points} Punkten.  "
+            "type": "compare",
+            "value_left": "_conf|league_int",
+            "value_right": 2,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Tabelle nach dem {_req|Spieltag} der {league_name} sieht wie folgt aus: "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|0|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|1|Text} "
+              },
+              {
+                "type": "text",
+                "pattern": "{_req|Tabelle|3|Text} "
+              }
+            ]
           }
         ]
       },
@@ -2843,7 +2955,7 @@
           },
           {
             "type": "text",
-            "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} und {_req|Tabelle|17|TeamName} mit jeweils {_req|Tabelle|16|Points} und {_req|Tabelle|17|Points} Punkten. "
+            "pattern": "Auf den Abstiegsplätzen liegen {_req|Tabelle|16|TeamName} mit {_req|Tabelle|16|Points} Punkten und {_req|Tabelle|17|TeamName} mit {_req|Tabelle|17|Points} Punkten. "
           }
         ]
       }
@@ -2865,10 +2977,6 @@
         {
           "value": 2,
           "display_value": "2. Bundesliga"
-        },
-        {
-          "value": 3,
-          "display_value": "3. Bundesliga"
         }
       ]
     }

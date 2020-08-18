@@ -11,6 +11,7 @@ export interface ParamSelectionProps {
     values: ParamValues;
     loadFailedProps: LoadFailedProps | undefined;
     selectParamHandler: (key: string, value: any, idx: number) => void;
+    style?: React.CSSProperties;
 }
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
@@ -42,7 +43,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
 
     return (
         <Fade in={true}>
-            <div className={classes.centerDivMedium}>
+            <div className={classes.centerDivMedium} style={props.style}>
                 {
                     props.loadFailedProps
                         ?

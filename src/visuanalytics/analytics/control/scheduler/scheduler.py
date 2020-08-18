@@ -1,3 +1,4 @@
+import functools
 import logging
 import re
 import threading
@@ -11,16 +12,29 @@ from visuanalytics.util import config_manager
 logger = logging.getLogger(__name__)
 
 
+def ignore_errors(func):
+    @functools.wraps(func)
+    def ignore_error_func(*kwargs, **args):
+        try:
+            func(*kwargs, **args)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except BaseException:
+            logger.exception("An error occurred: ")
+
+    return ignore_error_func
+
+
 class Scheduler(object):
     """Klasse zum Ausführen der Jobs an vorgegebenen Zeitpunkten.
 
-    Wenn :func:`start` aufgerufen wird, testet die Funktion jede Minute, ob ein Job ausgeführt werden muss,
-     ist dies der Fall, wird die dazugehörige config aus der Datenbank geladen und
+    Wenn :func:`start` aufgerufen wird, testet die Funktion jede Minute, ob ein Job ausgeführt werden muss.
+     Ist dies der Fall, wird die dazugehörige Konfigurationsdatei aus der Datenbank geladen und
      der Job wird in einem anderen Thread ausgeführt. Um zu bestimmen, ob ein Job ausgeführt werden muss,
      werden die Daten aus der Datenbank mithilfe der Funktion :func:job.get_all_schedules` aus der Datenbak geholt
-     und getestet, ob diese jetzt ausgeführt werden mussen.
+     und getestet, ob diese jetzt ausgeführt werden müssen.
 
-    :param steps: Dictionary zum übersetzen der Step id zu einer Step Klasse.
+    :param steps: Dictionary zum Übersetzen der Step-ID zu einer Step-Klasse.
     :type steps: dict
     """
 
@@ -42,35 +56,30 @@ class Scheduler(object):
                             ).start)
         t.start()
 
+    @ignore_errors
     def _check_all(self, now):
         assert False, "Not implemented"
 
     def start(self):
-        """Started den Scheduler (Blocking).
+        """Startet den Scheduler (Blocking).
 
-        Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
-        einem andern Thread ausgeführt.
+        Testet jede Minute, ob Jobs ausgeführt werden müssen. Ist dies der Fall, werden diese in
+        einem anderen Thread ausgeführt.
         """
         logger.info("Scheduler started")
         while True:
             while True:
-                # TODO(max) vtl move try catch in for Loop to continue looping and not skip all jobs
-                try:
-                    # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
-                    self._check_all(datetime.now())
-                except (KeyboardInterrupt, SystemExit):
-                    raise
-                except:
-                    logger.exception("An error occurred: ")
+                # TODO(max) maby in onother thread to make sure it doesn't take more than a minute
+                self._check_all(datetime.now())
 
                 now = datetime.now().second
 
                 time.sleep(60 - now)
 
     def start_unblocking(self):
-        """Started den Scheduler in einem neuen Thread.
+        """Startet den Scheduler in einem neuen Thread.
 
-        Testet jede Minute, ob Jobs ausgeführt werden müssen, ist dies der Fall werden diese in
-        einem andern Thread ausgeführt.
+        Testet jede Minute, ob Jobs ausgeführt werden müssen. Ist dies der Fall, werden diese in
+        einem anderen Thread ausgeführt.
         """
         threading.Thread(target=self.start, daemon=True).start()

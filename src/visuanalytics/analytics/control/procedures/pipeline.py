@@ -78,7 +78,7 @@ class Pipeline(object):
 
     @property
     def current_step(self):
-        """int: Aktuelle Step der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
+        """int: Aktueller Step der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
         return self.__current_step
 
     @property
@@ -165,17 +165,17 @@ class Pipeline(object):
         if self.__attach_mode:
             return
 
-        # Check and Delete Video
+        # Check and delete video
         delete_video(self.steps_config, self.__config)
 
         cp_request = data.get_config("on_completion")
 
-        # IF ON Completion is in config send Request
+        # IF ON Completion is in config send request
         if cp_request is not None:
             try:
                 logger.info("Send completion notice...")
 
-                # Save Video Name and Thumbnail name to Config
+                # Save video name and thumbnail name to config
                 video_name = os.path.basename(values["sequence"])
 
                 data.insert_data("_conf|video_path", values["sequence"], {})
@@ -189,7 +189,7 @@ class Pipeline(object):
                     data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
                     data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
 
-                # Make request
+                # make request
                 api_request(cp_request, data, "", "_comp", True)
 
                 logger.info("Completion report sent out!")
@@ -200,13 +200,13 @@ class Pipeline(object):
         if self.__no_tmp_dir:
             return
 
-            # delete Directory
+            # delete directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
         logger.info("Finished cleanup!")
 
     def __error_cleanup(self, e: Exception):
-        # If thumbnail was created and the video wasn`t generatet -> remove thumbnail
+        # If thumbnail was created and the video wasn`t generated -> remove thumbnail
         if isinstance(self.__config.get("thumbnail", None), str) and self.__current_step != self.__steps_max:
             print(self.__config["thumbnail"])
             with contextlib.suppress(FileNotFoundError):
@@ -227,9 +227,9 @@ class Pipeline(object):
         self.__cleanup()
 
     def start(self):
-        """Führt alle Schritte, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind, aus.
+        """Führt alle Schritte aus, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind.
 
-        Initialisiert zuerst einen Pipeline-Ordner mit der Pipeline id. Dieser kann dann in der gesamten Pipeline zur
+        Initialisiert zuerst einen Pipeline-Ordner mit der Pipeline-ID. Dieser kann dann in der gesamten Pipeline zur
         Zwichenspeicherung von Dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehlerfall wieder gelöscht.
 
         Führt alle Schritte aus der übergebenen Steps Instanz, die in der Funktion :func:`sequence` definiert sind,

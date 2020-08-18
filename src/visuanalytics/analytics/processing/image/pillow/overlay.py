@@ -1,5 +1,5 @@
 """
-Modul welches die Pillow Image Funktionen zum erstellen und bearbeiten von Bildern beinhaltet.
+Modul, welches die Pillow Image Funktionen zum Erstellen und Bearbeiten von Bildern beinhaltet.
 """
 import numbers
 
@@ -13,15 +13,15 @@ from visuanalytics.analytics.util.type_utils import register_type_func, get_type
 from visuanalytics.util import resources
 
 OVERLAY_TYPES = {}
-"""Ein Dictionary bestehende aus allen Overlay Typ Methoden  """
+"""Ein Dictionary bestehende aus allen Overlay-Typ-Methoden.  """
 
 
 def register_overlay(func):
     """
     Fügt eine Typ-Funktion dem Dictionary OVERLAY_TYPES hinzu.
 
-    :param func: Eine Funktion
-    :return: Die übergebene Funktion
+    :param func: eine Funktion
+    :return: die übergebene Funktion
     """
     return register_type_func(OVERLAY_TYPES, ImageError, func)
 
@@ -29,13 +29,13 @@ def register_overlay(func):
 @register_overlay
 def text(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode um Text auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
+    Methode, um Text auf ein gegebenes Bild zu schreiben mit dem Bauplan, der in overlay vorgegeben ist.
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches geschrieben werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches geschrieben werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     content = step_data.format(overlay["pattern"])
     draw_func = get_type_func(overlay, DRAW_TYPES, "anchor_point")
@@ -52,15 +52,15 @@ def text(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
 @register_overlay
 def text_array(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode um ein Text-Array auf ein gegebenes Bild zu schreiben mit dem Bauplan der in overlay vorgegeben ist.
-    Im Bauplan sind mehrere Texte vorgegeben die auf das Bild geschrieben werden sollen, diese werden ausgepackt
-    und umformatiert sodass alle einzelnen overlays nacheinander an die Funktion text übergeben werden.
+    Methode, um ein Text-Array auf ein gegebenes Bild zu schreiben mit dem Bauplan, der in overlay vorgegeben ist.
+    Im Bauplan sind mehrere Texte vorgegeben, die auf das Bild geschrieben werden sollen. Diese werden ausgepackt
+    und umformatiert, sodass alle einzelnen Overlays nacheinander an die Funktion `text` übergeben werden.
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches geschrieben werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches geschrieben werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     # TODO (Max) preset arrays are not working jet
     for idx, i in enumerate(overlay["pos_x"]):
@@ -87,15 +87,15 @@ def _add_to_dict(new_overlay: dict, overlay: dict, key: str, idx: int):
 @register_overlay
 def option(values: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
-    wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
-    true oder false ist wird entweder Bauplan A oder Bauplan B ausgeführt.
+    Methode, welche zwei verschiedene Baupläne bekommt, was auf ein Bild geschrieben werden soll. Dazu
+    wird ein boolean-Wert in der step_data ausgewertet und je nachdem, ob dieser Wert
+    `true` oder `false` ist, wird entweder Bauplan A oder Bauplan B ausgeführt.
 
     :param values: Baupläne des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches geschrieben werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches geschrieben werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     chosen_text = execute_type_option(values, step_data)
 
@@ -107,15 +107,15 @@ def option(values: dict, step_data: StepData, source_img, prev_paths, draw):
 @register_overlay
 def compare(values: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode welche 2 verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll, dazu
-    wird ein boolean Wert in der Step_data ausgewertet und je nachdem ob dieser Wert
-    true oder false ist wird entweder Bauplan A oder Bauplan B ausgeführt.
+    Methode, welche verschiedene Baupläne bekommt was auf ein Bild geschrieben werden soll. Dazu
+    werden zwei Werte miteinander verglichen und je nachdem ob der `value_left` =, !=, > oder < als `value_right` ist,
+    werden unterscheidliche Baupläne ausgeführt.
 
     :param values: Baupläne des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches geschrieben werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches geschrieben werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     chosen_text = execute_type_compare(values, step_data)
 
@@ -127,13 +127,13 @@ def compare(values: dict, step_data: StepData, source_img, prev_paths, draw):
 @register_overlay
 def image(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode um ein Bild in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
+    Methode, um ein Bild in das `source_img` einzufügen, mit dem Bauplan, der in overlay vorgegeben ist.
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches das Bild eingefügt werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches das Bild eingefügt werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     if overlay.get("path", None) is None:
         image_name = step_data.format(overlay["image_name"])
@@ -167,16 +167,16 @@ def image(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
 @register_overlay
 def image_array(overlay: dict, step_data: StepData, source_img, prev_paths, draw):
     """
-    Methode um ein Bild-Array in das source_img einzufügen mit dem Bauplan der in overlay vorgegeben ist.
-    Im Bauplan sind mehrere Bilder vorgegeben die auf das Bild gesetzt werden sollen, diese werden ausgepackt
-    und umformatiert sodass alle einzelnen Bilder nacheinander an die Funktion image übergeben werden
+    Methode, um ein Bild-Array in das `source_img` einzufügen, mit dem Bauplan, der in overlay vorgegeben ist.
+    Im Bauplan sind mehrere Bilder vorgegeben, die auf das Bild gesetzt werden sollen. Diese werden ausgepackt
+    und umformatiert, sodass alle einzelnen Bilder nacheinander an die Funktion `image` übergeben werden.
 
 
     :param overlay: Bauplan des zu schreibenden Overlays
     :param step_data: Daten aus der API
-    :param source_img: Bild auf welches das Bild eingefügt werden soll
-    :param prev_paths: Alle Image Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
-    :param draw: Draw Objekt
+    :param source_img: Bild, auf welches das Bild eingefügt werden soll
+    :param prev_paths: Alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellen Bildern
+    :param draw: Draw-Objekt
     """
     for idx, i in enumerate(overlay["pos_x"]):
         if isinstance(overlay["color"], list):

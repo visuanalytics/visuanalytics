@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on So. Aug. 16 13:43:38 2020
+-- File generated with SQLiteStudio v3.2.1 on Di. Aug. 18 11:03:19 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -11,14 +11,21 @@ DROP TABLE IF EXISTS job;
 
 CREATE TABLE job
 (
-    job_id   INTEGER PRIMARY KEY AUTOINCREMENT
+    job_id          INTEGER PRIMARY KEY AUTOINCREMENT
         UNIQUE
-                     NOT NULL,
-    job_name VARCHAR NOT NULL,
-    type     VARCHAR CHECK (type IN ("daily", "weekly", "interval", "on_date") )
-                     NOT NULL,
-    date     DATE,
-    time     TIME
+                            NOT NULL,
+    job_name        VARCHAR NOT NULL,
+    type            VARCHAR CHECK (type IN ("daily", "weekly", "interval", "on_date") )
+                            NOT NULL,
+    date            DATE,
+    time            TIME,
+    delete_type     VARCHAR NOT NULL
+        CHECK (delete_type IN ("no_deletion", "on_day_hour", "fix_names", "keep_count") ),
+    days            INTEGER,
+    hours           INTEGER,
+    k_count         INTEGER,
+    fix_names_count INTEGER,
+    time_interval CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") )
 );
 
 

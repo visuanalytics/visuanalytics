@@ -1,5 +1,5 @@
 """
-Modul welches die erstellten Videos nach einem angegebenem zeitraum wieder entfernt
+Modul, welches die erstellten Videos nach einem angegebenem Zeitraum wieder entfernt.
 """
 
 import os
@@ -30,12 +30,12 @@ def delete_video(steps_config, __config):
 
 def delete_on_time(jobs: dict, output_path: str):
     """
-    Methode zum löschen alter erstellten Videos, diese löscht Video nach einem vorgegebenem zeitraum
+    Methode zum Löschen alter (erstellter) Videos nach einem vorgegebenem Zeitraum.
 
-    :param jobs: Eine Liste aller Jobs
-    :param output_path: Der Pfad zum Output Ordner
+    :param jobs: eine Liste aller Jobs
+    :param output_path: Pfad zum Output-Ordner
     """
-    logger.info("Checking if Videos needs to be deleted")
+    logger.info("Checking if videos needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     for file in files:
         for job in jobs["jobs"]:
@@ -51,19 +51,21 @@ def delete_on_time(jobs: dict, output_path: str):
                                                                   hours=time.get("hours", 0))
                         if datetime.now() > date_time_obj:
                             os.remove(resources.path_from_root(os.path.join(output_path, file)))
-                            logger.info("removal time of file " + file + " exceed, file has been deleted")
+                            logger.info("removal time of file " + file + " exceeded, file has been deleted")
                 except ValueError:
                     pass
 
 
 def delete_amount_videos(job_name: str, output_path: str, count: int):
     """
-    Methode zum löschen alter erstellten Videos, diese löscht alle Videos eines Jobs bis auf die vorgegebene Anzahl
-    :param job_name: Ein String des Job Namens
-    :param output_path: Der Pfad zum Output Ordner
-    :param count: Die Anzahl an Video die erhalten bleiben sollen
+    Methode zum Löschen alter (erstellten) Videos. Diese Methode löscht alle Videos eines Jobs bis auf die vorgegebene
+    Anzahl (die letzten x Videos sollen erhalten bleiben).
+
+    :param job_name: ein String des Job Namens
+    :param output_path: Pfad zum Output-Ordner
+    :param count: Die Anzahl an Videos, die erhalten bleiben sollen
     """
-    logger.info("Checking if Videos or Images needs to be deleted")
+    logger.info("Checking if videos or images need to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     files.sort(reverse=True)
     delete = [[0, False], [0, False]]
@@ -80,15 +82,15 @@ def delete_amount_videos(job_name: str, output_path: str, count: int):
 
 def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, values: dict, thumbnail: bool):
     """
-    Methode zum umbenenen der erstellten Video nach dem style in der config
+    Methode zum Umbenennen der erstellten Videos nach dem Style in der Config.
 
-    :param job_name: Ein String des Job Namens
-    :param fix_names: Eine Liste wie die Video zu heißen haben
-    :param output_path: Der Pfad zum Output Ordner
+    :param job_name: String des Job Namens
+    :param fix_names: eine Liste wie die Videos heißen sollen
+    :param output_path: Pfad zum Output Ordner
     :param values: Werte aus der JSON-Datei
-    :param sym: Boolean ob Thumbnails ebenso umbenannt werden sollen
+    :param sym: Boolean, ob Thumbnails ebenso umbenannt werden sollen
     """
-    logger.info("Checking if Videos or Images needs to be deleted")
+    logger.info("Checking if videos or images need to be deleted")
     out = resources.path_from_root(os.path.join(output_path))
     sym = ["", "_thumbnail"]
     format = [".mp4", ".png"]
@@ -115,11 +117,11 @@ def delete_fix_name_videos(job_name: str, fix_names: list, output_path: str, val
 
 
 def delete_memory_files(job_name: str, name: str, count: int):
-    """Löscht memory files sobald zu viele vorhanden sind.
+    """Löscht memory-Dateien, sobald zu viele vorhanden sind.
 
-    :param job_name: Job Name, von der die Funktion aufgerufen wurde.
-    :param name: Name des dicts das exportiert wurde
-    :param count: Anzahl an Memory Files die Vorhanden sein sollen (dananch wird gelöscht)
+    :param job_name: Job-Name, von dem die Funktion aufgerufen wurde.
+    :param name: Name des Dictionaries, das exportiert wurde
+    :param count: Anzahl an memory-Dateien, die vorhanden sein sollen (ältere werden gelöscht)
     """
     files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
     files.sort(reverse=True)
