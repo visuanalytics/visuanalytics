@@ -104,6 +104,42 @@ Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verw
 }
 ```
 
+### Special Variablen
+
+Es gibt einge vor definierte Special Variablen mit folgenden Keys.
+
+**`_req`**:
+
+Hier werden alle Daten aus den Requests gespeichert (siehe [api](#api)).
+
+**`_conf`**:
+
+Hier werden alle Konfigurations Variablen gespeichert (siehe [run_config](#run_config)).
+
+**`_audio`**:
+
+Hier werden alle Konfigurationen und Daten für eine Benutzerdefiniert Audio generation gespeichert (siehe [Audio Configuration](./audio-apis.md)).
+
+**`_key`**:
+
+Hier wird der wert des Keys gespeichert. Diese variable ist nur in den meisten [transform](#transform) typen gesetzt.
+
+**`_loop`**:
+
+Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform) typen [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict).
+
+**`_idx`**:
+
+Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform) typen: [loop](#loop), [transform_array](#transform_array) und [transform_dict](#transform_dict).
+
+**`_pipe_id`**:
+
+Die `id` der Pipline die den Job ausführt. (Diese ist ein Zufallsgenerierten String und wird inerhalb der JSON datei normalerweiße nicht benötigt).
+
+**`_job_id`**:
+
+`id` des Jobs. (Wird normalerweiße inerhalb der JSON datei nicht benötigt)
+
 ### Daten Typen 
 
 In der JSON-StepsConfig-Datei gibt es Typen zu den - zu Beginn dieser Seite genannten - Abschnitten:
@@ -212,10 +248,6 @@ Führt eine **https**-Request durch.
 **`url_pattern`**:
 
 Die zu verwendende `URL`, um die API-Request zu senden.
-
-```note::
-  Formatierte Strings werden unterstützt.
-```
 
 **`api_key_name`** _(optional)_:
 
