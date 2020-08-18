@@ -1396,7 +1396,7 @@ int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll.
 {
   "type": "add_data",
   "new_key": "new_data",
-  "pattern": "new values"
+  "data": "new values"
 }
 ```
 
@@ -1404,9 +1404,9 @@ int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll.
 
 str - Name des Keys unter dem der neue Wert gespeichert werden soll. 
 
-**`pattern`**:
+**`data`**:
 
-str - Neuer Wert, der abgespeichert werden soll. 
+any - Neuer Wert, der abgespeichert werden soll. 
 
 
 ### copy
@@ -1921,6 +1921,35 @@ ersten Vorkommen, wird dann so geschrieben wie als es das erste Mal im Array vor
 }
 ```
 
+### check_key
+
+Testet ob ein key (bzw. ein Wert hinter dem key) Vorhanden ist.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "check_key",
+  "keys": [
+    "_req|test"
+  ],
+  "init_with": "test",
+  "new_keys": [
+    "_req|check_test"
+  ]
+}
+```
+
+**`init_wiht`** _(optional)_:
+
+any - Wenn der key nicht vorhandne ist, wird dieser mit diesem wert inizalisiert.
+
+**`new_keys`** _(optional)_:
+
+Hier wird gespeichert ob der key vorhanden war oder nicht.
+
+- `true`  -> key war Vorhanden:
+- `false` -> key war **nicht** Vorhanden.
 
 ## Storing
 
@@ -2805,13 +2834,14 @@ Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der
 Wie z.B. Optionen, was die Stimme genau vorlesen soll und was nicht oder Einstellungen wie z.B. die Farbe der Wörter 
 bei der Wordcloud. Dies kann mithilfe der `transform`-Typen `option` und `compare` erreicht werden. Man gibt mögliche Werte an. 
 
-Die folgenden vier Keys müssen mit Values hinterlegt werden.
+Die werte die der Benutzer dann eingibt werden unter dem key `_conf|key` gespeichert (siehe [Special Variablen](#special-variablen)). Wobei `key` dem in der Konfig angegebenen key entspricht also z. B.: `name`.
 
-**name**:
-str - Unter `name` steht der Name des Keys, wie der Parameter intern heißt.
+### Basis Angaben
+
+Die folgenden drei Keys müssen immer angegeben werden.
 
 **type**:
-str - Hier steht der Type der Konfiguration, möglich sind: `enum`, `multi_string`
+str - Hier steht der Type der Konfiguration, möglich sind: `string`, `multi_string`, `enum`, `number`, `multi_number`
 
 **display_name**:
 str - Name des Parameters wie er im Frontend stehen soll.
@@ -2822,11 +2852,15 @@ wird ein Sternchen nach dem Display-Namen angezeigt, um zu markieren, dass dies 
 
 Je nachdem welcher Typ gewählt wurde, werden die Werte aus denen ausgewählt werden soll, angegeben.
 
-## enum
+**default_value**:
+
+Wert mit dem nicht optionale Paramter im Frontend inizalisiert werden. (Wenn `optional` `false` ist kann diese Angabe auch weggelassen werden).
+
+### enum
 
 Um im Frontend eine Auswahl als Dropdown-Menü darzustellen, wird der Typ `enum` verwendet. 
 
-**Beispiel** 
+**JSON Beispiel**
 
 ```JSON
 {
@@ -2837,22 +2871,21 @@ Um im Frontend eine Auswahl als Dropdown-Menü darzustellen, wird der Typ `enum`
           "optional": false,
           "enum_values": [
             {
-              "value": 1,
+              "value": "1",
               "display_value": "1. Bundesliga"
             },
             {
-              "value": 2,
+              "value": "2",
               "display_value": "2. Bundesliga"
-            },
-            {
-              "value": 3,
-              "display_value": "3. Bundesliga"
             }
           ]
         }
     }
 }
 ```
+
+Alle [Basis Angaben](#basis-angaben).
+
 **enum_values**:
 [{}] - Array mit Dictionaries. Ein Dictionary besteht aus `value` und `display_value`.
 
@@ -2862,10 +2895,19 @@ Wert, dem der Key (`name`) in der JSON zugewiesen ist.
 **`display_value`**:
 str - Wert, wie er im Frontend dargestellt werden soll. 
 
+```note::
+  Der bei `value` angegebene Wert wird immer als `String` (str) interpretiert.
+```
+
+**Frontend Beispiel**
+
+TODO
+
 ### string
 Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
-**Beispiel**
+**JSON Beispiel**
+
 ```JSON
 {
     "city_name": {
@@ -2876,14 +2918,19 @@ Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ al
     }
 }
 ```
-**default_value**_(optional)_:
-str - String der übergeben wird, wenn kein String eingegeben wurde.
+
+Alle [Basis Angaben](#basis-angaben).
+
+**Frontend Beispiel**
+
+TODO
 
 ### multi_string
 
 Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
-**Beispiel**
+**JSON Beispiel**
+
 ```JSON
 {
     "hashtags": {
@@ -2894,12 +2941,18 @@ Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser
     }
 }
 ```
-**`default_value`**_(optional)_:
-[] - String-Array, z.B. ein leeres String-Array, das übergeben wird, wenn kein String eingegeben wurde..
+
+Alle [Basis Angaben](#basis-angaben).
+
+**Frontend Beispiel**
+
+TODO
 
 ### boolean
 Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. Dieser Parameter wird im Frontend mit einer Checkbox angezeigt.
-**Beispiel**
+
+**JSON Beispiel**
+
 ```JSON
 {
      "read": {
@@ -2910,15 +2963,19 @@ Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. 
      }
 }
 ```
-**`default_value`**:
-bool - Wenn nichts ausgewählt wird, übergebe den hier angegebenen Parameter.
+
+Alle [Basis Angaben](#basis-angaben).
+
+**Frontend Beispiel**
+
+TODO
 
 
 ### sub_params
 Ist der obere Wert `true` so gibt es weitere Parameter, die ausgeklappt werden, wenn der Parameter auf `true` gesetzt wurde. 
 Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend mit einer Checkbox angezeigt.
 
-**Beispiel**
+**JSON Beispiel**
 ```JSON
 {
     "color_func": {
@@ -2930,16 +2987,21 @@ Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend
     }
 }
 ```
+
+Alle [Basis Angaben](#basis-angaben).
+
 **sub_params**
-{} - weitere Parametertypen, die ausgewählt werden können.
+{} - weitere [Parametertypen](#run_config), die ausgewählt werden können.
 
-**default_value**
-bool - Wenn nichts ausgewählt wird, übergebe den hier angegebenen Parameter.
+**Frontend Beispiel**
 
+TODO
 
 ### number
 Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
-**Beispiel**
+
+**JSON Beispiel**
+
 ```JSON
 {
     "city_name": {
@@ -2950,12 +3012,16 @@ Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als
     }
 }
 ```
-**default_value**_(optional)_:
-int, float, double - Zahl, die übergeben wird, wenn keine Zahl eingegeben wurde.
+
+Alle [Basis Angaben](#basis-angaben).
+
+**Frontend Beispiel**
+
+TODO
 
 ### multi_number
 Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
-**Beispiel**
+**JSON Beispiel**
 ```JSON
 {
     "temperatur": {
@@ -2966,11 +3032,16 @@ Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser 
     }
 }
 ```
-**default_value**_(optional)_:
-int, float, double - Zahlen-Array oder leeres Array, das übergeben wird, wenn keine Zahlen eingegeben wurden (falls Parameter `"optional": false`).
-Wenn `"optional": true`, dann wird `default_value` nicht benötigt.
+
+Alle [Basis Angaben](#basis-angaben).
+
+**Frontend Beispiel**
+
+TODO
 
 ## Presets
+
+**TODO**: überarbeiten/an änderungen anpassen
 
 `presets` werden verwendet, um z.B. Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben. 
 Man kann hier auch Parameter wie Weite/Höhe etc. angeben, um es leichter zu haben, wenn man mehrmals Bilder erstellen möchte, die sich nur in wenigen Parametern unterscheiden.
