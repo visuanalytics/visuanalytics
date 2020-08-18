@@ -190,6 +190,7 @@ export default function JobCreate() {
     };
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        handleHintState(activeStep - 1);
     };
 
     // handlers for topic selection logic
