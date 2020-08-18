@@ -2901,7 +2901,7 @@ str - Wert, wie er im Frontend dargestellt werden soll.
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_enum.png)
 
 ### string
 Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
@@ -2923,7 +2923,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_string.png)
 
 ### multi_string
 
@@ -2946,7 +2946,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_multi_string.png)
 
 ### boolean
 Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. Dieser Parameter wird im Frontend mit einer Checkbox angezeigt.
@@ -2968,7 +2968,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_boolean.png)
 
 
 ### sub_params
@@ -2995,7 +2995,11 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_sub_params.png)
+
+```node::
+  Wenn optional `true` ist wird Zusätzlich eine Checkbox angezeigt.
+```
 
 ### number
 Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
@@ -3017,7 +3021,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_number.png)
 
 ### multi_number
 Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
@@ -3037,7 +3041,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **Frontend Beispiel**
 
-TODO
+![Beispiel](../_static/images/usage/run_config_multi_number.png)
 
 ## Presets
 
