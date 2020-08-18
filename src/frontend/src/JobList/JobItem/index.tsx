@@ -138,12 +138,12 @@ export const JobItem: React.FC<Props> = ({
     handleEditError
   );
 
-  /*useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setNext(showTimeToNextDate(schedule));
     }, 60000);
     return () => clearInterval(interval);
-  }, [schedule]);*/
+  }, [schedule]);
 
   useEffect(() => {
     setNext(showTimeToNextDate(schedule));
