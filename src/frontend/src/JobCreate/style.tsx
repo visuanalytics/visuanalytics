@@ -13,7 +13,15 @@ export const useStyles = makeStyles((theme) => ({
     },
     header: {
         fontWeight: "normal",
-        fontSize: "large"
+        fontSize: "xlarge"
+    },
+    XLPaddingTB: {
+        paddingBottom: 30,
+        paddingTop: 30
+    },
+    LPaddingTB: {
+        paddingBottom: 20,
+        paddingTop: 20
     },
     MPaddingT: {
         paddingTop: 15

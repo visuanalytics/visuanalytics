@@ -356,7 +356,7 @@ export default function JobCreate() {
             <div>
               <Grid container>
                 <Grid item sm={1} xs={1}></Grid>
-                <Grid item sm={10} xs={9}>
+                <Grid item sm={10} xs={9} className={classes.SPaddingTB}>
                   <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                 </Grid>
                 <Grid container item sm={1} xs={2}>
@@ -367,7 +367,7 @@ export default function JobCreate() {
             <GreyDivider />
             {getSelectPanel(activeStep)}
             <GreyDivider />
-            <div className={classes.MPaddingTB}>
+            <div className={classes.LPaddingTB}>
               <span>
                 <BackButton
                   onClick={handleBack}
