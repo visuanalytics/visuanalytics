@@ -3,13 +3,15 @@ import { useStyles } from "../style";
 import Backdrop from "@material-ui/core/Backdrop";
 import {
   Dialog,
-  Container,
   Grid,
   Tooltip,
   InputBase,
   TextField,
   Paper,
   Typography,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
@@ -160,7 +162,6 @@ export const JobSettings: React.FC<Props> = ({
 
   return (
     <Dialog
-      className={classes.modal}
       open={open}
       onClose={handleClose}
       closeAfterTransition
@@ -168,8 +169,10 @@ export const JobSettings: React.FC<Props> = ({
       BackdropProps={{
         timeout: 500,
       }}
+      maxWidth="md"
+      fullWidth
     >
-      <Container className={classes.backdropContent}>
+      <DialogTitle className={classes.dialogTitle}>
         <Grid container>
           <Grid item container xs={1} justify={"flex-end"}>
             <Tooltip title="Job-Name bearbeiten" arrow>
@@ -211,11 +214,9 @@ export const JobSettings: React.FC<Props> = ({
             <HintButton content={hintContent[hintState]} />
           </Grid>
         </Grid>
-        <Paper
-          variant="outlined"
-          className={classes.paper}
-          style={{ maxHeight: 600, overflow: "auto" }}
-        >
+      </DialogTitle>
+      <DialogContent className={classes.dialogContent}>
+        <Paper variant="outlined" className={classes.dialogPaper}>
           <SettingsPage
             offset={-1}
             schedule={schedule}
@@ -232,14 +233,10 @@ export const JobSettings: React.FC<Props> = ({
             }}
           />
         </Paper>
-        <div>
-          <div style={{ textAlign: "center", paddingTop: 15 }}>
-            <ContinueButton onClick={handleCheckClick}>
-              SPEICHERN
-            </ContinueButton>
-          </div>
-        </div>
-      </Container>
+        <DialogActions className={classes.dialogActions}>
+          <ContinueButton onClick={handleCheckClick}>SPEICHERN</ContinueButton>
+        </DialogActions>
+      </DialogContent>
     </Dialog>
   );
 };

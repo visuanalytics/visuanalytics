@@ -53,6 +53,7 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
                     onChange={handleChange}
                     centered
                     indicatorColor={'secondary'}
+                    variant="fullWidth"
                 >
                     <Tab label="Generieren" value="1" />
                     <Tab label="Löschen" value="2" />

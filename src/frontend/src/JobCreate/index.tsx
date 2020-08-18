@@ -305,6 +305,7 @@ export default function JobCreate() {
               onReload: handleReloadParams,
             }}
             selectParamHandler={handleSelectParam}
+            style={{padding: "0px 24px"}}
           />
         );
       case 2:
