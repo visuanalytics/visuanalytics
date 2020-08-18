@@ -20,7 +20,7 @@ interface IParam {
     name: string;
     displayName: string;
     optional: boolean;
-    defaultValue: string;
+    defaultValue: string | undefined;
 }
 
 interface StringParam extends IParam {
@@ -142,22 +142,22 @@ export const initSelectedValues = (params: Param[] | undefined) => {
     params?.forEach(p => {
         switch (p.type) {
             case "string":
-                selected[p.name] = p.optional ? p.defaultValue : "";
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : "";
                 break;
             case "number":
-                selected[p.name] = p.optional ? p.defaultValue : "";
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : "";
                 break;
             case "enum":
-                selected[p.name] = p.optional ? p.defaultValue : "";
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : "";
                 break;
             case "multiString":
-                selected[p.name] = p.optional ? p.defaultValue : [];
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : [];
                 break;
             case "multiNumber":
-                selected[p.name] = p.optional ? p.defaultValue : [];
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : [];
                 break;
             case "boolean":
-                selected[p.name] = p.optional ? p.defaultValue : false;
+                selected[p.name] = p.optional && p.defaultValue != undefined ? p.defaultValue : false;
                 break;
             case "subParams":
                 if (p.optional) {
