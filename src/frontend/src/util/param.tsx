@@ -91,32 +91,41 @@ export const validateParamValue = (value: any, param: Param) => {
     }
 }
 
-// validate parameter values
-export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
-    if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
-        return false;
 
-    return params.every((p: Param) => {
+// get list of names of parameters with invalid values
+export const getInvalidParamNames = (values: ParamValues, params: Param[] | undefined): string[] => {
+    if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
+        return [""];
+
+    let invalid: string[] = [];
+
+    params.forEach((p: Param) => {
         switch (p.type) {
             case "subParams":
                 if (!p.optional || values[p.name]) {
-                    return p.subParams === null ? true : validateParamValues(values, p.subParams);
+                    if (p.subParams !== null) {
+                        const subInvalid = getInvalidParamNames(values, p.subParams);
+                        invalid = [...invalid, ...subInvalid];
+                    }
                 }
-                return true;
+                break;
             default:
-                return validateParamValue(values[p.name], p);
+                if (!validateParamValue(values[p.name], p)) {
+                    invalid = [...invalid, p.name];
+                }
         }
     })
+    return invalid;
 }
 
 // trim all string / string[] values and remove empty values
 export const trimParamValues = (values: ParamValues): ParamValues => {
-    let cValues: ParamValues = { ...values }
+    let cValues: ParamValues = {...values}
     Object.keys(cValues).forEach((k) => {
         if (typeof (cValues[k]) === "string") {
             const v = cValues[k].trim();
             if (v === "") {
-                const { [k]: x, ...r } = cValues;
+                const {[k]: x, ...r} = cValues;
                 cValues = r;
             } else {
                 cValues[k] = v;
@@ -124,7 +133,7 @@ export const trimParamValues = (values: ParamValues): ParamValues => {
         } else if (cValues[k] instanceof Array) {
             const v = cValues[k].map((s: any) => String(s).trim()).filter((s: string) => s !== "");
             if (v.every((s: any) => String(s) === "")) {
-                const { [k]: x, ...r } = cValues;
+                const {[k]: x, ...r} = cValues;
                 cValues = r;
             } else {
                 cValues[k] = v;
@@ -158,7 +167,7 @@ export const initSelectedValues = (params: Param[] | undefined) => {
                 }
                 let subSelected = {}
                 subSelected = initSelectedValues(p.subParams)
-                selected = { ...selected, ...subSelected };
+                selected = {...selected, ...subSelected};
         }
     })
     return selected;
@@ -171,7 +180,7 @@ export const toTypedValues = (values: ParamValues, params: Param[] | undefined) 
             let v = values[p.name];
             if (p.type === "subParams" && (!p.optional || v)) {
                 const stValues = toTypedValues(values, p.subParams);
-                tValues = { ...tValues, ...stValues };
+                tValues = {...tValues, ...stValues};
             }
             if (p.type === "number") {
                 v = Number(v);
@@ -179,11 +188,11 @@ export const toTypedValues = (values: ParamValues, params: Param[] | undefined) 
             if (p.type === "multiNumber") {
                 v = v.map((n: any) => Number(n));
             }
-            tValues[p.name] = { type: p.type, value: v };
+            tValues[p.name] = {type: p.type, value: v};
         }
         if ((p.type === "subParams" && !p.optional)) {
             const stValues = toTypedValues(values, p.subParams);
-            tValues = { ...tValues, ...stValues };
+            tValues = {...tValues, ...stValues};
         }
     })
     return tValues;

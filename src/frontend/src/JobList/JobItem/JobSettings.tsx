@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../style";
+import {useStyles} from "../style";
 import Backdrop from "@material-ui/core/Backdrop";
 import {
     Dialog,
@@ -15,11 +15,11 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
-import { HintButton } from "../../util/HintButton";
-import { SettingsPage } from "../../util/SettingsPage";
-import { ContinueButton } from "../../JobCreate/ContinueButton";
-import { Job } from "../index";
-import { DeleteSchedule } from "../../util/deleteSchedule";
+import {HintButton} from "../../util/HintButton";
+import {SettingsPage} from "../../util/SettingsPage";
+import {ContinueButton} from "../../JobCreate/ContinueButton";
+import {Job} from "../index";
+import {DeleteSchedule} from "../../util/deleteSchedule";
 import {
     Schedule,
     withFormattedDates,
@@ -30,12 +30,12 @@ import {
     ParamValues,
     toTypedValues,
     trimParamValues,
-    validateParamValues,
     initSelectedValues,
+    getInvalidParamNames,
 } from "../../util/param";
-import { hintContents } from "../../util/hintContents";
-import { useCallFetch } from "../../Hooks/useCallFetch";
-import { getUrl } from "../../util/fetchUtils";
+import {hintContents} from "../../util/hintContents";
+import {useCallFetch} from "../../Hooks/useCallFetch";
+import {getUrl} from "../../util/fetchUtils";
 
 interface Props {
     open: boolean;
@@ -47,17 +47,17 @@ interface Props {
 
 const initParamValues = (topics: any) => {
     return topics.map((t: any) => {
-        return { ...initSelectedValues(t.params), ...t.values };
+        return {...initSelectedValues(t.params), ...t.values};
     });
 };
 
 export const JobSettings: React.FC<Props> = ({
-    open,
-    onClose,
-    job,
-    handleEditSuccess,
-    reportError,
-}) => {
+                                                 open,
+                                                 onClose,
+                                                 job,
+                                                 handleEditSuccess,
+                                                 reportError,
+                                             }) => {
     const classes = useStyles();
     const [edit, setEdit] = React.useState(false);
     const [hintState, setHintState] = React.useState(0);
@@ -67,6 +67,7 @@ export const JobSettings: React.FC<Props> = ({
     const [paramValues, setParamValues] = React.useState<ParamValues[]>(
         initParamValues(job.topicValues)
     );
+    const [invalid, setInvalid] = React.useState<string[][]>([]);
 
     const handleEditError = () => {
         reportError("Bearbeitung fehlgeschlagen");
@@ -85,12 +86,11 @@ export const JobSettings: React.FC<Props> = ({
             reportError("Jobname nicht ausgefüllt");
             return;
         }
-        if (
-            !job.topicValues.every((t: any, idx: number) =>
-                validateParamValues(paramValues[idx], t.params)
-            )
-        ) {
-            reportError("Parameter nicht korrekt gesetzt");
+        const invalidValues = job.topicValues.map((t: any, idx: number) => getInvalidParamNames(paramValues[idx], t.params));
+        setInvalid(invalidValues ? invalidValues : []);
+        const paramsValid = invalidValues?.every(t => t.length === 0);
+        if (!paramsValid) {
+            reportError("Parameter nicht korrekt gesetzt")
             return;
         }
         if (!validateSchedule(schedule)) {
@@ -178,7 +178,7 @@ export const JobSettings: React.FC<Props> = ({
                                 onClick={() => setEdit((b) => !b)}
                                 className={classes.button}
                             >
-                                <EditIcon color="primary" />
+                                <EditIcon color="primary"/>
                             </IconButton>
                         </Tooltip>
                     </Grid>
@@ -189,27 +189,27 @@ export const JobSettings: React.FC<Props> = ({
                                 onChange={handleJobName}
                                 value={jobName}
                                 inputProps={{
-                                    style: { textAlign: "center", fontSize: 20 },
+                                    style: {textAlign: "center", fontSize: 20},
                                 }}
                             />
                         ) : (
-                                <InputBase
-                                    fullWidth
-                                    disabled
-                                    value={jobName}
-                                    inputProps={{
-                                        style: {
-                                            color: "black",
-                                            textAlign: "center",
-                                            fontSize: 20,
-                                            cursor: "default",
-                                        },
-                                    }}
-                                />
-                            )}
+                            <InputBase
+                                fullWidth
+                                disabled
+                                value={jobName}
+                                inputProps={{
+                                    style: {
+                                        color: "black",
+                                        textAlign: "center",
+                                        fontSize: 20,
+                                        cursor: "default",
+                                    },
+                                }}
+                            />
+                        )}
                     </Grid>
                     <Grid item container xs={1} justify={"flex-end"}>
-                        <HintButton content={hintContent[hintState]} />
+                        <HintButton content={hintContent[hintState]}/>
                     </Grid>
                 </Grid>
             </DialogTitle>
@@ -228,6 +228,7 @@ export const JobSettings: React.FC<Props> = ({
                             params: job.topicValues.map((t: any) => t.params),
                             loadFailedProps: undefined,
                             selectParamHandler: handleSelectParam,
+                            invalidValues: invalid
                         }}
                     />
                 </Paper>

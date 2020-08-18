@@ -3,7 +3,7 @@ import { MenuItem, Checkbox, Collapse, TextField, Divider, useTheme } from '@mat
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
-import { Param, ParamValues, validateParamValue } from '../util/param';
+import { Param, ParamValues } from '../util/param';
 import { BooleanParam } from './BooleanParam'
 
 
@@ -20,7 +20,8 @@ interface ParamField {
     disabled: boolean,
     required: boolean,
     values: ParamValues,
-    index: number
+    index: number,
+    invalidValues: string[]
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
@@ -43,6 +44,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                     disabled={props.disabled}
                                     required={props.required}
                                     index={props.index}
+                                    invalidValues={props.invalidValues}
                                 />
                             </div>
                         </div>
@@ -61,15 +63,13 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const [showSubParams, setShowSubParams] = React.useState(false);
-    const [invalid, setInvalid] = React.useState(false);
+    const showInvalid = props.invalidValues.includes(param.name);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        setInvalid(!validateParamValue(event.target.value, param));
         props.selectParamHandler(name, event.target.value, props.index);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
-        setInvalid(!validateParamValue(values, param));
         props.selectParamHandler(name, values, props.index);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
@@ -109,7 +109,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         value={props.values[param.name] || ""}
                         disabled={props.disabled}
                         label={param.displayName}
-                        error={invalid}
+                        error={showInvalid}
                     />
                 </div>
             )
@@ -139,13 +139,13 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     label={param.displayName}
                     value={props.values[param.name] || ""}
                     disabled={props.disabled}
-                    select>
+                    select
+                    error={showInvalid}>
                     {param.enumValues.map((val) => (
                         <MenuItem key={val.value} value={val.value.toString()}>
                             {val.displayValue}
                         </MenuItem>
                     ))}
-                    error={invalid}
                 </TextField>
             )
         case "subParams":
@@ -183,6 +183,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             disabled={props.disabled}
                             required={props.required}
                             index={props.index}
+                            invalidValues={props.invalidValues}
                         />
                     </Collapse>
                     {((props.values[param.name] || showSubParams))

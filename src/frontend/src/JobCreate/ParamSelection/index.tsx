@@ -1,9 +1,9 @@
 import React from "react";
-import {Fade, Divider} from "@material-ui/core";
-import {useStyles} from "../style";
-import {Param, ParamValues} from "../../util/param";
-import {Load, LoadFailedProps} from "../../Load";
-import {ParamFields} from "../../ParamFields";
+import { Fade, Divider } from "@material-ui/core";
+import { useStyles } from "../style";
+import { Param, ParamValues } from "../../util/param";
+import { Load, LoadFailedProps } from "../../Load";
+import { ParamFields } from "../../ParamFields";
 
 export interface ParamSelectionProps {
     topicNames: string[];
@@ -12,6 +12,7 @@ export interface ParamSelectionProps {
     loadFailedProps: LoadFailedProps | undefined;
     selectParamHandler: (key: string, value: any, idx: number) => void;
     style?: React.CSSProperties;
+    invalidValues: string[][];
 }
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
@@ -24,7 +25,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
         return (
             <div key={idx}>
                 <div className={classes.MPaddingTB}>
-                    <div style={{textAlign: "center"}}>
+                    <div style={{ textAlign: "center" }}>
                         <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
                     </div>
                 </div>
@@ -35,8 +36,9 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                     disabled={false}
                     required={true}
                     index={idx}
+                    invalidValues={props.invalidValues[idx] ? props.invalidValues[idx] : []}
                 />
-                <Divider/>
+                <Divider />
             </div>
         )
     }
@@ -49,8 +51,8 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                         ?
                         (
                             <Load data={params && (params.length === (topicNames.length))}
-                                  failed={props.loadFailedProps}
-                                  className={classes.SPaddingTB}>
+                                failed={props.loadFailedProps}
+                                className={classes.SPaddingTB}>
                                 {params?.map((p, idx) => renderParamFields(p, topicNames[idx], idx))}
                             </Load>
                         )
