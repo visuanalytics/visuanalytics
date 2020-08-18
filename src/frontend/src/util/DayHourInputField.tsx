@@ -3,7 +3,6 @@ import {DayHour} from "./deleteSchedule";
 import {Grid, TextField, Typography} from "@material-ui/core";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 
-
 interface DayHourInputProps {
     dayHour: DayHour | undefined;
     selectDayHourHandler: (dayHour: DayHour) => void;
@@ -58,7 +57,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = ({
     return (
         <div style={{margin: "10px"}}>
             <div className={classes.centerDiv}>
-                <Grid container spacing={4}>
+                <Grid item container spacing={4}>
                     <Grid container>
                         <TextField
                             className={classes.inputFields}
@@ -74,7 +73,7 @@ export const DayHourInputField: React.FC<DayHourInputProps> = ({
                         <Typography className={classes.margin}>Tage</Typography>
                     </Grid>
                     <br/>
-                    <Grid container>
+                    <Grid item container>
                         <TextField
                             className={classes.inputFields}
                             onChange={handleAddHour}
