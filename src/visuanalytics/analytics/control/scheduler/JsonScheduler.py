@@ -53,7 +53,9 @@ class JsonScheduler(Scheduler):
         jobs = self.__get_jobs()
 
         if int(now.strftime("%M")) == 00:
-            delete_on_time(jobs, config_manager.STEPS_BASE_CONFIG["output_path"])
+            delete_on_time(jobs["jobs"], config_manager.STEPS_BASE_CONFIG["output_path"], "name",
+                           lambda j: "removal_time" in j["schedule"],
+                           lambda j: j["schedule"].get("removal_time", None))
 
         for job in jobs.get("jobs", []):
             self.__check(job, now)

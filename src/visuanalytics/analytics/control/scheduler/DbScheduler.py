@@ -2,8 +2,10 @@ import logging
 from datetime import datetime
 
 from visuanalytics.analytics.control.scheduler.scheduler import Scheduler, ignore_errors
+from visuanalytics.analytics.util.video_delete import delete_on_time
 from visuanalytics.server.db import job
 from visuanalytics.server.db.job import get_interval
+from visuanalytics.util import config_manager
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +44,26 @@ class DbScheduler(Scheduler):
             self.__run_jobs(row["job_id"])
             return
 
+    def __get_delete_time(self, time):
+        del_time = {}
+        if not time["days"] is None:
+            del_time["days"] = time["days"]
+
+        if not time["hours"] is None:
+            del_time["hours"] = time["hours"]
+
+        return del_time
+
     @ignore_errors
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
 
-        # todo für db scheduler muss noch delete_old_on_new abgefragt werden (da wo jetzt false steht)
+        rows = job.get_job_schedules()
 
-        for row in job.get_job_schedules():
+        if int(now.strftime("%M")) == 00:
+            delete_on_time(rows, config_manager.STEPS_BASE_CONFIG["output_path"], "job_name",
+                           lambda j: j["delete_type"] == "on_day_hour",
+                           lambda j: self.__get_delete_time(j))
+
+        for row in rows:
             self.__check(row, now)
