@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Di. Aug. 18 00:08:51 2020
+-- File generated with SQLiteStudio v3.2.1 on Di. Aug. 18 11:03:19 2020
 --
 -- Text encoding used: UTF-8
 --
@@ -24,7 +24,8 @@ CREATE TABLE job
     days            INTEGER,
     hours           INTEGER,
     k_count         INTEGER,
-    fix_names_count INTEGER
+    fix_names_count INTEGER,
+    time_interval CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") )
 );
 
 
