@@ -327,11 +327,7 @@ str - Der Datentype des Response-Bodys.
   Der wert `Other` sollte nur bei der `Audio Konfiguration <./audio-apis.md>`_ verwendet werden
 ```
 
-<!--TODO-->
-
 ### request_multiple
-
-<!-- TODO Description-->
 
 Führt mehrere **https**-Requests durch. Die Request bleibt gleich bis auf einen Wert, der sich ändert.
 Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
@@ -356,21 +352,25 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 }
 ```
 
-**`url_pattern`**:
-
-<!--TODO-->
+Alle angaben die auch bei dem [api](#api)-Type [request](#request) möglich sind.
 
 **`steps_value`**:
 
-<!--TODO-->
+list - Alle werte für die ein request gesendet werden soll. 
 
-**`api_key_name`** _(optional)_:
+- _Special Variablen_:
 
-<!--TODO-->
+  - `_loop` -> Beinhaltet den wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den index des Wertes aus `steps_value`.
 
-**`use_loop_as_key`** _(optional)_:
+**`use_loop_as_key`**
 
-<!--TODO-->
+bool - Gibt an ob der Wert aus steps_value als Key zum Speichern des requests verwendet Werden soll.
+
+- Bei `true`:
+  - Die daten der requests werden als Dictionary (dict) mit den werten aus `steps_value` als keys gespeichert 
+- Bei `false` (default):
+  - Die daten der requests werden als liste (list) gespeichert.
 
 ### request_multiple_custom
 
@@ -409,13 +409,72 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 }
 ```
 
+**`requests`**:
+
+Hier können mehrere requests angegeben werden, hierfür kann man einfach alle [api](#api)-Typen angeben. Diese werden dann nacheinander ausgeführt.
+
+**`steps_value`**:
+
+list - Alle werte für die ein request gesendet werden soll. 
+
+- _Special Variablen_:
+
+  - `_loop` -> Beinhaltet den wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den index des Wertes aus `steps_value`.
+
+**`use_loop_as_key`**
+
+bool - Gibt an ob der Wert aus steps_value als Key zum Speichern des requests verwendet Werden soll.
+
+- Bei `true`:
+  - Die daten der requests werden als Dictionary (dict) mit den werten aus `steps_value` als keys gespeichert 
+- Bei `false` (default):
+  - Die daten der requests werden als liste (list) gespeichert.
+
 ### input
 
-<!--TODO-->
+Hier können Daten angegeben werden die einfach hinzugefügt werden.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "input",
+  "data": "-1. Spieltag"
+}
+```
+
+**`data`**
+
+any - die einzufügenden Daten.
 
 ### request_memory
 
-<!--TODO-->
+Hier können die Daten aus den Schritt [storing](#storing) geladen werden.
+
+```JSON
+{
+  "type": "request_memory",
+  "name": "table",
+  "use_last": 1,
+  "alternative": {
+    "type": "request",
+    "url_pattern": "url"
+  }
+}
+```
+
+**`name`**:
+
+str - Name des gespeicherten [storing](#storing) eintrags.
+
+**`use_last`**: 
+
+number - Welche [storing](#storing) version geladen werden soll.
+
+**`alternative`**
+
+Hier kann einrequests angegeben werden, hierfür kann man einfach alle [api](#api)-Typen angeben.
 
 ## Transform
 
