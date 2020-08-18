@@ -20,6 +20,7 @@ interface IParam {
     name: string;
     displayName: string;
     optional: boolean;
+    defaultValue: string;
 }
 
 interface StringParam extends IParam {
@@ -69,7 +70,7 @@ export const validateParamValue = (value: any, param: Param) => {
             }
             return true;
         case "number":
-            const nv = value.trim();
+            const nv = String(value).trim();
             if (!optional) {
                 return nv !== "" && !isNaN(Number(nv));
             }
@@ -141,16 +142,22 @@ export const initSelectedValues = (params: Param[] | undefined) => {
     params?.forEach(p => {
         switch (p.type) {
             case "string":
+                selected[p.name] = p.optional ? p.defaultValue : "";
+                break;
             case "number":
+                selected[p.name] = p.optional ? p.defaultValue : "";
+                break;
             case "enum":
-                selected[p.name] = "";
+                selected[p.name] = p.optional ? p.defaultValue : "";
                 break;
             case "multiString":
+                selected[p.name] = p.optional ? p.defaultValue : [];
+                break;
             case "multiNumber":
-                selected[p.name] = []
+                selected[p.name] = p.optional ? p.defaultValue : [];
                 break;
             case "boolean":
-                selected[p.name] = false;
+                selected[p.name] = p.optional ? p.defaultValue : false;
                 break;
             case "subParams":
                 if (p.optional) {
