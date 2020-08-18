@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  ParamValues,
-  toTypedValues,
-  trimParamValues,
-  validateParamValues,
-  initSelectedValues,
-} from "../../util/param";
-import {
   Button,
   Tooltip,
   Dialog,
@@ -26,16 +19,13 @@ import Grid from "@material-ui/core/Grid";
 import DescriptionIcon from "@material-ui/icons/Description";
 import {
   Schedule,
-  withFormattedDates,
   fromFormattedDates,
   showTimeToNextDate,
-  validateSchedule,
 } from "../../util/schedule";
 import { ComponentContext } from "../../ComponentProvider";
 import { Job } from "../index";
 import { useCallFetch } from "../../Hooks/useCallFetch";
 import { getUrl } from "../../util/fetchUtils";
-import { DeleteSchedule } from "../../util/deleteSchedule";
 import { JobSettings } from "./JobSettings";
 import { JobInfos } from "./JobInfos";
 
@@ -55,43 +45,17 @@ export const JobItem: React.FC<Props> = ({
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
 
-  const initParamValues = (topics: any) => {
-    return topics.map((t: any) => {
-      return { ...initSelectedValues(t.params), ...t.values };
-    });
-  };
-
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const [jobName, setJobName] = React.useState(job.jobName);
   const [openSettings, setOpenSettings] = React.useState(false);
-  const [paramValues, setParamValues] = React.useState<ParamValues[]>(
-    initParamValues(job.topics)
-  );
   const [schedule, setSchedule] = React.useState<Schedule>(
     fromFormattedDates(job.schedule)
   );
-  const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({
-    type: "noDeletion",
-  });
   const [next, setNext] = React.useState(showTimeToNextDate(schedule));
   const [confirmDelete, setConfirmDelete] = React.useState(false);
 
   const handleSelectSchedule = (schedule: Schedule) => {
     setSchedule(schedule);
-  };
-
-  const handleSelectDeleteSchedule = (deleteSchedule: DeleteSchedule) => {
-    setDeleteSchedule(deleteSchedule);
-  };
-
-  const handleSelectParam = (key: string, value: any, idx: number) => {
-    const updated = [...paramValues];
-    updated[idx][key] = value;
-    setParamValues(updated);
-  };
-
-  const handleEditError = () => {
-    reportError("Bearbeitung fehlgeschlagen");
   };
 
   const handleEditSuccess = () => {
@@ -116,28 +80,6 @@ export const JobItem: React.FC<Props> = ({
     handleDeleteJobFailure
   );
 
-  const editJob = useCallFetch(
-    getUrl(`/edit/${job.jobId}`),
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        jobName: jobName.trim(),
-        topics: job.topics.map((t: any, idx: number) => {
-          return {
-            topicId: t.topicId,
-            values: toTypedValues(trimParamValues(paramValues[idx]), t.params),
-          };
-        }),
-        schedule: withFormattedDates(schedule),
-      }),
-    },
-    handleEditSuccess,
-    handleEditError
-  );
-
   useEffect(() => {
     const interval = setInterval(() => {
       setNext(showTimeToNextDate(schedule));
@@ -156,32 +98,8 @@ export const JobItem: React.FC<Props> = ({
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleCheckClick = () => {
-    if (jobName.trim() === "") {
-      reportError("Jobname nicht ausgefüllt");
-      return;
-    }
-    if (
-      !job.topics.every((t: any, idx: number) =>
-        validateParamValues(paramValues[idx], t.params)
-      )
-    ) {
-      reportError("Parameter nicht korrekt gesetzt");
-      return;
-    }
-    if (!validateSchedule(schedule)) {
-      reportError("Es muss mindestens ein Wochentag ausgewählt werden");
-      return;
-    }
-    editJob();
-  };
-  const handleSaveModal = () => {
-    handleCheckClick();
-  };
-
   const handleCloseModal = () => {
     setOpenSettings(false);
-    setParamValues(initParamValues(job.topics));
     setJobName(job.jobName);
     setSchedule(fromFormattedDates(job.schedule));
   };
@@ -264,13 +182,10 @@ export const JobItem: React.FC<Props> = ({
               job={job}
               jobName={jobName}
               handleSetJobName={(jobName: string) => setJobName(jobName)}
-              deleteSchedule={deleteSchedule}
               schedule={schedule}
               handleSelectSchedule={handleSelectSchedule}
-              handleSelectDeleteSchedule={handleSelectDeleteSchedule}
-              handleSaveModal={handleSaveModal}
-              handleSelectParam={handleSelectParam}
-              paramValues={paramValues}
+              handleEditSuccess={handleEditSuccess}
+              reportError={reportError}
             />
           ) : null}
         </AccordionDetails>

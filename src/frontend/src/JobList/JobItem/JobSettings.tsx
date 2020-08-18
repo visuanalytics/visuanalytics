@@ -18,9 +18,21 @@ import { SettingsPage } from "../../util/SettingsPage";
 import { ContinueButton } from "../../JobCreate/ContinueButton";
 import { Job } from "../index";
 import { DeleteSchedule } from "../../util/deleteSchedule";
-import { Schedule } from "../../util/schedule";
-import { ParamValues } from "../../util/param";
+import {
+  Schedule,
+  withFormattedDates,
+  validateSchedule,
+} from "../../util/schedule";
+import {
+  ParamValues,
+  toTypedValues,
+  trimParamValues,
+  validateParamValues,
+  initSelectedValues,
+} from "../../util/param";
 import { hintContents } from "../../util/hintContents";
+import { useCallFetch } from "../../Hooks/useCallFetch";
+import { getUrl } from "../../util/fetchUtils";
 
 interface Props {
   open: boolean;
@@ -29,13 +41,16 @@ interface Props {
   jobName: string;
   handleSetJobName: (jobName: string) => void;
   schedule: Schedule;
-  deleteSchedule: DeleteSchedule;
   handleSelectSchedule: (schedule: Schedule) => void;
-  handleSelectDeleteSchedule: (deleteSchedule: DeleteSchedule) => void;
-  paramValues: ParamValues[];
-  handleSelectParam: (key: string, value: any, idx: number) => void;
-  handleSaveModal: () => void;
+  handleEditSuccess: () => void;
+  reportError: (msg: string) => void;
 }
+
+const initParamValues = (topics: any) => {
+  return topics.map((t: any) => {
+    return { ...initSelectedValues(t.params), ...t.values };
+  });
+};
 
 export const JobSettings: React.FC<Props> = ({
   open,
@@ -44,16 +59,75 @@ export const JobSettings: React.FC<Props> = ({
   jobName,
   handleSetJobName,
   schedule,
-  deleteSchedule,
   handleSelectSchedule,
-  handleSelectDeleteSchedule,
-  paramValues,
-  handleSelectParam,
-  handleSaveModal,
+  handleEditSuccess,
+  reportError,
 }) => {
   const classes = useStyles();
   const [edit, setEdit] = React.useState(false);
   const [hintState, setHintState] = React.useState(0);
+  const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({
+    type: "noDeletion",
+  });
+  const [paramValues, setParamValues] = React.useState<ParamValues[]>(
+    initParamValues(job.topics)
+  );
+
+  const handleEditError = () => {
+    reportError("Bearbeitung fehlgeschlagen");
+  };
+
+  const handleSelectDeleteSchedule = (deleteSchedule: DeleteSchedule) => {
+    setDeleteSchedule(deleteSchedule);
+  };
+
+  const handleCheckClick = () => {
+    if (jobName.trim() === "") {
+      reportError("Jobname nicht ausgefüllt");
+      return;
+    }
+    if (
+      !job.topics.every((t: any, idx: number) =>
+        validateParamValues(paramValues[idx], t.params)
+      )
+    ) {
+      reportError("Parameter nicht korrekt gesetzt");
+      return;
+    }
+    if (!validateSchedule(schedule)) {
+      reportError("Es muss mindestens ein Wochentag ausgewählt werden");
+      return;
+    }
+    editJob();
+  };
+
+  const editJob = useCallFetch(
+    getUrl(`/edit/${job.jobId}`),
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jobName: jobName.trim(),
+        topics: job.topics.map((t: any, idx: number) => {
+          return {
+            topicId: t.topicId,
+            values: toTypedValues(trimParamValues(paramValues[idx]), t.params),
+          };
+        }),
+        schedule: withFormattedDates(schedule),
+      }),
+    },
+    handleEditSuccess,
+    handleEditError
+  );
+
+  const handleSelectParam = (key: string, value: any, idx: number) => {
+    const updated = [...paramValues];
+    updated[idx][key] = value;
+    setParamValues(updated);
+  };
 
   const hintContent = [
     hintContents.time,
@@ -70,6 +144,7 @@ export const JobSettings: React.FC<Props> = ({
 
   const handleClose = () => {
     setEdit(false);
+    setParamValues(initParamValues(job.topics));
     onClose();
   };
 
@@ -159,7 +234,9 @@ export const JobSettings: React.FC<Props> = ({
         </Paper>
         <div>
           <div style={{ textAlign: "center", paddingTop: 15 }}>
-            <ContinueButton onClick={handleSaveModal}>SPEICHERN</ContinueButton>
+            <ContinueButton onClick={handleCheckClick}>
+              SPEICHERN
+            </ContinueButton>
           </div>
         </div>
       </Container>
