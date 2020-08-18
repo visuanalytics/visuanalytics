@@ -73,15 +73,12 @@ class Scheduler(object):
         next_run = self._interval.get(job_id, None)
         run = False
 
-        print(f"Start: Next Runtime {self._interval.get(job_id, None)} for job({job_id})")
-
         if not next_run is None:
             run = self._check_datetime(now, next_run)
 
         if run or next_run is None:
             self._interval[job_id] = now + timedelta(**interval)
-
-        print(f"End: Next Runtime {self._interval.get(job_id, None)} for job({job_id})")
+            logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, None)}")
 
         return run
 
