@@ -21,16 +21,18 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     const values = props.values;
     const topicNames = props.topicNames;
 
-    const renderParamFields = (params: Param[] | undefined, topicName: string, idx: number) => {
+    const renderParamFields = (topicParams: Param[] | undefined, topicName: string, idx: number) => {
         return (
-            <div key={idx}>
-                <div className={classes.MPaddingTB}>
-                    <div style={{ textAlign: "center" }}>
-                        <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
-                    </div>
-                </div>
+            <div key={idx} className={params && params.length <= 1 ? classes.MPaddingT : undefined}>
+                {params && params.length > 1 ?
+                    (<div className={classes.MPaddingTB}>
+                        <div style={{ textAlign: "center" }}>
+                            <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
+                        </div>
+                    </div>) : ""
+                }
                 <ParamFields
-                    params={params}
+                    params={topicParams}
                     values={values[idx]}
                     selectParamHandler={props.selectParamHandler}
                     disabled={false}
@@ -38,7 +40,7 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                     index={idx}
                     invalidValues={props.invalidValues[idx] ? props.invalidValues[idx] : []}
                 />
-                <Divider />
+                {params && params[idx + 1] && (<Divider />)}
             </div>
         )
     }
@@ -63,7 +65,6 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                             </div>
                         )
                 }
-
             </div>
         </Fade>
 

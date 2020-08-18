@@ -9,10 +9,11 @@ import { BooleanParam } from './BooleanParam'
 
 interface ParamFieldProps extends ParamField {
     param: Param,
+    hasNext: boolean;
 }
 
 interface ParamFieldsProps extends ParamField {
-    params: Param[] | undefined,
+    params: Param[] | undefined;
 }
 
 interface ParamField {
@@ -34,7 +35,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
             {
                 params && params.length > 0
                     ?
-                    props.params?.map(p => (
+                    params.map((p, idx) => (
                         <div key={p.name}>
                             <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
                                 <ParamField
@@ -45,6 +46,7 @@ export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
                                     required={props.required}
                                     index={props.index}
                                     invalidValues={props.invalidValues}
+                                    hasNext={params && idx < params.length - 1}
                                 />
                             </div>
                         </div>
@@ -186,7 +188,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             invalidValues={props.invalidValues}
                         />
                     </Collapse>
-                    {((props.values[param.name] || showSubParams))
+                    {((props.values[param.name] || showSubParams) && props.hasNext)
                         &&
                         <div className={classes.SPaddingTB}>
                             <Divider />
