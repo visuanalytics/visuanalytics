@@ -44,6 +44,7 @@ export default function JobCreate() {
   // states for topic selection logic
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [jobName, setJobName] = React.useState("");
+  const [invalidJobName, setInvalidJobName] = React.useState(false);
   const [multipleTopics, setMultipleTopics] = React.useState(false);
   const multipleRef = React.useRef(false);
 
@@ -52,7 +53,7 @@ export default function JobCreate() {
     undefined
   );
   const [paramValues, setParamValues] = React.useState<ParamValues[]>([]);
-  const [invalid, setInvalid] = React.useState<string[][]>([]);
+  const [invalidValues, setInvalidValues] = React.useState<string[][]>([]);
 
   // state for Load Failed
   const [loadFailed, setLoadFailed] = React.useState(false);
@@ -183,13 +184,15 @@ export default function JobCreate() {
           return;
         }
         if (jobName.trim() === "") {
+          setInvalidJobName(true);
           reportError("Job-Name nicht ausgefüllt");
           return;
         }
+        setInvalidJobName(false);
         break;
       case 1:
-        const invalidValues = paramLists?.map((l, idx) => getInvalidParamNames(paramValues[idx], l));
-        setInvalid(invalidValues ? invalidValues : []);
+        const invalid = paramLists?.map((l, idx) => getInvalidParamNames(paramValues[idx], l));
+        setInvalidValues(invalid ? invalid : []);
         const paramsValid = invalidValues?.every(t => t.length === 0);
         if (!paramsValid) {
           reportError("Parameter nicht korrekt gesetzt")
@@ -212,7 +215,8 @@ export default function JobCreate() {
   };
 
   const handleBack = () => {
-    setInvalid([]);
+    setInvalidValues([]);
+    setInvalidJobName(false);
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
@@ -304,7 +308,8 @@ export default function JobCreate() {
             resetTopicsHandler={handleResetTopics}
             setSingleTopicHandler={handleSetSingleTopic}
             addTopicHandler={handleAddTopic}
-            enterJobNameHandler={handleEnterJobName} />
+            enterJobNameHandler={handleEnterJobName}
+            invalidJobName={invalidJobName} />
         );
       case 1:
         return (
@@ -318,7 +323,7 @@ export default function JobCreate() {
               onReload: handleReloadParams
             }}
             selectParamHandler={handleSelectParam}
-            invalidValues={invalid} />
+            invalidValues={invalidValues} />
         )
       case 2:
         return (
