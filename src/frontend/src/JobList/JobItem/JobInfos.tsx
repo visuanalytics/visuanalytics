@@ -17,7 +17,7 @@ export const JobInfos: React.FC<Props> = ({ job, next }) => {
       <div className={classes.SPaddingTRB}>
         <TextField
           label="Thema"
-          defaultValue={String(job.topics.map((t: any) => t.topicName))
+          defaultValue={String(job.topicValues.map((t: any) => t.topicName))
             .split(",")
             .join(", ")}
           InputProps={{
