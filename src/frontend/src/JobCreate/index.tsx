@@ -37,7 +37,7 @@ export default function JobCreate() {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
 
-  const [counter, setCounter] = React.useState(5);
+  const [counter, setCounter] = React.useState(0);
   // states for stepper logic
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectComplete, setSelectComplete] = React.useState(false);
