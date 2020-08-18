@@ -189,7 +189,7 @@ def _row_to_job(row):
         "jobName": job_name,
         "schedule": schedule,
         "deleteSchedule": delete_schedule,
-        "topics": topics
+        "topicValues": topics
     }
 
 
