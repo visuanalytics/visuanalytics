@@ -180,10 +180,18 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen, die im F
   Der Name des Thumbnails hat das Format: `{video_name}_thumbnail.png` (wobei `{video_name}` dem Namen des Videos entspricht).
 
 - `fix_names`(_optional_):
-<!--TODO-->
+
+  fix_names kann dazu verwendet werden um den Out Videos fixe Namen zu geben, hierzu kann man entweder `names` verwenden (hier gibt man dann einfach eine Liste mit Namen an)  
+  oder man verwendet `count`, bei `count` werden die Videos einfach durchnumeriert, dh das neueste Video bekommt _1.
+  Sollte man zb. count=3 wählen so liegen im Out Ordner immer die 3 neusten Videos, das neuste hat den Bezeichner _1 und das älteste _3.
+  Sobald ein neues Video generiert wird, so wird das Video _3 gelöscht und das _2 Video in _3 umbenannt etc.  
+  Die einzige Ausname hier ist wenn count = 1 gesetzt wurde, in diesem Fall wird kein _1 verwendet sondern bei jeder neuen Video erstellung heißt das Video gleich dem Jobnamen.
 
 - `keep_count`(_optional_):
-<!--TODO-->
+
+   keep_count gibt an wie viele Videos maximal im Output Ordner von einem Task vorhanden sein sollen, sobal es zu viele gibt, wird das älteste gelöscht
+
+
 
 `testing`(_optional_):
 
@@ -195,7 +203,7 @@ Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Er
 
 `console_mode`(_optional_):
 
-Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#jobs-json)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
+Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#vejobs-json)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
 
 #### jobs.json
 
