@@ -36,7 +36,10 @@ export default function JobCreate() {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
 
-  const [counter, setCounter] = React.useState(5);
+  const timeout = React.useRef<NodeJS.Timeout>();
+  const countertimeout = React.useRef<NodeJS.Timeout>();
+
+  const [counter, setCounter] = React.useState(0);
   // states for stepper logic
   const [activeStep, setActiveStep] = React.useState(0);
   const [finished, setFinished] = React.useState(false);
@@ -161,12 +164,19 @@ export default function JobCreate() {
   }, [multipleTopics]);
 
   useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter > 0) {
+      countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
+    }
+    return (() => {
+      if (countertimeout.current !== undefined) {
+        clearTimeout(countertimeout.current);
+      }
+    });
   }, [counter]);
 
   const delay = () => {
     setCounter(5);
-    setTimeout(() => {
+    timeout.current = setTimeout(() => {
       components?.setCurrent("home");
     }, 5000);
   };
@@ -174,6 +184,13 @@ export default function JobCreate() {
   const reportError = (message: string) => {
     dispatchMessage({ type: "reportError", message: message });
   };
+
+  const handleStartPage = () => {
+    if (timeout.current !== undefined) {
+      clearTimeout(timeout.current);
+    }
+    components?.setCurrent("home");
+  }
 
   // handlers for stepper logic
   const handleNext = () => {
@@ -361,7 +378,7 @@ export default function JobCreate() {
           <div>
             <div>
               <Grid container>
-                <Grid item sm={1} xs={1}></Grid>
+                <Grid item sm={1} xs={1} />
                 <Grid item sm={10} xs={9} className={classes.SPaddingTB}>
                   <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                 </Grid>
@@ -413,7 +430,7 @@ export default function JobCreate() {
                   </Grid>
                   <Grid container item justify="center">
                     <ContinueButton
-                      onClick={() => components?.setCurrent("home")}
+                      onClick={handleStartPage}
                     >
                       STARTSEITE
                   </ContinueButton>
