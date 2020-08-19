@@ -31,11 +31,12 @@ import { DeleteSchedule } from "../util/deleteSchedule";
 import { SettingsPage } from "../util/SettingsPage";
 import { hintContents } from "../util/hintContents";
 
-let timeout:  NodeJS.Timeout;
-
 export default function JobCreate() {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
+
+  const timeout = React.useRef<NodeJS.Timeout>();
+  const countertimeout = React.useRef<NodeJS.Timeout>();
 
   const [counter, setCounter] = React.useState(0);
   // states for stepper logic
@@ -180,18 +181,27 @@ export default function JobCreate() {
   }, [schedule, activeStep]);
 
   useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter > 0) {
+      countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
+    }
+    return(() => {
+      if (countertimeout.current != undefined) {
+        clearTimeout(countertimeout.current);
+      }
+    });
   }, [counter]);
 
   const delay = () => {
     setCounter(5);
-    timeout = setTimeout(() => {
+    timeout.current = setTimeout(() => {
       components?.setCurrent("home");
     }, 5000);
   };
 
   const handleStartPage = () => {
-    clearTimeout(timeout);
+    if (timeout.current != undefined) {
+      clearTimeout(timeout.current);
+    }
     components?.setCurrent("home");
   }
 
