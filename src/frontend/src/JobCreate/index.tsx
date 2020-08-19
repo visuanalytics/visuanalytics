@@ -12,7 +12,7 @@ import {
   Param,
   ParamValues,
   trimParamValues,
-  getInvalidParamNames,
+  getInvalidParamValues,
   initSelectedValues,
   toTypedValues,
 } from "../util/param";
@@ -191,7 +191,7 @@ export default function JobCreate() {
         setInvalidJobName(false);
         break;
       case 1:
-        const invalid = paramLists?.map((l, idx) => getInvalidParamNames(paramValues[idx], l));
+        const invalid = paramLists?.map((l, idx) => getInvalidParamValues(paramValues[idx], l));
         setInvalidValues(invalid ? invalid : []);
         const paramsValid = invalid?.every(t => t.length === 0);
         if (!paramsValid) {

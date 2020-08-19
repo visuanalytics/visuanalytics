@@ -31,7 +31,7 @@ import {
     toTypedValues,
     trimParamValues,
     initSelectedValues,
-    getInvalidParamNames,
+    getInvalidParamValues,
 } from "../../util/param";
 import { hintContents } from "../../util/hintContents";
 import { useCallFetch } from "../../Hooks/useCallFetch";
@@ -89,7 +89,7 @@ export const JobSettings: React.FC<Props> = ({
             reportError(emptyJobNameError);
             return;
         }
-        const invalid = job.topicValues.map((t: any, idx: number) => getInvalidParamNames(paramValues[idx], t.params));
+        const invalid = job.topicValues.map((t: any, idx: number) => getInvalidParamValues(paramValues[idx], t.params));
         setInvalidValues(invalid ? invalid : []);
         const paramsValid = invalid?.every(t => t.length === 0);
         if (!paramsValid) {
