@@ -1,5 +1,18 @@
 # Themenkonfiguration
 
+Die Themenkonfiguration ist eine JSON-Datei mit verschiedenen Abschnitten. Diese Datei dient der Angabe aller Parameter, 
+Einstellungen und Konfigurationen, die für die automatisierte Generierung eines Videos erforderlich sind.
+
+Hier wird angegeben, welche API-Anfrage gesendet wird und was danach mit der API-Antwort passiert.
+Es werden Bilder und Audiodateien erstellt, die am Ende in einer bestimmten Reihenfolge aneinander gehängt werden.
+
+Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
+
+- [Deutschlandweiter Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
+- [Ortsbezogener Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
+- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/football.json)
+- [Twitter-Wordcloud-Verlauf](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+
 Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON
 {
