@@ -184,8 +184,8 @@ export default function JobCreate() {
     if (counter > 0) {
       countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
     }
-    return(() => {
-      if (countertimeout.current != undefined) {
+    return (() => {
+      if (countertimeout.current !== undefined) {
         clearTimeout(countertimeout.current);
       }
     });
@@ -199,24 +199,24 @@ export default function JobCreate() {
   };
 
   const handleStartPage = () => {
-    if (timeout.current != undefined) {
+    if (timeout.current !== undefined) {
       clearTimeout(timeout.current);
     }
     components?.setCurrent("home");
   }
 
-    // handlers for stepper logic
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        handleHintState(activeStep + 1);
-        if (activeStep === 2) {
-            delay();
-        }
-    };
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-        handleHintState(activeStep - 1);
-    };
+  // handlers for stepper logic
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    handleHintState(activeStep + 1);
+    if (activeStep === 2) {
+      delay();
+    }
+  };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    handleHintState(activeStep - 1);
+  };
 
   // handlers for topic selection logic
   const handleResetTopics = () => {
