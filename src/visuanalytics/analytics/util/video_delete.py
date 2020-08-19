@@ -15,8 +15,11 @@ def delete_video(steps_config, __config):
     if steps_config.get("fix_names", None) is not None:
         fix_names = []
         if steps_config["fix_names"].get("names", None) is None:
-            for i in range(1, steps_config["fix_names"].get("count", 3) + 1):
-                fix_names.append(f"_{i}")
+            if steps_config["fix_names"].get("count", 1) == 1:
+                fix_names.append("")
+            else:
+                for i in range(1, steps_config["fix_names"].get("count", 3) + 1):
+                    fix_names.append(f"_{i}")
         else:
             fix_names = steps_config["fix_names"]["names"]
         delete_fix_name_videos(steps_config["job_name"], fix_names,
