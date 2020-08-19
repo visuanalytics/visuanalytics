@@ -111,10 +111,6 @@ _Programm starten_:
 > Um die Option `h264_nvenc` (siehe [config.json](#config.json)) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
 > Eine gute Anleitung finden Sie [hier](https://developer.nvidia.com/ffmpeg).
 
-## Ohne Docker (Produktion)
-
-_TODO_
-
 ## Wordpress-Plugin verwenden
 
 Nicht nur der Backend-Server kann das Frontend ausliefern. Das Frontend kann auch als Wordpress-Plugin verwendet werden.
