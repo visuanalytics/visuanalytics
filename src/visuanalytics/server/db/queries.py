@@ -27,19 +27,18 @@ def get_params(topic_id):
 
 def get_job_list():
     con = db.open_con_f()
-
     res = con.execute("""
         SELECT 
         job_id, job_name, 
-        job.type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
+        schedule.type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
         delete_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
         GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
         FROM job 
-        
-        LEFT JOIN schedule_weekday USING (job_id)
+        INNER JOIN schedule USING (schedule_id)
+        LEFT JOIN schedule_weekday USING (schedule_id)
         INNER JOIN job_topic_position USING (job_id) 
         LEFT JOIN job_config USING (position_id) 
         INNER JOIN steps USING (steps_id)
@@ -54,15 +53,14 @@ def insert_job(job):
     schedule = job["schedule"]
     delete_schedule = job["deleteSchedule"]
     topic_values = job["topics"]
-    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
     delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(delete_schedule)
+
+    schedule_id = _insert_schedule(con, schedule)
+
     job_id = con.execute(
-        "INSERT INTO job(job_name, type, time, date, time_interval, delete_type, days, hours, k_count, fix_names_count) "
-        "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [job_name, type, time, date, time_interval, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
-    if type == "weekly":
-        id_weekdays = [(job_id, d) for d in weekdays]
-        con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+        "INSERT INTO job(job_name, schedule_id, delete_type, days, hours, k_count, fix_names_count) "
+        "VALUES(?, ?, ?, ?, ?, ?, ?)",
+        [job_name, schedule_id, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
 
     _insert_param_values(con, job_id, topic_values)
     con.commit()
@@ -71,7 +69,8 @@ def insert_job(job):
 def delete_job(job_id):
     con = db.open_con_f()
     con.execute("PRAGMA foreign_keys = ON")
-    con.execute("DELETE FROM job WHERE job_id=?", [job_id])
+    schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id=?", [job_id]).fetchone()["schedule_id"]
+    con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
     con.commit()
 
 
@@ -81,17 +80,12 @@ def update_job(job_id, updated_data):
         if key == "jobName":
             con.execute("UPDATE job SET job_name=? WHERE job_id=?", [value, job_id])
         if key == "schedule":
-            type, time, date, weekdays, time_interval = _unpack_schedule(value)
-            con.execute("UPDATE job SET type=?, time=?, date=?, time_interval=? WHERE job_id=?",
-                        [type, time, date, time_interval, job_id])
-            con.execute("DELETE FROM schedule_weekday WHERE job_id=?", [job_id])
-            # Bug: wenn beim job erstellen der type "weekly" verwendet, lassen sich initialen Einträge in der
-            # schedule_weekday-Tabelle nicht mehr löschen (d.h. die am Anfang ausgewählten Tage lassen sich nicht mehr
-            # mit dieser Methode ändern)
-            # Wenn der type eines Jobs erst im Nachhinein zu "weekly" geändert wird, tritt das Problem nicht auf
-            if type == "weekly":
-                id_weekdays = [(job_id, d) for d in weekdays]
-                con.executemany("INSERT INTO schedule_weekday(job_id, weekday) VALUES(?, ?)", id_weekdays)
+            old_schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id=?", [job_id]).fetchone()[
+                "schedule_id"]
+            con.execute("DELETE FROM schedule WHERE schedule_id=?", [old_schedule_id])
+            con.execute("DELETE FROM schedule_weekday WHERE schedule_id=?", [old_schedule_id])
+            schedule_id = _insert_schedule(con, value)
+            con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [schedule_id, job_id])
         if key == "deleteSchedule":
             delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(value)
             con.execute("UPDATE job SET delete_type=?, days=?, hours=?, k_count=?, fix_names_count=? WHERE job_id=?",
@@ -122,6 +116,28 @@ def get_logs():
         "startTime": log["start_time"]
     }
         for log in logs]
+
+
+def _insert_param_values(con, job_id, topic_values):
+    for pos, t in enumerate(topic_values):
+        position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
+                                  [job_id, t["topicId"], pos]).lastrowid
+        jtkvt = [(position_id,
+                  k,
+                  _to_untyped_value(v["value"], humps.decamelize(v["type"])),
+                  humps.decamelize(v["type"]))
+                 for k, v in t["values"].items()]
+        con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
+
+
+def _insert_schedule(con, schedule):
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
+    schedule_id = con.execute("INSERT INTO schedule(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
+                              [type, time, date, time_interval]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(schedule_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
 
 
 def _row_to_job(row):
@@ -197,18 +213,6 @@ def _get_topic_steps(json_file_name: str):
     path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
-
-
-def _insert_param_values(con, job_id, topic_values):
-    for pos, t in enumerate(topic_values):
-        position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
-                                  [job_id, t["topicId"], pos]).lastrowid
-        jtkvt = [(position_id,
-                  k,
-                  _to_untyped_value(v["value"], humps.decamelize(v["type"])),
-                  humps.decamelize(v["type"]))
-                 for k, v in t["values"].items()]
-        con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
 
 
 def _get_values(param_string):
