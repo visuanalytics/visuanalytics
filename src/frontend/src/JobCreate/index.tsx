@@ -79,7 +79,7 @@ export default function JobCreate() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      topics: topics.map((t, idx) => {
+      topicValues: topics.map((t, idx) => {
         return {
           topicId: t.topicId,
           values: toTypedValues(trimParamValues(paramValues[idx]), paramLists ? paramLists[idx] : [])
