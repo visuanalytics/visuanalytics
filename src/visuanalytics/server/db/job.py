@@ -16,7 +16,8 @@ def get_job_schedules():
         res = con.execute("""
         SELECT DISTINCT job_id, type, date, time, group_concat(DISTINCT weekday) AS weekdays
         FROM job 
-        LEFT JOIN schedule_weekday USING(job_id)
+        INNER JOIN schedule USING(schedule_id)
+        LEFT JOIN schedule_weekday USING(schedule_id)
         GROUP BY(job_id)
         """).fetchall()
 
@@ -38,7 +39,7 @@ def get_job_run_info(job_id):
         WHERE job_id=?
         ORDER BY(position)
         """, [job_id]).fetchall()
-        
+
         job_name = res[0]["job_name"]
         steps_name = res[0]["json_file_name"]
         config = {}
