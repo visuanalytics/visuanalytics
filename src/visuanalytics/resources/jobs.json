@@ -5,7 +5,9 @@
       "id": 0,
       "steps": "weather_germany",
       "schedule": {
-        "time": "14:02",
+        "times": [
+          "14:02"
+        ],
         "daily": true
       },
       "config": {
@@ -40,7 +42,9 @@
       "id": 1,
       "steps": "weather_single",
       "schedule": {
-        "time": "17:43",
+        "times": [
+          "17:43"
+        ],
         "daily": true,
         "removal_time": {
           "days": 7,
@@ -69,7 +73,9 @@
       "id": 1,
       "steps": "football",
       "schedule": {
-        "time": "10:25",
+        "times": [
+          "14:46"
+        ],
         "daily": true
       },
       "config": {
@@ -83,7 +89,9 @@
       "id": 1,
       "steps": "twitter",
       "schedule": {
-        "time": "21:19",
+        "times": [
+          "15:11"
+        ],
         "daily": true
       },
       "config": {

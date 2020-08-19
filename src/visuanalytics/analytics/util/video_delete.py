@@ -31,25 +31,31 @@ def delete_video(steps_config, __config):
                                  steps_config["keep_count"])
 
 
-def delete_on_time(jobs: dict, output_path: str):
+def delete_on_time(jobs: dict, output_path: str, name_key: str, check, get_time):
     """
     Methode zum Löschen alter (erstellter) Videos nach einem vorgegebenem Zeitraum.
 
+    :param get_time: Funktion um die `Entfernungszeit` zu bekommen
     :param jobs: eine Liste aller Jobs
+    :param name_key: key zum Job namen
     :param output_path: Pfad zum Output-Ordner
     """
     logger.info("Checking if videos needs to be deleted")
     files = os.listdir(resources.path_from_root(output_path))
     for file in files:
-        for job in jobs["jobs"]:
-            job["name"] = re.sub(r'\s+', '-', job["name"].strip())
-            if file.startswith(job["name"]):
+        for job in jobs:
+            if not check(job):
+                break
+
+            job_name = re.sub(r'\s+', '-', job[name_key].strip())
+            if file.startswith(job_name):
                 try:
                     file_without_thumb = file.replace("_thumbnail", "")
-                    file_date = file_without_thumb[len(job["name"]) + 1:len(file_without_thumb) - 4]
+                    file_date = file_without_thumb[len(job_name) + 1:len(file_without_thumb) - 4]
                     date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
-                    time = job["schedule"].get("removal_time", {})
-                    if time != {}:
+
+                    time = get_time(job)
+                    if not time is None:
                         date_time_obj = date_time_obj + timedelta(days=time.get("days", 0),
                                                                   hours=time.get("hours", 0))
                         if datetime.now() > date_time_obj:

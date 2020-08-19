@@ -4,7 +4,7 @@ import re
 import threading
 import time
 import uuid
-from datetime import datetime, time as dt_time
+from datetime import datetime, time as dt_time, timedelta
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
 from visuanalytics.util import config_manager
@@ -38,9 +38,53 @@ class Scheduler(object):
     :type steps: dict
     """
 
+    def __init__(self):
+        self._interval = {}
+
     @staticmethod
     def _check_time(now: datetime, run_time: dt_time):
         return now.hour == run_time.hour and now.minute == run_time.minute
+
+    @staticmethod
+    def _check_times(now: datetime, run_times: list):
+        for run_time in run_times:
+            if Scheduler._check_time(now, datetime.strptime(run_time, "%H:%M").time()):
+                return True
+
+        return False
+
+    @staticmethod
+    def _check_dates(now: datetime, run_dates: list, date_is_string=False):
+        for run_date in run_dates:
+            # if run_date is string, convert to date Object
+            if date_is_string:
+                run_date = datetime.strptime(run_date, "%y-%m-%d").date()
+
+            if now.date() == run_date:
+                return True
+
+        return False
+
+    @staticmethod
+    def _check_datetime(now: datetime, run_time: datetime):
+        return now.date() >= run_time.date() and now.hour >= run_time.hour and now.minute >= run_time.minute
+
+    def _check_interval(self, now: datetime, interval: dict, job_id: int):
+        next_run = self._interval.get(job_id, None)
+        run = False
+
+        # If Interval has changed -> reset time
+        if next_run is not None and next_run["interval"] != interval:
+            next_run = None
+
+        if next_run is not None:
+            run = self._check_datetime(now, next_run["time"])
+
+        if run or next_run is None:
+            self._interval[job_id] = {"time": now + timedelta(**interval), "interval": interval}
+            logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, {}).get('time', None)}")
+
+        return run
 
     def _start_job(self, job_id: int, job_name: str, steps_name: str, config: dict, log_to_db=False):
         # Add base_config if exists
