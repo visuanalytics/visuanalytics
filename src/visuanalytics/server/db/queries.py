@@ -53,7 +53,7 @@ def insert_job(job):
     job_name = job["jobName"]
     schedule = job["schedule"]
     delete_schedule = job["deleteSchedule"]
-    topic_values = job["topics"]
+    topic_values = job["topicValues"]
 
     schedule_id = _insert_schedule(con, schedule)
     delete_options_id = _insert_delete_options(con, delete_schedule)
@@ -97,7 +97,7 @@ def update_job(job_id, updated_data):
             con.execute("DELETE FROM delete_options WHERE delete_options_id=?", [old_delete_options_id])
             delete_options_id = _insert_delete_options(con, value)
             con.execute("UPDATE job SET delete_options_id=? WHERE job_id=?", [delete_options_id, job_id])
-        if key == "topics":
+        if key == "topic_values":
             pos_id_rows = con.execute("SELECT position_id FROM job_topic_position WHERE job_id=?", [job_id])
             pos_ids = [(row["position_id"],) for row in pos_id_rows]
             con.execute("DELETE FROM job_topic_position WHERE job_id=?", [job_id])
@@ -187,7 +187,7 @@ def _row_to_job(row):
     if d_type == "fix_names":
         delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
 
-    topics = [{}] * (int(row["topic_count"]))
+    topic_values = [{}] * (int(row["topic_count"]))
     for tp_s in row["topic_positions"].split(","):
         tp = tp_s.split(":")
         topic_id = tp[0]
@@ -196,7 +196,7 @@ def _row_to_job(row):
         position = int(tp[3])
         run_config = _get_topic_steps(json_file_name)["run_config"]
         params = humps.camelize(_to_param_list(run_config))
-        topics[position] = {
+        topic_values[position] = {
             "topicId": topic_id,
             "topicName": topic_name,
             "params": params,
@@ -210,8 +210,8 @@ def _row_to_job(row):
             u_val = vals[2]
             type = vals[3]
             t_val = to_typed_value(u_val, type)
-            topics[position]["values"] = {
-                **topics[position]["values"],
+            topic_values[position]["values"] = {
+                **topic_values[position]["values"],
                 name: t_val
             }
 
@@ -220,7 +220,7 @@ def _row_to_job(row):
         "jobName": job_name,
         "schedule": schedule,
         "deleteSchedule": delete_schedule,
-        "topicValues": topics
+        "topicValues": topic_values
     }
 
 
