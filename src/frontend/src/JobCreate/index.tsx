@@ -193,7 +193,7 @@ export default function JobCreate() {
       case 1:
         const invalid = paramLists?.map((l, idx) => getInvalidParamNames(paramValues[idx], l));
         setInvalidValues(invalid ? invalid : []);
-        const paramsValid = invalidValues?.every(t => t.length === 0);
+        const paramsValid = invalid?.every(t => t.length === 0);
         if (!paramsValid) {
           reportError("Parameter nicht korrekt gesetzt")
           return;
