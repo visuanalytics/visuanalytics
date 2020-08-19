@@ -2,7 +2,7 @@
 
 ## Programm starten
 
-## Mit Docker
+### Mit Docker
 
 _Benötigte Software_:
 
@@ -55,7 +55,7 @@ Der Server kann nun unter `http://localhost:8000` erreicht werden.
   Wenn man die Option `h264_nvenc` (siehe `config.json <#config-json>`_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`_)
 ````
 
-## Ohne Docker (Development)
+### Ohne Docker (Development)
 
 _Benötigte Software_:
 
@@ -93,10 +93,6 @@ _Programm starten_:
   Um die Option `h264_nvenc` (siehe `config.json <#config-json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung finden Sie `hier <https://developer.nvidia.com/ffmpeg>`_.
 ````
-
-## Ohne Docker (Produktion)
-
-_TODO_
 
 ## Wordpress-Plugin verwenden
 
@@ -323,6 +319,44 @@ _Twitter Wordcloud (steps: `"twitter"`)_:
 - `color_func_words`: str - Farbe des gewünschten Farbverlaufs der Wörter in der Wordcloud (nur wenn `color_func` auf `true` gesetzt wurde)
 - `figure`: str - Form der Wordcloud (aktuell nur Kreis und Quadrat möglich)
 - `size_wordcloud`: str - Größe der Wordcloud (verschiedene Größen möglich)
+
+## Tests Ausführen
+
+### Mit Docker
+
+_Benötigte Software_:
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+
+Unter Windows muss ggf. noch ein Windows Subsystem for Linux installiert werden. 
+Weitere Informationen [hier](https://docs.docker.com/docker-for-windows/wsl/)
+
+_In den `src`-Ordner wechseln_: `cd src`
+
+_Tests ausführen_:
+
+- `docker-compose -f visuanalytics/docker-compose.test.yml up` 
+
+### Ohne Docker
+
+_Benötigte Software_:
+
+- [python](https://www.python.org/downloads/) >=3.6
+- [pip](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
+
+_In den `src`-Ordner wechseln_: `cd src`
+
+_Pakete installieren_:
+
+- `pip install -r visuanalytics/requiraments.txt`
+
+_Tests ausführen_:
+
+- `python python3 -m unittest discover visuanalytics`
+
+```note::
+ Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
+```
 
 ## Dokumentation generieren
 
