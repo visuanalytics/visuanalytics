@@ -7,3 +7,4 @@ Verwendung
    installation
    stepsConfig
    audio-apis
+   python-code-style
