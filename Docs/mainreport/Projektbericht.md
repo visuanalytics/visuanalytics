@@ -290,6 +290,69 @@ Für die Entwicklung des Programmes nutzen wir zwei Entwicklungsumgebungen von *
 
 ---
 
+## Testen mit unittest
+
+Zum Schreiben von Unit-Tests stellt Pythons Standard-Bibliothek [unittest](https://docs.python.org/3/library/unittest.html) zur Verfügung.
+
+Hier ist ein Beispiel für den Umgang mit der Test-Bibliothek:
+
+1. Definition von (zu testenden) Funktionen zur Berechnung der Summe aller geraden bzw. ungeraden Zahlen in einer Listeim Modul `sum_fun.py`.
+
+   ```
+   def sum_even(l):
+       return sum(filter(even, l))
+   
+   def sum_uneven(l):
+       return sum(filter(uneven, l))
+   ```
+
+2. Erstellung des Moduls (`test_sum.py`), das die Tests enthalten soll. Je Testfall wird eine Klasse erstellt, welche von `unittest.TestCase` erbt. In diesem Beispiel gibt es nur einen Testfall (Klasse `Test_Sum_Fun`). Innerhalb der Klasse werden nun die einzelnen Test-Methoden definiert. Damit diese auch automatisch beim Starten des Tests ausgeführt werden, müssen ihre Namen mit `test` beginnen. Zentrale Komponente der Test-Funktionen sind die `asserts`. Diese bestimmen, ob der Test durchläuft oder fehlschlägt.  
+
+   ```
+   import unittest
+   import sum_fun
+   
+   class TestSumFun(unittest.TestCase):
+   
+       def test_sum_even(self):
+           expected = 6
+           actual = sum_fun.sum_even([1, 2, 3, 4, 5])
+           self.assertEqual(expected, actual)
+   
+       def test_sum_uneven(self):
+           expected = 9
+           actual = sum_fun.sum_uneven([1, 2, 3, 4, 5])
+           self.assertEqual(expected, actual)
+   
+       def test_sum_even_uneven(self):
+           l = [1,2,3,4,5]
+           expected = sum(l)
+           actual = sum_fun.sum_even(l) + sum_fun.sum_uneven(l)
+           self.assertEqual(expected, actual, "Sum of even and uneven numbers should equal the sum of all numbers in a list")
+   ```
+
+   Die wahrscheinlich wichtigste `assert`-Funktion ist `assertEqual`. Diese nimmt zwei Werte an und wirft eine Exception (d.h. der Test schlägt fehl), wenn sie unterschiedlich sind. Um den Fehler genauer zu beschreiben, lässt sich als optionaler Parameter zusätzlich ein Text angeben, der ausgegeben wird, wenn der Test fehlschlägt.
+
+3. (optional) Um die im Modul enthaltenen Tests auch von der Kommandozeile aus ausführen zu können, werden folgende Anweisung hinzugefügt:
+
+   ```
+   if __name__ == '__main__':
+       unittest.main()
+   ```
+
+   Die Tests lassen sich dann von der Kommandozeile aus so ausführen: 
+
+   ```
+   python -m unittest test sum_test
+   python -m unittest sum_test.Test_Sum_Fun
+   python -m unittest sum_test.Test_Sum_Fun.test_sum_even
+   ```
+
+4. Um die Tests in PyCharm auszuführen: Rechtsklick auf das Testmodul im Projektverzeichnis und dann `Run unit tests in ...` auswählen.
+
+
+Quelle: https://docs.python.org/3/library/unittest.html
+
 ## Lastenheft
 ### Zielbestimmung
 Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
@@ -753,9 +816,11 @@ Das Programm ist um weitere Schnittstellen einfach erweiterbar sein. API-Antwort
 
 ### Möglichkeiten der Erweiterung der Software
 
+#### API-Schnittstellen
 Die Software kann leicht durch weitere API-Schnittstellen erweitert werden, um weitere Themen zu integrieren. Beispielsweise Themen wie Corona oder ein Quiz. 
 Zudem können weitere Funktionen zur Erstellung von Grafiken wie zum Beispiel Diagramme hinzugefügt werden, um die Population der Welt darzustellen oder Tabellen.
 
+#### Benutzeroberfläche für Erstellung der JSON-Datei
 Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-Konfigurationsdatei zu implementieren, um mithilfe von Formularen die einzelnen Konfigurationen der JSON-Datei hinzuzufügen. (siehe _Abbildung 14_)
 
 <figure>
@@ -763,3 +828,46 @@ Eine weitere Idee ist es, eine Benutzeroberfläche für die Erstellung der JSON-
   <figcaption>Abbildung 14</figcaption>
 </figure>
 <br>
+
+#### Asynchrone API-Requests
+
+Um die Abfrage von API-Requests zu beschleunigen, 
+kann man diese asynchron ausführen. Dies ist für einen Request natürlich langsamer, 
+ab zwei aber schon schneller, umso mehr requests man macht, umso größer wird der Unterschied,
+da man ungefähr in der Zeit von einem synchronen Request alle asynchronen machen kann.
+
+> z.B. bei unseren 19 API-Requests an die weatherbit-API für den deutschlandweiten Wetterbericht 
+> ist die asynchrone Variante 7 Sekunden schneller.
+
+Möglicher Code:
+
+~~~
+import asyncio
+from aiohttp import ClientSession
+
+
+async def _fetch(url, session):
+    async with session.get(url) as response:
+        return await response.json()
+
+
+async def _fetch_array(urls):
+    async with ClientSession() as session:
+        tasks = await asyncio.gather(
+            *[_fetch(url, session) for url in urls]
+        )
+
+        return tasks
+
+
+def fetch_all(urls):
+    loop = asyncio.get_event_loop()
+    task = loop.create_task(_fetch_array(urls))
+    loop.run_until_complete(task)
+    return task.result()
+~~~
+
+Der Funktion `fetch_all` übergibt man eine Liste von URLs und diese macht dann alle Requests und man bekommt eine Liste mit den Ergebnissen zurück.
+
+> Der Code wurde noch nicht eingebaut, da man eine weitere Dependency benötigt 
+> und noch nicht ganz sicher ist, ob man diese Funktion häufiger benötigt.
