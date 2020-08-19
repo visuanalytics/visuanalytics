@@ -19,7 +19,7 @@ def get_job_schedules():
     with db.open_con() as con:
         res = con.execute(
             """
-            SELECT DISTINCT job_id, type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
+            SELECT DISTINCT job_id, job_name, type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
             time_interval, delete_type, days, hours
             FROM job 
             LEFT JOIN schedule_weekday USING(job_id)
