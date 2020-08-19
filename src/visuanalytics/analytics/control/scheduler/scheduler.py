@@ -73,12 +73,16 @@ class Scheduler(object):
         next_run = self._interval.get(job_id, None)
         run = False
 
-        if not next_run is None:
-            run = self._check_datetime(now, next_run)
+        # If Interval has changed -> reset time
+        if next_run is not None and next_run["interval"] != interval:
+            next_run = None
+
+        if next_run is not None:
+            run = self._check_datetime(now, next_run["time"])
 
         if run or next_run is None:
-            self._interval[job_id] = now + timedelta(**interval)
-            logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, None)}")
+            self._interval[job_id] = {"time": now + timedelta(**interval), "interval": interval}
+            logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, {}).get('time', None)}")
 
         return run
 
