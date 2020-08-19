@@ -266,13 +266,13 @@ Führt eine **https**-Request durch.
 
 **`api_key_name`** _(optional)_:
 
-[str](#string) - Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der JSON-Datei übereinstimmen.
+[str](#string) - Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
 
 - _Fehler_:
 
-  - `ApiKeyError` -> Name in JSON-Datei nicht gefunden.
+  - `ApiKeyError` -> Name in Konfigurationsdatei nicht gefunden.
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
   - `api_key` -> Beinhaltet den API-Key hinter `api_key_name`.
 
@@ -376,7 +376,7 @@ Alle Angaben, die auch bei dem [api](#api)-Typ [request](#request) möglich sind
 
 [list](#list) - Alle Werte für die ein Request gesendet werden soll. 
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
   - `_loop` -> Beinhaltet den Wert aus `steps_value`.
   - `_idx` -> Beinhaltet den Index des Wertes aus `steps_value`.
