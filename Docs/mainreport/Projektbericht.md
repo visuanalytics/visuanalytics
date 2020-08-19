@@ -353,6 +353,8 @@ Hier ist ein Beispiel für den Umgang mit der Test-Bibliothek:
 
 Quelle: https://docs.python.org/3/library/unittest.html
 
+Wie die Tests für das Projekt ausgeführt werden können ist [hier](../usage/installation.html#tests-ausfuhren) beschrieben.
+
 ## Lastenheft
 ### Zielbestimmung
 Das Programm soll verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo soll anhand von Grafiken, Diagrammen, Wordclouds o.Ä. die Informationen dem Benutzer übersichtlich und verständlich präsentieren.
