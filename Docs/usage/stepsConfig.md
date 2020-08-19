@@ -2564,7 +2564,8 @@ sofern in der Konfiguration angegeben - neben dem Video zusätzlich erstellt.
 ```
 
 ### created
-Das gewünschte Thumbnail-Bild, wurde schon zuvor schonals Bild erstellt.
+Das gewünschte Thumbnail-Bild, wurde schon zuvor erstellt.
+In diesem Fall nutzt man unter `name` einfach den Internen Bildnamen des Bildes was zuvor schon definiert wurde
 
 **Beispiel**
 ```JSON
@@ -2579,7 +2580,9 @@ Das gewünschte Thumbnail-Bild, wurde schon zuvor schonals Bild erstellt.
 
 
 ### new
-Das gewünschte Thumbnail-Bild soll neu erstellt werden.
+den Typ `new` verwendet man wenn mann kein bisher erstelltest Thumbnail verwenden möchte, dazu muss man dann unter `image` ein image angeben
+Das Image wird mit dem selbem Style wie unter [image](####image) anegegeben
+
 **Beispiel**
 ```JSON
 {
@@ -2594,7 +2597,7 @@ Das gewünschte Thumbnail-Bild soll neu erstellt werden.
 ```
 
 **`image`**:  
-[dict ](#dict ) - Hier wird ein Bild spezifiziert wie unter `images` erläutert.
+[dict ](#dict ) - Hier wird ein Bild spezifiziert wie unter [image](####image) erläutert.
 
 ## Audios
 
