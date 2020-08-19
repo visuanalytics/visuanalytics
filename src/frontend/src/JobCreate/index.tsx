@@ -35,7 +35,10 @@ export default function JobCreate() {
   const classes = useStyles();
   const components = React.useContext(ComponentContext);
 
-  const [counter, setCounter] = React.useState(5);
+  const timeout = React.useRef<NodeJS.Timeout>();
+  const countertimeout = React.useRef<NodeJS.Timeout>();
+
+  const [counter, setCounter] = React.useState(0);
   // states for stepper logic
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectComplete, setSelectComplete] = React.useState(false);
@@ -178,15 +181,29 @@ export default function JobCreate() {
   }, [schedule, activeStep]);
 
   useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+    if (counter > 0) {
+      countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
+    }
+    return (() => {
+      if (countertimeout.current !== undefined) {
+        clearTimeout(countertimeout.current);
+      }
+    });
   }, [counter]);
 
   const delay = () => {
     setCounter(5);
-    setTimeout(() => {
+    timeout.current = setTimeout(() => {
       components?.setCurrent("home");
     }, 5000);
   };
+
+  const handleStartPage = () => {
+    if (timeout.current !== undefined) {
+      clearTimeout(timeout.current);
+    }
+    components?.setCurrent("home");
+  }
 
   // handlers for stepper logic
   const handleNext = () => {
@@ -392,7 +409,7 @@ export default function JobCreate() {
                   </Grid>
                   <Grid container item justify="center">
                     <ContinueButton
-                      onClick={() => components?.setCurrent("home")}
+                      onClick={handleStartPage}
                     >
                       STARTSEITE
                   </ContinueButton>
