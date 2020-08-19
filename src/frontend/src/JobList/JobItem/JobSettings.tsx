@@ -112,7 +112,7 @@ export const JobSettings: React.FC<Props> = ({
             },
             body: JSON.stringify({
                 jobName: jobName.trim(),
-                topics: job.topicValues.map((t: any, idx: number) => {
+                topicValues: job.topicValues.map((t: any, idx: number) => {
                     return {
                         topicId: t.topicId,
                         values: toTypedValues(trimParamValues(paramValues[idx]), t.params),
