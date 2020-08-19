@@ -30,8 +30,8 @@ def get_job_list():
     res = con.execute("""
         SELECT 
         job_id, job_name, 
-        schedule.type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
-        delete_type, days, hours, k_count, fix_names_count,
+        schedule.type AS s_type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
+        delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
         GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
@@ -39,6 +39,7 @@ def get_job_list():
         FROM job 
         INNER JOIN schedule USING (schedule_id)
         LEFT JOIN schedule_weekday USING (schedule_id)
+        INNER JOIN delete_options USING (delete_options_id)
         INNER JOIN job_topic_position USING (job_id) 
         LEFT JOIN job_config USING (position_id) 
         INNER JOIN steps USING (steps_id)
@@ -53,14 +54,14 @@ def insert_job(job):
     schedule = job["schedule"]
     delete_schedule = job["deleteSchedule"]
     topic_values = job["topics"]
-    delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(delete_schedule)
 
     schedule_id = _insert_schedule(con, schedule)
+    delete_options_id = _insert_delete_options(con, delete_schedule)
 
     job_id = con.execute(
-        "INSERT INTO job(job_name, schedule_id, delete_type, days, hours, k_count, fix_names_count) "
-        "VALUES(?, ?, ?, ?, ?, ?, ?)",
-        [job_name, schedule_id, delete_type, days, hours, keep_count, fix_names_count]).lastrowid
+        "INSERT INTO job(job_name, schedule_id, delete_options_id) "
+        "VALUES(?, ?, ?)",
+        [job_name, schedule_id, delete_options_id]).lastrowid
 
     _insert_param_values(con, job_id, topic_values)
     con.commit()
@@ -70,7 +71,10 @@ def delete_job(job_id):
     con = db.open_con_f()
     con.execute("PRAGMA foreign_keys = ON")
     schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id=?", [job_id]).fetchone()["schedule_id"]
+    delete_options_id = con.execute("SELECT delete_options_id FROM job WHERE job_id=?", [job_id]).fetchone()[
+        "delete_options_id"]
     con.execute("DELETE FROM schedule WHERE schedule_id=?", [schedule_id])
+    con.execute("DELETE FROM delete_options WHERE delete_options_id=?", [delete_options_id])
     con.commit()
 
 
@@ -87,9 +91,12 @@ def update_job(job_id, updated_data):
             schedule_id = _insert_schedule(con, value)
             con.execute("UPDATE job SET schedule_id=? WHERE job_id=?", [schedule_id, job_id])
         if key == "deleteSchedule":
-            delete_type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(value)
-            con.execute("UPDATE job SET delete_type=?, days=?, hours=?, k_count=?, fix_names_count=? WHERE job_id=?",
-                        [delete_type, days, hours, keep_count, fix_names_count, job_id])
+            old_delete_options_id = \
+                con.execute("SELECT delete_options_id FROM job WHERE job_id=?", [job_id]).fetchone()[
+                    "delete_options_id"]
+            con.execute("DELETE FROM delete_options WHERE delete_options_id=?", [old_delete_options_id])
+            delete_options_id = _insert_delete_options(con, value)
+            con.execute("UPDATE job SET delete_options_id=? WHERE job_id=?", [delete_options_id, job_id])
         if key == "topics":
             pos_id_rows = con.execute("SELECT position_id FROM job_topic_position WHERE job_id=?", [job_id])
             pos_ids = [(row["position_id"],) for row in pos_id_rows]
@@ -140,36 +147,44 @@ def _insert_schedule(con, schedule):
     return schedule_id
 
 
+def _insert_delete_options(con, delete_schedule):
+    type, days, hours, keep_count, fix_names_count = _unpack_delete_schedule(delete_schedule)
+    delete_options_id = con.execute(
+        "INSERT INTO delete_options(type, days, hours, k_count, fix_names_count) VALUES (?, ?, ?, ?, ?)",
+        [type, days, hours, keep_count, fix_names_count]).lastrowid
+    return delete_options_id
+
+
 def _row_to_job(row):
     job_id = row["job_id"]
     job_name = row["job_name"]
     weekdays = str(row["weekdays"]).split(",") if row["weekdays"] is not None else []
     param_values = row["param_values"]
 
-    type = row["type"]
+    s_type = row["s_type"]
     time = row["time"]
     schedule = {
-        "type": humps.camelize(row["type"])
+        "type": humps.camelize(s_type)
     }
 
-    if type == "daily":
+    if s_type == "daily":
         schedule = {**schedule, "time": time}
-    if type == "weekly":
+    if s_type == "weekly":
         schedule = {**schedule, "time": time, "weekdays": [int(d) for d in weekdays]}
-    if type == "on_date":
+    if s_type == "on_date":
         schedule = {**schedule, "time": time, "date": row["date"]}
-    if type == "interval":
+    if s_type == "interval":
         schedule = {**schedule, "interval": row["time_interval"]}
 
-    delete_type = row["delete_type"]
+    d_type = row["d_type"]
     delete_schedule = {
-        "type": humps.camelize(delete_type)
+        "type": humps.camelize(d_type)
     }
-    if delete_type == "on_day_hour":
+    if d_type == "on_day_hour":
         delete_schedule = {**delete_schedule, "removalTime": {"days": int(row["days"]), "hours": int(row["hours"])}}
-    if delete_type == "keep_count":
+    if d_type == "keep_count":
         delete_schedule = {**delete_schedule, "keepCount": int(row["k_count"])}
-    if delete_type == "fix_names":
+    if d_type == "fix_names":
         delete_schedule = {**delete_schedule, "count": int(row["fix_names_count"])}
 
     topics = [{}] * (int(row["topic_count"]))

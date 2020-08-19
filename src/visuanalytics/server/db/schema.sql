@@ -1,27 +1,40 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Mi. Aug. 19 12:13:36 2020
+-- File generated with SQLiteStudio v3.2.1 on Mi. Aug. 19 13:20:08 2020
 --
 -- Text encoding used: UTF-8
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
+-- Table: delete_options
+DROP TABLE IF EXISTS delete_options;
+
+CREATE TABLE delete_options (
+    delete_options_id INTEGER PRIMARY KEY
+                              UNIQUE
+                              NOT NULL,
+    type              VARCHAR NOT NULL
+                              CHECK (type IN ("no_deletion", "on_day_hour", "fix_names", "keep_count") ),
+    k_count           INTEGER,
+    days              INTEGER,
+    hours             INTEGER,
+    fix_names_count   INTEGER
+);
+
+
 -- Table: job
 DROP TABLE IF EXISTS job;
 
 CREATE TABLE job (
-    job_id          INTEGER PRIMARY KEY AUTOINCREMENT
-                            UNIQUE
-                            NOT NULL,
-    job_name        VARCHAR NOT NULL,
-    delete_type     VARCHAR NOT NULL
-                            CHECK (delete_type IN ("no_deletion", "on_day_hour", "fix_names", "keep_count") ),
-    days            INTEGER,
-    hours           INTEGER,
-    fix_names_count INTEGER,
-    k_count         INTEGER,
-    schedule_id     INTEGER REFERENCES schedule (schedule_id) ON DELETE CASCADE
-                                                              ON UPDATE CASCADE
+    job_id            INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    job_name          VARCHAR NOT NULL,
+    schedule_id       INTEGER REFERENCES schedule (schedule_id) ON DELETE CASCADE
+                                                                ON UPDATE CASCADE,
+    delete_options_id INTEGER REFERENCES delete_options (delete_options_id) ON DELETE CASCADE
+                                                                            ON UPDATE CASCADE
+                              NOT NULL
 );
 
 
