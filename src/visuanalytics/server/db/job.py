@@ -51,7 +51,7 @@ def get_job_run_info(job_id):
 
         # Init Config with deletion settings
         if res[0]["delete_type"] == "keep_count":
-            config["keep_count"] = res[0]["k_count"],
+            config["keep_count"] = res[0]["k_count"]
 
         if res[0]["delete_type"] == "fix_names":
             config["fix_names"] = {"count": res[0]["fix_names_count"]}
