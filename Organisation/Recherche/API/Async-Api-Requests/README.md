@@ -1,12 +1,12 @@
-# Async-Api-Requests
+# Asynchrone API-Requests
 
 Um die Abfrage von API-Requests zu beschleunigen, 
 kann man diese asynchron ausführen. Dies ist für einen Request natürlich langsamer, 
 ab zwei aber schon schneller, umso mehr requests man macht, umso größer wird der Unterschied,
 da man ungefähr in der Zeit von einem synchronen Request alle asynchronen machen kann.
 
-> z.B. bei unseren 19 API requests an die Weather Api für den Deutschlandweiten wetterbericht 
->ist die asyncrone variante 7 sekunden schneller.
+> z.B. bei unseren 19 API-Requests an die weatherbit-API für den deutschlandweiten Wetterbericht 
+> ist die asynchrone Variante 7 Sekunden schneller.
 
 Möglicher Code:
 
