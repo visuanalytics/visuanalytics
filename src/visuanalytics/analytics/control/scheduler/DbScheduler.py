@@ -19,7 +19,7 @@ class DbScheduler(Scheduler):
     @ignore_errors
     def __check(self, row, now):
         # check if type is "interval" and job has to be run
-        if row["type"] == "interval":
+        if row["s_type"] == "interval":
             if self._check_interval(now, get_interval(row), row["job_id"]):
                 self.__run_jobs(row["job_id"])
             return
@@ -29,18 +29,18 @@ class DbScheduler(Scheduler):
             return
 
         # check if date is today
-        if row["type"] == "on_date" and row["date"] == now.date():
+        if row["s_type"] == "on_date" and row["date"] == now.date():
             # TODO Delete date schedule after run
             self.__run_jobs(row["job_id"])
             return
 
         # if type is "weekly" and check if weekday is same as today
-        if row["type"] == "weekly" and now.weekday() in map(int, row["weekdays"].split(",")):
+        if row["s_type"] == "weekly" and now.weekday() in map(int, row["weekdays"].split(",")):
             self.__run_jobs(row["job_id"])
             return
 
         # check if type is "daily"
-        if row["type"] == "daily":
+        if row["s_type"] == "daily":
             self.__run_jobs(row["job_id"])
             return
 
@@ -62,7 +62,7 @@ class DbScheduler(Scheduler):
 
         if int(now.strftime("%M")) == 00:
             delete_on_time(rows, config_manager.STEPS_BASE_CONFIG["output_path"], "job_name",
-                           lambda j: j["delete_type"] == "on_day_hour",
+                           lambda j: j["d_type"] == "on_day_hour",
                            lambda j: self.__get_delete_time(j))
 
         for row in rows:

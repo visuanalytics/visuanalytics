@@ -19,10 +19,12 @@ def get_job_schedules():
     with db.open_con() as con:
         res = con.execute(
             """
-            SELECT DISTINCT job_id, job_name, type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
-            time_interval, delete_type, days, hours
+            SELECT DISTINCT job_id, job_name, schedule.type as s_type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
+            time_interval, delete_options.type as d_type, days, hours
             FROM job 
-            LEFT JOIN schedule_weekday USING(job_id)
+            INNER JOIN schedule USING(schedule_id)
+            LEFT JOIN schedule_weekday USING(schedule_id)
+            INNER JOIN delete_options USING(delete_options_id)
             GROUP BY(job_id)
             """).fetchall()
 
@@ -36,8 +38,9 @@ def get_job_run_info(job_id):
     """
     with db.open_con() as con:
         res = con.execute("""
-        SELECT job_name, json_file_name, key, value, job_config.type, position, delete_type, k_count, fix_names_count
+        SELECT job_name, json_file_name, key, value, job_config.type as type, position, delete_options.type as d_type, k_count, fix_names_count
         FROM job 
+        INNER JOIN delete_options USING(delete_options_id)
         INNER JOIN job_topic_position USING(job_id)
         LEFT JOIN job_config USING(position_id) 
         INNER JOIN steps USING(steps_id)
@@ -50,10 +53,10 @@ def get_job_run_info(job_id):
         config = {}
 
         # Init Config with deletion settings
-        if res[0]["delete_type"] == "keep_count":
+        if res[0]["d_type"] == "keep_count":
             config["keep_count"] = res[0]["k_count"]
 
-        if res[0]["delete_type"] == "fix_names":
+        if res[0]["d_type"] == "fix_names":
             config["fix_names"] = {"count": res[0]["fix_names_count"]}
 
         # Handle Multiple Topics
