@@ -1,5 +1,5 @@
 import React from "react";
-import {useStyles} from "../style";
+import { useStyles } from "../style";
 import Backdrop from "@material-ui/core/Backdrop";
 import {
     Dialog,
@@ -15,11 +15,11 @@ import {
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
-import {HintButton} from "../../util/HintButton";
-import {SettingsPage} from "../../util/SettingsPage";
-import {ContinueButton} from "../../JobCreate/ContinueButton";
-import {Job} from "../index";
-import {DeleteSchedule} from "../../util/deleteSchedule";
+import { HintButton } from "../../util/HintButton";
+import { SettingsPage } from "../../util/SettingsPage";
+import { ContinueButton } from "../../JobCreate/ContinueButton";
+import { Job } from "../index";
+import { DeleteSchedule } from "../../util/deleteSchedule";
 import {
     Schedule,
     withFormattedDates,
@@ -33,9 +33,9 @@ import {
     initSelectedValues,
     getInvalidParamNames,
 } from "../../util/param";
-import {hintContents} from "../../util/hintContents";
-import {useCallFetch} from "../../Hooks/useCallFetch";
-import {getUrl} from "../../util/fetchUtils";
+import { hintContents } from "../../util/hintContents";
+import { useCallFetch } from "../../Hooks/useCallFetch";
+import { getUrl } from "../../util/fetchUtils";
 
 interface Props {
     open: boolean;
@@ -47,17 +47,17 @@ interface Props {
 
 const initParamValues = (topics: any) => {
     return topics.map((t: any) => {
-        return {...initSelectedValues(t.params), ...t.values};
+        return { ...initSelectedValues(t.params), ...t.values };
     });
 };
 
 export const JobSettings: React.FC<Props> = ({
-                                                 open,
-                                                 onClose,
-                                                 job,
-                                                 handleEditSuccess,
-                                                 reportError,
-                                             }) => {
+    open,
+    onClose,
+    job,
+    handleEditSuccess,
+    reportError,
+}) => {
     const classes = useStyles();
     const [edit, setEdit] = React.useState(false);
     const [hintState, setHintState] = React.useState(0);
@@ -67,7 +67,8 @@ export const JobSettings: React.FC<Props> = ({
     const [paramValues, setParamValues] = React.useState<ParamValues[]>(
         initParamValues(job.topicValues)
     );
-    const [invalid, setInvalid] = React.useState<string[][]>([]);
+    const [invalidValues, setInvalidValues] = React.useState<string[][]>([]);
+    const [invalidJobName, setInvalidJobName] = React.useState(false);
 
     const handleEditError = () => {
         reportError("Bearbeitung fehlgeschlagen");
@@ -81,14 +82,16 @@ export const JobSettings: React.FC<Props> = ({
         setDeleteSchedule(deleteSchedule);
     };
 
+    const emptyJobNameError = "Job-Name nicht ausgefüllt";
+
     const handleCheckClick = () => {
         if (jobName.trim() === "") {
-            reportError("Jobname nicht ausgefüllt");
+            reportError(emptyJobNameError);
             return;
         }
-        const invalidValues = job.topicValues.map((t: any, idx: number) => getInvalidParamNames(paramValues[idx], t.params));
-        setInvalid(invalidValues ? invalidValues : []);
-        const paramsValid = invalidValues?.every(t => t.length === 0);
+        const invalid = job.topicValues.map((t: any, idx: number) => getInvalidParamNames(paramValues[idx], t.params));
+        setInvalidValues(invalid ? invalid : []);
+        const paramsValid = invalid?.every(t => t.length === 0);
         if (!paramsValid) {
             reportError("Parameter nicht korrekt gesetzt")
             return;
@@ -158,6 +161,15 @@ export const JobSettings: React.FC<Props> = ({
         setHintState(hint);
     };
 
+    const handleEditJobName = () => {
+        if (edit && jobName.trim() === "") {
+            setInvalidJobName(true);
+            reportError(emptyJobNameError);
+            return;
+        }
+        setEdit(p => !p);
+    }
+
     return (
         <Dialog
             open={open}
@@ -175,41 +187,42 @@ export const JobSettings: React.FC<Props> = ({
                     <Grid item container xs={1} justify={"flex-end"}>
                         <Tooltip title="Job-Name bearbeiten" arrow>
                             <IconButton
-                                onClick={() => setEdit((b) => !b)}
+                                onClick={handleEditJobName}
                                 className={classes.button}
                             >
-                                <EditIcon color="primary"/>
+                                <EditIcon color="primary" />
                             </IconButton>
                         </Tooltip>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={10} style={{ paddingLeft: 50, paddingRight: 50 }}>
                         {edit ? (
                             <TextField
                                 fullWidth
                                 onChange={handleJobName}
                                 value={jobName}
                                 inputProps={{
-                                    style: {textAlign: "center", fontSize: 20},
+                                    style: { textAlign: "center", fontSize: 20 },
                                 }}
+                                error={invalidJobName}
                             />
                         ) : (
-                            <InputBase
-                                fullWidth
-                                disabled
-                                value={jobName}
-                                inputProps={{
-                                    style: {
-                                        color: "black",
-                                        textAlign: "center",
-                                        fontSize: 20,
-                                        cursor: "default",
-                                    },
-                                }}
-                            />
-                        )}
+                                <InputBase
+                                    fullWidth
+                                    disabled
+                                    value={jobName}
+                                    inputProps={{
+                                        style: {
+                                            color: "black",
+                                            textAlign: "center",
+                                            fontSize: 20,
+                                            cursor: "default",
+                                        },
+                                    }}
+                                />
+                            )}
                     </Grid>
                     <Grid item container xs={1} justify={"flex-end"}>
-                        <HintButton content={hintContent[hintState]}/>
+                        <HintButton content={hintContent[hintState]} />
                     </Grid>
                 </Grid>
             </DialogTitle>
@@ -228,7 +241,7 @@ export const JobSettings: React.FC<Props> = ({
                             params: job.topicValues.map((t: any) => t.params),
                             loadFailedProps: undefined,
                             selectParamHandler: handleSelectParam,
-                            invalidValues: invalid
+                            invalidValues: invalidValues
                         }}
                     />
                 </Paper>
