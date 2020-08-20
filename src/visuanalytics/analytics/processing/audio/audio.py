@@ -1,3 +1,6 @@
+"""
+Modul welches die grundlegenden Funktionen der Audioerzeugung beeihaltet.
+"""
 import base64
 import logging
 import mimetypes
@@ -46,6 +49,13 @@ def register_generate_audio(func):
 
 @register_generate_audio
 def default(values: dict, data: StepData, config: dict):
+    """
+
+    :param values:
+    :param data:
+    :param config:
+    :return:
+    """
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
@@ -66,6 +76,13 @@ def default(values: dict, data: StepData, config: dict):
 
 @register_generate_audio
 def custom(values: dict, data: StepData, config: dict):
+    """
+
+    :param values:
+    :param data:
+    :param config:
+    :return:
+    """
     logger.info("Generate Audio with Custom Audio Config")
 
     _prepare_custom(config.get("prepare", None), data, config)

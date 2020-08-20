@@ -11,6 +11,13 @@ from visuanalytics.util.resources import get_resource_path, MEMORY_LOCATION
 
 
 def delete_video(steps_config, __config):
+    """
+    Methode welche vom Scheduler aufgerufen wird und entscheidet welche unter Methode von video_delete aufgerufen werden soll
+
+    :param steps_config: Konfiguration aus jobs.json
+    :param __config: Werte aus der JSON-Datei
+    :return:
+    """
     if steps_config.get("fix_names", None) is not None:
         fix_names = []
         if steps_config["fix_names"].get("names", None) is None:

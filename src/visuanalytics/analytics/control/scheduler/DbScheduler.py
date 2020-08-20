@@ -1,3 +1,8 @@
+"""
+Modul welches den Datenbank Scheduler beeinhaltet.
+Sorgt dafür das ein Video zur richtigen Zeit gerendert wird.
+"""
+
 import logging
 from datetime import datetime
 
@@ -8,6 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 class DbScheduler(Scheduler):
+    """
+
+    """
+
     def __init__(self, base_config=None):
         super().__init__(base_config)
 

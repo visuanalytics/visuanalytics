@@ -1,3 +1,6 @@
+"""
+
+"""
 import operator
 from functools import reduce
 from string import Formatter

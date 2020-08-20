@@ -1,3 +1,6 @@
+"""
+Modul welches die Wordcloud Image Funktionen beinhaltet.
+"""
 import numbers
 import random
 
@@ -31,8 +34,10 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "repeat": False,
     "mask": None
 }
+""" """
 
 DEFAULT_COLOR_FUNC_VALUES = [0, 0, 0, 40]
+""" """
 
 
 def get_color_func(h, s, l_start, l_end):

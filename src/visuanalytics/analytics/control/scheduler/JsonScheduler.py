@@ -1,3 +1,8 @@
+"""
+Modul welches den Json Scheduler beeinhaltet.
+Sorgt dafür das ein Video zur richtigen Zeit gerendert wird.
+"""
+
 import json
 import logging
 from datetime import datetime
@@ -10,6 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 class JsonScheduler(Scheduler):
+    """
+
+    """
+
     def __init__(self, file_path, base_config=None):
         super().__init__(base_config)
         self.__file_path = file_path

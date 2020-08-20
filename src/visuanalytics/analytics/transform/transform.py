@@ -1,3 +1,6 @@
+"""
+Modul welches alle Transform Typen beeinhaltet
+"""
 import numbers
 import re
 from collections import Counter
@@ -710,6 +713,12 @@ def normalize_words(values: dict, data: StepData):
 
 @register_transform
 def split_string(values: dict, data: StepData):
+    """
+
+    :param values:
+    :param data:
+    :return:
+    """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
         delimiter = data.format(values.get("delimiter", " "), values)

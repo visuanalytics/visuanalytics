@@ -405,21 +405,26 @@ Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein
 
 ### Audio
 
-`part.py`
-
-`audio.py`
-
-`generate_audios()`
+Im Audio Part können beliebig viele Texte welche in Audio übersetzt werden, angegeben werden.
+Eine Audio datei besteht in der regel aus mehreren Parts, welche beim Programmdurchlauf dann zu einem Text zusammengesetzt werden
+In der Regel erzeugt mann pro erstelltes Bild eine Audio Datei, dh wenn es `Football_Image_1`-`Football_Image_7` gibt  
+so sollte es auch `Football_Audio_1` bis `Football_Image_7` geben, dies dient im Sequence Bereich dazu dass zu jeder Audio datei eine Video datei zugeordnert werden kann.
+Natürlich kann dies auch varieren, dazu muss mann dann in Sequence aber den typ `custom` wählen
 
 ### Images
 
-**`pillow`**
+Im Image part können ebenso beliebig viele Bilder generiert werden. 
+Es gibt derzeit 2 Image Typen mit welchen Bilder erzegt werden können:
 
-`draw.py`
+#### Pillow
+Bilder welche mit Pillow erstellt werden sind die meist Verwendeten Bilder in unseren Videos
+Mit Pillow kann ein Angegebnes Bild bearbeitet werden mit folgenden Möglichkeiten:
+Text einfügen sowie
+Bilder einfügen, dies geschieht mit den beiden overlay Typen `Text` sowie `Image`, 
+zusätzlich gibt es noch die Typen `Image-Array` und `Text-Array` diese dienen lediglich dazu um ähnliche Text/Bilder einfacher auf das Bild zu schreiben.
+Ebensfalls funktioniert auch hier der `option` sowie `compare` Typ sofern man bestimmt Information auf das Bild schreiben möchte wenn eine Bedingung erfüllt ist
 
-`overlay.py`
-
-**`wordcloud.py`**
+#### Wordcloud
 Wordclouds sind Images, die erstellt werden können. Der Hintergrund kann einfarbig sein oder aber auch ein anderes Bild als Hintergrund haben. Hier wird dann mit dem overlay-Typ "image" gearbeitet.
 
 Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
@@ -460,13 +465,9 @@ Es ist eine Art Vorschau für das, was im Video gezeigt wird.
 
 ## Sequence
 
-`link(values: dict, step_data: StepData)`
-
-`successively(values: dict, step_data: StepData)`
-
-`custom(values: dict, step_data: StepData)`
-
-`_link(images, audios, audio_l, step_data: StepData, values: dict)`
+Im Sequence Bereich wird definiert wie ein Video zu render ist, bzw in welchen Reihenfolge und welcher Länge die Audios / Bilder
+aneinander gereiht werden sollen. Als einfachsten Typ gibt es hier den `successively` Typ welcher einfach alle Bilder und alle Audios 
+aneinanderreiht und jedes Bild solange zeigt wie die passende Audio Datei lang ist.
 
 ## run_config
 

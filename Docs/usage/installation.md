@@ -2,7 +2,7 @@
 
 ## Programm starten
 
-## Mit Docker
+### Mit Docker
 
 _Benötigte Software_:
 
@@ -55,7 +55,7 @@ Der Server kann nun unter `http://localhost:8000` erreicht werden.
   Wenn man die Option `h264_nvenc` (siehe `config.json <#config-json>`_) verwenden will, kann man beim Starten noch die Option`--runtime="nvidia"`(oder`--gpus all`) angeben. Dafür muss man vorher ein paar Konfigurationen und Installationen vornehmen. Eine Anleitung dafür finden Sie `hier <https://marmelab.com/blog/2018/03/21/using-nvidia-gpu-within-docker-container.html>`_ (Dies ist nicht die offizielle Dokumentation, wir fanden diese aber hilfreicher. Die Dokumentation von Docker zu dem Thema befindet sich `hier <https://docs.docker.com/config/containers/resource_constraints/#access-an-nvidia-gpu>`_)
 ````
 
-## Ohne Docker (Development)
+### Ohne Docker (Development)
 
 _Benötigte Software_:
 
@@ -93,10 +93,6 @@ _Programm starten_:
   Um die Option `h264_nvenc` (siehe `config.json <#config-json>`_) zu verwenden, müssen diverse Einstellungen vorgenommen werden.
   Eine gute Anleitung finden Sie `hier <https://developer.nvidia.com/ffmpeg>`_.
 ````
-
-## Ohne Docker (Produktion)
-
-_TODO_
 
 ## Wordpress-Plugin verwenden
 
@@ -180,10 +176,18 @@ Die Konfiguration, die für jeden Job gelten soll (die Konfigurationen, die im F
   Der Name des Thumbnails hat das Format: `{video_name}_thumbnail.png` (wobei `{video_name}` dem Namen des Videos entspricht).
 
 - `fix_names`(_optional_):
-<!--TODO-->
+
+  fix_names kann dazu verwendet werden um den Out Videos fixe Namen zu geben, hierzu kann man entweder `names` verwenden (hier gibt man dann einfach eine Liste mit Namen an)  
+  oder man verwendet `count`, bei `count` werden die Videos einfach durchnumeriert, dh das neueste Video bekommt _1.
+  Sollte man zb. count=3 wählen so liegen im Out Ordner immer die 3 neusten Videos, das neuste hat den Bezeichner _1 und das älteste _3.
+  Sobald ein neues Video generiert wird, so wird das Video _3 gelöscht und das _2 Video in _3 umbenannt etc.  
+  Die einzige Ausname hier ist wenn count = 1 gesetzt wurde, in diesem Fall wird kein _1 verwendet sondern bei jeder neuen Video erstellung heißt das Video gleich dem Jobnamen.
 
 - `keep_count`(_optional_):
-<!--TODO-->
+
+   keep_count gibt an wie viele Videos maximal im Output Ordner von einem Task vorhanden sein sollen, sobal es zu viele gibt, wird das älteste gelöscht
+
+
 
 `testing`(_optional_):
 
@@ -195,7 +199,7 @@ Hier kann die Konfiguration für die Audio-Generierung angegeben werden. Eine Er
 
 `console_mode`(_optional_):
 
-Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#jobs-json)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
+Falls man das Programm ohne Frontend verwenden will, kann man diese Option auf `true` setzen. Dann kann man die zu erstellenden Jobs in der Datei `jobs.json` angeben (diese liegt ab unter `src\visuanalytics\resources`, eine Erklärung des Formats befindet sich [hier](#vejobs-json)). Diese Option funktioniert nur, wenn man das Programm **ohne Docker** ausführt.
 
 #### jobs.json
 
@@ -315,6 +319,44 @@ _Twitter Wordcloud (steps: `"twitter"`)_:
 - `color_func_words`: str - Farbe des gewünschten Farbverlaufs der Wörter in der Wordcloud (nur wenn `color_func` auf `true` gesetzt wurde)
 - `figure`: str - Form der Wordcloud (aktuell nur Kreis und Quadrat möglich)
 - `size_wordcloud`: str - Größe der Wordcloud (verschiedene Größen möglich)
+
+## Tests Ausführen
+
+### Mit Docker
+
+_Benötigte Software_:
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+
+Unter Windows muss ggf. noch ein Windows Subsystem for Linux installiert werden. 
+Weitere Informationen [hier](https://docs.docker.com/docker-for-windows/wsl/)
+
+_In den `src`-Ordner wechseln_: `cd src`
+
+_Tests ausführen_:
+
+- `docker-compose -f visuanalytics/docker-compose.test.yml up` 
+
+### Ohne Docker
+
+_Benötigte Software_:
+
+- [python](https://www.python.org/downloads/) >=3.6
+- [pip](https://packaging.python.org/tutorials/installing-packages/#ensure-you-can-run-pip-from-the-command-line)
+
+_In den `src`-Ordner wechseln_: `cd src`
+
+_Pakete installieren_:
+
+- `pip install -r visuanalytics/requiraments.txt`
+
+_Tests ausführen_:
+
+- `python python3 -m unittest discover visuanalytics`
+
+```note::
+ Unter Linux kann es sein, dass `pip3` und `python3` verwendet werden müssen.
+```
 
 ## Dokumentation generieren
 

@@ -1,6 +1,19 @@
-# Steps Config 
+# Themenkonfiguration
 
-Die JSON-Datei zu einem Thema hat folgende Abschnitte:
+Die Themenkonfiguration ist eine JSON-Datei mit verschiedenen Abschnitten. Diese Datei dient der Angabe aller Parameter, 
+Einstellungen und Konfigurationen, die für die automatisierte Generierung eines Videos erforderlich sind.
+
+Hier wird angegeben, welche API-Anfrage gesendet wird und was danach mit der API-Antwort passiert.
+Es werden Bilder und Audiodateien erstellt, die am Ende in einer bestimmten Reihenfolge aneinander gehängt werden.
+
+Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
+
+- [Deutschlandweiter Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
+- [Ortsbezogener Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
+- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/football.json)
+- [Twitter-Wordcloud-Verlauf](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+
+Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON
 {
 "id": 1,
@@ -18,12 +31,12 @@ Die JSON-Datei zu einem Thema hat folgende Abschnitte:
 }
 ```
 Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id`, `name` und`info` gibt es mehrere Typen, aus denen bei 
-den einzelnen Abschnitten ausgewählt werden kann, je nachdem wie das Video am Ende aussehen soll und wie die Daten 
+den einzelnen Abschnitten ausgewählt werden kann - je nachdem wie das Video am Ende aussehen soll und wie die Daten 
 verarbeitet und visualisiert werden sollen.
 
-In der JSON-StepsConfig-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
-Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-StepsConfig-Datei "transform"-Typen verwendet.
-Des Weiteren können auch Daten mit "images"-Typen visualisiert werden.
+In der JSON-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
+Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-Datei `transform`-Typen verwendet.
+Des Weiteren können auch Daten mit `images`-Typen visualisiert werden.
 
 Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
@@ -33,22 +46,22 @@ Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusam
 
 Es gibt einen Ordner `resources` in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
-Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
+Es genügt hier der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
 ```note::
-  Der `resources` Ordner befindet sich in `src/visuanalytics/` (bzw. innerhalb des Docker-Containers in `/home/appuser/visuanalytics/`)
+  Der `resources`-Ordner befindet sich unter `src/visuanalytics/` (bzw. innerhalb des Docker-Containers unter `/home/appuser/visuanalytics/`).
 ```
 
 **Unterordner**:
 
-- _Bilder_: `images` (Dieser muss bei der Angabe des Pfads nicht angegeben werden)
-- _Schriftarten_: `fonts` (Dieser muss bei der Angabe des Pfads angegeben werden)
-- _Themen_: `steps` (Hier befinden sich alle JSON-StepsConfig-Dateien)
-- _Stopwords_:  `stopwords` (Hier befindet sich die Datei für die Globalen Stopwords)
+- _Bilder_: `images` (dieser muss bei der Angabe des Pfads **nicht** angegeben werden)
+- _Schriftarten_: `fonts` (dieser **muss** bei der Angabe des Pfads angegeben werden)
+- _Themen_: `steps` (hier befinden sich alle JSON-Dateien)
+- _Stopwords_:  `stopwords` (hier befindet sich die Datei für die globalen Stopwords)(siehe auch [hier](#wordcloud))
 
 **Beispiele**
 
-_Ordnerstrucktur_:
+_Ordnerstruktur_:
 
 ~~~
 resources
@@ -67,7 +80,7 @@ resources
         stopwords.txt
 ~~~
 
-_Verwendung der Bilder in einer JSON-StepsConfig-Datei_:
+_Verwendung der Bilder in einer JSON-Datei_:
 
 ```JSON
 {
@@ -75,7 +88,7 @@ _Verwendung der Bilder in einer JSON-StepsConfig-Datei_:
 }
 ```
 
-_Verwendung der Schriftart in einer JSON-StepsConfig-Datei_:
+_Verwendung der Schriftart in einer JSON-Datei_:
 
 ```JSON
 {
@@ -85,11 +98,11 @@ _Verwendung der Schriftart in einer JSON-StepsConfig-Datei_:
 
 ### Key/New Key
 
-Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet man die key/new_key-Syntax.
-Diese dient dazu einen Textzu verändern und neu abzuspeichern. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
+Um Daten zu verändern, verwendet man die `key`/`new_key`-Syntax.
+Diese dient dazu einen Text zu verändern und neu abzuspeichern. Dieser Text ist unter dem 
 Key `text1` abgespeichert. Den modifizierten Text kann man nun wieder unter `text1` abspeichern, indem man keinen neuen Key mit `new_key` angibt. 
 Dann ist der default-Speicherplatz an der Stelle `text1`. Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
-Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verwendet, z.B. mit dem Wert `text_transformed`.
+Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verwendet, z.B. mit dem Namen `text_transformed`.
 
 **Beispiel**
 ```JSON
@@ -100,15 +113,15 @@ Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verw
 }
 ```
 
-Ist ein angegebener `new_key` nicht vorhanden wir der erstellt bzw. alle keys die fehlen.
+Ist ein angegebener `new_key` nicht vorhanden, wird dieser - bzw. alle Keys, die fehlen - neu erstellt.
 
 ```warning::
-  Aktuelle ist es nicht möglich, dass durch die Angabe von `new_key` ein Array erstellt wird, oder ein Array was zu klein ist vergrößert wird.
+  Aktuell ist es nicht möglich, dass durch die Angabe von `new_key` ein Array erstellt wird oder ein Array, was zu klein ist, vergrößert wird.
 ```
 
-### Spezial Variablen
+### Spezialvariablen
 
-Es gibt einge vordefinierte Spezial-Variablen mit folgenden Keys.
+Es gibt einge vordefinierte Spezialvariablen mit folgenden Keys.
 
 **`_req`**:
 
@@ -116,39 +129,39 @@ Hier werden alle Daten aus den Requests gespeichert (siehe [api](#api)).
 
 **`_conf`**:
 
-Hier werden alle Konfigurations Variablen gespeichert (siehe [run_config](#run-config)).
+Hier werden alle Konfigurationsvariablen gespeichert (siehe [run_config](#run-config)).
 
 **`_audio`**:
 
-Hier werden alle Konfigurationen und Daten für eine Benutzerdefiniert Audio generation gespeichert (siehe [Audio Konfiguration](./audio-apis.md)).
+Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audio Konfiguration](./audio-apis.md)).
 
 **`_key`**:
 
-Hier wird der Wert des Keys gespeichert. Diese variable ist nur in den meisten [transform](#transform) typen gesetzt.
+Hier wird der Wert des Keys gespeichert. Diese Variable ist in den meisten [transform](#transform)-Typen gesetzt.
 
 **`_loop`**:
 
-Hier wird der Aktuelle wert des Schleifen durchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen [loop](#loop), [transform_array](#transform-array), [transform_dict](#transform-dict) und bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
+Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict); bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
 
 **`_idx`**:
 
-Hier wird der Aktuelle index des Schleifen durchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict) und bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
+Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict); bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
 
 **`_pipe_id`**:
 
-Die `id` der Pipline die den Job ausführt. (Diese ist ein Zufallsgenerierten String und wird inerhalb der JSON datei normalerweiße nicht benötigt).
+Die `id` der Pipline, die den Job ausführt. (Diese ist ein zufallsgenerierter String und wird innerhalb der JSON-Datei normalerweise nicht benötigt.)
 
 **`_job_id`**:
 
-`id` des Jobs. (Wird normalerweiße inerhalb der JSON datei nicht benötigt)
+`id` des Jobs (wird normalerweise innerhalb der JSON-Datei nicht benötigt).
 
-### Daten Typen 
+### Datentypen 
 
-In der JSON-StepsConfig-Datei gibt es Typen zu den - zu Beginn dieser Seite genannten - Abschnitten:
+In der JSON-Datei gibt es Typen zu den folgenden Abschnitten - wie auch zu Anfang beschrieben:
 `api`, `transform`, `images`, `thumbnail`, `audio` und `sequence`.
 
 #### string
-Um auf einen String zuzugreifen, verwendet man folgende Syntax. 
+Um auf einen String zuzugreifen, verwendet man folgende Syntax: 
 
 **Beispiel**
 ```JSON
@@ -158,10 +171,10 @@ Um auf einen String zuzugreifen, verwendet man folgende Syntax.
 }
 ```
 
-**TODO**: {} beschreibung
+**TODO**: {} Beschreibung
 
 #### boolean
-Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax. 
+Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax: 
 
 **Beispiel**
 ```JSON
@@ -171,7 +184,7 @@ Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax.
 }
 ```
 #### number
-Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende Syntax. 
+Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende Syntax:
 
 **Beispiel**
 ```JSON
@@ -182,7 +195,7 @@ Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende
 ```
 
 #### dict
-Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende Syntax:
 
 **Beispiel**
 ```JSON
@@ -195,7 +208,7 @@ Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet ma
 ```
 
 #### list
-Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax.
+Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
 
 **Beispiel**
 ```JSON
@@ -209,7 +222,7 @@ Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax.
 ```
 
 #### any
-Um auf einen Wert mit nicht festgelegten Daten type zuzugreifen, verwendet man folgende Syntax.
+Um auf einen Wert mit nicht festgelegtem Datentyp zuzugreifen, verwendet man folgende Syntax:
 
 **Beispiel**:
 ```JSON
@@ -249,7 +262,7 @@ Führt eine **https**-Request durch.
 
 **`url_pattern`**:
 
-[str](#string) - Die zu verwendende `URL`, um die API-Request zu senden.
+[str](#string) - Die zu verwendende URL, um die API-Request zu senden.
 
 **`api_key_name`** _(optional)_:
 
@@ -257,23 +270,23 @@ Führt eine **https**-Request durch.
 
 - _Fehler_:
 
-  - `ApiKeyError` -> Name in Config nicht gefunden.
+  - `ApiKeyError` -> Name in Konfigurationsdatei nicht gefunden.
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
-  - `api_key` -> Beinhaltet den Api-Key hinter `api_key_name`.
+  - `api_key` -> Beinhaltet den API-Key hinter `api_key_name`.
 
 **`headers`** _(optional)_:
 
-[any](#any) - Die [Http Header](https://developer.mozilla.org/de/docs/Web/HTTP/Headers) für den request.
+[any](#any) - Die [HTTP-Header](https://developer.mozilla.org/de/docs/Web/HTTP/Headers) für den Request.
 
 **`params`** _(optional)_:
 
-[any](#any) - Die URL-Paramter des Requests. Die Angabe erfolg als key, value Paare.
+[any](#any) - Die URL-Parameter des Requests. Die Angaben erfolgen als Key/Value-Paare.
 
 _Beispiel_
 
-In der JSON:
+In der JSON-Datei:
 
 ~~~JSON
 {
@@ -289,31 +302,31 @@ URL nach dem Zusammenbauen:
 
 `https://test.de?test=test_value&test1=test_value_1`
 
-**`body`** _(Optional)_:
+**`body`** _(optional)_:
 
-[any](#any) - Der zu verwendende Request-Body. Dieser kann entweder ein Json-Objekt oder ein String sein (Für Definition des Typen siehe `body_type`).
+[any](#any) - Der zu verwendende Request-Body. Dieser kann entweder ein JSON-Objekt oder ein String sein (für Definition des Typen siehe `body_type`).
 
-**`body_type`** _(Optional)_:
+**`body_type`** _(optional)_:
 
-[str](#string) - Der Datentype des Bodys.
+[str](#string) - Der Datentyp des Bodys.
 
 - _mögliche Werte_:
-  - `json` (Standart)
+  - `json` (default)
   - `other`
 
-**`method`** _(Optional)_:
+**`method`** _(optional)_:
 
-[str](#string) - Die zu verwendende [HTTP-Request methode](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
+[str](#string) - Die zu verwendende [HTTP-Request-Methode](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
 
 - _mögliche Werte`_:
-  - `GET` (Standart)
+  - `GET` (default)
   - `POST`
   - `PUT`
   - `DELETE`
 
-**`body_encoding`** _(Optional)_:
+**`body_encoding`** _(optional)_:
 
-[str](#string) - Die Encodierung mit welcher der Wert in `body_type` encodiert werden soll (z.B.: `utf-8`).
+[str](#string) - Die Kodierung, mit welcher der Wert in `body_type` kodiert werden soll (z.B.: `utf-8`).
 
 ```note::
   Diese ist nur für den `body_type` `other` möglich.
@@ -321,20 +334,20 @@ URL nach dem Zusammenbauen:
 
 **`response_format`** _(optional)_:
 
-[str](#string) - Der Datentype des Response-Bodys.
+[str](#string) - Der Datentyp des Response-Bodys.
 
 - _mögliche Werte`_:
-  - `json` (Standart)
+  - `json` (default)
   - `text`
   - `other`
 
 ```note::
-  Der wert `Other` sollte nur bei der `Audio Konfiguration <./audio-apis.html>`_ verwendet werden
+  Der Wert `other` sollte nur bei der `Audio-Konfiguration <./audio-apis.html>`_ verwendet werden.
 ```
 
 ### request_multiple
 
-Führt mehrere **https**-Requests durch. Die Request bleibt gleich bis auf einen Wert, der sich ändert.
+Führt mehrere **https**-Requests durch. Der Request bleibt gleich bis auf einen Wert, der sich ändert.
 Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 **Beispiel** 
@@ -357,29 +370,29 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 }
 ```
 
-Alle angaben die auch bei dem [api](#api)-Type [request](#request) möglich sind.
+Alle Angaben, die auch bei dem [api](#api)-Typ [request](#request) möglich sind.
 
 **`steps_value`**:
 
-[list](#list) - Alle werte für die ein request gesendet werden soll. 
+[list](#list) - Alle Werte für die ein Request gesendet werden soll. 
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
-  - `_loop` -> Beinhaltet den wert aus `steps_value`.
-  - `_idx` -> Beinhaltet den index des Wertes aus `steps_value`.
+  - `_loop` -> Beinhaltet den Wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den Index des Wertes aus `steps_value`.
 
 **`use_loop_as_key`**
 
-[bool ](#boolean) - Gibt an ob der Wert aus steps_value als Key zum Speichern des requests verwendet Werden soll.
+[bool](#boolean) - Gibt an, ob der Wert aus `steps_value` als Key zum Speichern des Requests verwendet werden soll.
 
 - Bei `true`:
-  - Die daten der requests werden als Dictionary (dict) mit den werten aus `steps_value` als keys gespeichert 
+  - Die Daten der Requests werden als Dictionary (dict) mit den Werten aus `steps_value` als Keys gespeichert.
 - Bei `false` (default):
-  - Die daten der requests werden als liste (list) gespeichert.
+  - Die Daten der Requests werden als Liste (list) gespeichert.
 
 ### request_multiple_custom
 
-Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden anderen Request-Typen verwenden, der
+Führt mehrere **https**-Requests durch. Man kann jeden anderen Request-Typen verwenden, der oben beschrieben wurde.
 
 **Beispiel** 
 
@@ -416,29 +429,29 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 
 **`requests`**:
 
-Hier können mehrere requests angegeben werden, hierfür kann man einfach alle [api](#api)-Typen angeben. Diese werden dann nacheinander ausgeführt.
+Hier können mehrere Requests angegeben werden. Hierfür kann man alle [api](#api)-Typen angeben. Diese werden dann nacheinander ausgeführt.
 
 **`steps_value`**:
 
-[list](#list) - Alle werte für die ein request gesendet werden soll. 
+[list](#list) - Alle Werte für die ein Request gesendet werden soll. 
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
-  - `_loop` -> Beinhaltet den wert aus `steps_value`.
-  - `_idx` -> Beinhaltet den index des Wertes aus `steps_value`.
+  - `_loop` -> Beinhaltet den Wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den Index des Wertes aus `steps_value`.
 
 **`use_loop_as_key`**
 
-[bool ](#boolean) - Gibt an ob der Wert aus steps_value als Key zum Speichern des requests verwendet Werden soll.
+[bool ](#boolean) - Gibt an, ob der Wert aus `steps_value` als Key zum Speichern des Requests verwendet werden soll.
 
 - Bei `true`:
-  - Die daten der requests werden als Dictionary (dict) mit den werten aus `steps_value` als keys gespeichert 
+  - Die Daten der Requests werden als Dictionary (dict) mit den Werten aus `steps_value` als Keys gespeichert.
 - Bei `false` (default):
-  - Die daten der requests werden als liste (list) gespeichert.
+  - Die Daten der Requests werden als Liste (list) gespeichert.
 
 ### input
 
-Hier können Daten angegeben werden die einfach hinzugefügt werden.
+Hier können Daten angegeben werden, die einfach hinzugefügt werden.
 
 **Beispiel**
 
@@ -451,11 +464,11 @@ Hier können Daten angegeben werden die einfach hinzugefügt werden.
 
 **`data`**
 
-[any](#any) - die einzufügenden Daten.
+[any](#any) - Die einzufügenden Daten.
 
 ### request_memory
 
-Hier können die Daten aus den Schritt [storing](#storing) geladen werden.
+Hier können die Daten aus dem Abschnitt [storing](#storing) geladen werden.
 
 ```JSON
 {
@@ -471,15 +484,15 @@ Hier können die Daten aus den Schritt [storing](#storing) geladen werden.
 
 **`name`**:
 
-[str](#string) - Name des gespeicherten [storing](#storing) eintrags.
+[str](#string) - Name des gespeicherten [storing](#storing)-Eintrags.
 
 **`use_last`**: 
 
-[number](#number) - Welche [storing](#storing) version geladen werden soll.
+[number](#number) - Nummer der [storing](#storing)-Version, die geladen werden soll.
 
 **`alternative`**
 
-Hier kann einrequests angegeben werden, hierfür kann man einfach alle [api](#api)-Typen angeben.
+Hier kann ein Requests angegeben werden. Hierfür kann man alle [api](#api)-Typen angeben.
 
 ## Transform
 
@@ -514,7 +527,7 @@ Dem `transform` wird entweder ein `transform_array` oder ein `transform_dict` vo
 } 
 ```
 
-Im Beispiel werden für das Dictionary (siehe `transform_dict`) mit dem Key `_req` (in der JSON-Ausgabedatei) die 
+Im Beispiel werden für das Dictionary (siehe `transform_dict`) mit dem Key `_req` die 
 `transform`-Typen `select` und `select_range` durchgeführt. Es wird mit einer Schleife durch alle Werte der Ebene unter 
 `dict_key` gelaufen und die `transform`-Typen werden auf diese Daten angewandt.
 
@@ -705,7 +718,7 @@ Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 #### Grundrechenarten
 
 Die Aktionen `multiply`, `divide`, `subtract` und `add` sind gleich aufgebaut. Daher haben die Keys auch die gleiche Bedeutung.
-Als Standard ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
+Als default ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
 
 **`keys_right`**_(optional)_: 
 
@@ -804,7 +817,7 @@ die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet we
 
 ### select
 
-`select` entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus dem Dictionary bzw. der JSON-Ausgabe-Datei.
+`select` entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus den Daten.
 
 Mit `select` kann man sich also die Key/Value-Paare aus der API-Antwort herausziehen, die für das zu erstellende Video 
 relevant sind. 
@@ -824,17 +837,16 @@ relevant sind.
 
 **`array_key`**:
 
-[str](#string) - Angabe, in welcher Ebene in der JSON-Ausgabe-Datei, die `relevant_keys` zu finden sind.
+[str](#string) - Angabe, in welcher Ebene der Daten, die `relevant_keys` zu finden sind.
 
 **`relevant_keys`**: 
 
-str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und in die JSON-Ausgabe-Datei 
-eingefügt werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und abgespeichert werden sollen.
 
 
 ### delete
 
-Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
+Entfernt Key/Value-Paare aus den Daten.
 
 **Beispiel** 
 
@@ -850,7 +862,7 @@ Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
 
 **`keys`**: 
 
-str-Array - Namen der Keys, dessen Key/Value-Paare aus der JSON-Ausgabe-Datei entfernt werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare entfernt werden sollen.
 
 
 ### select_range
@@ -870,7 +882,7 @@ Entfernt alle Werte aus `array_key`, die nicht innerhalb der von `range_start` u
 
 **`array_key`**:
 
-[str](#string) - Angabe, aus welcher Ebene in der JSON-Ausgabe-Datei, die Daten ausgewählt werden sollen.
+[str](#string) - Angabe, aus welcher Ebene die Daten ausgewählt werden sollen.
 
 **`range_start`**_(optional)_:
 
@@ -2018,7 +2030,7 @@ Pillow ist eine Image Library für Python. In unserem Projekt nutzen wir grundle
 Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen werden, die aus den angegebenen
 Parametern Bilddateien generieren.
 
-In diesem Abschnitt der JSON-Konfigurationsdatei werden Bilder spezifiziert, welche dann später in Sequence  
+In diesem Abschnitt der JSON-Datei werden Bilder spezifiziert, welche dann später in Sequence  
 aneinandergeschnitten werden können. Bilder lassen sich in der JSON wie folgt darstellen:
 
 ```JSON
@@ -2565,7 +2577,8 @@ sofern in der Konfiguration angegeben - neben dem Video zusätzlich erstellt.
 ```
 
 ### created
-Das gewünschte Thumbnail-Bild, wurde schon zuvor schonals Bild erstellt.
+Das gewünschte Thumbnail-Bild, wurde schon zuvor erstellt.
+In diesem Fall nutzt man unter `name` einfach den Internen Bildnamen des Bildes was zuvor schon definiert wurde
 
 **Beispiel**
 ```JSON
@@ -2580,7 +2593,9 @@ Das gewünschte Thumbnail-Bild, wurde schon zuvor schonals Bild erstellt.
 
 
 ### new
-Das gewünschte Thumbnail-Bild soll neu erstellt werden.
+den Typ `new` verwendet man wenn mann kein bisher erstelltest Thumbnail verwenden möchte, dazu muss man dann unter `image` ein image angeben
+Das Image wird mit dem selbem Style wie unter [image](####image) anegegeben
+
 **Beispiel**
 ```JSON
 {
@@ -2595,7 +2610,7 @@ Das gewünschte Thumbnail-Bild soll neu erstellt werden.
 ```
 
 **`image`**:  
-[dict ](#dict ) - Hier wird ein Bild spezifiziert wie unter `images` erläutert.
+[dict ](#dict ) - Hier wird ein Bild spezifiziert wie unter [image](####image) erläutert.
 
 ## Audios
 
@@ -2761,7 +2776,7 @@ Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
 ## Sequence
 
-Im `sequence`-Abschnitt der JSON-Konfigurationsdatei kann angegeben werden wie das Video auszusehen hat.
+Im `sequence`-Abschnitt der JSON-Datei kann angegeben werden wie das Video auszusehen hat.
 
 **Beispiel**
 ```JSON
@@ -2835,20 +2850,20 @@ int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer, als die Audi
 
 ## run_config
 
-Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der Job-Erstellung am Anfang und auch im Frontend auswählen kann.
+Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer bei der Job-Erstellung am Anfang und auch im Frontend auswählen kann.
 
-Wie z.B. Optionen, was die Stimme genau vorlesen soll und was nicht oder Einstellungen wie z.B. die Farbe der Wörter 
+Wie z.B. Optionen, was die Stimme vorlesen soll und was nicht oder Einstellungen wie z.B. die Farbe der Wörter 
 bei der Wordcloud. Dies kann mithilfe der `transform`-Typen `option` und `compare` erreicht werden. Man gibt mögliche Werte an. 
 
-Die werte die der Benutzer dann eingibt werden unter dem key `_conf|key` gespeichert (siehe [Spezial Variablen](#spezial-variablen)). Wobei `key` dem in der Konfig angegebenen key entspricht also z. B.: `name`.
+Die Werte, die der Benutzer eingibt, werden unter dem Key `_conf|key` gespeichert (siehe [Spezialvariablen](#spezialvariablen)). Wobei `key` dem in der JSON-Datei angegebenen Key entspricht also z. B.: `name`.
 
-### Basis Angaben
+### Basis-Angaben
 
 Die folgenden drei Keys müssen immer angegeben werden.
 
 **type**:
 
-[str](#string) - Hier steht der Type der Konfiguration, möglich sind: `enum`, `string`, `multi_string`, `sub_params`, `number`, `multi_number`
+[str](#string) - Hier steht der Typ der Konfiguration. Möglich sind: `enum`, `string`, `multi_string`, `sub_params`, `number`, `multi_number`
 
 **display_name**:
 
@@ -2856,20 +2871,20 @@ Die folgenden drei Keys müssen immer angegeben werden.
 
 **optional**:
 
-[bool ](#boolean) - Dieser Parameter gibt an, ob das Feld im Frontend ausgefüllt werden muss oder nicht. Ist der Parameter true, so 
-wird ein Sternchen nach dem Display-Namen angezeigt, um zu markieren, dass dies ein Pflichtparameter ist, bei dem auf jeden Fall ein Parameter ausgewählt werden muss.
+[bool](#boolean) - Dieser Parameter gibt an, ob das Feld im Frontend ausgefüllt werden muss oder nicht. Ist der Parameter `true`, so 
+wird ein Sternchen nach dem Display-Namen im Frontend angezeigt. Dieses dient der Markierung dafür, dass dies ein Pflichtparameter ist, bei dem auf jeden Fall ein Parameter ausgewählt werden muss.
 
 Je nachdem welcher Typ gewählt wurde, werden die Werte aus denen ausgewählt werden soll, angegeben.
 
 **default_value**:
 
-Wert mit dem nicht optionale Paramter im Frontend inizalisiert werden. (Wenn optional `true` ist kann diese Angabe auch weggelassen werden).
+Wert mit dem nicht-optionale Paramter im Frontend initialisiert werden. (Wenn optional `true` ist, kann diese Angabe auch weggelassen werden.)
 
 ### enum
 
 Um im Frontend eine Auswahl als Dropdown-Menü darzustellen, wird der Typ `enum` verwendet. 
 
-**JSON Beispiel**
+**JSON-Beispiel**
 
 ```JSON
 {
@@ -2893,7 +2908,7 @@ Um im Frontend eine Auswahl als Dropdown-Menü darzustellen, wird der Typ `enum`
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
 **enum_values**:
 [{}] - Array mit Dictionaries. Ein Dictionary besteht aus `value` und `display_value`.
@@ -2908,14 +2923,14 @@ Wert, dem der Key (`name`) in der JSON zugewiesen ist.
   Der bei `value` angegebene Wert wird immer als `String` (str) interpretiert.
 ```
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_enum.png)
 
 ### string
 Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
-**JSON Beispiel**
+**JSON-Beispiel**
 
 ```JSON
 {
@@ -2928,9 +2943,9 @@ Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ al
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_string.png)
 
@@ -2938,7 +2953,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
-**JSON Beispiel**
+**JSON-Beispiel**
 
 ```JSON
 {
@@ -2951,16 +2966,16 @@ Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_multi_string.png)
 
 ### boolean
 Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. Dieser Parameter wird im Frontend mit einer Checkbox angezeigt.
 
-**JSON Beispiel**
+**JSON-Beispiel**
 
 ```JSON
 {
@@ -2973,9 +2988,9 @@ Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. 
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_boolean.png)
 
@@ -2984,7 +2999,7 @@ Alle [Basis Angaben](#basis-angaben).
 Ist der obere Wert `true` so gibt es weitere Parameter, die ausgeklappt werden, wenn der Parameter auf `true` gesetzt wurde. 
 Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend mit einer Checkbox angezeigt.
 
-**JSON Beispiel**
+**JSON-Beispiel**
 ```JSON
 {
     "color_func": {
@@ -3004,23 +3019,23 @@ Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
 **sub_params**
 weitere [Parametertypen](#run-config), die ausgewählt werden können.
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_sub_params.png)
 
 ```note::
-  Wenn optional `true` ist wird Zusätzlich eine Checkbox angezeigt.
+  Wenn optional `true` ist, wird zusätzlich eine Checkbox angezeigt.
 ```
 
 ### number
 Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
-**JSON Beispiel**
+**JSON-Beispiel**
 
 ```JSON
 {
@@ -3033,15 +3048,15 @@ Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_number.png)
 
 ### multi_number
 Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
-**JSON Beispiel**
+**JSON-Beispiel**
 ```JSON
 {
     "temperatur": {
@@ -3053,9 +3068,9 @@ Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser 
 }
 ```
 
-Alle [Basis Angaben](#basis-angaben).
+Alle [Basis-Angaben](#basis-angaben).
 
-**Frontend Beispiel**
+**Frontend-Beispiel**
 
 ![Beispiel](../_static/images/usage/run_config_multi_number.png)
 
@@ -3063,7 +3078,7 @@ Alle [Basis Angaben](#basis-angaben).
 
 **TODO**: überarbeiten/an änderungen anpassen
 
-`presets` werden verwendet, um z.B. Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben. 
+`presets` werden verwendet, um z.B. Texte in dem Style, wie sie im `preset` angegeben wurden, auf die Bilder zu schreiben. 
 Man kann hier auch Parameter wie Weite/Höhe etc. angeben, um es leichter zu haben, wenn man mehrmals Bilder erstellen möchte, die sich nur in wenigen Parametern unterscheiden.
 Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf. Erst ein Wort, dann zwei, dann drei, usw.
 
@@ -3086,7 +3101,7 @@ Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf
 ```
 
 **`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
+[str](#string)/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 **`font_size`**:  
 int - Schriftgröße
