@@ -7,17 +7,31 @@ export const useStyles = makeStyles((theme) => ({
     jobCreateBox: {
         backgroundColor: 'white',
         textAlign: "center",
-        border: "solid #b4b4b4 1px",
-        borderRadius: "10px",
+        border: "solid rgba(0, 0, 0, 0.12) 1px",
+        borderRadius: "4px",
         width: '100%',
     },
-    jobCreateHeader: {
+    header: {
         fontWeight: "normal",
-        fontSize: "large"
+        fontSize: "xlarge"
+    },
+    XLPaddingTB: {
+        paddingBottom: 30,
+        paddingTop: 30
+    },
+    LPaddingTB: {
+        paddingBottom: 20,
+        paddingTop: 20
+    },
+    MPaddingT: {
+        paddingTop: 15
     },
     MPaddingTB: {
         paddingBottom: 15,
         paddingTop: 15
+    },
+    MPaddingB: {
+        paddingBottom: 15,
     },
     SPaddingTB: {
         paddingTop: 10,
@@ -37,10 +51,10 @@ export const useStyles = makeStyles((theme) => ({
         width: "45%"
     },
     inputElement: {
-      mozAppearance: "textfield",
-      appearance: "textfield",
-      webkitAppearance: "none",
-      margin: 0,
+        mozAppearance: "textfield",
+        appearance: "textfield",
+        webkitAppearance: "none",
+        margin: 0,
     },
     expIcon: {
         marginRight: 5,
@@ -49,12 +63,12 @@ export const useStyles = makeStyles((theme) => ({
     centerDiv: {
         textAlign: "left",
         margin: "0 auto",
-        width: 180
+        maxWidth: "180px"
     },
     centerDivMedium: {
         textAlign: "left",
         margin: "0 auto",
-        width: 500,
+        maxWidth: "500px"
     },
     checkboxParam: {
         display: "flex",

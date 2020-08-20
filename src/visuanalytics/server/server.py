@@ -62,4 +62,4 @@ def start_backend():
 
     init(config)
 
-    DbScheduler(config["steps_base_config"]).start_unblocking()
+    DbScheduler().start_unblocking()

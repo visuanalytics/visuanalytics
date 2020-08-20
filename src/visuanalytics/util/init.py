@@ -3,7 +3,7 @@ import os
 
 from visuanalytics.server.db import db
 from visuanalytics.server.db import job
-from visuanalytics.util import external_programs, resources
+from visuanalytics.util import external_programs, resources, config_manager
 
 
 def init(config: dict):
@@ -22,7 +22,10 @@ def init(config: dict):
     # init log_limit
     job.LOG_LIMIT = config["log_limit"]
 
-    # init resources locations
+    # INit STEPS_BASE_CONFIG
+    config_manager.STEPS_BASE_CONFIG = config["steps_base_config"]
+
+    # Init resources locations
     res_paths = config["resources"]
     res_sub_paths = res_paths["sub_paths"]
 

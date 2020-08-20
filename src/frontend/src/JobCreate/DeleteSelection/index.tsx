@@ -1,8 +1,8 @@
 import React from "react";
-import {useStyles} from "../style";
-import {Collapse, Divider, Fade, FormControlLabel, Radio, TextField} from "@material-ui/core";
-import {DayHour, DeleteSchedule} from "../../util/deleteSchedule";
-import {DayHourInputField} from "../../util/DayHourInputField";
+import { useStyles } from "../style";
+import { Collapse, Divider, Fade, FormControlLabel, Radio, TextField } from "@material-ui/core";
+import { DayHour, DeleteSchedule } from "../../util/deleteSchedule";
+import { DayHourInputField } from "../../util/DayHourInputField";
 
 interface DeleteSelectionProps {
     deleteSchedule: DeleteSchedule,
@@ -12,41 +12,42 @@ interface DeleteSelectionProps {
 export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule, selectDeleteScheduleHandler }) => {
     const classes = useStyles();
 
-    const [dayHour, setDayHour] = React.useState({days: 0, hours: 0});
-
     const handleSelectNoDeletion = () => {
-        selectDeleteScheduleHandler({type: "noDeletion"})
+        selectDeleteScheduleHandler({ type: "noDeletion" })
     }
 
     const handleSelectOnDayHour = () => {
-        selectDeleteScheduleHandler({type: "onDayHour", removalTime: dayHour })
+        selectDeleteScheduleHandler({ type: "onDayHour", removalTime: { days: 0, hours: 0 } })
     }
 
     const handleSelectKeepCount = () => {
-        selectDeleteScheduleHandler({type: "keepCount", keepCount: 1})
+        selectDeleteScheduleHandler({ type: "keepCount", keepCount: 1 })
     }
 
     const handleSelectFixNames = () => {
-        selectDeleteScheduleHandler({type: "fixNames", count: 1})
+        selectDeleteScheduleHandler({ type: "fixNames", count: 1 })
     }
 
     const handleAddRemovalTime = (removalTime: DayHour) => {
-        setDayHour(removalTime);
         if (deleteSchedule.type === "onDayHour") {
-            selectDeleteScheduleHandler({...deleteSchedule, removalTime: dayHour})
+            selectDeleteScheduleHandler({ ...deleteSchedule, removalTime: removalTime })
         }
     }
 
     const handleAddKeepCount = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (deleteSchedule.type === "keepCount") {
-            selectDeleteScheduleHandler({...deleteSchedule, keepCount: Number(event.target.value)})
+        if (deleteSchedule.type === "keepCount" && event.target.value.trim() !== "") {
+            selectDeleteScheduleHandler({ ...deleteSchedule, keepCount: Math.floor(Number(event.target.value)) })
         }
     }
 
     const handleAddFixNames = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (deleteSchedule.type === "fixNames") {
-            selectDeleteScheduleHandler({...deleteSchedule, count: Number(event.target.value)})
+        if (deleteSchedule.type === "fixNames" && event.target.value.trim() !== "") {
+            selectDeleteScheduleHandler({ ...deleteSchedule, count: Math.floor(Number(event.target.value)) })
         }
+    }
+
+    const handleFocus = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        event.target.select();
     }
 
     return (
@@ -72,13 +73,13 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                     </div>
                     <Collapse in={deleteSchedule.type === "onDayHour"}>
                         <DayHourInputField
-                            dayHour={dayHour}
+                            dayHour={deleteSchedule.type === "onDayHour" ? deleteSchedule.removalTime : undefined}
                             selectDayHourHandler={handleAddRemovalTime}
                         />
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.MPaddingTB} >
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="keepCount" control={<Radio
                             checked={deleteSchedule.type === "keepCount"}
@@ -95,17 +96,19 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                                     shrink: true,
                                 }}
                                 variant="outlined"
+                                onFocus={handleFocus}
+                                value={deleteSchedule.type === "keepCount" ? deleteSchedule.keepCount : ""}
                                 onChange={handleAddKeepCount}
                                 InputProps={{
                                     classes: { input: classes.inputElement },
-                                    inputProps: { min: 0}
+                                    inputProps: { min: 1 }
                                 }}
                             />
                         </div>
                     </Collapse>
                 </div>
                 <Divider />
-                <div className={classes.MPaddingTB} >
+                <div className={classes.MPaddingTB}>
                     <div className={classes.centerDiv}>
                         <FormControlLabel value="fixNames" control={<Radio
                             checked={deleteSchedule.type === "fixNames"}
@@ -115,19 +118,21 @@ export const DeleteSelection: React.FC<DeleteSelectionProps> = ({ deleteSchedule
                     </div>
                     <Collapse in={deleteSchedule.type === "fixNames"}>
                         <div className={classes.MPaddingTB}>
-                        <TextField
-                            label="Anzahl"
-                            type="number"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="outlined"
-                            onChange={handleAddFixNames}
-                            InputProps={{
-                                classes: { input: classes.inputElement },
-                                inputProps: { min: 0}
-                            }}
-                        />
+                            <TextField
+                                label="Anzahl"
+                                type="number"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="outlined"
+                                onFocus={handleFocus}
+                                value={deleteSchedule.type === "fixNames" ? deleteSchedule.count : ""}
+                                onChange={handleAddFixNames}
+                                InputProps={{
+                                    classes: { input: classes.inputElement },
+                                    inputProps: { min: 1 }
+                                }}
+                            />
                         </div>
                     </Collapse>
                 </div>

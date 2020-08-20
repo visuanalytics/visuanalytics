@@ -1,6 +1,3 @@
-"""
-
-"""
 import functools
 from typing import Type
 

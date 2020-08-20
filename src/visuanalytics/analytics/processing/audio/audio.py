@@ -26,7 +26,7 @@ def _get_audio_config(values: dict, data: StepData):
     config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
 
-    # If Config in Step Json is pressent use That config
+    # If config in step-JSON is present, use that config
     config.update(custom_config)
 
     # Init _audio with audio config
@@ -76,14 +76,7 @@ def default(values: dict, data: StepData, config: dict):
 
 @register_generate_audio
 def custom(values: dict, data: StepData, config: dict):
-    """
-
-    :param values:
-    :param data:
-    :param config:
-    :return:
-    """
-    logger.info("Generate Audio with Custom Audio Config")
+    logger.info("Generate audio with custom audio config")
 
     _prepare_custom(config.get("prepare", None), data, config)
 
@@ -107,26 +100,26 @@ def _save_audio(response, data: StepData, config: dict):
     post_generate = config.get("post_generate", {})
     extension = data.format(post_generate["file_extension"]) if post_generate.get("file_extension",
                                                                                   None) is not None else None
-    # If Multiple request were Used, get just the Request with the audio file
+    # If multiple requests were used, get only the request with the audio file
     if config["generate"]["type"].startswith("request_multiple"):
-        audio_idx = data.format(config["generate"]["audio_idx"], {})
+        audio_idx = data.format(config["generate"]["audio_idx"])
         response = response[audio_idx]
 
     content_type = response["headers"]["content-type"]
     audio = response["content"]
 
-    # If Content Type is json Try to decode json String with base64
+    # If content type is JSON, try to decode JSON-String with base64
     if content_type.startswith("application/json"):
-        # Get Audio String
+        # Get audio string
         audio = data_get_pattern(data.format(post_generate["audio_key"]), audio)
         # decode Audio Key with base64
         audio = base64.b64decode(audio)
     elif extension is None:
-        # Check if Content type is an audio Type
+        # Check if content type is an audio type
         if not content_type.startswith("audio"):
             raise InvalidContentTypeError(None, content_type, "'audio/*'")
 
-        # Get File Extention from Mime Type:
+        # Get file extention from mime type:
         extension = mimetypes.guess_all_extensions(content_type)[0].replace(".", "")
 
     audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension)

@@ -1,5 +1,5 @@
 """
-
+Modul für Berechnungen für den `transform`-Typ `calculate`.
 """
 import collections
 import numbers
@@ -103,7 +103,7 @@ def calculate_mode(values: dict, data: StepData):
         data.insert_data(new_key, new_value, values)
 
 
-# Function that can be used in all Calculate Operations with 2 values
+# Function that can be used in all calculate-Actions with 2 values
 def _bi_calculate(values: dict, data: StepData, op):
     keys_right = values.get("keys_right", None)
     value_right = values.get("value_right", None)

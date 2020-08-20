@@ -1,16 +1,16 @@
-# Async-Api-Requests
+# Asynchrone API-Requests
 
-Um die Abfrage von api requests zu beschleunigen 
+Um die Abfrage von API-Requests zu beschleunigen, 
 kann man diese asynchron ausführen. Dies ist für einen Request natürlich langsamer, 
-ab zwei aber schon schneller um so mehr requests man macht umso größer wird der unterschied,
-da man ungefähr in der zeit von einem syncronen Request alle Asyncronen machen kann.
+ab zwei aber schon schneller, umso mehr requests man macht, umso größer wird der Unterschied,
+da man ungefähr in der Zeit von einem synchronen Request alle asynchronen machen kann.
 
-> z.B. bei unseren 19 API requests an die Weather Api für den Deutschlandweiten wetterbericht 
->ist die asyncrone variante 7 sekunden schneller.
+> z.B. bei unseren 19 API-Requests an die weatherbit-API für den deutschlandweiten Wetterbericht 
+> ist die asynchrone Variante 7 Sekunden schneller.
 
 Möglicher Code:
 
-~~~Python
+~~~
 import asyncio
 from aiohttp import ClientSession
 
@@ -36,7 +36,7 @@ def fetch_all(urls):
     return task.result()
 ~~~
 
-Der Funktion fetch_all übergibt man eine Liste von urls und diese macht dann alle requests und man bekommt eine liste mit den ergebnissen zurück.
+Der Funktion `fetch_all` übergibt man eine Liste von URLs und diese macht dann alle Requests und man bekommt eine Liste mit den Ergebnissen zurück.
 
-> Der code wurde noch nicht eingebaut da man eine weitere dependencie benötigt 
->und noch nicht ganz sicher ist ob man diese funtion häufiger benötig.
+> Der Code wurde noch nicht eingebaut, da man eine weitere Dependency benötigt 
+> und noch nicht ganz sicher ist, ob man diese Funktion häufiger benötigt.

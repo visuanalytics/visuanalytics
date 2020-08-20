@@ -3,6 +3,7 @@ Modul, welches die erstellten Videos nach einem angegebenem Zeitraum wieder entf
 """
 
 import os
+import re
 from datetime import datetime, timedelta
 
 from visuanalytics.server.db.db import logger
@@ -21,8 +22,11 @@ def delete_video(steps_config, __config):
     if steps_config.get("fix_names", None) is not None:
         fix_names = []
         if steps_config["fix_names"].get("names", None) is None:
-            for i in range(1, steps_config["fix_names"].get("count", 3) + 1):
-                fix_names.append(f"_{i}")
+            if steps_config["fix_names"].get("count", 1) == 1:
+                fix_names.append("")
+            else:
+                for i in range(1, steps_config["fix_names"].get("count", 3) + 1):
+                    fix_names.append(f"_{i}")
         else:
             fix_names = steps_config["fix_names"]["names"]
         delete_fix_name_videos(steps_config["job_name"], fix_names,
@@ -34,7 +38,7 @@ def delete_video(steps_config, __config):
                                  steps_config["keep_count"])
 
 
-def delete_on_time(jobs: dict, output_path: str):
+def delete_on_time(jobs: dict, output_path: str, name_key: str, check, get_time):
     """
     Methode zum Löschen von erstellten Videos nach einem vorgegebenen Zeitraum.
 
@@ -44,19 +48,24 @@ def delete_on_time(jobs: dict, output_path: str):
     logger.info("Checking if videos needs to be deleted.")
     files = os.listdir(resources.path_from_root(output_path))
     for file in files:
-        for job in jobs["jobs"]:
-            if file.startswith(job["name"]):
+        for job in jobs:
+            if not check(job):
+                break
+
+            job_name = re.sub(r'\s+', '-', job[name_key].strip())
+            if file.startswith(job_name):
                 try:
                     file_without_thumb = file.replace("_thumbnail", "")
-                    file_date = file_without_thumb[len(job["name"]) + 1:len(file_without_thumb) - 4]
+                    file_date = file_without_thumb[len(job_name) + 1:len(file_without_thumb) - 4]
                     date_time_obj = datetime.strptime(file_date, resources.DATE_FORMAT)
-                    time = job["schedule"].get("removal_time", {})
-                    if time != {}:
+
+                    time = get_time(job)
+                    if not time is None:
                         date_time_obj = date_time_obj + timedelta(days=time.get("days", 0),
                                                                   hours=time.get("hours", 0))
                         if datetime.now() > date_time_obj:
                             os.remove(resources.path_from_root(os.path.join(output_path, file)))
-                            logger.info("removal time of file " + file + " exceed, file has been deleted")
+                            logger.info("removal time of file " + file + " exceeded, file has been deleted")
                 except ValueError:
                     pass
 

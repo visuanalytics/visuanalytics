@@ -67,7 +67,7 @@ def input(values: dict, data: StepData, name: str, save_key, ignore_testing=Fals
 
 @register_api
 def request_memory(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
-    """Ließt Daten aus einer Memory datei (Json-Format) zu einem bestimmtem Datum.
+    """Ließt Daten aus einer memory-Datei (JSON-Format) zu einem bestimmtem Datum.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -102,7 +102,7 @@ def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_t
     if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(values, data, name, save_key)
 
-    if data.format(values.get("use_loop_as_key", False), values):
+    if data.get_data(values.get("use_loop_as_key", False), values, bool):
         data.insert_data(save_key, {}, values)
         for _, key in data.loop_array(values["steps_value"], values):
             _fetch(values, data, f"{save_key}|{key}")
@@ -148,25 +148,25 @@ def _load_test_data(values: dict, data: StepData, name, save_key):
 
 
 def _fetch(values: dict, data: StepData, save_key):
-    """Abfrage einer API und Umwandlung der API-Antwort ein Angegebenes Format.
+    """Abfrage einer API und Umwandlung der API-Antwort in ein angegebenes Format.
 
-    :param req_data: Dictionary das alle informationen für den request enthält.
-    :return: Antwort der API im Angegebenen Format
+    :param req_data: Dictionary, das alle Informationen für den request enthält.
+    :return: Antwort der API im angegebenen Format
     """
-    # Build Http request
+    # Build http request
     req_data = _create_query(values, data)
 
     req = requests.Request(req_data["method"], req_data["url"], headers=req_data["headers"],
                            json=req_data.get("json", None),
                            data=req_data.get("other", None), params=req_data["params"])
-    # Make the Http request
+    # Make the http request
     s = requests.session()
     response = s.send(req.prepare())
 
     if not response.ok:
         raise APiRequestError(response)
 
-    # Get the Right Return Format
+    # Get the right return format
     if req_data["res_format"].__eq__("json"):
         res = response.json()
     elif req_data["res_format"].__eq__("text"):
@@ -186,34 +186,34 @@ def _create_query(values: dict, data: StepData):
     req = {}
     api_key_name = values.get("api_key_name", None)
 
-    # Get/Format Method and Headers
+    # Get/Format method and headers
     req["method"] = data.format(values.get("method", "get"))
     req["headers"] = data.deep_format(values.get("headers", None), api_key_name, values)
 
-    # Get/Format Body Data
+    # Get/Format body data
     req["body_type"] = data.format(values.get("body_type", "json"), values)
 
     if req["body_type"].__eq__("json"):
-        req[req["body_type"]] = data.deep_format(values.get("body", None), api_key_name, values)
+        req["json"] = data.deep_format(values.get("body", None), api_key_name, values)
     else:
-        req[req["body_type"]] = data.format(values.get("body", None))
+        req["other"] = data.format(values["body"]) if "body" in values else None
 
         if values.get("body_encoding", None) is not None:
             req[req["body_type"]] = req[req["body_type"]].encode(values["body_encoding"])
 
-    # Get/Format Url
+    # Get/Format url
     req["url"] = data.format_api(values["url_pattern"], api_key_name, values)
 
-    # Get/Format Params
+    # Get/Format params
     req["params"] = data.deep_format(values.get("params", None), api_key_name, values)
     if values.get("params_array", None) is not None:
         _build_params_array(values, data, api_key_name, req)
 
-    # Get/Format Response, Format
+    # Get/Format response, format
     req["res_format"] = data.format(values.get("response_format", "json"))
     # TODO use Format
-    req["xml_config"] = values.get("xml_config", {})
-    req["include_headers"] = values.get("include_headers", False)
+    req["xml_config"] = data.deep_format(values.get("xml_config", {}), values=values)
+    req["include_headers"] = data.get_data(values.get("include_headers", False), values, bool)
 
     return req
 

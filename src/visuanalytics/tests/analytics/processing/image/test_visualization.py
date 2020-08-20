@@ -22,7 +22,7 @@ def prepare_image_test(values, data, config=None):
         }
     }
 
-    step_data = StepData(config, "1", values.get("presets", None))
+    step_data = StepData(config, "1", 0, values.get("presets", None))
     step_data.insert_data("_req", {"_test": data}, {})
     step_data.data["_pipe_id"] = "102"
     generate_all_images(values, step_data)

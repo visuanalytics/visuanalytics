@@ -1,6 +1,4 @@
-import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Daten zum Plotten
 hoch = [11, 11, 12, 14, 18, 22, 20, 23, 23, 21, 20, 23, 11, 11, 16, 23, 24, 23, 15, 17, 18, 21, 22, 22, 16, 20, 22, 17,

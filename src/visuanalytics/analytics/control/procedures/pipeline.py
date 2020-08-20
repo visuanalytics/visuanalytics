@@ -1,3 +1,4 @@
+import contextlib
 import json
 import logging
 import os
@@ -41,7 +42,8 @@ class Pipeline(object):
     __steps_max = 7
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
-    def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False):
+    def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
+                 attach_mode=False, no_tmp_dir=False):
         if steps_config is None:
             steps_config = {}
 
@@ -55,6 +57,9 @@ class Pipeline(object):
         self.__current_step = -1
         self.__log_to_db = log_to_db
         self.__log_id = None
+        self.__attach_mode = attach_mode
+        self.__no_tmp_dir = no_tmp_dir
+        self.__log_name = 'Pipeline' if not attach_mode else 'Attached Pipeline'
 
     @property
     def start_time(self):
@@ -65,6 +70,16 @@ class Pipeline(object):
     def end_time(self):
         """float: Endzeit der Pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
         return self.__end_time
+
+    @property
+    def config(self):
+        """float: config der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
+        return self.__config
+
+    @property
+    def current_step(self):
+        """int: Aktueller Step der pipeline. Wird erst nach Beendigung der Pipeline initialisiert."""
+        return self.__current_step
 
     @property
     def id(self):
@@ -99,7 +114,7 @@ class Pipeline(object):
         return default_config
 
     def __setup(self):
-        logger.info(f"Initializing Pipeline {self.id}...")
+        logger.info(f"Initializing {self.__log_name} {self.id}...")
 
         self.__start_time = time.time()
 
@@ -111,6 +126,15 @@ class Pipeline(object):
         with resources.open_resource(f"steps/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
+        # Load and merge global presets
+        with resources.open_resource(f"steps/global_presets.json") as fp:
+            global_presets = json.loads(fp.read())
+
+        self.__config["presets"] = {**global_presets.get("presets", {}), **self.__config.get("presets", {})}
+
+        if not self.__no_tmp_dir:
+            os.mkdir(resources.get_temp_resource_path("", self.id))
+
         # Init Steps config with default config
         steps_config = self.__get_default_config(self.__config.get("run_config", {}))
         steps_config.update(self.steps_config)
@@ -119,8 +143,6 @@ class Pipeline(object):
         # Init out_time
         self.__config["out_time"] = datetime.fromtimestamp(self.__start_time).strftime(DATE_FORMAT)
 
-        os.mkdir(resources.get_temp_resource_path("", self.id))
-
         logger.info(f"Initialization finished!")
 
     def __update_db(self, func: callable, *args, **kwargs):
@@ -128,27 +150,32 @@ class Pipeline(object):
             return func(*args, **kwargs)
 
     def __on_completion(self, values: dict, data: StepData):
-        delete_video(self.steps_config, self.__config)
-
         # Set state to ready
         self.__current_step = self.__steps_max
 
         # Set endTime and log
         self.__end_time = time.time()
         completion_time = round(self.__end_time - self.__start_time, 2)
-        logger.info(f"Pipeline {self.id} finished in {completion_time}s")
+
+        logger.info(f"{self.__log_name}  {self.id} finished in {completion_time}s")
 
         # Update DB logs
         self.__update_db(update_log_finish, self.__log_id, self.__log_states["finished"], completion_time)
 
+        if self.__attach_mode:
+            return
+
+        # Check and delete video
+        delete_video(self.steps_config, self.__config)
+
         cp_request = data.get_config("on_completion")
 
-        # IF ON Completion is in config send Request
+        # IF ON Completion is in config send request
         if cp_request is not None:
             try:
                 logger.info("Send completion notice...")
 
-                # Save Video Name and Thumbnail name to Config
+                # Save video name and thumbnail name to config
                 video_name = os.path.basename(values["sequence"])
 
                 data.insert_data("_conf|video_path", values["sequence"], {})
@@ -162,7 +189,7 @@ class Pipeline(object):
                     data.insert_data("_conf|thumbnail_name", thumbnail_name, {})
                     data.insert_data("_conf|thumbnail_id", os.path.splitext(thumbnail_name)[0], {})
 
-                # Make request
+                # make request
                 api_request(cp_request, data, "", "_comp", True)
 
                 logger.info("Completion report sent out!")
@@ -170,15 +197,39 @@ class Pipeline(object):
                 logger.exception("Completion report could not be sent: ")
 
     def __cleanup(self):
-        # delete Directory
+        if self.__no_tmp_dir:
+            return
+
+            # delete directory
         logger.info("Cleaning up...")
         shutil.rmtree(resources.get_temp_resource_path("", self.id), ignore_errors=True)
         logger.info("Finished cleanup!")
 
-    def start(self):
-        """Führt alle Schritte, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind, aus.
+    def __error_cleanup(self, e: Exception):
+        # If thumbnail was created and the video wasn`t generated -> remove thumbnail
+        if isinstance(self.__config.get("thumbnail", None), str) and self.__current_step != self.__steps_max:
+            print(self.__config["thumbnail"])
+            with contextlib.suppress(FileNotFoundError):
+                os.remove(self.__config["thumbnail"])
 
-        Initialisiert zuerst einen Pipeline-Ordner mit der Pipeline id. Dieser kann dann in der gesamten Pipeline zur
+        self.__current_step = -2
+
+        if not self.__log_id is None:
+            self.__update_db(update_log_error,
+                             self.__log_id,
+                             self.__log_states["error"],
+                             f"{e.__class__.__name__}: {e}",
+                             traceback.format_exc())
+
+        logger.exception(f"An error occurred: ")
+        logger.info(f"{self.__log_name}  {self.id} could not be finished.")
+
+        self.__cleanup()
+
+    def start(self):
+        """Führt alle Schritte aus, die in der übergebenen Instanz der Klasse :class:`Steps` definiert sind.
+
+        Initialisiert zuerst einen Pipeline-Ordner mit der Pipeline-ID. Dieser kann dann in der gesamten Pipeline zur
         Zwichenspeicherung von Dateien verwendet werden. Dieser wird nach Beendigung oder bei einem Fehlerfall wieder gelöscht.
 
         Führt alle Schritte aus der übergebenen Steps Instanz, die in der Funktion :func:`sequence` definiert sind,
@@ -189,9 +240,9 @@ class Pipeline(object):
         """
         try:
             self.__setup()
-            data = StepData(self.steps_config, self.id, self.__config.get("presets", None))
+            data = StepData(self.steps_config, self.id, self.__job_id, self.__config.get("presets", None))
 
-            logger.info(f"Pipeline {self.id} started!")
+            logger.info(f"{self.__log_name}  {self.id} started!")
 
             for self.__current_step in range(0, self.__steps_max):
                 logger.info(f"Next step: {self.current_step_name()}")
@@ -203,22 +254,15 @@ class Pipeline(object):
 
             self.__on_completion(self.__config, data)
             self.__cleanup()
+
             return True
-        except (KeyboardInterrupt, SystemExit):
-            # TODO (max) db updaten und current_step setzen
-            self.__cleanup()
+        except (KeyboardInterrupt, SystemExit) as e:
+            self.__error_cleanup(e)
             raise
         except Exception as e:
-            self.__current_step = -2
+            self.__error_cleanup(e)
 
-            if not self.__log_id is None:
-                self.__update_db(update_log_error,
-                                 self.__log_id,
-                                 self.__log_states["error"],
-                                 f"{e.__class__.__name__}: {e}",
-                                 traceback.format_exc())
+            if self.__attach_mode:
+                raise
 
-            logger.exception(f"An error occurred: ")
-            logger.info(f"Pipeline {self.id} could not be finished.")
-            self.__cleanup()
             return False

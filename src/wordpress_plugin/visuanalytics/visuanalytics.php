@@ -14,7 +14,7 @@ function add_menu() {
   global $va_settings_page;
   $icon = plugins_url('images/icon.png', __FILE__);
 
-  $va_settings_page = add_menu_page('VisuAnalytics Settings', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
+  $va_settings_page = add_menu_page('VisuAnalytics', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
   
   // Define the Menu Page HTML
   function visuanalytics_settings_do_page() {
@@ -39,6 +39,10 @@ function init_va_menu() {
 }
 
 function add_va_scripts() {
+  /* Remove forms wp-Styles */
+  wp_deregister_style("forms");
+  wp_enqueue_style("forms", 'common');
+
   // add js files
   $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
   

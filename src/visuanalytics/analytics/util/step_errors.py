@@ -33,15 +33,16 @@ class StepError(Exception):
             'On Type ')
 
         if isinstance(self.__cause__,
-                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError)):
-            # invalid key
+                      (StepKeyError, StepTypeError, PresetError, APIKeyError, APiRequestError, TestDataError,
+                       FFmpegError)):
+            # invalid Key
             return f"{pos_msg}{self.__cause__}"
         elif isinstance(self.__cause__, KeyError):
             # field for type is missing
             return f"{pos_msg}Entry {self.__cause__} is missing."
 
         # other errors
-        return f"{pos_msg}'{type(self.__cause__).__name__}: {self.__cause__}' was raised"
+        return f"{pos_msg}{type(self.__cause__).__name__}: {self.__cause__}"
 
 
 class APIError(StepError):
@@ -68,7 +69,7 @@ class AudioError(StepError):
     pass
 
 
-class SeqenceError(StepError):
+class SequenceError(StepError):
     pass
 
 
@@ -117,7 +118,7 @@ class APiRequestError(Exception):
 
     def __init__(self, response: Response):
         super().__init__(
-            f"Response-Code: {response.status_code}\nResponse-Headers: {response.headers}\nResponse-Body: {response.content}")
+            f"Error during the api request to '{response.request.url}':\nResponse-Code: {response.status_code}\nResponse-Body: {response.content}")
 
 
 class TestDataError(IOError):
@@ -144,6 +145,14 @@ class PresetError(Exception):
         super().__init__(f"Preset '{key}' not found")
 
 
+class FFmpegError(Exception):
+    def __init__(self, exitCode, output):
+        if not output:
+            super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}.")
+        else:
+            super().__init__(f"Video generation with FFmpeg failed with exit code {exitCode}: {output}")
+
+
 def raise_step_error(error: Type[StepError]):
     """
     Gibt einen Decorator zurück, der die Original-Funktion
@@ -159,7 +168,7 @@ def raise_step_error(error: Type[StepError]):
         def new_func(values, *args, **kwargs):
             try:
                 return func(values, *args, **kwargs)
-            # Not raise the Same Error Twice
+            # Do not raise the same error twice
             except error:
                 raise
             except BaseException as e:

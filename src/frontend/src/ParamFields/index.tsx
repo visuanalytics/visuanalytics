@@ -1,45 +1,60 @@
 import React from 'react';
-import { MenuItem, FormControlLabel, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
+import { MenuItem, Checkbox, Collapse, TextField, Divider, useTheme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { useStyles } from '../JobCreate/style';
-import { Param, ParamValues, validateParamValue } from '../util/param';
+import { Param, ParamValues } from '../util/param';
+import { BooleanParam } from './BooleanParam'
 
 
 interface ParamFieldProps extends ParamField {
     param: Param,
+    hasNext: boolean;
 }
 
 interface ParamFieldsProps extends ParamField {
-    params: Param[] | undefined,
+    params: Param[] | undefined;
 }
 
 interface ParamField {
-    selectParamHandler: (_s: string, _a: any) => void,
+    selectParamHandler: (_s: string, _a: any, _i: number) => void,
     disabled: boolean,
     required: boolean,
-    values: ParamValues
+    values: ParamValues,
+    index: number,
+    invalidValues: string[]
 }
 
 export const ParamFields: React.FC<ParamFieldsProps> = (props) => {
     const classes = useStyles();
+    const idx = props.index;
+    const params = props.params;
 
     return (
-        <div >
+        <div key={idx} className={classes.MPaddingB}>
             {
-                props.params?.map(p => (
-                    <div key={p.name}>
-                        <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
-                            <ParamField
-                                param={p}
-                                values={props.values}
-                                selectParamHandler={props.selectParamHandler}
-                                disabled={props.disabled}
-                                required={props.required}
-                            />
+                params && params.length > 0
+                    ?
+                    params.map((p, idx) => (
+                        <div key={p.name}>
+                            <div className={p.type === "boolean" ? classes.XSPaddingTB : classes.SPaddingTB}>
+                                <ParamField
+                                    param={p}
+                                    values={props.values}
+                                    selectParamHandler={props.selectParamHandler}
+                                    disabled={props.disabled}
+                                    required={props.required}
+                                    index={props.index}
+                                    invalidValues={props.invalidValues}
+                                    hasNext={params && idx < params.length - 1}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))
+                    ))
+                    :
+                    <div className={classes.MPaddingTB} style={{ textAlign: "center" }}>
+                        Für dieses Thema stehen keine Parameter zur Verfügung.
+                        </div>
             }
         </div>
     )
@@ -50,19 +65,17 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
     const classes = useStyles();
     const theme = useTheme();
     const [showSubParams, setShowSubParams] = React.useState(false);
-    const [invalid, setInvalid] = React.useState(false);
+    const showInvalid = props.invalidValues.includes(param.name);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        setInvalid(!validateParamValue(event.target.value, param));
-        props.selectParamHandler(name, event.target.value);
+        props.selectParamHandler(name, event.target.value, props.index);
     }
     const handleMultiChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
         const values = event.target.value.split(",");
-        setInvalid(!validateParamValue(values, param));
-        props.selectParamHandler(name, values);
+        props.selectParamHandler(name, values, props.index);
     }
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>, name: string) => {
-        props.selectParamHandler(name, event.target.checked);
+        props.selectParamHandler(name, event.target.checked, props.index);
     }
 
     const withExpIcon = (name: string, expanded: boolean) => {
@@ -98,13 +111,13 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                         value={props.values[param.name] || ""}
                         disabled={props.disabled}
                         label={param.displayName}
-                        error={invalid}
+                        error={showInvalid}
                     />
                 </div>
             )
         case "boolean":
             return (
-                <FormControlLabel
+                <BooleanParam
                     control={
                         < Checkbox
                             checked={props.values[param.name]}
@@ -116,7 +129,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             {param.displayName}
                         </div>}
                     labelPlacement="start"
-                    className={classes.checkboxParam}
                 />
             )
         case "enum":
@@ -129,13 +141,13 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     label={param.displayName}
                     value={props.values[param.name] || ""}
                     disabled={props.disabled}
-                    select>
+                    select
+                    error={showInvalid}>
                     {param.enumValues.map((val) => (
                         <MenuItem key={val.value} value={val.value.toString()}>
                             {val.displayValue}
                         </MenuItem>
                     ))}
-                    error={invalid}
                 </TextField>
             )
         case "subParams":
@@ -144,7 +156,7 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                     <div className={classes.SPaddingTB}>
                         {param.optional
                             ?
-                            <FormControlLabel
+                            <BooleanParam
                                 control={
                                     <Checkbox
                                         checked={props.values[param.name]}
@@ -155,7 +167,6 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                                         {withExpIcon(param.displayName, props.values[param.name])}
                                     </div>}
                                 labelPlacement="start"
-                                className={classes.checkboxParam}
                                 disabled={props.disabled}
                             />
                             :
@@ -173,9 +184,11 @@ const ParamField: React.FC<ParamFieldProps> = (props) => {
                             selectParamHandler={props.selectParamHandler}
                             disabled={props.disabled}
                             required={props.required}
+                            index={props.index}
+                            invalidValues={props.invalidValues}
                         />
                     </Collapse>
-                    {((props.values[param.name] || showSubParams))
+                    {((props.values[param.name] || showSubParams) && props.hasNext)
                         &&
                         <div className={classes.SPaddingTB}>
                             <Divider />

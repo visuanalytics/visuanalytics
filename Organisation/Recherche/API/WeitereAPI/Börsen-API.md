@@ -26,77 +26,38 @@ Wert wird gegen Zeit aufgetragen. Markt besteht aus mehreren Unternehmen
 
 Symbole für die 30 Unternehmen, die aktuell (Stand: 05.07.2020) im DAX vertreten sind (die kann man nicht alle mit Alpha Vantage abfragen):
 
-Adidas: ADS 
-
-Allianz: ALV
-
-BASF: BAS
-
-BAYER: BAYN
-
-Beiersdorf: BEI
-
-
-
-BMW: BMW
-
-Continental: CON
-
-Covestro: COV
-
-Daimler: DAI
-
-Deutsche Bank: DBK
-
-
-
-Deutsche Börse: DB1
-
-Deutsche Post: DPW
-
-Deutsche Telekom: DTE
-
-Deutsche Wohnen: DWNI
-
-E.ON: EOAN
-
-
-
-Fresenius: FRE
-
-Fresenius Medical: FME
-
-Heidelberg Cement: HEI
-
-Henkel VZ: HEN3
-
-Infineon Technolo: IFX
-
-
-
-Linde: LIN
-
-Merck: MRK
-
-MTU Aero Engin: MTX
-
-Münchner Rückversicherung: MUV2
-
-RWE: RWE
-
-
-
-SAP: SAP
-
-Siemens: SIE
-
-Volkswagen VZ: VOW3
-
-Vonovia: VNA
-
-Wirecard: WDI
-
-
+| Unternehmen | Symbol |
+| ----------- | ------ |
+| Adidas | ADS |
+| Allianz | ALV |
+| BASF | BAS |
+| BAYER | BAYN |
+| Beiersdorf | BEI|
+| BMW | BMW |
+|Continental| CON|
+|Covestro| COV|
+|Daimler| DAI|
+|Deutsche Bank| DBK|
+|Deutsche Börse| DB1|
+|Deutsche Post| DPW|
+|Deutsche Telekom| DTE|
+|Deutsche Wohnen| DWNI|
+|E.ON| EOAN|
+|Fresenius| FRE|
+|Fresenius Medical| FME|
+|Heidelberg Cement| HEI|
+|Henkel VZ| HEN3|
+|Infineon Technolo| IFX|
+|Linde| LIN|
+|Merck| MRK|
+|MTU Aero Engin| MTX|
+|Münchner Rückversicherung| MUV2|
+|RWE| RWE|
+|SAP| SAP|
+|Siemens| SIE|
+|Volkswagen VZ| VOW3|
+|Vonovia| VNA|
+|Wirecard| WDI|
 
 Sonst gibts nach DAX (1-30) noch MDAX (31-80), SDAX (81-130) und TecDAX (30 größte Technologieunternehmen)
 

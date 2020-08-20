@@ -68,8 +68,12 @@
             },
             {
               "type": "append",
-              "key": "_loop|text",
-              "new_key": "_req|text_all"
+              "keys": [
+                "_loop|text"
+              ],
+              "new_keys": [
+                "_req|text_all"
+              ]
             }
           ]
         }
@@ -81,6 +85,13 @@
         "_req|search_metadata",
         "_req|statuses"
       ]
+    },
+    {
+      "type": "check_key",
+      "keys": [
+        "_req|text_all"
+      ],
+      "init_with": "$_conf|hashtags"
     },
     {
       "type": "remove_from_list",
@@ -111,109 +122,161 @@
       "include_count": true
     },
     {
-      "type": "sub_lists",
-      "array_key": "_req|text_all",
-      "sub_lists": [
+      "type": "length",
+      "keys": [
+        "_req|text_all"
+      ],
+      "new_keys": [
+        "_req|text_all_length"
+      ]
+    },
+    {
+      "type": "loop",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15,
+        20,
+        25
+      ],
+      "transform": [
         {
-          "new_key": "_req|text_top1",
-          "range_start": 0,
-          "range_end": 1
-        },
+          "type": "compare",
+          "value_left": "_req|text_all_length",
+          "value_right": "_loop",
+          "on_higher": [
+            {
+              "type": "sub_lists",
+              "array_key": "_req|text_all",
+              "sub_lists": [
+                {
+                  "new_key": "_req|text_top{_loop}",
+                  "range_start": 0,
+                  "range_end": "_loop"
+                }
+              ]
+            },
+            {
+              "type": "to_dict",
+              "keys": [
+                "_req|text_top{_loop}"
+              ],
+              "new_keys": [
+                "_req|dict_top{_loop}"
+              ]
+            },
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_req|default|{_loop}"
+              ],
+              "data": false
+            }
+          ],
+          "on_equal": [
+            {
+              "type": "sub_lists",
+              "array_key": "_req|text_all",
+              "sub_lists": [
+                {
+                  "new_key": "_req|text_top{_loop}",
+                  "range_start": 0,
+                  "range_end": "_loop"
+                }
+              ]
+            },
+            {
+              "type": "to_dict",
+              "keys": [
+                "_req|text_top{_loop}"
+              ],
+              "new_keys": [
+                "_req|dict_top{_loop}"
+              ]
+            },
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_req|default|{_loop}"
+              ],
+              "data": false
+            }
+          ],
+          "on_lower": [
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_req|text_top{_loop}"
+              ],
+              "data": [
+                "Wordcloud"
+              ]
+            },
+            {
+              "type": "most_common",
+              "keys": [
+                "_req|text_top{_loop}"
+              ],
+              "include_count": true
+            },
+            {
+              "type": "to_dict",
+              "keys": [
+                "_req|text_top{_loop}"
+              ],
+              "new_keys": [
+                "_req|dict_top{_loop}"
+              ]
+            },
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_req|default|{_loop}"
+              ],
+              "data": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "compare",
+      "value_left": "_req|text_all_length",
+      "value_right": 0,
+      "on_equal": [
         {
-          "new_key": "_req|text_top2",
-          "range_start": 0,
-          "range_end": 2
-        },
+          "type": "add_data",
+          "new_keys": [
+            "_req|default|all"
+          ],
+          "data": true
+        }
+      ],
+      "on_higher": [
         {
-          "new_key": "_req|text_top3",
-          "range_start": 0,
-          "range_end": 3
-        },
-        {
-          "new_key": "_req|text_top4",
-          "range_start": 0,
-          "range_end": 4
-        },
-        {
-          "new_key": "_req|text_top5",
-          "range_start": 0,
-          "range_end": 5
-        },
-        {
-          "new_key": "_req|text_top6",
-          "range_start": 0,
-          "range_end": 6
-        },
-        {
-          "new_key": "_req|text_top7",
-          "range_start": 0,
-          "range_end": 7
-        },
-        {
-          "new_key": "_req|text_top8",
-          "range_start": 0,
-          "range_end": 8
-        },
-        {
-          "new_key": "_req|text_top9",
-          "range_start": 0,
-          "range_end": 9
-        },
-        {
-          "new_key": "_req|text_top10",
-          "range_start": 0,
-          "range_end": 10
-        },
-        {
-          "new_key": "_req|text_top15",
-          "range_start": 0,
-          "range_end": 15
-        },
-        {
-          "new_key": "_req|text_top20",
-          "range_start": 0,
-          "range_end": 20
-        },
-        {
-          "new_key": "_req|text_top25",
-          "range_start": 0,
-          "range_end": 25
+          "type": "add_data",
+          "new_keys": [
+            "_req|default|all"
+          ],
+          "data": false
         }
       ]
     },
     {
       "type": "to_dict",
       "keys": [
-        "_req|text_all",
-        "_req|text_top1",
-        "_req|text_top2",
-        "_req|text_top3",
-        "_req|text_top4",
-        "_req|text_top5",
-        "_req|text_top6",
-        "_req|text_top7",
-        "_req|text_top8",
-        "_req|text_top9",
-        "_req|text_top10",
-        "_req|text_top15",
-        "_req|text_top20",
-        "_req|text_top25"
+        "_req|text_all"
       ],
       "new_keys": [
-        "_req|dict_all",
-        "_req|dict_top1",
-        "_req|dict_top2",
-        "_req|dict_top3",
-        "_req|dict_top4",
-        "_req|dict_top5",
-        "_req|dict_top6",
-        "_req|dict_top7",
-        "_req|dict_top8",
-        "_req|dict_top9",
-        "_req|dict_top10",
-        "_req|dict_top15",
-        "_req|dict_top20",
-        "_req|dict_top25"
+        "_req|dict_all"
       ]
     },
     {
@@ -237,6 +300,11 @@
     }
   ],
   "images": {
+    "default_wordcloud": {
+      "type": "wordcloud",
+      "text": "Wordcloud",
+      "preset": "wordcloud_default"
+    },
     "all_words_wordcloud": {
       "type": "wordcloud",
       "dict": "_req|dict_all",
@@ -295,7 +363,6 @@
     "top15_wordcloud": {
       "type": "wordcloud",
       "dict": "_req|dict_top15",
-      "stopwords": "_conf|stopwords",
       "preset": "wordcloud"
     },
     "top20_wordcloud": {
@@ -313,11 +380,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "color": "RGBA",
-          "image_name": "all_words_wordcloud",
-          "color_transparency": "FFFFFF"
+          "type": "option",
+          "check": "_req|default|all",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "all_words_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -326,10 +408,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top1_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|1",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top1_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -338,10 +436,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top2_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|2",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top2_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -350,10 +464,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top3_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|3",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top3_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -362,10 +492,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top4_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|4",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top4_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -374,10 +520,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top5_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|5",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top5_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -386,10 +548,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top6_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|6",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top6_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -398,10 +576,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top7_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|7",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top7_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -410,10 +604,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top8_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|8",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top8_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -422,10 +632,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top9_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|9",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top9_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -434,10 +660,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top10_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|10",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top10_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -446,10 +688,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top15_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|15",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top15_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -458,10 +716,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top20_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|20",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top20_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     },
@@ -470,10 +744,26 @@
       "path": "{_conf|background_image}",
       "overlay": [
         {
-          "description": "Wordcloud",
-          "type": "image",
-          "image_name": "top25_wordcloud",
-          "preset": "wordcloud_overlay"
+          "type": "option",
+          "check": "_req|default|25",
+          "on_true": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "default_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ],
+          "on_false": [
+            {
+              "description": "Wordcloud",
+              "type": "image",
+              "color": "RGBA",
+              "image_name": "top25_wordcloud",
+              "color_transparency": "FFFFFF"
+            }
+          ]
         }
       ]
     }
@@ -798,6 +1088,22 @@
         "contour_color": "white",
         "color_func": "_conf|color_func",
         "colormap": "{_conf|colormap_words}"
+      }
+    },
+    "wordcloud_default": {
+      "color_func_words": "{_conf|color_func_words}",
+      "parameter": {
+        "figure": "{_conf|figure}",
+        "width": "_conf|width_wordcloud",
+        "height": "_conf|height_wordcloud",
+        "collocations": false,
+        "max_font_size": 400,
+        "max_words": 100,
+        "contour_width": 3,
+        "contour_color": "white",
+        "color_func": "_conf|color_func",
+        "colormap": "{_conf|colormap_words}",
+        "repeat": true
       }
     },
     "wordcloud_overlay": {

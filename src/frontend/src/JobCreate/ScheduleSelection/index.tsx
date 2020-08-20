@@ -14,18 +14,19 @@ interface ScheduleSelectionProps {
 
 export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, selectScheduleHandler }) => {
     const classes = useStyles();
+    const time = schedule.type !== "interval" ? schedule.time : new Date();
 
     const handleSelectDaily = () => {
-        selectScheduleHandler({ type: "daily", time: schedule.time })
+        selectScheduleHandler({ type: "daily", time: time })
     }
     const handleSelectWeekly = () => {
-        selectScheduleHandler({ type: "weekly", time: schedule.time, weekdays: [] })
+        selectScheduleHandler({ type: "weekly", time: time, weekdays: [] })
     }
     const handleSelectInterval = () => {
-        selectScheduleHandler({ type: "interval", time: schedule.time, interval: TimeInterval.MINUTE })
+        selectScheduleHandler({ type: "interval", interval: "minute" })
     }
     const handleSelectOnDate = () => {
-        selectScheduleHandler({ type: "onDate", time: schedule.time, date: new Date() })
+        selectScheduleHandler({ type: "onDate", time: time, date: new Date() })
     }
     const handleAddWeekDay = (d: Weekday) => {
         if (schedule.type === "weekly") {
@@ -50,7 +51,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
         }
     }
     const handleSelectTime = (time: Date | null) => {
-        if (time !== null) {
+        if (time !== null && schedule.type !== "interval") {
             selectScheduleHandler({ ...schedule, time: time })
         }
     }
@@ -119,7 +120,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
                 </div>
                 <Divider />
                 <div className={classes.MPaddingTB} >
-                    <TimeInputField date={schedule.time} disabled={schedule.type === "interval"} handler={handleSelectTime} />
+                    <TimeInputField date={schedule.type !== "interval" ? time : new Date()} disabled={schedule.type === "interval"} handler={handleSelectTime} />
                 </div>
             </div >
         </Fade>

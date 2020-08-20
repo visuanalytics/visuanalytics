@@ -33,11 +33,12 @@ def text(values, data):
 
 @register_audio_parts
 def compare(values, data):
-    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, < oder > die "audio_parts"-Funktionen aus.
+    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, !=, < oder > die "transform"-Typen aus.
 
-    Wenn condition-Value gleich check-Value, führe"audio_parts"-Funktionen aus on_equal durch.
-    Wenn condition-Value größer check-Value, führe "audio_parts"-Funktionen aus on_higher durch.
-    Wenn condition-Value kleiner check-Value, führe "audio_parts"-Funktionen aus on_lower durch.
+    Wenn `value_left` gleich `value_right`, führe "transform"-Typen aus on_equal durch.
+    Wenn `value_left` ungleich `value_right`, führe "transform"-Typen aus on_not_equal durch.
+    Wenn `value_left` größer `value_right`, führe "transform"-Typen aus on_higher durch.
+    Wenn `value_left` kleiner `value_right`, führe "transform"-Typen aus on_lower durch.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -63,7 +64,7 @@ def option(values, data):
 
 @register_audio_parts
 def random_text(values, data):
-    """Sucht aus mehreren Strings (Array in pattern) einen aus.
+    """Sucht aus mehreren Strings (Array in pattern) zufällig einen aus.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

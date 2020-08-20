@@ -8,7 +8,7 @@ import { Menu } from "./Menu/Menu";
 
 export const Header = () => {
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="relative" color="transparent">
       <Box height="3rem" display="flex" alignSelf="center">
         <img
           style={{ maxWidth: "100%", maxHeight: "100%" }}
