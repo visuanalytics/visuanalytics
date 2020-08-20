@@ -57,4 +57,14 @@ export const hintContents = {
       </Typography>
     </div>
   ),
+  addTopic: (
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Thema hinzufügen
+      </Typography>
+      <Typography gutterBottom>
+        Auf dieser Seite können Sie neue Themen hinzufügen.
+      </Typography>
+    </div>
+  )
 };

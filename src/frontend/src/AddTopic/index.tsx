@@ -23,6 +23,7 @@ import { DeleteDialog } from "../util/DeleteDialog";
 import { InfoMessage } from "../util/InfoMessage";
 import { AddTopicDialog } from "./AddTopicDialog";
 import { Notification, notifcationReducer } from "../util/Notification";
+import { hintContents } from "../util/hintContents";
 
 export const AddTopic = () => {
   const classes = useStyles();
@@ -106,7 +107,7 @@ export const AddTopic = () => {
         Icon: <AddCircleIcon fontSize="large" />,
         onClick: handleOpen,
       }}
-      hintContent=""
+      hintContent={hintContents.addTopic}
     >
       <Load
         failed={{
@@ -119,12 +120,12 @@ export const AddTopic = () => {
         <InfoMessage
           condition={topics?.length === 0}
           message={{
-            headline: "Willkommen bei Ihrer Themen Übersicht!",
+            headline: "Willkommen bei Ihrer Themen-Übersicht!",
             text: (
               <Typography align={"center"} color="textSecondary">
                 Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
                 generieren lassen.
-                <br /> Klicken Sie auf 'Neues Thema erstellen', um Ihre erstes
+                <br /> Klicken Sie auf 'Thema erstellen', um ein neues
                 Thema anzulegen.
               </Typography>
             ),
