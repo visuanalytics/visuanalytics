@@ -556,38 +556,6 @@ Hier kann ein Requests angegeben werden. Hierfür kann man alle [api](#api)-Type
 `transform`-Typen sind Funktionen zum Bearbeiten der Daten der API-Antwort. 
 Die Daten können verändert oder entfernt werden, neue Daten können hinzugefügt werden.
 
-### transform
-
-Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays oder eines Dictionaries aus. 
-Dem `transform` wird entweder ein `transform_array` oder ein `transform_dict` vorangestellt. 
-
-**Beispiel** 
-
-```JSON
-{
-   "type": "transform_dict",
-   "dict_key": "_req",
-   "transform": [
-      {
-       "type": "select",
-       "relevant_keys": [
-           "data"
-       ]
-      },
-      {
-       "type": "select_range",
-       "array_key": "_loop|data",
-       "range_start": 0,
-       "range_end": 5
-      }
-   ]
-} 
-```
-
-Im Beispiel werden für das Dictionary (siehe `transform_dict`) mit dem Key `_req` die 
-`transform`-Typen `select` und `select_range` durchgeführt. Es wird mit einer Schleife durch alle Werte der Ebene unter 
-`dict_key` gelaufen und die `transform`-Typen werden auf diese Daten angewandt.
-
 ### transform_array
 
 Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus. 
@@ -610,6 +578,14 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus.
 
 `transform`-Typen, die für alle Werte des - unter `array_key` angegebenen - Arrays ausgeführt werden sollen.
 
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
+
 ### transform_dict
 
 Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus. 
@@ -631,6 +607,14 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
 `transform`:
 
 `transform`-Typen, die für alle Werte des - unter `dict_key` angegebenen - Dictionaries ausgeführt werden sollen.
+
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
 
 ### calculate
 
@@ -916,6 +900,10 @@ relevant sind.
 `relevant_keys`: 
 
 str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und abgespeichert werden sollen.
+
+```warning::
+  Die unter relevant_keys angegebenen `Keys` funktionieren etwas anderst als alle anderen keys, diese gehen nicht vom root des objects aus, sondern vom Momentanen `root`, ist also `_loop` gesetzt werden alle keys ausgehend von `_loop` angesehen (z. B. `normal`: `_loop|0` => `hier`: `0`). Dies ist notwendig da man ja nur Keys im Aktuellen level ersetzt (also z. B. im Aktuellen `array`) und nicht alle anderen keys aussortiert. (Ist `_loop` nicht gesetzt ist die Key angabe wie üblich).
+```
 
 `ignore_errors`:
 
@@ -1348,7 +1336,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 }
 ```
 ```warning::
-  Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
+  Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
 ```
 
 #### date_weekday
@@ -1371,7 +1359,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 ```
 
 ```warning::
-  Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+  Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
 ```
 
 #### date_now
@@ -1389,7 +1377,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 }
 ```
 ```warning::
-  Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
+  Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
   Diese haben immer dasselbe Format.
 ```
 
@@ -1502,6 +1490,13 @@ int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll.
 
 `transform`-Typen, die für alle Werte des Arrays ausgeführt werden sollen.
 
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
 
 ### add_data
 
@@ -2121,6 +2116,37 @@ Hier wird gespeichert, ob der Key vorhanden war oder nicht.
 
 - `true`  -> Key war vorhanden:
 - `false` -> Key war **nicht** vorhanden.
+
+### Key Trick
+
+Wenn man ein [transform](#transform)-Typen bei `transform` angibt (z. B. bei [transform_array](#transform_array)), der selbst die _Spezialvariablen_ `_loop` und/oder `_idx` verwendet, werden diese überschrieben und sind sommit innerhalb der dortigen unter `transform` definition anderst belegt. Falls man die werte aus dem vorherigen level benötigt, kann man diese mit einem Trick bekommen. Man kann diese Keys einfach in einem Außberhalb liegenden key speichern. z. B.:
+
+```JSON
+{
+  "type": "transform_array",
+  "array_key": "_req|data",
+  "transform": [
+    {
+      "type": "add_data",
+      "new_keys": [
+        "tmp"
+      ],
+      "data": "$_loop"
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|data2",
+      "transform": [
+        {
+          "type": "add_data",
+          "new_keys": ["_loop|test"],
+          "pattern": "{tmp|test}"
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## Storing
 
@@ -3233,7 +3259,7 @@ Alle [Basis-Angaben](#basis-angaben).
 
 ## Presets
 
-Da es häufiger mal vorkommt das man einige Konfigurationen mehrfach benötigt, kann man sogenante `Presets` verwenden um sich Doppelte einträge zu Sparen. Diese werden unter dem Punkt `"presets"` definiert. Innerhalb der restlichen JSON kann man diese dann mit `"preset": key` verwenden.
+Da es häufiger mal vorkommt das man einige Konfigurationen mehrfach benötigt, kann man sogenante `Presets` verwenden um sich Doppelte einträge zu Sparen. Diese werden unter dem Punkt `"presets"` definiert. Innerhalb der restlichen JSON kann man diese dann mit `"preset": "key"` verwenden.
 
 **Beispiele**
 
