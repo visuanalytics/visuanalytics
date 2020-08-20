@@ -7,6 +7,7 @@ import flask
 
 from flask import (Blueprint, request, send_file)
 from werkzeug.utils import secure_filename
+from os import path
 
 from visuanalytics.server.db import db, queries
 
@@ -59,13 +60,19 @@ def add_topic():
             return err, 400
 
         filename = secure_filename(file.filename).rsplit(".", 1)[0]
+        file_path = queries._get_file_path(filename)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid file Name"})
+            return err, 400 
+
         queries.add_topic(name, filename)
         file.save(queries._get_file_path(filename))
         return "", 204
     except Exception:
         traceback.print_exc()  # For debugging, should be removed later
         err = flask.jsonify({"err_msg": "An error occurred"})
-        return err, 400
+        return err, 500
 
 
 @api.route("/topic/<topic_id>", methods=["GET"])
