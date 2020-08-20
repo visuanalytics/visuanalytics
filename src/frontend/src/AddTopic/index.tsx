@@ -37,10 +37,13 @@ export const AddTopic = () => {
     handleLoadFailed
   );
   const [open, setOpen] = useState(false);
-  const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [confirmDelete, setConfirmDelete] = React.useState({
+    open: false,
+    topicId: -1,
+  });
 
   const deleteTopic = useCallFetch(
-    getUrl(`/topic/1`),
+    getUrl(`/topic`),
     { method: "DELETE" },
     getTopics
   );
@@ -56,6 +59,18 @@ export const AddTopic = () => {
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const handleConfirmDelete = (topicId: number) => {
+    setConfirmDelete({ open: true, topicId: topicId });
+  };
+
+  const handleDelete = () => {
+    deleteTopic(`/${confirmDelete.topicId}`);
+  };
+
+  const handleCloseDelete = () => {
+    setConfirmDelete({ open: false, topicId: -1 });
   };
 
   return (
@@ -125,7 +140,7 @@ export const AddTopic = () => {
                       <GetAppIcon />
                     </Link>
                     <IconButton
-                      onClick={() => setConfirmDelete(true)}
+                      onClick={() => handleConfirmDelete(topic.topicId)}
                       className={classes.listAction}
                     >
                       <DeleteIcon />
@@ -143,9 +158,9 @@ export const AddTopic = () => {
         />
         <DeleteDialog
           title={`Thema löschen?`}
-          open={confirmDelete}
-          onClose={() => setConfirmDelete(false)}
-          onDelete={deleteTopic}
+          open={confirmDelete.open}
+          onClose={handleCloseDelete}
+          onDelete={handleDelete}
         />
       </Load>
     </PageTemplate>
