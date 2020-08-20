@@ -296,8 +296,7 @@ export default function JobCreate() {
         Themenauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie auswählen zu welchem der Themen Ihnen ein
-        Video generiert werden soll.
+        Auf dieser Seite können Sie das Thema des Videos auswählen.
       </Typography>
     </div>,
     <div>
@@ -305,7 +304,7 @@ export default function JobCreate() {
         Parameterauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie bestimmte Parameter auswahlen.
+        Auf dieser Seite können Sie themenspezifische Parameter setzen.
       </Typography>
     </div>,
     hintContents.time,

@@ -32,7 +32,7 @@ export const Home = () => {
             Job-Pool
           </Typography>
           <Typography>
-            Auf dieser Seite haben Sie eine Übersicht über Ihre angelegten Jobs.
+            Auf dieser Seite haben Sie eine Übersicht über die angelegten Jobs.
           </Typography>
           <List>
             <ListItem>

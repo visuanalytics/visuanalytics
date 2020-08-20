@@ -1,15 +1,15 @@
-import React, {useState, useCallback} from "react";
-import {Param, ParamValues} from "../util/param";
-import {JobItem} from "./JobItem";
-import {Typography} from "@material-ui/core";
-import {useFetchMultiple} from "../Hooks/useFetchMultiple";
-import {Load} from "../Load";
-import {Schedule} from "../util/schedule";
-import {getUrl} from "../util/fetchUtils";
-import {ComponentContext} from "../ComponentProvider";
-import {DeleteSchedule} from "../util/deleteSchedule";
-import {InfoMessage} from "../util/InfoMessage";
-import {Notification, notifcationReducer} from "../util/Notification";
+import React, { useState, useCallback } from "react";
+import { Param, ParamValues } from "../util/param";
+import { JobItem } from "./JobItem";
+import { Typography } from "@material-ui/core";
+import { useFetchMultiple } from "../Hooks/useFetchMultiple";
+import { Load } from "../Load";
+import { Schedule } from "../util/schedule";
+import { getUrl } from "../util/fetchUtils";
+import { ComponentContext } from "../ComponentProvider";
+import { DeleteSchedule } from "../util/deleteSchedule";
+import { InfoMessage } from "../util/InfoMessage";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 export interface Job {
     jobId: number;
@@ -52,29 +52,28 @@ export const JobList: React.FC = () => {
     };
 
     const handleReportSuccess = (message: string) => {
-        dispatchMessage({type: "reportSuccess", message: message});
+        dispatchMessage({ type: "reportSuccess", message: message });
     };
 
     const handleReportError = (message: string) => {
-        dispatchMessage({type: "reportError", message: message});
+        dispatchMessage({ type: "reportError", message: message });
     };
 
     return (
         <InfoMessage
             condition={jobInfo?.length === 0}
             message={{
-                headline: "Willkommen bei Ihrer Job Übersicht!",
+                headline: "Willkommen bei Ihrer Job-Übersicht!",
                 text: (
                     <Typography align={"center"} color="textSecondary">
-                        Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
+                        Mit VisuAnalytics können Sie sich Videos zu verschiedenen Themen
                         generieren lassen.
-                        <br/> Klicken Sie auf 'Neuen Job erstellen', um Ihren ersten Job
-                        anzulegen und ein Video zu einem gewählten Zeitraum generieren zu
-                        lassen.
+                        <br /> Klicken Sie auf 'Job erstellen', um einen Job
+                        anzulegen, welcher ein Video nach einem gewählten Zeitplan generiert.
                     </Typography>
                 ),
                 button: {
-                    text: "Neuen Job erstellen",
+                    text: "Job erstellen",
                     onClick: () => components?.setCurrent("jobPage"),
                 },
             }}
@@ -98,7 +97,7 @@ export const JobList: React.FC = () => {
                     </div>
                 ))}
                 <Notification
-                    handleClose={() => dispatchMessage({type: "close"})}
+                    handleClose={() => dispatchMessage({ type: "close" })}
                     open={message.open}
                     message={message.message}
                     severity={message.severity}
