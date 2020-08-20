@@ -93,7 +93,7 @@ export const JobItem: React.FC<Props> = ({
             >
                 <AccordionSummary>
                     <Grid container>
-                        <Grid item container sm={8} xs={12} alignItems="center">
+                        <Grid item container sm={9} xs={12} alignItems="center">
                             <Grid item>
                                 {expanded ? (
                                     <ExpandLess className={classes.expIcon} />
@@ -109,12 +109,12 @@ export const JobItem: React.FC<Props> = ({
                         </Grid>
                         <Grid
                             item
-                            sm={4}
+                            sm={3}
                             xs
                             container
                             justify="flex-end"
-                            onClick={(event) => event.stopPropagation()}
                         >
+                            <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
                                 <IconButton
                                     onClick={() =>
@@ -141,6 +141,7 @@ export const JobItem: React.FC<Props> = ({
                                     <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
+                        </div>
                         </Grid>
                     </Grid>
                 </AccordionSummary>
