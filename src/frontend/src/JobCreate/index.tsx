@@ -188,13 +188,6 @@ export default function JobCreate() {
     dispatchMessage({ type: "reportError", message: message });
   };
 
-  const handleStartPage = () => {
-    if (timeout.current !== undefined) {
-      clearTimeout(timeout.current);
-    }
-    components?.setCurrent("home");
-  }
-
   // handlers for stepper logic
   const handleNext = () => {
     switch (activeStep) {
@@ -433,7 +426,7 @@ export default function JobCreate() {
                   </Grid>
                   <Grid container item justify="center">
                     <ContinueButton
-                      onClick={handleStartPage}
+                      onClick={() => components?.setCurrent("home")}
                     >
                       STARTSEITE
                   </ContinueButton>
