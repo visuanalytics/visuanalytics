@@ -23,7 +23,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = ({ schedule, 
         selectScheduleHandler({ type: "weekly", time: time, weekdays: [] })
     }
     const handleSelectInterval = () => {
-        selectScheduleHandler({ type: "interval", interval: "minute" })
+        selectScheduleHandler({ type: "interval", interval: "minute", nextExecution: new Date() })
     }
     const handleSelectOnDate = () => {
         selectScheduleHandler({ type: "onDate", time: time, date: new Date() })
