@@ -62,48 +62,48 @@ export const JobList: React.FC = () => {
   return (
     <>
       <InfoMessage
-            condition={jobInfo?.length === 0}
-            message={{
-                headline: "Willkommen bei Ihrer Job-Übersicht!",
+        condition={jobInfo?.length === 0}
+        message={{
+          headline: "Willkommen bei Ihrer Job-Übersicht!",
           text: (
             <Typography align={"center"} color="textSecondary">
               Mit VisuAnalytics können Sie sich Videos zu verschiedenen Themen
-                        generieren lassen.
-                        <br /> Klicken Sie auf 'Job erstellen', um einen Job
-                        anzulegen, welcher ein Video nach einem gewählten Zeitplan generiert.
+              generieren lassen.
+              <br /> Klicken Sie auf 'Job erstellen', um einen Job anzulegen,
+              welcher ein Video nach einem gewählten Zeitplan generiert.
             </Typography>
           ),
           button: {
             text: "Job erstellen",
-                    onClick: () => components?.setCurrent("jobPage"),
-                },
-            }}
+            onClick: () => components?.setCurrent("jobPage"),
+          },
+        }}
+      >
+        <Load
+          failed={{
+            hasFailed: loadFailed,
+            name: "Jobs",
+            onReload: handleReaload,
+          }}
+          data={jobInfo}
         >
-            <Load
-                failed={{
-                    hasFailed: loadFailed,
-                    name: "Jobs",
-                    onReload: handleReaload,
-                }}
-                data={jobInfo}
-            >
-                {jobInfo?.map((j: Job) => (
-                    <div key={j.jobId}>
-                        <JobItem
-                            job={j}
-                            getJobs={handleReaload}
-                            reportError={handleReportError}
-                            reportSuccess={handleReportSuccess}
-                        />
-                    </div>
-                ))}
-            </Load>
+          {jobInfo?.map((j: Job) => (
+            <div key={j.jobId}>
+              <JobItem
+                job={j}
+                getJobs={handleReaload}
+                reportError={handleReportError}
+                reportSuccess={handleReportSuccess}
+              />
+            </div>
+          ))}
+        </Load>
       </InfoMessage>
       <Notification
-          handleClose={() => dispatchMessage({ type: "close" })}
-          open={message.open}
-          message={message.message}
-          severity={message.severity}
+        handleClose={() => dispatchMessage({ type: "close" })}
+        open={message.open}
+        message={message.message}
+        severity={message.severity}
       />
     </>
   );
