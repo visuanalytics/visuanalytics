@@ -375,7 +375,7 @@ def loop(values: dict, data: StepData):
     """
     loop_values = data.deep_format(values.get("values", None), values=values)
 
-    # is Values is none use range
+    # if values is none use range
     if loop_values is None:
         start = data.get_data(values.get("range_start", 0), values, int)
         stop = data.get_data(values["range_stop"], values, int)
@@ -723,7 +723,7 @@ def normalize_words(values: dict, data: StepData):
 def split_string(values: dict, data: StepData):
     """Teilt einen String am angegebenen Trennzeichen.
 
-    Das Trennzeichen können auc mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
+    Das Trennzeichen können auch mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

@@ -43,7 +43,7 @@ Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusam
 
 ### Pfade
 
-Es gibt einen Ordner `resources` in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
+Es gibt einen Ordner `resources`, in dem alle Bilder, Audiodateien, die JSON-Dateien und weitere Dateien 
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
 Es genügt hier der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
@@ -120,7 +120,7 @@ Ist ein angegebener `new_key` nicht vorhanden, wird dieser - bzw. alle Keys, die
 
 ### Spezialvariablen
 
-Es gibt einge vordefinierte Spezialvariablen mit folgenden Keys.
+Es gibt einge vordefinierte Spezialvariablen mit folgenden Keys:
 
 `_req`:
 
@@ -148,7 +148,7 @@ Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert. Diese gibt es 
 
 `_pipe_id`:
 
-Die `id` der Pipline, die den Job ausführt. (Diese ist ein zufallsgenerierter String und wird innerhalb der JSON-Datei normalerweise nicht benötigt.)
+Die `id` der Pipeline, die den Job ausführt. (Diese ist ein zufallsgenerierter String und wird innerhalb der JSON-Datei normalerweise nicht benötigt.)
 
 `_job_id`:
 
@@ -576,8 +576,12 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
 
 ### calculate
 
-calculate beinhaltet Actionen (actions), die Funktionen für mathematische Berechnungen zur Verfügung stellen.
+`calculate` beinhaltet Aktionen (actions), die Funktionen für mathematische Berechnungen zur Verfügung stellen.
 Für alle `calculate`-Actions gilt:
+
+`action`:
+
+[str](#string) - Angabe des Namens der Aktion, die ausgeführt werden soll.
 
 `keys`:
 
@@ -585,7 +589,7 @@ Die Werte, die durchlaufen und transformiert werden sollen.
 
 `new_keys`_(optional)_:
 
-optional - Die tranformierten Werte werden unter diesem Key neu gespeichert. 
+Die tranformierten Werte werden unter diesem Key neu gespeichert. 
 Ist `new_keys` nicht vorhanden, werden die Werte in `keys` mit den transformierten Werten überschrieben.
 
 #### mean
@@ -603,7 +607,8 @@ Berechnet den Mittelwert von Werten, die in einem Array stehen.
     ],
     "new_keys": [
        "_loop|temp_avg"
-    ]
+    ],
+    "decimal": 2
 }
 ```
 
@@ -719,15 +724,15 @@ Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 Die Aktionen `multiply`, `divide`, `subtract` und `add` sind gleich aufgebaut. Daher haben die Keys auch die gleiche Bedeutung.
 Als default ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
 
-`keys_right`_(optional)_: 
+`keys_right`: 
 
 Datenzugriff auf Daten/Werte, die auf der rechten Seite der Gleichung stehen sollen. Wichtig: bei `divide` und `subtract`.
 
-`value_right`_(optional)_: 
+`value_right`: 
 
 Wert, der immer auf der rechten Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
 
-`value_left`_(optional)_: 
+`value_left`: 
 
 Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
 
@@ -736,6 +741,17 @@ Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei `di
 int - Nachkommastelle, auf die das Ergebnis gerundet werden soll. 
 
 Default: 0. (keine Nachkommastelle)
+
+Folgende Möglichkeiten gibt es:
+
+| Linke Seite der Gleichung | Rechte Seite der Gleichung |
+| ------------------------- | -------------------------- |
+| `keys`                    | `value_right`              |
+| `keys`                    | `keys_right`               |
+| `value_left`              | `value_right`              |
+| `value_left`              | `keys_right`               |
+
+Eine dieser Möglichkeiten muss vorhanden sein, die anderen Keys sind dann nicht erforderlich. 
 
 
 ##### multiply
@@ -748,10 +764,10 @@ die unter `decimal` angegeben wird, gerundet werden.
 ```JSON
 {
     "type": "calculate",
+    "action": "multiply",
     "keys": [
         "_loop|number1"
     ],
-    "action": "multiply",
     "value_right": 3.6,
     "decimal": 2
 }
@@ -767,10 +783,10 @@ die unter `decimal` angegeben wird, gerundet werden.
 ```JSON
 {
     "type": "calculate",
+    "action": "divide",
      "keys": [
          "_loop|number1"
      ],
-     "action": "divide",
      "value_right": 3.6,
      "decimal": 2
 }
@@ -786,10 +802,10 @@ auf die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerunde
 ```JSON
 {
     "type": "calculate",
+    "action": "subtract",
     "keys_right": [
         "_loop|number1"
     ],
-    "action": "subtract",
     "value_left": 3.6,
     "decimal": 2
 }
@@ -805,10 +821,10 @@ die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet we
 ```JSON
 {
     "type": "calculate",
+    "action": "add",
     "keys": [
         "_loop|number1"
     ],
-    "action": "add",
     "value_right": 3.6,
     "decimal": 2
 }
@@ -830,7 +846,8 @@ relevant sind.
   "relevant_keys": [
       "key1",
       "key2"
-  ]
+  ],
+  "ignore_errors": true
 }
 ```
 
@@ -842,6 +859,9 @@ relevant sind.
 
 str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und abgespeichert werden sollen.
 
+`ignore_errors`:
+
+[bool](#boolean)  - **TODO** Max
 
 ### delete
 
@@ -898,7 +918,7 @@ int - Endwert für die Schleife durch die Daten.
 
 Speichert den Wert, der unter `key` steht, in einem Array.
 
-**Beispiel** 
+**Beispiel mit list** 
 
 ```JSON
 {
@@ -906,6 +926,18 @@ Speichert den Wert, der unter `key` steht, in einem Array.
   "key": "key",
   "new_key": "new_key",
   "append_type": "list"
+}
+```
+
+**Beispiel mit string** 
+
+```JSON
+{
+  "type": "append",
+  "key": "key",
+  "new_key": "new_key",
+  "append_type": "string",
+  "delimiter": "-"
 }
 ```
 
@@ -925,7 +957,7 @@ Default: "list".
 
 `delimiter`_(optional)_:
 
-[str](#string) - Zeichen mit dem die Werte - im Falle des Datentyps String - voneinander getrennt werden sollen.
+[str](#string) - Zeichen mit dem die Werte - im Falle des Datentyps [string](#string) - voneinander getrennt werden sollen.
 
 Default: " " (Leerzeichen).
 
@@ -1037,7 +1069,7 @@ Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. Dieser neue
 
 `dict`:
 
-[dict ](#dict ) - Ein Dictionary mit bekannten Keys, welche unter `keys` stehen und den Werten, die anstelle dieser Keys neu abgespeichert werden sollen.
+[dict](#dict) - Ein Dictionary mit bekannten Keys, welche unter `keys` stehen und den Werten, die anstelle dieser Keys neu abgespeichert werden sollen.
 
 
 ### alias
@@ -1054,9 +1086,15 @@ Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
    ],
   "new_keys": [
       "new_key"
-  ]
+  ],
+  "keep_old": true
 }
 ```
+
+`keep_old`:
+
+[bool](#boolean) - **TODO** Max
+
 
 ### regex
 
@@ -1184,7 +1222,7 @@ str-Array - Keys unter denen die umgeformte Uhrzeit bzw. die Daten als Werte ste
 
 [str](#string) - Das Format, in dem die Uhrzeit bzw. das Datum angegeben sind.
 
-`zeropaded_off`:
+`zeropaded_off`_(optional)_:
 
 [bool ](#boolean) - `True`: Entfernt die 0 am Anfang einer Zahl. `False` (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
 `zeropaded_off` ist True, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
@@ -1196,13 +1234,13 @@ Beispiele für die Darstellung von Datum und Uhrzeit finden Sie unter: https://d
 
 Einige gängige Formate sind:
 
-|        Format        |       Beispiel       |
+|        Format          |       Beispiel           |
 |------------------------|--------------------------|
-|%Y-%m-%dT%H:%M:%S|2020-05-15T23:56:05|
-|%H:%M:%S|23:56:05|
-|%Y-%m-%d|2020-05-15|
-|%d.%m.%Y|15.05.2020|
-|On the %dth of %b %Y|On the 15th of May 2020|
+|%Y-%m-%dT%H:%M:%S       |2020-05-15T23:56:05       |
+|%H:%M:%S                |23:56:05                  |
+|%Y-%m-%d                |2020-05-15                |
+|%d.%m.%Y                |15.05.2020                |
+|On the %dth of %b %Y    |On the 15th of May 2020   |
 
 #### date_format
 
@@ -1221,7 +1259,8 @@ ein gewünschtes anderes Format, welches unter `format` angegeben wird.
       "new_key"
   ],
   "given_format": "%Y-%m-%dT%H:%M:%S",
-  "format": "%Y-%m-%d"
+  "format": "%Y-%m-%d", 
+  "zeropaded_off": false
 }
 ```
 
@@ -1283,7 +1322,8 @@ Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
 {
   "type": "date_now",
   "new_key": "new_key",
-  "format": "%Y-%m-%d"
+  "format": "%Y-%m-%d",
+  "zeropaded_off": false
 }
 ```
 ```warning::
@@ -1294,7 +1334,7 @@ Diese haben immer dasselbe Format.
 ### wind_direction
 
 `wind_direction` ist eine Funktion, die ausschließlich zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
-Die englischen Wörter werden auf Deutsch übersetzt.
+Die englischen Wörter werden ins Deutsche übersetzt.
 
 **Beispiel** 
 
@@ -1500,6 +1540,7 @@ Folgende Vergleiche werden durchgeführt:
     "value_left": "_loop|MatchResults|PointsTeam1",
     "value_right": "_loop|MatchResults|PointsTeam2",
     "on_equal": [],
+    "on_not_equal": [],
     "on_higher": [],
     "on_lower": []
 }  
@@ -1559,7 +1600,7 @@ optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner 
 
 Wählt zufällig einen Wert aus einem Array oder einem Dictionary mit verschiedenen Werten aus.
 
-**Beispiel** 
+**Beispiel mit array** 
 ```JSON
 {
      "type": "random_value",
@@ -1581,7 +1622,7 @@ Wählt zufällig einen Wert aus einem Array oder einem Dictionary mit verschiede
 
 array - Das Array enthält verschiedene Werte aus denen zufällig ein Wert ausgewählt werden soll.
 
-**Beispiel** 
+**Beispiel mit Dictionary** 
 ```JSON
 {
      "type": "random_value",
@@ -1656,7 +1697,7 @@ Es kann auch alphabetisch sortiert werden, wenn die Einträge keine Zahlen sind.
 
 `reverse`
 
-[bool ](#boolean) - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
+[bool](#boolean) - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
 sortiert werden (kleinste Zahl als Erstes).
 
 Default: False.
@@ -1675,9 +1716,9 @@ Default: False.
         }
 ```
 ### most_common
-
-`most_common` betrachtet ein Array oder einen String und zählt die Häufigkeit der jeweils darin vorkommenden Wörter.
-
+**TODO** Max drüberlesen
+`most_common` betrachtet ein Array oder einen String und sortiert die Elemente der Häufigkeit nach.
+Optional kann auch die Häufigkeit des Elements als Tupel angegeben werden.
 Beispiel: "Der Hund sucht die Katze und die Katze sucht die Maus."
 
 der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
@@ -1692,13 +1733,19 @@ der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
   ],
   "new_keys": [
     "_req|text_all_counter"
-  ]
+  ],
+  "include_count": true
 }
 ```
 
+`include_count`_(optional)_:
+
+[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll.
+
+
 ### sub_lists
 
-`sub_lists` geht durchläuft eine Liste und sucht sich bestimmte Teile dieser Liste heraus, um daraus kleinere Listen zu erhalten.
+`sub_lists` durchläuft eine Liste und sucht sich bestimmte Einträge dieser Liste heraus, um daraus kleinere Listen zu erstellen.
 
 Beispiel: Hund, Katze, Maus, Garage, Hoftor, Tür, Fenster
 
@@ -1737,11 +1784,13 @@ Pro Unterliste wird eine new_key/range_start/range_end-Struktur hinzugefügt.
 
 int - Listeneintrag ab dem die Unterliste generiert werden soll.
 
-Default: 0.
+Default: Anfang der Liste.
 
-`range_end`:
+`range_end`_(optional)_:
 
 int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
+
+Default: Ende der Liste. 
 
 ### to_dict
 
@@ -1787,7 +1836,8 @@ int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
 
 `length` gibt die Anzahl der Elemente eines Arrays/einer Liste aus, falls der Wert ein Array ist.
 Ist der Wert ein String, so wird die Anzahl der Zeichen des Strings ausgegeben.
-
+Ist der Wert ein Dictionary, so wird die Anzahl der Key/Value-Paare ausgegeben.
+Ist der Wert ein Tupel, so wird die Anzahl der Elemente des Tupels ausgegeben.
 ```json
 {
   "type": "length",
@@ -1836,9 +1886,9 @@ jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei en
 
 Array - Eine Liste mit Wörtern, die aus einem String oder einer anderen Liste entfernt werden sollen.
 
-`use_stopwords`:
+`use_stopwords`_(optional)_:
 
-[bool ](#boolean) - Sollen die Stopwords, die in der Datei stopwords/stopwords.txt stehen aus dem String oder der Liste entfernt werden?
+[bool](#boolean) - Sollen die Stopwords, die in der Datei stopwords/stopwords.txt stehen aus dem String oder der Liste entfernt werden?
 
 `true`: Stopwords aus der Datei stopwords/stopwords.txt entfernen.
 
@@ -1846,9 +1896,9 @@ Array - Eine Liste mit Wörtern, die aus einem String oder einer anderen Liste e
 
 Default: `false`.
 
-`ignore_case`:
+`ignore_case`_(optional)_:
 
-[bool ](#boolean) - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
+[bool](#boolean) - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
 
 `true`: Ja, auch entfernen, wenn sie eine andere Groß- bzw. Kleinschreibung besitzen.
 
@@ -1937,10 +1987,48 @@ ersten Vorkommen, wird dann so geschrieben wie als es das erste Mal im Array vor
   ]
 }
 ```
+### split_string
+**TODO** Max
+Teilt einen String am angegebenen Trennzeichen. Das Trennzeichen können auch mehrere Zeichen sein. Soll die Groß- und 
+Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzt man `ignore_case` auf `true`.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "split_string",
+  "keys": [
+    "_req|test"
+  ],
+  "new_keys": [
+    "_req|check_test"
+  ],
+  "delimiter": "-",
+  "ignore_case": true
+}
+```
+
+`delimiter`_(optional)_:
+
+[str](#string) - Trennzeichen bei dem einen String geteilt werden soll.
+
+Default: `" "`
+
+
+`ignore_case`_(optional)_:
+
+[bool](#boolean) - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
+
+`true`: Ja, auch entfernen, wenn sie eine andere Groß- bzw. Kleinschreibung besitzen.
+
+`false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
+
+Default: `false`.
+
 
 ### check_key
 
-Testet ob ein key (bzw. ein Wert hinter dem key) Vorhanden ist.
+Überprüft, ob ein Key vorhanden ist und setzt den dazugehörigen `keys` bzw. den `new_keys` auf `true`.
 
 **Beispiel**
 
@@ -1963,7 +2051,7 @@ Testet ob ein key (bzw. ein Wert hinter dem key) Vorhanden ist.
 
 `new_keys` _(optional)_:
 
-Hier wird gespeichert ob der key vorhanden war oder nicht.
+Hier wird gespeichert, ob der Key vorhanden war oder nicht.
 
 - `true`  -> Key war vorhanden:
 - `false` -> Key war **nicht** vorhanden.
