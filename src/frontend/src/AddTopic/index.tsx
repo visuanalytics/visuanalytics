@@ -123,7 +123,7 @@ export const AddTopic = () => {
             headline: "Willkommen bei Ihrer Themen-Übersicht!",
             text: (
               <Typography align={"center"} color="textSecondary">
-                Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
+                Mit VisuAnalytics können Sie sich Videos zu verschiedenen Themen
                 generieren lassen.
                 <br /> Klicken Sie auf 'Thema erstellen', um ein neues
                 Thema anzulegen.

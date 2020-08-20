@@ -1,12 +1,12 @@
-import React, {useState, useCallback} from "react";
-import {ListItem, Divider, List, TextField, Fade, Switch, FormControlLabel, Typography} from "@material-ui/core";
-import {TopicPanel} from "./TopicPanel";
-import {useStyles} from "../style";
-import {Load} from "../../Load";
-import {getUrl} from "../../util/fetchUtils";
-import {useFetchMultiple} from "../../Hooks/useFetchMultiple";
-import {InfoMessage} from "../../util/InfoMessage";
-import {ComponentContext} from "../../ComponentProvider";
+import React, { useState, useCallback } from "react";
+import { ListItem, Divider, List, TextField, Fade, Switch, FormControlLabel, Typography } from "@material-ui/core";
+import { TopicPanel } from "./TopicPanel";
+import { useStyles } from "../style";
+import { Load } from "../../Load";
+import { getUrl } from "../../util/fetchUtils";
+import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
+import { InfoMessage } from "../../util/InfoMessage";
+import { ComponentContext } from "../../ComponentProvider";
 
 export interface Topic {
     topicName: string;
@@ -59,7 +59,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     selectTopicHandler={!props.multipleTopics ? props.setSingleTopicHandler : props.addTopicHandler}
                     multipleTopics={props.multipleTopics}
                 />
-                <Divider/>
+                <Divider />
             </ListItem>
         );
     }
@@ -78,14 +78,13 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                 >
                     <InfoMessage
                         condition={topics?.length === 0}
-                        paperStyle={{border: "none"}}
+                        paperStyle={{ border: "none" }}
                         message={{
-                            headline: "Willkommen bei der Job erstellung!",
+                            headline: "Willkommen bei der Job-Erstellung!",
                             text: (
                                 <Typography align={"center"} color="textSecondary">
-                                    Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
-                                    generieren lassen.
-                                    <br/> Klicken Sie auf 'Zur Themen Übersicht', um Ihre erstes
+                                    Es stehen noch keine Themen zur Verfügung.
+                                    <br /> Klicken Sie auf 'Zur Themen Übersicht', um Ihr erstes
                                     Thema anzulegen.
                                 </Typography>
                             ),
@@ -97,25 +96,25 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     >
                         <div className={classes.SPaddingTB}>
                             <FormControlLabel
-                                control={<Switch/>}
+                                control={<Switch />}
                                 checked={props.multipleTopics}
                                 onChange={toggleChecked}
                                 label="Videos aneinanderhängen"
                             />
                         </div>
-                        <Divider/>
+                        <Divider />
                         <List>
                             {topics?.map(t => renderTopicPanel(t))}
                         </List>
-                        <Divider/>
+                        <Divider />
                         <div className={classes.LPaddingTB}>
                             <TextField className={classes.inputFields}
-                                       required
-                                       value={props.jobName}
-                                       variant="outlined"
-                                       label="Job-Name"
-                                       onChange={handleInput}
-                                       error={props.invalidJobName}
+                                required
+                                value={props.jobName}
+                                variant="outlined"
+                                label="Job-Name"
+                                onChange={handleInput}
+                                error={props.invalidJobName}
                             />
                         </div>
                     </InfoMessage>
