@@ -107,6 +107,16 @@ In dem Component `JobList` wird für jeden angelegten Job ein Component von `Job
 
 Ein `JobItem` beinhaltet den Component `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Component `JobSettings`, auf welchem man die Einstellungen zum Job vornehmen kann.
 
+#### JobInfo
+Der Component `JobInfo` beinhaltet drei Infomationen zu einem Job:
+
+1.  Das Thema des Jobs.
+2.  Die Information wann der Job ausgeführt wird.
+3.  Die Information wann der Job das nächste Mal ausgeführt wird.
+
+#### JobSettings
+Der Component `JobSettings` beinhaltet den Component `SettingsPage`, welcher aus den drei Components [ParamSelection](#paramselection), [ScheduleSelection](#scheduleselection) und [DeleteSelection](#deleteSelection) besteht.
+
 #### JobCreate
 
 Möchte man einen neuen Job erstellen, so wird beim klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
@@ -143,15 +153,34 @@ Die zweite Seite des Steppers gibt einem die Möglichkeit - je nach Thema - indi
 </figure>  
 <br>
 
+#### SettingsPage
+Auf der letzten Seite kann der Benutzer zwischen zwei Tabs auswählen.
+
 #### ScheduleSelection
-Auf der letzten Seite kann der Benutzer auswählen, wie häufig ein Video generiert werden soll.
+Auf dem ersten Tab kann der Benutzer auswählen, zu welchen Zeitpunkten das Video generiert werden soll.
+
+Dazu gibt es folgende Optionen:
 
 **täglich:** Das Video wird täglich zu einer bestimmten Uhrzeit generiert.
+
 **wöchentlich:** Das Video wird an bestimmten Wochentagen wöchentlich generiert.
+
 **an festem Datum:** Das Video wird einmalig an einem bestimmten Datum generiert.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/schedule.png"/>
+  <figcaption>Abbildung 7</figcaption>
+</figure>  
+<br>
+
+#### DeleteSelection
+
+Auf dem zweiten Tab kann der Benutzer auswählen, wann die generierten Videos gelöscht werden sollen.
+
+Dazu gibt es folgende Optionen:
+
+<figure>
+  <img width="70%" src="../_static/images/documentation/delete.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure>  
 <br>
