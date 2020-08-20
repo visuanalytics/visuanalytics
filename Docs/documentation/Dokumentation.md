@@ -105,7 +105,7 @@ In dem Component `JobList` wird für jeden angelegten Job ein Component von `Job
 </figure>  
 <br>
 
-Ein `JobItem` beinhaltet die genaueren Informationen zu einem Job.
+Ein `JobItem` beinhaltet den Component `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Component `JobSettings`, auf welchem man die Einstellungen zum Job vornehmen kann.
 
 #### JobCreate
 
