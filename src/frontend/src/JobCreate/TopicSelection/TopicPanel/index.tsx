@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, Button, Typography, Grid } from "@material-ui/core";
+import { makeStyles, Button, Typography, Grid, Theme, createStyles } from "@material-ui/core";
 import { Topic } from "..";
 import { HintButton } from "../../../util/HintButton"
 
@@ -9,23 +9,25 @@ interface TopicPanelProps {
     selectTopicHandler: (topic: Topic) => void;
 }
 
-const useStyles = makeStyles({
-    panel: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#2E97C5",
-        color: "white",
-        fontSize: "x-large",
-        width: '100%',
-        height: 80,
-        transition: "0.2s",
-        "&:hover": {
-            border: "solid #00638D 5px",
-            backgroundColor: "#2E97C5",
-        },
+const useStyles = makeStyles((theme: Theme) => 
+    createStyles({
+        panel: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: theme.palette.primary.main,
+            color: "white",
+            fontSize: "x-large",
+            width: '100%',
+            height: 80,
+            transition: "0.2s",
+            "&:hover": {
+                border: "solid #00638D 5px",
+                backgroundColor: theme.palette.primary.main,
+            },
+        }
     }
-});
+));
 
 type IndexedTopic = [Topic, number];
 const toIndexedTopic = (topic: Topic, idx: number): IndexedTopic => {
