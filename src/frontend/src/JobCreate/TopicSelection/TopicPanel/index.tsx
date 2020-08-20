@@ -25,6 +25,18 @@ const useStyles = makeStyles((theme: Theme) =>
                 border: "solid #00638D 5px",
                 backgroundColor: theme.palette.primary.main,
             },
+        },
+        panelNumbers: {
+            textAlign: "left", 
+            fontSize: 15, 
+            maxHeight: "60px", 
+            display: "flex", 
+            flexDirection: "column-reverse",
+            overflow: "auto"
+        },
+        panelText: {
+            textAlign: "right", 
+            fontSize: 15
         }
     }
 ));
@@ -52,11 +64,11 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
                 props.selectTopicHandler(topic);
             }
             }>
-            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>{String(pos).split(",").join(", ")}</Grid>
+            <Grid item xs={2} className={classes.panelNumbers}>{String(pos).split(",").join(", ")}</Grid>
             <Grid item xs={10}>
                 {topic.topicName}
             </Grid>
-            <Grid item xs={2} style={{ textAlign: "right", fontSize: 15 }}>
+            <Grid item xs={2} className={classes.panelText}>
                 <HintButton content={
                     <Typography gutterBottom>
                         {topic.topicInfo}

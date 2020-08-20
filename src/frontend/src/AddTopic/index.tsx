@@ -9,23 +9,19 @@ import {
   ListItemText,
   List,
   Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  DialogActions,
-  Button,
-  Paper,
   Link,
+  Typography,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { Topic } from "../JobCreate/TopicSelection";
 import { getUrl } from "../util/fetchUtils";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import { ContinueButton } from "../JobCreate/ContinueButton";
 import { useStyles } from "./style";
 import { Load } from "../Load";
 import { useCallFetch } from "../Hooks/useCallFetch";
+import { DeleteDialog } from "../util/DeleteDialog";
+import { InfoMessage } from "../util/InfoMessage";
+import { AddTopicDialog } from "./AddTopicDialog";
 
 export const AddTopic = () => {
   const classes = useStyles();
@@ -40,15 +36,14 @@ export const AddTopic = () => {
     undefined,
     handleLoadFailed
   );
+  const [open, setOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+
   const deleteTopic = useCallFetch(
-    getUrl("/topic/1"),
+    getUrl(`/topic/1`),
     { method: "DELETE" },
     getTopics
   );
-  const getTopicFile = useCallFetch(getUrl("/topic/1"));
-  const [open, setOpen] = useState(false);
-
-  //const t = window.navigator.msSaveBlob(new Blob());
 
   const handleReaload = () => {
     setLoadFailed(false);
@@ -81,77 +76,77 @@ export const AddTopic = () => {
         }}
         data={topics}
       >
-        <List>
-          {topics?.map((topic) => (
-            <ListItem divider key={topic.topicId} className={classes.listItem}>
-              <ListItemText
-                primary={topic.topicName}
-                secondary={topic.topicInfo}
-                primaryTypographyProps={{
-                  className: classes.text,
-                  variant: "h6",
-                }}
-                secondaryTypographyProps={{
-                  className: classes.text,
-                }}
-              />
-              <ListItemSecondaryAction>
-                <Grid container>
-                  {/* The download does not work in development mode, because requests accepting html are not forwarded by the proxy*/}
-                  <Link
-                    className={classes.listAction}
-                    component={IconButton}
-                    href={getUrl("/topic/1")}
-                    target="_blank"
-                    download
-                  >
-                    <GetAppIcon />
-                  </Link>
-                  <IconButton
-                    onClick={deleteTopic}
-                    className={classes.listAction}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-          <DialogTitle>Thema hinzufügen</DialogTitle>
-          <DialogContent>
-            <Paper variant="outlined" className={classes.paper}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Name"
-                fullWidth
-                variant="outlined"
-              />
-              <input
-                accept="application/json"
-                className={classes.input}
-                id="json-button-file"
-                type="file"
-              />
-              <label htmlFor="json-button-file">
-                <ContinueButton className={classes.fileButton} component="span">
-                  JSON-Datei
-                </ContinueButton>
-              </label>
-            </Paper>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Abbrechen
-            </Button>
-            <Button onClick={handleClose} color="primary">
-              hinzufügen
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <InfoMessage
+          condition={topics?.length === 0}
+          message={{
+            headline: "Willkommen bei Ihrer Themen Übersicht!",
+            text: (
+              <Typography align={"center"} color="textSecondary">
+                Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
+                generieren lassen.
+                <br /> Klicken Sie auf 'Neues Thema erstellen', um Ihre erstes
+                Thema anzulegen.
+              </Typography>
+            ),
+            button: {
+              text: "Neues Thema erstellen",
+              onClick: handleOpen,
+            },
+          }}
+        >
+          <List>
+            {topics?.map((topic) => (
+              <ListItem
+                divider
+                key={topic.topicId}
+                className={classes.listItem}
+              >
+                <ListItemText
+                  primary={topic.topicName}
+                  secondary={topic.topicInfo}
+                  primaryTypographyProps={{
+                    className: classes.text,
+                    variant: "h6",
+                  }}
+                  secondaryTypographyProps={{
+                    className: classes.text,
+                  }}
+                />
+                <ListItemSecondaryAction>
+                  <Grid container>
+                    {/* The download does not work in development mode, because requests accepting html are not forwarded by the proxy*/}
+                    <Link
+                      className={classes.listAction}
+                      component={IconButton}
+                      href={getUrl(`/topic/${topic.topicId}`)}
+                      target="_blank"
+                      download
+                    >
+                      <GetAppIcon />
+                    </Link>
+                    <IconButton
+                      onClick={() => setConfirmDelete(true)}
+                      className={classes.listAction}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        </InfoMessage>
+        <AddTopicDialog
+          open={open}
+          onClose={handleClose}
+          getTopics={getTopics}
+        />
+        <DeleteDialog
+          title={`Thema löschen?`}
+          open={confirmDelete}
+          onClose={() => setConfirmDelete(false)}
+          onDelete={deleteTopic}
+        />
       </Load>
     </PageTemplate>
   );
