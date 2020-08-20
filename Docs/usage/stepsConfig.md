@@ -3,8 +3,11 @@
 Die Themenkonfiguration ist eine JSON-Datei mit verschiedenen Abschnitten. Diese Datei dient der Angabe aller Parameter, 
 Einstellungen und Konfigurationen, die für die automatisierte Generierung eines Videos erforderlich sind.
 
-Hier wird angegeben, welche API-Anfrage gesendet wird und was danach mit der API-Antwort passiert.
-Es werden Bilder und Audiodateien erstellt, die am Ende in einer bestimmten Reihenfolge aneinander gehängt werden.
+In der JSON-Datei wird angegeben, welche API-Anfrage gesendet wird, wie die Daten aus der API-Antwort entnommen und
+verarbeitet werden sollen. 
+Um auf die Daten der API-Antwort zugreifen und diese modifizieren zu können, werden in der JSON-Datei `transform`-Typen verwendet..
+Es werden Bilder (`images`) und Audiodateien (`audio`) erstellt, die am Ende in einer bestimmten Reihenfolge (`sequence`) 
+aneinander gehängt werden.
 
 Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
 
@@ -33,10 +36,6 @@ Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei g
 Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id`, `name` und`info` gibt es mehrere Typen, aus denen bei 
 den einzelnen Abschnitten ausgewählt werden kann - je nachdem wie das Video am Ende aussehen soll und wie die Daten 
 verarbeitet und visualisiert werden sollen.
-
-In der JSON-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
-Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-Datei `transform`-Typen verwendet.
-Des Weiteren können auch Daten mit `images`-Typen visualisiert werden.
 
 Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
