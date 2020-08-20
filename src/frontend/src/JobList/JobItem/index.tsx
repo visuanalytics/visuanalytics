@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-    Button,
-    Tooltip,
-    Dialog,
-    DialogTitle,
-    DialogActions,
-} from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "../style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -27,6 +21,7 @@ import { useCallFetch } from "../../Hooks/useCallFetch";
 import { getUrl } from "../../util/fetchUtils";
 import { JobSettings } from "./JobSettings";
 import { JobInfos } from "./JobInfos";
+import {DeleteDialog} from "../../util/DeleteDialog"
 
 interface Props {
     job: Job;
@@ -92,11 +87,6 @@ export const JobItem: React.FC<Props> = ({
 
     const handleCloseModal = () => {
         setOpenSettings(false);
-    };
-
-    const handleDeleteJob = () => {
-        setConfirmDelete(false);
-        deleteJob();
     };
 
     return (
@@ -176,23 +166,12 @@ export const JobItem: React.FC<Props> = ({
                     ) : null}
                 </AccordionDetails>
             </Accordion>
-            <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
-                <DialogTitle>
-                    {`Job '#${job.jobId} ${job.jobName}' löschen?`}
-                </DialogTitle>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setConfirmDelete(false)}
-                        color="primary"
-                    >
-                        Abbrechen
-                    </Button>
-                    <Button onClick={handleDeleteJob} color="primary">
-                        Löschen
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <DeleteDialog 
+                title={`Job '#${job.jobId} ${job.jobName}' löschen?`} 
+                open={confirmDelete} 
+                onClose={() => setConfirmDelete(false)} 
+                onDelete={deleteJob}
+            />
         </div>
     );
 };
