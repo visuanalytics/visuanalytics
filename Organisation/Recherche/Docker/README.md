@@ -2,22 +2,22 @@
 
 ## Dockerfile
 
-> erstellen eines Images
+> Erstellen eines Images
 
 ```DOCKER
-# Definiert das Grund Image
+# Definiert das Grund-Image
 FROM baseimage
 
-# Quellcode zum Image Copieren
+# Quellcode zum Kopieren eines Images
 COPY src dest
 
-# code bauen
+# Code bauen
 RUN cmd
 
-# Beim Start Ausführen
+# Beim Start ausführen
 CMD ["command"]
 
-# Port von ausserhalb annehmen
+# Port von außerhalb annehmen
 EXPOSE PORT
 ```
 
@@ -49,27 +49,27 @@ Container starten
 Docker start containerID
 ```
 
-> mit **--name** kann man einen container einen Namen vergeben und diesen anstelle der id verwenden (geht bei create und run)
+> Mit `--name` kann man einem Container einen Namen geben und diesen anstelle der ID verwenden (möglich bei `create` und `run`).
 
 **RUN Options**
 
-- `-d` -> Im hintergrund Starten
+- `-d` -> Im Hintergrund starten
 
-> wieder stopen mit `docker stop containerID`
+> Wieder stoppen mit `docker stop containerID`
 
-- `-p HostPort:ImagePort` -> Port weiterleitung
+- `-p HostPort:ImagePort` -> Weiterleitung des Ports
 
-> Benötigt expose für ImagePort im **Dockerfile**
+> Benötigt `expose` für Image-Port im **Dockerfile**.
 
-- `--mount type=bind,source=/dir,target=/dir` -> Dateien des Host Sytemes an den Contaier Binden
+- `--mount type=bind,source=/dir,target=/dir` -> Dateien des Host-Sytems an den Container binden
 
-> Praktich für **Development**
+> Praktisch für **Development**
 
-- ´-i´ -> stdin des containers wird offen gehalten
+- `-i` -> `stdin` des Containers wird offen gehalten
 
 ## Docker Compose
 
-> Zum starten mehrerer Docker Container
+> Zum Starten mehrerer Docker-Container
 
 ### docker-compose.yml
 
@@ -97,9 +97,9 @@ services:
       - IMAGE
 ```
 
-> Mann kann entweder mit `build` ein path zu einem DockerFile angeben oder mit `image` ein schon Vorhandenes Docker image (local oder auch online)
+> Man kann entweder mit `build` einen Pfad zu einem Dockerfile angeben oder mit `image` ein schon vorhandenes Docker-Image (lokal oder auch online).
 
-> Um überes netzwerk zwichen den Containern zu Komunizieren kann man einfach als **Host** den Service namen verwenden (hier z.B. con1)
+> Um über ein Netzwerk zwischen den Containern zu kommunizieren, kann man einfach als **Host** den Service-Namen verwenden (hier z.B. con1).
 
 ### Run
 
@@ -109,6 +109,6 @@ docker-compose up
 
 **Compose Options**
 
-- `-d` -> Im hintergrund Starten
+- `-d` -> Im Hintergrund starten
 
-> wieder stopen mit `docker-compose stop`
+> Wieder stoppen mit `docker-compose stop`

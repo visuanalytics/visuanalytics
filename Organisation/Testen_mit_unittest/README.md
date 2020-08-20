@@ -2,10 +2,10 @@
 
 Zum Schreiben von Unit-Tests stellt Pythons Standard-Bibliothek [unittest](https://docs.python.org/3/library/unittest.html) zur Verfügung.
 
-Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
+Hier ist ein Beispiel für den Umgang mit der Test-Bibliothek:
 
-1. Wir definieren im Modul "sum_fun.py" folgende (zu testende) Funktionen zur Berechnung der Summe aller geraden bzw. ungeraden Zahlen in einer Liste.
-    ```python
+1. Definition von (zu testenden) Funktionen zur Berechnung der Summe aller geraden bzw. ungeraden Zahlen in einer Listeim Modul `sum_fun.py`.
+    ```
     def sum_even(l):
         return sum(filter(even, l))
 
@@ -13,8 +13,8 @@ Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
         return sum(filter(uneven, l))
     ```
 
-2. Wir erstellen das Modul ("test_sum.py"), das die Tests enthalten soll. Je Testfall wird eine Klasse erstellt, welche von unittest.TestCase erbt. In diesem Beispiel haben wir nur einen Testfall (Klasse Test_Sum_Fun). Innerhalb der Klasse definieren wir nun die einzelnen Test-Methoden; damit diese auch automatisch beim Starten des Tests ausgeführt werden, müssen ihre Namen mit "test" beginnen. Zentrale Komponente der Test-Funktionen sind die `asserts`: Diese bestimmen, ob der Test durchläuft oder fehlschlägt.  
-    ```python
+2. Erstellung des Moduls (`test_sum.py`), das die Tests enthalten soll. Je Testfall wird eine Klasse erstellt, welche von `unittest.TestCase` erbt. In diesem Beispiel gibt es nur einen Testfall (Klasse `Test_Sum_Fun`). Innerhalb der Klasse werden nun die einzelnen Test-Methoden definiert. Damit diese auch automatisch beim Starten des Tests ausgeführt werden, müssen ihre Namen mit `test` beginnen. Zentrale Komponente der Test-Funktionen sind die `asserts`. Diese bestimmen, ob der Test durchläuft oder fehlschlägt.  
+    ```
     import unittest
     import sum_fun
 
@@ -36,21 +36,21 @@ Hier ist ein simples Beispiel für den Umgang mit der Test-Bibliothek:
             actual = sum_fun.sum_even(l) + sum_fun.sum_uneven(l)
             self.assertEqual(expected, actual, "Sum of even and uneven numbers should equal the sum of all numbers in a list")
     ```
-    Die wahrscheinlich wichtigste `assert`-Funktion ist `assertEqual`: Diese nimmt zwei Werte an und wirft eine Exception (d.h., der Test schlägt fehl) wenn sie unterschiedlich sind. Um den Fehler genauer zu beschreiben, lässt sich als optionaler Parameter zusätzlich ein Text angeben, der ausgegeben wird, wenn der Test fehlschlägt.
+    Die wahrscheinlich wichtigste `assert`-Funktion ist `assertEqual`. Diese nimmt zwei Werte an und wirft eine Exception (d.h. der Test schlägt fehl), wenn sie unterschiedlich sind. Um den Fehler genauer zu beschreiben, lässt sich als optionaler Parameter zusätzlich ein Text angeben, der ausgegeben wird, wenn der Test fehlschlägt.
 
-3. (optional) Um die im Modul enthaltenen Tests auch von der Kommandozeile ausführen zu können, fügen wir folgende Anweisung hinzu:
-    ```python
+3. (optional) Um die im Modul enthaltenen Tests auch von der Kommandozeile aus ausführen zu können, werden folgende Anweisung hinzugefügt:
+    ```
     if __name__ == '__main__':
         unittest.main()
     ```
-    Unsere Tests lassen sich dann von der Kommandozeile aus so ausführen: 
+    Die Tests lassen sich dann von der Kommandozeile aus so ausführen: 
     ```
     python -m unittest test sum_test
     python -m unittest sum_test.Test_Sum_Fun
     python -m unittest sum_test.Test_Sum_Fun.test_sum_even
     ```
 
-4. Um die Tests in PyCharm auszuführen: Rechtsklick auf das Testmodul im Projektverzeichnis und dann "Run unit tests in ..." auswählen.
+4. Um die Tests in PyCharm auszuführen: Rechtsklick auf das Testmodul im Projektverzeichnis und dann `Run unit tests in ...` auswählen.
 
 
 Quelle: https://docs.python.org/3/library/unittest.html

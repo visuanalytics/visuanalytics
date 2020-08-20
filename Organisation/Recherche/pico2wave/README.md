@@ -7,7 +7,7 @@ Bei pico2wave war die Aussprache und Verständlichkeit am besten. Man kann damit
 Zusätzlich haben wir uns Book-To-MP3 und pdf2mp3 angeschaut, um uns die Möglichkeit offen zu halten auch .pdf-Dateien umformen zu können.
 Allerdings war hierbei die gesprochene Sprache nicht verständlich. 
  
-Um pico2wave das benutzen zu können, muss man zuerst die Pakete libttspico-utils und sox installieren.  
+Um pico2wave benutzen zu können, muss man zuerst die Pakete `libttspico-utils` und `sox` installieren.  
 Das geht mit dem Kommandozeilenbefehl:
 
 ```
@@ -18,7 +18,7 @@ sudo apt-get install libttspico-utils sox
 
 **Umwandlung:** 
 
-* direkte Eingabe von Text
+- direkte Eingabe von Text
     
     ```
     pico2wave --lang de-DE --wave /home/lisa/Dokumente/Studium/SWTP/test.wav "Das Wetter ist gut"
@@ -26,27 +26,27 @@ sudo apt-get install libttspico-utils sox
     <br>
     Erzeugt .wav Sprachdatei im Ordner SWTP mit dem Inhalt "Das Wetter ist gut".
     <br><br>
-* .txt-Datei einlesen mithilfe eines Bashskripts
+- .txt-Datei einlesen mithilfe eines Bashskripts
 
-    * in den Ordner /usr/local/bin wechseln, dort Skript mithilfe von nano erstellen:
+    - in den Ordner `/usr/local/bin` wechseln, dort Skript mithilfe von nano erstellen:
      
         ```
         sudo nano talk.sh
         ```
       
-    * in nano eingeben:
+    - in nano eingeben:
         ```
         #!/bin/bash
         pico2wave --lang de-DE -- wave /home/lisa/Dokumente/Studium/SWTP/test.wav "$(cat ${1})"
         ``` 
       
-    * Umwandlung durchführen:
+    - Umwandlung durchführen:
     
         ```
         talk.sh textbeispiel.txt
         ```
     <br>
-    Erzeugt .wav Sprachdatei im Ordner SWTP mit dem Inhalt der Textdatei textbeispiel.txt.
+    Erzeugt .wav-Sprachdatei im Ordner SWTP mit dem Inhalt der Textdatei textbeispiel.txt.
     <br><br>
 
 **Einstellung:**  

@@ -19,7 +19,7 @@ In Deutschland kann man auf sein Urheberrecht nicht verzichten. Allerdings könn
 
 Bei diesen sogenannten freien Lizenzen kann der Urheber selbst festlegen unter welchen Bestimmungen das Werk weiter genutzt werden darf. Dabei werden meist die Creative-Commons-Lizenzen verwendet, die aus standardisierten Lizenzbausteinen bestehen. Die Bilder können dann ohne Nachfrage benutzt werden, solange sich an die Bedingungen gehalten wird.
 
-Auf dieser Graphik sind die wichtigsten Attribute zusammengefasst:
+Auf dieser Grafik sind die wichtigsten Attribute zusammengefasst:
 
 ![](creative-commons-infografik.jpg)  
 <a href=https://www.bildersuche.org/creative-commons-infografik.php>Creative Commons – Was ist und bedeutet das?</a> von Martin Mißfeldt auf <a href=https://www.bildersuche.org>Bildersuche.org</a> lizenziert unter <a href="https://creativecommons.org/licenses/by-sa/3.0/de/">CC BY-SA 3.0 DE</a>
@@ -30,14 +30,14 @@ Wie man bei dieser Abbildung schon sehen kann, sollten folgende Angaben gemacht 
 * den Autor bzw. Urheber des Bildes
 * die Quelle des Bildes, welche als Link zur Webseite fungiert, auf der man das Bild gefunden hat
 * Bearbeitungshinweise (z.B. Zuschneiden des Bildes), falls Bild verändert wurde
-* die Lizenz unter der das Bild veröffentlicht wurde, welcher als Link zur Lizenzinformation fungiert
+* die Lizenz, unter der das Bild veröffentlicht wurde, welcher als Link zur Lizenzinformation fungiert
 
 Außerdem kann es sinnvoll sein, das Zugriffsdatum mit anzugeben.
 
 
 ### Eigene Fotografien
 
-Bilder, die man selbst geschossen oder anderweitig erstellt hat, darf man immer verwenden. Mit einer Ausnahme: Es herrscht ein "Recht am eigenen Bild". Das heißt, dass jede Person grundsätzlich selbst entscheiden darf, ob sie fotografiert werden möchte und wozu diese erstellten Fotografien benutzt werden dürfen. Das bedeutet man muss die Person ausdrücklich um Erlaubnis bitten.
+Bilder, die man selbst geschossen oder anderweitig erstellt hat, darf man immer verwenden. Mit einer Ausnahme: Es herrscht ein "Recht am eigenen Bild". Das heißt, dass jede Person grundsätzlich selbst entscheiden darf, ob sie fotografiert werden möchte und wozu diese erstellten Fotografien benutzt werden dürfen. Das bedeutet, man muss die Person ausdrücklich um Erlaubnis bitten.
 
 
 
