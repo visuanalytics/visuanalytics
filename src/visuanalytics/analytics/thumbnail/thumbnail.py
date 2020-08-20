@@ -1,3 +1,6 @@
+"""
+Modul welches Thumbnails erzeugt
+"""
 import os
 import shutil
 

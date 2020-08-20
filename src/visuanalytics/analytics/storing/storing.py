@@ -1,5 +1,5 @@
 """
-Modul schreibt Dicts in JSON Files
+Modul welches Dicts in JSON Files schreibt
 """
 
 import json

@@ -1,3 +1,6 @@
+"""
+Modul welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeihaltet.
+"""
 from random import randint
 
 from visuanalytics.analytics.util.step_errors import AudioError, raise_step_error
