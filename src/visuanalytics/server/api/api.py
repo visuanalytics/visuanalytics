@@ -3,9 +3,10 @@ Enthält die API-Endpunkte.
 """
 
 import traceback
-
 import flask
-from flask import (Blueprint, request, send_file, make_response)
+
+from flask import (Blueprint, request, send_file)
+from werkzeug.utils import secure_filename
 
 from visuanalytics.server.db import db, queries
 
@@ -34,10 +35,38 @@ def topics():
         err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of topics"})
         return err, 400
 
+
 @api.route("/topic", methods=["PUT"])
 def add_topic():
-    # Todo (Max) queries.add_topic(name, file_name)
-    return "", 204
+    try:
+        if "config" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing File"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Topic name"})
+            return err, 400
+
+        file = request.files["config"]
+        name = request.form["name"]
+
+        if file.filename == '':
+            err = flask.jsonify({"err_msg": "Missing File"})
+            return err, 400
+
+        if not _check_file_extention(file.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extention"})
+            return err, 400
+
+        filename = secure_filename(file.filename).rsplit(".", 1)[0]
+        queries.add_topic(name, filename)
+        file.save(queries._get_file_path(filename))
+        return "", 204
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 400
+
 
 @api.route("/topic/<topic_id>", methods=["GET"])
 def get_topic(topic_id):
@@ -59,6 +88,7 @@ def get_topic(topic_id):
         err = flask.jsonify({"err_msg": "An error occurred"})
         return err, 400
 
+
 @api.route("/topic/<topic_id>", methods=["DELETE"])
 def delete_topic(topic_id):
     try:
@@ -68,6 +98,7 @@ def delete_topic(topic_id):
         traceback.print_exc()  # For debugging, should be removed later
         err = flask.jsonify({"err_msg": "An error occurred"})
         return err, 400
+
 
 @api.route("/params/<topic_id>", methods=["GET"])
 def params(topic_id):
@@ -169,3 +200,7 @@ def logs():
     Gibt die logs der jobs zurück
     """
     return flask.jsonify(queries.get_logs())
+
+
+def _check_file_extention(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() == "json"

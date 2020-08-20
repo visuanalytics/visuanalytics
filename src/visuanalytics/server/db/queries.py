@@ -12,7 +12,7 @@ def get_topic_names():
     con = db.open_con_f()
     res = con.execute("SELECT steps_id, steps_name, json_file_name FROM steps")
     return [{"topicId": row["steps_id"], "topicName": row["steps_name"],
-             "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
+             "topicInfo": _get_topic_info(row["json_file_name"])} for row in res]
 
 def get_topic_file(topic_id):
     con = db.open_con_f()
@@ -215,6 +215,12 @@ def _row_to_job(row):
 
 def _get_file_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+
+def _get_topic_info(json_file_name: str):
+    try: 
+        return _get_topic_steps(json_file_name).get("info", "")
+    except Exception:
+        return ""
 
 def _get_topic_steps(json_file_name: str):
     path_to_json = _get_file_path(json_file_name)
