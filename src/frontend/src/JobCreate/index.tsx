@@ -168,8 +168,11 @@ export default function JobCreate() {
       countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
     }
     return (() => {
-      if (countertimeout.current !== undefined) {
+      if (countertimeout.current !== undefined ) {
         clearTimeout(countertimeout.current);
+      }
+      if (timeout.current !== undefined ) {
+        clearTimeout(timeout.current);
       }
     });
   }, [counter]);
