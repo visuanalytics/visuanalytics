@@ -101,7 +101,8 @@ CREATE TABLE schedule (
                           CHECK (type IN ("daily", "weekly", "interval", "on_date") ),
     time          TIME,
     date          DATE,
-    time_interval         CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") )
+    time_interval         CHECK (time_interval IN ("minute", "quarter", "half", "threequarter", "hour", "quartday", "halfday") ),
+    next_execution VARCHAR
 );
 
 
