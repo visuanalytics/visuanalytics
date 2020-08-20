@@ -1,12 +1,12 @@
-import React, { useState, useCallback } from "react";
-import { ListItem, Divider, List, TextField, Fade, Switch, FormControlLabel, Typography } from "@material-ui/core";
-import { TopicPanel } from "./TopicPanel";
-import { useStyles } from "../style";
-import { Load } from "../../Load";
-import { getUrl } from "../../util/fetchUtils";
-import { useFetchMultiple } from "../../Hooks/useFetchMultiple";
-import { InfoMessage } from "../../util/InfoMessage";
-import { ComponentContext } from "../../ComponentProvider";
+import React, {useState, useCallback} from "react";
+import {ListItem, Divider, List, TextField, Fade, Switch, FormControlLabel, Typography} from "@material-ui/core";
+import {TopicPanel} from "./TopicPanel";
+import {useStyles} from "../style";
+import {Load} from "../../Load";
+import {getUrl} from "../../util/fetchUtils";
+import {useFetchMultiple} from "../../Hooks/useFetchMultiple";
+import {InfoMessage} from "../../util/InfoMessage";
+import {ComponentContext} from "../../ComponentProvider";
 
 export interface Topic {
     topicName: string;
@@ -59,7 +59,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     selectTopicHandler={!props.multipleTopics ? props.setSingleTopicHandler : props.addTopicHandler}
                     multipleTopics={props.multipleTopics}
                 />
-                <Divider />
+                <Divider/>
             </ListItem>
         );
     }
@@ -67,15 +67,6 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
     return (
         <Fade in={true}>
             <div>
-                <div className={classes.SPaddingTB}>
-                    <FormControlLabel
-                        control={<Switch />}
-                        checked={props.multipleTopics}
-                        onChange={toggleChecked}
-                        label="Videos aneinanderhängen"
-                    />
-                </div>
-                <Divider />
                 <Load
                     failed={{
                         hasFailed: loadFailed,
@@ -92,34 +83,43 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                             headline: "Willkommen bei der Job erstellung!",
                             text: (
                                 <Typography align={"center"} color="textSecondary">
-                                Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
-                                generieren lassen.
-                                <br /> Klicken Sie auf 'Zur Themen Übersicht', um Ihre erstes
-                                Thema anzulegen.
+                                    Mit VisuAnalytics können Sie sich Videos zu bestimmten Themen
+                                    generieren lassen.
+                                    <br/> Klicken Sie auf 'Zur Themen Übersicht', um Ihre erstes
+                                    Thema anzulegen.
                                 </Typography>
                             ),
                             button: {
-                              text: "Zur Themen Übersicht",
-                              onClick: () => components?.setCurrent("addTopic"),
+                                text: "Zur Themen Übersicht",
+                                onClick: () => components?.setCurrent("addTopic"),
                             },
-                      }}
+                        }}
                     >
+                        <div className={classes.SPaddingTB}>
+                            <FormControlLabel
+                                control={<Switch/>}
+                                checked={props.multipleTopics}
+                                onChange={toggleChecked}
+                                label="Videos aneinanderhängen"
+                            />
+                        </div>
+                        <Divider/>
                         <List>
                             {topics?.map(t => renderTopicPanel(t))}
                         </List>
+                        <Divider/>
+                        <div className={classes.LPaddingTB}>
+                            <TextField className={classes.inputFields}
+                                       required
+                                       value={props.jobName}
+                                       variant="outlined"
+                                       label="Job-Name"
+                                       onChange={handleInput}
+                                       error={props.invalidJobName}
+                            />
+                        </div>
                     </InfoMessage>
                 </Load>
-                <Divider />
-                <div className={classes.LPaddingTB}>
-                    <TextField className={classes.inputFields}
-                        required
-                        value={props.jobName}
-                        variant="outlined"
-                        label="Job-Name"
-                        onChange={handleInput}
-                        error={props.invalidJobName}
-                    />
-                </div>
             </div>
         </Fade>
     );
