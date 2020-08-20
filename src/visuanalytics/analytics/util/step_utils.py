@@ -1,5 +1,5 @@
 """
-
+Modul mit Typ-Methoden, die in `images`, `transform` und `audio` verwendet werden können.
 """
 import numbers
 
@@ -22,7 +22,7 @@ def execute_type_compare(values: dict, data: StepData):
     if value_left == value_right:
         return values.get("on_equal", [])
 
-    # If on_not_equal is present return on not equal
+    # if on_not_equal is present return on_not_equal
     if values.get("on_not_equal", None) is not None:
         return values.get("on_not_equal", [])
 
