@@ -346,7 +346,7 @@ export default function JobCreate() {
       case 2:
         return (
           <SettingsPage
-            offset={1}
+            offset={0}
             schedule={schedule}
             deleteSchedule={deleteSchedule}
             selectScheduleHandler={handleSelectSchedule}
