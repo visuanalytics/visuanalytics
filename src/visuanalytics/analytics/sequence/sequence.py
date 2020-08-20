@@ -73,7 +73,6 @@ def link(values: dict, step_data: StepData):
                 pipeline.start()
 
                 sequence_out.append(pipeline.config["sequence"])
-                print(pipeline.config["sequence"])
 
             _combine(sequence_out, step_data, values)
 
