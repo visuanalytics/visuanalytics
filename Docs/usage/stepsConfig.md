@@ -3233,11 +3233,20 @@ Alle [Basis-Angaben](#basis-angaben).
 
 ## Presets
 
-**TODO**
+Da es häufiger mal vorkommt das man einige Konfigurationen mehrfach benötigt, kann man sogenante `Presets` verwenden um sich Doppelte einträge zu Sparen. Diese werden unter dem Punkt `"presets"` definiert. Innerhalb der restlichen JSON kann man diese dann mit `"preset": key` verwenden.
 
-**Beispiel**
+**Beispiele**
+
+![Preset Beispiel](../_static/images/usage/presets.gif)
+
 ```JSON
 {
+ "images": {
+   "beispiel": {
+     "type": "pillow",
+     "preset": "test_preset_1"
+   },
+ },
  "presets": {
     "test_preset_1": {
       "colour": "black",
@@ -3253,3 +3262,10 @@ Alle [Basis-Angaben](#basis-angaben).
 }
 ```
 
+```warning::
+  Hierbei ist zu beachten das man `Presets` nur auf einer Ebene angeben kann die auch eine `type` definition enthält (Die verwendung einer `type` angabe inerhalb eines Presets ist also nicht möglich). Desweiteren werden beim einfügen der im presets angegebenen felder, keine Arrays gemerged. Hat also ein Preset eine Key definition und in der normalen definition ist dieser Key auch vorhanden wird der Wert des Presets verwendet.
+```
+
+### Globale Presets
+
+Um Presets bei Mehreren Themen zu verwenden gibt es `Globale Presets`. Diese können im [Themen Ordner (`steps`)](#pfade) in der Datei `golobal_presets` definiert Werden.
