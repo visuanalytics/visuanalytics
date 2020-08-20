@@ -7,6 +7,7 @@ import uuid
 from datetime import datetime, time as dt_time, timedelta
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+from visuanalytics.server.db import job
 from visuanalytics.util import config_manager
 
 logger = logging.getLogger(__name__)
@@ -69,9 +70,10 @@ class Scheduler(object):
     def _check_datetime(now: datetime, run_time: datetime):
         return now.date() >= run_time.date() and now.hour >= run_time.hour and now.minute >= run_time.minute
 
-    def _check_interval(self, now: datetime, interval: dict, job_id: int):
+    def _check_interval(self, now: datetime, interval: dict, job_id: int, db_use: bool = False):
         next_run = self._interval.get(job_id, None)
         run = False
+        next_execution = now + timedelta(**interval)
 
         # If Interval has changed -> reset time
         if next_run is not None and next_run["interval"] != interval:
@@ -81,7 +83,10 @@ class Scheduler(object):
             run = self._check_datetime(now, next_run["time"])
 
         if run or next_run is None:
-            self._interval[job_id] = {"time": now + timedelta(**interval), "interval": interval}
+            if db_use:
+                job.insert_next_execution_time(job_id, str(next_execution))
+
+            self._interval[job_id] = {"time": next_execution, "interval": interval}
             logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, {}).get('time', None)}")
 
         return run

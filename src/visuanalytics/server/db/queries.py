@@ -51,7 +51,7 @@ def get_job_list():
     res = con.execute("""
         SELECT 
         job_id, job_name, 
-        schedule.type AS s_type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
+        schedule.type AS s_type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval, next_execution,
         delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
@@ -195,7 +195,7 @@ def _row_to_job(row):
     if s_type == "on_date":
         schedule = {**schedule, "time": time, "date": row["date"]}
     if s_type == "interval":
-        schedule = {**schedule, "interval": row["time_interval"]}
+        schedule = {**schedule, "interval": row["time_interval"], "nextExecution": row["next_execution"]}
 
     d_type = row["d_type"]
     delete_schedule = {

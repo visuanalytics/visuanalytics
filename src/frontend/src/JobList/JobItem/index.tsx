@@ -70,12 +70,8 @@ export const JobItem: React.FC<Props> = ({
     useEffect(() => {
         const interval = setInterval(() => {
             setNext(showTimeToNextDate(schedule));
-        }, 60000);
+        }, 2000);
         return () => clearInterval(interval);
-    }, [schedule]);
-
-    useEffect(() => {
-        setNext(showTimeToNextDate(schedule));
     }, [schedule]);
 
     const handleChange = (panel: string) => (

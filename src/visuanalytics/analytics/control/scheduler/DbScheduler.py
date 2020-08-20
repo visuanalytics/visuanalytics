@@ -20,7 +20,7 @@ class DbScheduler(Scheduler):
     def __check(self, row, now):
         # check if type is "interval" and job has to be run
         if row["s_type"] == "interval":
-            if self._check_interval(now, get_interval(row), row["job_id"]):
+            if self._check_interval(now, get_interval(row), row["job_id"], True):
                 self.__run_jobs(row["job_id"])
             return
 
