@@ -286,7 +286,7 @@ Bei _openligadb_ war das Problem, dass man nur die aktuelle Tabelle abfragen kon
 
 Die zuvor implementierten `transform`-Funktionen konnten größtenteils übernommen werden. Einige wurden verallgemeinert, ergänzt, entfernt oder zusammengefügt zu einer Funktion. Nachdem die verbesserten Funktionen getestet wurden, wurden die Änderungen auch in den JSON-Dateien der Wetterberichte eingepflegt.
 
-Folgende transform-Funktionen wurden verwendet:
+Folgende `transform`-Funktionen wurden verwendet:
 
 | transform-Typ      | Beschreibung                                                                                                  |
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
@@ -314,7 +314,7 @@ Beispiel:
 
 `"500": {"1": "Text1", "2": "Text2"}`
 
-Man musste immer genau diese Anzahl an Key-Value-Paaren eintragen, um die Funktion nutzen zu können.
+Man musste immer genau diese Anzahl an Key/Value-Paaren eintragen, um die Funktion nutzen zu können.
 
 Dies wurde so geändert, dass dort ein Dictionary mit
 
@@ -359,19 +359,8 @@ Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet 
 Die API-Antwort wird so verkürzt, dass nur noch die Hashtags, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden Wordclouds erstellt.
 
 Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt. Es ist möglich verschiedene Parameter für die Wordcloud festzulegen.
-Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square":
-
-<figure>
-  <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
-  <figcaption>Abbildung : Wordcloud mit "figure": "circle"</figcaption>
-</figure>  
-<br>
-
-<figure>
-  <img width="90%" src="../_static/images/documentation/wordcloud_square.png"/>
-  <figcaption>Abbildung : Wordcloud mit "figure": "square"</figcaption>
-</figure>  
-<br>
+Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square".
+(siehe [Images: Wordcloud](#wordcloud))
 
 Die zuvor implementierten `transform`-Typen konnten größtenteils nicht weiter verwendet werden und es mussten neue implementiert werden.
 `transform_array`, `select`, `append` und `delete` konnten wiederverwendet werden.
@@ -398,7 +387,7 @@ Folgende transform-Typen wurden verwendet:
 **Wordcloud-Parameter**
 
 Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud beeinflussen kann. Diese betreffen die Größe der Wordcloud und der Schrift. Die Hintergrundfarbe, Schriftfarben. Will man anstatt eines einfarbigen Hintergrunds ein Bild, geht dies durch die JSON und den Overlay-Typ "image" auch.
-Die verschiedenen Parameter werden in der Steps-Config-Doku genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
+Die verschiedenen Parameter werden in der [Dokumentation zur Themenkonfiguration](#themenkonfiguration) genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
 Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
 ## Processing
@@ -431,7 +420,13 @@ Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
 
 <figure>
   <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
-  <figcaption>Abbildung : Wordcloud zum Thema Bundesliga</figcaption>
+  <figcaption>Abbildung : Wordcloud zum Thema Bundesliga (mit "figure": "circle")</figcaption>
+</figure>  
+<br>
+
+<figure>
+  <img width="90%" src="../_static/images/documentation/wordcloud_square.png"/>
+  <figcaption>Abbildung : Wordcloud mit "figure": "square"</figcaption>
 </figure>  
 <br>
 
