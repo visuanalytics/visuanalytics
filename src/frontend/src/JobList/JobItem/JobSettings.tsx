@@ -85,19 +85,30 @@ export const JobSettings: React.FC<Props> = ({
     const emptyJobNameError = "Job-Name nicht ausgefüllt";
 
     const handleCheckClick = () => {
+        let errorMessage = ""
+
         if (jobName.trim() === "") {
-            reportError(emptyJobNameError);
-            return;
+            setJobNameInvalid(true);
+            errorMessage = emptyJobNameError;
+        } else {
+            setEdit(false);
+            setJobNameInvalid(false);
         }
+
         const invalid = job.topicValues.map((t: any, idx: number) => getInvalidParamValues(paramValues[idx], t.params));
         setInvalidValues(invalid ? invalid : []);
         const paramsValid = invalid?.every(t => t.length === 0);
         if (!paramsValid) {
-            reportError("Parameter nicht korrekt gesetzt")
-            return;
+            errorMessage = errorMessage !== "" ? errorMessage : "Parameter nicht korrekt gesetzt";
+        } else {
+            setInvalidValues([]);
         }
         if (!validateSchedule(schedule)) {
-            reportError("Es muss mindestens ein Wochentag ausgewählt werden");
+            errorMessage = errorMessage !== "" ? errorMessage : "Es muss mindestens ein Wochentag ausgewählt werden";
+        }
+
+        if (errorMessage !== "") {
+            reportError(errorMessage);
             return;
         }
         editJob();
@@ -167,6 +178,7 @@ export const JobSettings: React.FC<Props> = ({
             reportError(emptyJobNameError);
             return;
         }
+        setJobNameInvalid(false);
         setEdit(p => !p);
     }
 
