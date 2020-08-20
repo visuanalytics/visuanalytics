@@ -81,6 +81,16 @@ export default function JobCreate() {
 
   const [hintState, setHintState] = React.useState(0);
 
+  const handleAddSuccess = () => {
+    setActiveStep(4);
+    delay();
+    setFinished(true);
+  }
+
+  const handleAddError = () => {
+    reportError("Job konnte nicht erstellt werden");
+  }
+
   // initialize callback for add job functionality
   const addJob = useCallFetch(getUrl("/add"), {
     method: "POST",
@@ -98,7 +108,7 @@ export default function JobCreate() {
       schedule: withFormattedDates(schedule),
       deleteSchedule: deleteSchedule
     })
-  });
+  }, handleAddSuccess, handleAddError);
 
   // handler for param Load failed
   const handleLoadParamsFailed = React.useCallback(() => {
@@ -139,13 +149,7 @@ export default function JobCreate() {
     fetchParams();
   }, [fetchParams]);
 
-  useEffect(() => {
-    if (activeStep === 3) {
-      setActiveStep(4);
-      setFinished(true);
-      addJob();
-    }
-  }, [activeStep, addJob]);
+
 
   // when a new topic is selected, fetch params
   useEffect(() => {
@@ -171,10 +175,10 @@ export default function JobCreate() {
 
   useEffect(() => {
     return () => {
-      if (timeout.current !== undefined ) {
+      if (timeout.current !== undefined) {
         clearTimeout(timeout.current);
       }
-      if (countertimeout.current !== undefined ) {
+      if (countertimeout.current !== undefined) {
         clearTimeout(countertimeout.current);
       }
     }
@@ -223,10 +227,12 @@ export default function JobCreate() {
         }
         break;
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    handleHintState(activeStep + 1);
-    if (activeStep === 2) {
-      delay();
+
+    if (activeStep !== 2) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      handleHintState(activeStep + 1);
+    } else {
+      addJob();
     }
   };
 
