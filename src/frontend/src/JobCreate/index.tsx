@@ -199,16 +199,20 @@ export default function JobCreate() {
   const handleNext = () => {
     switch (activeStep) {
       case 0:
+        let errorMessage = "";
         if (topics.length <= 0) {
-          reportError("Es muss mindestens ein Thema ausgewählt werden");
-          return;
+          errorMessage = "Es muss mindestens ein Thema ausgewählt werden";
         }
         if (jobName.trim() === "") {
           setInvalidJobName(true);
-          reportError("Job-Name nicht ausgefüllt");
+          errorMessage = errorMessage !== "" ? errorMessage : "Job-Name nicht ausgefüllt";
+        } else {
+          setInvalidJobName(false);
+        }
+        if (errorMessage !== "") {
+          reportError(errorMessage);
           return;
         }
-        setInvalidJobName(false);
         break;
       case 1:
         const invalid = paramLists?.map((l, idx) => getInvalidParamValues(paramValues[idx], l));
