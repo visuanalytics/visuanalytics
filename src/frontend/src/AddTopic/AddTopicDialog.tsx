@@ -16,17 +16,42 @@ interface Props {
   open: boolean;
   onClose: () => void;
   getTopics: () => void;
+  reportError: (message: string) => void;
+  reportSuccess: (message: string) => void;
 }
 
 export const AddTopicDialog: React.FC<Props> = ({
   open,
   onClose,
   getTopics,
+  reportError,
+  reportSuccess,
 }) => {
   const classes = useStyles();
   const topicNameRef = React.createRef<HTMLInputElement>();
   const topicConfigRef = React.createRef<HTMLInputElement>();
-  const uploadTopic = useUploadTopic(getTopics);
+  const [nameError, setNameError] = React.useState(false);
+  const [configError, setConfigError] = React.useState(false);
+
+  const handleClose = () => {
+    setNameError(false);
+    setConfigError(false);
+    onClose();
+  };
+
+  const handleUploadTopicSuccess = () => {
+    getTopics();
+    reportSuccess("Thema wurde erstellt");
+  };
+
+  const handleUploadTopicFailed = () => {
+    reportError("Thema konnte nicht erstellt werden");
+  };
+
+  const uploadTopic = useUploadTopic(
+    handleUploadTopicSuccess,
+    handleUploadTopicFailed
+  );
 
   const handleAddTopic = () => {
     const topicName = topicNameRef.current?.value;
@@ -34,8 +59,19 @@ export const AddTopicDialog: React.FC<Props> = ({
       ? topicConfigRef.current?.files[0]
       : undefined;
 
-    if (!topicName || !topicConfig) {
-      console.log("error");
+    // Reset Errors
+    setNameError(false);
+    setConfigError(false);
+
+    if (!topicName) {
+      reportError("Name des Themas fehlt");
+      setNameError(true);
+      return;
+    }
+
+    if (!topicConfig) {
+      reportError("JSON-Datei fehlt");
+      setConfigError(true);
       return;
     }
 
@@ -45,7 +81,7 @@ export const AddTopicDialog: React.FC<Props> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>Thema hinzufügen</DialogTitle>
       <DialogContent>
         <Paper variant="outlined" className={classes.paper}>
@@ -58,6 +94,7 @@ export const AddTopicDialog: React.FC<Props> = ({
             variant="outlined"
             inputRef={topicNameRef}
             required
+            error={nameError}
           />
           <input
             accept="application/json"
@@ -67,14 +104,18 @@ export const AddTopicDialog: React.FC<Props> = ({
             ref={topicConfigRef}
           />
           <label htmlFor="json-button-file">
-            <ContinueButton className={classes.fileButton} component="span">
+            <ContinueButton
+              style={{ boxShadow: configError ? undefined : "none" }}
+              className={classes.fileButton}
+              component="span"
+            >
               JSON-Datei
             </ContinueButton>
           </label>
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={handleClose} color="primary">
           Abbrechen
         </Button>
         <Button onClick={handleAddTopic} color="primary">

@@ -63,7 +63,7 @@ def add_topic():
         file_path = queries._get_file_path(filename)
 
         if path.exists(file_path):
-            err = flask.jsonify({"err_msg": "Invalid file Name"})
+            err = flask.jsonify({"err_msg": "Invalid File name"})
             return err, 400 
 
         queries.add_topic(name, filename)

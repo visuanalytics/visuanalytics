@@ -22,9 +22,24 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { DeleteDialog } from "../util/DeleteDialog";
 import { InfoMessage } from "../util/InfoMessage";
 import { AddTopicDialog } from "./AddTopicDialog";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 export const AddTopic = () => {
   const classes = useStyles();
+
+  const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const reportError = (message: string) => {
+    dispatchMessage({ type: "reportError", message: message });
+  };
+
+  const reportSuccess = (message: string) => {
+    dispatchMessage({ type: "reportSuccess", message: message });
+  };
 
   const [loadFailed, setLoadFailed] = useState(false);
   const handleLoadFailed = useCallback(() => {
@@ -42,10 +57,20 @@ export const AddTopic = () => {
     topicId: -1,
   });
 
+  const handleDeleteSuccess = () => {
+    getTopics();
+    reportSuccess("Thema wurde gelöscht");
+  };
+
+  const handleDeleteError = () => {
+    reportError("Thema konnte nicht gelöscht werden");
+  };
+
   const deleteTopic = useCallFetch(
     getUrl(`/topic`),
     { method: "DELETE" },
-    getTopics
+    handleDeleteSuccess,
+    handleDeleteError
   );
 
   const handleReaload = () => {
@@ -155,12 +180,20 @@ export const AddTopic = () => {
           open={open}
           onClose={handleClose}
           getTopics={getTopics}
+          reportError={reportError}
+          reportSuccess={reportSuccess}
         />
         <DeleteDialog
           title={`Thema löschen?`}
           open={confirmDelete.open}
           onClose={handleCloseDelete}
           onDelete={handleDelete}
+        />
+        <Notification
+          handleClose={() => dispatchMessage({ type: "close" })}
+          open={message.open}
+          message={message.message}
+          severity={message.severity}
         />
       </Load>
     </PageTemplate>

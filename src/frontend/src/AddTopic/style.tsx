@@ -7,6 +7,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     fileButton: {
       marginTop: "20px",
+      border: `2px solid`,
+      boxShadow: `inset 0px 0px 0px 2px ${theme.palette.error.light}`,
     },
     listItem: {
       borderRadius: "4px",
