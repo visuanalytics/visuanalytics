@@ -63,7 +63,7 @@ export const AddTopicDialog: React.FC<Props> = ({
     setNameError(false);
     setConfigError(false);
 
-    if (!topicName) {
+    if (!topicName || topicName.trim() === "") {
       reportError("Name des Themas fehlt");
       setNameError(true);
       return;
