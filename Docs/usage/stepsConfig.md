@@ -19,18 +19,18 @@ Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer
 Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON
 {
-"id": 1,
-"name": "name_des_videos",
-"info": "",
-"api": {},
-"transform": [],
-"storing": [],
-"images": {},
-"thumbnail": {},
-"audio": {},
-"sequence": {},
-"run_config": [],
-"presets": {}
+  "id": 1,
+  "name": "name_des_videos",
+  "info": "",
+  "api": {},
+  "transform": [],
+  "storing": [],
+  "images": {},
+  "thumbnail": {},
+  "audio": {},
+  "sequence": {},
+  "run_config": [],
+  "presets": {}
 }
 ```
 Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id`, `name` und`info` gibt es mehrere Typen, aus denen bei 
@@ -94,6 +94,12 @@ _Verwendung der Schriftart in einer JSON-Datei_:
   "font": "fonts/Dosis-Bold.ttf"
 }
 ```
+
+### Auf Daten zugreifen
+
+Um auf Daten (z. B.: Daten aus der `api`) zuzugreifen gibt man einfach die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei wird nicht zweichen Arrays und Dictionarys (Objecten) untersicheden, man verwendet für arrays also einfach einen Zahlen-Wert als `Key` anstadt eines Strings.
+
+![Daten zugriff Beispiel](../_static/images/usage/daten_zugriff.gif)
 
 ### Key/New Key
 
@@ -165,12 +171,16 @@ Um auf einen String zuzugreifen, verwendet man folgende Syntax:
 **Beispiel**
 ```JSON
 {
-"text": "{_req|text}",
-"stopwords": "{_conf|stopwords}"
+  "text": "{_req|text} Test",
+  "stopwords": "{_conf|stopwords}"
 }
 ```
 
-**TODO**: {} Beschreibung
+Um innerhalb eines Strings Daten einzufügen kann man `{}` verwenden, und dort einen Key reinschreiben. 
+
+```note::
+  Wenn man in dem String `{}` haben will ohne das diese entfernt werden, kann man das machen in dem man die Klammern einfach doppelt hinschreibt (z.B.: `{{"_conf|test}}` -> `"{test}"`).
+```
 
 #### boolean
 Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax: 
@@ -182,6 +192,9 @@ Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax:
   "color_func": true
 }
 ```
+
+Hierbei gibt man entweder direckt einen boolean-Wert an oder den `Key` zu einem boolean-Wert.
+
 #### number
 Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende Syntax:
 
@@ -192,6 +205,8 @@ Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende
   "height": 10
 }
 ```
+
+Hierbei gibt man entweder direckt einen Zahlenwert an oder den `Key` zu einem Zahlenwert.
 
 #### dict
 Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende Syntax:
@@ -205,6 +220,8 @@ Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende
     }
 }
 ```
+
+Hierbei gibt man entweder direckt eine Dictionary (Object) an oder den `Key` zu einem Dictionary (Object).
 
 #### list
 Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
@@ -220,17 +237,31 @@ Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
 }
 ```
 
+Hierbei gibt man entweder direckt eine liste an oder den `Key` zu einer liste.
+
 #### any
 Um auf einen Wert mit nicht festgelegtem Datentyp zuzugreifen, verwendet man folgende Syntax:
 
 **Beispiel**:
 ```JSON
 {
-  "any": "$_conf|value"
+  "any": "$_conf|value",
+  "any2": {
+    "test": 2,
+    "test2": "hallo",
+    "test3": [
+      "hallo",
+      "$_conf|value"
+    ] 
+  }
 }
 ```
 
-**TODO**
+Dieser Daten-Type ist dafür da um auf Daten anzugeben, wo Vorher der Daten-Type nicht bekannt ist. Mann kann hier also einfach einen `String` (str), eine `liste` (list) usw. angeben. Da so allerdings nicht zwichen einem `String` und einem `Key` unterschieden werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben. 
+
+```note::
+  Fals man ein Dollarzeichen (`$`) am anfang eines Strings verwenden will muss mal dieses mit einer Tilde (`~`) Escapen. (z. B.: `"~$test"`)
+```
 
 ## Api
 
@@ -337,11 +368,32 @@ URL nach dem Zusammenbauen:
 
 - _mögliche Werte`_:
   - `json` (default)
+  - `xml`
   - `text`
   - `other`
 
 ```note::
   Der Wert `other` sollte nur bei der `Audio-Konfiguration <./audio-apis.html>`_ verwendet werden.
+```
+
+`xml_config` _(optional)_:
+
+[any](#any) - XML Einstellungen (Wird nur bei `response_format = xml` verwendet)
+
+Um es Möglich zu machen auch XML Daten zu verarbeiten wird das Python modul [xmltodict](https://pypi.org/project/xmltodict/) verwendet. Dieses Wandelt die XML-Daten in ein Dictionary (bzw. in JSON) um. Unter `xml_config` können Konfigurationen angegeben werden, die an das module weiter gegeben werden.
+
+```warning::
+  Da der Doppelpunkt (`:`) in Python auch eine bedutung hat, ist es nicht möglich innerhalb eines Keys einen Doppelpunkt (`:`) anzugeben. Dammit man XML-Daten mit einem Doppelpunkt in dem Key verwenden kann, kann man die `NameSpace <https://github.com/martinblech/xmltodict#namespace-support>`_ einstellung des modules verwenden. z. B:
+    .. code-block:: JSON
+      "xml_config": {
+          "process_namespaces": true,
+          "namespaces": {
+            "http://www.w3.org/2003/05/soap-envelope": null,
+            "http://msiggi.de/Sportsdata/Webservices": null
+          }
+        }
+  Hierbei kann man alle in den XML-Daten vorhandenen namespaces auf `null` setzen dammit die Keys etwas kürtzer werden.
+
 ```
 
 ### request_multiple
@@ -861,7 +913,7 @@ str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernomm
 
 `ignore_errors`:
 
-[bool](#boolean)  - **TODO** Max
+[bool](#boolean)  - Wenn ignore_erros auf `true` gesetzt wird, werden fehlende Keys ignoriert. Steht allso z. B. in den relevant_keys `key1` und `key1` ist nicht vorhanden, wird kein Fehler geworfen. Sondern es wird einfach ignoriert das es diesen Key gar nicht gibt. 
 
 ### delete
 
@@ -1093,13 +1145,12 @@ Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
 
 `keep_old`:
 
-[bool](#boolean) - **TODO** Max
-
+[bool](#boolean) - Wenn `keep_old` auf `true` gesetzt ist wird der allte Key nicht gelöscht. Es wird also nur eine Kopie der Daten angefertigt. 
 
 ### regex
 
 regex - regular expression (zu Deutsch: regulärer Ausdruck)
-Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf keinen Backslash (\) enthalten, da JSON keine Regex.
+Führt re.sub für die angegebenen Werte aus.
 
 **Beispiel** 
 
@@ -1115,6 +1166,10 @@ Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf kein
 ```
 Dieses Beispiel sucht alle . und ersetzt diese mit einem ,
 Durch das + soll mindestens ein . ersetzt werden.
+
+```warning::
+  Da ein Backslash (`\`) in JSON eine bedeutung hat, kann es sein das man diesen escapen muss. (z. B. darf der Backslash (`\`) nicht vor dem Anführungszeichen stehen da dieses sonst ignoriert wird.)
+```
 
 **Beispiel (mehrere Zeichen)** 
 
@@ -1716,12 +1771,12 @@ Default: False.
         }
 ```
 ### most_common
-**TODO** Max drüberlesen
+
 `most_common` betrachtet ein Array oder einen String und sortiert die Elemente der Häufigkeit nach.
 Optional kann auch die Häufigkeit des Elements als Tupel angegeben werden.
 Beispiel: "Der Hund sucht die Katze und die Katze sucht die Maus."
 
-der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
+`[(die, 3), (sucht, 2), (Katze, 2), (der, 1), (Hund, 1), (und, 1), (Maus, 1)]`
 
 **Beispiel** 
 
@@ -1740,8 +1795,13 @@ der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
 
 `include_count`_(optional)_:
 
-[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll.
+[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll. Ist `include_count` auf `false` gesetzt wird einfach nur eine liste mit der Häufigkeit nach sortierten Elementen hinzugefügt. z. B.:
 
+`["die", "sucht", "Katze", "der", "Hund", "und", "Maus"]`
+
+```note::
+  Fals man die option `include_count` auf true gesetzt hat und ein dictionary anstadt einer Liste von Tuppeln haben will kann man diese ganz einfach mit dem Typen `to_dict <#to-dict>`_ umwandeln.
+```
 
 ### sub_lists
 
@@ -1988,9 +2048,8 @@ ersten Vorkommen, wird dann so geschrieben wie als es das erste Mal im Array vor
 }
 ```
 ### split_string
-**TODO** Max
-Teilt einen String am angegebenen Trennzeichen. Das Trennzeichen können auch mehrere Zeichen sein. Soll die Groß- und 
-Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzt man `ignore_case` auf `true`.
+
+Teilt einen String am angegebenen Trennzeichen.
 
 **Beispiel**
 
@@ -2010,9 +2069,9 @@ Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzt man `ignor
 
 `delimiter`_(optional)_:
 
-[str](#string) - Trennzeichen bei dem einen String geteilt werden soll.
+[str](#string) - Trennzeichen bei dem einen String geteilt werden soll. (Dies können auch mehrere Zeichen sein)
 
-Default: `" "`
+_Default_: `" "`
 
 
 `ignore_case`_(optional)_:
@@ -2602,8 +2661,11 @@ Im Image-Overlay:
 `"color": "RGBA",
 "color_transparency": "FFFFFF"`
 
-Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
-und `circle`empfohlen.
+```note::
+  Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
+  und `circle`empfohlen.
+```
+
 <!--TODO-->
 
 #### Text oder Dictionary hinterlegen
@@ -3164,11 +3226,7 @@ Alle [Basis-Angaben](#basis-angaben).
 
 ## Presets
 
-**TODO**: überarbeiten/an änderungen anpassen
-
-`presets` werden verwendet, um z.B. Texte in dem Style, wie sie im `preset` angegeben wurden, auf die Bilder zu schreiben. 
-Man kann hier auch Parameter wie Weite/Höhe etc. angeben, um es leichter zu haben, wenn man mehrmals Bilder erstellen möchte, die sich nur in wenigen Parametern unterscheiden.
-Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf. Erst ein Wort, dann zwei, dann drei, usw.
+**TODO**
 
 **Beispiel**
 ```JSON
@@ -3188,17 +3246,3 @@ Verwendung findet ein Preset z.B. bei der Erstellung von einem Wordcloud-Verlauf
 }
 ```
 
-`colour`:  
-[str](#string)/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
-
-`font_size`:  
-int - Schriftgröße
-
-`font`:  
-[str](#string) - Name des relativen Pfads vom resource-Ordner zu der Font-Datei (Schriftart-Datei).
-
-`"test_preset_1"`, `"test_preset_2":`  
-[str](#string) - Die internen Namen der `presets`, sodass man sie in `images` mit dem Name, der hier angegeben wurde, verwenden kann.
-
-**Parameter**:
-Siehe außerdem die Parameter unter [`images`](#images).
