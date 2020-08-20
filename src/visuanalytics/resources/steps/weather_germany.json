@@ -1,7 +1,7 @@
 {
   "id": 0,
   "name": "weather_germany",
-  "info": "Der Wetterbericht enthält das deutschlandweite Wetter für den aktuellen Tag und die darauffolgenden vier Tage",
+  "info": "Der Wetterbericht prognostiziert das deutschlandweite Wetter für den aktuellen Tag und die darauffolgenden vier Tage.",
   "api": {
     "type": "request_multiple",
     "api_key_name": "weatherbit",

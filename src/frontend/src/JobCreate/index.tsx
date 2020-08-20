@@ -168,10 +168,10 @@ export default function JobCreate() {
       countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
     }
     return (() => {
-      if (countertimeout.current !== undefined ) {
+      if (countertimeout.current !== undefined) {
         clearTimeout(countertimeout.current);
       }
-      if (timeout.current !== undefined ) {
+      if (timeout.current !== undefined) {
         clearTimeout(timeout.current);
       }
     });
@@ -293,8 +293,7 @@ export default function JobCreate() {
         Themenauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie auswählen zu welchem der Themen Ihnen ein
-        Video generiert werden soll.
+        Auf dieser Seite können Sie das Thema des Videos auswählen.
       </Typography>
     </div>,
     <div>
@@ -302,7 +301,7 @@ export default function JobCreate() {
         Parameterauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie bestimmte Parameter auswahlen.
+        Auf dieser Seite können Sie themenspezifische Parameter setzen.
       </Typography>
     </div>,
     hintContents.time,

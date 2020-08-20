@@ -166,23 +166,23 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           <Typography variant="h5" gutterBottom>
             Logs
           </Typography>
-          <Typography gutterBottom>Auf dieser Seite können Sie sich die Logs zu ihren angelegten Jobs anschauen. </Typography>
+          <Typography gutterBottom>Auf dieser Seite können Sie sich die Logs zu den angelegten Jobs ansehen. </Typography>
           <List>
             <ListItem>
               <ListItemIcon className={classes.hintIcons}>
-                <CheckCircleOutlineOutlinedIcon/>
+                <CheckCircleOutlineOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary="Job erfolgreich ausgeführt" />
             </ListItem>
             <ListItem>
               <ListItemIcon className={classes.hintIcons}>
-                <LoopIcon/>
+                <LoopIcon />
               </ListItemIcon>
               <ListItemText primary="Job wird ausgeführt" />
             </ListItem>
             <ListItem>
               <ListItemIcon className={classes.hintIcons}>
-                <HighlightOffOutlinedIcon/>
+                <HighlightOffOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary="Job fehlgeschlogen" />
             </ListItem>
@@ -197,8 +197,8 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           text: (
             <Typography align={"center"} color="textSecondary">
               Aktuell wurde noch kein Video generiert. <br />
-              Sobald das erste Video generiert wurde können Sie hier die
-              Log-Informationen sehen.
+              Sobald das erste Video generiert wurde, können Sie sich hier die
+              Log-Informationen ansehen.
             </Typography>
           ),
           button: {
@@ -264,7 +264,8 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               headline: "Keine Logs verfügbar",
               text: (
                 <Typography align={"center"} color="textSecondary">
-                  Für diesen Job sind noch keine Logs verfügbar. Sie können sich die Logs ansehen, sobald der Job das erste mal ausgeführt wurde
+                  Für diesen Job sind noch keine Logs verfügbar.
+                  Sie können sich die Logs ansehen, sobald der Job zum ersten mal ausgeführt wurde.
                 </Typography>
               ),
             }}
@@ -273,9 +274,9 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               <TableBody>
                 {(rowsPerPage > 0
                   ? filteredLogs.logs?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : filteredLogs.logs
                 )?.map((log, idx) => (
                   <TableRow key={idx}>
