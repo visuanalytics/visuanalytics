@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, Button, Typography, Grid } from "@material-ui/core";
+import { makeStyles, Button, Typography, Grid, Theme, createStyles } from "@material-ui/core";
 import { Topic } from "..";
 import { HintButton } from "../../../util/HintButton"
 
@@ -10,23 +10,37 @@ interface TopicPanelProps {
     selectTopicHandler: (topic: Topic) => void;
 }
 
-const useStyles = makeStyles({
-    panel: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#2E97C5",
-        color: "white",
-        fontSize: "x-large",
-        width: '100%',
-        height: 80,
-        transition: "0.2s",
-        "&:hover": {
-            border: "solid #00638D 5px",
-            backgroundColor: "#2E97C5",
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        panel: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: theme.palette.primary.main,
+            color: "white",
+            fontSize: "x-large",
+            width: '100%',
+            height: 80,
+            transition: "0.2s",
+            "&:hover": {
+                border: "solid #00638D 5px",
+                backgroundColor: theme.palette.primary.main,
+            },
         },
+        panelNumbers: {
+            textAlign: "left",
+            fontSize: 15,
+            maxHeight: "60px",
+            display: "flex",
+            flexDirection: "column-reverse",
+            overflow: "auto"
+        },
+        panelText: {
+            textAlign: "right",
+            fontSize: 15
+        }
     }
-});
+));
 
 type IndexedTopic = [Topic, number];
 const toIndexedTopic = (topic: Topic, idx: number): IndexedTopic => {
@@ -51,13 +65,13 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
                 props.selectTopicHandler(topic);
             }
             }>
-            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>
+            <Grid item xs={2} className={classes.panelNumbers}>
                 {props.multipleTopics && String(pos).split(",").join(", ")}
             </Grid>
             <Grid item xs={10}>
                 {topic.topicName}
             </Grid>
-            <Grid item xs={2} style={{ textAlign: "right", fontSize: 15 }}>
+            <Grid item xs={2} className={classes.panelText}>
                 <HintButton content={
                     <Typography gutterBottom>
                         {topic.topicInfo}
