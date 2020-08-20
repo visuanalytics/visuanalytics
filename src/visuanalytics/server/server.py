@@ -14,10 +14,10 @@ from visuanalytics.util.init import init
 
 
 def create_app():
-    """Erstellt die Flask server instance.
+    """Erstellt die Flask-Server-Instanz.
 
-    Initialisiert die Server Konfiguration und registriert alle Endpunkte.
-    Wenn eine `config.py` Datei im `instaances` Ordner existiert, wird diese Konfiguration benutzt.
+    Initialisiert die Serverkonfiguration und registriert alle Endpunkte.
+    Wenn eine `config.py`-Datei im `instaances`-Ordner existiert, wird diese Konfiguration benutzt.
 
     :return: Eine Instanz des Servers.
     :rtype: Flask
@@ -39,10 +39,10 @@ def create_app():
     # add js as mmetype to ensure that the content-type is correct for js files
     mimetypes.add_type("text/javascript", ".js")
 
-    # Register the Blueprints
+    # register the blueprints
     app.register_blueprint(api.api, url_prefix="/visuanalytics")
 
-    # Serve index.html
+    # serve index.html
     @app.route("/", methods=["GET"])
     def index():
         try:
@@ -54,10 +54,10 @@ def create_app():
 
 
 def start_backend():
-    # Start Scheduler and init Programm
+    # start scheduler and init programm
     config = config_manager.get_config()
 
-    # Ensure that console_mode is false
+    # ensure that console_mode is false
     config["console_mode"] = False
 
     init(config)

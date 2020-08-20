@@ -9,7 +9,7 @@ LOG_LIMIT = 100
 
 
 def get_job_schedules():
-    """ Gibt alle angelegten jobs mitsamt ihren Zeitplänen zurück.
+    """ Gibt alle angelegten Jobs mitsamt ihren Zeitplänen zurück.
 
     """
     with db.open_con() as con:
@@ -25,7 +25,7 @@ def get_job_schedules():
 
 
 def get_job_run_info(job_id):
-    """Gibt den Namen eines Jobs, dessen Parameter sowie den Namen der zugehörigen steps-Json-Datei zurück.
+    """Gibt den Namen eines Jobs, dessen Parameter sowie den Namen der zugehörigen JSON-Datei zurück.
 
     :param job_id: id des Jobs
     """
@@ -50,7 +50,7 @@ def insert_log(job_id: int, state: int, start_time: datetime):
         con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
-        
+
         # Only keep LOG_LIMMIT logs 
         con.execute(
             "DELETE FROM job_logs WHERE job_logs_id NOT IN (SELECT job_logs_id FROM job_logs ORDER BY job_logs_id DESC limit ?)",
