@@ -68,7 +68,7 @@ export const JobSettings: React.FC<Props> = ({
         initParamValues(job.topicValues)
     );
     const [invalidValues, setInvalidValues] = React.useState<string[][]>([]);
-    const [invalidJobName, setInvalidJobName] = React.useState(false);
+    const [jobNameInvalid, setJobNameInvalid] = React.useState(false);
 
     const handleEditError = () => {
         reportError("Bearbeitung fehlgeschlagen");
@@ -163,7 +163,7 @@ export const JobSettings: React.FC<Props> = ({
 
     const handleEditJobName = () => {
         if (edit && jobName.trim() === "") {
-            setInvalidJobName(true);
+            setJobNameInvalid(true);
             reportError(emptyJobNameError);
             return;
         }
@@ -203,7 +203,7 @@ export const JobSettings: React.FC<Props> = ({
                                 inputProps={{
                                     style: { textAlign: "center", fontSize: 20 },
                                 }}
-                                error={invalidJobName}
+                                error={jobNameInvalid}
                             />
                         ) : (
                                 <InputBase
