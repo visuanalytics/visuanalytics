@@ -12,7 +12,7 @@ import {
   Param,
   ParamValues,
   trimParamValues,
-  validateParamValues,
+  getInvalidParamValues,
   initSelectedValues,
   toTypedValues,
 } from "../util/param";
@@ -30,6 +30,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { DeleteSchedule } from "../util/deleteSchedule";
 import { SettingsPage } from "../util/SettingsPage";
 import { hintContents } from "../util/hintContents";
+import { Notification, notifcationReducer } from "../util/Notification";
 
 export default function JobCreate() {
   const classes = useStyles();
@@ -41,12 +42,12 @@ export default function JobCreate() {
   const [counter, setCounter] = React.useState(0);
   // states for stepper logic
   const [activeStep, setActiveStep] = React.useState(0);
-  const [selectComplete, setSelectComplete] = React.useState(false);
   const [finished, setFinished] = React.useState(false);
 
   // states for topic selection logic
   const [topics, setTopics] = React.useState<Topic[]>([]);
   const [jobName, setJobName] = React.useState("");
+  const [invalidJobName, setInvalidJobName] = React.useState(false);
   const [multipleTopics, setMultipleTopics] = React.useState(false);
   const multipleRef = React.useRef(false);
 
@@ -55,6 +56,7 @@ export default function JobCreate() {
     undefined
   );
   const [paramValues, setParamValues] = React.useState<ParamValues[]>([]);
+  const [invalidValues, setInvalidValues] = React.useState<string[][]>([]);
 
   // state for Load Failed
   const [loadFailed, setLoadFailed] = React.useState(false);
@@ -68,6 +70,13 @@ export default function JobCreate() {
   // state for deleteSchedule selection logic
   const [deleteSchedule, setDeleteSchedule] = React.useState<DeleteSchedule>({
     type: "noDeletion",
+  });
+
+  // for error notifications
+  const [message, dispatchMessage] = React.useReducer(notifcationReducer, {
+    open: false,
+    message: "",
+    severity: "success",
   });
 
   const [hintState, setHintState] = React.useState(0);
@@ -145,14 +154,6 @@ export default function JobCreate() {
     }
   }, [topics, handleReloadParams]);
 
-  // when a new topic or job name is selected, check if topic selection is complete
-  useEffect(() => {
-    if (activeStep === 0) {
-      const allSet = topics.length > 0 && jobName.trim() !== "";
-      setSelectComplete(allSet);
-    }
-  }, [topics, jobName, activeStep, paramLists]);
-
   useEffect(() => {
     multipleRef.current = multipleTopics;
     if (!multipleTopics) {
@@ -161,24 +162,6 @@ export default function JobCreate() {
       setParamValues([]);
     }
   }, [multipleTopics]);
-
-  // when a new parameter value is entered, check if parameter selection is complete
-  useEffect(() => {
-    if (activeStep === 1) {
-      const allSet = paramLists?.every((l, idx) =>
-        validateParamValues(paramValues[idx], l)
-      );
-      setSelectComplete(allSet || false);
-    }
-  }, [paramLists, paramValues, activeStep]);
-
-  // when a weekly schedule is selected, check if at least one weekday checkbox is checked
-  useEffect(() => {
-    if (activeStep === 2) {
-      const allSet = validateSchedule(schedule);
-      setSelectComplete(allSet);
-    }
-  }, [schedule, activeStep]);
 
   useEffect(() => {
     if (counter > 0) {
@@ -198,6 +181,10 @@ export default function JobCreate() {
     }, 5000);
   };
 
+  const reportError = (message: string) => {
+    dispatchMessage({ type: "reportError", message: message });
+  };
+
   const handleStartPage = () => {
     if (timeout.current !== undefined) {
       clearTimeout(timeout.current);
@@ -207,13 +194,46 @@ export default function JobCreate() {
 
   // handlers for stepper logic
   const handleNext = () => {
+    switch (activeStep) {
+      case 0:
+        if (topics.length <= 0) {
+          reportError("Es muss mindestens ein Thema ausgewählt werden");
+          return;
+        }
+        if (jobName.trim() === "") {
+          setInvalidJobName(true);
+          reportError("Job-Name nicht ausgefüllt");
+          return;
+        }
+        setInvalidJobName(false);
+        break;
+      case 1:
+        const invalid = paramLists?.map((l, idx) => getInvalidParamValues(paramValues[idx], l));
+        setInvalidValues(invalid ? invalid : []);
+        const paramsValid = invalid?.every(t => t.length === 0);
+        if (!paramsValid) {
+          reportError("Parameter nicht korrekt gesetzt")
+          return;
+        }
+        break;
+      case 2:
+        const scheduleValid = validateSchedule(schedule);
+        if (!scheduleValid) {
+          reportError("Es muss mindestens ein Wochentag gesetzt werden");
+          return;
+        }
+        break;
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     handleHintState(activeStep + 1);
     if (activeStep === 2) {
       delay();
     }
   };
+
   const handleBack = () => {
+    setInvalidValues([]);
+    setInvalidJobName(false);
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     handleHintState(activeStep - 1);
   };
@@ -306,7 +326,8 @@ export default function JobCreate() {
             resetTopicsHandler={handleResetTopics}
             setSingleTopicHandler={handleSetSingleTopic}
             addTopicHandler={handleAddTopic}
-            enterJobNameHandler={handleEnterJobName} />
+            enterJobNameHandler={handleEnterJobName}
+            invalidJobName={invalidJobName} />
         );
       case 1:
         return (
@@ -319,7 +340,8 @@ export default function JobCreate() {
               name: "Parameter",
               onReload: handleReloadParams
             }}
-            selectParamHandler={handleSelectParam} />
+            selectParamHandler={handleSelectParam}
+            invalidValues={invalidValues} />
         )
       case 2:
         return (
@@ -356,8 +378,8 @@ export default function JobCreate() {
           <div>
             <div>
               <Grid container>
-                <Grid item sm={1} xs={1}></Grid>
-                <Grid item sm={10} xs={9}>
+                <Grid item sm={1} xs={1} />
+                <Grid item sm={10} xs={9} className={classes.SPaddingTB}>
                   <h3 className={classes.header}>{descriptions[activeStep]}</h3>
                 </Grid>
                 <Grid container item sm={1} xs={2}>
@@ -368,7 +390,7 @@ export default function JobCreate() {
             <GreyDivider />
             {getSelectPanel(activeStep)}
             <GreyDivider />
-            <div className={classes.MPaddingTB}>
+            <div className={classes.LPaddingTB}>
               <span>
                 <BackButton
                   onClick={handleBack}
@@ -380,7 +402,6 @@ export default function JobCreate() {
                 <ContinueButton
                   onClick={handleNext}
                   style={{ marginLeft: 20 }}
-                  disabled={!selectComplete}
                 >
                   {activeStep < steps.length - 1 ? "WEITER" : "ERSTELLEN"}
                 </ContinueButton>
@@ -419,6 +440,12 @@ export default function JobCreate() {
             </Fade>
           )}
       </div>
+      <Notification
+        handleClose={() => dispatchMessage({ type: "close" })}
+        open={message.open}
+        message={message.message}
+        severity={message.severity}
+      />
     </div>
   );
 }

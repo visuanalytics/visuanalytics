@@ -6,6 +6,7 @@ import { HintButton } from "../../../util/HintButton"
 interface TopicPanelProps {
     topic: Topic;
     topics: Topic[];
+    multipleTopics: boolean;
     selectTopicHandler: (topic: Topic) => void;
 }
 
@@ -50,7 +51,9 @@ export const TopicPanel: React.FC<TopicPanelProps> = (props) => {
                 props.selectTopicHandler(topic);
             }
             }>
-            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>{String(pos).split(",").join(", ")}</Grid>
+            <Grid item xs={2} style={{ textAlign: "left", fontSize: 15 }}>
+                {props.multipleTopics && String(pos).split(",").join(", ")}
+            </Grid>
             <Grid item xs={10}>
                 {topic.topicName}
             </Grid>

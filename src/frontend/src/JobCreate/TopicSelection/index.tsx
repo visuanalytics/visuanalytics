@@ -21,6 +21,7 @@ interface TopicSelectionProps {
     addTopicHandler: (topic: Topic) => void;
     enterJobNameHandler: (jobName: string) => void;
     toggleMultipleHandler: () => void;
+    invalidJobName: boolean;
 }
 
 export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
@@ -53,6 +54,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     topic={topic}
                     topics={props.topics}
                     selectTopicHandler={!props.multipleTopics ? props.setSingleTopicHandler : props.addTopicHandler}
+                    multipleTopics={props.multipleTopics}
                 />
                 <Divider />
             </ListItem>
@@ -70,7 +72,7 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                         label="Videos aneinanderhängen"
                     />
                 </div>
-                <Divider></Divider>
+                <Divider />
                 <Load
                     failed={{
                         hasFailed: loadFailed,
@@ -85,13 +87,14 @@ export const TopicSelection: React.FC<TopicSelectionProps> = (props) => {
                     </List>
                 </Load>
                 <Divider />
-                <div className={classes.MPaddingTB}>
+                <div className={classes.LPaddingTB}>
                     <TextField className={classes.inputFields}
                         required
                         value={props.jobName}
                         variant="outlined"
                         label="Job-Name"
                         onChange={handleInput}
+                        error={props.invalidJobName}
                     />
                 </div>
             </div>

@@ -48,7 +48,7 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
         <div>
             <TabContext value={value}>
                 <Tabs
-                    classes={{root: classes.tabs}}
+                    classes={{ root: classes.tabs }}
                     value={value}
                     onChange={handleChange}
                     centered
@@ -79,8 +79,9 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
                             values={paramSelectionProps.values}
                             params={paramSelectionProps.params}
                             loadFailedProps={paramSelectionProps.loadFailedProps}
-                            selectParamHandler={paramSelectionProps.selectParamHandler} />
-
+                            selectParamHandler={paramSelectionProps.selectParamHandler}
+                            invalidValues={paramSelectionProps.invalidValues}
+                        />
                     </TabPanel>)}
             </TabContext>
         </div>

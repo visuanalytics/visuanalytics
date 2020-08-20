@@ -13,7 +13,18 @@ export const useStyles = makeStyles((theme) => ({
     },
     header: {
         fontWeight: "normal",
-        fontSize: "large"
+        fontSize: "xlarge"
+    },
+    XLPaddingTB: {
+        paddingBottom: 30,
+        paddingTop: 30
+    },
+    LPaddingTB: {
+        paddingBottom: 20,
+        paddingTop: 20
+    },
+    MPaddingT: {
+        paddingTop: 15
     },
     MPaddingTB: {
         paddingBottom: 15,
@@ -40,10 +51,10 @@ export const useStyles = makeStyles((theme) => ({
         width: "45%"
     },
     inputElement: {
-      mozAppearance: "textfield",
-      appearance: "textfield",
-      webkitAppearance: "none",
-      margin: 0,
+        mozAppearance: "textfield",
+        appearance: "textfield",
+        webkitAppearance: "none",
+        margin: 0,
     },
     expIcon: {
         marginRight: 5,

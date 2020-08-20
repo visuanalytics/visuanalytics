@@ -1,9 +1,9 @@
 import React from "react";
-import {Fade, Divider} from "@material-ui/core";
-import {useStyles} from "../style";
-import {Param, ParamValues} from "../../util/param";
-import {Load, LoadFailedProps} from "../../Load";
-import {ParamFields} from "../../ParamFields";
+import { Fade, Divider } from "@material-ui/core";
+import { useStyles } from "../style";
+import { Param, ParamValues } from "../../util/param";
+import { Load, LoadFailedProps } from "../../Load";
+import { ParamFields } from "../../ParamFields";
 
 export interface ParamSelectionProps {
     topicNames: string[];
@@ -12,6 +12,7 @@ export interface ParamSelectionProps {
     loadFailedProps: LoadFailedProps | undefined;
     selectParamHandler: (key: string, value: any, idx: number) => void;
     style?: React.CSSProperties;
+    invalidValues: string[][];
 }
 
 export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
@@ -20,23 +21,26 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
     const values = props.values;
     const topicNames = props.topicNames;
 
-    const renderParamFields = (params: Param[] | undefined, topicName: string, idx: number) => {
+    const renderParamFields = (topicParams: Param[] | undefined, topicName: string, idx: number) => {
         return (
-            <div key={idx}>
-                <div className={classes.MPaddingTB}>
-                    <div style={{textAlign: "center"}}>
-                        <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
-                    </div>
-                </div>
+            <div key={idx} className={params && params.length <= 1 ? classes.MPaddingT : undefined}>
+                {params && params.length > 1 ?
+                    (<div className={classes.MPaddingTB}>
+                        <div style={{ textAlign: "center" }}>
+                            <h3 className={classes.header}> {(idx + 1) + ". Parameter für '" + topicName + "':"} </h3>
+                        </div>
+                    </div>) : ""
+                }
                 <ParamFields
-                    params={params}
+                    params={topicParams}
                     values={values[idx]}
                     selectParamHandler={props.selectParamHandler}
                     disabled={false}
                     required={true}
                     index={idx}
+                    invalidValues={props.invalidValues[idx] ? props.invalidValues[idx] : []}
                 />
-                <Divider/>
+                {params && params[idx + 1] && (<Divider />)}
             </div>
         )
     }
@@ -49,8 +53,8 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                         ?
                         (
                             <Load data={params && (params.length === (topicNames.length))}
-                                  failed={props.loadFailedProps}
-                                  className={classes.SPaddingTB}>
+                                failed={props.loadFailedProps}
+                                className={classes.SPaddingTB}>
                                 {params?.map((p, idx) => renderParamFields(p, topicNames[idx], idx))}
                             </Load>
                         )
@@ -61,7 +65,6 @@ export const ParamSelection: React.FC<ParamSelectionProps> = (props) => {
                             </div>
                         )
                 }
-
             </div>
         </Fade>
 

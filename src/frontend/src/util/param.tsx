@@ -92,22 +92,31 @@ export const validateParamValue = (value: any, param: Param) => {
     }
 }
 
-// validate parameter values
-export const validateParamValues = (values: ParamValues, params: Param[] | undefined): boolean => {
-    if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
-        return false;
 
-    return params.every((p: Param) => {
+// get list of names of parameters with invalid values
+export const getInvalidParamValues = (values: ParamValues, params: Param[] | undefined): string[] => {
+    if (params === undefined || (params.length > 0 && Object.keys(values).length === 0))
+        return [""];
+
+    let invalid: string[] = [];
+
+    params.forEach((p: Param) => {
         switch (p.type) {
             case "subParams":
                 if (!p.optional || values[p.name]) {
-                    return p.subParams === null ? true : validateParamValues(values, p.subParams);
+                    if (p.subParams !== null) {
+                        const subInvalid = getInvalidParamValues(values, p.subParams);
+                        invalid = [...invalid, ...subInvalid];
+                    }
                 }
-                return true;
+                break;
             default:
-                return validateParamValue(values[p.name], p);
+                if (!validateParamValue(values[p.name], p)) {
+                    invalid = [...invalid, p.name];
+                }
         }
     })
+    return invalid;
 }
 
 // trim all string / string[] values and remove empty values
