@@ -90,16 +90,18 @@
       "steps": "twitter",
       "schedule": {
         "times": [
-          "15:11"
+          "20:04"
         ],
         "daily": true
       },
       "config": {
         "hashtags": [
-          "Bundesliga"
+          "Bundesliga",
+          "Corona",
+          "Berlin"
         ],
         "stopwords": [
-          "Bundesliga"
+          "Corona"
         ],
         "thumbnail": true,
         "normalize_words": true,
