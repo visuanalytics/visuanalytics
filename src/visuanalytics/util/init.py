@@ -14,15 +14,15 @@ def init(config: dict):
     level = logging.INFO if config.get("testing", False) else logging.WARNING
     logging.basicConfig(format='%(module)s %(levelname)s: %(message)s', level=level)
 
-    # if Graphic mode -> init db
+    # if graphic mode -> init db
     if not config["console_mode"]:
         # init db
         db.init_db(config["db"].get("topics", []), config["db"]["db_path"])
 
-    # Init Log_limit
+    # init log_limit
     job.LOG_LIMIT = config["log_limit"]
 
-    # Init resources locations
+    # init resources locations
     res_paths = config["resources"]
     res_sub_paths = res_paths["sub_paths"]
 
