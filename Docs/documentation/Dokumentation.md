@@ -138,23 +138,34 @@ Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
 Die erste Seite `TopicSelection` dient zur Auswahl des Themas. Dort kann man sich für eines der vorgegebenen Themen entscheiden und einen Namen für den Job festlegen.
 
 <figure>
-  <img width="70%" src="../_static/images/documentation/topic.png"/>
+  <img width="100%" src="../_static/images/documentation/topic.png"/>
   <figcaption>Abbildung 5</figcaption>
 </figure>  
 <br>
 
 #### ParamSelection
 
-Die zweite Seite des Steppers gibt einem die Möglichkeit - je nach Thema - individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden.
+Die zweite Seite des Steppers gibt einem die Möglichkeit - je nach Thema - individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden oder für eine Twitterwordcloud bestimmte Angaben getätigt werden.
+
+Wie die Parameter und deren Inputfelder für jedes Thema festgelegt werden sehen Sie [hier](../usage/stepsConfig.md#run-config)
 
 <figure>
-  <img width="70%" src="../_static/images/documentation/param.png"/>
+  <img width="100%" src="../_static/images/documentation/param.png"/>
   <figcaption>Abbildung 6</figcaption>
 </figure>  
 <br>
 
 #### SettingsPage
 Auf der letzten Seite kann der Benutzer zwischen zwei Tabs auswählen.
+
+- Generieren: Komponent [ScheduleSelection](#scheduleselection)
+- Löschen: Komponent [DeleteSelection](#deleteselection)
+  
+<figure>
+  <img width="100%" src="../_static/images/documentation/tabs.png"/>
+  <figcaption>Abbildung 6</figcaption>
+</figure>  
+<br>
 
 #### ScheduleSelection
 Auf dem ersten Tab kann der Benutzer auswählen, zu welchen Zeitpunkten das Video generiert werden soll.
@@ -168,7 +179,7 @@ Dazu gibt es folgende Optionen:
 **an festem Datum:** Das Video wird einmalig an einem bestimmten Datum generiert.
 
 <figure>
-  <img width="70%" src="../_static/images/documentation/schedule.png"/>
+  <img width="100%" src="../_static/images/documentation/schedule.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure>  
 <br>
@@ -179,11 +190,96 @@ Auf dem zweiten Tab kann der Benutzer auswählen, wann die generierten Videos ge
 
 Dazu gibt es folgende Optionen:
 
+**nie:** Das Video wird nie gelöscht.
+
+**nach Zeit:** Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht
+
+**nach Anzahl:** Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht.
+
+**feste Namen:** Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen _jobName1_ besitzt
+
 <figure>
-  <img width="70%" src="../_static/images/documentation/delete.png"/>
+  <img width="100%" src="../_static/images/documentation/delete.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure>  
 <br>
+
+## Wordpress-Plugin
+
+Um die in ReactJS geschriebene Benutzeroberfläche als Wordpress-Plugin zu realisieren, muss zuerst ein _Production Build_ erstellt werden.
+
+Dieses _Production Build_ komprimiert den ReactJS-Code in vier JavaScript-Dateien. 
+
+### Anlegen einer Wordpress Menü-Seite
+Damit in dem installierten Wordpress das Plugin angezeigt wird, muss zuerst eine neue Menü-Seite erstellt werden.
+
+`add_menu()`
+
+<figure style="float: right;">
+  <img width="60%" src="../_static/images/documentation/menupage.png"/>
+  <figcaption>Abbildung 7</figcaption>
+</figure>  
+<br>
+
+Zuerst wird eine Variable für die Seite angelegt, sowie eine für das Icon welches daneben auftauchen soll.
+
+~~~php
+global $va_settings_page;
+$icon = plugins_url('images/icon.png', __FILE__);
+~~~
+
+Daraufhin wird mit Hilfe der Funktion `add_menu_page` von Wordpress, die Seite der Variablen `$va_settings_page` zugewiesen.
+
+~~~php
+add_menu_page('VisuAnalytics', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
+~~~
+
+Da React seine Komponenten immer in den einen div-Container mit der id `root` rendert, muss der Menü-Seite noch ein solcher Container als HTML übergeben werden.
+Dazu wurde der Methode `add_menu_page` als fünfter Parameter eine Funktion übergeben, welche diesen div-Container übergibt.
+
+~~~php
+function visuanalytics_settings_do_page() {
+  ?>
+      <div id="root" />
+  <?php
+}
+~~~
+
+### Laden der JavaScript-Dateien in Wordpress 
+
+`add_va_scripts`
+
+Zuerst werden alle JavaScript-Dateien aus dem Production Build in `$files` gespeichert.
+~~~php
+  $files = glob(plugin_dir_path( __FILE__ ) . "/src/js/*.js");
+~~~
+
+Daraufhin wird jeder JavaScript-Datei der _basename_ und der Pfad entnommen.
+
+~~~php
+ foreach ($files as $file) {
+	  $file_name = basename($file, ".js");
+	  $file_url = plugins_url("src/js/" . basename($file), __FILE__);
+      ...
+  }
+~~~
+
+Mit Hilfe dieser beide Informationen werden dann die JavaScript-Dateien, anhand der Funktion `wp_enqueue_script`, in Wordpress geladen.
+
+~~~php
+  wp_enqueue_script($file_name, $file_url, array (), '', true);
+~~~
+
+
+`init_va_menu`
+
+Um die Methode `add_va_scripts` auszuführen, wird in der Methode `init_va_menu`, die von Wordpress bereitgestellte Methode `add_action` aufgerufen. Diese lädt entgültig die JavaScript-Dateien in das Wordpress-Plugin.
+
+~~~php
+function init_va_menu() {
+  add_action( 'admin_enqueue_scripts', 'add_va_scripts' );
+}
+~~~
 
 ## Web-API
 

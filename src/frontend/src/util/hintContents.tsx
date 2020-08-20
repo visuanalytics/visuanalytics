@@ -55,7 +55,7 @@ export const hintContents = {
       <Typography variant="h6">feste Namen</Typography>
       <Typography gutterBottom>
         Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste
-        immer den Namen <i>jobName</i>_1 besitzt
+        immer den Namen <i>jobName</i>1 besitzt
       </Typography>
     </div>
   ),

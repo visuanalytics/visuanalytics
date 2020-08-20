@@ -33,7 +33,7 @@ function add_menu() {
   });
 }
 
-// Inizalisize the Plugin Menu Page
+// Initalisize the Plugin Menu Page
 function init_va_menu() {
   add_action( 'admin_enqueue_scripts', 'add_va_scripts' );
 }
