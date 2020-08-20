@@ -97,7 +97,9 @@ _Verwendung der Schriftart in einer JSON-Datei_:
 
 ### Auf Daten zugreifen
 
-Um auf Daten (z. B.: Daten aus der `api`) zuzugreifen gibt man einfach die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei wird nicht zweichen Arrays und Dictionarys (Objecten) untersicheden, man verwendet für arrays also einfach einen Zahlen-Wert als `Key` anstadt eines Strings.
+Um auf Daten (z. B.: Daten aus der `api`) zuzugreifen gibt man einfach die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei wird nicht zweichen Arrays und Dictionarys (Objekten) untersicheden, man verwendet für arrays also einfach einen Zahlen-Wert als `Key` anstadt eines Strings.
+
+**Beispiel**
 
 ![Daten zugriff Beispiel](../_static/images/usage/daten_zugriff.gif)
 
@@ -384,16 +386,20 @@ Um es Möglich zu machen auch XML Daten zu verarbeiten wird das Python modul [xm
 
 ```warning::
   Da der Doppelpunkt (`:`) in Python auch eine bedutung hat, ist es nicht möglich innerhalb eines Keys einen Doppelpunkt (`:`) anzugeben. Dammit man XML-Daten mit einem Doppelpunkt in dem Key verwenden kann, kann man die `NameSpace <https://github.com/martinblech/xmltodict#namespace-support>`_ einstellung des modules verwenden. z. B:
+
     .. code-block:: JSON
-      "xml_config": {
+
+      {
+        "xml_config": {
           "process_namespaces": true,
           "namespaces": {
             "http://www.w3.org/2003/05/soap-envelope": null,
             "http://msiggi.de/Sportsdata/Webservices": null
           }
         }
-  Hierbei kann man alle in den XML-Daten vorhandenen namespaces auf `null` setzen dammit die Keys etwas kürtzer werden.
+      }
 
+  Hierbei kann man alle in den XML-Daten vorhandenen namespaces auf `null` setzen dammit die Keys etwas kürtzer werden.
 ```
 
 ### request_multiple
@@ -1342,7 +1348,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 }
 ```
 ```warning::
-Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
+  Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
 ```
 
 #### date_weekday
@@ -1363,8 +1369,9 @@ Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
   "given_format": "%Y-%m-%d"
 }
 ```
+
 ```warning::
-Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+  Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
 ```
 
 #### date_now
@@ -1382,8 +1389,8 @@ Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
 }
 ```
 ```warning::
-Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
-Diese haben immer dasselbe Format.
+  Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
+  Diese haben immer dasselbe Format.
 ```
 
 ### wind_direction
