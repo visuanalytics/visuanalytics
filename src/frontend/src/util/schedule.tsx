@@ -1,5 +1,5 @@
-import {format, parse, isPast, addDays, formatDistanceToNowStrict, addMinutes} from "date-fns"
-import {de} from "date-fns/locale";
+import { format, parse, isPast, addDays, formatDistanceToNowStrict, addMinutes } from "date-fns"
+import { de } from "date-fns/locale";
 
 
 export type Schedule = DailySchedule | WeeklySchedule | DateSchedule | IntervalSchedule
@@ -145,31 +145,31 @@ const getNextJobDate = (schedule: Schedule) => {
 export const showSchedule = (schedule: Schedule) => {
     switch (schedule.type) {
         case "daily":
-            return "täglich, " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+            return "täglich, " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
         case "onDate":
-            return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+            return format(schedule.date, "dd.MM.yyyy") + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
         case "weekly":
             if (schedule.weekdays.length === 0) {
                 return "wöchentlich: kein Wochentag ausgewählt";
             }
             const weekdays = schedule.weekdays.map(w => getWeekdayLabel(w)).join(", ");
-            return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", {locale: de}) + " Uhr";
+            return "wöchentlich: " + weekdays + ", " + format(schedule.time, "HH:mm", { locale: de }) + " Uhr";
         case "interval":
             switch (schedule.interval) {
                 case "minute":
-                    return "Jede Minute";
+                    return "jede Minute";
                 case "quarter":
-                    return "Alle 15 Minuten";
+                    return "alle 15 Minuten";
                 case "half":
-                    return "Alle 30 Minuten";
+                    return "alle 30 Minuten";
                 case "threequarter":
-                    return "Alle 45 Minuten";
+                    return "alle 45 Minuten";
                 case "hour":
-                    return "Jede Stunde";
+                    return "jede Stunde";
                 case "quartday":
-                    return "Alle 6 Stunden";
+                    return "alle 6 Stunden";
                 case "halfday":
-                    return "Alle 12 Stunden";
+                    return "alle 12 Stunden";
             }
     }
 }
@@ -217,7 +217,7 @@ export const showTimeToNextDate = (schedule: Schedule) => {
     if (date === null || date === undefined) {
         return "-";
     }
-    return formatDistanceToNowStrict(date, {locale: de, addSuffix: true});
+    return formatDistanceToNowStrict(date, { locale: de, addSuffix: true });
 }
 
 export const validateSchedule = (schedule: Schedule) => {
