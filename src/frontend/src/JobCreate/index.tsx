@@ -167,15 +167,18 @@ export default function JobCreate() {
     if (counter > 0) {
       countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
     }
-    return (() => {
-      if (countertimeout.current !== undefined ) {
-        clearTimeout(countertimeout.current);
-      }
+  }, [counter]);
+
+  useEffect(() => {
+    return () => {
       if (timeout.current !== undefined ) {
         clearTimeout(timeout.current);
       }
-    });
-  }, [counter]);
+      if (countertimeout.current !== undefined ) {
+        clearTimeout(countertimeout.current);
+      }
+    }
+  }, []);
 
   const delay = () => {
     setCounter(5);
