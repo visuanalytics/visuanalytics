@@ -14,6 +14,27 @@ def get_topic_names():
     return [{"topicId": row["steps_id"], "topicName": row["steps_name"],
              "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
 
+def get_topic_file(topic_id):
+    con = db.open_con_f()
+    res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
+    
+    return _get_file_path(res["json_file_name"]) if res is not None else None
+
+def delete_topic(topic_id):
+    con = db.open_con_f()
+    file_path = get_topic_file(topic_id)
+    res = con.execute("DELETE FROM steps WHERE steps_id = ?", [topic_id])
+    con.commit()
+
+    if (res.rowcount > 0):
+        os.remove(file_path)
+
+def add_topic(name, file_name):
+    con = db.open_con_f()
+    con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
+                        [name, file_name])
+    con.commit()
+
 
 def get_params(topic_id):
     con = db.open_con_f()
@@ -192,9 +213,11 @@ def _row_to_job(row):
         "topicValues": topics
     }
 
+def _get_file_path(json_file_name: str):
+    return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 def _get_topic_steps(json_file_name: str):
-    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+    path_to_json = _get_file_path(json_file_name)
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
 

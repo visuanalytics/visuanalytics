@@ -5,7 +5,7 @@ Enthält die API-Endpunkte.
 import traceback
 
 import flask
-from flask import (Blueprint, request)
+from flask import (Blueprint, request, send_file, make_response)
 
 from visuanalytics.server.db import db, queries
 
@@ -34,6 +34,40 @@ def topics():
         err = flask.jsonify({"err_msg": "An error occurred while retrieving the list of topics"})
         return err, 400
 
+@api.route("/topic", methods=["PUT"])
+def add_topic():
+    # Todo (Max) queries.add_topic(name, file_name)
+    return "", 204
+
+@api.route("/topic/<topic_id>", methods=["GET"])
+def get_topic(topic_id):
+    """
+    Endpunkt `/topic`.
+
+    Die Response enthält die JSON-Datei des Thema.
+    """
+    try:
+        file_path = queries.get_topic_file(topic_id)
+
+        if file_path is None:
+            err = flask.jsonify({"err_msg": "Unknown topic"})
+            return err, 400
+
+        return send_file(file_path, "application/json", True)
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 400
+
+@api.route("/topic/<topic_id>", methods=["DELETE"])
+def delete_topic(topic_id):
+    try:
+        queries.delete_topic(topic_id)
+        return "", 204
+    except Exception:
+        traceback.print_exc()  # For debugging, should be removed later
+        err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 400
 
 @api.route("/params/<topic_id>", methods=["GET"])
 def params(topic_id):
