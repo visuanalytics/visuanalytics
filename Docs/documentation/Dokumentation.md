@@ -163,7 +163,7 @@ Auf der letzten Seite kann der Benutzer zwischen zwei Tabs auswählen.
   
 <figure>
   <img width="100%" src="../_static/images/documentation/tabs.png"/>
-  <figcaption>Abbildung 6</figcaption>
+  <figcaption>Abbildung 7</figcaption>
 </figure>  
 <br>
 
@@ -180,7 +180,7 @@ Dazu gibt es folgende Optionen:
 
 <figure>
   <img width="100%" src="../_static/images/documentation/schedule.png"/>
-  <figcaption>Abbildung 7</figcaption>
+  <figcaption>Abbildung 8</figcaption>
 </figure>  
 <br>
 
@@ -201,7 +201,7 @@ die Dateinamen <i>Job-Name</i>_1,  <i>Job-Name</i>_2, usw.
 
 <figure>
   <img width="100%" src="../_static/images/documentation/delete.png"/>
-  <figcaption>Abbildung 7</figcaption>
+  <figcaption>Abbildung 9</figcaption>
 </figure>  
 <br>
 
@@ -216,12 +216,12 @@ Der Aufbau der `visuanalytics.php`-Datei wird im folgenden genauer erläutert.
 ### Anlegen einer Wordpress Menü-Seite
 Damit das Plugin in Wordpress angezeigt wird, muss zuerst eine neue Menü-Seite erstellt werden.
 
-`add_menu()`
-
 <figure style="float: right;">
   <img width="60%" src="../_static/images/documentation/menupage.png"/>
-  <figcaption>Abbildung 7</figcaption>
+  <figcaption>Abbildung 10</figcaption>
 </figure>  
+
+`add_menu()`
 
 Zuerst wird eine Variable für die Seite angelegt, sowie eine für das Icon, welches daneben auftauchen soll.
 
@@ -291,7 +291,7 @@ Um dies zu beheben, haben wir in dem Entwicklertools des Browser rausgesucht, we
 
 <figure>
   <img width="100%" src="../_static/images/documentation/forms.png"/>
-  <figcaption>Abbildung 7</figcaption>
+  <figcaption>Abbildung 11</figcaption>
 </figure>  
 <br>
 
@@ -325,7 +325,7 @@ wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
-  <figcaption>Abbildung 8</figcaption>
+  <figcaption>Abbildung 12</figcaption>
 </figure>  
 <br>
 
@@ -333,7 +333,7 @@ wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/SchedulerClass.png"/>
-  <figcaption>Abbildung 9</figcaption>
+  <figcaption>Abbildung 13</figcaption>
 </figure>  
 <br>
 
@@ -341,7 +341,7 @@ Der Scheduler prüft minütlich, ob ein neuer Job ausgeführt werden soll (_Abbi
 
 <figure>
   <img width="100%" src="../_static/images/documentation/scheduler.gif"/>
-  <figcaption>Abbildung 10</figcaption>
+  <figcaption>Abbildung 14</figcaption>
 </figure>  
 <br>
 
