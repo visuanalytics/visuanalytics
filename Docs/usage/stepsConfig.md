@@ -1,127 +1,119 @@
-# Steps Config 
+# Themenkonfiguration
 
-Die JSON-Datei zu einem Job hat folgende Abschnitte:
+Die Themenkonfiguration ist eine JSON-Datei mit verschiedenen Abschnitten. Diese Datei dient der Angabe aller Parameter, 
+Einstellungen und Konfigurationen, die für die automatisierte Generierung eines Videos erforderlich sind.
+
+In der JSON-Datei wird angegeben, welche API-Anfrage gesendet wird, wie die Daten aus der API-Antwort entnommen und
+verarbeitet werden sollen. 
+Um auf die Daten der API-Antwort zugreifen und diese modifizieren zu können, werden in der JSON-Datei `transform`-Typen verwendet..
+Es werden Bilder (`images`) und Audiodateien (`audio`) erstellt, die am Ende in einer bestimmten Reihenfolge (`sequence`) 
+aneinander gehängt werden.
+
+Im Repository finden 4 dieser [JSON-Dateien](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/tree/master/src/visuanalytics/resources/steps) für die Generierung von Videos zu den Themen:
+
+- [Deutschlandweiter Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_germany.json)
+- [Ortsbezogener Wetterbericht](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/weather_single.json)
+- [Fußballbericht zur 1. und 2. Bundesliga](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/football.json)
+- [Twitter-Wordcloud-Verlauf](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+
+Die JSON-Datei mit den Konfigurationen zu einem Thema (im folgenden JSON-Datei genannt) hat folgende Abschnitte:
 ```JSON
 {
-"id": 1,
-"name": "name_des_videos",
-"api": {},
-"transform": [],
-"storing": [],
-"images": {},
-"thumbnail": {},
-"audio": {},
-"sequence": {},
-"run_config": [],
-"presets": {}
+  "id": 1,
+  "name": "name_des_videos",
+  "info": "",
+  "api": {},
+  "transform": [],
+  "storing": [],
+  "images": {},
+  "thumbnail": {},
+  "audio": {},
+  "sequence": {},
+  "run_config": [],
+  "presets": {}
 }
 ```
-Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von id und name gibt es mehrere Typen, aus denen bei 
-den einzelnen Abschnitten ausgewählt werden kann, je nachdem wie das Video am ENde aussehen soll und wie die Daten 
+Diese Abschnitte werden im folgenden näher beschrieben. Abgesehen von `id`, `name` und`info` gibt es mehrere Typen, aus denen bei 
+den einzelnen Abschnitten ausgewählt werden kann - je nachdem wie das Video am Ende aussehen soll und wie die Daten 
 verarbeitet und visualisiert werden sollen.
 
 Doch zunächst werden grundlegende Funktionen dargestellt, die man bei der Zusammenstellung der JSON-Datei beachten muss.
 
 ## Datenzugriffe
 
-### JSON-Ausgabe-Datei
-Die JSON-Ausgabe-Datei enthält die ggf. modifizierte API-Antwort und die Konfigurationsparameter. D.h. sie stellt alle für 
-die Video-Generierung benötigten und relevanten Daten bereit. Sie hat die folgenden zwei Abschnitte:
-
-**_req**: 
-In der JSON-Datei stehen die Daten aus der API-Antwort unter dem Abschnitt _req.
-
-**_conf**: 
-In der JSON-Datei stehen die Konfigurationsdaten, die bei der Job-Erstellung festgelegt und ausgewählt wurden unter dem Abschnitt _conf.
-
-Die JSON-Ausgabe-Datei enthält die ggf. modifizierte API-Antwort und die Konfigurationsparameter. D.h. sie stellt alle für 
-die Video-Generierung benötigten und relevanten Daten bereit.
-
-### JSON-StepsConfig-Datei
-In der JSON-StepsConfig-Datei wird angegeben wie die Daten, die aus der API-Antwort entnommen werden, verarbeitet werden sollen. 
-Die Daten aus der API und die Konfigurationen, welche bei der Job-Erstellung festgelegt wurden, werden in einer JSON-Ausgabe-Datei gespeichert.
-Um auf die Daten der API zugreifen und diese modifizieren zu können, werden in der JSON-StepsConfig-Datei "transform"-Typen verwendet.
-Des Weiteren können auch Daten mit "images"-Typen visualisiert werden. 
-
-Um auf die Daten der JSON-Ausgabe-Datei zuzugreifen und diese modifizieren zu können, gibt es verschiedene Methoden, 
-je nachdem welche Datentypen, die jeweils benötigten Daten besitzen. 
-
-Die verschiedenen Datenzugriffe werden im Folgenden aufgeführt und erläutert.
-
-
 ### Pfade
 
-Es gibt einen Ordner "resources" in dem alle Bilder, Audiodateien, die API-Antworten im JSON-Format und weitere Dateien 
+Es gibt einen Ordner `resources`, in dem alle Bilder, Audiodateien, die JSON-Dateien und weitere Dateien 
 abgelegt werden können. Dieser Ordner ist der default-Ordner. Man muss also nur den Pfad innerhalb dieses Ordners abgeben. 
-Es genügt also der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
+Es genügt hier der relative Pfad, da im Hintergrund der Ordner festgelegt wurde. 
 
-**Beispiel**:
+```note::
+  Der `resources`-Ordner befindet sich unter `src/visuanalytics/` (bzw. innerhalb des Docker-Containers unter `/home/appuser/visuanalytics/`).
+```
+
+**Unterordner**:
+
+- _Bilder_: `images` (dieser muss bei der Angabe des Pfads **nicht** angegeben werden)
+- _Schriftarten_: `fonts` (dieser **muss** bei der Angabe des Pfads angegeben werden)
+- _Themen_: `steps` (hier befinden sich alle JSON-Dateien)
+- _Stopwords_:  `stopwords` (hier befindet sich die Datei für die globalen Stopwords)(siehe auch [hier](#wordcloud))
+
+**Beispiele**
+
+_Ordnerstruktur_:
+
+~~~
+resources
+|   
++---fonts
+|       Dosis-Bold.ttf
+|       
++---images
+|   \---football
+|           Matchday.png
+|           
++---steps
+|       (...)
+|
+\---stopwords
+        stopwords.txt
+~~~
+
+_Verwendung der Bilder in einer JSON-Datei_:
+
 ```JSON
 {
 "path": "football/Matchday.png"
 }
 ```
 
-### string
-Um auf einen string in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
+_Verwendung der Schriftart in einer JSON-Datei_:
 
-Beispiel:
 ```JSON
 {
-"text": "{_req|text}",
-"stopwords": "{_conf|stopwords}"
+  "font": "fonts/Dosis-Bold.ttf"
 }
 ```
 
-### boolean
-Um auf einen boolean-Wert in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
-```JSON
-{
-"collocations": "_conf|collocations",
-"color_func": "_conf|color_func"
-}
-```
-### number
-Um auf einen Zahlenwert (int, double, float) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
-```JSON
-{
-"width": "_conf|width_wordcloud",
-"height": "_conf|height_wordcloud"
-}
-```
+### Auf Daten zugreifen
 
-### dict
-Um auf ein Dictionary (dict) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
-```JSON
-{
-"dict": "_conf|value"
-}
-```
+Um auf Daten (z.B.: Daten aus der API) zuzugreifen, gibt man die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei 
+wird nicht zwischen Arrays und Dictionaries (Objekte) unterschieden. Man verwendet für Arrays einen Zahlen-Wert als `Key` 
+anstatt eines Strings.
 
-### list
-Um auf ein Array/eine Liste (list) in der JSON-Ausgabe-Datei zuzugreifen, verwendet man folgende Syntax. 
-Beispiel:
-```JSON
-{
-"list": "_conf|value"
-}
-```
+**Beispiel**
 
-### Typen
-
-In der JSON-StepsConfig-Datei gibt es die Typen zu Anfang dieser Seite genannten Abschnitte. 
+![Beispiel für einen Datenzugriff](../_static/images/usage/daten_zugriff.gif)
 
 ### Key/New Key
-Um Daten in der JSON-Ausgabe-Datei zu verändern, verwendet kann die key/new_key-Syntax.
-Man hat einen Text, den man verändern und neu abspeichern möchte. Dieser Text ist in der JSON-Ausgabe-Datei unter dem 
-Key "text1" abgespeichert. Den modifizierten Text kann man nun wieder unter "text1" abspeichern, indem man keinen neuen Key mit "new_key" angibt. 
-Dann ist der default-Speicherplatz an der Stelle "text1". Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
-Um die Daten zu ergänzen anstatt sie zu Überschreiben, wird der "new_key" verwendet, z.B. mit dem Wert "text_modifiziert".
 
-**Beispiel**:
+Um Daten zu verändern, verwendet man die `key`/`new_key`-Syntax.
+Diese dient dazu einen Text zu verändern und neu abzuspeichern. Dieser Text ist unter dem 
+Key `text1` abgespeichert. Den modifizierten Text kann man nun wieder unter `text1` abspeichern, indem man keinen neuen Key mit `new_key` angibt. 
+Dann ist der default-Speicherplatz an der Stelle `text1`. Der alte Wert (in diesem Fall ein Text) wird also überschrieben.
+Um die Daten zu ergänzen anstatt sie zu überschreiben, wird der `new_key` verwendet, z.B. mit dem Namen `text_transformed`.
+
+**Beispiel**
 ```JSON
 {
     "type": "append",
@@ -129,12 +121,160 @@ Um die Daten zu ergänzen anstatt sie zu Überschreiben, wird der "new_key" verw
     "new_key": "_req|text_transformed"
 }
 ```
-## Api
 
+Ist ein angegebener `new_key` nicht vorhanden, wird dieser - bzw. alle Keys, die fehlen - neu erstellt.
+
+```warning::
+  Aktuell ist es nicht möglich, dass durch die Angabe von `new_key` ein Array erstellt wird oder ein Array, was zu klein ist, vergrößert wird.
+```
+
+### Spezialvariablen
+
+Es gibt einge vordefinierte Spezialvariablen mit folgenden Keys:
+
+`_req`:
+
+Hier werden alle Daten aus den Requests gespeichert (siehe [api](#api)).
+
+`_conf`:
+
+Hier werden alle Konfigurationsvariablen gespeichert (siehe [run_config](#run-config)).
+
+`_audio`:
+
+Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audiokonfiguration](./audio-apis.md)).
+
+`_key`:
+
+Hier wird der Wert des Keys gespeichert. Diese Variable ist in den meisten [transform](#transform)-Typen gesetzt.
+
+`_loop`:
+
+Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert. Diese gibt es nur bei den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict); bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
+
+`_idx`:
+
+Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert. Diese gibt es nur in den [transform](#transform)-Typen: [loop](#loop), [transform_array](#transform-array) und [transform_dict](#transform-dict); bei den [api](#api)-Typen [request_multiple](#request-multiple) und [request_multiple_custom](#request-multiple-custom).
+
+`_pipe_id`:
+
+Die `id` der Pipeline, die den Job ausführt. (Diese ist ein zufallsgenerierter String und wird innerhalb der JSON-Datei normalerweise nicht benötigt.)
+
+`_job_id`:
+
+`id` des Jobs (wird normalerweise innerhalb der JSON-Datei nicht benötigt).
+
+### Datentypen 
+
+In der JSON-Datei gibt es Typen zu den folgenden Abschnitten - wie auch zu Anfang beschrieben:
+`api`, `transform`, `images`, `thumbnail`, `audio` und `sequence`.
+
+#### string
+Um auf einen String zuzugreifen, verwendet man folgende Syntax: 
+
+**Beispiel**
+```JSON
+{
+  "text": "{_req|text} Test",
+  "stopwords": "{_conf|stopwords}"
+}
+```
+
+Um innerhalb eines Strings Daten einzufügen, kann man `{}` verwenden und dort einen Key hineinschreiben. 
+
+```note::
+  Wenn man in dem String die Zeichen `{}` schreiben möchte, ohne dass diese entfernt werden, muss man die Klammern doppelt schreiben (z.B.: `{{"_conf|test}}` -> `"{test}"`).
+```
+
+#### boolean
+Um auf einen boolean-Wert zuzugreifen, verwendet man folgende Syntax: 
+
+**Beispiel**
+```JSON
+{
+  "collocations": "_conf|collocations",
+  "color_func": true
+}
+```
+
+Hierbei gibt man entweder direckt einen boolean-Wert an oder den `Key` zu einem boolean-Wert.
+
+#### number
+Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende Syntax:
+
+**Beispiel**
+```JSON
+{
+  "width": "_conf|width_wordcloud",
+  "height": 10
+}
+```
+
+Hierbei gibt man entweder direkt einen Zahlenwert an oder den `Key` zu einem Zahlenwert.
+
+#### dict
+Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende Syntax:
+
+**Beispiel**
+```JSON
+{
+  "dict": "_conf|value",
+  "dict": {
+      "test": "hallo"
+    }
+}
+```
+
+Hierbei gibt man entweder direkt ein Dictionary (Objekt) an oder den `Key` zu einem Dictionary (Objekt).
+
+#### list
+Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
+
+**Beispiel**
+```JSON
+{
+  "list": "_conf|value",
+  "list2": [
+    "test",
+    "test"
+  ]
+}
+```
+
+Hierbei gibt man entweder direkt eine Liste an oder den `Key` zu einer Liste.
+
+#### any
+Um auf einen Wert mit nicht festgelegtem Datentyp zuzugreifen, verwendet man folgende Syntax:
+
+**Beispiel**:
+```JSON
+{
+  "any": "$_conf|value",
+  "any2": {
+    "test": 2,
+    "test2": "hallo",
+    "test3": [
+      "hallo",
+      "$_conf|value"
+    ] 
+  }
+}
+```
+
+Dieser Datentyp ist dafür da, um Daten anzugeben, von denen der Datentyp vorher nicht bekannt ist. Man kann hier einen 
+**String** (str), eine **Liste** (list) usw. angeben. Da so nicht zwischen einem **String** und einem **Key** unterschieden 
+werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben. 
+
+```note::
+  Falls man ein Dollarzeichen (`$`) am Anfang eines Strings verwenden will, muss dieses mit einer Tilde (`~`) escapt werden. 
+  (z. B.: `"~$test"`)
+```
+
+## API
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
-Daten der API. Die Responses können auch .csv-Dateien sein.
+Daten der API. Die Responses können auch XML-Daten enthalten.
 
 ### request
 
@@ -157,33 +297,123 @@ Führt eine **https**-Request durch.
 }
 ```
 
-**`url_pattern`**:
+`url_pattern`:
 
-Die zu verwendende `URL`, um die API-Request zu senden.
+[str](#string) - Die zu verwendende URL, um die API-Request zu senden.
 
-```note::
-  Formatierte Strings werden unterstützt.
-```
+`api_key_name` _(optional)_:
 
-**`api_key_name`** _(Optional)_:
-
-Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
+[str](#string) - Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
 
 - _Fehler_:
 
-  - `ApiKeyError` -> Name in Config nicht gefunden.
+  - `ApiKeyError` -> Name in Konfigurationsdatei nicht gefunden.
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
-  - `api_key` -> Beinhaltet den Api-Key hinter `api_key_name`.
+  - `api_key` -> Beinhaltet den API-Key hinter `api_key_name`.
 
-<!--TODO-->
+`headers` _(optional)_:
+
+[any](#any) - Die [HTTP-Header](https://developer.mozilla.org/de/docs/Web/HTTP/Headers) für den Request.
+
+`params` _(optional)_:
+
+[any](#any) - Die URL-Parameter des Requests. Die Angaben erfolgen als Key/Value-Paare.
+
+_Beispiel_
+
+In der JSON-Datei:
+
+~~~JSON
+{
+  "url_pattern": "https://test.de",
+  "params": {
+    "test": "test_value",
+    "test1": "test_value_1"
+  }
+}
+~~~
+
+URL nach dem Zusammenbauen:
+
+`https://test.de?test=test_value&test1=test_value_1`
+
+`body` _(optional)_:
+
+[any](#any) - Der zu verwendende Request-Body. Dieser kann entweder ein JSON-Objekt oder ein String sein (für Definition des Typen siehe `body_type`).
+
+`body_type` _(optional)_:
+
+[str](#string) - Der Datentyp des Bodys.
+
+- _mögliche Werte_:
+  - `json` (default)
+  - `other`
+
+`method` _(optional)_:
+
+[str](#string) - Die zu verwendende [HTTP-Request-Methode](https://developer.mozilla.org/de/docs/Web/HTTP/Methods).
+
+- _mögliche Werte`_:
+  - `GET` (default)
+  - `POST`
+  - `PUT`
+  - `DELETE`
+
+`body_encoding` _(optional)_:
+
+[str](#string) - Die Kodierung, mit welcher der Wert in `body_type` kodiert werden soll (z.B.: `utf-8`).
+
+```note::
+  Diese ist nur für den `body_type` `other` möglich.
+```
+
+`response_format` _(optional)_:
+
+[str](#string) - Der Datentyp des Response-Bodys.
+
+- _mögliche Werte`_:
+  - `json` (default)
+  - `xml`
+  - `text`
+  - `other`
+
+```note::
+  Der Wert `other` sollte nur bei der `Audiokonfiguration <./audio-apis.html>`_ verwendet werden.
+```
+
+`xml_config` _(optional)_:
+
+[any](#any) - XML-Einstellungen (wird nur bei `response_format = xml` verwendet).
+
+Um es möglich zu machen, auch XML Daten zu verarbeiten, wird das Python-Modul [xmltodict](https://pypi.org/project/xmltodict/) 
+verwendet. Dieses wandelt die XML-Daten in ein Dictionary (bzw. in JSON) um. Unter `xml_config` können Konfigurationen 
+angegeben werden, die an das Modul weitergegeben werden.
+
+```warning::
+  Da der Doppelpunkt (`:`) in Python auch eine Bedutung hat, ist es nicht möglich innerhalb eines Keys einen Doppelpunkt 
+  (`:`) anzugeben. Damit man XML-Daten mit einem Doppelpunkt im Key verwenden kann, kann man die `NameSpace <https://github.com/martinblech/xmltodict#namespace-support>`_-Einstellung 
+  des Moduls verwenden. z.B.:
+
+    .. code-block:: JSON
+
+      {
+        "xml_config": {
+          "process_namespaces": true,
+          "namespaces": {
+            "http://www.w3.org/2003/05/soap-envelope": null,
+            "http://msiggi.de/Sportsdata/Webservices": null
+          }
+        }
+      }
+
+  Hierbei kann man alle, in den XML-Daten vorhandenen, Namespaces auf `null` setzen, damit die Keys etwas kürzer werden.
+```
 
 ### request_multiple
 
-<!-- TODO Description-->
-
-Führt mehrere **https**-Requests durch. Die Request bleibt gleich bis auf einen Wert der sich ändert.
+Führt mehrere **https**-Requests durch. Der Request bleibt gleich bis auf einen Wert, der sich ändert.
 Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 
 **Beispiel** 
@@ -206,25 +436,29 @@ Z.B. werden die Wetterdaten mehrerer einzelner Städte angefragt.
 }
 ```
 
-**`url_pattern`**:
+Alle Angaben, die auch bei dem [api](#api)-Typ [request](#request) möglich sind.
 
-<!--TODO-->
+`steps_value`:
 
-**`steps_value`**:
+[list](#list) - Alle Werte für die ein Request gesendet werden soll. 
 
-<!--TODO-->
+- _Spezialvariablen_:
 
-**`api_key_name`** _(Optional)_:
+  - `_loop` -> Beinhaltet den Wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den Index des Wertes aus `steps_value`.
 
-<!--TODO-->
+`use_loop_as_key`
 
-**`use_loop_as_key`** _(Optional)_:
+[bool](#boolean) - Gibt an, ob der Wert aus `steps_value` als Key zum Speichern des Requests verwendet werden soll.
 
-<!--TODO-->
+- Bei `true`:
+  - Die Daten der Requests werden als Dictionary (dict) mit den Werten aus `steps_value` als Keys gespeichert.
+- Bei `false` (default):
+  - Die Daten der Requests werden als Liste (list) gespeichert.
 
 ### request_multiple_custom
 
-Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden anderen Request-Typen verwenden, der
+Führt mehrere **https**-Requests durch. Man kann jeden anderen Request-Typen verwenden, der oben beschrieben wurde.
 
 **Beispiel** 
 
@@ -259,50 +493,77 @@ Führt mehrere **https**-Requests (zu Deutsch: Anfrage) durch. Man kann jeden an
 }
 ```
 
+`requests`:
+
+Hier können mehrere Requests angegeben werden. Hierfür kann man alle [api](#api)-Typen angeben. Diese werden dann nacheinander ausgeführt.
+
+`steps_value`:
+
+[list](#list) - Alle Werte für die ein Request gesendet werden soll. 
+
+- _Spezialvariablen_:
+
+  - `_loop` -> Beinhaltet den Wert aus `steps_value`.
+  - `_idx` -> Beinhaltet den Index des Wertes aus `steps_value`.
+
+`use_loop_as_key`
+
+[bool ](#boolean) - Gibt an, ob der Wert aus `steps_value` als Key zum Speichern des Requests verwendet werden soll.
+
+- Bei `true`:
+  - Die Daten der Requests werden als Dictionary (dict) mit den Werten aus `steps_value` als Keys gespeichert.
+- Bei `false` (default):
+  - Die Daten der Requests werden als Liste (list) gespeichert.
+
 ### input
 
-<!--TODO-->
+Hier können Daten angegeben werden, die einfach hinzugefügt werden.
 
-### request_memory
-
-<!--TODO-->
-
-## Transform
-
-`transform`-Typen sind Funktionen zum Bearbeiten der Daten der API-Antwort zu verarbeiten. 
-Die Daten können verändert oder entfernt werden, neue Daten können hinzugefügt werden.
-
-### transform
-
-Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays oder eines Dictionaries aus. 
-Dem `transform` wird entweder ein `transform_array` oder ein `transform_dict` vorangestellt. 
-
-**Beispiel** 
+**Beispiel**
 
 ```JSON
 {
-   "type": "transform_dict",
-   "dict_key": "_req",
-   "transform": [
-      {
-       "type": "select",
-       "relevant_keys": [
-           "data"
-       ]
-      },
-      {
-       "type": "select_range",
-       "array_key": "_loop|data",
-       "range_start": 0,
-       "range_end": 5
-      }
-   ]
-} 
+  "type": "input",
+  "data": "-1. Spieltag"
+}
 ```
 
-Im Beispiel werden für das Dictionary (siehe `transform_dict`) mit dem Key `_req` (in der JSON-Ausgabedatei) die 
-`transform`-Typen `select` und `select_range` durchgeführt. Es wird mit einer Schleife durch alle Werte der Ebene unter 
-`dict_key` gelaufen und die `transform`-Typen werden auf diese Daten angewandt.
+`data`
+
+[any](#any) - Die einzufügenden Daten.
+
+### request_memory
+
+Hier können die Daten aus dem Abschnitt [storing](#storing) geladen werden.
+
+```JSON
+{
+  "type": "request_memory",
+  "name": "table",
+  "use_last": 1,
+  "alternative": {
+    "type": "request",
+    "url_pattern": "url"
+  }
+}
+```
+
+`name`:
+
+[str](#string) - Name des gespeicherten [storing](#storing)-Eintrags.
+
+`use_last`: 
+
+[number](#number) - Nummer der [storing](#storing)-Version, die geladen werden soll.
+
+`alternative`
+
+Hier kann ein Requests angegeben werden. Hierfür kann man alle [api](#api)-Typen angeben.
+
+## Transform
+
+`transform`-Typen sind Funktionen zum Bearbeiten der Daten der API-Antwort. 
+Die Daten können verändert oder entfernt werden, neue Daten können hinzugefügt werden.
 
 ### transform_array
 
@@ -318,13 +579,23 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus.
 }
 ```
 
-**`array_key`**:
+`array_key`:
 
-str - Keys zu einem Array, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
+[str](#string) - Keys zu einem Array, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
 
-**`transform`**:
+`transform`:
 
 `transform`-Typen, die für alle Werte des - unter `array_key` angegebenen - Arrays ausgeführt werden sollen.
+
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
+```
 
 ### transform_dict
 
@@ -340,26 +611,39 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
 }
 ```
 
-**`dict_key`**:
+`dict_key`:
 
-str - Keys zu einem Dictionary, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
+[str](#string) - Keys zu einem Dictionary, welches durchlaufen werden soll und auf dessen Werte die `transform`-Typen angewandt werden sollen.
 
-**`transform`**:
+`transform`:
 
 `transform`-Typen, die für alle Werte des - unter `dict_key` angegebenen - Dictionaries ausgeführt werden sollen.
 
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
+
 ### calculate
 
-calculate beinhaltet Actionen (actions), die Funktionen für mathematische Berechnungen zur Verfügung stellen.
-Für alle calculate-Actions gilt:
+`calculate` beinhaltet Aktionen (actions), die Funktionen für mathematische Berechnungen zur Verfügung stellen.
+Für alle `calculate`-Actions gilt:
 
-**`keys`** :
+`action`:
+
+[str](#string) - Angabe des Namens der Aktion, die ausgeführt werden soll.
+
+`keys`:
 
 Die Werte, die durchlaufen und transformiert werden sollen. 
 
-**`new_keys`**_optional_:
+`new_keys`_(optional)_:
 
-optional - Die tranformierten Werte werden unter diesem Key neu gespeichert. 
+Die tranformierten Werte werden unter diesem Key neu gespeichert. 
 Ist `new_keys` nicht vorhanden, werden die Werte in `keys` mit den transformierten Werten überschrieben.
 
 #### mean
@@ -377,15 +661,16 @@ Berechnet den Mittelwert von Werten, die in einem Array stehen.
     ],
     "new_keys": [
        "_loop|temp_avg"
-    ]
+    ],
+    "decimal": 2
 }
 ```
 
-**`decimal`**_optional_: 
+`decimal`_(optional)_: 
 
 int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
 
 #### max
 
@@ -409,7 +694,7 @@ Findet den Maximalwert von Werten, die in einem Array stehen.
 }
 ```
 
-**`save_idx_to`**_optional_:
+`save_idx_to`_(optional)_:
 
 int - Der Index vom Durchlaufen der Schleife (_loop) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
 Dient z.B. dazu auf eine vorherige Ebene in der JSON-Struktur zugreifen zu können. 
@@ -437,7 +722,7 @@ Findet den Minimalwert von Werten, die in einem Array stehen.
 }
 ```
 
-**`save_idx_to`**_optional_:
+`save_idx_to`_(optional)_:
 
 int - Der Index vom Durchlaufen der Schleife (`_loop`) wird als Zahlenwert unter dem genannten `save_idx_to`-Key gespeichert.
 Dient z.B. dazu auf eine vorherige Ebene in der JSON-Struktur zugreifen zu können. 
@@ -462,11 +747,11 @@ Rundet gegebene Werte auf eine gewünschte Nachkommastelle.
 }
 ```
 
-**`decimal`**_optional_: 
+`decimal`_(optional)_: 
 
 int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
 
 
 #### mode
@@ -491,25 +776,36 @@ Bestimmt den am häufigsten in einem Array vorkommenden Wert.
 #### Grundrechenarten
 
 Die Aktionen `multiply`, `divide`, `subtract` und `add` sind gleich aufgebaut. Daher haben die Keys auch die gleiche Bedeutung.
-Als Standard ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
+Als default ist der Wert zu `keys` immer auf der linken Seite der Gleichung. Alternativ: `keys_right`.
 
-**`keys_right`**_optional_: 
+`keys_right`: 
 
 Datenzugriff auf Daten/Werte, die auf der rechten Seite der Gleichung stehen sollen. Wichtig: bei `divide` und `subtract`.
 
-**`value_right`**_optional_: 
+`value_right`: 
 
 Wert, der immer auf der rechten Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
 
-**`value_left`**_optional_: 
+`value_left`: 
 
 Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei `divide` und `subtract`.
 
-**`decimal`**_optional_: 
+`decimal`_(optional)_: 
 
 int - Nachkommastelle, auf die das Ergebnis gerundet werden soll. 
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
+
+Folgende Möglichkeiten gibt es:
+
+| Linke Seite der Gleichung | Rechte Seite der Gleichung |
+| ------------------------- | -------------------------- |
+| `keys`                    | `value_right`              |
+| `keys`                    | `keys_right`               |
+| `value_left`              | `value_right`              |
+| `value_left`              | `keys_right`               |
+
+Eine dieser Möglichkeiten muss vorhanden sein, die anderen Keys sind dann nicht erforderlich. 
 
 
 ##### multiply
@@ -522,10 +818,10 @@ die unter `decimal` angegeben wird, gerundet werden.
 ```JSON
 {
     "type": "calculate",
+    "action": "multiply",
     "keys": [
         "_loop|number1"
     ],
-    "action": "multiply",
     "value_right": 3.6,
     "decimal": 2
 }
@@ -541,10 +837,10 @@ die unter `decimal` angegeben wird, gerundet werden.
 ```JSON
 {
     "type": "calculate",
+    "action": "divide",
      "keys": [
          "_loop|number1"
      ],
-     "action": "divide",
      "value_right": 3.6,
      "decimal": 2
 }
@@ -560,10 +856,10 @@ auf die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerunde
 ```JSON
 {
     "type": "calculate",
+    "action": "subtract",
     "keys_right": [
         "_loop|number1"
     ],
-    "action": "subtract",
     "value_left": 3.6,
     "decimal": 2
 }
@@ -579,10 +875,10 @@ die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet we
 ```JSON
 {
     "type": "calculate",
+    "action": "add",
     "keys": [
         "_loop|number1"
     ],
-    "action": "add",
     "value_right": 3.6,
     "decimal": 2
 }
@@ -590,7 +886,7 @@ die gewünschte Nachkommastelle, die unter `decimal` angegeben wird, gerundet we
 
 ### select
 
-`select` entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus dem Dictionary bzw. der JSON-Ausgabe-Datei.
+`select` entfernt alle Keys, die nicht in `"relevant_keys"` stehen aus den Daten.
 
 Mit `select` kann man sich also die Key/Value-Paare aus der API-Antwort herausziehen, die für das zu erstellende Video 
 relevant sind. 
@@ -604,23 +900,36 @@ relevant sind.
   "relevant_keys": [
       "key1",
       "key2"
-  ]
+  ],
+  "ignore_errors": true
 }
 ```
 
-**`array_key`**:
+`array_key`:
 
-str - Angabe, in welcher Ebene in der JSON-Ausgabe-Datei, die `relevant_keys` zu finden sind.
+[str](#string) - Angabe, in welcher Ebene der Daten, die `relevant_keys` zu finden sind.
 
-**`relevant_keys`**: 
+`relevant_keys`: 
 
-str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und in die JSON-Ausgabe-Datei 
-eingefügt werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und abgespeichert werden sollen.
 
+```warning::
+  Die unter `relevant_keys` angegebenen `Keys` funktionieren etwas anders als alle anderen Keys. Diese gehen **nicht** vom 
+  `root` des Objekts aus, sondern vom momentanen `root`. Ist also `_loop` gesetzt, werden alle Keys ausgehend von `_loop` 
+  betrachtet (z.B. `normal`: `_loop|0` => `hier`: `0`). Dies ist notwendig, da man nur Keys in der aktuellen Ebene der JSON-Datei
+  ersetzt (also z.B. im aktuellen `array`) und nicht alle anderen Keys aussortiert. (Ist `_loop` nicht gesetzt, ist die 
+  Key-Angabe wie üblich).
+```
+
+`ignore_errors`:
+
+[bool](#boolean)  - Wenn `ignore_errors` auf `true` gesetzt wird, werden fehlende Keys ignoriert. 
+Beispiel: Steht in den `relevant_keys` `key1` und `key1` ist nicht vorhanden, wird kein Fehler geworfen. Sondern es 
+wird einfach ignoriert, dass es diesen Key nicht gibt. 
 
 ### delete
 
-Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
+Entfernt Key/Value-Paare aus den Daten.
 
 **Beispiel** 
 
@@ -634,9 +943,9 @@ Entfernt Key/Value-Paare aus der JSON-Ausgabe-Datei.
 }
 ```
 
-**`keys`**: 
+`keys`: 
 
-str-Array - Namen der Keys, dessen Key/Value-Paare aus der JSON-Ausgabe-Datei entfernt werden sollen.
+str-Array - Namen der Keys, dessen Key/Value-Paare entfernt werden sollen.
 
 
 ### select_range
@@ -654,17 +963,17 @@ Entfernt alle Werte aus `array_key`, die nicht innerhalb der von `range_start` u
 }
 ```
 
-**`array_key`**:
+`array_key`:
 
-str - Angabe, aus welcher Ebene in der JSON-Ausgabe-Datei, die Daten ausgewählt werden sollen.
+[str](#string) - Angabe, aus welcher Ebene die Daten ausgewählt werden sollen.
 
-**`range_start`**_optional_:
+`range_start`_(optional)_:
 
 int - Startwert für die Schleife durch die Daten.
 
-Default: 0. 
+_Default_: 0. 
 
-**`range_end`**:
+`range_end`:
 
 int - Endwert für die Schleife durch die Daten.
 
@@ -673,7 +982,7 @@ int - Endwert für die Schleife durch die Daten.
 
 Speichert den Wert, der unter `key` steht, in einem Array.
 
-**Beispiel** 
+**Beispiel mit list** 
 
 ```JSON
 {
@@ -684,25 +993,37 @@ Speichert den Wert, der unter `key` steht, in einem Array.
 }
 ```
 
-**`key`**:
+**Beispiel mit string** 
+
+```JSON
+{
+  "type": "append",
+  "key": "key",
+  "new_key": "new_key",
+  "append_type": "string",
+  "delimiter": "-"
+}
+```
+
+`key`:
 
 Name des Keys zum Wert, der in ein neues Array gespeichert werden soll. 
 
-**`new_key`**_optional_:
+`new_key`_(optional)_:
 
 Name des Arrays unter dem die neuen Werte (Wert unter `key`) gespeichert werden sollen.
 
-**`append_type`**_optional_:
+`append_type`_(optional)_:
 
 "list" oder "string" - Datentyp der Werte, die in einem Array gespeichert werden sollen.
 
-Default: "list".
+_Default_: "list".
 
-**`delimiter`**_optional_:
+`delimiter`_(optional)_:
 
-str - Zeichen mit dem die Werte - im Falle des Datentyps String - voneinander getrennt werden sollen.
+[str](#string) - Zeichen mit dem die Werte - im Falle des Datentyps [string](#string) - voneinander getrennt werden sollen.
 
-Default: " " (Leerzeichen).
+_Default_: " " (Leerzeichen).
 
 ### add_symbol
 
@@ -725,9 +1046,9 @@ Unter `{_key}` wird dann der Wert zum Key aus `keys` eingefügt.
 }
 ```
 
-**`pattern`**:
+`pattern`:
 
-str - String mit `{_key}` und/oder auch nur einem Satz/Wort/Zeichen o.Ä. der/das eingefügt werden soll unter `new_keys`.
+[str](#string) - String mit `{_key}` und/oder auch nur einem Satz/Wort/Zeichen o.Ä. der/das eingefügt werden soll unter `new_keys`.
 
 **Beispiel**
 
@@ -772,19 +1093,19 @@ count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt we
 }
 ```
 
-**`old_value`**:
+`old_value`:
 
-str - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der ersetzt werden soll.
+[str](#string) - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der ersetzt werden soll.
 
-**`new_value`**:
+`new_value`:
 
-str - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der den `old_value` ersetzen soll.
+[str](#string) - Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text, der den `old_value` ersetzen soll.
 
-**`count`**_optional_:
+`count`_(optional)_:
 
 int - Gibt an, wie oft der `old_value` in dem Wert mit dem `new_value` ersetzt werden soll.
 
-Default: -1. 
+_Default_: -1. 
 
 
 ### translate_key
@@ -810,9 +1131,9 @@ Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. Dieser neue
 }
 ```
 
-**`dict`**:
+`dict`:
 
-dict - Ein Dictionary mit bekannten Keys, welche unter `keys` stehen und den Werten, die anstelle dieser Keys neu abgespeichert werden sollen.
+[dict](#dict) - Ein Dictionary mit bekannten Keys, welche unter `keys` stehen und den Werten, die anstelle dieser Keys neu abgespeichert werden sollen.
 
 
 ### alias
@@ -829,14 +1150,20 @@ Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
    ],
   "new_keys": [
       "new_key"
-  ]
+  ],
+  "keep_old": true
 }
 ```
+
+`keep_old`:
+
+[bool](#boolean) - Wenn `keep_old` auf `true` gesetzt ist, wird der alte Key nicht gelöscht. Es wird nur eine Kopie der 
+Daten angefertigt. 
 
 ### regex
 
 regex - regular expression (zu Deutsch: regulärer Ausdruck)
-Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf keinen Backslash (\) enthalten, da JSON keine Regex.
+Führt re.sub für die angegebenen Werte aus.
 
 **Beispiel** 
 
@@ -852,6 +1179,11 @@ Führt re.sub für die angegebenen Werte aus. Der String unter `regex` darf kein
 ```
 Dieses Beispiel sucht alle . und ersetzt diese mit einem ,
 Durch das + soll mindestens ein . ersetzt werden.
+
+```warning::
+  Da ein Backslash (`\`) in JSON eine Bedeutung hat, kann es sein, dass man diesen escapen muss. 
+  (Z.B. darf der Backslash (`\`) nicht vor dem Anführungszeichen stehen, da dieses sonst ignoriert wird.)
+```
 
 **Beispiel (mehrere Zeichen)** 
 
@@ -929,39 +1261,39 @@ dieser Buchstabe jeweils durch START ersetzt.
 
 In diesem Beispiel wird jede Zahl in einem String durch ein Leerzeichen ersetzt.
 
-**`regex`**
+`regex`
 
-str - Beinhaltet den regulären Ausdruck. Oben sind einige Beispiele genannt. 
+[str](#string) - Beinhaltet den regulären Ausdruck. Oben sind einige Beispiele genannt. 
 Der String unter regex darf keine Backslashes (\) enthalten.
 
-**`replace_by`**
+`replace_by`
 
-str - Zeichen mit denen der reguläre Ausdruck im String ersetzt werden soll.
+[str](#string) - Zeichen mit denen der reguläre Ausdruck im String ersetzt werden soll.
 
 ### Uhrzeit und Datum
 
 Im folgenden werden einige transform-Typen für Uhrzeit- und Datumsformate näher erläutert. 
 Für alle diese Typen gilt:
 
-**`keys`**:
+`keys`:
 
 str-Array - Keys unter denen die Uhrzeit bzw. die Daten als Werte stehen. 
 
-**`new_keys`**:
+`new_keys`:
 
 str-Array - Keys unter denen die umgeformte Uhrzeit bzw. die Daten als Werte stehen sollen.
 
-**`format`**:
+`format`:
 
-str - Das Format, in das die Uhrzeit bzw. das Datum umgewandelt werden soll.
+[str](#string) - Das Format, in das die Uhrzeit bzw. das Datum umgewandelt werden soll.
 
-**`given_format`**:
+`given_format`:
 
-str - Das Format, in dem die Uhrzeit bzw. das Datum angegeben sind.
+[str](#string) - Das Format, in dem die Uhrzeit bzw. das Datum angegeben sind.
 
-**`zeropaded_off`**:
+`zeropaded_off`_(optional)_:
 
-bool - `True`: Entfernt die 0 am Anfang einer Zahl. `False` (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
+[bool ](#boolean) - `True`: Entfernt die 0 am Anfang einer Zahl. `False` (default): Die 0 am Anfang einer Zahl bleibt stehen. Könnte zu Fehlaussprache bei der Umwandlung von Text zu Sprache führen.
 `zeropaded_off` ist True, wenn z.B. aus 05. Mai 2020 -> 5. Mai 2020 werden soll.
 
 **Beispiele für Formate**:
@@ -971,13 +1303,13 @@ Beispiele für die Darstellung von Datum und Uhrzeit finden Sie unter: https://d
 
 Einige gängige Formate sind:
 
-|        Format        |       Beispiel       |
+|        Format          |       Beispiel           |
 |------------------------|--------------------------|
-|%Y-%m-%dT%H:%M:%S|2020-05-15T23:56:05|
-|%H:%M:%S|23:56:05|
-|%Y-%m-%d|2020-05-15|
-|%d.%m.%Y|15.05.2020|
-|On the %dth of %b %Y|On the 15th of May 2020|
+|%Y-%m-%dT%H:%M:%S       |2020-05-15T23:56:05       |
+|%H:%M:%S                |23:56:05                  |
+|%Y-%m-%d                |2020-05-15                |
+|%d.%m.%Y                |15.05.2020                |
+|On the %dth of %b %Y    |On the 15th of May 2020   |
 
 #### date_format
 
@@ -996,7 +1328,8 @@ ein gewünschtes anderes Format, welches unter `format` angegeben wird.
       "new_key"
   ],
   "given_format": "%Y-%m-%dT%H:%M:%S",
-  "format": "%Y-%m-%d"
+  "format": "%Y-%m-%d", 
+  "zeropaded_off": false
 }
 ```
 
@@ -1022,8 +1355,9 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
   "zeropaded_off": true
 }
 ```
-
-Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
+```warning::
+  Kein `given_format`-Key, da das `given_format` ein Zeitstempel ist.
+```
 
 #### date_weekday
 
@@ -1044,7 +1378,9 @@ Achtung: Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
 }
 ```
 
-Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+```warning::
+  Kein `format`-Key, da das `format` ein String mit dem Wochentag ist.
+```
 
 #### date_now
 
@@ -1056,17 +1392,19 @@ Achtung: Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
 {
   "type": "date_now",
   "new_key": "new_key",
-  "format": "%Y-%m-%d"
+  "format": "%Y-%m-%d",
+  "zeropaded_off": false
 }
 ```
-
-Achtung: Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
-Diese haben immer dasselbe Format.
+```warning::
+  Kein `given_format`-Key und kein `keys`-Key, da der Typ sich die aktuelle Uhrzeit vom Betriebssystem holt. 
+  Diese haben immer dasselbe Format.
+```
 
 ### wind_direction
 
 `wind_direction` ist eine Funktion, die ausschließlich zum Umwandeln der Windrichtung aus der Weatherbit-API verwendet wird.
-Die englischen Wörter werden auf Deutsch übersetzt.
+Die englischen Wörter werden ins Deutsche übersetzt.
 
 **Beispiel** 
 
@@ -1113,13 +1451,13 @@ Die englischen Wörter werden auf Deutsch übersetzt.
         }
 ```
 
-**`dict`**:
+`dict`:
 
-dict - Enthält die Übersetzungen der Wörter von Englisch zu Deutsch.
+[dict ](#dict ) - Enthält die Übersetzungen der Wörter von Englisch zu Deutsch.
 
-**`delimiter`**:
+`delimiter`:
 
-str - Trennzeichen. Z.B. "south-southwest", zuerst wird south übersetzt und dann southwest.
+[str](#string) - Trennzeichen. Z.B. `south-southwest`, zuerst wird `south` übersetzt und dann `southwest`.
 
 
 ### loop
@@ -1139,11 +1477,11 @@ Bereich an mit `range_start` und `range_stop` (siehe Beispiele).
 }
 ```
 
-**`values`**:
+`values`:
 
 int-Array - Bestimmte Werte, welche in der Schleife durchlaufen werden sollen. 
 
-**`transform`**:
+`transform`:
 
 `transform`-Typen, die für alle Werte des Arrays ausgeführt werden sollen.
 
@@ -1158,20 +1496,28 @@ int-Array - Bestimmte Werte, welche in der Schleife durchlaufen werden sollen.
 }
 ```
 
-**`range_start`**:
+`range_start`:
 
 int - Beginn des Bereichs, welcher in der Schleife durchlaufen werden soll. 
 
-Default: 0.
+_Default_: 0.
 
-**`range_stop`**:
+`range_stop`:
 
 int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll. 
 
-**`transform`**:
+`transform`:
 
 `transform`-Typen, die für alle Werte des Arrays ausgeführt werden sollen.
 
+- _Spezialvariablen_:
+  - `_loop`: Hier wird der aktuelle Wert des Schleifendurchlaufs gespeichert.
+  - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
+
+```note::
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
 
 ### add_data
 
@@ -1184,17 +1530,17 @@ int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll.
 {
   "type": "add_data",
   "new_key": "new_data",
-  "pattern": "new values"
+  "data": "new values"
 }
 ```
 
-**`new_key`**:
+`new_key`:
 
-str - Name des Keys unter dem der neue Wert gespeichert werden soll. 
+[str](#string) - Name des Keys unter dem der neue Wert gespeichert werden soll. 
 
-**`pattern`**:
+`data`:
 
-str - Neuer Wert, der abgespeichert werden soll. 
+[any](#any) - Neuer Wert, der abgespeichert werden soll. 
 
 
 ### copy
@@ -1241,15 +1587,15 @@ die unter `on_false` stehen.
         }
 ```
 
-**`check`**:
+`check`:
 
-bool - Der Wert, der auf true bzw. false getestet werden soll. 
+[bool ](#boolean) - Der Wert, der auf true bzw. false getestet werden soll. 
 
-**`on_true`**:
+`on_true`:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter `check` `true` ist.
 
-**`on_false`**:
+`on_false`:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter `check` `false` ist.
 
@@ -1272,6 +1618,7 @@ Folgende Vergleiche werden durchgeführt:
     "value_left": "_loop|MatchResults|PointsTeam1",
     "value_right": "_loop|MatchResults|PointsTeam2",
     "on_equal": [],
+    "on_not_equal": [],
     "on_higher": [],
     "on_lower": []
 }  
@@ -1289,11 +1636,11 @@ Folgende Vergleiche werden durchgeführt:
 }  
 ```
 
-**`value_left`**:
+`value_left`:
 
 Wert der auf der linken Seite beim Vergleich steht.
 
-**`value_right`**:
+`value_right`:
 
 Wert der auf der rechten Seite beim Vergleich steht.
 
@@ -1301,37 +1648,37 @@ Wert der auf der rechten Seite beim Vergleich steht.
 
 Eine der folgenden Möglichkeiten sollte angegeben werden, sonst passiert generell keine Umwandlung der Daten.
 
-**`on_equal`**_optional_:
+`on_equal`_(optional)_:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
 `value_left` gleich dem Wert unter `value_right` ist.
 
-**`on_not_equal`**_optional_:
+`on_not_equal`_(optional)_:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
 `value_left` nicht gleich dem Wert unter `value_right` ist.
 
-Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`.
+optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`.
 
-**`on_higher`**_optional_:
+`on_higher`_(optional)_:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
 `value_left` größer als der Wert unter `value_right` ist.
 
-Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
+optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
 
-**`on_lower`**_optional_:
+`on_lower`_(optional)_:
 
 `transform`-Typen, die für alle Werte des Arrays/Dictionaries ausgeführt werden sollen, wenn der Wert unter 
 `value_left` kleiner als der Wert unter `value_right` ist.
 
-Optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
+optional: Zum Beispiel, wenn es egal ist, ob `value_left` größer oder kleiner ist als `value_right`, dann kann `on_not_equal` verwendet werden.
 
 ### random_value
 
 Wählt zufällig einen Wert aus einem Array oder einem Dictionary mit verschiedenen Werten aus.
 
-**Beispiel** 
+**Beispiel mit array** 
 ```JSON
 {
      "type": "random_value",
@@ -1349,11 +1696,11 @@ Wählt zufällig einen Wert aus einem Array oder einem Dictionary mit verschiede
      ]
 }
 ```
-**`array`**
+`array`
 
 array - Das Array enthält verschiedene Werte aus denen zufällig ein Wert ausgewählt werden soll.
 
-**Beispiel** 
+**Beispiel mit Dictionary** 
 ```JSON
 {
      "type": "random_value",
@@ -1377,9 +1724,9 @@ array - Das Array enthält verschiedene Werte aus denen zufällig ein Wert ausge
 }
 ```
 
-**`dict`**
+`dict`
 
-dict - Das Dictionary enthält mögliche Keys mit verschiedenen Werten aus denen zufällig ein Wert ausgewählt werden soll. 
+[dict ](#dict ) - Das Dictionary enthält mögliche Keys mit verschiedenen Werten aus denen zufällig ein Wert ausgewählt werden soll. 
 In diesem Beispiel erhält man einen Zahlencode und je nachdem welcher Zahlencode verwendet werden soll, wird aus dem dazugehörigen Werte-Array ein Wert ausgewählt.
 
 In diesem Beispiel muss der gewünschten Key des Dictionaries angegeben werden, damit aus dessen Werte-Array ein Wert ausgewählt werden kann.
@@ -1404,7 +1751,7 @@ Konvertieren von einem Datentyp in einen anderen Datentyp.
 }
 ```
 
-**`to`**:
+`to`:
 
 Beispiel: int - Datentyp in den der Wert konvertiert werden soll
 
@@ -1426,32 +1773,33 @@ Es kann auch alphabetisch sortiert werden, wenn die Einträge keine Zahlen sind.
 }
 ```
 
-**`reverse`**
+`reverse`
 
-bool - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
+[bool](#boolean) - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
 sortiert werden (kleinste Zahl als Erstes).
 
-Default: False.
+_Default_: False.
 
-**Achtung:** 
+```warning::
+
  `USA` wird hier alphabetisch vor `United Kingdom` sortiert, da es andere Groß- und Kleinschreibung verwendet.
 
-```JSON
-{
-"test": 
-    ["Canada", "Argentina", "Cyprus", "Schweden", "Norway", "USA", "Germany", "United Kingdom", "Z"],
-"sort_ascending": 
-    ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
-}
-```
+    .. code-block:: JSON
 
+        {
+        "test": 
+            ["Canada", "Argentina", "Cyprus", "Schweden", "Norway", "USA", "Germany", "United Kingdom", "Z"],
+        "sort_ascending": 
+            ["Argentina", "Canada", "Cyprus", "Germany", "Norway", "Schweden", "USA", "United Kingdom", "Z"]
+        }
+```
 ### most_common
 
-`most_common` betrachtet ein Array oder einen String und zählt die Häufigkeit der jeweils darin vorkommenden Wörter.
-
+`most_common` betrachtet ein Array oder einen String und sortiert die Elemente der Häufigkeit nach.
+Optional kann auch die Häufigkeit des Elements als Tupel angegeben werden.
 Beispiel: "Der Hund sucht die Katze und die Katze sucht die Maus."
 
-der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
+`[(die, 3), (sucht, 2), (Katze, 2), (der, 1), (Hund, 1), (und, 1), (Maus, 1)]`
 
 **Beispiel** 
 
@@ -1463,13 +1811,27 @@ der: 1, Hund: 1, sucht: 2, die: 3, Katze: 2, und: 1, Maus: 1
   ],
   "new_keys": [
     "_req|text_all_counter"
-  ]
+  ],
+  "include_count": true
 }
+```
+
+`include_count`_(optional)_:
+
+[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll. Ist `include_count` auf `false` gesetzt,
+wird nur eine Liste mit der Häufigkeit nach sortierten Elementen hinzugefügt. z.B.:
+
+`["die", "sucht", "Katze", "der", "Hund", "und", "Maus"]`
+
+```note::
+  Falls die Option `include_count` auf `true` gesetzt ist, erhält man folgende Daten zurück: 
+  [(die, 3), (sucht, 2), (Katze, 2), (der, 1), (Hund, 1), (und, 1), (Maus, 1)]`
+  Möchte man anstatt dieser Liste von Tupeln ein Dictionary, kann man dies mit dem Typen `to_dict <#to-dict>`_ umwandeln.
 ```
 
 ### sub_lists
 
-`sub_lists` geht durchläuft eine Liste und sucht sich bestimmte Teile dieser Liste heraus, um daraus kleinere Listen zu erhalten.
+`sub_lists` durchläuft eine Liste und sucht sich bestimmte Einträge dieser Liste heraus, um daraus kleinere Listen zu erstellen.
 
 Beispiel: Hund, Katze, Maus, Garage, Hoftor, Tür, Fenster
 
@@ -1496,23 +1858,25 @@ Daraus wollen wir zwei Listen machen: Die ersten 3 Einträge sollen in die erste
 }
 ```
 
-**`array_key`**:
+`array_key`:
 
-str - Enthält den Key zum Array, von dem die Unterlisten erstellt werden sollen.
+[str](#string) - Enthält den Key zum Array, von dem die Unterlisten erstellt werden sollen.
 
-**`sub_lists`**:
+`sub_lists`:
 
 Pro Unterliste wird eine new_key/range_start/range_end-Struktur hinzugefügt.
 
-**`range_start`**_optional_:
+`range_start`_(optional)_:
 
 int - Listeneintrag ab dem die Unterliste generiert werden soll.
 
-Default: 0.
+_Default_: Anfang der Liste.
 
-**`range_end`**:
+`range_end`_(optional)_:
 
 int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
+
+_Default_: Ende der Liste. 
 
 ### to_dict
 
@@ -1550,15 +1914,16 @@ int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
 }
 ```
 
-**`delimiter`**:
+`delimiter`:
 
-str - Trennzeichen zum Trennen der einzelnen Einträge in einem String. Z.B. . , ; : - + 
+[str](#string) - Trennzeichen zum Trennen der einzelnen Einträge in einem String. Z.B. . , ; : - + 
 
 ### length
 
 `length` gibt die Anzahl der Elemente eines Arrays/einer Liste aus, falls der Wert ein Array ist.
 Ist der Wert ein String, so wird die Anzahl der Zeichen des Strings ausgegeben.
-
+Ist der Wert ein Dictionary, so wird die Anzahl der Key/Value-Paare ausgegeben.
+Ist der Wert ein Tupel, so wird die Anzahl der Elemente des Tupels ausgegeben.
 ```json
 {
   "type": "length",
@@ -1603,29 +1968,29 @@ jede immer Wörter eingegeben werden, die neben den Wörtern in der Textdatei en
 }
 ```
 
-**`to_remove`**:
+`to_remove`:
 
 Array - Eine Liste mit Wörtern, die aus einem String oder einer anderen Liste entfernt werden sollen.
 
-**`use_stopwords`**:
+`use_stopwords`_(optional)_:
 
-bool - Sollen die Stopwords, die in der Datei stopwords/stopwords.txt stehen aus dem String oder der Liste entfernt werden?
+[bool](#boolean) - Sollen die Stopwords, die in der Datei stopwords/stopwords.txt stehen aus dem String oder der Liste entfernt werden?
 
 `true`: Stopwords aus der Datei stopwords/stopwords.txt entfernen.
 
 `false`: Stopword aus der Datei stopwords/stopwords.txt nicht entfernen.
 
-Default: `false`.
+_Default_: `false`.
 
-**`ignore_case`**:
+`ignore_case`_(optional)_:
 
-bool - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
+[bool](#boolean) - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
 
 `true`: Ja, auch entfernen, wenn sie eine andere Groß- bzw. Kleinschreibung besitzen.
 
 `false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
 
-Default: `false`.
+_Default_: `false`.
 
 ### lower_case
 
@@ -1683,11 +2048,11 @@ Der erste Buchstabe jedes Worts in dem Array wird groß geschrieben.
 
 ### normalize_words
 
-Wörter, welche öfter in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen
-für die Zählung der Häufigkeit und der Darstellung in der Wordcloud vereinheitlicht werden.
+Wörter, welche mehrmals in einem Array vorkommen, jedoch unterschiedlich in ihrer Klein- bzw. Großschreibung sind, sollen
+für die Zählung der Häufigkeit und zur Darstellung in der Wordcloud vereinheitlicht werden.
 
 Ein Array wird durchlaufen und jedes Wort, welches beim zweiten Vorkommen anders geschrieben wurde als das Wort beim
-ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vorgekommen ist.
+ersten Vorkommen, wird dann so geschrieben wie als es das erste Mal im Array vorgekommen ist.
 
 **Beispiel**
 
@@ -1697,7 +2062,6 @@ ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vor
 
 
 **Beispiel**
-
 ```JSON
 {
   "type": "normalize_words",
@@ -1709,12 +2073,116 @@ ersten Vorkommen, wird dann so geschrieben wie das Wort als es das erste Mal vor
   ]
 }
 ```
+### split_string
 
+Teilt einen String am angegebenen Trennzeichen.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "split_string",
+  "keys": [
+    "_req|test"
+  ],
+  "new_keys": [
+    "_req|check_test"
+  ],
+  "delimiter": "-",
+  "ignore_case": true
+}
+```
+
+`delimiter`_(optional)_:
+
+[str](#string) - Trennzeichen bei dem ein String geteilt werden soll. (Dies können auch mehrere Zeichen sein.)
+
+_Default_: `" "`
+
+
+`ignore_case`_(optional)_:
+
+[bool](#boolean) - Sollen die Wörter die entfernt werden, auch dann entfernt werden, wenns sie eine andere Groß- bzw. Kleinschreibung besitzen?
+
+`true`: Ja, auch entfernen, wenn sie eine andere Groß- bzw. Kleinschreibung besitzen.
+
+`false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
+
+_Default_: `false`.
+
+
+### check_key
+
+Überprüft, ob ein Key vorhanden ist und setzt den dazugehörigen `keys` bzw. den `new_keys` auf `true`.
+
+**Beispiel**
+
+```JSON
+{
+  "type": "check_key",
+  "keys": [
+    "_req|test"
+  ],
+  "init_with": "test",
+  "new_keys": [
+    "_req|check_test"
+  ]
+}
+```
+
+`init_with` _(optional)_:
+
+[any](#any) - Wenn der Key nicht vorhanden ist, wird dieser mit diesem Wert initialisiert.
+
+`new_keys` _(optional)_:
+
+Hier wird gespeichert, ob der Key vorhanden war oder nicht.
+
+- `true`  -> Key war vorhanden:
+- `false` -> Key war **nicht** vorhanden.
+
+### Key Trick
+
+Wenn man einen [transform](#transform)-Typen bei `transform` angibt (z. B. bei [transform_array](#transform_array)), der 
+selbst die _Spezialvariablen_ `_loop` und/oder `_idx` verwendet, werden diese überschrieben und sind somit innerhalb der 
+dortigen `transform`-Definition anders belegt. Falls man die Werte aus der vorherigen Ebene benötigt, kann man 
+diese mit einem Trick bekommen. Man kann diese Keys in einem außberhalb liegenden Key speichern. z. B.:
+
+```JSON
+{
+  "type": "transform_array",
+  "array_key": "_req|data",
+  "transform": [
+    {
+      "type": "add_data",
+      "new_keys": [
+        "tmp"
+      ],
+      "data": "$_loop"
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|data2",
+      "transform": [
+        {
+          "type": "add_data",
+          "new_keys": ["_loop|test"],
+          "pattern": "{tmp|test}"
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## Storing
 
-Mit Hilfe von Storing können ganze Dictionarys oder auch einzelne Werte in Dateien gespeichert werden
-und in einem späterem Durchlauf des Programms wieder eingelesen werden
+Der Abschnitt `storing` dient dazu, API-Antworten persistent zu speichern, um zu späteren Zeitpunkten wieder auf diese Daten zugreifen zu können.   
+Der Abschnitt wurde hinzugefügt, weil die openligadb-API nur die Bundesliga-Tabelle des aktuellen Spieltags bereitstellt und nicht auch die der vorherigen Spieltage.
+Um jedoch herauszufinden, ob sich eine Mannschaft im Vergleich zum vorherigen Spieltag verbessert oder verschlechtert hat oder auf dem gleichen Tabellenplatz ist wie zuvor, wurde auch die Tabelle vom vorherigen Spieltag benötigt. 
+
+Zuerst wurden transform-Typen geschrieben, welche die vorherigen Tabelle anhand der Spielergebnisse des aktuellen Spieltags rekonstruiert haben (darunter gehörte u.A. `subtract`).
+Dies war recht aufwändig, also kam die Idee mit dem Speichern von `Dictionaries` bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere APIs bzw. weitere Video-Ideen verwendet werden.
 
 ```JSON
 {
@@ -1736,23 +2204,24 @@ und in einem späterem Durchlauf des Programms wieder eingelesen werden
 
 ```
 
-**`name`**:  
-str - Frei zu wähender Name des zu Exportierenden Dicts oder values (dieser Name wird später wieder zum importieren benötigt)
+`name`:  
+[str](#string) - Frei zu wählender Name des zu exportierenden Dictionaries oder Values (dieser Name wird später wieder zum importieren benötigt).
 
-**`key`**:  
-str - Angabe des Keys welcher exportiert werden soll
+`key`:  
+[str](#string) - Angabe des Keys, welcher exportiert werden soll.
 
-**`exclude`** _(Optional)_:  
-list - Angabe von Keys welche beim exportieren nicht mit exportiert werden soll
-(Macht logischerweiße nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
+`exclude` _(optional)_:  
+[list](#list) - Angabe von Keys, welche beim exportieren nicht mit exportiert werden sollen.
+(Macht logischerweise nur sein wenn man in `key` ein Dict angegeben hat und keinen einzelnen value)
 
 ## Images
 
-Der Abschnitt `images` beinhaltet die Konfigurationen, für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
+Der Abschnitt `images` beinhaltet die Konfigurationen für die Erstellung der einzelnen Bilder, die am Ende im Abschnitt
 `sequence` mit den generierten Audiodateien zu einem Video zusammengeschnitten werden.
 Die verschiedenen Typen können mehrere Male hintereinander mit ihren Parametern angegeben werden, je nachdem wie viele
-Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
+Bilder generiert werden sollen. Jedes Bild erhält noch einen Key als Bildnamen:
 
+**Beispiel**
 ```JSON
 {
     "images": {
@@ -1763,18 +2232,16 @@ Bilder generiert werden soll. Jedes Bild erhält noch einen Key als Bildnamen:
 
 ### pillow
 
-Pillow ist eine Image Library für Python.
-In unserem projekt nutzen wir grundlegend 3 Funktionen:
-Ein Bild öffnen um es zu bearbeiten.
-Ein Bild in ein Bild einfügen.
-Text in ein Bild einfügen.
+Pillow ist eine Image Library für Python. In unserem Projekt nutzen wir grundlegend 3 Funktionen:
+- Ein Bild öffnen, um es zu bearbeiten.
+- Ein Bild in ein Bild einfügen.
+- Text in ein Bild einfügen.
 
-Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen, die aus den angegebenen
+Mithilfe des Image-Typen `pillow` können verschiedene `overlay`- oder `draw`-Typen aufgerufen werden, die aus den angegebenen
 Parametern Bilddateien generieren.
 
-In diesem Part der JSON werden Bilder spezifiziert, welche dann später in Sequence  
-verwendet werden können
-Bilder lassen sich in der JSOn wie folgt darstellen:
+In diesem Abschnitt der JSON-Datei werden Bilder spezifiziert, welche dann später in Sequence  
+aneinandergeschnitten werden können. Bilder lassen sich in der JSON wie folgt darstellen:
 
 ```JSON
 {
@@ -1789,8 +2256,8 @@ Bilder lassen sich in der JSOn wie folgt darstellen:
 }
 ```
 
-**`"test1"`, `"test2":`**  
-sind die internen Bildnamen der erstellten Bilder
+`"test1"`, `"test2":`:
+[str](#string) - Die internen Bildnamen der erstellten Bilder
 
 ```JSON
 
@@ -1809,26 +2276,24 @@ sind die internen Bildnamen der erstellten Bilder
 }
 ```
 
-**`path`**:  
-Der Pfad zum Bild welches geöffnet werden soll,
-hier kann auch ein Bild verwendet werden was vorher bereits erstellt wurde,  
-dazu muss lediglich der interne Bildname angegeben werden
+`path`:  
+Der Pfad zum Bild, welches geöffnet werden soll. Hier kann auch ein Bild verwendet werden, welches vorher bereits erstellt wurde. 
+Dazu muss der interne Bildname angegeben werden.
 
-**`already_created`** _(Optional)_:  
-Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen so muss dies true sein
+`already_created` _(optional)_:  
+Sollte man ein zuvor erstelltes Bild wieder weiter bearbeiten wollen, so muss dieser Wert `true` sein.
 
-**`overlay`**  
-Eine Liste mit Overlays welche alle auf das Bild angewendet werden
+`overlay`  
+Eine Liste mit Overlays, welche alle auf das Bild angewendet werden sollen.
 
 ### Overlay
 
-Es gibt 6 verschiedene Overlay-Arten:
+Es gibt 6 verschiedene Overlay-Typen:
 
 
 #### option
 
-Werted den boolean Wert aus der in `check` angegeben wurde, 
-und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` aus
+Wertet den boolean-Wert aus, der in `check` angegeben wurde, und führt je nachdem dann die angegebenen Overlay-Typen in `on_true` oder `on_false` aus.
 
 ```JSON
 
@@ -1845,23 +2310,28 @@ und führt jenachdem dann die angegebenen Overlays in `on_true` oder `on_false` 
 }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`check`**  
-Der Wert anhand dem entschieden wird ob `on_true` oder `on_false` ausgeführt wird
+`check`  
+[str](#string) - Der Wert anhand dem entschieden wird, ob `on_true` oder `on_false` ausgeführt wird.
 
-**`on_true`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert True ergab
+`on_true`  
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn der Wert `true` ist.
 
-**`on_false`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn der Wert False ergab
+`on_false`  
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn der Wert `false` ist.
 
 #### compare
 
-Vergleicht die beiden Werte in `value_left` und `value_right`, 
-und führt jenachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus
-oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower` verwendet
+Vergleicht die beiden Werte in `value_left` und `value_right` und führt je nachdem dann die angegebenen Overlays in `on_equals` oder `on_not_equals` aus.
+Sofern `on_not_equals` nicht angegeben wurde, wird `on_higher` und `on_lower` verwendet.
+
+
+- `value_left = value_right` -> `on_equal`
+- `value_left != value_right` -> `on_not_equal`
+- `value_left > value_right` -> `on_higher`
+- `value_left < value_right` -> `on_lower`
 
 ```JSON
 
@@ -1882,35 +2352,35 @@ oder sofern `on_not_equals` nicht angegeben wurde wird `on_higher` und `on_lower
 }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`value_left`**  
-Der Erste Wert der verglichen werden soll
+`value_left`  
+[str](#string) - Wert, der auf der linken Seite der Gleichung steht. 
 
-**`value_right`**  
-Der Zweite Wert der verglichen werden soll
+`value_right`  
+[str](#string) - Wert, der auf der rechten Seite der Gleichung steht. 
 
-**`on_equals`**  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte identisch sind
+`on_equals`  
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn die beiden Werte identisch sind.
 
-**`on_not_equals`**  _(Optional)_  
-Eine Liste aus neuen Overlay Typen welche angewendet werden wenn die beiden Werte nicht identisch sind
+`on_not_equals`  _(optional)_  
+Eine Liste aus Overlay-Typen, welche angewendet werden, wenn die beiden Werte nicht identisch sind.
 
-**`on_higher`**  _(Optional)_  
-Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
-Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite wert größer wie der erste ist.
+`on_higher`  _(optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein, so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus Overlay-Typen, welche angewendet werden, wenn value_left größer ist als value_right.
 
-**`on_lower`**  _(Optional)_  
-Sollte `on_not_equals` nicht angegeben worden sein so wird `on_lower` und `on_higher` verwendet.
-Dies ist ebenso eine Liste aus neuen Overlay Typen welche angewendet werden wenn der zweite Wert kleiner wie der erste ist.
+`on_lower`  _(optional)_  
+Sollte `on_not_equals` nicht angegeben worden sein, so wird `on_lower` und `on_higher` verwendet.
+Dies ist ebenso eine Liste aus Overlay-Typen, welche angewendet werden, wenn value_left kleiner ist als value_right.
 
 #### image
 
-Der Typ Image setzt ein Bild in das zuvor definierte source image
+Der Typ `image` setzt ein Bild in das zuvor definierte `source_image`.
 
+**Beispiel**
 ```JSON
-
  {
   "description": "icon",
   "type": "image",
@@ -1918,36 +2388,36 @@ Der Typ Image setzt ein Bild in das zuvor definierte source image
   "pos_y": 280,
   "size_x": 350,
   "size_y": 350,
-  "colour": "RGBA",
+  "color": "RGBA",
   "pattern": "123.png"
  }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`pos_x`** _(Optional)_:  
-X Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
+`pos_x` _(optional)_:  
+int - X-Koordinate des zu setzenden Bildes (Ausgangspunkt: obere linke Ecke des Bildes)
 
-**`pos_y`** _(Optional)_:  
-Y Koordinate des zu setztenden Bildes (obere linke Ecke des Bildes)
+`pos_y` _(optional)_:  
+int - Y-Koordinate des zu setzenden Bildes (Ausgangspunkt: obere linke Ecke des Bildes)
 
-**`size_x`** _(Optional)_:  
-X Größe des zu setzende Bildes  
-(wird nichts angeben wird das zu setzende Bild nicht skalliert)
+`size_x` _(optional)_:  
+int - Breite des zu setzende Bildes  
+(wenn nichts angeben, wird das zu setzende Bild nicht skaliert)
 
-**`size_y`** _(Optional)_:  
-Y Größe des zu setzende Bildes  
-(wird nichts angeben wird das zu setzende Bild nicht skalliert)
+`size_y` _(optional)_:  
+int - Höhe des zu setzende Bildes  
+(wenn nichts angeben, wird das zu setzende Bild nicht skaliert)
 
-**`colour`**:  
-Farbe in welche das Bild konvertiert werden soll  
+`color`:  
+[str](#string) - Farbe in welche das Bild konvertiert werden soll  
 (RGBA = bunt, L = schwarz-weiß)
 
-**`pattern`**:  
-Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
+`pattern`:  
+[str](#string) - Pfad des zu setzenden Bildes (kann sich auch auf Daten aus der API beziehen)
 
-######## Bild mittig vor Hintergrund platzieren
+###### Bild mittig vor Hintergrund platzieren
 
 Um ein Bild mittig vor dem Hintergrund zu platzieren, sollten die Felder `pos_x` und `pos_y` nicht mit Werten 
 versehen werden. Die Position wird automatisch berechnet unter Berücksichtigung der Größe des Hintergrundbildes und 
@@ -1957,10 +2427,10 @@ Um das Bild anders zu platzieren, müssen die Felder `pos_x` und `pos_y` mit Wer
 
 #### image_array
 
-Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
+Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte `source_image`.
 
+**Beispiel**
 ```JSON
-
 {
   "description": "icon",
   "type": "image_array",
@@ -1968,7 +2438,7 @@ Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
   "pos_y": [865, 787],
   "size_x": 160,
    "size_y": 160,
-   "colour": "L",
+   "color": "L",
    "pattern": [
       "{_req|test}.png",
       "{_req|test}.png"
@@ -1976,43 +2446,38 @@ Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte source image.
 }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`pos_x`** :  
-X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
-(obere linke Ecke des Bildes)
+`pos_x`:  
+X-Koordinaten der zu setzenden Bilder (muss eine Liste sein) (Ausgangspunkt: obere linke Ecke des Bildes)
 
-**`pos_y`** :  
-X Koordinaten der zu setztenden Bilder (muss eine Liste sein)  
-(obere linke Ecke des Bildes)
+`pos_y`:  
+Y-Koordinaten der zu setzenden Bilder (muss eine Liste sein) (Ausgangspunkt: obere linke Ecke des Bildes)
 
-**`size_x`** _(Optional)_:  
-X Größe der zu setzenden Bilder (muss ein String sein)  
-(wird nichts angeben werden die Bilder nicht skaliert)
+`size_x` _(optional)_:  
+Breite der jeweils zu setzenden Bilder (muss ein String sein)  
+(wenn nichts angeben, werden die Bilder nicht skaliert)
 
-**`size_y`** _(Optional)_:  
-Y Größe der zu setzenden Bilder (muss ein String sein)  
-(wird nichts angeben werden die Bilder nicht skaliert)
+`size_y` _(optional)_:  
+Höhe der jeweils zu setzenden Bilder (muss ein String sein)  
+(wenn nichts angeben, werden die Bilder nicht skaliert)
 
-**`colour`**:  
+`color`:  
 Farbe in welche die Bilder konvertiert werden sollen.
 Kann ein String sein, dann wird die Farbe für alle verwendet oder eine Liste,
-dann wird jeder Eintrag einer Koordinate zu geordnet
-(Liste muss dann lgischerweiße identisch lang sein wie pos_x)  
+dann wird jeder Eintrag einer Koordinate zu geordnet (Liste muss dann genauso lang sein wie pos_x)  
 (RGBA = bunt, L = schwarz-weiß)
 
-**`pattern`**:  
-Pfad der zu setzenden Bilder
-Kann ebenfalls wieder Liste oder String sein  
-(kann sich auch auf Daten aus der API beziehen)
+`pattern`:  
+[str](#string) - Pfad, der zu setzenden Bilder. Kann ebenfalls wieder Liste oder String sein (kann sich auch auf Daten aus der API beziehen)
 
 #### text
 
-Der Typ `text` setzt einen Text in das zuvor definierte source image.
+Der Typ `text` setzt einen Text in das zuvor definierte `source_image`.
 
+**Beispiel**
 ```JSON
-
 {
    "description": "week_day",
    "type": "text",
@@ -2024,43 +2489,43 @@ Der Typ `text` setzt einen Text in das zuvor definierte source image.
 }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`anchor_point`**:  
-Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
+`anchor_point`:  
+Legt fest, ob der Text zentriert oder linksbündig dargestellt werden soll.
 
-**`pos_x`** :  
-X Koordinate des zu setztenden Textes
+`pos_x`:  
+int - X-Koordinate des zu setzenden Textes
 
-**`pos_y`** :  
-Y Koordinate des zu setztenden Textes
+`pos_y`:  
+int - Y-Koordinate des zu setzenden Textes
 
-**`pattern`**:  
-Text der geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
+`pattern`:  
+[str](#string) - Text, der auf das Bild geschrieben werden soll (kann sich auch auf Daten aus der API beziehen)
 
-**`preset`**:  
-Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
-Presets sind weiter unten in der JSON spezifiziert
+`preset`:  
+Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)  
+[Presets](#presets) sind weiter unten in der JSON spezifiziert
 
-**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+**Sollte man kein neues `preset` angeben wollen, so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
-**`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+`color`:  
+str/hex - Farbe des Textes. Kann ein Name sein, aber auch eine Hexadezimalzahl.
 
-**`font_size`**:  
+`font_size`:  
 int - Größe des Textes
 
-**`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+`font`:  
+[str](#string) - Name des relativen Pfads vom `resource`-Ordner zu der Font-Datei.
 
 
 #### text_array
 
-Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
+Der Typ `text_array` setzt mehrere Texte in das zuvor definierte `source_image`.
 
+**Beispiel**
 ```JSON
-
 {
  "description": "min_temp",
  "type": "text_array",
@@ -2078,44 +2543,43 @@ Der Typ `text_array` setzt mehrere Texte in das zuvor definierte source image.
 }
 ```
 
-**`description`** _(Optional)_:  
-Lediglich ein Name des overlays, wird im programm nicht verwendet, dient nur zur Orientierung in der JSON
+`description` _(optional)_:  
+[str](#string) - Name des Overlays, wird im Programm nicht verwendet, dient nur zur Orientierung in der JSON.
 
-**`anchor_point`**:  
-Legt fest ob der Text zentriert oder linksbündig dargestellt werden soll
+`anchor_point`:  
+Legt fest, ob der Text zentriert oder linksbündig dargestellt werden soll.
 
-**`pos_x`** :  
-X Koordinate der zu setztenden Texte
+`pos_x`:  
+X-Koordinaten der zu setzenden Texte (eine Liste)
 
-**`pos_y`** :  
-Y Koordinate der zu setztenden Texte
+`pos_y`:  
+Y-Koordinaten der zu setzenden Texte (eine Liste)
 
-**`pattern`**:  
-Texte die geschrieben werden sollen, auch hier wieder Liste sowie String möglich  
-(kann sich auch auf Daten aus der API beziehen)
+`pattern`:  
+Texte, die auf das Bild geschrieben werden sollen. Liste sowie String sind möglich (kann sich auch auf Daten aus der API beziehen)
 
-**`preset`**:  
-Preset welches verwendet werden soll (Schriftart,-Größe,-Farbe)  
-Dies kann wieder eine Liste oder ein String sein  
-Presets sind weiter unten in der JSON spezifiziert
+`preset`:  
+Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)   Liste oder String möglich
+[Presets](#presets) sind weiter unten in der JSON spezifiziert
 
 
-**Sollte man kein neues preset angeben wollen so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
+**Sollte man kein neues `preset` angeben wollen ,so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
-**`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+`color`:  
+str/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
 
-**`font_size`**:  
+`font_size`:  
 int - Größe des Textes
 
-**`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
+`font`:  
+[str](#string) - Name des relativen Pfads vom `resource`-Ordner zu der Font-Datei.
 
 ### wordcloud
 
 Mithilfe des Image-Typen `wordcloud` wird eine Funktion aufgerufen, die aus den angegebenen Parametern
 eine .png-Datei mit einer Wordcloud generiert. Alle default-Werte, die zur Erstellung einer Wordcloud benötigt werden sind:
 
+**Default-Parameter für die Wordcloud**:
 ```PYTHON
 WORDCLOUD_DEFAULT_PARAMETER = {
     "background_color": "white",
@@ -2133,83 +2597,89 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "font_step": 1,
     "mode": "RGB",
     "relative_scaling": 0.5,
-    "color_func": None,
+    "color_func": False,
     "regexp": None,
     "colormap": "viridis",
     "normalize_plurals": True,
     "stopwords": None,
-    "repeat": False
+    "repeat": False,
+    "mask": None
 }
 ```
 
 Diese Parameter können in der JSON-Datei optional angegeben werden, wird kein anderer Wert angegeben, wird
-der jeweilige default-Wert verwendet.
+der jeweilige default-Wert verwendet. Die default-Parameter wurden mithilfe dieser [default-Parameter](https://www.datacamp.com/community/tutorials/wordcloud-python) festgelegt.
+Die Erläuterungen der einzelnen Parameter stammen von der eben genannten Quelle.
 
-**`background_color`**: color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
+`background_color`: 
+color value - z.B. `white`, `black`, `red` etc. Wenn der Hintergrund transparent sein soll,
 muss hier `None` angegeben werden und bei `mode` `RGBA`
 
-**`width`**: 
+`width`: 
 int - Breite der Wordcloud in Pixeln
 
-**`height`**: 
+`height`: 
 int - Höhe der Wordcloud in Pixeln
 
-**`collocations`**: 
-bool - <!--TODO-->
+`collocations`: 
+[bool ](#boolean) - Ob Kollokationen (Bigramme) von zwei Wörtern einbezogen werden sollen
 
-**`max_font_size`**: 
+`max_font_size`: 
 int - Schriftgröße des Wortes, welches am häufigsten im angegebenen Text vorkommt
 
-**`max_words`**: 
+`max_words`: 
 int - Maximale Anzahl an Wörtern, die in der Wordcloud dargestellt werden
 
-**`contour_width`**: 
+`contour_width`: 
 int - Breite der Kontur/Umrandung der Maske bzw. der Form der Wordcloud
 
-**`contour_color`**: 
+`contour_color`: 
 color value - Farbe der Kontur/Umrandung
 
-**`font_path`**: 
-str - Relativer Pfad zur Schriftart (Default: Dosis-Medium.ttf)
+`font_path`: 
+[str](#string) - Relativer Pfad zur Schriftart (Default: Dosis-Medium.ttf)
 
-**`prefer_horizontal`**: 
-float - <!--TODO-->
+`prefer_horizontal`: 
+float - Verhältnis der Zeiten für den Versuch einer horizontalen Anpassung im Gegensatz zu einer vertikalen Anpassung.
+<1: Der Algorithmus rotiert das Wort, wenn es nicht passt.
 
-**`scale`**: 
-float/int - <!--TODO-->
+`scale`: 
+float - Skalierung zwischen Berechnung und Darstellung. Für große Wordclouds sollte `scale` anstelle einer größeren `width`/`height` verwendet werden, da `scale` schneller ist, könnte jedoch zu einer gröberen Anpassung der Wörter führen.
 
-**`min_font_size`**: 
+`min_font_size`: 
 int - Schriftgröße des Wortes, welches am seltensten im angegebenen Text vorkommt
 
-**`font_step`**: 
+`font_step`: 
 int - Änderung der Schriftgröße bei den Wörtern, je häufiger ein Wort vorkommt, desto größer ist es dargestellt
 
-**`mode`**: 
+`mode`: 
 `RGB`. Wenn der Hintergrund transparent sein soll, muss `RGBA` angegeben werden und bei `background_color` `None`
 
-**`relative_scaling`**: 
-float - <!--TODO-->
+`relative_scaling`: 
+float - Bedeutung der relativen Worthäufigkeiten für die Schriftgröße.
+0: es werden nur Wortfolgen berücksichtigt
+1: ein Wort, das doppelt so häufig vorkommt, hat die doppelte Schriftgröße
+.5: Berücksichtigung der Worthäufigkeiten und nicht nur des Rangs
 
-**`color_func`**: 
+`color_func`: 
 callable - Interne Funktion zur Darstellung eines Farbverlaufs mittel hsl-Darstellung. Überschreibt `colormap`, wenn color_func nicht `None` ist.
 
-**`regexp`**: 
-None, <!--TODO-->
+`regexp`: 
+None - Regulärer Ausdruck zum Aufteilen des Eingabetextes (None verwendet: `r"\w[\w']+"`). Bleibt None, da JSON nicht gut mit regulären Ausdrücken klarkommt. 
 
-**`colormap`**: 
+`colormap`: 
 colormap (callable) von matplotlib - viridis, magma, inferno, plasma
 
-**`normalize_plurals`**: 
-bool - <!--TODO-->
+`normalize_plurals`: 
+[bool ](#boolean) - Wenn `true` wird bei Wörtern das hintere "s" entfernt, wenn das Wort mit und ohne "s" am Ende des Wortes vorkommt. Zählung der Häufigkeit zu der Version ohne "s" am Ende, es sei denn, das Wort hat am Ende "ss".
 
-**`stopwords`**: 
-set of str - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
+`stopwords`: 
+set of [str](#string) - Wörter, die zwar im Text vorkommen, aber nicht in der Wordclud dargestellt werden sollen
 
-**`repeat`**:
-bool - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
+`repeat`:
+[bool ](#boolean) - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
 
-**Beispiel** 
-
+**Beispiele** 
 ```JSON
 {
     "type": "wordcloud",
@@ -2235,6 +2705,12 @@ bool - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud 
 }
 ```
 
+<figure>
+  <img width="100%" src="../_static/images/documentation/wordcloud_circle.png"/>
+  <figcaption>Wordcloud zum Thema Bundesliga (mit "figure": "circle")</figcaption>
+</figure>  
+<br>
+
 #### Wordcloud mit nur einem Wort
 Zum Generieren einer Wordcloud, die nur ein Wort enthält, muss `repeat` auf `True` gesetzt werden. Der Textstring `text`
 soll nur das Wort enthalten, welches wiederholt werden soll.
@@ -2242,21 +2718,24 @@ soll nur das Wort enthalten, welches wiederholt werden soll.
 #### Wordcloud transparent
 Möchte man eine Wordcloud mit transparentem Hintergrund, so hat man mehrere Möglichkeiten.
 Will meine eine Wordcloud der Form `square` so kann man in der JSON folgendes angeben:
-"mode": "RGBA",
-"background_color": None
+`"mode": "RGBA",
+"background_color": None`
 
 **Alternativ für `square` und `circle` möglich**:
 
 Erstellen einer Wordcloud mit weißem Hintergrund.
-"mode": "RGB" (default),
-"background_color": "white" (default)
+`"mode": "RGB"` (default),
+`"background_color": "white"` (default)
 
 Im Image-Overlay:
-"color": "RGBA",
-"color_transparency": "FFFFFF"
+`"color": "RGBA",
+"color_transparency": "FFFFFF"`
 
-Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
-und `circle`empfohlen.
+```note::
+  Da ersteres nur in der JSON und nicht bei der Job-Erstellung angegeben kann, wird die Alternative für `square` 
+  und `circle`empfohlen.
+```
+
 <!--TODO-->
 
 #### Text oder Dictionary hinterlegen
@@ -2266,9 +2745,16 @@ Um eine Wordcloud zu erstellen kann man zwei verschiedene Datenstrukturen angebe
 
 Der Key `text` wird angegeben und dahinter muss ein Verweis auf einen String stehen.
 
+**Beispiel 1**
 ```JSON
 {
 "text": "{_req|text}"
+}
+```
+**Beispiel 2**
+```JSON
+{
+"text": "Dieser Text dient der Erstellung einer Wordcloud und enthält Wörter für die Wordcloud."
 }
 ```
 
@@ -2276,9 +2762,17 @@ Der Key `text` wird angegeben und dahinter muss ein Verweis auf einen String ste
 
 Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary stehen.
 
+**Beispiel 1**
 ```JSON
 {
 "dict": "_req|dict"
+}
+```
+
+**Beispiel 2**
+```JSON
+{
+"dict": {"Hund": 4, "Katze":  2, "Maus":  13, "Haus":  2, "Garten": 5, "Wiese":  1}
 }
 ```
 
@@ -2286,37 +2780,41 @@ Der Key `dict` wird angegeben und dahinter muss ein Verweis auf ein Dictionary s
 #### Stopwords
 
 Stopwords sind Wörter, die in der Wordcloud nicht vorkommen sollen. Man kann sie bei der Joberstellung angeben. 
+Des Weiteren können generelle verbotene Wörter zur Textdatei `stopwords.txt` im Ordner `resources/stopwords` hinzugefügt werden.
 
 ## Thumbnail
 
-In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann,
-sofern in der config angegeben neben dem Video zusätzlich erstellt
+Für ein generiertes Video lässt sich bei Bedarf ein Thumbnail erstellen.
+Für einen Thumbnail kann man ein bereits für das Video erstellte Bild wählen oder ein neues Bild erstellen. 
 
-```JSON
-{
-  "thumbnail": {
-    "type": "new"
-  }
-}
+Nützlich ist dies zum Beispiel bei einer Übersichtsseite wie z.B. [hier](https://biebertal.mach-mit.tv/gemeinde/).
+Das Thumbnail gibt eine Vorschau auf den Inhalt des Videos.
 
-```
+**Beispiel**
+
+![Thumbnail Beispiel](../_static/images/usage/thumbnail.png)
 
 ### created
+Das gewünschte Thumbnail-Bild, wurde schon zuvor erstellt.
+In diesem Fall nutzt man unter `name` einfach den Internen Bildnamen des Bildes was zuvor schon definiert wurde
 
+**Beispiel**
 ```JSON
 {
  "type": "created",
  "name": "wordcloud_all"   
 }
-
 ```
 
-**`name`**:  
-str - Angabe des Internen Namen des bereits erstellten Bildes
+`name`:  
+[str](#string) - Angabe des internen Namens des bereits erstellten Bildes
 
 
 ### new
+den Typ `new` verwendet man wenn mann kein bisher erstelltest Thumbnail verwenden möchte, dazu muss man dann unter `image` ein image angeben
+Das Image wird mit dem selbem Style wie unter [image](####image) anegegeben
 
+**Beispiel**
 ```JSON
 {
   "type": "new",
@@ -2327,11 +2825,10 @@ str - Angabe des Internen Namen des bereits erstellten Bildes
      ]
   } 
 }
-
 ```
 
-**`image`**:  
-dict - Hier wird ein Bild spezifiziert wie unter `images` erläutert
+`image`:  
+[dict ](#dict ) - Hier wird ein Bild spezifiziert wie unter [image](####image) erläutert.
 
 ## Audios
 
@@ -2340,6 +2837,7 @@ Der Abschnitt `audios` beinhaltet die Texte, die in eine Audio-Datei umgewandelt
 Video zusammengeschnitten. Die verschiedenen `parts`-Typen können mehrere Male hintereinander mit ihren Parametern
 angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede Audiodatei erhält noch einen Key als Dateinamen:
 
+**Beispiel**
 ```JSON
 {
   "audio": {
@@ -2357,7 +2855,6 @@ angegeben werden, je nachdem wie viele Audiodateien generiert werden soll. Jede 
 Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2373,8 +2870,8 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 }
 ```
 
-**`pattern`**:  
-str - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
+`pattern`:  
+[str](#string) - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein **formatted string** möglich.
 
 ### compare
 
@@ -2382,7 +2879,6 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert größer, klein
 String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2416,23 +2912,23 @@ String mithilfe eines weiteren `parts`-Typen aus, der dann in eine Audiodatei um
 }
 ```
 
-**`value_left`**:  
+`value_left`:  
 str, int - Der Wert, der beim Vergleich auf der linken Seite steht. 
 
-**`value_right`**:   
+`value_right`:   
 str, int - Der Wert, der beim Vergleich auf der rechten Seite steht.
 
-**`on_equal`**:   
-callable - Optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+`on_equal`_(optional)_:   
+callable - optional, wenn `on_not_equal` oder `on_higher` und `on_lower` angegeben ist. Wenn `value_left` und `value_right` gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_not_equal`**:   
-callable - Optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
+`on_not_equal`_(optional)_:   
+callable - optional, wenn `on_equal` angegeben ist. Wenn `value_left` und `value_right` nicht gleich sind, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_higher`**:   
-callable - Optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+`on_higher`_(optional)_:   
+callable - optional. Wenn `value_left` größer ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_lower`**:   
-callable - Optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
+`on_lower`_(optional)_:   
+callable - optional. Wenn `value_left` kleiner ist als `value_right`, wird der angegebene `parts`-Typ aufgerufen.
 
 #### option
 
@@ -2440,7 +2936,6 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 `parts`-Typen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "parts": [
@@ -2468,13 +2963,13 @@ Dieser `parts`-Typ wählt aus je nachdem, ob ein bestimmter Wert `true` oder `fa
 }
 ```
 
-**`check`**:   
+`check`:   
 str, int - Der Wert, der auf true oder false geprüft werden soll.
 
-**`on_true`**:   
+`on_true`_(optional)_:   
 callable - optional, wenn `on_false` angegeben ist. Wenn `check` true ist, wird der angegebene `parts`-Typ aufgerufen.
 
-**`on_false`**:   
+`on_false`_(optional)_:   
 callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird der angegebene `parts`-Typ aufgerufen.
 
 ### random_text
@@ -2482,7 +2977,6 @@ callable - optional, wenn `on_true` angegeben ist. Wenn `check` false ist, wird 
 Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in eine Audiodatei umgewandelt wird.
 
 **Beispiel** 
-
 ```JSON
 {
     "type": "random_text",
@@ -2494,14 +2988,17 @@ Dieser `parts`-Typ wählt aus mehreren gegebenen Strings einen aus, der dann in 
 }
 ```
 
-**`pattern`**:   
-array of str - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
+`pattern`:   
+array of [str](#string) - Mehrere Texte als Strings. Es wird zufällig einer dieser Texte ausgewählt und in
 Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
 ## Sequence
 
-Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
+Im Sequence-Abschnitt wird definiert, wie das Video gerendert wird bzw. in welcher Reihenfolge und Länge die Audios/Bilder abgespielt/gezeigt werden sollen.   
+Der einfachste Typ ist der `successively`-Typ, welcher alle Bilder und Audios 
+aneinanderreiht und jedes Bild so lange zeigt wie die entsprechende Audio lang ist.
 
+**Beispiel**
 ```JSON
 {
  "sequence": {
@@ -2511,16 +3008,17 @@ Im Sequence Teil der JSON kan angegeben werden wie das Video auszusehen hat
 }
 ```
 
-**`transitions`**:  
-float - wie lange das Bildübergängsintervall ist.
+`transitions`:  
+float - Länge des Bildübergangsintervalls 
 
 ### successively
 
-Successively ist der denkbar einfachste Typ der Video Erzeugung, es werden einfach alle Bilder
-und alle Audio in der selben Reihenfolge aneinander gehängt wie sie in der JSOn vorher
-definiert wurden. Jedes Bild wird so lange gezeigt wie die dazu geordnete Audio datei ist.
-Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Audios gibt
+`successively` ist der einfachste Typ der Videoerzeugung, es werden alle Bilder
+und alle Audiodateien in derselben Reihenfolge aneinandergehängt wie sie vorher in der JSON 
+definiert wurden. Jedes Bild wird so lange gezeigt wie die zugeordnete Audiodatei lang ist.
+Dies setzt voraus, dass es eine identische Anzahl von Bildern und Audiodateien gibt.
 
+**Beispiel**
 ```JSON
 {
   "type": "successively"
@@ -2530,17 +3028,17 @@ Dies setzt natürlich vorraus dass es eine identische Anzahl an Bildern sowie Au
 ### custom
 
 `custom` ist ein etwas schwierigerer sequence-Typ, dieser setzt nicht voraus, dass es dieselbe
-Anzahl an Bildern und Audios gibt. Das heißt man kann bestimmte Bilder doppelt oder auch gar nicht verwenden.
+Anzahl an Bildern und Audiodateien gibt. Das heißt man kann bestimmte Bilder doppelt oder auch gar nicht verwenden.
 `custom` funktioniert wie folgt:  
-Die Audios werden in der Reihenfolge aneinander gehängt wie in `audio_l` vorgegeben.  
-Die Bilder werden ebenfalls in der Reihenfolge wie in `image` angeben aneinander gehängt.  
-Jedes Bild wird solange gezeigt wie `time_diff` + Länge des Audios `audio_l`.
-Sollte kein Audio angegeben werden, wird dies als + 0 betrachtet.
+Die Audiodateien werden in der Reihenfolge aneinander gehängt wie in `audio_l` vorgegeben.  
+Die Bilder werden ebenfalls in der Reihenfolge wie in `image` angeben aneinandergehängt.  
+Jedes Bild wird solange gezeigt wie `time_diff` + Länge der Audiodaatei `audio_l`.
+Sollte keine Audiodatei angegeben werden, wird dies als + 0 betrachtet.
 Das heißt alle `time_diff`-Werte aufaddiert, müssen 0 ergeben,
 ansonsten passt die gesamte Audiolänge nicht auf alle Bilder.
 
+**Beispiel**
 ```JSON
-
 {
    "type": "custom",
    "pattern": [
@@ -2561,77 +3059,281 @@ ansonsten passt die gesamte Audiolänge nicht auf alle Bilder.
 }
 ```
 
-**`image`**:  
-str - Name des internen Bildes.
+`image`:  
+[str](#string) - Name des internen Bildes.
 
-**`time_diff`**_(Optional)_:  
-int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer als die Audiodatei angezeigt werden soll.
+`time_diff`_(optional)_:  
+int - Zeit (in Sekunden), welches dieses Bild länger oder kürzer, als die Audiodatei lang, ist angezeigt werden soll.
 
-**`audio_l`**_(Optional)_:  
-str - Name der internen Audiodatei.
+`audio_l`_(optional)_:  
+[str](#string) - Name der internen Audiodatei.
 
 ## run_config
 
-Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer in der Job-Erstellung am Anfang auswählen kann.
+Der Abschnitt `run_config` beinhaltet die Konfigurationen, die der Nutzer bei der Job-Erstellung am Anfang und auch im Frontend auswählen kann.
 
-Bei einem ortsbezogenen Wetterbericht würde dies wie folgt aussehen:
+Wie z.B. Optionen, was die Stimme vorlesen soll und was nicht oder Einstellungen wie z.B. die Farbe der Wörter 
+bei der Wordcloud. Dies kann mithilfe der `transform`-Typen `option` und `compare` erreicht werden. Man gibt mögliche Werte an. 
 
-**Beispiel** 
+Die Werte, die der Benutzer eingibt, werden unter dem Key `_conf|key` gespeichert (siehe [Spezialvariablen](#spezialvariablen)). Wobei `key` dem in der JSON-Datei angegebenen Key entspricht also z. B.: `name`.
+
+### Übersicht
+
+Hier einer übersicht aller möglichen Typen (Diese werden im folgenden genauer beschrieben).
+
+| Name | Beschreibung | Frontend |
+|----|----| ---- |
+|`enum`| Anzahl an Werten|Dropdown-Menü|
+|`string`|String|Textfeld|
+|`multi_string`|Eine Liste von Strings|Textfeld (komma-separierte Eingabe)|
+|`number`|Eine Zahl|Textfeld|
+|`multi_number`|Liste von Zahlen|Textfeld (komma-separierte Eingabe)|
+|`boolean`|`true` oder `false`|Checkbox|
+|`sub_params`|Ein Parameter kann Unterparameter enthalten, welche logisch abhängig von diesem sind| Hängt von den Typen der Unterparameter ab.|
+
+### Basis-Angaben
+
+Die folgenden drei Keys müssen immer angegeben werden.
+
+`type`:
+
+[str](#string) - Hier steht der Typ der Konfiguration. Möglich sind: `enum`, `string`, `multi_string`, `sub_params`, `number`, `multi_number`
+
+`display_name`:
+
+[str](#string) - Name des Parameters wie er im Frontend stehen soll.
+
+`optional`:
+
+[bool](#boolean) - Dieser Parameter gibt an, ob das Feld im Frontend ausgefüllt werden muss oder nicht. Ist der Parameter `true`, so 
+wird ein Sternchen nach dem Display-Namen im Frontend angezeigt. Dieses dient der Markierung dafür, dass dies ein Pflichtparameter ist, bei dem auf jeden Fall ein Parameter ausgewählt werden muss.
+
+Je nachdem welcher Typ gewählt wurde, werden die Werte aus denen ausgewählt werden soll, angegeben.
+
+`default_value`:
+
+Wert mit dem nicht-optionale Paramter im Frontend initialisiert werden. (Wenn optional `true` ist, kann diese Angabe auch weggelassen werden.)
+
+### enum
+
+Um im Frontend eine Auswahl als Dropdown-Menü darzustellen, wird der Typ `enum` verwendet. 
+
+**JSON-Beispiel**
 
 ```JSON
 {
-"run_config": [
-    {
-      "name": "city_name",
-      "display_name": "Ort",
-      "possible_values": [],
-      "default_value": "Biebertal"
-    },
-    {
-      "name": "p_code",
-      "display_name": "Postleitzahl",
-      "possible_values": [],
-      "default_value": "35444"
-    },
-    {
-      "name": "speech_rain",
-      "display_name": "Regenwahrscheinlichkeit",
-      "possible_values": [
-        {
-          "value": true,
-          "display_value": "wird vorgelesen"
-        },
-        {
-          "value": false,
-          "display_value": "wird nicht vorgelesen"
+    "run_config": {
+        "name": {
+          "type": "enum",
+          "display_name": "Liga",
+          "optional": false,
+          "enum_values": [
+            {
+              "value": "1",
+              "display_value": "1. Bundesliga"
+            },
+            {
+              "value": "2",
+              "display_value": "2. Bundesliga"
+            }
+          ]
         }
-      ],
-      "default_value": true
     }
-  ]
 }
 ```
 
-Man kann noch weitere Einstellungen vornehmen, wie z.B. Optionen, was die Stimme genau vorlesen soll und was nicht. Dies
-kann mithilfe der transform-Typen option und compare erreicht werden. Man gibt mögliche Werte (`possible_values`) an
-und einen default-Wert `default_value`. Wird bei der Job-Erstellung keine Auswahl zwischen den möglichen Werten
-vorgenommen, wird automatisch der `default_value` verwendet. Bei der Job-Erstellung erscheinen die möglichen Werte
-als `display_value`.
+Alle [Basis-Angaben](#basis-angaben).
 
-## Presets
+`enum_values`:
+[{}] - Array mit Dictionaries. Ein Dictionary besteht aus `value` und `display_value`.
 
-Presets werden verwendet, um Texte in dem Style wie sie im `preset` angegeben wurden auf die Bilder zu schreiben.
+`value`
+Wert, dem der Key (`name`) in der JSON zugewiesen ist.
+
+`display_value`:
+[str](#string) - Wert, wie er im Frontend dargestellt werden soll. 
+
+```note::
+  Der bei `value` angegebene Wert wird immer als `String` (str) interpretiert.
+```
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_enum.png)
+
+### string 
+Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
+
+**JSON-Beispiel**
 
 ```JSON
 {
+    "city_name": {
+      "type": "string",
+      "display_name": "Ort",
+      "optional": false,
+      "default_value": "Gießen"
+    }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_string.png)
+
+### multi_string
+
+Hier können komma-separierte Strings eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
+
+**JSON-Beispiel**
+
+```JSON
+{
+    "hashtags": {
+      "type": "multi_string",
+      "display_name": "Hashtags (z. B.: Bundesliga, Fußball)",
+      "optional": false,
+      "default_value": []
+    }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_multi_string.png)
+
+### boolean
+Mit dem Typ `boolean` kann ein Parameterauf `true` bzw. `false` gesetzt werden. Dieser Parameter wird im Frontend mit einer Checkbox angezeigt.
+
+**JSON-Beispiel**
+
+```JSON
+{
+     "read": {
+        "type": "boolean",
+        "display_name": "Gefühlte Temperaturen (2 Tage)",
+        "optional": false,
+        "default_value": true
+     }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_boolean.png)
+
+
+### sub_params
+Ist der obere Wert `true` so gibt es weitere Parameter, die ausgeklappt werden, wenn der Parameter auf `true` gesetzt wurde. 
+Der Parameter, der auf `true` bzw. `false` gesetzt werden kann, wird im Frontend mit einer Checkbox angezeigt.
+
+**JSON-Beispiel**
+```JSON
+{
+    "color_func": {
+      "type": "sub_params",
+      "display_name": "Farbverlauf",
+      "optional": true,
+      "sub_params": {
+        "color": {
+          "type": "string",
+          "display_name": "Farbe",
+          "optional": false,
+          "default_value": "black"
+        }
+      },
+      "default_value": false
+    }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+`sub_params`
+weitere [Parametertypen](#run-config), die ausgewählt werden können.
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_sub_params.png)
+
+```note::
+  Wenn optional `true` ist, wird zusätzlich eine Checkbox angezeigt.
+```
+
+### number
+Hier kann eine Zahl eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
+
+**JSON-Beispiel**
+
+```JSON
+{
+    "city_name": {
+      "type": "number",
+      "display_name": "Postleitzahl",
+      "optional": false,
+      "default_value": 35390
+    }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_number.png)
+
+### multi_number
+Hier können komma-separierte Zahlen eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
+**JSON-Beispiel**
+```JSON
+{
+    "temperatur": {
+      "type": "multi_number",
+      "display_name": "Temperaturen",
+      "optional": false,
+      "default_value": []
+    }
+}
+```
+
+Alle [Basis-Angaben](#basis-angaben).
+
+**Frontend-Beispiel**
+
+![Beispiel](../_static/images/usage/run_config_multi_number.png)
+
+## Presets
+
+Da es häufiger mal vorkommt, dass man Konfigurationen mehrfach benötigt, kann man sogenannte `presets` verwenden, 
+um doppelte Einträge in der JSON-Datei zu vermeiden. Diese werden unter dem Abschnitt `"presets"` definiert. Innerhalb 
+der restlichen JSON-Datei kann man diese dann mit `"preset": "key"` verwenden.
+
+**Beispiele**
+
+![Beispiel für ein Preset](../_static/images/usage/presets.gif)
+
+```JSON
+{
+ "images": {
+   "beispiel": {
+     "type": "pillow",
+     "preset": "test_preset_1"
+   },
+ },
  "presets": {
     "test_preset_1": {
-      "colour": "black",
+      "color": "black",
       "font_size": 74,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "test_preset_2": {
-      "colour": "white",
+      "color": "white",
       "font_size": 35,
       "font": "fonts/Dosis-Bold.ttf"
     }
@@ -2639,14 +3341,14 @@ Presets werden verwendet, um Texte in dem Style wie sie im `preset` angegeben wu
 }
 ```
 
-**`colour`**:  
-str/hex - Farbe des Textes, kann ein Name sein aber auch eine Hexzahl.
+```warning::
+  Hierbei ist zu beachten, dass man **Presets** nur auf einer Ebene angeben kann, die auch eine `type`-Definition enthält.
+  (Die Verwendung einer `type`-Angabe innerhalb eines Presets ist also nicht möglich.) Des Weiteren werden beim Einfügen,
+  der in `presets` angegebenen Keys, keine Arrays gemerged. Hat also ein Preset eine Key-Definition, und in der normalen 
+  Definition ist dieser Key auch vorhanden, wird der Wert des Presets verwendet.
+```
 
-**`font_size`**:  
-int - Größe des Textes
+### Globale Presets
 
-**`font`**:  
-str - Name des relativen Pfads vom resource-Ordner zu der Font-Datei.
-
-**`"test_preset_1"`, `"test_preset_2":`**  
-str - Die internen Namen der presets, sodass man sie in Images mit dem Name der hier angegeben wurde verwenden kann.
+Um Presets bei mehreren Themen zu verwenden, gibt es `Globale Presets`. Diese können im [Themen-Ordner (`steps`)](#pfade) 
+in der Datei `global_presets` definiert werden.

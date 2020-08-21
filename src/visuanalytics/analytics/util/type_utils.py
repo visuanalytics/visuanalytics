@@ -7,19 +7,19 @@ from visuanalytics.util.dict_utils import merge_dict
 
 
 def register_type_func(types: dict, error: Type[StepError], func):
-    """ Registriert die übergebene Funktion,
+    """ Registriert die übergebene Funktion
     und versieht sie mit einem try-except-Block.
 
-    :param types: Dictionary, in dem der Typ registriert werden soll
-    :param error: Fehler, der geworfen werden soll
-    :param func: zu registrierende Funktion
-    :return: Funktion mit try-catch-Block
+    :param types: Dictionary, in dem der Typ registriert werden soll.
+    :param error: Fehler, der geworfen werden soll.
+    :param func: Zu registrierende Funktion.
+    :return: Funktion mit try-catch-Block.
     """
     func = raise_step_error(error)(func)
 
     @functools.wraps(func)
     def type_func(values: dict, data: StepData, *args, **kwargs):
-        # Replace presets
+        # replace presets
         if "preset" in values:
             # TODO (Max) may give values a higher prio
             merge_dict(values, data.get_preset(values["preset"]))
@@ -38,7 +38,8 @@ def register_type_func_no_data(types: dict, error: Type[StepError], func):
 
 
 def get_type_func(values: dict, types: dict, key="type"):
-    """ Hilfsfunktion um die Typ-Funktion aus einem Dictonary zu bekommen.
+    """
+    Hilfsfunktion, um die Typfunktion aus einem Dictonary zu bekommen.
 
     Ist der Typ (Eintrag in `types`) nicht vorhanden, wird ein `StepTypeError` geworfen.
 

@@ -1,3 +1,8 @@
+"""
+
+"""
+
+
 def get_new_key(values: dict):
     """
     :param values: Werte aus der JSON-Datei

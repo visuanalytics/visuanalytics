@@ -1,3 +1,7 @@
+"""
+Scheduler Oberklasse welche sich darum kümmert das ein Video zur richtigen zeit gerendert wird.
+"""
+
 import functools
 import logging
 import re

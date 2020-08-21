@@ -1,6 +1,6 @@
 # Python Style-Guide
 
-Grundlegender Style-Guide für Python Source-Code-Dateien.
+Grundlegender Style-Guide für Python Source-Code-Dateien des Projekts. 
 
 ## Module
 

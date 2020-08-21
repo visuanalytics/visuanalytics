@@ -1,6 +1,5 @@
 """
-Modul mit Funktionen zur Berechnung und Umwandlung von Daten aus einer API.
-
+Modul mit Funktionen zur Berechnung und Umwandlung von Daten.
 """
 import numbers
 import re
@@ -20,6 +19,7 @@ from visuanalytics.analytics.util.type_utils import get_type_func, register_type
 from visuanalytics.util import resources
 
 TRANSFORM_TYPES = {}
+"""Ein Dictionary bestehend aus allen Transform-Typ-Methoden.  """
 
 
 @raise_step_error(TransformError)
@@ -39,10 +39,11 @@ def transform(values: dict, data: StepData):
 
 
 def register_transform(func):
-    """Registriert die übergebene Funktion und versieht sie mit einem `"try except"`-Block.
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary TRANSFORM_TYPES hinzu.
 
     :param func: die zu registrierende Funktion
-    :return: Funktion mit try catch Block
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(TRANSFORM_TYPES, TransformError, func)
 
@@ -109,7 +110,8 @@ def select(values: dict, data: StepData):
 
 @register_transform
 def delete(values: dict, data: StepData):
-    """Löscht die angegebenen Keys aus den daten
+    """
+    Löscht die angegebenen Keys aus den daten
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
@@ -375,7 +377,7 @@ def loop(values: dict, data: StepData):
     """
     loop_values = data.deep_format(values.get("values", None), values=values)
 
-    # is Values is none use range
+    # if values is none use range
     if loop_values is None:
         start = data.get_data(values.get("range_start", 0), values, int)
         stop = data.get_data(values["range_stop"], values, int)
@@ -723,7 +725,7 @@ def normalize_words(values: dict, data: StepData):
 def split_string(values: dict, data: StepData):
     """Teilt einen String am angegebenen Trennzeichen.
 
-    Das Trennzeichen können auc mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
+    Das Trennzeichen können auch mehrere Zeichen sein. Soll die Groß- und Kleinschreibung des Trennzeichens (delimiter) ignoriert werden, setzte `ignore_case` auf `true`.
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API

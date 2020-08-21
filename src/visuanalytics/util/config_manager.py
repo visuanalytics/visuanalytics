@@ -17,14 +17,14 @@ def _get_config_path(config_location):
 
 def get_config():
     """
-    Ermöglicht den Zugriff auf die Konfigurations Dateien.
-    Verwendet zuerst die Config datei in `CONFIG_LOCATION`,
-    ist auch eine Config datei  in `CONFIG_PRIVATE_LOCATION` vorhanden
-    werden beide configurationen verwendet, bei dopplungen werden die einstellungen
+    Ermöglicht den Zugriff auf die Konfigurationsdateien.
+    Verwendet zuerst die Konfigurationsdatei in `CONFIG_LOCATION`.
+    Ist auch eine Konfigurationsdatei in `CONFIG_PRIVATE_LOCATION` vorhanden,
+    werden beide Konfigurationen verwendet, bei Doppelungen werden die Einstellungen
     aus `CONFIG_PRIVATE_LOACTION` verwendet.
-    Der key `api_keys` wird von `CONFIG_PRIVATE_LOCATION` entfernt.
+    Der Key `api_keys` wird von `CONFIG_PRIVATE_LOCATION` entfernt.
 
-    :return: Die Konfigurationsdateien in form eines Dictionaries.
+    :return: Die Konfigurationsdateien in Form eines Dictionaries.
     :rtype: dict
     """
 
@@ -45,7 +45,7 @@ def get_config():
         return public_config
 
     except (FileNotFoundError, JSONDecodeError) as e:
-        e.strerror = "Public Configuration file does not exist"
+        e.strerror = "Public configuration file does not exist"
         raise e
 
 
@@ -62,7 +62,7 @@ def get_private():
     Example:
       config = config_manager.get_private()
       print(config["api_keys"]["weatherbit"])
-        => gibt den API-Key auf der Konsole aus
+        => Gibt den API-Key auf der Konsole aus.
     """
     try:
         with open(os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION))) as fh:

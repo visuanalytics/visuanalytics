@@ -12,9 +12,9 @@ DATABASE_LOCATION = ""
 
 
 def open_con():
-    """ Öffnet DB-Verbindung außerhalb von Flask-Kontext.
+    """ Öffnet DB-Verbindung außerhalb des Flask-Kontexts.
 
-    Dieese Methode wird u.a. für den DB-Scheduler benötigt, welcher unabhängig vom Flask-Server ausgeführt wird,
+    Dieese Methode wird u.a. für den DB-Scheduler benötigt, welcher unabhängig vom Flask-Server ausgeführt wird.
     """
     con = sqlite3.connect(
         DATABASE_LOCATION,
@@ -25,7 +25,7 @@ def open_con():
 
 
 def open_con_f():
-    """ Öffnet DB-Verbindung innerhalb von Flask-Kontext.
+    """ Öffnet DB-Verbindung innerhalb des Flask-Kontexts.
 
     Diese Methode wird in den Endpunkt-Handler-Methoden verwendet.
     """
@@ -39,7 +39,7 @@ def open_con_f():
 
 
 def close_con_f(e=None):
-    """ Schließt DB-Verbindung innerhalb von Flask-Kontext.
+    """ Schließt DB-Verbindung innerhalb des Flask-Kontexts.
     """
     db = flask.g.pop('db', None)
     if db is not None:
@@ -47,10 +47,10 @@ def close_con_f(e=None):
 
 
 def init_db(topics: list, db_path: str):
-    """ Initialisiert DB außerhalb von Flask-Kontext.
+    """ Initialisiert DB außerhalb des Flask-Kontexts.
 
-    Nur, wenn noch keine Datenbank im "instance"-Ordner angelegt ist, wird eine neue erstellt.
-    :param topics: Liste mit allen Themen
+    Nur wenn noch keine Datenbank im "instance"-Ordner angelegt ist, wird eine neue erstellt.
+    :param topics: Liste mit allen Themen.
     """
     global DATABASE_LOCATION
     DATABASE_LOCATION = resources.path_from_root(db_path)
@@ -67,11 +67,11 @@ def init_db(topics: list, db_path: str):
 
         _init_topics(topics)
 
-        logger.info("Database Initialisation Done!")
+        logger.info("Database initialisation done!")
 
 
 def _init_topics(topics: list):
-    logger.info("Initialize Topics ...")
+    logger.info("Initialize topics ...")
 
     with open_con() as con:
         for topic in topics:

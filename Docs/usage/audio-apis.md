@@ -1,16 +1,16 @@
-# Audio Configuration
+# Audiokonfiguration
 
 Die Audioeinstellungen können in der Datei `instance/config.json` angegeben werden.
 
 ## Default
 
-Stellt man in `instance/config.json` nichts ein, wird das Python-module `gtts` verwendet. Aber auch dort kann man noch ein paar Einstellungen vornehmen:
+Stellt man in `instance/config.json` nichts ein, wird das Python-Module `gtts` verwendet. Aber auch dort kann man noch ein paar Einstellungen vornehmen:
 
 `config.json`:
 
 ~~~jsonc
 {
-  // ... Rest der Config
+  // ... Rest der Konfiguration
   "audio": {
     "type": "default",
     "lang": "de",
@@ -21,28 +21,30 @@ Stellt man in `instance/config.json` nichts ein, wird das Python-module `gtts` v
 
 `lang`: 
 
-Sprache die verwendet wird.
+Sprache, die verwendet werden soll.
 
 `format`: 
 
-Output-Format der Audiodatei.
+Output-Format der Audiodatei. Z.B. mp3
 
 ## Custom
 
-Verwendet man den `Configurations` type custom, kann man folgendes einstellen:
+Verwendet man den Konfigurations-Typ `custom`, kann man folgendes einstellen:
+
+_(Ein vollständiges Beispiel, wie man Microsoft Azure einbinden kann, finden Sie [hier](#beispiel))_
 
 `config.json`:
 
 ~~~jsonc
 {
-  // ... Rest der Config
+  // ... Rest der Konfiguration
   "audio": {
     "type": "custom",
     "prepare": {
-      // ... request Einstellungen
+      // ... Request-Einstellungen
     },
     "generate": {
-      // ... request Einstellungen
+      // ... Request-Einstellungen
     },
     "post_generate": {
       "file_extension": "mp3",
@@ -52,65 +54,99 @@ Verwendet man den `Configurations` type custom, kann man folgendes einstellen:
 }
 ~~~
 
-`prepare` (Optional):
+`prepare`_(optional)_:
 
-Hier können **Requests** angegeben werden, die vor der Generation aller Audios ausgeführt werden sollen. Diese werden also nur **einmal** pro Videogenerierung aufgerufen. Die Syntax für die Definition der Requests befindet sich im Abschnitt [Requests](#Requests).
+Hier können **Requests** angegeben werden, die vor der Generierung aller Audiodateien ausgeführt werden sollen. Diese 
+werden also nur **einmal** pro Videogenerierung aufgerufen. Die Syntax für die Definition der Requests befindet sich im 
+Abschnitt [Requests](#requests).
 
 ```note::
-  Dies kann nützlich sein um z.B. eine Acces Token zu bekommen.
+  Dies kann nützlich sein um z.B. eine Acces-Token zu bekommen.
 ```
 
 `generate`:
 
-Hier können **Requests** angegeben werden, die zur Generierung der Texte verwendet werden. Diese werde pro Videogenerierung **mehrfach** ausgeführt. Die Syntax für die Definition der Requests befindet sich im Abschnitt [Requests](#Requests).
+Hier können **Requests** angegeben werden, die zur Generierung der Texte verwendet werden. Diese werden pro 
+Videogenerierung **mehrfach** ausgeführt. Die Syntax für die Definition der Requests befindet sich im Abschnitt 
+[Requests](#requests).
 
-`post_generate` (Optional):
+`post_generate` _(optional)_:
 
-Hier können noch einige Einstellungen angegeben werden, die nach der Generierung verwendet werden:
+Hier können noch einige Einstellungen angegeben werden, die nach der Generierung verwendet werden sollen:
 
 - `file_extension`: 
   
-  Gibt die File extension der Audio datei an.
+  Gibt die Dateiendung der Audiodatei an.
     
-  Diese Angabe ist nur notwendig, wenn der Response-body json-Daten enthält,
-  kann aber immer angegeben werden. Wurde die `file_extension` nicht angegeben und es handelt sich um `audio` Daten, wird der Datentyp automatisch anhand es `content-type` im Header bestimmt.
+  Diese Angabe ist nur notwendig, wenn der Response-Body JSON-Daten enthält, kann aber immer angegeben werden. 
+  Wurde die `file_extension` nicht angegeben und es handelt sich um `audio`-Daten, wird der Datentyp automatisch anhand 
+  des `content-type` im Header bestimmt.
 
 - `json_key`:
  
   Key des Audio-Strings.
     
-  Wird nur benötigt, wenn der Response-body json-Daten enthält. Dieser Key sollte zu dem String, der die Audio daten enthält, zeigen. Dieser wird dann mit `base64` decodiert und mit der angegebenen `file_extension` gespeichert und verwendet.
+  Wird nur benötigt, wenn der Response-Body JSON-Daten enthält. Dieser Key sollte zu dem String zeigen, der die Audiodaten enthält.
+  Dieser wird dann mit `base64` dekodiert und mit der angegebenen `file_extension` gespeichert und verwendet.
 
 
 ### Keys
 
-Um auf die Daten(Konfigurations Dateien, den Text, vorherige Requests)  zugreifen zu können gibt es eine Syntax:
+Um auf die Daten (Konfigurationsdateien, den Text, vorherige Requests) zugreifen zu können, gibt es eine Syntax:
 
-- Die einzelen `keys` zu den Werten werden durch ein `|` (Pipe) Symbol getrennt. (also z.B.: `_audio|text`)
-- Zwichen einem normalen Json `Objekt` (In Python `dictionary`) und einem Array gibt es in der Syntax keine Unterschide, man kann diese also gleich verwenden (also z.B.: `_audio|0|test`)
-- will man in einem Value-String (in `config.json`) einen Wert aus einem Key einsetzen, muss man diesen Key in `{}` schreiben.
+- Die einzelen `keys` zu den Werten werden durch ein `|` (Pipe) Symbol getrennt (also z.B.: `_audio|text`).
+- Zwischen einem normalen JSON-`Objekt` (in Python `dictionary`) und einem Array gibt es in der Syntax keine Unterschiede.
+    Man kann diese also gleich verwenden (z.B.: `_audio|0|test`)
+- Will man in einem Value-String (in `config.json`) einen Wert aus einem Key einsetzen, muss man diesen Key in `{}` schreiben.
 
-#### Spezial Variablen
+**Beispiel**
 
-`Spezial Variablen die überall möglich sind`: 
+Will man die Stimme von Microsoft Azure verwenden, so muss zuerst ein Anfrage für das `Access-Token` getätigt werden. Dazu wird wie oben beschrieben der Request in [prepare](#custom) geschrieben.
 
-- unter `_conf` befinden sich alle Konfigurationen, die in der `jobs.json` als config angegeben werden.
-- bei den Requests gibt es noch die Variable `_api_key` (Erklärung siehe [Api Requests](#api-requests))
+~~~jsonc
+"prepare": {
+  "type": "request",
+  "api_key_name": "azure",
+  "url_pattern": "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+  "method": "post",
+  "headers": {
+    "Ocp-Apim-Subscription-Key": "{_api_key}"
+  },
+~~~
+
+Um im folgenden Request auf das Token zugreifen zu können, verwendet man nun `{_audio|pre}`, um an den Wert zu gelangen.
+
+Im aktuellen Beispiel kann also im folgenden Request unter `"Authorization"` der Acces-Token verwendet werden.
+
+~~~jsonc
+"headers": {
+  "Authorization": "Bearer {_audio|pre}",
+  "Content-type": "application/ssml+xml; charset=utf-8",
+  "X-Microsoft-OutputFormat": "audio-24khz-96kbitrate-mono-mp3",
+  "User-Agent": "Mozilla/5.0"
+},
+~~~
+#### Spezialvariablen
+
+**Spezialvariablen, die überall möglich sind**: 
+
+- Unter `_conf` befinden sich alle Konfigurationen, die in der `jobs.json` als `config` angegeben werden.
+- Bei den Requests gibt es noch die Variable `_api_key` (Erklärung siehe [Api Requests](#api-requests))
 
 
-`Spezial Variablen die nur unter generate möglich sind`:
+**Spezialvariablen, die nur unter `generate` möglich sind**:
 
-- unter `_audio|pre` befindet sich die Antworten der dort definierten requests.
-- unter `_audio|text` befindet sich der zu generierende Text.
+- Unter `_audio|pre` befinden sich die Antworten der dort definierten Requests.
+- Unter `_audio|text` befindet sich der zu generierende Text.
 
 
-### API Requests
+### API-Requests
 
-Es gibt zwei verschidene Request-Typen die verwendet werden können:
+Es gibt zwei verschiedene Request-Typen die verwendet werden können:
 
 #### request
 
-Führt einen **Https** Request durch.
+Führt einen **https**-Request durch.
 
 ```JSON
 {
@@ -128,56 +164,56 @@ Führt einen **Https** Request durch.
 
 **`url_pattern`**:
 
-Die zu verwendende `url`.
+Die zu verwendende URL.
 
 ```note::
-  Format Strings werden unterstützt.
+  Formatted Strings werden unterstützt.
 ```
 
-**`api_key_name`** _(Optional)_:
+**`api_key_name`** _(optional)_:
 
-Der Name des Api-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
+Der Name des API-Keys. Dieser **Name** muss mit einem **Key** in der Konfigurationsdatei übereinstimmen.
 
 - _Fehler_:
 
-  - `ApiKeyError` -> Name in Config nicht gefunden.
+  - `ApiKeyError` -> Name in Konfigurationsdatei nicht gefunden.
 
-- _Special Variablen_:
+- _Spezialvariablen_:
 
-  - `api_key` -> Beinhaltet den Api-Key hinter `api_key_name`
+  - `api_key` -> Beinhaltet den API-Key hinter `api_key_name`
 
-**`method`** _(Optional)_:
+**`method`** _(optional)_:
 
-Die zu verwendende Http/Https **Methode**. 
+Die zu verwendende http/https-**Methode**. 
 
-- _Standart_: `get`
+- _Standard_: `get`
 
-**`headers`** _(Optional)_:
+**`headers`** _(optional)_:
 
-Der zu verwendenden Request **header**.
+Der zu verwendenden Request-**Header**.
 
-**`body`** _(Optional)_:
+**`body`** _(optional)_:
 
-Der zu verwendende Request-Body. Dieser kann entweder ein Json-Objekt oder ein String sein (Für Definition des Typen siehe `body_type`).
+Der zu verwendende Request-Body. Dieser kann entweder ein JSON-Objekt oder ein String sein (für Definition des Typen siehe `body_type`).
 
-**`body_type`** _(Optional)_:
+**`body_type`** _(optional)_:
 
-Der Datentype des Bodys.
+Der Datentyp des Bodys.
 
 - _mögliche Werte_:
-  - `json` (Standart)
+  - `json` (default)
   - `Other`
 
-**`body_encoding`** _(Optional)_:
+**`body_encoding`** _(optional)_:
 
-Die Encodierung mit welcher der Wert in `body_type` encodiert werden soll (z.B.: `utf-8`).
+Die Kodierung mit welcher der Wert in `body_type` kodiert werden soll (z.B.: `utf-8`).
 
 **`response_format`**:
 
-Der Datentype des Response-Bodys.
+Der Datentyp des Response-Bodys.
 
 - _mögliche Werte`_:
-  - `json` (Standart)
+  - `json` (default)
   - `text`
   - `Other`
 
@@ -185,7 +221,7 @@ Der Datentype des Response-Bodys.
   Falls man bei `generate` eine Audiodatei zurückbekommt, muss man diesen Wert auf `Other` setzen.
 ```
 
-#### request Multiple Custom
+#### request_multiple_custom
 
 Führt mehrere Requests nacheinander durch.
 
@@ -201,13 +237,14 @@ Führt mehrere Requests nacheinander durch.
 
 **`requests`**:
 
-Hier können mehrere [requests](#request) angegeben werden. Diese werden dann nacheinander ausgeführt. Die Responses werden in einem Array an der jeweiligen Position gespeichert. Diese können dann später z.B. so verwendet werden: `_audio|pre|0`.
+Hier können mehrere [Requests](#request) angegeben werden. Diese werden dann nacheinander ausgeführt. Die Responses 
+werden in einem Array an der jeweiligen Position gespeichert. Diese können dann später z.B. so verwendet werden: `_audio|pre|0`.
 
 ```note::
-  Bei den Requests, die in `generate` ausgeführt werden, werden die Daten etwas anders gespeichert. Dort wird ein Json-Objekt (In Python `Dictionoray`) mit zwei Keys gespeichert. Zum einen `headers`, enthält alle response Headers und zum anderen `content`, welches die Response-Body enthält.
+  Bei den Requests, die in `generate` ausgeführt werden, werden die Daten etwas anders gespeichert. Dort wird ein JSON-Objekt (in Python `Dictionoray`) mit zwei Keys gespeichert. Zum einen `headers`, enthält alle Response-Headers, und zum anderen `content`, welches den Response-Body enthält.
 ```
 
-**`audio_key`** _(Bei Prepare Optional)_:
+**`audio_key`** _(bei Prepare optional)_:
 
 Gibt an, welcher der Requests die Audiodatei enthält.
 
@@ -219,7 +256,7 @@ Gibt an, welcher der Requests die Audiodatei enthält.
 
 #### Verwendung des Azure (Microsoft) TTS Services
 
-Config zur Verwendung des Azure TTs Service:
+Konfiguration zur Verwendung des Azure TTS Service:
 
 `config.json`:
 
@@ -257,18 +294,18 @@ Config zur Verwendung des Azure TTs Service:
 }
 ~~~
 
-Des Weiteren muss noch der Api Key in der `config.json` hinzugefügt werden:
+Des Weiteren muss noch der API-Key in der `config.json` hinzugefügt werden:
 
 ~~~jsonc
 {
   "api_keys": {
-    // ... Restliche API Keys
+    // ... Restliche API-Keys
     "azure": "api_key"
   }
-  // ... Restliche Config
+  // ... Restliche Konfiguration
 }
 ~~~
 
 ```note::
-  `api_key` muss durch den eigentlichen API-Key ersetzt werden
+  `api_key` muss durch den eigentlichen API-Key ersetzt werden.
 ```

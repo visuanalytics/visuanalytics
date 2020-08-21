@@ -13,7 +13,7 @@ INTERVAL = {"minute": {"minutes": 1}, "quarter": {"minutes": 15}, "half": {"minu
 
 
 def get_job_schedules():
-    """ Gibt alle angelegten jobs mitsamt ihren Zeitplänen zurück.
+    """ Gibt alle angelegten Jobs mitsamt ihren Zeitplänen zurück.
 
     """
     with db.open_con() as con:
@@ -32,7 +32,7 @@ def get_job_schedules():
 
 
 def get_job_run_info(job_id):
-    """Gibt den Namen eines Jobs, dessen Parameter sowie den Namen der zugehörigen steps-Json-Datei zurück.
+    """Gibt den Namen eines Jobs, dessen Parameter sowie den Namen der zugehörigen JSON-Datei zurück.
 
     :param job_id: id des Jobs
     """

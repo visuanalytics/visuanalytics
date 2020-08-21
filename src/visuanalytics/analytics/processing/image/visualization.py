@@ -1,5 +1,5 @@
 """
-Modul, welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeinhaltet.
+Modul, welches die grundlegenden Funktionen der verschiedenen Arten zur Bilderzeugung beeinhaltet.
 """
 
 from PIL import Image
@@ -17,11 +17,11 @@ IMAGE_TYPES = {}
 
 
 def register_image(func):
-    """
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary IMAGE_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(IMAGE_TYPES, ImageError, func)
 
@@ -44,7 +44,7 @@ def generate_all_images(values: dict, step_data: StepData):
 @register_image
 def pillow(values: dict, step_data: StepData, prev_paths: dict):
     """
-    Erstellt ein Bild mit Hilfe der Bibliothek Pillow.
+    Erstellt ein Bild mit Hilfe der Python-Bibliothek Pillow.
     Dazu wird ein neues Bild geöffnet oder ein bisher erstelltes Bild weiter bearbeitet.
     In der JSON können beliebige viele Overlays angegeben werden, welche diese Methode alle
     ausführt und auf das Bild setzt.
@@ -76,7 +76,7 @@ def pillow(values: dict, step_data: StepData, prev_paths: dict):
 @register_image
 def wordcloud(values: dict, step_data: StepData, prev_paths):
     """
-    Erstellt ein Wordcloud Bild mit Hilfe der Bibliothek Wordcloud.
+    Erstellt ein Wordcloud Bild mit Hilfe der Python-Bibliothek Wordcloud.
 
     :param values: Image-Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API

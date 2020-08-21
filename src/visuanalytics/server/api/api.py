@@ -29,7 +29,7 @@ def topics():
     """
     Endpunkt `/topics`.
 
-    Die Response enthält die Liste der zur Videogenerierung verfügbaren Themen.
+    Die Response enthält die Liste, der zur Videogenerierung verfügbaren Themen.
     """
     try:
         return flask.jsonify(queries.get_topic_names())
@@ -144,7 +144,7 @@ def jobs():
     """
     Endpunkt `/jobs`.
 
-    Die Response enthält die in der Datenbank angelegten Jobs.
+    Die Response enthält, die in der Datenbank angelegten, Jobs.
     """
     try:
         return flask.jsonify(queries.get_job_list())
@@ -176,7 +176,7 @@ def edit(job_id):
     """
     Endpunkt `/edit`.
 
-    Aktualisert den Job-Datenbank-Eintrag mit der übergebenen id.
+    Aktualisert den Job-Datenbank-Eintrag mit der übergebenen ID.
     Der Request-Body enthält die Informationen, mit denen der Job aktualisert werden soll.
 
     :param id: URL-Parameter <id>
@@ -197,7 +197,7 @@ def remove(job_id):
     """
     Endpunkt `/remove`.
 
-    Löscht den Job-Datenbank-Eintrag mit der übergebenen id.
+    Löscht den Job-Datenbank-Eintrag mit der übergebenen ID.
 
     :param id: URL-Parameter <id>
     :type id: str
@@ -216,7 +216,7 @@ def logs():
     """
     Endpunkt `/logs`.
 
-    Gibt die logs der jobs zurück
+    Gibt die Logs der Jobs zurück
     """
     try:
         return flask.jsonify(queries.get_logs())

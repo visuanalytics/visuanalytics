@@ -1,3 +1,8 @@
+"""
+Modul welches den Datenbank Scheduler beeinhaltet.
+Sorgt dafür das ein Video zur richtigen Zeit gerendert wird.
+"""
+
 import logging
 from datetime import datetime
 
