@@ -1,5 +1,5 @@
 """
-Modul, welches die verschieden Typen beeihaltet, um Text auf ein Bild zu setzen.
+Modul, welches die verschiedenen Typen beeinhaltet, um Text auf ein Bild zu setzen.
 """
 from PIL import ImageFont
 
@@ -8,14 +8,15 @@ from visuanalytics.analytics.util.type_utils import register_type_func_no_data
 from visuanalytics.util import resources
 
 DRAW_TYPES = {}
-"""Ein Dictionary bestehende aus allen Draw-Typ-Methoden  """
+"""Ein Dictionary bestehend aus allen Draw-Typ-Methoden.  """
 
 
 def register_draw(func):
-    """ Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu.
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func_no_data(DRAW_TYPES, ImageError, func)
 

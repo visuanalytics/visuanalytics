@@ -1,5 +1,5 @@
 """
-Modul welches die grundlegenden Funktionen der verschieden Arten zur Bilderzeugung beeihaltet.
+Modul, welches die grundlegenden Funktionen der verschiedenen Arten zur Textgenerierung für die Text-to-Speech-Umwandlung beeinhaltet.
 """
 from random import randint
 
@@ -8,6 +8,7 @@ from visuanalytics.analytics.util.step_utils import execute_type_option, execute
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 
 AUDIO_PARTS_TYPES = {}
+"""Ein Dictionary bestehend aus allen Audio-Parts-Typ-Methoden.  """
 
 
 @raise_step_error(AudioError)
@@ -16,6 +17,12 @@ def audio_parts(values, data):
 
 
 def register_audio_parts(func):
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary AUDIO_PARTS_TYPES hinzu.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
+    """
     return register_type_func(AUDIO_PARTS_TYPES, AudioError, func)
 
 
@@ -33,7 +40,7 @@ def text(values, data):
 
 @register_audio_parts
 def compare(values, data):
-    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, !=, < oder > die "transform"-Typen aus.
+    """Vergleicht zwei Werte miteinander und führt je nachdem, ob =, !=, < oder >, die danach aufgeführten `"audio_parts"`-Funktionen aus.
 
     Wenn `value_left` gleich `value_right`, führe "transform"-Typen aus on_equal durch.
     Wenn `value_left` ungleich `value_right`, führe "transform"-Typen aus on_not_equal durch.

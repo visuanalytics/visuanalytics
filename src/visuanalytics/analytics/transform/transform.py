@@ -19,6 +19,7 @@ from visuanalytics.analytics.util.type_utils import get_type_func, register_type
 from visuanalytics.util import resources
 
 TRANSFORM_TYPES = {}
+"""Ein Dictionary bestehend aus allen Transform-Typ-Methoden.  """
 
 
 @raise_step_error(TransformError)
@@ -38,10 +39,11 @@ def transform(values: dict, data: StepData):
 
 
 def register_transform(func):
-    """Registriert die übergebene Funktion und versieht sie mit einem `"try except"`-Block.
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary TRANSFORM_TYPES hinzu.
 
     :param func: die zu registrierende Funktion
-    :return: Funktion mit try catch Block
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(TRANSFORM_TYPES, TransformError, func)
 

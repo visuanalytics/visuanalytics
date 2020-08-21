@@ -1,5 +1,5 @@
 """
-Modul, welches Bilder und Audios kombiniert zu einem fertigem Video.
+Modul, welches Bilder und Audios zu einem Video kombiniert.
 """
 import numbers
 import os
@@ -20,11 +20,11 @@ SEQUENCE_TYPES = {}
 
 
 def register_sequence(func):
-    """
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary SEQUENCE_TYPES hinzu.
 
-    :param func: Eine Funktion
-    :return: Die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(SEQUENCE_TYPES, SequenceError, func)
 

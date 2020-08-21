@@ -1,5 +1,5 @@
 """
-Modul welches die Funktionen bereitstellt welche für API Requests benötigt werden.
+Modul, welches die Funktionen bereitstellt, welche für API-Requests benötigt werden.
 """
 import json
 import logging
@@ -15,6 +15,7 @@ from visuanalytics.util import resources
 logger = logging.getLogger(__name__)
 
 API_TYPES = {}
+"""Ein Dictionary bestehend aus allen API-Typ-Methoden.  """
 
 
 @raise_step_error(APIError)
@@ -30,6 +31,12 @@ def api_request(values: dict, data: StepData, name: str, save_key, ignore_testin
 
 
 def register_api(func):
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary API_TYPES hinzu.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
+    """
     return register_type_func(API_TYPES, APIError, func)
 
 
