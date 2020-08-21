@@ -16,11 +16,13 @@ interface MessageProps {
 interface Props {
   condition: boolean;
   message: MessageProps;
+  paperStyle?: React.CSSProperties;
 }
 
 export const InfoMessage: React.FC<Props> = ({
   condition,
   message,
+  paperStyle,
   children,
 }) => {
   const classes = useStyles();
@@ -28,7 +30,7 @@ export const InfoMessage: React.FC<Props> = ({
   if (condition) {
     return (
       <Fade in>
-        <Paper variant="outlined" className={classes.paper}>
+        <Paper variant="outlined" className={classes.paper} style={paperStyle}>
           <Grid container spacing={2}>
             <Grid container item justify="center">
               <InfoOutlinedIcon

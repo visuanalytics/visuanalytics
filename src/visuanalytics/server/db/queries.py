@@ -12,7 +12,28 @@ def get_topic_names():
     con = db.open_con_f()
     res = con.execute("SELECT steps_id, steps_name, json_file_name FROM steps")
     return [{"topicId": row["steps_id"], "topicName": row["steps_name"],
-             "topicInfo": _get_topic_steps(row["json_file_name"]).get("info", "")} for row in res]
+             "topicInfo": _get_topic_info(row["json_file_name"])} for row in res]
+
+def get_topic_file(topic_id):
+    con = db.open_con_f()
+    res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
+    
+    return _get_file_path(res["json_file_name"]) if res is not None else None
+
+def delete_topic(topic_id):
+    con = db.open_con_f()
+    file_path = get_topic_file(topic_id)
+    res = con.execute("DELETE FROM steps WHERE steps_id = ?", [topic_id])
+    con.commit()
+
+    if (res.rowcount > 0):
+        os.remove(file_path)
+
+def add_topic(name, file_name):
+    con = db.open_con_f()
+    con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
+                        [name, file_name])
+    con.commit()
 
 
 def get_params(topic_id):
@@ -30,7 +51,7 @@ def get_job_list():
     res = con.execute("""
         SELECT 
         job_id, job_name, 
-        schedule.type AS s_type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval,
+        schedule.type AS s_type, time, STRFTIME('%Y-%m-%d', date) as date, time_interval, next_execution,
         delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
@@ -174,7 +195,7 @@ def _row_to_job(row):
     if s_type == "on_date":
         schedule = {**schedule, "time": time, "date": row["date"]}
     if s_type == "interval":
-        schedule = {**schedule, "interval": row["time_interval"]}
+        schedule = {**schedule, "interval": row["time_interval"], "nextExecution": row["next_execution"]}
 
     d_type = row["d_type"]
     delete_schedule = {
@@ -223,9 +244,17 @@ def _row_to_job(row):
         "topicValues": topic_values
     }
 
+def _get_file_path(json_file_name: str):
+    return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+
+def _get_topic_info(json_file_name: str):
+    try: 
+        return _get_topic_steps(json_file_name).get("info", "")
+    except Exception:
+        return ""
 
 def _get_topic_steps(json_file_name: str):
-    path_to_json = os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+    path_to_json = _get_file_path(json_file_name)
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
 

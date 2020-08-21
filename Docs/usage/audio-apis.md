@@ -99,6 +99,33 @@ Um auf die Daten (Konfigurationsdateien, den Text, vorherige Requests) zugreifen
     Man kann diese also gleich verwenden (z.B.: `_audio|0|test`)
 - Will man in einem Value-String (in `config.json`) einen Wert aus einem Key einsetzen, muss man diesen Key in `{}` schreiben.
 
+**Beispiel**
+
+Will man die Stimme von Microsoft Azure verwenden, so muss zuerst ein Anfrage für das `Access-Token` getätigt werden. Dazu wird wie oben beschrieben der Request in [prepare](#custom) geschrieben.
+
+~~~jsonc
+"prepare": {
+  "type": "request",
+  "api_key_name": "azure",
+  "url_pattern": "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+  "method": "post",
+  "headers": {
+    "Ocp-Apim-Subscription-Key": "{_api_key}"
+  },
+~~~
+
+Um im folgenden Request auf das Token zugreifen zu können, verwendet man nun `{_audio|pre}`, um an den Wert zu gelangen.
+
+Im aktuellen Beispiel kann also im folgenden Request unter `"Authorization"` der Acces-Token verwendet werden.
+
+~~~jsonc
+"headers": {
+  "Authorization": "Bearer {_audio|pre}",
+  "Content-type": "application/ssml+xml; charset=utf-8",
+  "X-Microsoft-OutputFormat": "audio-24khz-96kbitrate-mono-mp3",
+  "User-Agent": "Mozilla/5.0"
+},
+~~~
 #### Spezialvariablen
 
 **Spezialvariablen, die überall möglich sind**: 

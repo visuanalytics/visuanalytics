@@ -37,7 +37,7 @@ interface Props {
 export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule, selectScheduleHandler, selectDeleteScheduleHandler, handleHintState, paramSelectionProps }) => {
     const classes = useStyles();
 
-    const [value, setValue] = React.useState("1");
+    const [value, setValue] = React.useState(paramSelectionProps ? "1" : "2");
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
         handleHintState(Number(newValue) + offset)
@@ -55,25 +55,13 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
                     indicatorColor={'secondary'}
                     variant="fullWidth"
                 >
-                    <Tab label="Generieren" value="1" />
-                    <Tab label="Löschen" value="2" />
-                    {paramSelectionProps && (<Tab label="Parameter" value="3" />)}
+                    {paramSelectionProps && (<Tab label="Parameter" value="1" />)}
+                    <Tab label="Generieren" value="2" />
+                    <Tab label="Löschen" value="3" />
 
                 </Tabs>
-                <TabPanel value={"1"} className={classes.tabPanel}>
-                    <ScheduleSelection
-                        schedule={schedule}
-                        selectScheduleHandler={selectScheduleHandler}
-                    />
-                </TabPanel>
-                <TabPanel value={"2"} className={classes.tabPanel}>
-                    <DeleteSelection
-                        deleteSchedule={deleteSchedule}
-                        selectDeleteScheduleHandler={selectDeleteScheduleHandler}
-                    />
-                </TabPanel>
                 {paramSelectionProps && (
-                    <TabPanel value={"3"} className={classes.tabPanelParams}>
+                    <TabPanel value={"1"} className={classes.tabPanelParams}>
                         <ParamSelection
                             topicNames={paramSelectionProps.topicNames}
                             values={paramSelectionProps.values}
@@ -83,6 +71,18 @@ export const SettingsPage: React.FC<Props> = ({ offset, schedule, deleteSchedule
                             invalidValues={paramSelectionProps.invalidValues}
                         />
                     </TabPanel>)}
+                <TabPanel value={"2"} className={classes.tabPanel}>
+                    <ScheduleSelection
+                        schedule={schedule}
+                        selectScheduleHandler={selectScheduleHandler}
+                    />
+                </TabPanel>
+                <TabPanel value={"3"} className={classes.tabPanel}>
+                    <DeleteSelection
+                        deleteSchedule={deleteSchedule}
+                        selectDeleteScheduleHandler={selectDeleteScheduleHandler}
+                    />
+                </TabPanel>
             </TabContext>
         </div>
     )

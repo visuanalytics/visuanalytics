@@ -8,26 +8,25 @@ export const hintContents = {
         Zeitplan auswählen
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video
-        generiert werden soll.
+        Auf dieser Seite können Sie auswählen, wann der Job Videos generieren soll.
       </Typography>
       <Typography variant="h6">täglich</Typography>
       <Typography gutterBottom>
-        Das Video wird täglich zur unten angegebenen Uhrzeit erstellt
+        Das Video wird täglich zur unten angegebenen Uhrzeit generiert.
       </Typography>
       <Typography variant="h6">wöchentlich</Typography>
       <Typography gutterBottom>
-        Das Video wird zu den angegebenen Wochentagen wöchentlich zur unten
-        angegebenen Uhrzeit erstellt
+        Das Video wird jede Woche zu den ausgewählten Wochentagen zur unten
+        ausgewählten Uhrzeit generiert.
       </Typography>
       <Typography variant="h6">Intervall</Typography>
       <Typography gutterBottom>
-        Das Video wird nach dem angegebenen Intervall generiert
+        Das Video wird nach dem ausgewählten Intervall generiert.
       </Typography>
       <Typography variant="h6">an festem Datum</Typography>
       <Typography gutterBottom>
-        Das Video wird zum angegebenen Datum und zur angegebenen Uhrzeit
-        erstellt
+        Das Video wird zum ausgewählten Datum und zur ausgewählten Uhrzeit
+        generiert.
       </Typography>
     </div>
   ),
@@ -37,26 +36,35 @@ export const hintContents = {
         Löschen
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie auswählen an welchem Zeitpunkt das Video
-        gelöscht werden soll.
+        Auf dieser Seite können Sie auswählen, wann generierte Videos wieder gelöscht werden sollen.
       </Typography>
       <Typography variant="h6">nie</Typography>
-      <Typography gutterBottom>Das Video wird nie gelöscht</Typography>
+      <Typography gutterBottom>Das Video wird nie gelöscht.</Typography>
       <Typography variant="h6">nach Zeit</Typography>
       <Typography gutterBottom>
-        Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden
-        gelöscht
+        Das Video wird nach einer ausgewählten Anzahl an Tagen und Stunden
+        gelöscht.
       </Typography>
       <Typography variant="h6">nach Anzahl</Typography>
       <Typography gutterBottom>
-        Das Video wird nach einer bestimmten Anzahl an generierten Videos
-        gelöscht
+        Das Video wird gelöscht, sobald eine ausgewählte Anzahl an neueren Videos generiert wurde.
       </Typography>
       <Typography variant="h6">feste Namen</Typography>
       <Typography gutterBottom>
-        Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste
-        immer den Namen <i>jobName</i>1 besitzt
+        Wie die Option "nach Anzahl". Zusätzlich besitzt das neueste Video immer den
+        Dateinamen: <i>jobName</i>. Ältere Videos besitzen
+        die Dateinamen <i>Job-Name</i>_1,  <i>Job-Name</i>_2, usw.
       </Typography>
     </div>
   ),
+  addTopic: (
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Thema hinzufügen
+      </Typography>
+      <Typography gutterBottom>
+        Auf dieser Seite können Sie neue Themen hinzufügen.
+      </Typography>
+    </div>
+  )
 };

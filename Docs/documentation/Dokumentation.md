@@ -122,6 +122,7 @@ Der Component `JobSettings` beinhaltet den Component `SettingsPage`, welcher aus
 Möchte man einen neuen Job erstellen, so wird beim Klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
 
 ```ts
+const components = React.useContext(ComponentContext);
 onClick={() => components?.setCurrent("jobpage")}
 ```
 
@@ -147,7 +148,7 @@ Die erste Seite (`TopicSelection`) dient zur Auswahl des Themas. Zusätzlich lä
 
 Die zweite Seite des Steppers gibt dem Nutzer die Möglichkeit, themenspezifische Parameter zu setzen. So können z.B. bei einem Wetterbericht der gewünschte Ort oder bei einer Twitter-Wordcloud die zu verwendenden Hashtags angegegeben werden.
 
-Wie die Parameter und deren Input-Felder für jedes Thema in der Oberfläche dargestellt werden, siehe [hier](../usage/stepsConfig.md#run-config).
+Wie die Parameter und deren Input-Felder für jedes Thema in der Oberfläche dargestellt werden, siehe [hier](../usage/stepsConfig.html#run-config).
 
 <figure>
   <img width="100%" src="../_static/images/documentation/param.png"/>
@@ -206,6 +207,8 @@ die Dateinamen <i>Job-Name</i>_1,  <i>Job-Name</i>_2, usw.
 <br>
 
 ## Wordpress-Plugin
+
+[VisuAnalytics als Wordpress-Plugin verwenden](../usage/installation.html#wordpress-plugin-verwenden)
 
 Um die in ReactJS geschriebene Benutzeroberfläche als Wordpress-Plugin zu realisieren, muss zuerst ein _Production Build_ erstellt werden. Dieses _Production Build_ komprimiert den ReactJS-Code in vier JavaScript-Dateien. 
 

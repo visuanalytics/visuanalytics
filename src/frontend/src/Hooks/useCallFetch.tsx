@@ -18,16 +18,21 @@ export const useCallFetch = (
 ) => {
   const isMounted = useRef(true);
 
-  const cb = useCallback(() => {
-    fetchTimeOut(url, parms, 5000)
-      .then(handleResponse)
-      .then((data) => {
-        if (isMounted && callBack) callBack(data);
-      })
-      .catch((err) => {
-        if (isMounted && errorHandle) errorHandle(err);
-      });
-  }, [url, parms, callBack, errorHandle, isMounted]);
+  const cb = useCallback(
+    (appendUrl?: string) => {
+      const rq_url = appendUrl ? `${url}${appendUrl}` : url;
+
+      fetchTimeOut(rq_url, parms, 5000)
+        .then(handleResponse)
+        .then((data) => {
+          if (isMounted && callBack) callBack(data);
+        })
+        .catch((err) => {
+          if (isMounted && errorHandle) errorHandle(err);
+        });
+    },
+    [url, parms, callBack, errorHandle, isMounted]
+  );
 
   useEffect(() => {
     return () => {

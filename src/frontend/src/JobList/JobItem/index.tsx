@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-    Button,
-    Tooltip,
-    Dialog,
-    DialogTitle,
-    DialogActions,
-} from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import { AccordionSummary, useStyles } from "../style";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -27,6 +21,7 @@ import { useCallFetch } from "../../Hooks/useCallFetch";
 import { getUrl } from "../../util/fetchUtils";
 import { JobSettings } from "./JobSettings";
 import { JobInfos } from "./JobInfos";
+import {DeleteDialog} from "../../util/DeleteDialog"
 
 interface Props {
     job: Job;
@@ -75,12 +70,8 @@ export const JobItem: React.FC<Props> = ({
     useEffect(() => {
         const interval = setInterval(() => {
             setNext(showTimeToNextDate(schedule));
-        }, 60000);
+        }, 2000);
         return () => clearInterval(interval);
-    }, [schedule]);
-
-    useEffect(() => {
-        setNext(showTimeToNextDate(schedule));
     }, [schedule]);
 
     const handleChange = (panel: string) => (
@@ -94,11 +85,6 @@ export const JobItem: React.FC<Props> = ({
         setOpenSettings(false);
     };
 
-    const handleDeleteJob = () => {
-        setConfirmDelete(false);
-        deleteJob();
-    };
-
     return (
         <div className={classes.root}>
             <Accordion
@@ -107,7 +93,7 @@ export const JobItem: React.FC<Props> = ({
             >
                 <AccordionSummary>
                     <Grid container>
-                        <Grid item container sm={8} xs={12} alignItems="center">
+                        <Grid item container sm={9} xs={12} alignItems="center">
                             <Grid item>
                                 {expanded ? (
                                     <ExpandLess className={classes.expIcon} />
@@ -123,12 +109,12 @@ export const JobItem: React.FC<Props> = ({
                         </Grid>
                         <Grid
                             item
-                            sm={4}
+                            sm={3}
                             xs
                             container
                             justify="flex-end"
-                            onClick={(event) => event.stopPropagation()}
                         >
+                            <div onClick={(event) => event.stopPropagation()}>
                             <Tooltip title="Logs öffnen" arrow>
                                 <IconButton
                                     onClick={() =>
@@ -155,6 +141,7 @@ export const JobItem: React.FC<Props> = ({
                                     <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
+                        </div>
                         </Grid>
                     </Grid>
                 </AccordionSummary>
@@ -176,23 +163,12 @@ export const JobItem: React.FC<Props> = ({
                     ) : null}
                 </AccordionDetails>
             </Accordion>
-            <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
-                <DialogTitle>
-                    {`Job '#${job.jobId} ${job.jobName}' löschen?`}
-                </DialogTitle>
-                <DialogActions>
-                    <Button
-                        autoFocus
-                        onClick={() => setConfirmDelete(false)}
-                        color="primary"
-                    >
-                        Abbrechen
-                    </Button>
-                    <Button onClick={handleDeleteJob} color="primary">
-                        Löschen
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <DeleteDialog 
+                title={`Job '#${job.jobId} ${job.jobName}' löschen?`} 
+                open={confirmDelete} 
+                onClose={() => setConfirmDelete(false)} 
+                onDelete={deleteJob}
+            />
         </div>
     );
 };

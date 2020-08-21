@@ -1,4 +1,4 @@
-import { format, parse, isPast, addDays, formatDistanceToNowStrict } from "date-fns"
+import { format, parse, isPast, addDays, formatDistanceToNowStrict, addMinutes } from "date-fns"
 import { de } from "date-fns/locale";
 
 
@@ -19,6 +19,7 @@ interface DailySchedule {
 interface IntervalSchedule {
     type: "interval"
     interval: TimeInterval
+    nextExecution: Date
 }
 
 interface WeeklySchedule {
@@ -92,18 +93,30 @@ export const fromFormattedDates = (fSchedule: any): Schedule => {
         };
     }
     if (fSchedule.type === "interval") {
+        let nextExecution;
+        if (fSchedule.nextExecution === null) {
+            nextExecution = addInterval(new Date(), fSchedule.interval)
+        } else {
+            let nextExecutionStr = String(fSchedule.nextExecution).replace(" ", "-").substr(0, 19);
+            nextExecution = parse(nextExecutionStr, "yyyy-MM-dd-HH:mm:ss", new Date())
+        }
         return {
             type: type,
-            interval: fSchedule.interval
+            interval: fSchedule.interval,
+            nextExecution: nextExecution
         }
     }
     return partial;
 }
 
 const getNextJobDate = (schedule: Schedule) => {
-    if (!validateSchedule(schedule) || schedule.type === "interval") {
+    if (!validateSchedule(schedule)) {
         return null;
     }
+    if (schedule.type === "interval") {
+        return schedule.nextExecution;
+    }
+
     const fToday = format(new Date(), "yyyy-MM-dd");
     const fTime = schedule.time.toLocaleTimeString("de-DE").slice(0, -3);
     const combined = parse(`${fTime}-${fToday}`, "H:m-y-MM-dd", new Date());
@@ -144,44 +157,58 @@ export const showSchedule = (schedule: Schedule) => {
         case "interval":
             switch (schedule.interval) {
                 case "minute":
-                    return "Jede Minute";
+                    return "jede Minute";
                 case "quarter":
-                    return "Alle 15 Minuten";
+                    return "alle 15 Minuten";
                 case "half":
-                    return "Alle 30 Minuten";
+                    return "alle 30 Minuten";
                 case "threequarter":
-                    return "Alle 45 Minuten";
+                    return "alle 45 Minuten";
                 case "hour":
-                    return "Jede Stunde";
+                    return "jede Stunde";
                 case "quartday":
-                    return "Alle 6 Stunden";
+                    return "alle 6 Stunden";
                 case "halfday":
-                    return "Alle 12 Stunden";
+                    return "alle 12 Stunden";
             }
     }
 }
 
 export const getWeekdayLabel = (day: Weekday) => {
     switch (day) {
-        case Weekday.MONDAY: return "Mo";
-        case Weekday.TUESDAY: return "Di";
-        case Weekday.WEDNESDAY: return "Mi"
-        case Weekday.THURSDAY: return "Do";
-        case Weekday.FRIDAY: return "Fr";
-        case Weekday.SATURDAY: return "Sa";
-        case Weekday.SUNDAY: return "So"
+        case Weekday.MONDAY:
+            return "Mo";
+        case Weekday.TUESDAY:
+            return "Di";
+        case Weekday.WEDNESDAY:
+            return "Mi"
+        case Weekday.THURSDAY:
+            return "Do";
+        case Weekday.FRIDAY:
+            return "Fr";
+        case Weekday.SATURDAY:
+            return "Sa";
+        case Weekday.SUNDAY:
+            return "So"
     }
 }
 
 export const getIntervalLabel = (interval: TimeInterval) => {
     switch (interval) {
-        case "minute": return "1min";
-        case "quarter": return "15min";
-        case "half": return "30min"
-        case "threequarter": return "45min";
-        case "hour": return "1std";
-        case "quartday": return "6std";
-        case "halfday": return "12std"
+        case "minute":
+            return "1min";
+        case "quarter":
+            return "15min";
+        case "half":
+            return "30min"
+        case "threequarter":
+            return "45min";
+        case "hour":
+            return "1std";
+        case "quartday":
+            return "6std";
+        case "halfday":
+            return "12std"
     }
 }
 
@@ -195,4 +222,32 @@ export const showTimeToNextDate = (schedule: Schedule) => {
 
 export const validateSchedule = (schedule: Schedule) => {
     return schedule.type !== "weekly" || (schedule.type === "weekly" && schedule.weekdays.length > 0);
+}
+
+const addInterval = (date: Date, interval: TimeInterval) => {
+    let minutes;
+    switch (interval) {
+        case "minute":
+            minutes = 1;
+            break;
+        case "quarter":
+            minutes = 15;
+            break;
+        case "half":
+            minutes = 30;
+            break;
+        case "threequarter":
+            minutes = 45;
+            break;
+        case "hour":
+            minutes = 60
+            break;
+        case "quartday":
+            minutes = 360;
+            break;
+        case "halfday":
+            minutes = 720;
+            break;
+    }
+    return addMinutes(date, minutes)
 }

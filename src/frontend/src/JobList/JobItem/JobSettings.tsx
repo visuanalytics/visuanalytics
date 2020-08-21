@@ -144,8 +144,6 @@ export const JobSettings: React.FC<Props> = ({
     };
 
     const hintContent = [
-        hintContents.time,
-        hintContents.delete,
         <div>
             <Typography variant="h5" gutterBottom>
                 Parameter bearbeiten
@@ -154,6 +152,8 @@ export const JobSettings: React.FC<Props> = ({
                 Auf dieser Seite können Sie die Parameter für das Video bearbeiten.
             </Typography>
         </div>,
+        hintContents.time,
+        hintContents.delete,
     ];
 
     const handleClose = () => {
