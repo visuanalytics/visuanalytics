@@ -103,6 +103,27 @@
       "ignore_case": true
     },
     {
+      "type": "remove_from_list",
+      "keys": [
+        "_conf|hashtags"
+      ],
+      "to_remove": "_conf|stopwords",
+      "use_stopwords": true,
+      "ignore_case": true,
+      "new_keys": [
+        "_conf|hashtags_without_stopwords"
+      ]
+    },
+    {
+      "type": "length",
+      "keys": [
+        "_conf|hashtags_without_stopwords"
+      ],
+      "new_keys": [
+        "_conf|hashtags_without_stopwords_length"
+      ]
+    },
+    {
       "type": "option",
       "check": "_conf|normalize_words",
       "on_true": [
@@ -212,12 +233,30 @@
           ],
           "on_lower": [
             {
-              "type": "add_data",
-              "new_keys": [
-                "_req|text_top{_loop}"
+              "type": "compare",
+              "value_left": "_conf|hashtags_without_stopwords_length",
+              "value_right": 0,
+              "on_equal": [
+                {
+                  "type": "add_data",
+                  "new_keys": [
+                    "_req|text_top{_loop}"
+                  ],
+                  "data": [
+                    "Wordcloud"
+                  ]
+                }
               ],
-              "data": [
-                "Wordcloud"
+              "on_higher": [
+                {
+                  "type": "add_data",
+                  "new_keys": [
+                    "_req|text_top{_loop}"
+                  ],
+                  "data": [
+                    "{_conf|hashtags_without_stopwords|0}"
+                  ]
+                }
               ]
             },
             {
@@ -302,7 +341,7 @@
   "images": {
     "default_wordcloud": {
       "type": "wordcloud",
-      "text": "Wordcloud",
+      "text": "{_conf|hashtags_without_stopwords|0}",
       "preset": "wordcloud_default"
     },
     "all_words_wordcloud": {
@@ -1092,6 +1131,7 @@
     },
     "wordcloud_default": {
       "color_func_words": "{_conf|color_func_words}",
+      "stopwords": "_conf|stopwords",
       "parameter": {
         "figure": "{_conf|figure}",
         "width": "_conf|width_wordcloud",
