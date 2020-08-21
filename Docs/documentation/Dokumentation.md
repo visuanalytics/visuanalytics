@@ -233,7 +233,7 @@ global $va_settings_page;
 $icon = plugins_url('images/icon.png', __FILE__);
 ~~~
 
-Daraufhin wird die Seite mit Hilfe der von Wordpress bereitgestellten Funktion `add_menu_page` der Variablen `$va_settings_page` zugewiesen.
+Daraufhin wird die Seite mithilfe der von Wordpress bereitgestellten Funktion `add_menu_page` der Variablen `$va_settings_page` zugewiesen.
 
 ~~~php
 add_menu_page('VisuAnalytics', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
@@ -269,7 +269,7 @@ Daraufhin wird jeder JavaScript-Datei der _basename_ und der Pfad entnommen.
   }
 ~~~
 
-Mit Hilfe dieser beide Informationen werden dann die JavaScript-Dateien mit Hilfe der Funktion `wp_enqueue_script` in Wordpress geladen.
+Mithilfe dieser beide Informationen werden dann die JavaScript-Dateien mithilfe der Funktion `wp_enqueue_script` in Wordpress geladen.
 
 ~~~php
   wp_enqueue_script($file_name, $file_url, array (), '', true);
@@ -475,8 +475,6 @@ Mit dieser Funktion kann man beliebige Einträge von Arrays miteinander mulitpli
 
 Außerdem wurden `calculate_divide`, `calculate_subtract` und `calculate_add` hinzugefügt, um alle vier Hauptrechenarten abzudecken.
 
-Die Funktion `choose_random` hatte ein Dictionary mit kleinen Dictionaries gegeben. Ein Key hatte eine festgelegte Anzahl an Key-Value-Paaren (ein kleines Dictionary), aus denen zufällig ein Value ausgewählt werden sollte.
-
 Beispiel:
 
 `"500": {"1": "Text1", "2": "Text2"}`
@@ -523,20 +521,25 @@ Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Daten
     Da die Datei `football.json` bisher nur auf 18 Mannschaften ausgelegt ist, können keine Videos zu Ligen mit mehr oder 
     weniger Mannschaften erstellt werden. Sollen auch Videos für andere Ligen erstellt werden können, so muss dafür eine eigene JSON-Datei zusammengestellt werden.
 ```
-**Twitter Wordcloud**
+**Twitter-Wordcloud**
 
-Um an die Daten für die Wordclouds zu kommen, werden eine oder mehrere API-Anfragen gesendet, welche die zugrundeliegenden Hashtags enthalten. Als Antwort erhält man unter anderem alle Twitter-Beiträge, in denen die gesuchten Hashtags innerhalb der letzten sieben Tage verwendet wurden.
-Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthält, die neben mindestestens einem der gesuchten Hashtags in den Posts verwendet wurden. Aus diesen Hashtags werden dann letztendlich die Wordclouds erstellt.
+Die Daten aus der Twitter-API werden dafür verwendet eine Wordcloud zu generieren.
+Um an die Daten für die Wordclouds zu kommen, werden eine oder mehrere API-Anfragen gesendet, welche die zugrundeliegenden 
+Hashtags enthalten. Als Antwort erhält man unter anderem alle Twitter-Beiträge, in denen die gesuchten Hashtags innerhalb 
+der letzten sieben Tage verwendet wurden. Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthält, die 
+neben mindestestens einem der gesuchten Hashtags in den Posts verwendet wurden. Aus diesen Hashtags werden dann 
+letztendlich die Wordclouds erstellt.
 
-Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt.   
+Mithilfe der Python-Library [Wordcloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt.   
 Es ist möglich, verschiedene Parameter für die Wordcloud festzulegen.
-Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square"
-(siehe [Images: Wordcloud](#wordcloud)).
+Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Dafür wurden Masken für die Formen "circle" und "square" 
+implementiert (siehe [Images: Wordcloud](#wordcloud)).
 
-Die zuvor implementierten `transform`-Typen konnten größtenteils nicht weiter verwendet werden und es mussten neue implementiert werden.
+Die zuvor implementierten `transform`-Typen konnten für die Erstellung eines Wordcloud-Videos größtenteils nicht weiter 
+verwendet werden und es mussten neue `transform`-Typen implementiert werden.
 `transform_array`, `select`, `append` und `delete` konnten wiederverwendet werden.
 
-Folgende transform-Typen wurden verwendet:
+Folgende `transform`-Typen wurden verwendet:
 
 | transform-Typ    | Beschreibung                                                                                                                                                                                  |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -579,41 +582,53 @@ Es gibt derzeit zwei verschiedene Image-Typen zur Bilderzeugung:
 #### Pillow
 Die meisten Videos in unseren Bildern werden mit dem Bildbearbeitungs-Tool Pillow erstellt.   
 Folgende Typen stehen zur Bildbearbeitung mit Pillow bereit:  
-Texte und Bilder lassen sich mit Hilfe der beiden `overlay`-Typen `Text` sowie `Image` in ein Bild einfügen.  
+Texte und Bilder lassen sich mithilfe der beiden `overlay`-Typen `Text` sowie `Image` in ein Bild einfügen.  
 Zusätzlich gibt es noch die Typen `Image-Array` und `Text-Array`. Diese dienen lediglich dazu, mehrere Texte/Bilder, die sich ähneln, leichter in ein Bild einzufügen.   
 Möchte man nur etwas auf das Bild schreiben, wenn eine Bedingung erfüllt ist, eignet hier der `option`- sowie der `compare`-Typ.
 
 Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#pillow)
 
 #### Wordcloud
-Neben Bildern, die mit Hilfe von Pillow erzeugt werden, können auch Wordclouds generiert und in das Video eingebunden werden.   
-Der Hintergrund kann einfarbig sein, es lässt sich aber auch ein Hintergrundbild verwenden. Hierfür kann der overlay-Typ "image" benutzt werden.
+Neben Bildern, die mithilfe von Pillow erzeugt werden, können auch Wordclouds generiert und in das Video eingebunden werden.   
+Der Hintergrund kann einfarbig sein, es lässt sich aber auch ein Hintergrundbild verwenden. Hierfür kann der overlay-Typ 
+"image" verwendet werden.
 
 Eine Wordcloud zum Thema Bundesliga sieht folgendermaßen aus:
 
 <figure>
   <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
-  <figcaption>Abbildung : Wordcloud zum Thema Bundesliga (mit "figure": "circle")</figcaption>
+  <figcaption>Abbildung 15: Wordcloud zum Thema Bundesliga (mit "figure": "circle")</figcaption>
 </figure>  
 <br>
 
 <figure>
   <img width="90%" src="../_static/images/documentation/wordcloud_square.png"/>
-  <figcaption>Abbildung : Wordcloud mit "figure": "square"</figcaption>
+  <figcaption>Abbildung 16: Wordcloud zum Thema Bundesliga (mit "figure": "square")</figcaption>
 </figure>  
 <br>
 
-Die Wörter, die zu sehen sind, sind Hashtags, die am häufigsten neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
-Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
+Die Wörter, die zu sehen sind, sind die Hashtags, die am häufigsten neben dem gesuchten Hashtag (im obigen Fall "Bundesliga") verwendet wurden.
+Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, 
+welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
 
-Um das Auftauchen bestimmter Wörter in der Wordcloud zu verhindern, lassen sich Stopwords definieren. Dafür ist global eine Textdatei im resources-Ordner hinterlegt, welche eine Liste von Stopwords enthält und sich beim Erstellen der Wordcloud optional verwenden lässt.   
+Um das Auftauchen bestimmter Wörter in der Wordcloud zu verhindern, lassen sich Stopwords definieren. Dafür ist global 
+eine Textdatei im resources-Ordner hinterlegt. Diese Textdatei enthält eine Liste von Stopwords, die man beim 
+Erstellen der Wordcloud optional noch aus der Wordcloud ausschließen kann.   
 Zusätzlich können über das Frontend Stopwords gesetzt werden, welche nur für bestimmte Videos gelten sollen.    
 Des Weiteren kann eingestellt werden, dass Groß- und Kleinschreibung beim Prüfen der Stopwords keine Rolle spielen sollen.
 
-Möchte man die am häufigsten auftretenden Wörter nach und nach in der Wordcloud darstellen, müssen einzelne Wordclouds erstellt und diese anschließend im Sequence-Schritt aneinandergehängt werden.
+Möchte man einen Wordcloud-Verlauf darstellen, müssen einzelne Wordclouds erstellt werden: Also das Wort, welches am 
+häufigsten vorkommt, dann kommt das zweithäufigste Wort hinzu und so weiter. Bis am Ende eine Worcloud mit allen Wörtern 
+dargestellt wird. Die einzelnen Wordclouds werden dann im Sequence-Schritt aneinandergehängt.
+
+In dem Verlauf, welcher mit der [twitter.json](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics/blob/master/src/visuanalytics/resources/steps/twitter.json)
+erstellt wird, werden Wordclouds mit jeweils den ersten x (x = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, alle) Wörtern, die am 
+häufigsten vorkommen, erstellt und aneinandergereiht.
 
 
-Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#wordcloud)
+```note::
+Eine genaue Beschreibung zur Verwendung der Wordcloud befindet sich [hier](../usage/stepsConfig.html#wordcloud)
+```
 
 ```note::
 Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich [hier](../usage/stepsConfig.md)
