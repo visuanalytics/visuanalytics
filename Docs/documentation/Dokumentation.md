@@ -315,7 +315,9 @@ Für die Datenbank wird eine SQLite-Datenbank verwendet.
 
 _(Eine spätere Anbindung an einen SQL-Server ist aber einfach möglich.)_
 
-Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Sie enthält die ID des Themas, zu dem der Job Videos generieren soll. In der Tabelle `schedule` wird der Zeitplan gespeichert, nach dem der Job ausgeführt werden soll. Beispiel: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
+Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Sie enthält die ID des Themas, zu dem der Job Videos generieren soll, einen Job-Namen, eine Schedule-ID, welche auf die `schedule`-Tabelle verweist sowie eine Delete-Options-ID, welche auf die `delete_options`-Tabelle verweist.
+
+In der Tabelle `schedule` wird der Zeitplan gespeichert, nach dem der Job ausgeführt werden soll. Beispiel: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:   
 
 type = "daily",  
 date = null,   
@@ -323,8 +325,19 @@ time = 12:00,
 time_interval = null,  
 next_execution = null   
 
-In der Tabelle `job_config` stehen die Konfigurationswerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus Key/Value-Paaren, 
-wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
+Falls der type "weekly" ist, werden separat in der `schedule_weekday`-Tabelle die Wochentage gespeichert, an denen der Job auszuführen ist.  
+
+In der Tabelle `delete_options` wird gespeichert, wann generierte Videos wieder gelöscht werden sollen.
+
+Da zu einem Job mehrere Themen gehören können, wird in der Tabelle `job_topic_position` gespeichert, welche Themen zu einem Job gehören und in welcher Reihenfolge sie in dem generierten Video aneinandergehängt werden sollen.
+
+In der Tabelle `job_config` werden die Konfigurationswerte, die bei der Ausführung des Jobs verwendet werden, gespeichert. Diese bestehen aus Key/Value-Paaren, 
+wobei zu jedem Paar der zugehörige Datentyp gespeichert wird. Da zu einem Job mehrere Themen gehören können, verweist diese Tabelle nicht direkt auf die `job`-Tabelle, sondern auf die `job_topic_position`-Tabelle - nur so kann im Nachhinein wieder ermittelt werden, zu welchen Themen welche Parameterwerte gehören.
+
+Die `job_logs`-Tabelle enthält Log-Informationen zu mindestens ein mal ausgeführten Jobs.
+
+Die `steps`-Tabelle enthält die zur Verfügung stehenden Themen und verweist auf die entsprechenden JSON-Konfigurations-Dateien.
+
 
 <figure>
   <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
@@ -362,11 +375,11 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Des Weiteren stellt diese Hilfsfunktionen bereit, welche die Verwendung der Daten erleichtern. Eine Auflistung aller Funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data)
+StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Außerdem stellt sie Hilfsfunktionen bereit, welche die Verwendung der Daten erleichtern. Eine Auflistung aller Funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data).
 
 ## Themenkonfiguration
 
-Um die Themen der Videos leicht erweiterbar zu machen, werden diese als JSON-Datei definiert. Diese enthalten gewissermaßen eine Anleitung dafür, welche Daten von den APIs bezogen werden und wie daraus dann ein Video generiert werden soll.    
+Um die Themen der Videos leicht erweiterbar zu machen, werden diese als JSON-Dateien definiert. Diese enthalten gewissermaßen eine Anleitung dafür, welche Daten von den APIs bezogen werden und wie daraus dann ein Video generiert werden soll.    
 Dieser Ansatz ermöglicht es zum einen, ein neues Thema hinzuzufügen, indem einfach eine neue JSON-Datei mit der entsprechenden Konfiguration geschrieben wird, und zum anderen die Konfiguration für bestehende Themen anzupassen (z.B. wenn API-Anfragen auf Änderungen der API angepasst werden müssen).
  
 Eine genaue Beschreibung der Konfigurationsdatei befindet sich [hier](../usage/stepsConfig.md).
