@@ -46,9 +46,9 @@ def request(values: dict, data: StepData, name: str, save_key, ignore_testing=Fa
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :param name:
-    :param save_key:
-    :param ignore_testing:
+    :param name: Testdatei, die geladen werden soll.
+    :param save_key: Key, unter dem die Daten gespeichert werden.
+    :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
     if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(values, data, name, save_key)
@@ -58,15 +58,14 @@ def request(values: dict, data: StepData, name: str, save_key, ignore_testing=Fa
 
 @register_api
 def input(values: dict, data: StepData, name: str, save_key, ignore_testing=False):
-    """
+    """Hier können Daten angegeben werden, die einfach hinzugefügt werden.
 
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :param name:
-    :param save_key:
-    :param ignore_testing:
-    :return:
+    :param name: Testdatei, die geladen werden soll.
+    :param save_key: Key, unter dem die Daten gespeichert werden.
+    :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
     res = data.deep_format(values["data"], values=values)
     data.insert_data(save_key, res, values)
@@ -78,9 +77,9 @@ def request_memory(values: dict, data: StepData, name: str, save_key, ignore_tes
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :param name:
-    :param save_key:
-    :param ignore_testing:
+    :param name: Testdatei, die geladen werden soll.
+    :param save_key: Key, unter dem die Daten gespeichert werden.
+    :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
     try:
         if values.get("timedelta", None) is None:
@@ -101,9 +100,9 @@ def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_t
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :param name:
-    :param save_key:
-    :param ignore_testing:
+    :param name: Testdatei, die geladen werden soll.
+    :param save_key: Key, unter dem die Daten gespeichert werden.
+    :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
 
     if data.get_config("testing", False) and not ignore_testing:
@@ -125,9 +124,9 @@ def request_multiple_custom(values: dict, data: StepData, name: str, save_key, i
 
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
-    :param name:
-    :param save_key:
-    :param ignore_testing:
+    :param name: Testdatei, die geladen werden soll.
+    :param save_key: Key, unter dem die Daten gespeichert werden.
+    :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
 
     if data.get_config("testing", False) and not ignore_testing:
