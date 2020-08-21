@@ -7,6 +7,8 @@ import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
 import { JobPage } from "../JobPage";
 import { JobLogs } from "../JobLogs";
 import DescriptionIcon from "@material-ui/icons/Description";
+import CreateIcon from "@material-ui/icons/Create";
+import { AddTopic } from "../AddTopic";
 
 export type MainComponent = {
   component: FC;
@@ -39,9 +41,14 @@ export const mainComponents: MainComponents = {
     icon: DescriptionIcon,
     navName: "Logs",
   },
+  addTopic: {
+    component: AddTopic,
+    icon: CreateIcon,
+    navName: "Themen",
+  },
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs";
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic";

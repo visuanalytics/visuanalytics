@@ -61,5 +61,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     errorButton: {
       minWidth: "max-content",
     },
+    hintIcons: {
+      color: "white"
+    }
   })
 );

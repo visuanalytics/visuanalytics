@@ -114,3 +114,9 @@ def update_log_finish(id: int, state: int, duration: int):
 
 def get_interval(res):
     return INTERVAL.get(res["time_interval"])
+
+def insert_next_execution_time(id: int, next_execution: str):
+    with db.open_con() as con:
+        schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
+        con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        con.commit()

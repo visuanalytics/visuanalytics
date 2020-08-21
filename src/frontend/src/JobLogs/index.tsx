@@ -10,7 +10,7 @@ import {
   Typography,
   MenuItem,
   Grid,
-  TextField,
+  TextField, ListItem, ListItemIcon, ListItemText, List,
 } from "@material-ui/core";
 import { useFetchMultiple } from "../Hooks/useFetchMultiple";
 import { getUrl } from "../util/fetchUtils";
@@ -22,6 +22,9 @@ import { InfoMessage } from "../util/InfoMessage";
 import { Job } from "../JobList";
 import { Notification } from "../util/Notification";
 import { ComponentContext } from "../ComponentProvider";
+import CheckCircleOutlineOutlinedIcon from "@material-ui/icons/CheckCircleOutlineOutlined";
+import LoopIcon from "@material-ui/icons/Loop";
+import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
 
 interface Props {
   jobId?: number;
@@ -163,7 +166,27 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           <Typography variant="h5" gutterBottom>
             Logs
           </Typography>
-          <Typography gutterBottom>TODO</Typography>
+          <Typography gutterBottom>Auf dieser Seite können Sie sich die Logs zu den angelegten Jobs ansehen. </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon className={classes.hintIcons}>
+                <CheckCircleOutlineOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Job erfolgreich ausgeführt" />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon className={classes.hintIcons}>
+                <LoopIcon />
+              </ListItemIcon>
+              <ListItemText primary="Job wird ausgeführt" />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon className={classes.hintIcons}>
+                <HighlightOffOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Job fehlgeschlogen" />
+            </ListItem>
+          </List>
         </div>
       }
     >
@@ -174,8 +197,8 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           text: (
             <Typography align={"center"} color="textSecondary">
               Aktuell wurde noch kein Video generiert. <br />
-              Sobald das erste Video generiert wurde können Sie hier die
-              Log-Informationen sehen.
+              Sobald das erste Video generiert wurde, können Sie sich hier die
+              Log-Informationen ansehen.
             </Typography>
           ),
           button: {
@@ -238,12 +261,11 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
           <InfoMessage
             condition={filteredLogs.logs?.length === 0}
             message={{
-              headline: "Todo",
+              headline: "Keine Logs verfügbar",
               text: (
                 <Typography align={"center"} color="textSecondary">
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                  diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                  aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                  Für diesen Job sind noch keine Logs verfügbar.
+                  Sie können sich die Logs ansehen, sobald der Job zum ersten mal ausgeführt wurde.
                 </Typography>
               ),
             }}
@@ -252,9 +274,9 @@ export const JobLogs: React.FC<Props> = ({ jobId }) => {
               <TableBody>
                 {(rowsPerPage > 0
                   ? filteredLogs.logs?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : filteredLogs.logs
                 )?.map((log, idx) => (
                   <TableRow key={idx}>
