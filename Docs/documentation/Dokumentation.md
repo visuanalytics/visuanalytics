@@ -8,7 +8,7 @@ Die grafische Benutzeroberfläche wurde mithilfe des Web-Frameworks ReactJS in T
 
 ### Struktur
 
-Die Oberfläche besteht aus mehreren Komponenten (Components), welche je nach Bedarf geladen und angezeigt werden. So wird beispielsweise bei einem Klick auf einen Button keine neue html-Datei geladen, sondern in die aktuelle, der neue `Component` hinzugefügt.
+Die Oberfläche besteht aus mehreren Komponenten (Components), welche je nach Bedarf geladen und angezeigt werden. So wird beispielsweise bei einem Klick auf einen Button keine neue HTML-Datei geladen, sondern in die aktuelle der neue `Component` hinzugefügt.
 
 <figure>
   <img width="90%" src="../_static/images/documentation/ReactDiagramm.png"/>
@@ -24,7 +24,7 @@ Die `index.html` wird vom Browser geladen. Diese beinhaltet den div-Container `r
 <div id="root"></div>
 ```
 
-In der `index.tsx` wird mithilfe der ID, der Component `App` in den Container geladen.
+In der `index.tsx` wird mithilfe der ID der Component `App` in den Container geladen.
 
 ```tsx
 ReactDOM.render(
@@ -39,7 +39,7 @@ ReactDOM.render(
 
 Der Component `App` besteht aus einem `Header`- und einem `Main`-Component.
 
-Der `Header` steht immer am oberen Bildschirmrand, daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
+Der `Header` befindet sich immer am oberen Bildschirmrand, daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
 
 ```html
 <ComponentProvider>
@@ -56,7 +56,7 @@ Der `Header` steht immer am oberen Bildschirmrand, daher liegt dieser über `Mai
 </figure>  
 <br>
 
-Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programms man sich befindet.
+Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programms, man sich befindet.
 
 #### Main
 
@@ -105,27 +105,27 @@ In dem Component `JobList` wird für jeden angelegten Job ein Component von `Job
 </figure>  
 <br>
 
-Ein `JobItem` beinhaltet den Component `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Component `JobSettings`, auf welchem man die Einstellungen zum Job vornehmen kann.
+Ein `JobItem` beinhaltet den Component `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Component `JobSettings`, auf welchem man Änderungen an den Einstellungen des Jobs vornehmen kann.
 
 #### JobInfo
 Der Component `JobInfo` beinhaltet drei Infomationen zu einem Job:
 
 1.  Das Thema des Jobs.
-2.  Die Information wann der Job ausgeführt wird.
-3.  Die Information wann der Job das nächste Mal ausgeführt wird.
+2.  Der allgemeine Zeitplan, nach dem Job der Job ausgeführt wird.
+3.  Die Information, wann der Job das nächste Mal ausgeführt wird.
 
 #### JobSettings
 Der Component `JobSettings` beinhaltet den Component `SettingsPage`, welcher aus den drei Components [ParamSelection](#paramselection), [ScheduleSelection](#scheduleselection) und [DeleteSelection](#deleteSelection) besteht.
 
 #### JobCreate
 
-Möchte man einen neuen Job erstellen, so wird beim klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
+Möchte man einen neuen Job erstellen, so wird beim Klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
 
 ```ts
 onClick={() => components?.setCurrent("jobpage")}
 ```
 
-Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
+Dabei handelt es sich um einen Stepper, welcher aus drei Seiten besteht.
 
 <figure>
   <img width="100%" src="../_static/images/documentation/stepper.gif"/>
@@ -135,7 +135,7 @@ Daraufhin wird ein Stepper geladen, welcher aus drei Seiten besteht.
 
 #### TopicSelection
 
-Die erste Seite `TopicSelection` dient zur Auswahl des Themas. Dort kann man sich für eines der vorgegebenen Themen entscheiden und einen Namen für den Job festlegen.
+Die erste Seite (`TopicSelection`) dient zur Auswahl des Themas. Zusätzlich lässt sich hier der Name für den Job festlegen.
 
 <figure>
   <img width="100%" src="../_static/images/documentation/topic.png"/>
@@ -145,9 +145,9 @@ Die erste Seite `TopicSelection` dient zur Auswahl des Themas. Dort kann man sic
 
 #### ParamSelection
 
-Die zweite Seite des Steppers gibt einem die Möglichkeit - je nach Thema - individuelle Angaben zu tätigen. So kann bei einem Wetterbericht z.B. der gewünschte Ort angegeben werden oder für eine Twitterwordcloud bestimmte Angaben getätigt werden.
+Die zweite Seite des Steppers gibt dem Nutzer die Möglichkeit, themenspezifische Parameter zu setzen. So können z.B. bei einem Wetterbericht der gewünschte Ort oder bei einer Twitter-Wordcloud die zu verwendenden Hashtags angegegeben werden.
 
-Wie die Parameter und deren Inputfelder für jedes Thema festgelegt werden sehen Sie [hier](../usage/stepsConfig.md#run-config)
+Wie die Parameter und deren Input-Felder für jedes Thema in der Oberfläche dargestellt werden, siehe [hier](../usage/stepsConfig.md#run-config).
 
 <figure>
   <img width="100%" src="../_static/images/documentation/param.png"/>
@@ -172,9 +172,9 @@ Auf dem ersten Tab kann der Benutzer auswählen, zu welchen Zeitpunkten das Vide
 
 Dazu gibt es folgende Optionen:
 
-**täglich:** Das Video wird täglich zu einer bestimmten Uhrzeit generiert.
+**täglich:** Das Video wird täglich zu einer ausgewählten Uhrzeit generiert.
 
-**wöchentlich:** Das Video wird an bestimmten Wochentagen wöchentlich generiert.
+**wöchentlich:** Das Video wird jede Woche an ausgewählten Wochentagen generiert.
 
 **an festem Datum:** Das Video wird einmalig an einem bestimmten Datum generiert.
 
@@ -186,17 +186,18 @@ Dazu gibt es folgende Optionen:
 
 #### DeleteSelection
 
-Auf dem zweiten Tab kann der Benutzer auswählen, wann die generierten Videos gelöscht werden sollen.
+Auf dem zweiten Tab kann der Benutzer auswählen, wann die generierten Videos wieder gelöscht werden sollen.
 
 Dazu gibt es folgende Optionen:
 
 **nie:** Das Video wird nie gelöscht.
 
-**nach Zeit:** Das Video wird nach einer bestimmten Anzahl an Tagen und Stunden gelöscht
+**nach Zeit:** Das Video wird nach einer ausgewählten Anzahl an Tagen und Stunden gelöscht
 
-**nach Anzahl:** Das Video wird nach einer bestimmten Anzahl an generierten Videos gelöscht.
+**nach Anzahl:** Das Video wird gelöscht, sobald eine ausgewählte Anzahl an neueren Videos generiert wurden.
 
-**feste Namen:** Es wird eine bestimmte Anzahl an Videos generiert, wobei das neuste immer den Namen _jobName1_ besitzt
+**feste Namen:** Wie die Option "nach Anzahl". Zusätzlich besitzt das neueste Video immer den Dateinamen: <i>Job-Name</i>. Ältere Videos besitzen
+die Dateinamen <i>Job-Name</i>_1,  <i>Job-Name</i>_2, usw.
 
 <figure>
   <img width="100%" src="../_static/images/documentation/delete.png"/>
@@ -222,21 +223,21 @@ Damit das Plugin in Wordpress angezeigt wird, muss zuerst eine neue Menü-Seite 
   <figcaption>Abbildung 7</figcaption>
 </figure>  
 
-Zuerst wird eine Variable für die Seite angelegt, sowie eine für das Icon welches daneben auftauchen soll.
+Zuerst wird eine Variable für die Seite angelegt, sowie eine für das Icon, welches daneben auftauchen soll.
 
 ~~~php
 global $va_settings_page;
 $icon = plugins_url('images/icon.png', __FILE__);
 ~~~
 
-Daraufhin wird mit Hilfe der Funktion `add_menu_page` von Wordpress, die Seite der Variablen `$va_settings_page` zugewiesen.
+Daraufhin wird mit Hilfe der Funktion `add_menu_page` von Wordpress die Seite der Variablen `$va_settings_page` zugewiesen.
 
 ~~~php
 add_menu_page('VisuAnalytics', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
 ~~~
 
 Da React seine Komponenten immer in den einen div-Container mit der id `root` rendert, muss der Menü-Seite noch ein solcher Container als HTML übergeben werden.
-Dazu wurde der Methode `add_menu_page` als fünfter Parameter eine Funktion übergeben, welche diesen div-Container übergibt.
+Dazu wird der Methode `add_menu_page` als fünfter Parameter eine Funktion übergeben, welche diesen div-Container übergibt.
 
 ~~~php
 function visuanalytics_settings_do_page() {
@@ -265,7 +266,7 @@ Daraufhin wird jeder JavaScript-Datei der _basename_ und der Pfad entnommen.
   }
 ~~~
 
-Mit Hilfe dieser beide Informationen werden dann die JavaScript-Dateien, anhand der Funktion `wp_enqueue_script`, in Wordpress geladen.
+Mit Hilfe dieser beide Informationen werden dann die JavaScript-Dateien mit Hilfe der Funktion `wp_enqueue_script` in Wordpress geladen.
 
 ~~~php
   wp_enqueue_script($file_name, $file_url, array (), '', true);
@@ -274,7 +275,7 @@ Mit Hilfe dieser beide Informationen werden dann die JavaScript-Dateien, anhand 
 
 `init_va_menu`
 
-Um die Methode `add_va_scripts` auszuführen, wird in der Methode `init_va_menu`, die von Wordpress bereitgestellte Methode `add_action` aufgerufen. Diese lädt entgültig die JavaScript-Dateien in das Wordpress-Plugin.
+Um die Methode `add_va_scripts` auszuführen, wird in der Methode `init_va_menu` die von Wordpress bereitgestellte Methode `add_action` aufgerufen. Diese lädt entgültig die JavaScript-Dateien in das Wordpress-Plugin.
 
 ~~~php
 function init_va_menu() {
@@ -311,16 +312,16 @@ Für die Datenbank wird eine SQLite-Datenbank verwendet.
 
 _(Eine spätere Anbindung an einen SQL-Server ist aber einfach möglich.)_
 
-Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Diese hat die ID für seine Schritte gespeichert. In der Tabelle `schedule` wird die Zeit gespeichert, an welcher der Job ausgeführt werden soll. z.B.: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
+Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Sie enthält die ID des Themas, zu dem der Job Videos generieren soll. In der Tabelle `schedule` wird der Zeitpaln gespeichert, nach dem der Job ausgeführt werden soll. Beispiel: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
 
-date = null,  
+type = "daily",  
+date = null,   
 time = 12:00,  
-weekday = null,  
-daily = True.
+time_interval = null,  
+next_execution = null   
 
-Es sind auch mehrere Schedule-Einträge für einen Job möglich.
-
-In der Tabelle `job_config` stehen die Konfigurationswerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus Key/Value-Paaren.
+In der Tabelle `job_config` stehen die Konfigurationswerte, die bei der Ausführung des Jobs verwendet werden. Diese bestehen aus Key/Value-Paaren, 
+wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
 
 <figure>
   <img width="70%" src="../_static/images/documentation/db-diagramm.png"/>
@@ -344,7 +345,7 @@ Der Scheduler prüft minütlich, ob ein neuer Job ausgeführt werden soll (_Abbi
 </figure>  
 <br>
 
-Es gibt zwei Varianten des Schedulers. Der JsonScheduler prüft anhand einer Json-Datei, ob ein Job ausgeführt werden soll. Der DbScheduler hingegen entnimmt die Informationen einer Datenbank und prüft anhand von diesen, ob ein Job ausgeführt werden soll.
+Es gibt zwei Varianten des Schedulers. Der JsonScheduler prüft anhand einer Json-Datei, ob ein Job ausgeführt werden soll. Der DbScheduler hingegen entnimmt die Informationen einer Datenbank und prüft anhand dessen, ob ein Job ausgeführt werden soll.
 
 `start()`  
 Diese Methode startet den Scheduler.
@@ -357,7 +358,7 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-Eine Beschreibung hierfür befindet sich [hier](../usage/stepsConfig.md).
+Eine Beschreibung zu diesem Punkt befindet sich [hier](../usage/stepsConfig.md).
 
 ## API
 
@@ -367,7 +368,7 @@ Für die API-Anfragen gibt es folgende Möglichkeiten:
 Fragt einmal die gewünschten Daten einer API ab.
 
 `request_multiple`  
-Fragt für einen variablen Key, mehrere Male gewünschte Daten einer API ab.
+Fragt für einen variablen Key mehrere Male gewünschte Daten einer API ab.
 
 `request_multiple_custom`  
 Fragt unterschiedliche Daten einer API ab.
@@ -418,7 +419,7 @@ Für den Wetterbericht werden folgende Funktionen verwendet:
 | choose_random        | Wählt einen Text aus mehreren gegebenen Texten aus                                                        |
 | date_now             | Generiert das heutige Datum und gibt es im gewünschten Format aus.                                                                  |
 
-Für den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städtenabgefragt, um eine Tendenz berechnen zu können wie die Durchschnittswerte an einem Tag in ganz Deutschland sind.  
+Für den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städten abgefragt, um eine Tendenz für die Durchschnittswerte an einem Tag zu berechnen.  
 Dafür wird die `transform`-Funktion `transform_dict` verwendet. Mithilfe dieser Funktion kann in der JSON-Datenstruktur ein neuer Dictionary-Eintrag generiert werden, in dem Zusammenfassungen von Daten aus allen 19 Anfragen zu einem bestimmten Datum berechnet werden.  
 Zunächst werden z.B. alle maximalen Temperaturwerte für einen Tag von allen Städten in einem Array gespeichert. Mit der `calculate_mean`-Funktion wird aus diesem Array an Zahlen der Mittelwert berechnet und anstelle des Arrays in das Dictionary geschrieben. Außerdem kann z.B. auch der Minimal- und Maximalwert eines Arrays anstelle des Arrays zu einem Key in dem Dictionary abgespeichert werden.  
 Mit `calculate_mode` wird das am häufigsten in einem Array vorkommende Element anstelle des Arrays gespeichert.
@@ -429,7 +430,7 @@ Nachdem die Weatherbit-API erfolgreich implementiert wurde, wurde sich um die Ei
 Genauer genommen wurde zunächst die Darstellung der Fußball-Bundesliga-Ergebnisse in einem Video umgesetzt. Die zuvor implementierten Funktionen konnten größtenteils übernommen werden.
 
 Für die API-Anfrage wurde die Funktion `request_multiple_custom` (ruft die Funktion `request` mehrmals) verwendet, die zuvor noch keine Verwendung gefunden hatte. Nun sollten nämlich die Tabelle der Bundesliga und die Spiele des aktuellen Spieltages abgefragt werden, dies sind bei der API zwei verschiedene einzelne Requests. Außerdem wurde eine weitere Funktion für die API-Anfragen implementiert: `request_memory`. Diese wird dafür benötigt, zuvor abgefragte Requests zu speichern.  
-Bei _openligadb_ war das Problem, dass man nur die aktuelle Tabelle abfragen konnte und keine vorherigen. Vorherige Spieltage waren allerdings kein Problem. Die vorherigen Tabellen werden dafür benötigt Veränderungen zwischen der vorherigen und der aktuellen Tabelle visualisieren zu können. Wenn sich zum Bespiel eine Mannschaft auf der Tabelle um einen Platz verbessert oder verschlechtert hat, kann man dies mithilfe von Pfeilen oder einem anderen dazugehörigen Text darstellen.
+Bei _openligadb_ war das Problem, dass man nur die aktuelle Tabelle abfragen konnte und keine vorherigen. Vorherige Spieltage waren allerdings kein Problem. Die vorherigen Tabellen werden dafür benötigt, um Veränderungen zwischen der vorherigen und der aktuellen Tabelle visualisieren zu können. Wenn sich zum Bespiel eine Mannschaft auf der Tabelle um einen Platz verbessert oder verschlechtert hat, kann man dies mithilfe von Pfeilen oder einem anderen dazugehörigen Text darstellen.
 
 Die zuvor implementierten `transform`-Funktionen konnten größtenteils übernommen werden. Einige wurden verallgemeinert, ergänzt, entfernt oder zusammengefügt zu einer Funktion. Nachdem die verbesserten Funktionen getestet wurden, wurden die Änderungen auch in den JSON-Dateien der Wetterberichte eingepflegt.
 
@@ -439,14 +440,14 @@ Folgende `transform`-Funktionen wurden verwendet:
 | ------------------ | ------------------------------------------------------------------------------------------------------------- |
 | alias              | Erstzt einen Key durch einen neuen Key.                                                                       |
 | transform_array    | Führt alle angegebenen `transform`-Funktionen für alle Werte eines Arrays aus.                                |
-| select             | Entfernt alle Keys, die nicht in `relevant_keys` stehen aus dem Dictionary.                                   |
+| select             | Entfernt alle Keys, die nicht in `relevant_keys` stehen, aus dem Dictionary.                                   |
 | date_weekday       | Wandelt das angegebene Datum in den jeweiligen Wochentag um.                                                  |
 | option             | Führt die aufgeführten `transform`-Funktionen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist. |
 | compare            | Vergleicht zwei                                                                                               |
-| random_string      | Wählt einen Text aus mehreren gegebenen Texten aus                                                                                                 |
+| random_string      | Wählt einen Text aus mehreren gegebenen Texten aus.                                                                                                 |
 | calculate subtract | Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.          |
-| copy               | Kopiert einen Wert zu einem neuen Key                                                                        |
-| delete             | Löscht die angegebenen Keys aus den Daten                                                                     |
+| copy               | Kopiert einen Wert zu einem neuen Key.                                                                        |
+| delete             | Löscht die angegebenen Keys aus den Daten.                                                                     |
 
 Folgende Änderungen wurden durchgeführt, um die Funktionen allgemeiner und modularer zu gestalten:
 
@@ -455,7 +456,7 @@ Mit dieser Funktion kann man beliebige Einträge von Arrays miteinander mulitpli
 
 Außerdem wurden `calculate_divide`, `calculate_subtract` und `calculate_add` hinzugefügt, um alle vier Hauptrechenarten abzudecken.
 
-Die Funktion `choose_random` hatte ein Dictionary mit kleinen Dictionaries gegeben. Ein Key hatte eine festgelegte Anzahl an Key-Value-Paaren (ein kleines Dictionary) aus denen zufällig ein Value ausgewählten werden soll.
+Die Funktion `choose_random` hatte ein Dictionary mit kleinen Dictionaries gegeben. Ein Key hatte eine festgelegte Anzahl an Key-Value-Paaren (ein kleines Dictionary), aus denen zufällig ein Value ausgewählt werden sollte.
 
 Beispiel:
 
@@ -483,31 +484,32 @@ Bei allen Funktion, mit denen das Datumsformat geändert werden kann, wurde erg�
 Bei `compare` werden zwei Werte miteinander vergleichen. Je nachdem ob ein Wert gleich, größer oder kleiner als der andere Wert ist, werden unterschiedliche Funktionen durchgeführt.
 
 Zudem wurden die Funktionen `copy` und `delete` implementiert.  
-`copy` dient dazu, um einen Wert von einem Key zu einem anderen Key zu kopieren.  
+`copy` dient dazu, einen Wert von einem Key zu einem anderen Key zu kopieren.  
 Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Datenstruktur zu entfernen, falls diese nicht mehr benötigt werden.
 
 ```note::
     Mit der JSON-Konfigurationsdatei kann aktuell nur ein Video zur 1. Fußball-Bundesliga erstellt werden.
     Wenn die neue Saison anfängt, können auch Videos zur 2. Fußball-Bundesliga erstellt werden.
     
-    Aktuell können die Testdaten nur zur Generierung eines Videoszur 1. Fußball-Bundesliga erstellt werden, da keine Testdaten 
+    Aktuell können die Testdaten nur zur Generierung eines Videos zur 1. Fußball-Bundesliga erstellt werden, da keine Testdaten 
     der 2. Fußball-Bundesliga vorliegen.
 
     Bei der Erstellung des Videos zur 1. Fußball-Bundesliga kann aktuell nur der Spielplan für den 1. Spieltag dargestellt werden, die Tabelle ist zunächst nur alphabetisch sortiert.
     Bei der Erstellung des Videos zur 2. Fußball-Bundesliga tritt ein Fehler auf, da in openligadb noch nicht alle Mannschaften aufgeführt sind.
-    Wenn der 1. Spieltag allerdings gespielt wurde, sollte auch ein Video, der 2. Fußball-Bundesliga erstellt werden können.
+    Wenn der 1. Spieltag allerdings gespielt wurde, sollte auch ein Video der 2. Fußball-Bundesliga erstellt werden können.
 
     Da die Datei `football.json` bisher nur auf 18 Mannschaften ausgelegt ist, können keine Videos zu Ligen mit mehr oder 
     weniger Mannschaften erstellt werden. Sollen auch Videos für andere Ligen erstellt werden können, so muss dafür eine eigene JSON-Datei zusammengestellt werden.
 ```
 **Wordcloud**
 
-Um die Twitter-API zu verwenden, wird eine (oder mehrere) API-Anfragen gesendet mit Hashtags. Als Antwort erhält man unter anderem alle Posts, die das gesuchte Hashtag innerhalb der letzten 7 Tage verwendet haben.
-Die API-Antwort wird so verkürzt, dass nur noch die Hashtags, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden Wordclouds erstellt.
+Um an die Daten für die Wordclouds zu kommen, werden eine oder mehrere API-Anfragen gesendet, welche die zugrundeliegenden Hashtags enthalten. Als Antwort erhält man unter anderem alle Twitter-Beiträge, in denen die gesuchten Hashtags innerhalb der letzten sieben Tage verwendet wurden.
+Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthalten, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden dann letztendlich die Wordclouds erstellt.
 
-Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt. Es ist möglich verschiedene Parameter für die Wordcloud festzulegen.
-Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square".
-(siehe [Images: Wordcloud](#wordcloud))
+Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt.   
+Es ist möglich, verschiedene Parameter für die Wordcloud festzulegen.
+Zum Beispiel kann die Wordcloud verschiedene Formen annehmen. Implementiert wurden Masken für "circle" und "square"
+(siehe [Images: Wordcloud](#wordcloud)).
 
 Die zuvor implementierten `transform`-Typen konnten größtenteils nicht weiter verwendet werden und es mussten neue implementiert werden.
 `transform_array`, `select`, `append` und `delete` konnten wiederverwendet werden.
@@ -522,18 +524,18 @@ Folgende transform-Typen wurden verwendet:
 | delete           | Entfernt Key/Value-Paare, die nicht relevant für die Erstellung der Wordcloud sind.                                                                                                           |
 | remove_from_list | Entfernt Wörter aus einer Liste.                                                                                                                                                              |
 | option           | transform-Typen, die durchgeführt werden, wenn ein gewisser Wert true bzw. false ist.                                                                                                         |
-| most_common      | Zählt wie oft ein Wort vorkommt und sortiert diese Liste (mit bzw. ohne die Zahl).                                                                                                            |
-| sub_lists        | Erstellt aus einer großen Liste, eine (oder mehrere) kleinere Listen, die nur einen Teil der großen Liste repräsentieren.                                                                     |
+| most_common      | Zählt, wie oft ein Wort vorkommt, und sortiert diese Liste (mit bzw. ohne die Zahl).                                                                                                            |
+| sub_lists        | Erstellt aus einer großen Liste eine oder mehrere kleinere Listen, die nur einen Teil der großen Liste repräsentieren.                                                                     |
 | to_dict          | Wandelt ein Array aus Tupeln in ein Dictionary um.                                                                                                                                            |
 | length           | Gibt die Länge eines Ararys bzw. einer Liste aus.                                                                                                                                             |
-| join             | Erstellt aus den Elementen einer Liste einen String, indem die Elemente mit dem gewünschten Trennzeichen aufgeführt werden.                                                                   |
+| join             | Erstellt aus den Elementen einer Liste einen String, indem die Elemente mit dem gewünschten Trennzeichen konkateniert werden.                                                                   |
 | select           | Wählt die Key/Value-Paare aus, die relevant für die Erstellung oder die Datenverarbeitung für die Wordcloud sind.                                                                             |
 | append           | Fügt den Daten weitere Key/Value-Paare hinzu.                                                                                                                                                 |
-| normalize_words  | Wörter, die mehrmals in einer Liste vorkommen, werden wenn die Groß- bzw. Kleinschreibung anders it als beim ersten Vorkommen eines Worts so geschrieben wie beim ersten Vorkommen des Worts. |
+| normalize_words  | Wörter, die mehrmals in einer Liste vorkommen und sich nur in Groß-/Kleinschreibung unterscheiden, werden ersetzt durch das erste in der Liste vorkommende Wort. |
 
 **Wordcloud-Parameter**
 
-Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud beeinflussen kann. Diese betreffen die Größe der Wordcloud und der Schrift. Die Hintergrundfarbe, Schriftfarben. Will man anstatt eines einfarbigen Hintergrunds ein Bild, geht dies durch die JSON und den Overlay-Typ "image" auch.
+Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud setzen kann. Diese betreffen u.a. die Größe der Wordcloud sowie die Schrift. Die Hintergrundfarbe, Schriftfarben. Möchte man anstatt eines einfarbigen Hintergrunds ein Bild verwenden, lässt sich dies in der JSON-Datei durch den Overlay-Typ "image" einstellen.
 Die verschiedenen Parameter werden in der [Dokumentation zur Themenkonfiguration](#themenkonfiguration) genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
 Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
@@ -541,29 +543,28 @@ Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein
 
 ### Audio
 
-Im Audio Part können beliebig viele Texte welche in Audio übersetzt werden, angegeben werden.
-Eine Audio datei besteht in der regel aus mehreren Parts, welche beim Programmdurchlauf dann zu einem Text zusammengesetzt werden
-In der Regel erzeugt mann pro erstelltes Bild eine Audio Datei, dh wenn es `Football_Image_1`-`Football_Image_7` gibt  
-so sollte es auch `Football_Audio_1` bis `Football_Image_7` geben, dies dient im Sequence Bereich dazu dass zu jeder Audio datei eine Video datei zugeordnert werden kann.
-Natürlich kann dies auch varieren, dazu muss mann dann in Sequence aber den typ `custom` wählen
+Im Audio-Abschnitt können beliebig viele Texte angegeben werden, welche in Audios übersetzt werden.
+Eine Audio-Datei besteht in der Regel aus mehreren Parts, welche beim Programmdurchlauf dann zu einem Text zusammengesetzt werden.  
+In der Regel erzeugt man für jedes erstellte Bild eine Audio-Datei, d.h., wenn es `Football_Image_1`-`Football_Image_7` gibt, so sollte es auch `Football_Audio_1` bis `Football_Image_7` geben. Dies dient dazu, dass im Sequence-Abschnitt jeder Audio-Datei eine Video-Datei zugeordnert werden kann.
+Möchte man dies anders machen, muss im Sequence-Abschnitt der Typ `custom` gewählt werden.
 
 ### Images
 
-Im Image part können ebenso beliebig viele Bilder generiert werden. 
-Es gibt derzeit 2 Image Typen mit welchen Bilder erzegt werden können:
+Im Image-Part können ebenso beliebig viele Bilder generiert werden. 
+Es gibt derzeit zwei verschiedene Image-Typen zur Bilderzeugung:
 
 #### Pillow
-Bilder welche mit Pillow erstellt werden sind die meist Verwendeten Bilder in unseren Videos
-Mit Pillow kann ein Angegebnes Bild bearbeitet werden mit folgenden Möglichkeiten:
-Text einfügen sowie
-Bilder einfügen, dies geschieht mit den beiden overlay Typen `Text` sowie `Image`, 
-zusätzlich gibt es noch die Typen `Image-Array` und `Text-Array` diese dienen lediglich dazu um ähnliche Text/Bilder einfacher auf das Bild zu schreiben.
-Ebensfalls funktioniert auch hier der `option` sowie `compare` Typ sofern man bestimmt Information auf das Bild schreiben möchte wenn eine Bedingung erfüllt ist
+Die meisten Videos in unseren Bildern werden mit dem Bildbearbeitungs-Tool Pillow erstellt.   
+Folgende Typen stehen zur Bildbearbeitung mit Pillow bereit:  
+Texte und Bilder lassen sich mit Hilfe der beiden `overlay`-Typen `Text` sowie `Image` in ein Bild einfügen.  
+Zusätzlich gibt es noch die Typen `Image-Array` und `Text-Array`. Diese dienen lediglich dazu, mehrere Texte/Bilder, die sich ähneln, leichter in ein Bild einzufügen.   
+Möchte man nur etwas auf das Bild schreiben, wenn eine Bedingung erfüllt ist, eignet hier der `option`- sowie der `compare`-Typ.
 
 #### Wordcloud
-Wordclouds sind Images, die erstellt werden können. Der Hintergrund kann einfarbig sein oder aber auch ein anderes Bild als Hintergrund haben. Hier wird dann mit dem overlay-Typ "image" gearbeitet.
+Neben Bildern, die mit Hilfe von Pillow erzeugt werden, können auch Wordclouds generiert und in das Video eingebunden werden.   
+Der Hintergrund kann einfarbig sein, es lässt sich aber auch ein Hintergrundbild verwenden. Hier wird dann mit dem overlay-Typ "image" gearbeitet.
 
-Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
+Eine Wordcloud zum Thema Bundesliga sieht folgendermaßen aus:
 
 <figure>
   <img width="90%" src="../_static/images/documentation/wordcloud_circle.png"/>
@@ -577,57 +578,57 @@ Eine Wordcloud zum Thema Bundesliga sähe folgendermaßen aus:
 </figure>  
 <br>
 
-Die Wörter, die zu sehen sind, sind alles Hashtags, die neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
+Die Wörter, die zu sehen sind, sind Hashtags, die am häufigsten neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
 Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
 
-Man kann außerdem entscheiden, welche Wörter man auf keinen Fall in der Wordcloud haben möchte, die Stopwords. Dafür ist eine Textdatei im Resources-Ordner hinterlegt und man kann sie im Frontend eingeben,
-falls spontan neue Stopwords hinzukommen. Die Textdatei mit den Stopwords kann optional verwendet werden. Es kann außerdem berücksichtig werden, dass Wörter, die upper, lower oder capitalized vorkommen, aber zu den Stopwords gehören, auch nicht auftauchen sollen.
+Um das Auftauchen bestimmter Wörter in der Wordcloud zu verhindern, lassen sich Stopwords definieren. Dafür ist global eine TextdateiVideogenerierung im Resources-Ordner hinterlegt, welche eine Liste von Stopwords enthält und sich beim Erstellen der Wordcloud optional verwenden lässt.   
+Zusätzlich können über das Frontend Stopwords gesetzt werden, welche nur für bestimmte Videos gelten sollen.    
+Des Weiteren kann eingestellt werden, dass Groß- und Kleinschreibung beim Prüfen der Stopwords keine Rolle spielen sollen.
 
 Man kann auch Stopwords mit nur einen Wort, welches sich wiederholt, darstellen.
 
-Möchte man einen Verlauf von dem am häufigsten genannten Hashtag zu dem immer das nächsthäufigste hinzu kommt, muss man einzelne Wordclouds erstellen und diese aneinanderhängen, damit man einen Verlauf als Video hat.
-Dies geschieht dann mit dem Sequencer.
+Möchte man die am häufigsten auftretenden Wörter nach und nach in der Wordcloud darstellen. Dafür müssen einzelne Wordclouds erstellt und diese anschließend im Sequence-Schritt aneinandergehängt werden.
+
 
 ## Storing
 
-Der Abschnitt `storing` ist dafür da, dass man z. B. die Tabelle eines jeden Spieltags im gleichen Zug abspeichert wie man sie aus der API erhält.
+Der Abschnitt `storing` dient dazu, API-Antworten persistent zu speichern, um zu späteren Zeitpunkten wieder auf diese Daten zugreifen zu können.   
 Der Abschnitt wurde hinzugefügt, weil die openligadb-API nur die Bundesliga-Tabelle des aktuellen Spieltags bereitstellt und nicht auch die der vorherigen Spieltage.
 Um jedoch herauszufinden, ob sich eine Mannschaft im Vergleich zum vorherigen Spieltag verbessert oder verschlechtert hat oder auf dem gleichen Tabellenplatz ist wie zuvor, wurde auch die Tabelle vom vorherigen Spieltag benötigt. 
 
 Zuerst wurden transform-Typen geschrieben, welche die vorherigen Tabelle anhand der Spielergebnisse des aktuellen Spieltags rekonstruiert haben (darunter gehörte u.A. `subtract`).
-Dies war recht aufwändig, also kam die Idee mit dem Speichern von Dictionaries bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere API-Schnittstellen bzw. weitere Video-Ideen verwendet werden.
+Dies war recht aufwändig, also kam die Idee mit dem Speichern von Dictionaries bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere APIs bzw. weitere Video-Ideen verwendet werden.
 
 ## Thumbnail
 
-Für ein Video, welches erstellt wird, kann man - wenn man das möchte - einen Thumbnail erstellen. Dieser kann zum Beispiel in einer Übersicht angezeigt werden.
-Man kann einen Thumbnail aus einem bereits für das Video erstellten Bild generieren oder ein neues Bild erstellen, welches dann als Thumbnail abgespeichert wird.  
+Für ein generiertes Video lässt sich bei Bedarf ein Thumbnail erstellen.
+Für einen Thumbnail kann man ein bereits für das Video erstellte Bild wählen oder ein neues Bild erstellen. 
 
 Nützlich ist dies zum Beispiel bei einer Übersichtsseite wie z.B. [hier](https://biebertal.mach-mit.tv/gemeinde/).
-Es ist eine Art Vorschau für das, was im Video gezeigt wird. 
+Der Thumbnail gibt eine Vorschau auf den Inhalt des Videos. 
 
 ## Sequence
 
-Im Sequence Bereich wird definiert wie ein Video zu render ist, bzw in welchen Reihenfolge und welcher Länge die Audios / Bilder
-aneinander gereiht werden sollen. Als einfachsten Typ gibt es hier den `successively` Typ welcher einfach alle Bilder und alle Audios 
-aneinanderreiht und jedes Bild solange zeigt wie die passende Audio Datei lang ist.
+Im Sequence-Abschnitt wird definiert, wie das Video gerendert wird bzw. in welcher Reihenfolge und Länge die Audios/Bilder abgespielt/gezeigt werden sollen.   
+Der einfachste Typ ist der `successively`-Typ, welcher alle Bilder und Audios 
+aneinanderreiht und jedes Bild so lange zeigt wie die entsprechende Audio lang ist.
 
 ## run_config
 
-Hier werden Parameter angegeben, die bei der Themen-Konfiguration im Frontend angegeben werden können.
-Unter dem Abschnitt `run_config` werden die Konfigurationen eingefügt, die zur Laufzeit noch angegeben werden können.
+Hier werden Konfigurationsparameter angegeben, welche noch zur Laufzeit gesetzt werden können. Die hier aufgeführten Parameter werden auch vom Frontend zur Darstellung der Parameter-Auswahl-Seite verwendet - dafür besitzt jeder Paremeter einen der folgenden Typen:
 
 | Name | Beschreibung | Frontend |
 |----|----| ---- |
-|`enum`|Auswahl an verschiedenen Werten vorgeben|Dropdown-Menü|
-|`string`|Nutzereingabe eines Strings|Textfeld|
-|`multi_string`|Nutzereingabe mehrerer Strings|Textfeld (komma-separierte Eingabe)|
-|`number`|Nutzereingabe einer Zahl|Textfeld|
-|`multi_number`|Nutzereingabe mehrerer Zahlen|Textfeld (komma-separierte Eingabe)|
+|`enum`|Vorgegebene Anzahl an Werten|Dropdown-Menü|
+|`string`|String|Textfeld|
+|`multi_string`|Eine Liste von Strings|Textfeld (komma-separierte Eingabe)|
+|`number`|Eine Zahl|Textfeld|
+|`multi_number`|Liste von Zahlen|Textfeld (komma-separierte Eingabe)|
 |`boolean`|`true` oder `false`|Checkbox|
-|`sub_params`|Wenn ein Parameter ausgewählt wurde, gibt es weitere Auswahlmöglichkeiten, die dann angezeigt werden, um ausgewählt zu werden| Je nachdem welchen Typ, der Unterparameter bzw. die Unterparameter haben (siehe vorherige Typen).|
+|`sub_params`|Ein Parameter kann Unterparameter enthalten, welche logisch abhängig von diesem sind| Hängt von den Typen der Unterparameter ab.|
 
 ## presets
 
 Unter dem Abschnitt `presets` können Einstellungen vorgenommen werden für Images, die sich sonst bei der Konfiguration oft wiederholen.
 
-Um diese Code-Mehrfachnennungen zu vermeiden, kann man diese als Preset anlegen indem man einem Set an Parametern einen Namen gibt, welcher dann z.B. bei der Image-Generierung als Einzeiler angegeben wird.
+Um diese Code-Wiederholungen zu vermeiden, kann man diese als Preset anlegen indem man einem Set an Parametern einen Namen gibt, welcher dann z.B. bei der Image-Generierung als Einzeiler angegeben wird.
