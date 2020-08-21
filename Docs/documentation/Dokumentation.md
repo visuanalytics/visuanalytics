@@ -206,12 +206,14 @@ Dazu gibt es folgende Optionen:
 
 ## Wordpress-Plugin
 
-Um die in ReactJS geschriebene Benutzeroberfläche als Wordpress-Plugin zu realisieren, muss zuerst ein _Production Build_ erstellt werden.
+Um die in ReactJS geschriebene Benutzeroberfläche als Wordpress-Plugin zu realisieren, muss zuerst ein _Production Build_ erstellt werden. Dieses _Production Build_ komprimiert den ReactJS-Code in vier JavaScript-Dateien. 
 
-Dieses _Production Build_ komprimiert den ReactJS-Code in vier JavaScript-Dateien. 
+Danach muss eine php-Datei geschrieben werden, welche aus den Dateien des Production Builds, das Wordpress-Plugin generiert.
+
+Der Aufbau der `visuanalytics.php`-Datei wird im folgenden genauer erläutert.
 
 ### Anlegen einer Wordpress Menü-Seite
-Damit in dem installierten Wordpress das Plugin angezeigt wird, muss zuerst eine neue Menü-Seite erstellt werden.
+Damit das Plugin in Wordpress angezeigt wird, muss zuerst eine neue Menü-Seite erstellt werden.
 
 `add_menu()`
 
@@ -219,7 +221,6 @@ Damit in dem installierten Wordpress das Plugin angezeigt wird, muss zuerst eine
   <img width="60%" src="../_static/images/documentation/menupage.png"/>
   <figcaption>Abbildung 7</figcaption>
 </figure>  
-<br>
 
 Zuerst wird eine Variable für die Seite angelegt, sowie eine für das Icon welches daneben auftauchen soll.
 
@@ -280,6 +281,27 @@ function init_va_menu() {
   add_action( 'admin_enqueue_scripts', 'add_va_scripts' );
 }
 ~~~
+
+### Probleme mit dem Wordpress eigenen Style
+
+Nach dem Laden der Dateien hatten wir das Problem, dass manche Komponenten wie z.B. die Input-Felder von dem Wordpress Style überschrieben wurden.
+
+Um dies zu beheben, haben wir in dem Entwicklertools des Browser rausgesucht, welche Styles geladen werden und diese nacheinander entfernt, um zu sehen, welcher unser Design überschreibt.
+
+<figure>
+  <img width="100%" src="../_static/images/documentation/forms.png"/>
+  <figcaption>Abbildung 7</figcaption>
+</figure>  
+<br>
+
+Dabei ist uns aufgefallen,dass `forms` unser Design verändert. Daher haben wir mit `wp_deregister_style` diesen Style für unser Plugin deaktiviert.
+
+~~~php
+wp_deregister_style("forms");
+wp_enqueue_style("forms", 'common');
+~~~
+
+Eine geneuere Dokumentation der Wordpress-Methoden finden Sie [hier](https://developer.wordpress.org/plugins/)
 
 ## Web-API
 
