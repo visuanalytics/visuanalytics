@@ -40,7 +40,7 @@ def text(values, data):
 
 @register_audio_parts
 def compare(values, data):
-    """Vergleicht zwei Werte miteinander und führt je nachdem ob =, !=, < oder > die "transform"-Typen aus.
+    """Vergleicht zwei Werte miteinander und führt je nachdem, ob =, !=, < oder >, die danach aufgeführten `"audio_parts"`-Funktionen aus.
 
     Wenn `value_left` gleich `value_right`, führe "transform"-Typen aus on_equal durch.
     Wenn `value_left` ungleich `value_right`, führe "transform"-Typen aus on_not_equal durch.

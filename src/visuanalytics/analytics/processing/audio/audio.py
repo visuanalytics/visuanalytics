@@ -58,6 +58,10 @@ def register_generate_audio(func):
 def default(values: dict, data: StepData, config: dict):
     """Generiert eine Audiodatei mit der Python-Bibliothek gTTS.
 
+    Wenn in der Konfiguration `sub_pairs` angegeben sind, werden diese den bisherigen `sub_pairs` hinzugefügt.
+    `sub_pairs` sind bestimmte Wörter, die im Text ersetzt werden sollen.
+    Beispiel: "z.B." soll vorgelesen werden als "zum Beispiel".
+
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     :param config: Daten aus der Konfigurationsdatei

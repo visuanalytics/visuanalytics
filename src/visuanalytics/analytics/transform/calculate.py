@@ -11,9 +11,16 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.transform.util.key_utils import get_new_keys
 
 CALCULATE_ACTIONS = {}
+"""Ein Dictionary bestehend aus allen Calculate-Actions-Methoden."""
 
 
 def register_calculate(func):
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Action-Funktion dem Dictionary CALCULATE_ACTIONS hinzu.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
+    """
     CALCULATE_ACTIONS[func.__name__.replace("calculate_", "")] = func
     return func
 
