@@ -377,7 +377,7 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Des Weiteren stellt diese Hilfsfunktionen bereit, welche die Verwendung der Daten erleichtern. Eine Auflistung aller Funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data)
+StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Außerdem stellt sie Hilfsfunktionen bereit, welche die Verwendung der Daten erleichtern. Eine Auflistung aller Funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data).
 
 ## Themenkonfiguration
 
