@@ -381,7 +381,7 @@ StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Außerdem 
 
 ## Themenkonfiguration
 
-Um die Themen der Videos leicht erweiterbar zu machen, werden diese als JSON-Datei definiert. Diese enthalten gewissermaßen eine Anleitung dafür, welche Daten von den APIs bezogen werden und wie daraus dann ein Video generiert werden soll.    
+Um die Themen der Videos leicht erweiterbar zu machen, werden diese als JSON-Dateien definiert. Diese enthalten gewissermaßen eine Anleitung dafür, welche Daten von den APIs bezogen werden und wie daraus dann ein Video generiert werden soll.    
 Dieser Ansatz ermöglicht es zum einen, ein neues Thema hinzuzufügen, indem einfach eine neue JSON-Datei mit der entsprechenden Konfiguration geschrieben wird, und zum anderen die Konfiguration für bestehende Themen anzupassen (z.B. wenn API-Anfragen auf Änderungen der API angepasst werden müssen).
  
 Eine genaue Beschreibung der Konfigurationsdatei befindet sich [hier](../usage/stepsConfig.md).
