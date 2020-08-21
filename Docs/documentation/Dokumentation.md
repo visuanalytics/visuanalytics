@@ -309,8 +309,6 @@ Eine geneuere Dokumentation der Wordpress-Methoden finden Sie [hier](https://dev
 
 ## Web-API
 
-**TODO**
-
 ## Datenbank
 
 Für die Datenbank wird eine SQLite-Datenbank verwendet.
