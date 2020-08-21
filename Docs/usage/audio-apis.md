@@ -31,6 +31,8 @@ Output-Format der Audiodatei. Z.B. mp3
 
 Verwendet man den Konfigurations-Typ `custom`, kann man folgendes einstellen:
 
+_(Ein vollständiges Beispiel, wie man Microsoft Azure einbinden kann, finden Sie [hier](#beispiel))_
+
 `config.json`:
 
 ~~~jsonc
