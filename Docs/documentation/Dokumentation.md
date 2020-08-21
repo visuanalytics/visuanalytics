@@ -24,7 +24,7 @@ Die `index.html` wird vom Browser geladen. Diese beinhaltet den div-Container `r
 <div id="root"></div>
 ```
 
-In der `index.tsx` wird mithilfe der ID der Component `App` in den Container geladen.
+In der `index.tsx` wird mithilfe der ID des Komponenten `App` in den Container geladen.
 
 ```tsx
 ReactDOM.render(
@@ -37,7 +37,7 @@ ReactDOM.render(
 
 #### App
 
-Der Component `App` besteht aus einem `Header`- und einem `Main`-Component.
+Der Komponent `App` besteht aus einem `Header`- und einem `Main`-Komponenten.
 
 Der `Header` befindet sich immer am oberen Bildschirmrand, daher liegt dieser über `Main`. In `Main` wird der Inhalt der Seite geladen.
 
@@ -56,7 +56,7 @@ Der `Header` befindet sich immer am oberen Bildschirmrand, daher liegt dieser ü
 </figure>  
 <br>
 
-Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an, auf welcher Seite des Programms man sich befindet.
+Der Komponent `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an, auf welcher Seite des Programms man sich befindet.
 
 #### Main
 
@@ -67,7 +67,7 @@ export const Main = () => {
 };
 ```
 
-`Main` zeigt immer den aktuellen Component an. Soll sich also die Seite beim Klicken auf einen Button verändern, so muss nur der aktuelle Component (`current.component`) gesetzt werden.
+`Main` zeigt immer den aktuellen Komponenten an. Soll sich also die Seite beim Klicken auf einen Button verändern, so muss nur der aktuelle Komponent (`current.component`) gesetzt werden.
 
 #### Home
 
@@ -81,7 +81,7 @@ export const Main = () => {
 
 ```
 
-`Home` stellt die Startseite dar. Auf dieser wird eine Liste aller angelegten Jobs angezeigt. Dazu gibt es den Component `JobList`.
+`Home` stellt die Startseite dar. Auf dieser wird eine Liste aller angelegten Jobs angezeigt. Dazu gibt es den Komponenten `JobList`.
 
 #### JobList
 
@@ -95,7 +95,7 @@ export const Main = () => {
 }
 ```
 
-In dem Component `JobList` wird für jeden angelegten Job ein Component von `JobItem` generiert.
+In dem Komponenten `JobList` wird für jeden angelegten Job ein Komponent von `JobItem` generiert.
 
 #### JobItem
 
@@ -105,21 +105,21 @@ In dem Component `JobList` wird für jeden angelegten Job ein Component von `Job
 </figure>  
 <br>
 
-Ein `JobItem` beinhaltet den Component `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Component `JobSettings`, auf welchem man Änderungen an den Einstellungen des Jobs vornehmen kann.
+Ein `JobItem` beinhaltet den Komponenten `JobInfo`, welcher die Informationen eines Jobs anzeigt, sowie den Komponenten `JobSettings`, auf welchem man Änderungen an den Einstellungen des Jobs vornehmen kann.
 
 #### JobInfo
-Der Component `JobInfo` beinhaltet drei Infomationen zu einem Job:
+Der Komponent `JobInfo` beinhaltet drei Infomationen zu einem Job:
 
 1.  Das Thema des Jobs.
 2.  Der allgemeine Zeitplan, nach dem Job der Job ausgeführt wird.
 3.  Die Information, wann der Job das nächste Mal ausgeführt wird.
 
 #### JobSettings
-Der Component `JobSettings` beinhaltet den Component `SettingsPage`, welcher aus den drei Components [ParamSelection](#paramselection), [ScheduleSelection](#scheduleselection) und [DeleteSelection](#deleteSelection) besteht.
+Der Komponent `JobSettings` beinhaltet den Komponenten `SettingsPage`, welcher aus den drei Komponenten [ParamSelection](#paramselection), [ScheduleSelection](#scheduleselection) und [DeleteSelection](#deleteSelection) besteht.
 
 #### JobCreate
 
-Möchte man einen neuen Job erstellen, so wird beim Klicken auf den dazugehörigen Button der Component `JobCreate` in den `Main`-Component geladen.
+Möchte man einen neuen Job erstellen, so wird beim Klicken auf den dazugehörigen Button der Komponent `JobCreate` in den `Main`-Komponenten geladen.
 
 ```ts
 const components = React.useContext(ComponentContext);
