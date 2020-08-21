@@ -329,6 +329,10 @@ wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
 </figure>  
 <br>
 
+### Server Endpunkte
+
+**TODO**
+
 ## Scheduler
 
 <figure>
@@ -358,9 +362,17 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-Eine Beschreibung zu diesem Punkt befindet sich [hier](../usage/stepsConfig.md).
+StepData ist die Daten Klasse, die alle daten zur Laufzeit speichert. Desweiteren Stellt diese hilfsfunktionen bereit um einfacher die Daten zu verwenden. Wie z. B.: das Formatieren eines Strings oder das bekommen von Daten. Eine Auflistung aller funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data)
 
-## API
+## Themenkonfiguration
+
+Um die Themen der Videos leicht erweiterbar zu machen können diese als JSON-Datei definiert werden. Das Programm generiert dann anhand dieser Konfigurations dateien ein Viedeo, dies ermöglicht es die Themen leicht zu erweitern und auch gut auf `api` änderungen anzupassen.
+
+Eine Genau Beschreibung der Konfiguration befindet sich [hier](../usage/stepsConfig.md).
+
+Im weiteren wird die Konfiguration anhand von den vordefinierten Themen beschrieben. Fals also Fragen beim Lessen auftretten kann es sinvoll sein in die Oben verlinkte beschreibung zu schauen und sich die genau definition anzuschauen.
+
+### API
 
 Für die API-Anfragen gibt es folgende Möglichkeiten:
 
@@ -372,6 +384,8 @@ Fragt für einen variablen Key mehrere Male gewünschte Daten einer API ab.
 
 `request_multiple_custom`  
 Fragt unterschiedliche Daten einer API ab.
+
+Eine genaue Beschreibung der einzelnen Typen befindet sich [hier](../usage/stepsConfig.html#api).
 
 Für die Wetterberichte werden die folgenden API-Typen verwendet:
 
@@ -394,9 +408,11 @@ Für die Twitter-Wordcloud werden die folgenden API-Typen verwendet:
 | -------------------- | ------------------------------------------ |
 |request               |Anfrage für die Twitter-Daten zu einem Thema|
 
-## Transform
+### Transform
 
 Mit den `transform`-Typen werden Funktionen implementiert, mit denen man die aus den API-Request erhaltenen Daten transformieren kann.
+
+Eine genaue Beschreibung aller `transform`-Typen befindet sich [hier](../usage/stepsConfig.html#transform)
 
 **Wetterbericht**  
 Für den Wetterbericht werden folgende Funktionen verwendet:
@@ -501,7 +517,7 @@ Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Daten
     Da die Datei `football.json` bisher nur auf 18 Mannschaften ausgelegt ist, können keine Videos zu Ligen mit mehr oder 
     weniger Mannschaften erstellt werden. Sollen auch Videos für andere Ligen erstellt werden können, so muss dafür eine eigene JSON-Datei zusammengestellt werden.
 ```
-**Wordcloud**
+**Twitter Wordcloud**
 
 Um an die Daten für die Wordclouds zu kommen, werden eine oder mehrere API-Anfragen gesendet, welche die zugrundeliegenden Hashtags enthalten. Als Antwort erhält man unter anderem alle Twitter-Beiträge, in denen die gesuchten Hashtags innerhalb der letzten sieben Tage verwendet wurden.
 Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthalten, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden dann letztendlich die Wordclouds erstellt.
@@ -536,12 +552,12 @@ Folgende transform-Typen wurden verwendet:
 **Wordcloud-Parameter**
 
 Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud setzen kann. Diese betreffen u.a. die Größe der Wordcloud sowie die Schrift. Die Hintergrundfarbe, Schriftfarben. Möchte man anstatt eines einfarbigen Hintergrunds ein Bild verwenden, lässt sich dies in der JSON-Datei durch den Overlay-Typ "image" einstellen.
-Die verschiedenen Parameter werden in der [Dokumentation zur Themenkonfiguration](#themenkonfiguration) genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
+Die verschiedenen Parameter werden in der [Dokumentation zur Themenkonfiguration](../usage/stepsConfig.html#wordcloud) genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
 Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
-## Processing
+### Processing
 
-### Audio
+#### Audio
 
 Im Audio-Abschnitt können beliebig viele Texte angegeben werden, welche in Audios übersetzt werden.
 Eine Audio-Datei besteht in der Regel aus mehreren Parts, welche beim Programmdurchlauf dann zu einem Text zusammengesetzt werden.  
@@ -559,6 +575,8 @@ Folgende Typen stehen zur Bildbearbeitung mit Pillow bereit:
 Texte und Bilder lassen sich mit Hilfe der beiden `overlay`-Typen `Text` sowie `Image` in ein Bild einfügen.  
 Zusätzlich gibt es noch die Typen `Image-Array` und `Text-Array`. Diese dienen lediglich dazu, mehrere Texte/Bilder, die sich ähneln, leichter in ein Bild einzufügen.   
 Möchte man nur etwas auf das Bild schreiben, wenn eine Bedingung erfüllt ist, eignet hier der `option`- sowie der `compare`-Typ.
+
+Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#pillow)
 
 #### Wordcloud
 Neben Bildern, die mit Hilfe von Pillow erzeugt werden, können auch Wordclouds generiert und in das Video eingebunden werden.   
@@ -590,45 +608,6 @@ Man kann auch Stopwords mit nur einen Wort, welches sich wiederholt, darstellen.
 Möchte man die am häufigsten auftretenden Wörter nach und nach in der Wordcloud darstellen. Dafür müssen einzelne Wordclouds erstellt und diese anschließend im Sequence-Schritt aneinandergehängt werden.
 
 
-## Storing
+Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#wordcloud)
 
-Der Abschnitt `storing` dient dazu, API-Antworten persistent zu speichern, um zu späteren Zeitpunkten wieder auf diese Daten zugreifen zu können.   
-Der Abschnitt wurde hinzugefügt, weil die openligadb-API nur die Bundesliga-Tabelle des aktuellen Spieltags bereitstellt und nicht auch die der vorherigen Spieltage.
-Um jedoch herauszufinden, ob sich eine Mannschaft im Vergleich zum vorherigen Spieltag verbessert oder verschlechtert hat oder auf dem gleichen Tabellenplatz ist wie zuvor, wurde auch die Tabelle vom vorherigen Spieltag benötigt. 
-
-Zuerst wurden transform-Typen geschrieben, welche die vorherigen Tabelle anhand der Spielergebnisse des aktuellen Spieltags rekonstruiert haben (darunter gehörte u.A. `subtract`).
-Dies war recht aufwändig, also kam die Idee mit dem Speichern von Dictionaries bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere APIs bzw. weitere Video-Ideen verwendet werden.
-
-## Thumbnail
-
-Für ein generiertes Video lässt sich bei Bedarf ein Thumbnail erstellen.
-Für einen Thumbnail kann man ein bereits für das Video erstellte Bild wählen oder ein neues Bild erstellen. 
-
-Nützlich ist dies zum Beispiel bei einer Übersichtsseite wie z.B. [hier](https://biebertal.mach-mit.tv/gemeinde/).
-Der Thumbnail gibt eine Vorschau auf den Inhalt des Videos. 
-
-## Sequence
-
-Im Sequence-Abschnitt wird definiert, wie das Video gerendert wird bzw. in welcher Reihenfolge und Länge die Audios/Bilder abgespielt/gezeigt werden sollen.   
-Der einfachste Typ ist der `successively`-Typ, welcher alle Bilder und Audios 
-aneinanderreiht und jedes Bild so lange zeigt wie die entsprechende Audio lang ist.
-
-## run_config
-
-Hier werden Konfigurationsparameter angegeben, welche noch zur Laufzeit gesetzt werden können. Die hier aufgeführten Parameter werden auch vom Frontend zur Darstellung der Parameter-Auswahl-Seite verwendet - dafür besitzt jeder Paremeter einen der folgenden Typen:
-
-| Name | Beschreibung | Frontend |
-|----|----| ---- |
-|`enum`|Vorgegebene Anzahl an Werten|Dropdown-Menü|
-|`string`|String|Textfeld|
-|`multi_string`|Eine Liste von Strings|Textfeld (komma-separierte Eingabe)|
-|`number`|Eine Zahl|Textfeld|
-|`multi_number`|Liste von Zahlen|Textfeld (komma-separierte Eingabe)|
-|`boolean`|`true` oder `false`|Checkbox|
-|`sub_params`|Ein Parameter kann Unterparameter enthalten, welche logisch abhängig von diesem sind| Hängt von den Typen der Unterparameter ab.|
-
-## presets
-
-Unter dem Abschnitt `presets` können Einstellungen vorgenommen werden für Images, die sich sonst bei der Konfiguration oft wiederholen.
-
-Um diese Code-Wiederholungen zu vermeiden, kann man diese als Preset anlegen indem man einem Set an Parametern einen Namen gibt, welcher dann z.B. bei der Image-Generierung als Einzeiler angegeben wird.
+Die hier beschriebenen Abschnitte sind nur ein auschnitt aus den Funktionen der Themenkonfiguration eine genaue beschreibung aller abschnitte und möglichkeiten befindet sich [heir](../usage/stepsConfig.md)

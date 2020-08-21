@@ -2150,8 +2150,12 @@ Wenn man ein [transform](#transform)-Typen bei `transform` angibt (z. B. bei [tr
 
 ## Storing
 
-Mit Hilfe von `storing` können ganze Dictionaries oder auch einzelne Werte in Dateien gespeichert werden
-und bei einem späterem Durchlauf des Programms wieder eingelesen werden.
+Der Abschnitt `storing` dient dazu, API-Antworten persistent zu speichern, um zu späteren Zeitpunkten wieder auf diese Daten zugreifen zu können.   
+Der Abschnitt wurde hinzugefügt, weil die openligadb-API nur die Bundesliga-Tabelle des aktuellen Spieltags bereitstellt und nicht auch die der vorherigen Spieltage.
+Um jedoch herauszufinden, ob sich eine Mannschaft im Vergleich zum vorherigen Spieltag verbessert oder verschlechtert hat oder auf dem gleichen Tabellenplatz ist wie zuvor, wurde auch die Tabelle vom vorherigen Spieltag benötigt. 
+
+Zuerst wurden transform-Typen geschrieben, welche die vorherigen Tabelle anhand der Spielergebnisse des aktuellen Spieltags rekonstruiert haben (darunter gehörte u.A. `subtract`).
+Dies war recht aufwändig, also kam die Idee mit dem Speichern von `Dictionaries` bzw. API-Antworten auf. Dies ist generell sehr sinnvoll und kann womöglich auch gut für weitere APIs bzw. weitere Video-Ideen verwendet werden.
 
 ```JSON
 {
@@ -2648,7 +2652,7 @@ set of [str](#string) - Wörter, die zwar im Text vorkommen, aber nicht in der W
 `repeat`:
 [bool ](#boolean) - Ob ein Wort wiederholt werden sollen. Wird benötigt bei einer Wordcloud mit nur einem einzigen Wort im Textstring.
 
-**Beispiel** 
+**Beispiele** 
 ```JSON
 {
     "type": "wordcloud",
@@ -2673,6 +2677,12 @@ set of [str](#string) - Wörter, die zwar im Text vorkommen, aber nicht in der W
     }
 }
 ```
+
+<figure>
+  <img width="100%" src="../_static/images/documentation/wordcloud_circle.png"/>
+  <figcaption>Wordcloud zum Thema Bundesliga (mit "figure": "circle")</figcaption>
+</figure>  
+<br>
 
 #### Wordcloud mit nur einem Wort
 Zum Generieren einer Wordcloud, die nur ein Wort enthält, muss `repeat` auf `True` gesetzt werden. Der Textstring `text`
@@ -2747,17 +2757,15 @@ Des Weiteren können generelle verbotene Wörter zur Textdatei `stopwords.txt` i
 
 ## Thumbnail
 
-In Thumbnails werden bisher erstellte Bilder oder aber auch neue Bilder angegben welche dann -
-sofern in der Konfiguration angegeben - neben dem Video zusätzlich erstellt.
+Für ein generiertes Video lässt sich bei Bedarf ein Thumbnail erstellen.
+Für einen Thumbnail kann man ein bereits für das Video erstellte Bild wählen oder ein neues Bild erstellen. 
+
+Nützlich ist dies zum Beispiel bei einer Übersichtsseite wie z.B. [hier](https://biebertal.mach-mit.tv/gemeinde/).
+Das Thumbnail gibt eine Vorschau auf den Inhalt des Videos.
 
 **Beispiel**
-```JSON
-{
-  "thumbnail": {
-    "type": "new"
-  }
-}
-```
+
+![Thumbnail Beispiel](../_static/images/usage/thumbnail.png)
 
 ### created
 Das gewünschte Thumbnail-Bild, wurde schon zuvor erstellt.
@@ -2959,7 +2967,9 @@ Sprache umgewandelt. Einfacher String oder auch ein formatted string möglich.
 
 ## Sequence
 
-Im `sequence`-Abschnitt der JSON-Datei kann angegeben werden wie das Video auszusehen hat.
+Im Sequence-Abschnitt wird definiert, wie das Video gerendert wird bzw. in welcher Reihenfolge und Länge die Audios/Bilder abgespielt/gezeigt werden sollen.   
+Der einfachste Typ ist der `successively`-Typ, welcher alle Bilder und Audios 
+aneinanderreiht und jedes Bild so lange zeigt wie die entsprechende Audio lang ist.
 
 **Beispiel**
 ```JSON
@@ -3040,6 +3050,20 @@ bei der Wordcloud. Dies kann mithilfe der `transform`-Typen `option` und `compar
 
 Die Werte, die der Benutzer eingibt, werden unter dem Key `_conf|key` gespeichert (siehe [Spezialvariablen](#spezialvariablen)). Wobei `key` dem in der JSON-Datei angegebenen Key entspricht also z. B.: `name`.
 
+### Übersicht
+
+Hier einer übersicht aller möglichen Typen (Diese werden im folgenden genauer beschrieben).
+
+| Name | Beschreibung | Frontend |
+|----|----| ---- |
+|`enum`| Anzahl an Werten|Dropdown-Menü|
+|`string`|String|Textfeld|
+|`multi_string`|Eine Liste von Strings|Textfeld (komma-separierte Eingabe)|
+|`number`|Eine Zahl|Textfeld|
+|`multi_number`|Liste von Zahlen|Textfeld (komma-separierte Eingabe)|
+|`boolean`|`true` oder `false`|Checkbox|
+|`sub_params`|Ein Parameter kann Unterparameter enthalten, welche logisch abhängig von diesem sind| Hängt von den Typen der Unterparameter ab.|
+
 ### Basis-Angaben
 
 Die folgenden drei Keys müssen immer angegeben werden.
@@ -3110,7 +3134,7 @@ Wert, dem der Key (`name`) in der JSON zugewiesen ist.
 
 ![Beispiel](../_static/images/usage/run_config_enum.png)
 
-### string
+### string 
 Hier kann ein String eingegeben werden. Im Frontend wird dieser Parameter-Typ als Textfeld angezeigt.
 
 **JSON-Beispiel**
