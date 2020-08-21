@@ -16,7 +16,7 @@
         "key": "q",
         "array": "_conf|hashtags",
         "pattern": "%23{_loop}",
-        "delimiter": "+"
+        "delimiter": " OR "
       }
     ],
     "headers": {
