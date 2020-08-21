@@ -81,6 +81,16 @@ export default function JobCreate() {
 
   const [hintState, setHintState] = React.useState(0);
 
+  const handleAddSuccess = () => {
+    setActiveStep(4);
+    delay();
+    setFinished(true);
+  }
+
+  const handleAddError = () => {
+    reportError("Job konnte nicht erstellt werden");
+  }
+
   // initialize callback for add job functionality
   const addJob = useCallFetch(getUrl("/add"), {
     method: "POST",
@@ -98,7 +108,7 @@ export default function JobCreate() {
       schedule: withFormattedDates(schedule),
       deleteSchedule: deleteSchedule
     })
-  });
+  }, handleAddSuccess, handleAddError);
 
   // handler for param Load failed
   const handleLoadParamsFailed = React.useCallback(() => {
@@ -139,13 +149,7 @@ export default function JobCreate() {
     fetchParams();
   }, [fetchParams]);
 
-  useEffect(() => {
-    if (activeStep === 3) {
-      setActiveStep(4);
-      setFinished(true);
-      addJob();
-    }
-  }, [activeStep, addJob]);
+
 
   // when a new topic is selected, fetch params
   useEffect(() => {
@@ -167,12 +171,18 @@ export default function JobCreate() {
     if (counter > 0) {
       countertimeout.current = setTimeout(() => setCounter(counter - 1), 1000);
     }
-    return (() => {
+  }, [counter]);
+
+  useEffect(() => {
+    return () => {
+      if (timeout.current !== undefined) {
+        clearTimeout(timeout.current);
+      }
       if (countertimeout.current !== undefined) {
         clearTimeout(countertimeout.current);
       }
-    });
-  }, [counter]);
+    }
+  }, []);
 
   const delay = () => {
     setCounter(5);
@@ -184,13 +194,6 @@ export default function JobCreate() {
   const reportError = (message: string) => {
     dispatchMessage({ type: "reportError", message: message });
   };
-
-  const handleStartPage = () => {
-    if (timeout.current !== undefined) {
-      clearTimeout(timeout.current);
-    }
-    components?.setCurrent("home");
-  }
 
   // handlers for stepper logic
   const handleNext = () => {
@@ -228,10 +231,12 @@ export default function JobCreate() {
         }
         break;
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    handleHintState(activeStep + 1);
-    if (activeStep === 2) {
-      delay();
+
+    if (activeStep !== 2) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      handleHintState(activeStep + 1);
+    } else {
+      addJob();
     }
   };
 
@@ -301,8 +306,7 @@ export default function JobCreate() {
         Themenauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie auswählen zu welchem der Themen Ihnen ein
-        Video generiert werden soll.
+        Auf dieser Seite können Sie das Thema des Videos auswählen.
       </Typography>
     </div>,
     <div>
@@ -310,7 +314,7 @@ export default function JobCreate() {
         Parameterauswahl
       </Typography>
       <Typography gutterBottom>
-        Auf dieser Seite können Sie bestimmte Parameter auswahlen.
+        Auf dieser Seite können Sie themenspezifische Parameter setzen.
       </Typography>
     </div>,
     hintContents.time,
@@ -350,7 +354,7 @@ export default function JobCreate() {
       case 2:
         return (
           <SettingsPage
-            offset={1}
+            offset={0}
             schedule={schedule}
             deleteSchedule={deleteSchedule}
             selectScheduleHandler={handleSelectSchedule}
@@ -434,7 +438,7 @@ export default function JobCreate() {
                   </Grid>
                   <Grid container item justify="center">
                     <ContinueButton
-                      onClick={handleStartPage}
+                      onClick={() => components?.setCurrent("home")}
                     >
                       STARTSEITE
                   </ContinueButton>

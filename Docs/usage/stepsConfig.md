@@ -97,11 +97,13 @@ _Verwendung der Schriftart in einer JSON-Datei_:
 
 ### Auf Daten zugreifen
 
-Um auf Daten (z. B.: Daten aus der `api`) zuzugreifen gibt man einfach die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei wird nicht zweichen Arrays und Dictionarys (Objekten) untersicheden, man verwendet für arrays also einfach einen Zahlen-Wert als `Key` anstadt eines Strings.
+Um auf Daten (z.B.: Daten aus der API) zuzugreifen, gibt man die `Keys` getrennt mit einem Pipe-Symbol (`|`) an. Hierbei 
+wird nicht zwischen Arrays und Dictionaries (Objekte) unterschieden. Man verwendet für Arrays einen Zahlen-Wert als `Key` 
+anstatt eines Strings.
 
 **Beispiel**
 
-![Daten zugriff Beispiel](../_static/images/usage/daten_zugriff.gif)
+![Beispiel für einen Datenzugriff](../_static/images/usage/daten_zugriff.gif)
 
 ### Key/New Key
 
@@ -178,10 +180,10 @@ Um auf einen String zuzugreifen, verwendet man folgende Syntax:
 }
 ```
 
-Um innerhalb eines Strings Daten einzufügen kann man `{}` verwenden, und dort einen Key reinschreiben. 
+Um innerhalb eines Strings Daten einzufügen, kann man `{}` verwenden und dort einen Key hineinschreiben. 
 
 ```note::
-  Wenn man in dem String `{}` haben will ohne das diese entfernt werden, kann man das machen in dem man die Klammern einfach doppelt hinschreibt (z.B.: `{{"_conf|test}}` -> `"{test}"`).
+  Wenn man in dem String die Zeichen `{}` schreiben möchte, ohne dass diese entfernt werden, muss man die Klammern doppelt schreiben (z.B.: `{{"_conf|test}}` -> `"{test}"`).
 ```
 
 #### boolean
@@ -208,7 +210,7 @@ Um auf einen Zahlenwert (int, double, float) zuzugreifen, verwendet man folgende
 }
 ```
 
-Hierbei gibt man entweder direckt einen Zahlenwert an oder den `Key` zu einem Zahlenwert.
+Hierbei gibt man entweder direkt einen Zahlenwert an oder den `Key` zu einem Zahlenwert.
 
 #### dict
 Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende Syntax:
@@ -223,7 +225,7 @@ Um auf ein abgespeichertes Dictionary (dict) zuzugreifen, verwendet man folgende
 }
 ```
 
-Hierbei gibt man entweder direckt eine Dictionary (Object) an oder den `Key` zu einem Dictionary (Object).
+Hierbei gibt man entweder direkt ein Dictionary (Objekt) an oder den `Key` zu einem Dictionary (Objekt).
 
 #### list
 Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
@@ -239,7 +241,7 @@ Um auf ein Array/eine Liste (list) zuzugreifen, verwendet man folgende Syntax:
 }
 ```
 
-Hierbei gibt man entweder direckt eine liste an oder den `Key` zu einer liste.
+Hierbei gibt man entweder direkt eine Liste an oder den `Key` zu einer Liste.
 
 #### any
 Um auf einen Wert mit nicht festgelegtem Datentyp zuzugreifen, verwendet man folgende Syntax:
@@ -259,10 +261,13 @@ Um auf einen Wert mit nicht festgelegtem Datentyp zuzugreifen, verwendet man fol
 }
 ```
 
-Dieser Daten-Type ist dafür da um auf Daten anzugeben, wo Vorher der Daten-Type nicht bekannt ist. Mann kann hier also einfach einen `String` (str), eine `liste` (list) usw. angeben. Da so allerdings nicht zwichen einem `String` und einem `Key` unterschieden werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben. 
+Dieser Datentyp ist dafür da, um Daten anzugeben, von denen der Datentyp vorher nicht bekannt ist. Man kann hier einen 
+**String** (str), eine **Liste** (list) usw. angeben. Da so nicht zwischen einem **String** und einem **Key** unterschieden 
+werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben. 
 
 ```note::
-  Fals man ein Dollarzeichen (`$`) am anfang eines Strings verwenden will muss mal dieses mit einer Tilde (`~`) Escapen. (z. B.: `"~$test"`)
+  Falls man ein Dollarzeichen (`$`) am Anfang eines Strings verwenden will, muss dieses mit einer Tilde (`~`) escapt werden. 
+  (z. B.: `"~$test"`)
 ```
 
 ## Api
@@ -375,17 +380,21 @@ URL nach dem Zusammenbauen:
   - `other`
 
 ```note::
-  Der Wert `other` sollte nur bei der `Audio-Konfiguration <./audio-apis.html>`_ verwendet werden.
+  Der Wert `other` sollte nur bei der `Audiokonfiguration <./audio-apis.html>`_ verwendet werden.
 ```
 
 `xml_config` _(optional)_:
 
-[any](#any) - XML Einstellungen (Wird nur bei `response_format = xml` verwendet)
+[any](#any) - XML-Einstellungen (wird nur bei `response_format = xml` verwendet).
 
-Um es Möglich zu machen auch XML Daten zu verarbeiten wird das Python modul [xmltodict](https://pypi.org/project/xmltodict/) verwendet. Dieses Wandelt die XML-Daten in ein Dictionary (bzw. in JSON) um. Unter `xml_config` können Konfigurationen angegeben werden, die an das module weiter gegeben werden.
+Um es möglich zu machen, auch XML Daten zu verarbeiten, wird das Python-Modul [xmltodict](https://pypi.org/project/xmltodict/) 
+verwendet. Dieses wandelt die XML-Daten in ein Dictionary (bzw. in JSON) um. Unter `xml_config` können Konfigurationen 
+angegeben werden, die an das Modul weitergegeben werden.
 
 ```warning::
-  Da der Doppelpunkt (`:`) in Python auch eine bedutung hat, ist es nicht möglich innerhalb eines Keys einen Doppelpunkt (`:`) anzugeben. Dammit man XML-Daten mit einem Doppelpunkt in dem Key verwenden kann, kann man die `NameSpace <https://github.com/martinblech/xmltodict#namespace-support>`_ einstellung des modules verwenden. z. B:
+  Da der Doppelpunkt (`:`) in Python auch eine Bedutung hat, ist es nicht möglich innerhalb eines Keys einen Doppelpunkt 
+  (`:`) anzugeben. Damit man XML-Daten mit einem Doppelpunkt im Key verwenden kann, kann man die `NameSpace <https://github.com/martinblech/xmltodict#namespace-support>`_-Einstellung 
+  des Moduls verwenden. z.B.:
 
     .. code-block:: JSON
 
@@ -399,7 +408,7 @@ Um es Möglich zu machen auch XML Daten zu verarbeiten wird das Python modul [xm
         }
       }
 
-  Hierbei kann man alle in den XML-Daten vorhandenen namespaces auf `null` setzen dammit die Keys etwas kürtzer werden.
+  Hierbei kann man alle, in den XML-Daten vorhandenen, Namespaces auf `null` setzen, damit die Keys etwas kürzer werden.
 ```
 
 ### request_multiple
@@ -583,7 +592,9 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Arrays aus.
   - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
 
 ```note::
-  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+```
 ```
 
 ### transform_dict
@@ -613,7 +624,8 @@ Führt alle angegebenen `transform`-Typen für alle Werte eines Dictionaries aus
   - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
 
 ```note::
-  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
 ```
 
 ### calculate
@@ -658,7 +670,7 @@ Berechnet den Mittelwert von Werten, die in einem Array stehen.
 
 int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
 
 #### max
 
@@ -739,7 +751,7 @@ Rundet gegebene Werte auf eine gewünschte Nachkommastelle.
 
 int - Nachkommastelle, auf die der Durchschnittswert gerundet werden soll.
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
 
 
 #### mode
@@ -782,7 +794,7 @@ Wert, der immer auf der linken Seite der Gleichung stehen soll. Wichtig: bei `di
 
 int - Nachkommastelle, auf die das Ergebnis gerundet werden soll. 
 
-Default: 0. (keine Nachkommastelle)
+_Default_: 0. (keine Nachkommastelle)
 
 Folgende Möglichkeiten gibt es:
 
@@ -902,12 +914,18 @@ relevant sind.
 str-Array - Namen der Keys, dessen Key/Value-Paare aus der API-Antwort übernommen werden und abgespeichert werden sollen.
 
 ```warning::
-  Die unter relevant_keys angegebenen `Keys` funktionieren etwas anderst als alle anderen keys, diese gehen nicht vom root des objects aus, sondern vom Momentanen `root`, ist also `_loop` gesetzt werden alle keys ausgehend von `_loop` angesehen (z. B. `normal`: `_loop|0` => `hier`: `0`). Dies ist notwendig da man ja nur Keys im Aktuellen level ersetzt (also z. B. im Aktuellen `array`) und nicht alle anderen keys aussortiert. (Ist `_loop` nicht gesetzt ist die Key angabe wie üblich).
+  Die unter `relevant_keys` angegebenen `Keys` funktionieren etwas anders als alle anderen Keys. Diese gehen **nicht** vom 
+  `root` des Objekts aus, sondern vom momentanen `root`. Ist also `_loop` gesetzt, werden alle Keys ausgehend von `_loop` 
+  betrachtet (z.B. `normal`: `_loop|0` => `hier`: `0`). Dies ist notwendig, da man nur Keys in der aktuellen Ebene der JSON-Datei
+  ersetzt (also z.B. im aktuellen `array`) und nicht alle anderen Keys aussortiert. (Ist `_loop` nicht gesetzt, ist die 
+  Key-Angabe wie üblich).
 ```
 
 `ignore_errors`:
 
-[bool](#boolean)  - Wenn ignore_erros auf `true` gesetzt wird, werden fehlende Keys ignoriert. Steht allso z. B. in den relevant_keys `key1` und `key1` ist nicht vorhanden, wird kein Fehler geworfen. Sondern es wird einfach ignoriert das es diesen Key gar nicht gibt. 
+[bool](#boolean)  - Wenn `ignore_errors` auf `true` gesetzt wird, werden fehlende Keys ignoriert. 
+Beispiel: Steht in den `relevant_keys` `key1` und `key1` ist nicht vorhanden, wird kein Fehler geworfen. Sondern es 
+wird einfach ignoriert, dass es diesen Key nicht gibt. 
 
 ### delete
 
@@ -953,7 +971,7 @@ Entfernt alle Werte aus `array_key`, die nicht innerhalb der von `range_start` u
 
 int - Startwert für die Schleife durch die Daten.
 
-Default: 0. 
+_Default_: 0. 
 
 `range_end`:
 
@@ -999,13 +1017,13 @@ Name des Arrays unter dem die neuen Werte (Wert unter `key`) gespeichert werden 
 
 "list" oder "string" - Datentyp der Werte, die in einem Array gespeichert werden sollen.
 
-Default: "list".
+_Default_: "list".
 
 `delimiter`_(optional)_:
 
 [str](#string) - Zeichen mit dem die Werte - im Falle des Datentyps [string](#string) - voneinander getrennt werden sollen.
 
-Default: " " (Leerzeichen).
+_Default_: " " (Leerzeichen).
 
 ### add_symbol
 
@@ -1087,7 +1105,7 @@ count gibt an, wie oft in dem Value der old_value gegen den new_value ersetzt we
 
 int - Gibt an, wie oft der `old_value` in dem Wert mit dem `new_value` ersetzt werden soll.
 
-Default: -1. 
+_Default_: -1. 
 
 
 ### translate_key
@@ -1139,7 +1157,8 @@ Erstzt einen Key durch einen neuen Key (Änderung des Key-Namens).
 
 `keep_old`:
 
-[bool](#boolean) - Wenn `keep_old` auf `true` gesetzt ist wird der allte Key nicht gelöscht. Es wird also nur eine Kopie der Daten angefertigt. 
+[bool](#boolean) - Wenn `keep_old` auf `true` gesetzt ist, wird der alte Key nicht gelöscht. Es wird nur eine Kopie der 
+Daten angefertigt. 
 
 ### regex
 
@@ -1162,7 +1181,8 @@ Dieses Beispiel sucht alle . und ersetzt diese mit einem ,
 Durch das + soll mindestens ein . ersetzt werden.
 
 ```warning::
-  Da ein Backslash (`\`) in JSON eine bedeutung hat, kann es sein das man diesen escapen muss. (z. B. darf der Backslash (`\`) nicht vor dem Anführungszeichen stehen da dieses sonst ignoriert wird.)
+  Da ein Backslash (`\`) in JSON eine Bedeutung hat, kann es sein, dass man diesen escapen muss. 
+  (Z.B. darf der Backslash (`\`) nicht vor dem Anführungszeichen stehen, da dieses sonst ignoriert wird.)
 ```
 
 **Beispiel (mehrere Zeichen)** 
@@ -1336,7 +1356,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 }
 ```
 ```warning::
-  Kein `given_format`-Key. Da das `given_format` ein Zeitstempel ist.
+  Kein `given_format`-Key, da das `given_format` ein Zeitstempel ist.
 ```
 
 #### date_weekday
@@ -1359,7 +1379,7 @@ um. Unter `keys` sind die Keys angegeben unter denen als Werte Datumsangaben im 
 ```
 
 ```warning::
-  Kein `format`-Key. Da das `format` ein String mit dem Wochentag ist.
+  Kein `format`-Key, da das `format` ein String mit dem Wochentag ist.
 ```
 
 #### date_now
@@ -1480,7 +1500,7 @@ int-Array - Bestimmte Werte, welche in der Schleife durchlaufen werden sollen.
 
 int - Beginn des Bereichs, welcher in der Schleife durchlaufen werden soll. 
 
-Default: 0.
+_Default_: 0.
 
 `range_stop`:
 
@@ -1495,7 +1515,8 @@ int - Ende des Bereichs, welcher in der Schleife durchlaufen werden soll.
   - `_idx`: Hier wird der aktuelle Index des Schleifendurchlaufs gespeichert.
 
 ```note::
-  Für Kompliziertere anwendungen kann es sein das man einen Trick benötigt um _spezialvariablen_ aus dem Vorherigen level zu verwenden, dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
+  Für kompliziertere Anwendungen kann es sein, dass man einen Trick benötigt, um _Spezialvariablen_ aus der vorherigen
+  Ebene (innerhalb der JSON-Datei) zu verwenden. Dieser ist unter `Key Trick <#key-trick>`_ beschrieben.
 ```
 
 ### add_data
@@ -1757,7 +1778,7 @@ Es kann auch alphabetisch sortiert werden, wenn die Einträge keine Zahlen sind.
 [bool](#boolean) - True: Die Liste soll absteigend sortiert werden (größte Zahl als Erstes). False: Die Liste soll aufsteigend 
 sortiert werden (kleinste Zahl als Erstes).
 
-Default: False.
+_Default_: False.
 
 ```warning::
 
@@ -1797,12 +1818,15 @@ Beispiel: "Der Hund sucht die Katze und die Katze sucht die Maus."
 
 `include_count`_(optional)_:
 
-[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll. Ist `include_count` auf `false` gesetzt wird einfach nur eine liste mit der Häufigkeit nach sortierten Elementen hinzugefügt. z. B.:
+[bool](#boolean) - Ob die Häufigkeit des Elements als Tupel angegeben werden soll. Ist `include_count` auf `false` gesetzt,
+wird nur eine Liste mit der Häufigkeit nach sortierten Elementen hinzugefügt. z.B.:
 
 `["die", "sucht", "Katze", "der", "Hund", "und", "Maus"]`
 
 ```note::
-  Fals man die option `include_count` auf true gesetzt hat und ein dictionary anstadt einer Liste von Tuppeln haben will kann man diese ganz einfach mit dem Typen `to_dict <#to-dict>`_ umwandeln.
+  Falls die Option `include_count` auf `true` gesetzt ist, erhält man folgende Daten zurück: 
+  [(die, 3), (sucht, 2), (Katze, 2), (der, 1), (Hund, 1), (und, 1), (Maus, 1)]`
+  Möchte man anstatt dieser Liste von Tupeln ein Dictionary, kann man dies mit dem Typen `to_dict <#to-dict>`_ umwandeln.
 ```
 
 ### sub_lists
@@ -1846,13 +1870,13 @@ Pro Unterliste wird eine new_key/range_start/range_end-Struktur hinzugefügt.
 
 int - Listeneintrag ab dem die Unterliste generiert werden soll.
 
-Default: Anfang der Liste.
+_Default_: Anfang der Liste.
 
 `range_end`_(optional)_:
 
 int - Listeneintrag bis zu dem die Unterliste generiert werden soll.
 
-Default: Ende der Liste. 
+_Default_: Ende der Liste. 
 
 ### to_dict
 
@@ -1956,7 +1980,7 @@ Array - Eine Liste mit Wörtern, die aus einem String oder einer anderen Liste e
 
 `false`: Stopword aus der Datei stopwords/stopwords.txt nicht entfernen.
 
-Default: `false`.
+_Default_: `false`.
 
 `ignore_case`_(optional)_:
 
@@ -1966,7 +1990,7 @@ Default: `false`.
 
 `false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
 
-Default: `false`.
+_Default_: `false`.
 
 ### lower_case
 
@@ -2071,7 +2095,7 @@ Teilt einen String am angegebenen Trennzeichen.
 
 `delimiter`_(optional)_:
 
-[str](#string) - Trennzeichen bei dem einen String geteilt werden soll. (Dies können auch mehrere Zeichen sein)
+[str](#string) - Trennzeichen bei dem ein String geteilt werden soll. (Dies können auch mehrere Zeichen sein.)
 
 _Default_: `" "`
 
@@ -2084,7 +2108,7 @@ _Default_: `" "`
 
 `false`: Nein, die Wörter nur entfernen, wenn sie genau so geschrieben werden, wie sie in `to_remove` bzw. im Frontend und in der Textdatei geschrieben wurden.
 
-Default: `false`.
+_Default_: `false`.
 
 
 ### check_key
@@ -2119,7 +2143,10 @@ Hier wird gespeichert, ob der Key vorhanden war oder nicht.
 
 ### Key Trick
 
-Wenn man ein [transform](#transform)-Typen bei `transform` angibt (z. B. bei [transform_array](#transform_array)), der selbst die _Spezialvariablen_ `_loop` und/oder `_idx` verwendet, werden diese überschrieben und sind sommit innerhalb der dortigen unter `transform` definition anderst belegt. Falls man die werte aus dem vorherigen level benötigt, kann man diese mit einem Trick bekommen. Man kann diese Keys einfach in einem Außberhalb liegenden key speichern. z. B.:
+Wenn man einen [transform](#transform)-Typen bei `transform` angibt (z. B. bei [transform_array](#transform_array)), der 
+selbst die _Spezialvariablen_ `_loop` und/oder `_idx` verwendet, werden diese überschrieben und sind somit innerhalb der 
+dortigen `transform`-Definition anders belegt. Falls man die Werte aus der vorherigen Ebene benötigt, kann man 
+diese mit einem Trick bekommen. Man kann diese Keys in einem außberhalb liegenden Key speichern. z. B.:
 
 ```JSON
 {
@@ -2533,7 +2560,7 @@ Texte, die auf das Bild geschrieben werden sollen. Liste sowie String sind mögl
 
 `preset`:  
 Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)   Liste oder String möglich
-[Presets](#Presets) sind weiter unten in der JSON spezifiziert
+[Presets](#presets) sind weiter unten in der JSON spezifiziert
 
 
 **Sollte man kein neues `preset` angeben wollen ,so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
@@ -2705,7 +2732,7 @@ Im Image-Overlay:
 "color_transparency": "FFFFFF"`
 
 ```note::
-  Da ersteres nur in der JSON und nicht bei der Joberstellung angegeben kann, wird die Alternative für `square` 
+  Da ersteres nur in der JSON und nicht bei der Job-Erstellung angegeben kann, wird die Alternative für `square` 
   und `circle`empfohlen.
 ```
 
@@ -2844,7 +2871,7 @@ Dieser `parts`-Typ wandelt den gegebenen String in eine Audiodatei um.
 ```
 
 `pattern`:  
-[str](#string) - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein formatted string möglich.
+[str](#string) - Der Text, der in Sprache umgewandelt werden soll. Einfacher String oder auch ein **formatted string** möglich.
 
 ### compare
 
@@ -3283,11 +3310,13 @@ Alle [Basis-Angaben](#basis-angaben).
 
 ## Presets
 
-Da es häufiger mal vorkommt das man einige Konfigurationen mehrfach benötigt, kann man sogenante `Presets` verwenden um sich Doppelte einträge zu Sparen. Diese werden unter dem Punkt `"presets"` definiert. Innerhalb der restlichen JSON kann man diese dann mit `"preset": "key"` verwenden.
+Da es häufiger mal vorkommt, dass man Konfigurationen mehrfach benötigt, kann man sogenannte `presets` verwenden, 
+um doppelte Einträge in der JSON-Datei zu vermeiden. Diese werden unter dem Abschnitt `"presets"` definiert. Innerhalb 
+der restlichen JSON-Datei kann man diese dann mit `"preset": "key"` verwenden.
 
 **Beispiele**
 
-![Preset Beispiel](../_static/images/usage/presets.gif)
+![Beispiel für ein Preset](../_static/images/usage/presets.gif)
 
 ```JSON
 {
@@ -3313,9 +3342,13 @@ Da es häufiger mal vorkommt das man einige Konfigurationen mehrfach benötigt, 
 ```
 
 ```warning::
-  Hierbei ist zu beachten das man `Presets` nur auf einer Ebene angeben kann die auch eine `type` definition enthält (Die verwendung einer `type` angabe inerhalb eines Presets ist also nicht möglich). Desweiteren werden beim einfügen der im presets angegebenen felder, keine Arrays gemerged. Hat also ein Preset eine Key definition und in der normalen definition ist dieser Key auch vorhanden wird der Wert des Presets verwendet.
+  Hierbei ist zu beachten, dass man **Presets** nur auf einer Ebene angeben kann, die auch eine `type`-Definition enthält.
+  (Die Verwendung einer `type`-Angabe innerhalb eines Presets ist also nicht möglich.) Des Weiteren werden beim Einfügen,
+  der in `presets` angegebenen Keys, keine Arrays gemerged. Hat also ein Preset eine Key-Definition, und in der normalen 
+  Definition ist dieser Key auch vorhanden, wird der Wert des Presets verwendet.
 ```
 
 ### Globale Presets
 
-Um Presets bei Mehreren Themen zu verwenden gibt es `Globale Presets`. Diese können im [Themen Ordner (`steps`)](#pfade) in der Datei `golobal_presets` definiert Werden.
+Um Presets bei mehreren Themen zu verwenden, gibt es `Globale Presets`. Diese können im [Themen-Ordner (`steps`)](#pfade) 
+in der Datei `global_presets` definiert werden.

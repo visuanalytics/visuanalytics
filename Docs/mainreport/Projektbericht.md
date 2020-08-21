@@ -673,10 +673,6 @@ Das Programm muss fehlerfreie Ausgaben zu den zur Auswahl stehenden Themen liefe
 
 ## Fazit
 
-### Verwendete Technologien
-
-Neben PyCharm und WebStorm noch mehr?
-
 ### Zielbestimmung
 
 Das Programm kann verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo präsentiert dem Benutzer Informationen übersichtlich und verständlich mithilfe von Grafiken, Tabellen und Wordclouds die Informationen.
@@ -739,7 +735,21 @@ Eine genaue Zielgruppe wurde bei der Herstellung nicht berücksichtigt. Der Wett
 #### Benutzeroberfläche/Funktion
 ##### Übersicht
 
-<-- TO DO --> Vergleich wie sah es am Anfang aus, wie jetzt 
+Bei der Gestaltung des Frontends wurde sich an das zuerst erstellte Mock-up gehalten.
+
+**Beispiel**
+
+Links: Mock-up  
+Rechts: Benutzeroberfläche
+
+<img src="../_static/images/mainreport/StartseiteMock.png" width="48%">
+<img src="../_static/images/mainreport/StartseiteReal.png" width="45%">
+
+<hr>
+
+<img src="../_static/images/mainreport/Topic.png" width="48%">
+<img src="../_static/images/mainreport/TopicReal.png" width="45%">
+
 
 ### Benutzerschnittstellen
 Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
@@ -798,8 +808,6 @@ Um am Ende alle Grafiken, Tabellen und Wordclouds zu einem Video zusammenzufüge
 
 ### Umgesetzte besondere Herausforderungen
 
-<-- TO DO --> wurde das alles umgesetzt?
-
 - Programm für Produktionsbetrieb absichern und zuverlässig machen
 - Kompatibilität mit verschiedenen Betriebssystemen
 - Verständliches und einfach zu bedienendes User Interface
@@ -807,10 +815,6 @@ Um am Ende alle Grafiken, Tabellen und Wordclouds zu einem Video zusammenzufüge
 - Umgang mit auftretenden Programmfehlern
 - API-Daten sinnvoll zusammenbauen (individuell auf verschiedene Daten reagieren)
 - Gute Sprachausgabe (komische Aussprache durch verschiedene Formulierungen vermeiden)
-
-### Nicht umgesetzte besondere Herausforderungen
-
-<-- TO DO -->
 
 ### Nichtfunktionale Anforderungen
 Das Programm ist um weitere Schnittstellen einfach erweiterbar sein. API-Antworten im JSON-Format können einfach weiterverarbeitet werden.
