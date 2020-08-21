@@ -285,3 +285,23 @@ Ebenso wurde die Option zum Löschen der generierten Videos im Frontend hinzugef
 Auf Anfrage des Auftraggebers wurde dem Frontend noch eine weitere Seite hinzugefügt auf welcher man sich nun die Log-Informationen zu einem Job anzeigen lassen kann.
 
 <img src="../_static/images/reports/Logs.jpeg" width="70%">
+
+## Statusbericht 21.08.2020 (Sprint 15+16)
+
+### Zusammenfassung
+In diesen Sprints wurde das Programm fertiggestellt.
+
+Als letzte Erweiterung wurde eine Themen-Seite erstellt, auf welcher man die Themen hinzufügen und löschen kann.
+
+<img src="../_static/images/reports/Topic.png" width="90%">
+
+Ebenfalls kann man auf dieser Seite die Json-Dateien zu den Themen herunterladen.
+
+Möchte man ein Thema hinzufügen, so kann man diesem einen Namen geben, sowie eine passende Json-Datei hochladen.
+Wird eine fehlerhafte Datei hochgeladen, wird dies nicht überprüft. Dies kann zu unerwarteten Fehlern führen.
+
+<img src="../_static/images/reports/upload.png" width="90%">
+
+### Links
+- [GitHub-Repository](https://github.com/SWTP-SS20-Kammer-2/Data-Analytics)
+- [Dokumentation](visuanalytics.readthedocs.io/)
