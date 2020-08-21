@@ -17,11 +17,11 @@ def audio_parts(values, data):
 
 
 def register_audio_parts(func):
-    """
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary AUDIO_PARTS_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(AUDIO_PARTS_TYPES, AudioError, func)
 

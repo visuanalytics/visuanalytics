@@ -12,10 +12,11 @@ DRAW_TYPES = {}
 
 
 def register_draw(func):
-    """ Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu.
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary DRAW_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func_no_data(DRAW_TYPES, ImageError, func)
 

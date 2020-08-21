@@ -17,11 +17,11 @@ OVERLAY_TYPES = {}
 
 
 def register_overlay(func):
-    """
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary OVERLAY_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(OVERLAY_TYPES, ImageError, func)
 

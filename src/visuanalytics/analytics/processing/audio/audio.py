@@ -45,11 +45,11 @@ def generate_audios(values: dict, data: StepData):
 
 
 def register_generate_audio(func):
-    """Registriert die übergebene Funktion und versieht sie mit einem `"try except"`-Block.
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary GENERATE_AUDIO_TYPES hinzu.
 
     :param func: die zu registrierende Funktion
-    :return: Funktion mit try/catch-Block
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(GENERATE_AUDIO_TYPES, AudioError, func)
 
