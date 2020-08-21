@@ -2,7 +2,7 @@
 
 ## Frontend
 
-### Gui
+### GUI
 
 Die grafische Benutzeroberfläche wurde mithilfe des Web-Frameworks ReactJS in TypeScript geschrieben und mit der Erweiterung Material-UI designt.
 
@@ -56,7 +56,7 @@ Der `Header` befindet sich immer am oberen Bildschirmrand, daher liegt dieser ü
 </figure>  
 <br>
 
-Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an auf welcher Seite des Programms, man sich befindet.
+Der Component `Header` stellt den Header der Oberfläche dar. Dieser soll durchgehend am oberen Bildschirmrand angezeigt werden. Er zeigt immer an, auf welcher Seite des Programms man sich befindet.
 
 #### Main
 
@@ -233,7 +233,7 @@ global $va_settings_page;
 $icon = plugins_url('images/icon.png', __FILE__);
 ~~~
 
-Daraufhin wird mit Hilfe der Funktion `add_menu_page` von Wordpress die Seite der Variablen `$va_settings_page` zugewiesen.
+Daraufhin wird die Seite mit Hilfe der von Wordpress bereitgestellten Funktion `add_menu_page` der Variablen `$va_settings_page` zugewiesen.
 
 ~~~php
 add_menu_page('VisuAnalytics', 'VisuAnalytics', 'manage_options', 'visuanalytics-settings', 'visuanalytics_settings_do_page', $icon);
@@ -288,9 +288,9 @@ function init_va_menu() {
 
 ### Probleme mit dem Wordpress eigenen Style
 
-Nach dem Laden der Dateien hatten wir das Problem, dass manche Komponenten wie z.B. die Input-Felder von dem Wordpress Style überschrieben wurden.
+Nach dem Laden der Dateien hatten wir das Problem, dass der Style mancher Komponenten wie z.B. der Input-Felder vom Wordpress-Style überschrieben wurden.
 
-Um dies zu beheben, haben wir in dem Entwicklertools des Browser rausgesucht, welche Styles geladen werden und diese nacheinander entfernt, um zu sehen, welcher unser Design überschreibt.
+Um dies zu beheben, haben wir in dem Entwicklertools des Browsers rausgesucht, welche Styles geladen werden und diese nacheinander entfernt, um zu sehen, welcher unser Design überschreibt.
 
 <figure>
   <img width="100%" src="../_static/images/documentation/forms.png"/>
@@ -298,7 +298,7 @@ Um dies zu beheben, haben wir in dem Entwicklertools des Browser rausgesucht, we
 </figure>  
 <br>
 
-Dabei ist uns aufgefallen,dass `forms` unser Design verändert. Daher haben wir mit `wp_deregister_style` diesen Style für unser Plugin deaktiviert.
+Dabei ist uns aufgefallen, dass `forms` unser Design verändert. Daher haben wir mit `wp_deregister_style` diesen Style für unser Plugin deaktiviert.
 
 ~~~php
 wp_deregister_style("forms");
@@ -309,13 +309,15 @@ Eine geneuere Dokumentation der Wordpress-Methoden finden Sie [hier](https://dev
 
 ## Web-API
 
-### Datenbank
+**TODO**
+
+## Datenbank
 
 Für die Datenbank wird eine SQLite-Datenbank verwendet.
 
 _(Eine spätere Anbindung an einen SQL-Server ist aber einfach möglich.)_
 
-Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Sie enthält die ID des Themas, zu dem der Job Videos generieren soll. In der Tabelle `schedule` wird der Zeitpaln gespeichert, nach dem der Job ausgeführt werden soll. Beispiel: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
+Die Tabelle `job` beinhaltet einen Job für eine Videoreihe. Sie enthält die ID des Themas, zu dem der Job Videos generieren soll. In der Tabelle `schedule` wird der Zeitplan gespeichert, nach dem der Job ausgeführt werden soll. Beispiel: Wenn der Job täglich um 12:00 Uhr ausgeführt werden soll, steht in der Datenbank:
 
 type = "daily",  
 date = null,   
@@ -332,9 +334,6 @@ wobei zu jedem Paar der zugehörige Datentyp gespeichert wird.
 </figure>  
 <br>
 
-### Server Endpunkte
-
-**TODO**
 
 ## Scheduler
 
@@ -365,15 +364,16 @@ Diese Methode startet den Job in einem neuen Thread.
 
 ## StepData
 
-StepData ist die Daten Klasse, die alle daten zur Laufzeit speichert. Desweiteren Stellt diese hilfsfunktionen bereit um einfacher die Daten zu verwenden. Wie z. B.: das Formatieren eines Strings oder das bekommen von Daten. Eine Auflistung aller funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data)
+StepData ist die Daten-Klasse, die alle Daten zur Laufzeit speichert. Des Weiteren stellt diese Hilfsfunktionen bereit, welche die Verwendung der Daten erleichtern. Eine Auflistung aller Funktionen befindet sich in der [Technichen Dokumentation](../modules/visuanalytics.analytics.control.procedures.html#module-visuanalytics.analytics.control.procedures.step_data)
 
 ## Themenkonfiguration
 
-Um die Themen der Videos leicht erweiterbar zu machen können diese als JSON-Datei definiert werden. Das Programm generiert dann anhand dieser Konfigurations dateien ein Viedeo, dies ermöglicht es die Themen leicht zu erweitern und auch gut auf `api` änderungen anzupassen.
+Um die Themen der Videos leicht erweiterbar zu machen, werden diese als JSON-Datei definiert. Diese enthalten gewissermaßen eine Anleitung dafür, welche Daten von den APIs bezogen werden und wie daraus dann ein Video generiert werden soll.    
+Dieser Ansatz ermöglicht es zum einen, ein neues Thema hinzuzufügen, indem einfach eine neue JSON-Datei mit der entsprechenden Konfiguration geschrieben wird, und zum anderen die Konfiguration für bestehende Themen anzupassen (z.B. wenn API-Anfragen auf Änderungen der API angepasst werden müssen).
+ 
+Eine genaue Beschreibung der Konfigurationsdatei befindet sich [hier](../usage/stepsConfig.md).
 
-Eine Genau Beschreibung der Konfiguration befindet sich [hier](../usage/stepsConfig.md).
-
-Im weiteren wird die Konfiguration anhand von den vordefinierten Themen beschrieben. Fals also Fragen beim Lessen auftretten kann es sinvoll sein in die Oben verlinkte beschreibung zu schauen und sich die genau definition anzuschauen.
+Im Folgenden werden die verschiedenen Abschnitte der Konfigurationsdatei anhand der vordefinierten Themen beschrieben. Fals Fragen beim Lesen auftreten, sei geraten, in die oben verlinkte Anleitung zu schauen.
 
 ### API
 
@@ -433,14 +433,14 @@ Für den Wetterbericht werden folgende Funktionen verwendet:
 | replace              | Ersetzt ein Zeichen, Symbol, Wort, einen Satz oder eine ganzen Text in einem String.                                                |
 | date_weekday         | Wandelt das angegebene Datum in den jeweiligen Wochentag um.                                                                        |
 | timestamp            | Wandelt einen UNIX-Zeitstempel in ein anderes Format um.                                                                            |
-| wind_direction       | Wandelt einen String von Windrichtungen um. (geht nur für dieses Format und nur für die Weatherbit-API)                             |
-| translate_key        | Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON. (wählt aus dict einen Code als Key und gibt dazu den Value aus) |
-| choose_random        | Wählt einen Text aus mehreren gegebenen Texten aus                                                        |
+| wind_direction       | Wandelt einen String von Windrichtungen um (geht nur für dieses Format und nur für die Weatherbit-API).                           |
+| translate_key        | Setzt den Wert eines Keys zu einem neuen Key als Wert für die JSON (wählt aus dict einen Code als Key und gibt dazu den Value aus). |
+| choose_random        | Wählt einen Text aus mehreren gegebenen Texten aus.                                                        |
 | date_now             | Generiert das heutige Datum und gibt es im gewünschten Format aus.                                                                  |
 
 Für den deutschlandweiten Wetterbericht werden die Wetterdaten von 19 Städten abgefragt, um eine Tendenz für die Durchschnittswerte an einem Tag zu berechnen.  
 Dafür wird die `transform`-Funktion `transform_dict` verwendet. Mithilfe dieser Funktion kann in der JSON-Datenstruktur ein neuer Dictionary-Eintrag generiert werden, in dem Zusammenfassungen von Daten aus allen 19 Anfragen zu einem bestimmten Datum berechnet werden.  
-Zunächst werden z.B. alle maximalen Temperaturwerte für einen Tag von allen Städten in einem Array gespeichert. Mit der `calculate_mean`-Funktion wird aus diesem Array an Zahlen der Mittelwert berechnet und anstelle des Arrays in das Dictionary geschrieben. Außerdem kann z.B. auch der Minimal- und Maximalwert eines Arrays anstelle des Arrays zu einem Key in dem Dictionary abgespeichert werden.  
+Zunächst werden z.B. alle maximalen Temperaturwerte für einen Tag von allen Städten in einem Array gespeichert. Mit der `calculate_mean`-Funktion wird aus diesem Zahlen-Array der Mittelwert berechnet und anstelle des Arrays in das Dictionary geschrieben. Außerdem kann z.B. auch der Minimal- und Maximalwert eines Arrays anstelle des Arrays zu einem Key in dem Dictionary abgespeichert werden.  
 Mit `calculate_mode` wird das am häufigsten in einem Array vorkommende Element anstelle des Arrays gespeichert.
 
 **Fußball-Bundesliga**
@@ -462,7 +462,7 @@ Folgende `transform`-Funktionen wurden verwendet:
 | select             | Entfernt alle Keys, die nicht in `relevant_keys` stehen, aus dem Dictionary.                                   |
 | date_weekday       | Wandelt das angegebene Datum in den jeweiligen Wochentag um.                                                  |
 | option             | Führt die aufgeführten `transform`-Funktionen aus, je nachdem ob ein bestimmter Wert `true` oder `false` ist. |
-| compare            | Vergleicht zwei                                                                                               |
+| compare            | Vergleicht zwei Werte miteinander.                                                                                        |
 | random_string      | Wählt einen Text aus mehreren gegebenen Texten aus.                                                                                                 |
 | calculate subtract | Die jeweiligen Werte, die in subtract stehen, werden von den Werten, die in key stehen, subtrahiert.          |
 | copy               | Kopiert einen Wert zu einem neuen Key.                                                                        |
@@ -499,7 +499,10 @@ Beispiel:
 
 Diese Funktion (`choose_random`) wurde zu `random_string` umbenannt und man kann entweder ein Dictionary oder ein Array einfügen, aus dem ein Value per Zufall ausgewählt werden soll und unter einem neuen Key in der JSON abgespeichert wird.
 
-Bei allen Funktion, mit denen das Datumsformat geändert werden kann, wurde ergänzt, dass man z.B. aus 05. Mai -> 5. Mai machen kann, wenn `zeropaded_of` auf `True` gesetzt wird. Dieser Key ist optional. Die Funktionen `option` und `compare` wurden neu hinzugefügt. Bei `option` wird überprüft, ob ein gewisser Wert `True` oder `False` ist und je nachdem, werden unterschiedliche Funktionen durchgeführt.  
+Bei allen Funktion, mit denen das Datumsformat geändert werden kann, wurde ergänzt, dass man z.B. aus 05. Mai -> 5. Mai machen kann, wenn `zeropaded_of` auf `True` gesetzt wird. Dieser Key ist optional.
+
+ Die Funktionen `option` und `compare` wurden neu hinzugefügt.    
+ Bei `option` wird überprüft, ob ein gewisser Wert `True` oder `False` ist und je nachdem, werden unterschiedliche Funktionen durchgeführt.  
 Bei `compare` werden zwei Werte miteinander vergleichen. Je nachdem ob ein Wert gleich, größer oder kleiner als der andere Wert ist, werden unterschiedliche Funktionen durchgeführt.
 
 Zudem wurden die Funktionen `copy` und `delete` implementiert.  
@@ -511,7 +514,7 @@ Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Daten
     Wenn die neue Saison anfängt, können auch Videos zur 2. Fußball-Bundesliga erstellt werden.
     
     Aktuell können die Testdaten nur zur Generierung eines Videos zur 1. Fußball-Bundesliga erstellt werden, da keine Testdaten 
-    der 2. Fußball-Bundesliga vorliegen.
+    zur 2. Fußball-Bundesliga vorliegen.
 
     Bei der Erstellung des Videos zur 1. Fußball-Bundesliga kann aktuell nur der Spielplan für den 1. Spieltag dargestellt werden, die Tabelle ist zunächst nur alphabetisch sortiert.
     Bei der Erstellung des Videos zur 2. Fußball-Bundesliga tritt ein Fehler auf, da in openligadb noch nicht alle Mannschaften aufgeführt sind.
@@ -523,7 +526,7 @@ Die Funktion `delete` dient dazu, Werte mit dem dazugehörigen Key aus der Daten
 **Twitter Wordcloud**
 
 Um an die Daten für die Wordclouds zu kommen, werden eine oder mehrere API-Anfragen gesendet, welche die zugrundeliegenden Hashtags enthalten. Als Antwort erhält man unter anderem alle Twitter-Beiträge, in denen die gesuchten Hashtags innerhalb der letzten sieben Tage verwendet wurden.
-Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthalten, die neben dem gesuchten Hashtag in den Posts verwendet wurden. Aus diesen Hashtags werden dann letztendlich die Wordclouds erstellt.
+Die API-Antwort wird so verkürzt, dass sie nur noch die Hashtags enthält, die neben mindestestens einem der gesuchten Hashtags in den Posts verwendet wurden. Aus diesen Hashtags werden dann letztendlich die Wordclouds erstellt.
 
 Mithilfe der Python-Library Wordcloud (Quelle: [https://github.com/amueller/word_cloud](https://github.com/amueller/word_cloud)) wurde der Image-Typ Wordcloud ergänzt.   
 Es ist möglich, verschiedene Parameter für die Wordcloud festzulegen.
@@ -554,9 +557,10 @@ Folgende transform-Typen wurden verwendet:
 
 **Wordcloud-Parameter**
 
-Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud setzen kann. Diese betreffen u.a. die Größe der Wordcloud sowie die Schrift. Die Hintergrundfarbe, Schriftfarben. Möchte man anstatt eines einfarbigen Hintergrunds ein Bild verwenden, lässt sich dies in der JSON-Datei durch den Overlay-Typ "image" einstellen.
+Es gibt verschiedene Parameter, die man beim Erstellen einer Wordcloud setzen kann. Diese betreffen u.a. die Größe der Wordcloud, den Hintergrund sowie die Schrift.   
+ Möchte man anstatt eines einfarbigen Hintergrunds ein Bild verwenden, lässt sich dies in der JSON-Datei durch den Overlay-Typ "image" einstellen.
 Die verschiedenen Parameter werden in der [Dokumentation zur Themenkonfiguration](../usage/stepsConfig.html#wordcloud) genauer erläutert. Zum Teil wurden die Default-Parameter als solche übernommen (Quelle: [https://www.datacamp.com/community/tutorials/wordcloud-python](https://www.datacamp.com/community/tutorials/wordcloud-python)).
-Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
+Andere Default-Parameter wurden angepasst. Die Schriftart sollte die gleiche sein, wie sie in den Wetterberichten und dem Fußball-Bericht auch verwendet wurde.
 
 ### Processing
 
@@ -564,7 +568,7 @@ Andere Default-Parameter wurden angepasst. Die Schriftart sollte diegleiche sein
 
 Im Audio-Abschnitt können beliebig viele Texte angegeben werden, welche in Audios übersetzt werden.
 Eine Audio-Datei besteht in der Regel aus mehreren Parts, welche beim Programmdurchlauf dann zu einem Text zusammengesetzt werden.  
-In der Regel erzeugt man für jedes erstellte Bild eine Audio-Datei, d.h., wenn es `Football_Image_1`-`Football_Image_7` gibt, so sollte es auch `Football_Audio_1` bis `Football_Image_7` geben. Dies dient dazu, dass im Sequence-Abschnitt jeder Audio-Datei eine Video-Datei zugeordnert werden kann.
+In der Regel erzeugt man für jedes erstellte Bild eine Audio-Datei, d.h., wenn es `Football_Image_1`-`Football_Image_7` gibt, so sollte es auch `Football_Audio_1` bis `Football_Image_7` geben. Dies dient dazu, dass im Sequence-Abschnitt jeder Audio-Datei eine Video-Datei zugeordnet werden kann.
 Möchte man dies anders machen, muss im Sequence-Abschnitt der Typ `custom` gewählt werden.
 
 ### Images
@@ -583,7 +587,7 @@ Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#pillow)
 
 #### Wordcloud
 Neben Bildern, die mit Hilfe von Pillow erzeugt werden, können auch Wordclouds generiert und in das Video eingebunden werden.   
-Der Hintergrund kann einfarbig sein, es lässt sich aber auch ein Hintergrundbild verwenden. Hier wird dann mit dem overlay-Typ "image" gearbeitet.
+Der Hintergrund kann einfarbig sein, es lässt sich aber auch ein Hintergrundbild verwenden. Hierfür kann der overlay-Typ "image" benutzt werden.
 
 Eine Wordcloud zum Thema Bundesliga sieht folgendermaßen aus:
 
@@ -602,15 +606,15 @@ Eine Wordcloud zum Thema Bundesliga sieht folgendermaßen aus:
 Die Wörter, die zu sehen sind, sind Hashtags, die am häufigsten neben dem gesuchten Hashtag "Bundesliga" verwendet wurden.
 Das Wort, welches am häufigsten als Hashtag verwendet wurde, ist das Wort, welches am größten dargestellt ist. Das Wort, welches am seltensten als Hashtag verwendet wurde, ist das Wort, welches am kleinsten dargestellt ist.
 
-Um das Auftauchen bestimmter Wörter in der Wordcloud zu verhindern, lassen sich Stopwords definieren. Dafür ist global eine TextdateiVideogenerierung im Resources-Ordner hinterlegt, welche eine Liste von Stopwords enthält und sich beim Erstellen der Wordcloud optional verwenden lässt.   
+Um das Auftauchen bestimmter Wörter in der Wordcloud zu verhindern, lassen sich Stopwords definieren. Dafür ist global eine Textdatei im resources-Ordner hinterlegt, welche eine Liste von Stopwords enthält und sich beim Erstellen der Wordcloud optional verwenden lässt.   
 Zusätzlich können über das Frontend Stopwords gesetzt werden, welche nur für bestimmte Videos gelten sollen.    
 Des Weiteren kann eingestellt werden, dass Groß- und Kleinschreibung beim Prüfen der Stopwords keine Rolle spielen sollen.
 
-Man kann auch Stopwords mit nur einen Wort, welches sich wiederholt, darstellen.
-
-Möchte man die am häufigsten auftretenden Wörter nach und nach in der Wordcloud darstellen. Dafür müssen einzelne Wordclouds erstellt und diese anschließend im Sequence-Schritt aneinandergehängt werden.
+Möchte man die am häufigsten auftretenden Wörter nach und nach in der Wordcloud darstellen, müssen einzelne Wordclouds erstellt und diese anschließend im Sequence-Schritt aneinandergehängt werden.
 
 
 Eine genaue Beschreibung befindet sich [hier](../usage/stepsConfig.html#wordcloud)
 
-Die hier beschriebenen Abschnitte sind nur ein auschnitt aus den Funktionen der Themenkonfiguration eine genaue beschreibung aller abschnitte und möglichkeiten befindet sich [heir](../usage/stepsConfig.md)
+```note::
+Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich [hier](../usage/stepsConfig.md)
+```
