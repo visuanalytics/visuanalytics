@@ -142,7 +142,7 @@ Hier werden alle Konfigurationsvariablen gespeichert (siehe [run_config](#run-co
 
 `_audio`:
 
-Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audio Konfiguration](./audio-apis.md)).
+Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audiokonfiguration](./audio-apis.md)).
 
 `_key`:
 
@@ -270,7 +270,7 @@ werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben.
   (z. B.: `"~$test"`)
 ```
 
-## Api
+## API
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
