@@ -673,10 +673,6 @@ Das Programm muss fehlerfreie Ausgaben zu den zur Auswahl stehenden Themen liefe
 
 ## Fazit
 
-### Verwendete Technologien
-
-Neben PyCharm und WebStorm noch mehr?
-
 ### Zielbestimmung
 
 Das Programm kann verschiedene Informationen aus dem Internet erfassen und diese automatisiert zu einem Informationsvideo verarbeiten. Dieses Informationsvideo präsentiert dem Benutzer Informationen übersichtlich und verständlich mithilfe von Grafiken, Tabellen und Wordclouds die Informationen.
@@ -739,7 +735,10 @@ Eine genaue Zielgruppe wurde bei der Herstellung nicht berücksichtigt. Der Wett
 #### Benutzeroberfläche/Funktion
 ##### Übersicht
 
-<-- TO DO --> Vergleich wie sah es am Anfang aus, wie jetzt 
+Bei der Gestaltung des Frontends wurde sich an das zuerst erstellte Mock-up gehalten.
+
+<img src="../_static/images/mainreport/ThumbnailDE.png" width="45%">
+<img src="../_static/images/mainreport/ThumbnailOrt.png" width="45%">
 
 ### Benutzerschnittstellen
 Das Produkt ist betriebssystemunabhängig. Der Zugriff auf das Programm erfolgt über einen Browser. Dort kann das Programm als Plugin der gewünschten Website hinzugefügt und verwendet werden.
