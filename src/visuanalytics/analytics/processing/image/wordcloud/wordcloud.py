@@ -1,5 +1,5 @@
 """
-Modul welches die Wordcloud Image Funktionen beinhaltet.
+Modul, welches die Wordcloud-Image-Funktionen beinhaltet.
 """
 import numbers
 import random
@@ -34,15 +34,16 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "repeat": False,
     "mask": None
 }
-""" """
+"""Ein Dictionary bestehend aus allen Default-Parametern für die Generierung einer Wordcloud.  """
 
 DEFAULT_COLOR_FUNC_VALUES = [0, 0, 0, 40]
-""" """
+"""Ein Array bestehend aus den Default-Werten für die Funktion color_func. Dieses Array stellt die Farbwerte (HSL-Farbschema) 
+    zur Generierung eines Farbverlaufs mit Schwarz- & Grautönen dar. """
 
 
 def get_color_func(h, s, l_start, l_end):
     """
-    Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+    Erstellt das Farbspektrum (mit HSL-Farbschema), in welchem die Wörter der Wordcloud dargestellt werden sollen.
 
     Die Werte werden jeweils als Integer angegeben.
 

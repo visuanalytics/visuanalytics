@@ -13,7 +13,7 @@ from visuanalytics.analytics.util.type_utils import register_type_func, get_type
 from visuanalytics.util import resources
 
 OVERLAY_TYPES = {}
-"""Ein Dictionary bestehende aus allen Overlay-Typ-Methoden.  """
+"""Ein Dictionary bestehend aus allen Overlay-Typ-Methoden.  """
 
 
 def register_overlay(func):

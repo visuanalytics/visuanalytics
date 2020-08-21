@@ -1,5 +1,5 @@
 """
-Modul welches die grundlegenden Funktionen der Audioerzeugung beeihaltet.
+Modul, welches die grundlegenden Funktionen der Audioerzeugung beeinhaltet.
 """
 import base64
 import logging
@@ -20,16 +20,17 @@ from visuanalytics.util.config_manager import get_config
 logger = logging.getLogger(__name__)
 
 GENERATE_AUDIO_TYPES = {}
+"""Ein Dictionary bestehend aus allen Generate-Audio-Typ-Methoden.  """
 
 
 def _get_audio_config(values: dict, data: StepData):
     config = get_config()["audio"]
     custom_config = values["audio"].get("config", {})
 
-    # If config in step-JSON is present, use that config
+    # if config in step-JSON is present, use that config
     config.update(custom_config)
 
-    # Init _audio with audio config
+    # init _audio with audio config
     data.insert_data("_audio|_conf", config, {})
 
     return config
@@ -44,16 +45,22 @@ def generate_audios(values: dict, data: StepData):
 
 
 def register_generate_audio(func):
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary GENERATE_AUDIO_TYPES hinzu.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/catch-Block
+    """
     return register_type_func(GENERATE_AUDIO_TYPES, AudioError, func)
 
 
 @register_generate_audio
 def default(values: dict, data: StepData, config: dict):
-    """
+    """Generiert eine Audiodatei mit der Python-Bibliothek gTTS.
 
-    :param values:
-    :param data:
-    :param config:
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :param config: Daten aus der Konfigurationsdatei
     :return:
     """
     for key in values:
@@ -76,6 +83,13 @@ def default(values: dict, data: StepData, config: dict):
 
 @register_generate_audio
 def custom(values: dict, data: StepData, config: dict):
+    """Generiert eine Audiodatei mithilfe einer bestimmten TTS-API und Konfigurationen dafür.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    :param config: Daten aus der Konfigurationsdatei
+    :return:
+    """
     logger.info("Generate audio with custom audio config")
 
     _prepare_custom(config.get("prepare", None), data, config)
@@ -100,7 +114,7 @@ def _save_audio(response, data: StepData, config: dict):
     post_generate = config.get("post_generate", {})
     extension = data.format(post_generate["file_extension"]) if post_generate.get("file_extension",
                                                                                   None) is not None else None
-    # If multiple requests were used, get only the request with the audio file
+    # if multiple requests were used, get only the request with the audio file
     if config["generate"]["type"].startswith("request_multiple"):
         audio_idx = data.format(config["generate"]["audio_idx"])
         response = response[audio_idx]
@@ -108,18 +122,18 @@ def _save_audio(response, data: StepData, config: dict):
     content_type = response["headers"]["content-type"]
     audio = response["content"]
 
-    # If content type is JSON, try to decode JSON-String with base64
+    # if content type is JSON, try to decode JSON string with base64
     if content_type.startswith("application/json"):
-        # Get audio string
+        # get audio string
         audio = data_get_pattern(data.format(post_generate["audio_key"]), audio)
         # decode Audio Key with base64
         audio = base64.b64decode(audio)
     elif extension is None:
-        # Check if content type is an audio type
+        # check if content type is an audio type
         if not content_type.startswith("audio"):
             raise InvalidContentTypeError(None, content_type, "'audio/*'")
 
-        # Get file extention from mime type:
+        # get file extention from mime type:
         extension = mimetypes.guess_all_extensions(content_type)[0].replace(".", "")
 
     audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], extension)
