@@ -1,5 +1,5 @@
 """
-Modul welches Thumbnails erzeugt
+Modul, welches Thumbnails erzeugt.
 """
 
 import numbers
@@ -19,11 +19,11 @@ THUMBNAIL_TYPES = {}
 
 
 def register_thumbnail(func):
-    """
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
     Fügt eine Typ-Funktion dem Dictionary THUMBNAIL_TYPES hinzu.
 
-    :param func: eine Funktion
-    :return: die übergebene Funktion
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
     """
     return register_type_func(THUMBNAIL_TYPES, ThumbnailError, func)
 

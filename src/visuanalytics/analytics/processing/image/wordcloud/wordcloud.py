@@ -1,5 +1,5 @@
 """
-Modul welches die Wordcloud Image Funktionen beinhaltet.
+Modul, welches die Wordcloud-Image-Funktionen beinhaltet.
 """
 import numbers
 import random
@@ -34,17 +34,22 @@ WORDCLOUD_DEFAULT_PARAMETER = {
     "repeat": False,
     "mask": None
 }
-""" """
+"""Ein Dictionary bestehend aus allen Default-Parametern für die Generierung einer Wordcloud. 
+   Siehe auch Quelle: https://www.datacamp.com/community/tutorials/wordcloud-python"""
 
 DEFAULT_COLOR_FUNC_VALUES = [0, 0, 0, 40]
-""" """
+"""Ein Array bestehend aus den Default-Werten für die Funktion color_func. Dieses Array stellt die Farbwerte (HSL-Farbschema) 
+    zur Generierung eines Farbverlaufs mit Schwarz- & Grautönen dar. """
 
 
 def get_color_func(h, s, l_start, l_end):
     """
-    Erstellt das Farbspektrum, in welcher die Wörter der wordcloud dargestellt werden
+    Erstellt das Farbspektrum (mit HSL-Farbschema), in welchem die Wörter der Wordcloud dargestellt werden sollen.
 
     Die Werte werden jeweils als Integer angegeben.
+
+    Quelle: https://github.com/amueller/word_cloud/blob/master/wordcloud/wordcloud.py (siehe random_color_func)
+    Funktion wurde für unsere Zwecke angepasst.
 
     :param h: (hue) Farbton in Grad auf einem Farbenrad. Mögliche Werte: 0 bis 360
         0 ist Rot, 120 ist Grün und 240 ist Blau.
@@ -66,6 +71,8 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
 
     Der Standard-Farbverlauf bei color_func true ist Grau/Schwarz.
     Die Standard-Farbe ist generell die colormap viridis.
+
+    Quelle bzgl. Verwendung: https://github.com/amueller/word_cloud
 
     :param values: Image Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API

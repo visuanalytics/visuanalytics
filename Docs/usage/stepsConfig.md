@@ -142,7 +142,7 @@ Hier werden alle Konfigurationsvariablen gespeichert (siehe [run_config](#run-co
 
 `_audio`:
 
-Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audio Konfiguration](./audio-apis.md)).
+Hier werden alle Konfigurationen und Daten für eine benutzerdefinierte Audiogenerierung gespeichert (siehe [Audiokonfiguration](./audio-apis.md)).
 
 `_key`:
 
@@ -270,7 +270,7 @@ werden kann, muss man dies mit einem führenden Dollarzeichen (`$`) angeben.
   (z. B.: `"~$test"`)
 ```
 
-## Api
+## API
 
 Die im folgenden aufgeführten Typen dienen zur Anfrage von Daten, welche an API-Schnittstellen gesendet werden. Diese
 werden Request genannt. Die Antwort der API wird Response genannt und besteht aus einer JSON-Datei mit den angeforderten
@@ -2388,7 +2388,7 @@ Der Typ `image` setzt ein Bild in das zuvor definierte `source_image`.
   "pos_y": 280,
   "size_x": 350,
   "size_y": 350,
-  "colour": "RGBA",
+  "color": "RGBA",
   "pattern": "123.png"
  }
 ```
@@ -2410,7 +2410,7 @@ int - Breite des zu setzende Bildes
 int - Höhe des zu setzende Bildes  
 (wenn nichts angeben, wird das zu setzende Bild nicht skaliert)
 
-`colour`:  
+`color`:  
 [str](#string) - Farbe in welche das Bild konvertiert werden soll  
 (RGBA = bunt, L = schwarz-weiß)
 
@@ -2438,7 +2438,7 @@ Der Typ `image_array` setzt mehrere Bilder in das zuvor definierte `source_image
   "pos_y": [865, 787],
   "size_x": 160,
    "size_y": 160,
-   "colour": "L",
+   "color": "L",
    "pattern": [
       "{_req|test}.png",
       "{_req|test}.png"
@@ -2463,7 +2463,7 @@ Breite der jeweils zu setzenden Bilder (muss ein String sein)
 Höhe der jeweils zu setzenden Bilder (muss ein String sein)  
 (wenn nichts angeben, werden die Bilder nicht skaliert)
 
-`colour`:  
+`color`:  
 Farbe in welche die Bilder konvertiert werden sollen.
 Kann ein String sein, dann wird die Farbe für alle verwendet oder eine Liste,
 dann wird jeder Eintrag einer Koordinate zu geordnet (Liste muss dann genauso lang sein wie pos_x)  
@@ -2510,7 +2510,7 @@ Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)
 
 **Sollte man kein neues `preset` angeben wollen, so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
-`colour`:  
+`color`:  
 str/hex - Farbe des Textes. Kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 `font_size`:  
@@ -2565,7 +2565,7 @@ Preset, welches verwendet werden soll (z.B. Schriftart, -Größe und -Farbe)   L
 
 **Sollte man kein neues `preset` angeben wollen ,so kann man anstelle des `preset` auch folgendes zusätzlich angeben:**
 
-`colour`:  
+`color`:  
 str/hex - Farbe des Textes, kann ein Name sein, aber auch eine Hexadezimalzahl.
 
 `font_size`:  
@@ -3328,12 +3328,12 @@ der restlichen JSON-Datei kann man diese dann mit `"preset": "key"` verwenden.
  },
  "presets": {
     "test_preset_1": {
-      "colour": "black",
+      "color": "black",
       "font_size": 74,
       "font": "fonts/Dosis-Bold.ttf"
     },
     "test_preset_2": {
-      "colour": "white",
+      "color": "white",
       "font_size": 35,
       "font": "fonts/Dosis-Bold.ttf"
     }
