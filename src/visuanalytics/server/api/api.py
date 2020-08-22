@@ -16,9 +16,6 @@ logger = logging.getLogger()
 api = Blueprint('api', __name__)
 
 
-# TODO (David): Besseres Error-Handling
-
-
 @api.teardown_app_request
 def close_db_con(exception):
     db.close_con_f()
@@ -71,7 +68,7 @@ def add_topic():
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid File name"})
-            return err, 400 
+            return err, 400
 
         queries.add_topic(name, filename)
         file.save(queries._get_file_path(filename))
