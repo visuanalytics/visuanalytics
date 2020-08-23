@@ -309,6 +309,22 @@ Eine geneuere Dokumentation der Wordpress-Methoden finden Sie [hier](https://dev
 
 ## Web-API
 
+Für die Kommunikation zwischen Frontend und Server werden folgende API-Endpunkte bereitgestellt:
+
+| Endpunkt | Request-Method | Request-Body | Beschreibung 
+|----------| -------------- | ------------ | ---------- |
+| /add     | POST           | Job-Informationen im JSON-Format | Legt einen neuen Job an, indem er in der Datenbank gespeichert wird.
+| /remove/\<job_id\> | DELETE | - | Entfernt den Job mit der ID \<job_id\>, indem er ihn aus der Datenbank löscht.
+| /edit/\<job_id\> | PUT | Bearbeitete Job-Informationen im JSON-Format | Ändert die Einstellungen des Jobs mit der ID \<job_id\>, indem die entsprechenden Datenbankeinträge angepasst werden.
+| /jobs | GET | - | Die Response enthält eine Liste aller angelegten Jobs im JSON-Format.
+| /topics | GET | - | Die Response enthält eine Liste aller zur Verfügung stehenden Themen im JSON-Format.
+| /params/\<topic_id\> | GET | - | Die Response enthält Informationen zu den Parametern, die für das Thema mit der ID \<topic_id\> zur Verfügung stehen, im JSON-Format.
+| /logs | GET | - | Die Response enthält eine Liste aller Log-Einträge, die zu den angelegten Jobs gehören, im JSON-Format.
+| /topic | PUT | JSON-Datei | Legt ein neues Thema an, indem die übermittelte JSON-Datei im resources/steps-Ordner gespeichert wird und ein entsprechender Datenbankeintrag gemacht wird.
+| /topic/\<topic_id\> | GET | - | Die Response enthält die JSON-Datei zu dem Thema mit der ID \<topic_id\>.
+| /topic/\<topic_id\> | DELETE | - | Löscht die JSON-Datei des Themas mit der ID \<topic_id\> und entfernt den entsprechenden Datenbankeintrag.
+
+
 ## Datenbank
 
 Für die Datenbank wird eine SQLite-Datenbank verwendet.
@@ -638,9 +654,9 @@ häufigsten vorkommen, erstellt und aneinandergereiht.
 
 
 ```note::
-Eine genaue Beschreibung zur Verwendung der Wordcloud befindet sich [hier](../usage/stepsConfig.html#wordcloud)
+    Eine genaue Beschreibung zur Verwendung der Wordcloud befindet sich [hier](../usage/stepsConfig.html#wordcloud)
 ```
 
 ```note::
-Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich [hier](../usage/stepsConfig.md)
+    Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich [hier](../usage/stepsConfig.md)
 ```
