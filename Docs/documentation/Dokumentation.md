@@ -637,10 +637,8 @@ erstellt wird, werden Wordclouds mit jeweils den ersten x (x = 1, 2, 3, 4, 5, 6,
 häufigsten vorkommen, erstellt und aneinandergereiht.
 
 
-```note::
-Eine genaue Beschreibung zur Verwendung der Wordcloud befindet sich [hier](../usage/stepsConfig.html#wordcloud)
-```
+Eine genaue Beschreibung zur Verwendung der Wordcloud befindet sich [hier](../usage/stepsConfig.html#wordcloud).
 
 ```note::
-Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich [hier](../usage/stepsConfig.md)
+  Die hier beschriebenen Abschnitte bilden nicht den Gesamtumfang der Themenkonfiguration ab. Eine genaue Beschreibung aller Abschnitte befindet sich `hier <../usage/stepsConfig.html>`_.
 ```
