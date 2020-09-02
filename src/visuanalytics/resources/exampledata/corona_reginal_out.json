@@ -1,23 +1,184 @@
 {
   "_conf": {
     "output_path": "out",
-    "h264_nvenc": true,
-    "testing": true,
-    "thumbnail": false,
-    "Landkreis": "GIESSEN",
+    "testing": False,
+    "h264_nvenc": True,
+    "thumbnail": False,
+    "Landkreis": "GIEßEN",
     "keep_count": 3,
-    "job_name": "Coronabericht"
+    "job_name": "Coronabericht-Regional"
   },
-  "_pipe_id": "237673d414324eb9960b380a2f1a7401",
+  "_pipe_id": "b6a85bc2bb164acf91517c804d6e642b",
   "_job_id": 1,
   "_req": {
     "Aktuelle_Daten": {
+      "cases": 371,
+      "cases_per_100k": 137.98,
+      "cases7_per_100k": 5.21,
+      "deaths": 4,
+      "death_rate": 1.08,
+      "last_update": "02.09.2020, 00:00 Uhr",
+      "BEZ": "Landkreis",
+      "GEN": "Gießen",
+      "new_cases": 2
+    },
+    "Alte_Daten-1": {
+      "cases": 369,
+      "cases_per_100k": 137.24,
+      "cases7_per_100k": 7.81,
+      "deaths": 4,
+      "death_rate": 1.08,
+      "new_cases": 0
+    },
+    "Alte_Daten-2": {
       "cases": 369,
       "cases_per_100k": 137.237983308291,
       "cases7_per_100k": 7.81029173299216,
       "deaths": 4,
       "death_rate": 1.0840108401084,
       "last_update": "31.08.2020, 00:00 Uhr"
-    }
+    },
+    "Alte_Daten-3": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-4": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-5": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-6": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-7": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-8": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-9": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-10": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-11": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-12": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-13": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-14": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-15": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-16": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-17": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-18": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-19": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "Alte_Daten-20": {
+      "cases": 0,
+      "cases_per_100k": 0,
+      "cases7_per_100k": 0,
+      "deaths": 0,
+      "death_rate": 0
+    },
+    "14d_cases7_per_100k": [
+      5.21,
+      7.81,
+      7.81029173299216,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
   }
 }
