@@ -73,6 +73,12 @@
     "type": "successively"
   },
   "run_config": {
+    "city": {
+      "type": "string",
+      "display_name": "Ort",
+      "optional": false,
+      "default_value": "Gießen"
+    }
   },
   "presets": {
   }
