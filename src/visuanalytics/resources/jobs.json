@@ -115,6 +115,22 @@
           "count": 3
         }
       }
+    },
+    {
+      "name": "Coronabericht-Regional",
+      "id": 1,
+      "steps": "corona_regional",
+      "schedule": {
+        "times": [
+          "12:41"
+        ],
+        "daily": true
+      },
+      "config": {
+        "thumbnail": false,
+        "Landkreis": "GIESSEN",
+        "keep_count": 3
+      }
     }
   ]
 }

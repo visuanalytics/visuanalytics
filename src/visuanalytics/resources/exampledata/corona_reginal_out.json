@@ -1,0 +1,23 @@
+{
+  "_conf": {
+    "output_path": "out",
+    "h264_nvenc": true,
+    "testing": true,
+    "thumbnail": false,
+    "Landkreis": "GIESSEN",
+    "keep_count": 3,
+    "job_name": "Coronabericht"
+  },
+  "_pipe_id": "237673d414324eb9960b380a2f1a7401",
+  "_job_id": 1,
+  "_req": {
+    "Aktuelle_Daten": {
+      "cases": 369,
+      "cases_per_100k": 137.237983308291,
+      "cases7_per_100k": 7.81029173299216,
+      "deaths": 4,
+      "death_rate": 1.0840108401084,
+      "last_update": "31.08.2020, 00:00 Uhr"
+    }
+  }
+}

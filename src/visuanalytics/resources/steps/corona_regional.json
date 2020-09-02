@@ -1,0 +1,79 @@
+{
+  "id": 1,
+  "name": "corona_regional",
+  "info": "Der Corona-Bericht enthält die aktuellen Corona Daten zu dem Angegebenem Landkreis.",
+  "api": {
+    "type": "request_multiple_custom",
+    "use_loop_as_key": true,
+    "steps_value": [
+      "Aktuelle_Daten",
+      "Daten-1Tag"
+    ],
+    "requests": [
+      {
+        "type": "request",
+        "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20'{_conf|Landkreis}'&outFields=*&outSR=4326&f=json"
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "data": "0"
+        }
+      }
+    ]
+  },
+  "transform": [
+    {
+      "type": "transform_array",
+      "array_key": "_req|Aktuelle_Daten|features",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "0|attributes",
+          "relevant_keys": [
+            "attributes|cases",
+            "attributes|cases_per_100k",
+            "attributes|cases7_per_100k",
+            "attributes|deaths",
+            "attributes|death_rate",
+            "attributes|last_update"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "copy",
+      "keys": [
+        "_req|Aktuelle_Daten|features|0|attributes"
+      ],
+      "new_keys": [
+        "_req|Aktuelle_Daten"
+      ]
+    }
+  ],
+  "storing": [
+    {
+      "name": "corona",
+      "key": "_req|Aktuelle_Daten",
+      "count": 31
+    }
+  ],
+  "images": {
+  },
+  "thumbnail": {
+  },
+  "audio": {
+    "audios": {
+    }
+  },
+  "sequence": {
+    "type": "successively"
+  },
+  "run_config": {
+  },
+  "presets": {
+  }
+}
