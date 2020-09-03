@@ -143,7 +143,10 @@ def append(values: dict, data: StepData):
     """
     for idx, key in data.loop_key(values["keys"], values):
         value = data.get_data(key, values)
-        new_key = values["new_keys"][idx]
+        if values.get("new_key_type", "multiple") != "single":
+            new_key = values["new_keys"][idx]
+        else:
+            new_key = values["new_keys"][0]
         new_key_format = data.format(values.get("append_type", "list"))
 
         try:

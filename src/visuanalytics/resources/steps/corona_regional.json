@@ -7,7 +7,26 @@
     "use_loop_as_key": true,
     "steps_value": [
       "Aktuelle_Daten",
-      "Daten-1Tag"
+      "Alte_Daten-1",
+      "Alte_Daten-2",
+      "Alte_Daten-3",
+      "Alte_Daten-4",
+      "Alte_Daten-5",
+      "Alte_Daten-6",
+      "Alte_Daten-7",
+      "Alte_Daten-8",
+      "Alte_Daten-9",
+      "Alte_Daten-10",
+      "Alte_Daten-11",
+      "Alte_Daten-12",
+      "Alte_Daten-13",
+      "Alte_Daten-14",
+      "Alte_Daten-15",
+      "Alte_Daten-16",
+      "Alte_Daten-17",
+      "Alte_Daten-18",
+      "Alte_Daten-19",
+      "Alte_Daten-20"
     ],
     "requests": [
       {
@@ -20,7 +39,298 @@
         "use_last": 1,
         "alternative": {
           "type": "input",
-          "data": "0"
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 2,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 3,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 4,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 5,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 6,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 7,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 8,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 9,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 10,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 11,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 12,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 13,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 14,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 15,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 16,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 17,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 18,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 19,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
+        }
+      },
+      {
+        "type": "request_memory",
+        "name": "corona",
+        "use_last": 20,
+        "alternative": {
+          "type": "input",
+          "data": {
+            "cases": 0,
+            "cases_per_100k": 0,
+            "cases7_per_100k": 0,
+            "deaths": 0,
+            "death_rate": 0
+          }
         }
       }
     ]
@@ -39,7 +349,9 @@
             "attributes|cases7_per_100k",
             "attributes|deaths",
             "attributes|death_rate",
-            "attributes|last_update"
+            "attributes|last_update",
+            "attributes|BEZ",
+            "attributes|GEN"
           ]
         }
       ]
@@ -52,28 +364,163 @@
       "new_keys": [
         "_req|Aktuelle_Daten"
       ]
+    },
+    {
+      "type": "calculate",
+      "action": "subtract",
+      "keys": [
+        "_req|Alte_Daten-1|cases"
+      ],
+      "value_left": "_req|Aktuelle_Daten|cases",
+      "new_keys": [
+        "_req|Aktuelle_Daten|new_cases"
+      ]
+    },
+    {
+      "type": "calculate",
+      "action": "round",
+      "decimal": 2,
+      "keys": [
+        "_req|Aktuelle_Daten|cases_per_100k",
+        "_req|Aktuelle_Daten|cases7_per_100k",
+        "_req|Aktuelle_Daten|death_rate"
+      ]
+    },
+    {
+      "type": "append",
+      "new_key_type": "single",
+      "keys": [
+        "_req|Aktuelle_Daten|cases7_per_100k",
+        "_req|Alte_Daten-1|cases7_per_100k",
+        "_req|Alte_Daten-2|cases7_per_100k",
+        "_req|Alte_Daten-3|cases7_per_100k",
+        "_req|Alte_Daten-4|cases7_per_100k",
+        "_req|Alte_Daten-5|cases7_per_100k",
+        "_req|Alte_Daten-6|cases7_per_100k",
+        "_req|Alte_Daten-7|cases7_per_100k",
+        "_req|Alte_Daten-8|cases7_per_100k",
+        "_req|Alte_Daten-9|cases7_per_100k",
+        "_req|Alte_Daten-10|cases7_per_100k",
+        "_req|Alte_Daten-11|cases7_per_100k",
+        "_req|Alte_Daten-12|cases7_per_100k",
+        "_req|Alte_Daten-13|cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|14d_cases7_per_100k"
+      ]
     }
   ],
   "storing": [
     {
       "name": "corona",
       "key": "_req|Aktuelle_Daten",
+      "exclude": [
+        "last_update",
+        "BEZ",
+        "GEN",
+        "new_cases"
+      ],
       "count": 31
     }
   ],
   "images": {
+    "corona1": {
+      "type": "pillow",
+      "path": "corona/Corona_Regional.png",
+      "overlay": [
+        {
+          "description": "Überschrift",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 20,
+          "color": "black",
+          "font_size": 110,
+          "font": "fonts/Dosis-Bold.ttf",
+          "pattern": "{_req|Aktuelle_Daten|BEZ} {_req|Aktuelle_Daten|GEN}"
+        },
+        {
+          "description": "Corona Daten",
+          "type": "text_array",
+          "pos_x": [
+            500,
+            500,
+            500,
+            500,
+            500,
+            1050
+          ],
+          "pos_y": [
+            315,
+            440,
+            559,
+            686,
+            811,
+            900
+          ],
+          "preset": "corona_1",
+          "pattern": [
+            "{_req|Aktuelle_Daten|cases}",
+            "{_req|Aktuelle_Daten|new_cases}",
+            "{_req|Aktuelle_Daten|cases_per_100k}",
+            "{_req|Aktuelle_Daten|deaths}",
+            "{_req|Aktuelle_Daten|death_rate} %",
+            "{_req|Aktuelle_Daten|last_update}"
+          ]
+        }
+      ]
+    }
   },
   "thumbnail": {
   },
   "audio": {
     "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt {_req|Aktuelle_Daten|cases} Corona Fälle"
+          },
+          {
+            "type": "text",
+            "pattern": "Davon waren {_req|Aktuelle_Daten|new_cases} Fälle von gestern."
+          },
+          {
+            "type": "text",
+            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths}."
+          },
+          {
+            "type": "text",
+            "pattern": "Die Durschnittliche Anzahl der Neuinfektionen lag bei {_req|Aktuelle_Daten|cases7_per_100k}."
+          }
+        ]
+      }
     }
   },
   "sequence": {
-    "type": "successively"
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "corona1",
+        "audio_l": "a1",
+        "time_diff": 10
+      }
+    ]
   },
   "run_config": {
+    "city": {
+      "type": "string",
+      "display_name": "Ort",
+      "optional": false,
+      "default_value": "Gießen"
+    }
   },
   "presets": {
+    "corona_1": {
+      "anchor_point": "left",
+      "color": "black",
+      "font_size": 70,
+      "font": "fonts/Dosis-Medium.ttf"
+    }
   }
 }

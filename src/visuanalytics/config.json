@@ -23,6 +23,10 @@
       {
         "name": "Twitter-Wordcloud",
         "file_name": "twitter"
+      },
+      {
+        "name": "Corona-Daten",
+        "file_name": "corona_regional"
       }
     ]
   },

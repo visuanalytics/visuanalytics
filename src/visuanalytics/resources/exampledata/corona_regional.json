@@ -384,16 +384,16 @@
           "DEBKG_ID": "DEBKGDL20000DWKN",
           "Shape__Area": 854708867.207275,
           "Shape__Length": 216885.28507977,
-          "death_rate": 1.0840108401084,
-          "cases": 369,
+          "death_rate": 1.07816711590297,
+          "cases": 371,
           "deaths": 4,
-          "cases_per_100k": 137.237983308291,
-          "cases_per_population": 0.137237983308291,
+          "cases_per_100k": 137.981820616195,
+          "cases_per_population": 0.137981820616195,
           "BL": "Hessen",
           "BL_ID": "6",
           "county": "LK Gießen",
-          "last_update": "31.08.2020, 00:00 Uhr",
-          "cases7_per_100k": 7.81029173299216,
+          "last_update": "02.09.2020, 00:00 Uhr",
+          "cases7_per_100k": 5.20686115532811,
           "recovered": null
         },
         "geometry": {
@@ -4712,5 +4712,145 @@
         }
       }
     ]
+  },
+  "Alte_Daten-1": {
+    "cases": 369,
+    "cases_per_100k": 137.24,
+    "cases7_per_100k": 7.81,
+    "deaths": 4,
+    "death_rate": 1.08
+  },
+  "Alte_Daten-2": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-3": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-4": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-5": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-6": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-7": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-8": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-9": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-10": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-11": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-12": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-13": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-14": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-15": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-16": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-17": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-18": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-19": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
+  },
+  "Alte_Daten-20": {
+    "cases": 0,
+    "cases_per_100k": 0,
+    "cases7_per_100k": 0,
+    "deaths": 0,
+    "death_rate": 0
   }
 }
