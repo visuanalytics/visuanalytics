@@ -6,6 +6,7 @@ from PIL import Image
 from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
@@ -85,3 +86,17 @@ def wordcloud(values: dict, step_data: StepData, prev_paths):
     :rtype: str
     """
     return wc.wordcloud(values, step_data, prev_paths)
+
+
+@register_image
+def diagram(values: dict, step_data: StepData, prev_paths):
+    """
+    Erstellt ein Wordcloud Bild mit Hilfe der Python-Bibliothek Wordcloud.
+
+    :param values: Image-Bauplan des zu erstellenden Bildes
+    :param step_data: Daten aus der API
+    :param prev_paths: alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellten Bildern
+    :return: Pfad zum erstellten Bild
+    :rtype: str
+    """
+    return generate_diagram(values, step_data, prev_paths)

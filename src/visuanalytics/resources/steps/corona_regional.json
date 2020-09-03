@@ -390,20 +390,20 @@
       "type": "append",
       "new_key_type": "single",
       "keys": [
-        "_req|Aktuelle_Daten|cases7_per_100k",
-        "_req|Alte_Daten-1|cases7_per_100k",
-        "_req|Alte_Daten-2|cases7_per_100k",
-        "_req|Alte_Daten-3|cases7_per_100k",
-        "_req|Alte_Daten-4|cases7_per_100k",
-        "_req|Alte_Daten-5|cases7_per_100k",
-        "_req|Alte_Daten-6|cases7_per_100k",
-        "_req|Alte_Daten-7|cases7_per_100k",
-        "_req|Alte_Daten-8|cases7_per_100k",
-        "_req|Alte_Daten-9|cases7_per_100k",
-        "_req|Alte_Daten-10|cases7_per_100k",
-        "_req|Alte_Daten-11|cases7_per_100k",
+        "_req|Alte_Daten-13|cases7_per_100k",
         "_req|Alte_Daten-12|cases7_per_100k",
-        "_req|Alte_Daten-13|cases7_per_100k"
+        "_req|Alte_Daten-11|cases7_per_100k",
+        "_req|Alte_Daten-10|cases7_per_100k",
+        "_req|Alte_Daten-9|cases7_per_100k",
+        "_req|Alte_Daten-8|cases7_per_100k",
+        "_req|Alte_Daten-7|cases7_per_100k",
+        "_req|Alte_Daten-6|cases7_per_100k",
+        "_req|Alte_Daten-5|cases7_per_100k",
+        "_req|Alte_Daten-4|cases7_per_100k",
+        "_req|Alte_Daten-3|cases7_per_100k",
+        "_req|Alte_Daten-2|cases7_per_100k",
+        "_req|Alte_Daten-1|cases7_per_100k",
+        "_req|Aktuelle_Daten|cases7_per_100k"
       ],
       "new_keys": [
         "_req|14d_cases7_per_100k"
@@ -424,6 +424,10 @@
     }
   ],
   "images": {
+    "corona0": {
+      "type": "diagram",
+      "data": "{_req|14d_cases7_per_100k}"
+    },
     "corona1": {
       "type": "pillow",
       "path": "corona/Corona_Regional.png",
@@ -467,6 +471,15 @@
             "{_req|Aktuelle_Daten|death_rate} %",
             "{_req|Aktuelle_Daten|last_update}"
           ]
+        },
+        {
+          "description": "Diagram",
+          "type": "image",
+          "pos_x": 885,
+          "pos_y": 170,
+          "color": "RGBA",
+          "image_name": "corona0",
+          "transparency": true
         }
       ]
     }
