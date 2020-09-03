@@ -444,6 +444,17 @@
           "pattern": "{_req|Aktuelle_Daten|BEZ} {_req|Aktuelle_Daten|GEN}"
         },
         {
+          "description": "Diagramm Beschreibung",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1550,
+          "pos_y": 610,
+          "color": "black",
+          "font_size": 100,
+          "font": "fonts/Dosis-Medium.ttf",
+          "pattern": "{_req|Aktuelle_Daten|cases7_per_100k}"
+        },
+        {
           "description": "Corona Daten",
           "type": "text_array",
           "pos_x": [
@@ -475,8 +486,8 @@
         {
           "description": "Diagram",
           "type": "image",
-          "pos_x": 885,
-          "pos_y": 170,
+          "pos_x": 925,
+          "pos_y": 180,
           "color": "RGBA",
           "image_name": "corona0",
           "transparency": true
@@ -500,7 +511,7 @@
           },
           {
             "type": "text",
-            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths}."
+            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths} ."
           },
           {
             "type": "text",
