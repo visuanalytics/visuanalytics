@@ -532,9 +532,9 @@
     ]
   },
   "run_config": {
-    "city": {
+    "Landkreis": {
       "type": "string",
-      "display_name": "Ort",
+      "display_name": "Landkreis",
       "optional": false,
       "default_value": "Gießen"
     }
