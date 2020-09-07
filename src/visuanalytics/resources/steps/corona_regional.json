@@ -426,7 +426,18 @@
   "images": {
     "corona0": {
       "type": "diagram",
-      "data": "{_req|14d_cases7_per_100k}"
+      "data": "{_req|14d_cases7_per_100k}",
+      "plot_size_x": 9,
+      "plot_size_y": 4.5,
+      "label_rotation": 45,
+      "axis_depth": 2,
+      "label_colour": {
+        "r": 0.02,
+        "g": 0.36,
+        "b": 0.49,
+        "t": 1
+      },
+      "label_use_date": true
     },
     "corona1": {
       "type": "pillow",
