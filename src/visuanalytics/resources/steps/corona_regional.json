@@ -390,20 +390,20 @@
       "type": "append",
       "new_key_type": "single",
       "keys": [
-        "_req|Aktuelle_Daten|cases7_per_100k",
-        "_req|Alte_Daten-1|cases7_per_100k",
-        "_req|Alte_Daten-2|cases7_per_100k",
-        "_req|Alte_Daten-3|cases7_per_100k",
-        "_req|Alte_Daten-4|cases7_per_100k",
-        "_req|Alte_Daten-5|cases7_per_100k",
-        "_req|Alte_Daten-6|cases7_per_100k",
-        "_req|Alte_Daten-7|cases7_per_100k",
-        "_req|Alte_Daten-8|cases7_per_100k",
-        "_req|Alte_Daten-9|cases7_per_100k",
-        "_req|Alte_Daten-10|cases7_per_100k",
-        "_req|Alte_Daten-11|cases7_per_100k",
+        "_req|Alte_Daten-13|cases7_per_100k",
         "_req|Alte_Daten-12|cases7_per_100k",
-        "_req|Alte_Daten-13|cases7_per_100k"
+        "_req|Alte_Daten-11|cases7_per_100k",
+        "_req|Alte_Daten-10|cases7_per_100k",
+        "_req|Alte_Daten-9|cases7_per_100k",
+        "_req|Alte_Daten-8|cases7_per_100k",
+        "_req|Alte_Daten-7|cases7_per_100k",
+        "_req|Alte_Daten-6|cases7_per_100k",
+        "_req|Alte_Daten-5|cases7_per_100k",
+        "_req|Alte_Daten-4|cases7_per_100k",
+        "_req|Alte_Daten-3|cases7_per_100k",
+        "_req|Alte_Daten-2|cases7_per_100k",
+        "_req|Alte_Daten-1|cases7_per_100k",
+        "_req|Aktuelle_Daten|cases7_per_100k"
       ],
       "new_keys": [
         "_req|14d_cases7_per_100k"
@@ -424,6 +424,21 @@
     }
   ],
   "images": {
+    "corona0": {
+      "type": "diagram",
+      "data": "{_req|14d_cases7_per_100k}",
+      "plot_size_x": 9,
+      "plot_size_y": 4.5,
+      "label_rotation": 45,
+      "axis_depth": 2,
+      "label_colour": {
+        "r": 0.02,
+        "g": 0.36,
+        "b": 0.49,
+        "t": 1
+      },
+      "label_use_date": true
+    },
     "corona1": {
       "type": "pillow",
       "path": "corona/Corona_Regional.png",
@@ -438,6 +453,17 @@
           "font_size": 110,
           "font": "fonts/Dosis-Bold.ttf",
           "pattern": "{_req|Aktuelle_Daten|BEZ} {_req|Aktuelle_Daten|GEN}"
+        },
+        {
+          "description": "Diagramm Beschreibung",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 1550,
+          "pos_y": 610,
+          "color": "black",
+          "font_size": 100,
+          "font": "fonts/Dosis-Medium.ttf",
+          "pattern": "{_req|Aktuelle_Daten|cases7_per_100k}"
         },
         {
           "description": "Corona Daten",
@@ -467,6 +493,15 @@
             "{_req|Aktuelle_Daten|death_rate} %",
             "{_req|Aktuelle_Daten|last_update}"
           ]
+        },
+        {
+          "description": "Diagram",
+          "type": "image",
+          "pos_x": 925,
+          "pos_y": 180,
+          "color": "RGBA",
+          "image_name": "corona0",
+          "transparency": true
         }
       ]
     }
@@ -487,7 +522,7 @@
           },
           {
             "type": "text",
-            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths}."
+            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths} ."
           },
           {
             "type": "text",
@@ -508,9 +543,9 @@
     ]
   },
   "run_config": {
-    "city": {
+    "Landkreis": {
       "type": "string",
-      "display_name": "Ort",
+      "display_name": "Landkreis",
       "optional": false,
       "default_value": "Gießen"
     }
