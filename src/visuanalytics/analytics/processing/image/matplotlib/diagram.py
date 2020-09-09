@@ -24,24 +24,19 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     ax = fig.add_subplot(111)
     for axis in ['top', 'bottom', 'left', 'right']:
         ax.spines[axis].set_linewidth(step_data.format(values.get("axis_depth", 1)))
-    barlist = plt.bar(days, data, color=(step_data.format(values["label_colour"].get("r", 0)),
-                                         step_data.format(values["label_colour"].get("g", 0)),
-                                         step_data.format(values["label_colour"].get("b", 0)),
-                                         step_data.format(values["label_colour"].get("t", 1))))
+    bar_list = plt.bar(days, data, color=(step_data.format(values["label_colour"].get("r", 0)),
+                                          step_data.format(values["label_colour"].get("g", 0)),
+                                          step_data.format(values["label_colour"].get("b", 0)),
+                                          step_data.format(values["label_colour"].get("t", 1))))
 
-    for idx, b in enumerate(barlist):
-        if data[idx] < 10:
-            b.set_color('#accfe9')
-        elif data[idx] < 20:
-            b.set_color('#528ebc')
-        elif data[idx] < 35:
-            b.set_color('#d4a129')
-        elif data[idx] < 50:
-            b.set_color('#ee7401')
-        elif data[idx] < 75:
-            b.set_color('#cb1a14')
-        else:
-            b.set_color('#a20500')
+    for idx, b in enumerate(bar_list):
+        color_not_set = True
+        for entry in values["bar_colors"]["list"]:
+            if data[idx] > step_data.format(entry["number"]):
+                b.set_color(step_data.format(entry["color"]))
+                color_not_set = False
+            if color_not_set:
+                b.set_color(step_data.format(values["bar_colors"]["default"]))
 
     plt.xticks(rotation=step_data.format(values.get("label_rotation", 0)))
     plt.tight_layout()
