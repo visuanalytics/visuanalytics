@@ -408,6 +408,17 @@
       "new_keys": [
         "_req|14d_cases7_per_100k"
       ]
+    },
+    {
+      "type": "replace",
+      "keys": [
+        "_req|Aktuelle_Daten|cases7_per_100k",
+        "_req|Aktuelle_Daten|cases_per_100k",
+        "_req|Aktuelle_Daten|death_rate"
+      ],
+      "old_value": ".",
+      "new_value": ",",
+      "count": 1
     }
   ],
   "storing": [
@@ -519,10 +530,6 @@
           {
             "type": "text",
             "pattern": "Davon waren {_req|Aktuelle_Daten|new_cases} Fälle von gestern."
-          },
-          {
-            "type": "text",
-            "pattern": "Todesfälle gab es bisher im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} {_req|Aktuelle_Daten|deaths} ."
           },
           {
             "type": "text",
