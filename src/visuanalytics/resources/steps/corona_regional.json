@@ -448,7 +448,32 @@
         "b": 0.49,
         "t": 1
       },
-      "label_use_date": true
+      "label_use_date": true,
+      "bar_colors": {
+        "default": "#accfe9",
+        "list": [
+          {
+            "number": 10,
+            "color": "#528ebc"
+          },
+          {
+            "number": 20,
+            "color": "#d4a129"
+          },
+          {
+            "number": 35,
+            "color": "#ee7401"
+          },
+          {
+            "number": 50,
+            "color": "#cb1a14"
+          },
+          {
+            "number": 75,
+            "color": "#a20500"
+          }
+        ]
+      }
     },
     "corona1": {
       "type": "pillow",
