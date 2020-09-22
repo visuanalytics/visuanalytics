@@ -103741,7 +103741,7 @@
   "Vorherige_Daten": [
       {
         "attributes": {
-          "cases": 394,
+          "cases": 374,
           "cases_per_100k": 247.48,
           "cases7_per_100k": 10.64,
           "deaths": 18,
@@ -103755,7 +103755,7 @@
       },
       {
         "attributes": {
-          "cases": 3092,
+          "cases": 3072,
           "cases_per_100k": 410.59,
           "cases7_per_100k": 19.92,
           "deaths": 70,
@@ -103769,7 +103769,7 @@
       },
       {
         "attributes": {
-          "cases": 529,
+          "cases": 509,
           "cases_per_100k": 410.89,
           "cases7_per_100k": 17.09,
           "deaths": 9,
