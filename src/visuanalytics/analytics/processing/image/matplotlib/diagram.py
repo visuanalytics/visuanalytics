@@ -62,12 +62,14 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     plt.xticks(rotation=step_data.format(values.get("label_rotation", 0)))
     plt.tight_layout()
 
-    rects = ax.patches
-    labels = ["label%d" % i for i in range(len(rects))]
-
-    for rect, label in zip(rects, labels):
-        ax.text(rect.get_width() + 0.4, (rect.get_y() + rect.get_height() / 2) + 0.2, label,
-                fontsize=30)
+    if step_data.format(values.get("label_data", None)) is not None:
+        rects = ax.patches
+        labels = step_data.format(values["label_data"])
+        labels = labels[1:len(labels) - 1].split(",")
+        labels = list(map(str, labels))
+        for rect, label in zip(rects, labels):
+            ax.text(rect.get_width() + 0.4, (rect.get_y() + rect.get_height() / 2) + 0.2, label,
+                    fontsize=30)
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     plt.savefig(file, transparent=True)
