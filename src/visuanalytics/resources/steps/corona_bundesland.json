@@ -340,6 +340,13 @@
   },
   "transform": [
     {
+      "type": "add_data",
+      "new_keys": [
+        "_req|new_cases_total"
+      ],
+      "data": 0
+    },
+    {
       "type": "transform_array",
       "array_key": "_req|Aktuelle_Daten|features",
       "transform": [
@@ -374,10 +381,10 @@
             {
               "type": "calculate",
               "action": "subtract",
-              "keys": [
+              "keys_right": [
                 "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases7_per_100k"
               ],
-              "keys_right": [
+              "keys": [
                 "_loop|attributes|cases7_per_100k"
               ],
               "new_keys": [
@@ -387,10 +394,10 @@
             {
               "type": "calculate",
               "action": "subtract",
-              "keys": [
+              "keys_right": [
                 "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases"
               ],
-              "keys_right": [
+              "keys": [
                 "_loop|attributes|cases"
               ],
               "new_keys": [
@@ -408,6 +415,19 @@
             "_loop|attributes|cases_per_100k",
             "_loop|attributes|cases7_per_100k",
             "_loop|attributes|death_rate"
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "add",
+          "keys": [
+            "_req|new_cases_total"
+          ],
+          "keys_right": [
+            "_loop|attributes|new_cases"
+          ],
+          "new_keys": [
+            "_req|new_cases_total"
           ]
         },
         {
