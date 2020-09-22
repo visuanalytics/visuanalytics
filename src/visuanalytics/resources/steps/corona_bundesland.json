@@ -454,6 +454,7 @@
       "plot_type": "bar_chart",
       "data": "{_req|14d_cases7_per_100k}",
       "label": "{_req|citys}",
+      "use+-_label": true,
       "label_data": "{_req|dif_cases7_per_100k}",
       "plot_size_x": 30,
       "plot_size_y": 20,
@@ -465,6 +466,9 @@
         "b": 0.49,
         "t": 1
       },
+      "use_special_x_labels": true,
+      "x_label_hop": 5,
+      "x_label_one_value_more": true,
       "bar_colors": {
         "default": "#accfe9",
         "list": [
