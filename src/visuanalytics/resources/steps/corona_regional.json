@@ -447,7 +447,7 @@
       "type": "diagram",
       "plot_type": "column_chart",
       "data": "{_req|14d_cases7_per_100k}",
-      "plot_size_x": 9,
+      "plot_size_x": 8,
       "plot_size_y": 4.5,
       "label_rotation": 45,
       "axis_depth": 2,
