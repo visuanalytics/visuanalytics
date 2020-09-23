@@ -416,6 +416,11 @@
         "_req|Aktuelle_Daten|cases_per_100k",
         "_req|Aktuelle_Daten|death_rate"
       ],
+      "new_keys": [
+        "_req|Aktuelle_Daten|Scases7_per_100k",
+        "_req|Aktuelle_Daten|Scases_per_100k",
+        "_req|Aktuelle_Daten|Sdeath_rate"
+      ],
       "old_value": ".",
       "new_value": ",",
       "count": 1
@@ -429,7 +434,10 @@
         "last_update",
         "BEZ",
         "GEN",
-        "new_cases"
+        "new_cases",
+        "Scases7_per_100k",
+        "Scases_per_100k",
+        "Sdeath_rate"
       ],
       "count": 31
     }
@@ -437,6 +445,7 @@
   "images": {
     "corona0": {
       "type": "diagram",
+      "plot_type": "column_chart",
       "data": "{_req|14d_cases7_per_100k}",
       "plot_size_x": 9,
       "plot_size_y": 4.5,
@@ -499,7 +508,7 @@
           "color": "black",
           "font_size": 100,
           "font": "fonts/Dosis-Medium.ttf",
-          "pattern": "{_req|Aktuelle_Daten|cases7_per_100k}"
+          "pattern": "{_req|Aktuelle_Daten|Scases7_per_100k}"
         },
         {
           "description": "Corona Daten",
@@ -524,9 +533,9 @@
           "pattern": [
             "{_req|Aktuelle_Daten|cases}",
             "{_req|Aktuelle_Daten|new_cases}",
-            "{_req|Aktuelle_Daten|cases_per_100k}",
+            "{_req|Aktuelle_Daten|Scases_per_100k}",
             "{_req|Aktuelle_Daten|deaths}",
-            "{_req|Aktuelle_Daten|death_rate} %",
+            "{_req|Aktuelle_Daten|Sdeath_rate} %",
             "{_req|Aktuelle_Daten|last_update}"
           ]
         },
@@ -558,7 +567,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Durschnittliche Anzahl der Neuinfektionen lag bei {_req|Aktuelle_Daten|cases7_per_100k}."
+            "pattern": "Die Durschnittliche Anzahl der Neuinfektionen lag bei {_req|Aktuelle_Daten|Scases7_per_100k}."
           }
         ]
       }
