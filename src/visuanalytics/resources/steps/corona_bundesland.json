@@ -514,6 +514,32 @@
           }
         ]
       }
+    },
+    "corona1": {
+      "type": "pillow",
+      "path": "corona/Corona_Bundesland.png",
+      "overlay": [
+        {
+          "description": "Überschrift",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 20,
+          "color": "black",
+          "font_size": 110,
+          "font": "fonts/Dosis-Bold.ttf",
+          "pattern": "{_conf|Bundesland}"
+        },
+        {
+          "description": "Diagram",
+          "type": "image",
+          "pos_x": 110,
+          "pos_y": 200,
+          "color": "RGBA",
+          "image_name": "corona0",
+          "transparency": true
+        }
+      ]
     }
   },
   "thumbnail": {
@@ -524,7 +550,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": ""
+            "pattern": "Die Zahlen der Landkreise in {_conf|Bundesland}"
           }
         ]
       }
