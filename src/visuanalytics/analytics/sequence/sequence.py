@@ -127,6 +127,17 @@ def custom(values: dict, step_data: StepData, out_images, out_audios, out_audio_
             out_audio_l.append(step_data.get_data(s.get("time_diff", 0), None, numbers.Number) + MP3(
                 values["audio"]["audios"][step_data.format(s["audio_l"])]).info.length)
 
+    sum_sol = 0
+    for entry in values["sequence"]["pattern"]:
+        sum_sol += entry.get("time_diff", 0)
+    temp_silent_file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "ac3")
+    if sum_sol > 0:
+        args = ["ffmpeg", "-loglevel", "8", "-f", "lavfi", "-i", "anullsrc=channel_layout=5.1:sample_rate=48000",
+                "-t", str(sum_sol), temp_silent_file]
+        subprocess.run(args)
+        # out_audios.append(temp_silent_file)
+        # out_audio_l.append(sum_sol)
+
 
 def _generate(images, audios, audio_l, step_data: StepData, values: dict):
     try:
@@ -139,11 +150,10 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
             for i in audios:
                 file.write("file 'file:" + i + "'\n")
         output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
-        args1 = ["ffmpeg", "-loglevel", "8", "-f", "concat", "-safe", "0", "-i",
+        args1 = ["ffmpeg", "-f", "concat", "-safe", "0", "-i",
                  resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
-                 "-c", "copy",
                  output]
-        subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+        subprocess.run(args1)
 
         # Generate video
 
@@ -153,7 +163,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
             output2 = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
                                              step_data.get_config("job_name", "") + "_0")
 
-        args2 = ["ffmpeg", "-loglevel", "8", "-y"]
+        args2 = ["ffmpeg", "-y"]
         for i in range(0, len(images)):
             args2.extend(("-loop", "1", "-t", str(round(audio_l[i], 2)), "-i", images[i]))
 
@@ -178,7 +188,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
             args2.extend(("-c:v", "h264_nvenc"))
 
         args2.extend(("-s", "1920x1080", output2))
-        subprocess.run(args2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+        subprocess.run(args2)
 
         values["sequence"] = output2
 
@@ -188,31 +198,14 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
 
 def _combine(sequence_out: list, step_data: StepData, values: dict):
     try:
-        args = ["ffmpeg", "-loglevel", "8", "-i"]
-        concat = "concat:"
-        file_temp = []
-        output = resources.get_temp_resource_path(f"file.mkv", step_data.data["_pipe_id"])
-        for idx, file in enumerate(sequence_out):
-            temp_file = resources.get_temp_resource_path(f"temp{idx}.ts", step_data.data["_pipe_id"])
-            args2 = ["ffmpeg", "-loglevel", "8", "-i", file, "-c", "copy", "-bsf:v", "h264_mp4toannexb", "-f", "mpegts",
-                     temp_file]
-
-            subprocess.run(args2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
-
-            file_temp.append(temp_file)
-        for idx, file in enumerate(file_temp):
-            if idx != 0:
-                concat += "|"
-            concat += file
-        args.extend((concat, "-codec", "copy", output))
-
-        subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
-
-        new_output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
-                                            step_data.get_config("job_name", ""))
-        args = ["ffmpeg", "-loglevel", "8", "-i", output, new_output]
-
-        subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+        with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
+            for video in sequence_out:
+                file.write("file 'file:" + video + "'\n")
+        output = resources.get_out_path(values["out_time"], step_data.get_config("output_path", ""),
+                                        step_data.get_config("job_name", ""))
+        args = ["ffmpeg", "-safe", "0", "-f", "concat", "-i",
+                resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "-c", "copy", output]
+        subprocess.run(args)
         values["sequence"] = output
     except subprocess.CalledProcessError as e:
         raise FFmpegError(e.returncode, e.output.decode("utf-8")) from e

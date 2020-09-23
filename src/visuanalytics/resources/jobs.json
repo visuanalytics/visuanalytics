@@ -6,7 +6,7 @@
       "steps": "weather_germany",
       "schedule": {
         "times": [
-          "14:02"
+          "14:13"
         ],
         "daily": true
       },
@@ -122,14 +122,23 @@
       "steps": "corona_regional",
       "schedule": {
         "times": [
-          "11:01"
+          "14:24"
         ],
         "daily": true
       },
       "config": {
         "thumbnail": false,
         "Landkreis": "GIESSEN",
-        "keep_count": 3
+        "keep_count": 3,
+        "attach": [
+          {
+            "steps": "corona_bundesland",
+            "config": {
+              "thumbnail": false,
+              "Bundesland": "HESSEN"
+            }
+          }
+        ]
       }
     },
     {

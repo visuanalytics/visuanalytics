@@ -442,16 +442,6 @@
             "_req|citys",
             "_req|dif_cases7_per_100k"
           ]
-        },
-        {
-          "type": "calculate",
-          "action": "max",
-          "keys": [
-            "_loop|attributes|dif_cases7_per_100k"
-          ],
-          "new_keys": [
-            "_loop|attributes|max_dif_cases7_per_100k"
-          ]
         }
       ]
     },
@@ -562,10 +552,6 @@
           {
             "type": "text",
             "pattern": "Die Zahlen der Landkreise in {_conf|Bundesland}"
-          },
-          {
-            "type": "text",
-            "pattern": "Maximale Anzahl {attributes|max_dif_cases7_per_100}"
           }
         ]
       }
