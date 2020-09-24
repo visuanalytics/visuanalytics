@@ -14,6 +14,7 @@ from visuanalytics.analytics.util.step_errors import raise_step_error, SequenceE
 from visuanalytics.analytics.util.type_utils import register_type_func, get_type_func
 from visuanalytics.util import resources
 from visuanalytics.util.resources import get_relative_temp_resource_path
+from pydub import AudioSegment
 
 SEQUENCE_TYPES = {}
 """Ein Dictionary bestehend aus allen Sequence-Typ-Methoden."""
@@ -134,16 +135,39 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
             os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda/lib64"
 
         # Concatenate audio files
+        if values["sequence"].get("audio_breaks", False):
+            temp_audios = []
+            for idx, s_audio in enumerate(audios):
+                temp_audios.append(resources.new_temp_resource_path(step_data.data["_pipe_id"], "wav"))
+                args = ["ffmpeg", "-loglevel", "8", "-i", s_audio, temp_audios[idx]]
+                subprocess.run(args)
 
-        with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
-            for i in audios:
-                file.write("file 'file:" + i + "'\n")
-        output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
-        args1 = ["ffmpeg", "-loglevel", "8", "-f", "concat", "-safe", "0", "-i",
-                 resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
-                 "-c", "copy",
-                 output]
-        subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+            combined_sound = AudioSegment.empty()
+            for idx, i in enumerate(temp_audios):
+                sound = AudioSegment.from_file(i, "wav")
+                combined_sound += sound
+                time_diff = audio_l[idx] - MP3(audios[idx]).info.length
+                if time_diff > 0:
+                    silence = AudioSegment.silent(duration=time_diff * 1000)
+                    combined_sound += silence
+            temp_output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "wav")
+            combined_sound.export(temp_output, format="wav")
+
+            output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
+            args = ["ffmpeg", "-loglevel", "8", "-i", temp_output, "-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k",
+                    output]
+            subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+
+        else:
+            with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
+                for i in audios:
+                    file.write("file 'file:" + i + "'\n")
+            output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
+            args1 = ["ffmpeg", "-loglevel", "8", "-f", "concat", "-safe", "0", "-i",
+                     resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
+                     "-c", "copy",
+                     output]
+            subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
         # Generate video
 
@@ -169,9 +193,19 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
                 filter += f"[bg{j}][f{j}]overlay,format=yuv420p[v]"
             else:
                 filter += f"[bg{j}][f{j}]overlay[bg{j + 1}];"
-
-        if len(images) > 2:
-            args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
+        if len(images) > 1:
+            if len(images) == 2:
+                with open(resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "w") as file:
+                    for idx, i in enumerate(images):
+                        file.write("file 'file:" + i + "'\n")
+                        file.write("duration " + str(int(audio_l[idx])) + "\n")
+                    file.write("file 'file:" + images[len(images) - 1] + "'\n")
+                    args2 = ["ffmpeg", "-loglevel", "8", "-y", "-f", "concat", "-safe", "0", "-i",
+                             resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "-i", output,
+                             "-c:a", "copy", "-vsync",
+                             "vfr", "-pix_fmt", "yuv420p"]
+            else:
+                args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
         else:
             args2.extend(("-pix_fmt", "yuv420p"))
         if step_data.get_config("h264_nvenc", False):
