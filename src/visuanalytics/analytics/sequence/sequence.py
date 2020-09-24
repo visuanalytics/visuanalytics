@@ -202,8 +202,8 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
                     file.write("file 'file:" + images[len(images) - 1] + "'\n")
                     args2 = ["ffmpeg", "-loglevel", "8", "-y", "-f", "concat", "-safe", "0", "-i",
                              resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "-i", output,
-                             "-c:a", "copy", "-vsync",
-                             "vfr", "-pix_fmt", "yuv420p"]
+                             "-c:a", "copy",
+                             "-pix_fmt", "yuv420p"]
             else:
                 args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
         else:
