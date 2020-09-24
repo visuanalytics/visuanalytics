@@ -567,7 +567,7 @@
           },
           {
             "type": "text",
-            "pattern": "Die Durschnittliche Anzahl der Neuinfektionen lag bei {_req|Aktuelle_Daten|Scases7_per_100k}."
+            "pattern": "Die Durschnittliche Anzahl der Neuinfektionen lag bei {_req|Aktuelle_Daten|Scases7_per_100k} Fällen pro 100000 Einwohnern."
           }
         ]
       }
@@ -580,7 +580,7 @@
       {
         "image": "corona1",
         "audio_l": "a1",
-        "time_diff": 5
+        "time_diff": 3
       }
     ]
   },

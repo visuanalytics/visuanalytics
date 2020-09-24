@@ -447,6 +447,39 @@
     },
     {
       "type": "calculate",
+      "action": "min",
+      "keys": [
+        "_req|dif_cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases7_per_100k"
+      ],
+      "save_idx_to": [
+        "_req|min_dif_cases"
+      ]
+    },
+    {
+      "type": "calculate",
+      "action": "min",
+      "keys": [
+        "_req|14d_cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|min_14d_cases7_per_100k"
+      ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|min_dif_cases}|attributes|GEN"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "calculate",
       "action": "max",
       "keys": [
         "_req|dif_cases7_per_100k"
@@ -459,6 +492,16 @@
       ]
     },
     {
+      "type": "calculate",
+      "action": "max",
+      "keys": [
+        "_req|14d_cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|max_14d_cases7_per_100k"
+      ]
+    },
+    {
       "type": "add_symbol",
       "keys": [
         "_req|Aktuelle_Daten|features|{_req|max_dif_cases}|attributes|GEN"
@@ -467,6 +510,16 @@
         "_req|max_dif_cases"
       ],
       "pattern": "{_key}"
+    },
+    {
+      "type": "replace",
+      "keys": [
+        "_req|max_14d_cases7_per_100k",
+        "_req|min_14d_cases7_per_100k"
+      ],
+      "old_value": ".",
+      "new_value": ",",
+      "count": 1
     },
     {
       "type": "copy",
@@ -577,12 +630,67 @@
             "pattern": "Hier ist die Inzidenzrate für die Regionen in Hessen."
           },
           {
-            "type": "text",
-            "pattern": "Insgesamt gibt es {_req|new_cases_total} neue positive Corona-Fälle in den letzten 24 Stunden."
+            "type": "compare",
+            "value_left": "_req|max_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "In den letzten 24 Stunden gab es keine positiven Corona-Fälle in {_conf|Bundesland}."
+              }
+            ],
+            "on_not_equal": [
+              {
+                "type": "text",
+                "pattern": "Insgesamt gibt es {_req|new_cases_total} neue positive Corona-Fälle in den letzten 24 Stunden. "
+              }
+            ]
           },
           {
-            "type": "text",
-            "pattern": "Die stärkste Veränderung der Inzidenzrate liegt in {_req|max_dif_cases}, sie liegt bei {_req|max_dif_cases7_per_100k}."
+            "type": "compare",
+            "value_left": "_req|max_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Es gab in keiner Region einen Anstieg der Inzidenzrate."
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "text",
+                "pattern": "Am stärkste ist die Inzidenzrate in {_req|max_dif_cases} gestiegen, sie liegt bei {_req|max_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+              }
+            ],
+            "on_lower": [
+              {
+                "type": "text",
+                "pattern": "In geringste Veränderung der Inzidenzrate seit dem Vortag liegt in {_req|max_dif_cases}. Hier liegt sie bei {_req|max_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+              }
+            ]
+          },
+          {
+            "type": "compare",
+            "value_left": "_req|min_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Inzidenzrate hat in keiner Region abgenommen."
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "text",
+                "pattern": "Der geringste Zuwachs der Inzidenzrate liegt in {_req|min_dif_cases}, dort liegt sie bei {_req|min_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+              }
+            ],
+            "on_lower": [
+              {
+                "type": "text",
+                "pattern": "Die Inzidenzrate ist in {_req|min_dif_cases} am stärksten gesunken. Hier liegt sie bei {_req|min_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+              }
+            ]
           }
         ]
       }
@@ -595,7 +703,7 @@
       {
         "image": "corona1",
         "audio_l": "a1",
-        "time_diff": 5
+        "time_diff": 3
       }
     ]
   },
@@ -605,12 +713,6 @@
       "display_name": "Bundesland",
       "optional": false,
       "default_value": "Hessen"
-    },
-    "SeperateRendering": {
-      "type": "boolean",
-      "display_name": "Seperates rendern",
-      "optional": true,
-      "default_value": false
     }
   },
   "presets": {

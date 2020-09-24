@@ -25,8 +25,12 @@
         "file_name": "twitter"
       },
       {
-        "name": "Corona-Daten",
+        "name": "Corona-Regional",
         "file_name": "corona_regional"
+      },
+      {
+        "name": "Corona-Bundesland",
+        "file_name": "corona_bundesland"
       }
     ]
   },
