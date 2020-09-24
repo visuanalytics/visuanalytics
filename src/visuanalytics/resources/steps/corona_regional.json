@@ -575,11 +575,12 @@
   },
   "sequence": {
     "type": "custom",
+    "audio_breaks": true,
     "pattern": [
       {
         "image": "corona1",
         "audio_l": "a1",
-        "time_diff": 10
+        "time_diff": 5
       }
     ]
   },
