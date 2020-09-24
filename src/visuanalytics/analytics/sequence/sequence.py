@@ -199,7 +199,6 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
                     for idx, i in enumerate(images):
                         file.write("file 'file:" + i + "'\n")
                         file.write("duration " + str(int(audio_l[idx])) + "\n")
-                    file.write("file 'file:" + images[len(images) - 1] + "'\n")
                     args2 = ["ffmpeg", "-loglevel", "8", "-y", "-f", "concat", "-safe", "0", "-i",
                              resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "-i", output,
                              "-c:a", "copy",
