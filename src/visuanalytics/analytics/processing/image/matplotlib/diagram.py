@@ -88,7 +88,7 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
                 if float(label) == 0.0:
                     label = "0"
             ax.text(rect.get_width() + 0.4, (rect.get_y() + rect.get_height() / 2) + 0.2, label,
-                    fontsize=30)
+                    fontsize=step_data.format(values["label_fontsize"]))
 
     file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
     plt.savefig(file, transparent=True)
