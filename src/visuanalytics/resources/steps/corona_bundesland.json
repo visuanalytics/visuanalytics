@@ -175,22 +175,22 @@
       ]
     },
     {
-      "type": "calculate",
-      "action": "min",
-      "keys": [
-        "_req|14d_cases7_per_100k"
-      ],
-      "new_keys": [
-        "_req|min_14d_cases7_per_100k"
-      ]
-    },
-    {
       "type": "add_symbol",
       "keys": [
         "_req|Aktuelle_Daten|features|{_req|min_dif_cases}|attributes|GEN"
       ],
       "new_keys": [
-        "_req|min_dif_cases"
+        "_req|min_dif_cases_city"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|min_dif_cases}|attributes|cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases_values"
       ],
       "pattern": "{_key}"
     },
@@ -208,30 +208,29 @@
       ]
     },
     {
-      "type": "calculate",
-      "action": "max",
-      "keys": [
-        "_req|14d_cases7_per_100k"
-      ],
-      "new_keys": [
-        "_req|max_14d_cases7_per_100k"
-      ]
-    },
-    {
       "type": "add_symbol",
       "keys": [
         "_req|Aktuelle_Daten|features|{_req|max_dif_cases}|attributes|GEN"
       ],
       "new_keys": [
-        "_req|max_dif_cases"
+        "_req|max_dif_cases_city"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|max_dif_cases}|attributes|cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|max_dif_cases_value"
       ],
       "pattern": "{_key}"
     },
     {
       "type": "replace",
       "keys": [
-        "_req|max_14d_cases7_per_100k",
-        "_req|min_14d_cases7_per_100k"
+        "_req|max_dif_cases_value"
       ],
       "old_value": ".",
       "new_value": ",",
@@ -343,7 +342,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Hier ist die Inzidenzrate für die Regionen in Hessen."
+            "pattern": "Hier ist die Inzidenzrate für die Regionen in {_conf|Bundesland}."
           },
           {
             "type": "compare",
@@ -352,13 +351,26 @@
             "on_equal": [
               {
                 "type": "text",
-                "pattern": "In den letzten 24 Stunden gab es keine positiven Corona-Fälle in {_conf|Bundesland}."
+                "pattern": "Gestern gab es keine positiven Corona-Fälle in {_conf|Bundesland}."
               }
             ],
             "on_not_equal": [
               {
-                "type": "text",
-                "pattern": "Insgesamt gibt es {_req|new_cases_total} neue positive Corona-Fälle in den letzten 24 Stunden. "
+                "type": "compare",
+                "value_left": "_req|max_dif_cases7_per_100k",
+                "value_right": 1,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Insgesamt gab es gestern einen neuen positiven Corona-Fall."
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Insgesamt gab es gestern {_req|new_cases_total} neue positive Corona-Fälle. "
+                  }
+                ]
               }
             ]
           },
@@ -375,13 +387,13 @@
             "on_higher": [
               {
                 "type": "text",
-                "pattern": "Am stärkste ist die Inzidenzrate in {_req|max_dif_cases} gestiegen, sie liegt bei {_req|max_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+                "pattern": "Am stärkste ist die Inzidenzrate in {_req|max_dif_cases_city} gestiegen, sie liegt bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
               }
             ],
             "on_lower": [
               {
                 "type": "text",
-                "pattern": "In geringste Veränderung der Inzidenzrate seit dem Vortag liegt in {_req|max_dif_cases}. Hier liegt sie bei {_req|max_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+                "pattern": "In geringste Veränderung der Inzidenzrate seit dem Vortag liegt in {_req|max_dif_cases_city}. Hier liegt sie bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
               }
             ]
           },
@@ -398,7 +410,7 @@
             "on_higher": [
               {
                 "type": "text",
-                "pattern": "Der geringste Zuwachs der Inzidenzrate liegt in {_req|min_dif_cases}, dort liegt sie bei {_req|min_14d_cases7_per_100k} Fällen pro 100000 Einwohnern. "
+                "pattern": "Der geringste Zuwachs der Inzidenzrate liegt in {_req|min_dif_cases_city}, dort liegt sie bei {_req|min_dif_cases_value} Fällen pro 100000 Einwohnern. "
               }
             ],
             "on_lower": [

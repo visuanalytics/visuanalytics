@@ -562,8 +562,34 @@
             "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt {_req|Aktuelle_Daten|cases} Corona Fälle"
           },
           {
-            "type": "text",
-            "pattern": "Davon waren {_req|Aktuelle_Daten|new_cases} Fälle von gestern."
+            "type": "compare",
+            "value_left": "_req|Aktuelle_Daten|new_cases",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Seit gestern gibt es keine neuen Coronafälle."
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "compare",
+                "value_left": "_req|Aktuelle_Daten|new_cases",
+                "value_right": 1,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Davon war ein Fall von gestern."
+                  }
+                ],
+                "on_higher": [
+                  {
+                    "type": "text",
+                    "pattern": "Davon waren {_req|Aktuelle_Daten|new_cases} Fälle von gestern. "
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "text",
