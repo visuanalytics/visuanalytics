@@ -23,314 +23,7 @@
           "data": [
             {
               "attributes": {
-                "cases": 394,
-                "cases_per_100k": 247.476555679084,
-                "cases7_per_100k": 8.79358319671874,
-                "deaths": 18,
-                "death_rate": 4.56852791878173,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Kreisfreie Stadt",
-                "GEN": "Darmstadt"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 3092,
-                "cases_per_100k": 410.593634470743,
-                "cases7_per_100k": 19.9188373773,
-                "deaths": 70,
-                "death_rate": 2.26390685640362,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Kreisfreie Stadt",
-                "GEN": "Frankfurt am Main"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 529,
-                "cases_per_100k": 410.89293481638,
-                "cases7_per_100k": 17.0881749829118,
-                "deaths": 9,
-                "death_rate": 1.70132325141777,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Kreisfreie Stadt",
-                "GEN": "Offenbach am Main"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 989,
-                "cases_per_100k": 355.318277514712,
-                "cases7_per_100k": 16.1671612620445,
-                "deaths": 22,
-                "death_rate": 2.22446916076845,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Kreisfreie Stadt",
-                "GEN": "Wiesbaden"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 585,
-                "cases_per_100k": 216.912500834279,
-                "cases7_per_100k": 7.0450213946176,
-                "deaths": 3,
-                "death_rate": 0.512820512820513,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Bergstra\u00dfe"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 681,
-                "cases_per_100k": 228.985302573311,
-                "cases7_per_100k": 8.40621521928453,
-                "deaths": 21,
-                "death_rate": 3.08370044052863,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Darmstadt-Dieburg"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 992,
-                "cases_per_100k": 361.350108915003,
-                "cases7_per_100k": 21.8558533617945,
-                "deaths": 17,
-                "death_rate": 1.71370967741935,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Gro\u00df-Gerau"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 462,
-                "cases_per_100k": 195.295987555165,
-                "cases7_per_100k": 16.0633063357062,
-                "deaths": 6,
-                "death_rate": 1.2987012987013,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Hochtaunuskreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 1278,
-                "cases_per_100k": 305.048335123523,
-                "cases7_per_100k": 13.6054421768707,
-                "deaths": 52,
-                "death_rate": 4.06885758998435,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Main-Kinzig-Kreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 698,
-                "cases_per_100k": 293.604223189686,
-                "cases7_per_100k": 17.6667297621301,
-                "deaths": 16,
-                "death_rate": 2.29226361031519,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Main-Taunus-Kreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 480,
-                "cases_per_100k": 495.878014008554,
-                "cases7_per_100k": 12.3969503502138,
-                "deaths": 63,
-                "death_rate": 13.125,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Odenwaldkreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 1163,
-                "cases_per_100k": 328.445714673023,
-                "cases7_per_100k": 14.6854489793613,
-                "deaths": 44,
-                "death_rate": 3.78331900257954,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Offenbach"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 470,
-                "cases_per_100k": 251.126059938982,
-                "cases7_per_100k": 9.61759378489717,
-                "deaths": 8,
-                "death_rate": 1.70212765957447,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Rheingau-Taunus-Kreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 564,
-                "cases_per_100k": 184.037068459179,
-                "cases7_per_100k": 6.19983032043334,
-                "deaths": 13,
-                "death_rate": 2.30496453900709,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Wetteraukreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 448,
-                "cases_per_100k": 166.619556970499,
-                "cases7_per_100k": 9.6698850027522,
-                "deaths": 5,
-                "death_rate": 1.11607142857143,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Gie\u00dfen"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 493,
-                "cases_per_100k": 194.265043719486,
-                "cases7_per_100k": 10.6392620292619,
-                "deaths": 20,
-                "death_rate": 4.05679513184584,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Lahn-Dill-Kreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 448,
-                "cases_per_100k": 260.339487340411,
-                "cases7_per_100k": 13.36564332328,
-                "deaths": 7,
-                "death_rate": 1.5625,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Limburg-Weilburg"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 367,
-                "cases_per_100k": 148.795043949272,
-                "cases7_per_100k": 8.91959391521521,
-                "deaths": 4,
-                "death_rate": 1.08991825613079,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Marburg-Biedenkopf"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 177,
-                "cases_per_100k": 167.173539356618,
-                "cases7_per_100k": 6.61138291240862,
-                "deaths": 6,
-                "death_rate": 3.38983050847458,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Vogelsbergkreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 557,
-                "cases_per_100k": 276.310241337401,
-                "cases7_per_100k": 7.44102983852965,
-                "deaths": 9,
-                "death_rate": 1.61579892280072,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Kreisfreie Stadt",
-                "GEN": "Kassel"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 576,
-                "cases_per_100k": 258.778708262948,
-                "cases7_per_100k": 11.6809833590914,
-                "deaths": 15,
-                "death_rate": 2.60416666666667,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Fulda"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 370,
-                "cases_per_100k": 306.217878158389,
-                "cases7_per_100k": 15.7247018513767,
-                "deaths": 23,
-                "death_rate": 6.21621621621622,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Hersfeld-Rotenburg"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 547,
-                "cases_per_100k": 231.159643836658,
-                "cases7_per_100k": 5.0711439232905,
-                "deaths": 32,
-                "death_rate": 5.85009140767824,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Kassel"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 659,
-                "cases_per_100k": 365.660130283761,
-                "cases7_per_100k": 4.99384092952026,
-                "deaths": 39,
-                "death_rate": 5.91805766312595,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Schwalm-Eder-Kreis"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 245,
-                "cases_per_100k": 156.097685294324,
-                "cases7_per_100k": 3.82280045618752,
-                "deaths": 5,
-                "death_rate": 2.04081632653061,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Waldeck-Frankenberg"
-              }
-            },
-            {
-              "attributes": {
-                "cases": 252,
-                "cases_per_100k": 249.462961679717,
-                "cases7_per_100k": 1.97986477523585,
-                "deaths": 16,
-                "death_rate": 6.34920634920635,
-                "last_update": "19.09.2020, 00:00 Uhr",
-                "BEZ": "Landkreis",
-                "GEN": "Werra-Mei\u00dfner-Kreis"
+                "cases": -1
               }
             }
           ]
@@ -375,33 +68,56 @@
         },
         {
           "type": "compare",
-          "value_left": "_req|Vorherige_Daten|{_temp|loopkey}|attributes|GEN",
-          "value_right": "_loop|attributes|GEN",
+          "value_left": "_req|Vorherige_Daten|0|attributes|cases",
+          "value_right": -1,
           "on_equal": [
             {
-              "type": "calculate",
-              "action": "subtract",
-              "keys_right": [
-                "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases7_per_100k"
-              ],
-              "keys": [
-                "_loop|attributes|cases7_per_100k"
-              ],
+              "type": "add_data",
               "new_keys": [
                 "_loop|attributes|dif_cases7_per_100k"
-              ]
+              ],
+              "data": 0
             },
             {
-              "type": "calculate",
-              "action": "subtract",
-              "keys_right": [
-                "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases"
-              ],
-              "keys": [
-                "_loop|attributes|cases"
-              ],
+              "type": "add_data",
               "new_keys": [
                 "_loop|attributes|new_cases"
+              ],
+              "data": 0
+            }
+          ],
+          "on_not_equal": [
+            {
+              "type": "compare",
+              "value_left": "_req|Vorherige_Daten|{_temp|loopkey}|attributes|GEN",
+              "value_right": "_loop|attributes|GEN",
+              "on_equal": [
+                {
+                  "type": "calculate",
+                  "action": "subtract",
+                  "keys_right": [
+                    "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases7_per_100k"
+                  ],
+                  "keys": [
+                    "_loop|attributes|cases7_per_100k"
+                  ],
+                  "new_keys": [
+                    "_loop|attributes|dif_cases7_per_100k"
+                  ]
+                },
+                {
+                  "type": "calculate",
+                  "action": "subtract",
+                  "keys_right": [
+                    "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases"
+                  ],
+                  "keys": [
+                    "_loop|attributes|cases"
+                  ],
+                  "new_keys": [
+                    "_loop|attributes|new_cases"
+                  ]
+                }
               ]
             }
           ]
