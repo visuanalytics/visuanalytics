@@ -195,17 +195,8 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
                 filter += f"[bg{j}][f{j}]overlay[bg{j + 1}];"
         if len(images) > 1:
             if len(images) == 2:
-                with open(resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "w") as file:
-                    for idx, i in enumerate(images):
-                        file.write("file 'file:" + i + "'\n")
-                        file.write("duration " + str(int(audio_l[idx])) + "\n")
-                    file.write("file 'file:" + images[len(images) - 1] + "'\n")
-                    args2 = ["ffmpeg", "-loglevel", "8", "-y", "-f", "concat", "-safe", "0", "-i",
-                             resources.get_temp_resource_path("input2.txt", step_data.data["_pipe_id"]), "-i", output,
-                             "-c:a", "copy",
-                             "-pix_fmt", "yuv420p"]
-            else:
-                args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
+                filter = f"[1]format=yuva444p,fade=d={values['sequence'].get('transitions', 0.8)}:t=in:alpha=1,setpts=PTS-STARTPTS+{_sum_audio_l(audio_l, 0)}/TB[f0];[0][f0]overlay,format=yuv420p[v]"
+            args2.extend(("-filter_complex", filter, "-map", "[v]", "-map", str(len(images)) + ":a"))
         else:
             args2.extend(("-pix_fmt", "yuv420p"))
         if step_data.get_config("h264_nvenc", False):
