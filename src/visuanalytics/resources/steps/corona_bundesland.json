@@ -278,10 +278,17 @@
         "b": 0.49,
         "t": 1
       },
+      "marked_label": "Gießen",
+      "sorted": true,
+      "grid_axis": "x",
       "use_special_x_labels": true,
       "x_label_hop": 5,
       "x_label_one_value_more": true,
       "label_fontsize": 13,
+      "label_append": [
+        "Kassel"
+      ],
+      "label_append_value": "({_req|Aktuelle_Daten|_idx|attributes|BEZ})",
       "bar_colors": {
         "default": "#accfe9",
         "list": [
