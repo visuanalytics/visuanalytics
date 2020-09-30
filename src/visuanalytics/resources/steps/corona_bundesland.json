@@ -448,6 +448,11 @@
       "display_name": "Bundesland",
       "optional": false,
       "default_value": "Hessen"
+    },
+    "marked_city": {
+      "type": "string",
+      "display_name": "markierte Stadt",
+      "optional": true
     }
   },
   "presets": {
