@@ -43,7 +43,7 @@
       "steps": "weather_single",
       "schedule": {
         "times": [
-          "17:43"
+          "09:20"
         ],
         "daily": true,
         "removal_time": {
@@ -122,7 +122,7 @@
       "steps": "corona_regional",
       "schedule": {
         "times": [
-          "16:42"
+          "10:36"
         ],
         "daily": true
       },
@@ -135,7 +135,8 @@
             "steps": "corona_bundesland",
             "config": {
               "thumbnail": false,
-              "Bundesland": "HESSEN"
+              "Bundesland": "Hessen",
+              "marked_city": "Gießen"
             }
           }
         ]
@@ -147,13 +148,14 @@
       "steps": "corona_bundesland",
       "schedule": {
         "times": [
-          "11:10"
+          "10:46"
         ],
         "daily": true
       },
       "config": {
         "thumbnail": false,
         "Bundesland": "HESSEN",
+        "marked_city": "Gießen",
         "keep_count": 3
       }
     }

@@ -54,9 +54,9 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     if step_data.format(values["plot_type"]) == "bar_chart":
         ax.set_yticks(np.arange(len(days)))
         ax.set_yticklabels(days)
-        if values.get("marked_label", None) is not None:
+        if step_data.get_config("marked_city", None) is not None:
             for l in ax.get_yticklabels():
-                if l.get_text() == step_data.format(values["marked_label"]):
+                if l.get_text() == step_data.format(step_data.get_config("marked_city", "")):
                     l.set_fontweight(550)
         ax.invert_yaxis()  # labels von oben nach unten
 
@@ -110,8 +110,8 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
                 if float(label) == 0.0:
                     label = "\u00B10"
             label = str(data) + " / " + label
-            if values.get("marked_label", None) is not None:
-                if days == step_data.format(values["marked_label"]):
+            if step_data.get_config("marked_city", None) is not None:
+                if days == step_data.format(step_data.get_config("marked_city", "")):
                     ax.text(rect.get_width() + 0.4, (rect.get_y() + rect.get_height() / 2) + 0.2, label,
                             fontsize=step_data.format(values["label_fontsize"]), fontweight=550)
                 else:
