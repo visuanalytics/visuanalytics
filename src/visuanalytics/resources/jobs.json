@@ -43,7 +43,7 @@
       "steps": "weather_single",
       "schedule": {
         "times": [
-          "09:20"
+          "11:27"
         ],
         "daily": true,
         "removal_time": {
@@ -122,7 +122,7 @@
       "steps": "corona_regional",
       "schedule": {
         "times": [
-          "10:36"
+          "11:26"
         ],
         "daily": true
       },

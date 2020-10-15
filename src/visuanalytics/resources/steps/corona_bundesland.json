@@ -2,6 +2,16 @@
   "id": 1,
   "name": "corona_bundesland",
   "info": "Der Corona-Bericht enthält die aktuellen Corona Daten zu dem Angegebenem Bundesland.",
+  "precondition": {
+    "type": "date_today",
+    "request": {
+      "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20'Giessen'&outFields=*&outSR=4326&f=json"
+    },
+    "key": "_pre|features|0|attributes|last_update",
+    "key_split": 10,
+    "sleep_time": 600,
+    "exit": 120
+  },
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,
@@ -282,7 +292,7 @@
       "grid_axis": "x",
       "use_special_x_labels": true,
       "x_label_hop": 5,
-      "x_label_one_value_more": true,
+      "x_labels_more": 3,
       "label_fontsize": 13,
       "label_append": [
         "Kassel"

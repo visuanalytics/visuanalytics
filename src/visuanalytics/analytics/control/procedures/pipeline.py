@@ -9,6 +9,7 @@ from datetime import datetime
 
 from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
+from visuanalytics.analytics.precondition.precondition import precondition
 from visuanalytics.analytics.processing.audio.audio import generate_audios
 from visuanalytics.analytics.processing.image.visualization import generate_all_images
 from visuanalytics.analytics.sequence.sequence import link
@@ -31,15 +32,16 @@ class Pipeline(object):
     """
     __steps = {-2: {"name": "Error"},
                -1: {"name": "Not Started"},
-               0: {"name": "Apis", "call": api},
-               1: {"name": "Transform", "call": transform},
-               2: {"name": "Storing", "call": storing},
-               3: {"name": "Images", "call": generate_all_images},
-               4: {"name": "Thumbnail", "call": thumbnail},
-               5: {"name": "Audios", "call": generate_audios},
-               6: {"name": "Sequence", "call": link},
-               7: {"name": "Ready"}}
-    __steps_max = 7
+               0: {"name": "Precondition", "call": precondition},
+               1: {"name": "Apis", "call": api},
+               2: {"name": "Transform", "call": transform},
+               3: {"name": "Storing", "call": storing},
+               4: {"name": "Images", "call": generate_all_images},
+               5: {"name": "Thumbnail", "call": thumbnail},
+               6: {"name": "Audios", "call": generate_audios},
+               7: {"name": "Sequence", "call": link},
+               8: {"name": "Ready"}}
+    __steps_max = 8
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,

@@ -85,8 +85,11 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
         while current_value < max_value:
             current_value = current_value + hop_value
             x_label_list.append(current_value)
-        if step_data.format(values.get("x_label_one_value_more", False)):
-            x_label_list.append(current_value + hop_value)
+        counter = step_data.format(values.get("x_labels_more", 0))
+        while counter != 0:
+            current_value = current_value + hop_value
+            x_label_list.append(current_value)
+            counter = counter - 1
         ax.set_xticks(x_label_list)
 
     for idx, b in enumerate(bar_list):
