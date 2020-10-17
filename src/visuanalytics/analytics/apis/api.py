@@ -53,7 +53,7 @@ def request(values: dict, data: StepData, name: str, save_key, ignore_testing=Fa
     if data.get_config("testing", False) and not ignore_testing:
         return _load_test_data(values, data, name, save_key)
 
-    _fetch(values, data, save_key)
+    fetch(values, data, save_key)
 
 
 @register_api
@@ -111,11 +111,11 @@ def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_t
     if data.get_data(values.get("use_loop_as_key", False), values, bool):
         data.insert_data(save_key, {}, values)
         for _, key in data.loop_array(values["steps_value"], values):
-            _fetch(values, data, f"{save_key}|{key}")
+            fetch(values, data, f"{save_key}|{key}")
     else:
         data.insert_data(save_key, [None] * len(values["steps_value"]), values)
         for idx, _ in data.loop_array(values["steps_value"], values):
-            _fetch(values, data, f"{save_key}|{idx}", )
+            fetch(values, data, f"{save_key}|{idx}", )
 
 
 @register_api
@@ -153,7 +153,7 @@ def _load_test_data(values: dict, data: StepData, name, save_key):
         raise TestDataError(name) from e
 
 
-def _fetch(values: dict, data: StepData, save_key):
+def fetch(values: dict, data: StepData, save_key):
     """Abfrage einer API und Umwandlung der API-Antwort in ein angegebenes Format.
 
     :param req_data: Dictionary, das alle Informationen für den request enthält.

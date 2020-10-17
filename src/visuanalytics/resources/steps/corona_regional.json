@@ -2,6 +2,16 @@
   "id": 1,
   "name": "corona_regional",
   "info": "Der Corona-Bericht enthält die aktuellen Corona Daten zu dem Angegebenem Landkreis.",
+  "precondition": {
+    "type": "date_today",
+    "request": {
+      "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20'{_conf|Landkreis}'&outFields=*&outSR=4326&f=json"
+    },
+    "key": "_pre|features|0|attributes|last_update",
+    "key_split": 10,
+    "sleep_time": 600,
+    "exit": 120
+  },
   "api": {
     "type": "request_multiple_custom",
     "use_loop_as_key": true,

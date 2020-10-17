@@ -49,6 +49,15 @@ class APIError(StepError):
     pass
 
 
+class PreconditionError(StepError):
+    pass
+
+
+class PreconditionNotFulfilledError(Exception):
+    def __init__(self, count: int):
+        super().__init__(f"Precondition after {count} times not fulfilled")
+
+
 class TransformError(StepError):
     pass
 
