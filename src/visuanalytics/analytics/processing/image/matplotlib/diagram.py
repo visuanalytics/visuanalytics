@@ -81,11 +81,22 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
         max_value = max(data)
         if values.get("x_label_max_value", None) is not None:
             max_value = step_data.format(values["x_label_max_value"])
-        hop_value = step_data.format(values.get("x_label_hop", 10))
+
+        hop_value = 10
+        hop_values = values.get("x_label_hop", None)
+        if hop_values is not None:
+            for entry in hop_values:
+                if entry["value"] < max_value:
+                    hop_value = entry["step"]
         while current_value < max_value:
             current_value = current_value + hop_value
             x_label_list.append(current_value)
-        counter = step_data.format(values.get("x_labels_more", 0))
+        counter = 0
+        counters = values.get("x_labels_more", None)
+        if counters is not None:
+            for entry in counters:
+                if entry["value"] < max_value:
+                    counter = entry["amount"]
         while counter != 0:
             current_value = current_value + hop_value
             x_label_list.append(current_value)

@@ -291,8 +291,66 @@
       "sorted": true,
       "grid_axis": "x",
       "use_special_x_labels": true,
-      "x_label_hop": 5,
-      "x_labels_more": 3,
+      "x_label_hop": [
+        {
+          "value": 0,
+          "step": 5
+        },
+        {
+          "value": 80,
+          "step": 10
+        },
+        {
+          "value": 160,
+          "step": 20
+        },
+        {
+          "value": 320,
+          "step": 50
+        }
+      ],
+      "x_labels_more": [
+        {
+          "value": 0,
+          "amount": 1
+        },
+        {
+          "value": 50,
+          "amount": 2
+        },
+        {
+          "value": 60,
+          "amount": 3
+        },
+        {
+          "value": 80,
+          "amount": 2
+        },
+        {
+          "value": 120,
+          "amount": 3
+        },
+        {
+          "value": 160,
+          "amount": 2
+        },
+        {
+          "value": 230,
+          "amount": 3
+        },
+        {
+          "value": 320,
+          "amount": 2
+        },
+        {
+          "value": 500,
+          "amount": 3
+        },
+        {
+          "value": 1000,
+          "amount": 4
+        }
+      ],
       "label_fontsize": 13,
       "label_append": [
         "Kassel"
