@@ -462,7 +462,7 @@
             "on_higher": [
               {
                 "type": "text",
-                "pattern": "Am stärkste ist die Inzidenzrate in {_req|max_dif_cases_city} gestiegen, sie liegt bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
+                "pattern": "Am stärksten ist die Inzidenzrate in {_req|max_dif_cases_city} gestiegen, sie liegt bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
               }
             ],
             "on_lower": [
