@@ -513,7 +513,7 @@
           "description": "Diagramm Beschreibung",
           "type": "text",
           "anchor_point": "center",
-          "pos_x": 1550,
+          "pos_x": 1600,
           "pos_y": 610,
           "color": "black",
           "font_size": 100,
