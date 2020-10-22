@@ -569,7 +569,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt {_req|Aktuelle_Daten|cases} Corona Fälle"
+            "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt \"{_req|Aktuelle_Daten|cases}\" Corona Fälle"
           },
           {
             "type": "compare",
