@@ -443,7 +443,7 @@
                 "on_not_equal": [
                   {
                     "type": "text",
-                    "pattern": "Insgesamt gab es gestern {_req|new_cases_total} neue positive Corona-Fälle. "
+                    "pattern": "Insgesamt gab es gestern \"{_req|new_cases_total}\" neue positive Corona-Fälle. "
                   }
                 ]
               }
