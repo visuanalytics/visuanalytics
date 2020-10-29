@@ -1,5 +1,5 @@
 # App requirements
-Pillow==8.0.0
+Pillow==8.0.1
 numpy==1.19.2
 requests==2.24.0
 gTTS==2.1.1
