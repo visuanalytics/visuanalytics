@@ -20,7 +20,7 @@ RUN apt-get update \
     libxslt1-dev\
     libldap2-dev\
     libsasl2-dev\
-    libffi-dev\
+    libffi-dev
 
 # install Requirements
 COPY visuanalytics/requirements.txt /tmp/
