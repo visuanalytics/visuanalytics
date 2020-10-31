@@ -168,3 +168,4 @@ Docs/modules
 
 # vscode
 .vscode
+/npm-debug.log
