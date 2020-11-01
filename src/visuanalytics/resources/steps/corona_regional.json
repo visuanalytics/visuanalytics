@@ -434,6 +434,19 @@
       "old_value": ".",
       "new_value": ",",
       "count": 1
+    },
+    {
+      "type": "seperator",
+      "seperator": ".",
+      "keys": [
+        "_req|Aktuelle_Daten|cases"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_pre"
+      ]
     }
   ],
   "storing": [
