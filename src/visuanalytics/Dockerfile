@@ -1,7 +1,7 @@
 FROM python:3.8-slim-buster
 
 # install GCC
-RUN apt-get update && apt-get install -y gcc
+RUN apt-get update && apt-get install -y gcc g++
 
 # install Requirements
 COPY requirements.txt /tmp/
