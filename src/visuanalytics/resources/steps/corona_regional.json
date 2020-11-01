@@ -47,6 +47,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 1,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -62,6 +63,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 2,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -77,6 +79,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 3,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -92,6 +95,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 4,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -107,6 +111,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 5,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -122,6 +127,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 6,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -137,6 +143,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 7,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -152,6 +159,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 8,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -167,6 +175,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 9,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -182,6 +191,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 10,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -197,6 +207,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 11,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -212,6 +223,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 12,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -227,6 +239,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 13,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -242,6 +255,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 14,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -257,6 +271,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 15,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -272,6 +287,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 16,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -287,6 +303,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 17,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -302,6 +319,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 18,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -317,6 +335,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 19,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {
@@ -332,6 +351,7 @@
         "type": "request_memory",
         "name": "corona",
         "use_last": 20,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": {

@@ -28,7 +28,7 @@ def storing(values: dict, data: StepData):
             if value.get("safe_only_on_change", True):
                 try:
                     with resources.open_specific_memory_resource(data.get_config("job_name"),
-                                                                 name) as fp:
+                                                                 name, False) as fp:
                         old_data = json.loads(fp.read())
                     if old_data == new_data:
                         continue
