@@ -28,6 +28,7 @@
         "type": "request_memory",
         "name": "corona_bundesland",
         "use_last": 1,
+        "skip_today": true,
         "alternative": {
           "type": "input",
           "data": [

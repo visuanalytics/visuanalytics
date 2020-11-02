@@ -107,7 +107,7 @@ def get_memory_path(path: str, name: str, job_name: str):
     return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, path))
 
 
-def get_specific_memory_path(job_name: str, name: str, number: int):
+def get_specific_memory_path(job_name: str, name: str, number: int, skip: bool):
     """Erstellt einen absoluten Pfad zu der Memory-Datei im übergebenen Ordner.
 
     :param job_name: Name des Jobs von der die Funktion aufgerufen wurde.
@@ -116,6 +116,10 @@ def get_specific_memory_path(job_name: str, name: str, number: int):
     """
     files = os.listdir(get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name)))
     files.sort(reverse=True)
+    if skip:
+        now = datetime.now()
+        if files[0] == now.strftime("%Y-%m-%d.json"):
+            number += 1
     return get_resource_path(os.path.join(MEMORY_LOCATION, job_name, name, files[number]))
 
 
@@ -191,7 +195,7 @@ def open_memory_resource(job_name: str, name: str, time_delta, mode: str = "rt")
     return open_resource(os.path.join(MEMORY_LOCATION, job_name, name, res_name), mode)
 
 
-def open_specific_memory_resource(job_name: str, name: str, number: int = 1, mode: str = "rt"):
+def open_specific_memory_resource(job_name: str, name: str, skip, number: int = 1, mode: str = "rt"):
     """Öffnet die angegebene Memory-Ressource.
 
     :param job_name: Name des Jobs von der die Funktion aufgerufen wurde.
@@ -200,7 +204,7 @@ def open_specific_memory_resource(job_name: str, name: str, number: int = 1, mod
     :param mode: Mode zum Öffnen der Datei siehe :func:`open`.
 
     """
-    return open_resource(get_specific_memory_path(job_name, name, number - 1), mode)
+    return open_resource(get_specific_memory_path(job_name, name, number - 1, skip), mode)
 
 
 def delete_resource(path: str):

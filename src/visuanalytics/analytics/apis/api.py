@@ -83,7 +83,8 @@ def request_memory(values: dict, data: StepData, name: str, save_key, ignore_tes
     """
     try:
         if values.get("timedelta", None) is None:
-            with resources.open_specific_memory_resource(data.get_config("job_name"), values["name"],
+            skip = values.get("skip_today", False)
+            with resources.open_specific_memory_resource(data.get_config("job_name"), values["name"], skip,
                                                          values.get("use_last", 1)) as fp:
                 data.insert_data(save_key, json.loads(fp.read()), values)
         else:
