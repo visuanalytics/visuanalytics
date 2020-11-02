@@ -9,7 +9,7 @@ wordcloud==1.8.0
 pyhumps==1.6.1
 xmltodict==0.12.0
 pydub==0.24.1
-kiwisolver==1.0.1
+kiwisolver==1.3.1
 
 # Server requirements
 flask==1.1.2
