@@ -257,9 +257,17 @@
       ]
     },
     {
+      "type": "seperator",
+      "seperator": ".",
+      "keys": [
+        "_req|new_cases_total"
+      ]
+    },
+    {
       "type": "delete",
       "keys": [
-        "_temp"
+        "_temp",
+        "_pre"
       ]
     }
   ],
