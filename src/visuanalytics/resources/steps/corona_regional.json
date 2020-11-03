@@ -460,6 +460,9 @@
       "seperator": ".",
       "keys": [
         "_req|Aktuelle_Daten|cases"
+      ],
+      "new_keys": [
+        "_req|Aktuelle_Daten|cases_with_point"
       ]
     },
     {
@@ -582,7 +585,7 @@
           ],
           "preset": "corona_1",
           "pattern": [
-            "{_req|Aktuelle_Daten|cases}",
+            "{_req|Aktuelle_Daten|cases_with_point}",
             "{_req|Aktuelle_Daten|new_cases}",
             "{_req|Aktuelle_Daten|Scases_per_100k}",
             "{_req|Aktuelle_Daten|deaths}",
@@ -610,7 +613,7 @@
         "parts": [
           {
             "type": "text",
-            "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt \"{_req|Aktuelle_Daten|cases}\" Corona Fälle"
+            "pattern": "Im {_req|Aktuelle_Daten|BEZ}{_req|Aktuelle_Daten|GEN} gibt es seit Beginn insgesamt \"{_req|Aktuelle_Daten|cases_with_point}\" Corona Fälle"
           },
           {
             "type": "compare",
