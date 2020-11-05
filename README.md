@@ -32,19 +32,6 @@ _Benötigte Software_:
 Unter Windows muss ggf. noch ein Windows Subsystem for Linux installiert werden. 
 Weitere Informationen [hier](https://docs.docker.com/docker-for-windows/wsl/)
 
-_Docker-Container erstellen:_
-
-```shell
-docker build -t visuanalytics src
-```
-
-Falls man nur das Wordpress-Plugin verwenden will (siehe [hier](#wordpress-plugin-verwenden)) kann man auch
-eine Docker-Container bauen, der das Frontend nicht enthält. Hierfür muss man nur anstelle vom obigen Befehl den folgenden Befehl verwenden:
-
-```shell
-docker build -f Dockerfile.wordpress -t visuanalytics src
-```
-
 _Docker-Container starten:_
 
 Die Pfade hinter `-v` müssen durch Pfade zu den Dateien, welche in [Konfiguration](#Konfiguration) beschrieben werden
@@ -57,7 +44,7 @@ docker run -t \
   -v /home/user/out:/out \
   -v /home/user/config.json:/config.json \
   -p 8000:8000 \
-  visuanalytics
+  visuanalytics/visuanalytics
 ```
 
 _Windows:_
@@ -67,8 +54,15 @@ docker run -t ^
   -v C:\Users\user\out:/out  ^
   -v C:\Users\user\config.json:/config.json ^
   -p 8000:8000 ^
-  visuanalytics
+  visuanalytics/visuanalytics
 ```
+
+Falls man nur das Wordpress-Plugin verwenden will (siehe [hier](#wordpress-plugin-verwenden)) kann man auch
+eine Docker-Container starten, der das Frontend nicht enthält. Hierfür muss man nur anstelle von  
+`visuanalytics/visuanalytics`   
+im obigen Befehl  
+`visuanalytics/visuanalytics:latest-wordpress`
+eingeben.
 
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
