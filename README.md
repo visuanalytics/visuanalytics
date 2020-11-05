@@ -58,10 +58,11 @@ docker run -t ^
 ```
 
 Falls man nur das Wordpress-Plugin verwenden will (siehe [hier](#wordpress-plugin-verwenden)) kann man auch
-eine Docker-Container bauen, der das Frontend nicht enthält. Hierfür muss man nur anstelle von  
+eine Docker-Container starten, der das Frontend nicht enthält. Hierfür muss man nur anstelle von  
 `visuanalytics/visuanalytics`   
 im obigen Befehl  
 `visuanalytics/visuanalytics:latest-wordpress`
+eingeben.
 
 Der Server kann nun unter `http://localhost:8000` erreicht werden.
 
