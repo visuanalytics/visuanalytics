@@ -128,7 +128,7 @@
       },
       "config": {
         "thumbnail": false,
-        "Landkreis": "GIESSEN",
+        "Landkreis": "WETTERAUKREIS",
         "keep_count": 3,
         "attach": [
           {
@@ -136,7 +136,7 @@
             "config": {
               "thumbnail": false,
               "Bundesland": "Hessen",
-              "marked_city": "Gießen"
+              "marked_city": "Friedberg"
             }
           }
         ]
@@ -155,7 +155,7 @@
       "config": {
         "thumbnail": false,
         "Bundesland": "HESSEN",
-        "marked_city": "Gießen",
+        "marked_city": "Friedberg",
         "keep_count": 3
       }
     }
