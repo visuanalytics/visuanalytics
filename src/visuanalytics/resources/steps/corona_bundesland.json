@@ -5,7 +5,7 @@
   "precondition": {
     "type": "date_today",
     "request": {
-      "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20'Giessen'&outFields=*&outSR=4326&f=json"
+      "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20%27WETTERAUKREIS%27&outFields=*&outSR=4326&f=json"
     },
     "key": "_pre|features|0|attributes|last_update",
     "key_split": 10,
