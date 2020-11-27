@@ -1,0 +1,29 @@
+{
+  "_conf": {
+    "output_path": "out",
+    "testing": true,
+    "h264_nvenc": false,
+    "hashtag": "Bundesliga",
+    "stopwords": " ",
+    "colormap_words": "viridis",
+    "color_func_words": true,
+    "figure": "circle",
+    "width_wordcloud": 1000,
+    "height_wordcloud": 1000,
+    "keep_count": 3,
+    "job_name": "Twitter-Wordcloud"
+  },
+  "_pipe_id": "4457c1a7aa4541e28f265f6a877b1b02",
+  "_req": {
+    "text_all": "Bundesliga bundesliga Werder SPOX fussball sportwetten VfB Stuttgart FCBayern WerderBremen RBLeipzig Serdar Kohfeldt Geisterspiele Zuschauer Corona Fussball Kobel effzeh fcn Palikuca Erras DFBPokal FlorianKohfeldt werder kruse kohlfeld BVB Favre transfermarkt dieng wolfsbergerac scfreiburg Sprüche herthabsc berlin coronavirus Ishak UEFA ChampionsLeague football Deutsch Deutschland Followback TrophyManager Hwang Jakobs S04 schalke04 SCHALKE trikot Magath MartinSonneborn Regionalliga Pizza Relegation 1Liga Videobeweis Haaland Herrman Thioune Sky VflHSV Lewandowski MiaSanMia fcb Pizarro TSG Hoffenheim skysportNews Finanzchef München Talent Abwerbung",
+    "text_top1": "Bundesliga",
+    "text_top2": "Bundesliga bundesliga",
+    "text_top3": "Bundesliga bundesliga Werder",
+    "text_top4": "Bundesliga bundesliga Werder SPOX",
+    "text_top5": "Bundesliga bundesliga Werder SPOX fussball",
+    "text_top10": "Bundesliga bundesliga Werder SPOX fussball sportwetten VfB Stuttgart FCBayern WerderBremen",
+    "text_top15": "Bundesliga bundesliga Werder SPOX fussball sportwetten VfB Stuttgart FCBayern WerderBremen RBLeipzig Serdar Kohfeldt Geisterspiele Zuschauer",
+    "text_top20": "Bundesliga bundesliga Werder SPOX fussball sportwetten VfB Stuttgart FCBayern WerderBremen RBLeipzig Serdar Kohfeldt Geisterspiele Zuschauer Corona Fussball Kobel effzeh fcn",
+    "text_top25": "Bundesliga bundesliga Werder SPOX fussball sportwetten VfB Stuttgart FCBayern WerderBremen RBLeipzig Serdar Kohfeldt Geisterspiele Zuschauer Corona Fussball Kobel effzeh fcn Palikuca Erras DFBPokal FlorianKohfeldt werder"
+  }
+}

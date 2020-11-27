@@ -1,0 +1,153 @@
+{
+  "_conf": {
+    "city_name": "Gießen"
+  },
+  "_pipe_id": "1",
+  "_req": [
+    {
+      "data": [
+        {
+          "valid_date": "2020-05-21",
+          "max_temp": 24.4,
+          "min_temp": 7.2,
+          "app_min_temp": 4.1,
+          "app_max_temp": 23.9,
+          "wind_cdir_full": "Südosten",
+          "wind_spd": 1.32611,
+          "weather": {
+            "icon": "c02d",
+            "code": 801,
+            "str_code": "sind nur wenige Wolken am Himmel"
+          },
+          "sunrise_ts": 1590032139,
+          "sunset_ts": 1590088706,
+          "rh": 57,
+          "pop": 0,
+          "str_max_temp": "24,4 Grad",
+          "str_min_temp": "7,2 Grad",
+          "str_app_max_temp": "23,9 Grad",
+          "str_app_min_temp": "4,1 Grad",
+          "str_wind_spd": "4,77 Kilometern pro Stunde",
+          "str_rh": "57 Prozent",
+          "str_pop": "0 Prozent",
+          "weekday": "Donnerstag",
+          "str_sunset_ts": "21 Uhr 18",
+          "str_sunrise_ts": "05 Uhr 35"
+        },
+        {
+          "valid_date": "2020-05-22",
+          "max_temp": 27.3,
+          "min_temp": 10.7,
+          "app_min_temp": 10.7,
+          "app_max_temp": 26.9,
+          "wind_cdir_full": "Süden",
+          "wind_spd": 1.95446,
+          "weather": {
+            "icon": "c04d",
+            "code": 804,
+            "str_code": "ist es bewölkt"
+          },
+          "sunrise_ts": 1590118470,
+          "sunset_ts": 1590175183,
+          "rh": 65,
+          "pop": 30,
+          "str_max_temp": "27,3 Grad",
+          "str_min_temp": "10,7 Grad",
+          "str_app_max_temp": "26,9 Grad",
+          "str_app_min_temp": "10,7 Grad",
+          "str_wind_spd": "7,04 Kilometern pro Stunde",
+          "str_rh": "65 Prozent",
+          "str_pop": "30 Prozent",
+          "weekday": "Freitag",
+          "str_sunset_ts": "21 Uhr 19",
+          "str_sunrise_ts": "05 Uhr 34"
+        },
+        {
+          "valid_date": "2020-05-23",
+          "max_temp": 17.5,
+          "min_temp": 11.7,
+          "app_min_temp": 11.7,
+          "app_max_temp": 17.5,
+          "wind_cdir_full": "West Südwest",
+          "wind_spd": 2.84042,
+          "weather": {
+            "icon": "r04d",
+            "code": 520,
+            "str_code": "ist mit leichten Regenschauern zu rechnen"
+          },
+          "sunrise_ts": 1590204804,
+          "sunset_ts": 1590261659,
+          "rh": 68,
+          "pop": 80,
+          "str_max_temp": "17,5 Grad",
+          "str_min_temp": "11,7 Grad",
+          "str_app_max_temp": "17,5 Grad",
+          "str_app_min_temp": "11,7 Grad",
+          "str_wind_spd": "10,23 Kilometern pro Stunde",
+          "str_rh": "68 Prozent",
+          "str_pop": "80 Prozent",
+          "weekday": "Samstag",
+          "str_sunset_ts": "21 Uhr 20",
+          "str_sunrise_ts": "05 Uhr 33"
+        },
+        {
+          "valid_date": "2020-05-24",
+          "max_temp": 17.7,
+          "min_temp": 7.1,
+          "app_min_temp": 4,
+          "app_max_temp": 17.6,
+          "wind_cdir_full": "Westen",
+          "wind_spd": 4.33938,
+          "weather": {
+            "icon": "c04d",
+            "code": 804,
+            "str_code": "ist es bewölkt"
+          },
+          "sunrise_ts": 1590291140,
+          "sunset_ts": 1590348133,
+          "rh": 72,
+          "pop": 15,
+          "str_max_temp": "17,7 Grad",
+          "str_min_temp": "7,1 Grad",
+          "str_app_max_temp": "17,6 Grad",
+          "str_app_min_temp": "4 Grad",
+          "str_wind_spd": "15,62 Kilometern pro Stunde",
+          "str_rh": "72 Prozent",
+          "str_pop": "15 Prozent",
+          "weekday": "Sonntag",
+          "str_sunset_ts": "21 Uhr 22",
+          "str_sunrise_ts": "05 Uhr 32"
+        },
+        {
+          "valid_date": "2020-05-25",
+          "max_temp": 19.9,
+          "min_temp": 6.8,
+          "app_min_temp": 3.6,
+          "app_max_temp": 19.1,
+          "wind_cdir_full": "West Südwest",
+          "wind_spd": 2.95654,
+          "weather": {
+            "icon": "c03d",
+            "code": 803,
+            "str_code": "ist es bewölkt, vereinzelt kommt die Sonne durch"
+          },
+          "sunrise_ts": 1590377478,
+          "sunset_ts": 1590434606,
+          "rh": 79,
+          "pop": 45,
+          "str_max_temp": "19,9 Grad",
+          "str_min_temp": "6,8 Grad",
+          "str_app_max_temp": "19,1 Grad",
+          "str_app_min_temp": "3,6 Grad",
+          "str_wind_spd": "10,64 Kilometern pro Stunde",
+          "str_rh": "79 Prozent",
+          "str_pop": "45 Prozent",
+          "weekday": "Montag",
+          "str_sunset_ts": "21 Uhr 23",
+          "str_sunrise_ts": "05 Uhr 31"
+        }
+      ]
+    }
+  ],
+  "date_today": "2020-06-12"
+}

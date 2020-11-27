@@ -1,0 +1,163 @@
+{
+  "jobs": [
+    {
+      "name": "Wetter in Deutschland",
+      "id": 0,
+      "steps": "weather_germany",
+      "schedule": {
+        "times": [
+          "14:34"
+        ],
+        "daily": true
+      },
+      "config": {
+        "thumbnail": true,
+        "attach": [
+          {
+            "steps": "twitter",
+            "config": {
+              "hashtags": [
+                "Bundesliga",
+                "Fußball"
+              ],
+              "stopwords": [
+                "Bundesliga",
+                "Werder"
+              ],
+              "normalize_words": true,
+              "colormap_words": "viridis",
+              "color_func": true,
+              "color_func_words": "145 46 5 35",
+              "figure": "circle",
+              "width_wordcloud": 1000,
+              "height_wordcloud": 1000
+            }
+          }
+        ],
+        "separate_rendering": true
+      }
+    },
+    {
+      "name": "Wetter in Biebertal",
+      "id": 1,
+      "steps": "weather_single",
+      "schedule": {
+        "times": [
+          "11:27"
+        ],
+        "daily": true,
+        "removal_time": {
+          "days": 7,
+          "hours": 10
+        }
+      },
+      "config": {
+        "thumbnail": true,
+        "keep_count": 3,
+        "city_name": "Biebertal",
+        "p_code": "35444",
+        "speech_app_temp_2": true,
+        "speech_wind_2": false,
+        "speech_sun_2": true,
+        "speech_rh_2": true,
+        "speech_pop_2": true,
+        "speech_app_temp_3": false,
+        "speech_wind_3": false,
+        "speech_sun_3": false,
+        "speech_rh_3": false,
+        "speech_pop_3": true
+      }
+    },
+    {
+      "name": "Fußballbericht",
+      "id": 1,
+      "steps": "football",
+      "schedule": {
+        "times": [
+          "14:46"
+        ],
+        "daily": true
+      },
+      "config": {
+        "thumbnail": true,
+        "league": "1",
+        "keep_count": 3
+      }
+    },
+    {
+      "name": "Twitter-Wordcloud",
+      "id": 1,
+      "steps": "twitter",
+      "schedule": {
+        "times": [
+          "20:04"
+        ],
+        "daily": true
+      },
+      "config": {
+        "hashtags": [
+          "Bundesliga",
+          "Corona",
+          "Berlin"
+        ],
+        "stopwords": [
+          "Corona"
+        ],
+        "thumbnail": true,
+        "normalize_words": true,
+        "colormap_words": "viridis",
+        "background_image": "backgrounds/football.png",
+        "color_func": true,
+        "color_func_words": "145 46 5 35",
+        "figure": "circle",
+        "size_wordcloud": "1000x1000",
+        "fix_names": {
+          "count": 3
+        }
+      }
+    },
+    {
+      "name": "Coronabericht-Regional",
+      "id": 1,
+      "steps": "corona_regional",
+      "schedule": {
+        "times": [
+          "11:26"
+        ],
+        "daily": true
+      },
+      "config": {
+        "thumbnail": false,
+        "Landkreis": "WETTERAUKREIS",
+        "keep_count": 3,
+        "attach": [
+          {
+            "steps": "corona_bundesland",
+            "config": {
+              "thumbnail": false,
+              "Bundesland": "Hessen",
+              "marked_city": "Friedberg"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Coronabericht-Bundesland",
+      "id": 1,
+      "steps": "corona_bundesland",
+      "schedule": {
+        "times": [
+          "10:46"
+        ],
+        "daily": true
+      },
+      "config": {
+        "thumbnail": false,
+        "Bundesland": "HESSEN",
+        "marked_city": "Friedberg",
+        "keep_count": 3
+      }
+    }
+  ]
+}

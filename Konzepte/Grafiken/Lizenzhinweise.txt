@@ -1,0 +1,24 @@
+Lizenzhinweise
+
+Lizenzhinweis für "3-Tage-Vorhersage.png"
+
+Text: Alexrk2, Europe laea location map, Zuschneiden des Bildes, Farbänderung, Duplizieren von Formen, Hinzufügen von Schrift und Icons von VisuAnalytics, CC BY-SA 3.0 
+
+Plain Text: Alexrk2 (https://commons.wikimedia.org/wiki/File:Europe_laea_location_map.svg), „Europe laea location map“, Zuschneiden des Bildes, Farbänderung, Duplizieren von Formen, Hinzufügen von Schrift und Icons von VisuAnalytics, https://creativecommons.org/licenses/by-sa/3.0/legalcode 
+
+HTML: <a href="https://commons.wikimedia.org/wiki/User:Alexrk2">Alexrk2</a>, <a href="https://commons.wikimedia.org/wiki/File:Europe_laea_location_map.svg">Europe laea location map</a>, Zuschneiden des Bildes, Farbänderung, Duplizieren von Formen, Hinzufügen von Schrift und Icons von VisuAnalytics, <a href="https://creativecommons.org/licenses/by-sa/3.0/legalcode" rel="license">CC BY-SA 3.0</a>
+
+
+Lizenzhinweis für "aktuelles-Wetter.png"
+
+Text: Alexrk2, Europe laea location map, Zuschneiden des Bildes, Farbänderung, Hinzufügen von Schrift und Icons von VisuAnalytics, CC BY-SA 3.0 
+
+Plain Text: Alexrk2 (https://commons.wikimedia.org/wiki/File:Europe_laea_location_map.svg), „Europe laea location map“, Zuschneiden des Bildes, Farbänderung, Hinzufügen von Schrift und Icons von VisuAnalytics, https://creativecommons.org/licenses/by-sa/3.0/legalcode
+
+HTML: <a href="https://commons.wikimedia.org/wiki/User:Alexrk2">Alexrk2</a>, <a href="https://commons.wikimedia.org/wiki/File:Europe_laea_location_map.svg">Europe laea location map</a>, Zuschneiden des Bildes, Farbänderung, Hinzufügen von Schrift und Icons von VisuAnalytics, <a href="https://creativecommons.org/licenses/by-sa/3.0/legalcode" rel="license">CC BY-SA 3.0</a> 
+
+Lizenzhinweis für Icons
+
+Plain Text: Weatherbit.io (https://www.weatherbit.io/api), Weatherbit weather Icons: PNG Archive (tar.gz) (https://www.weatherbit.io/api/meta), Eingebunden in Wetterkarten von VisuAnalytics, Attribution-NonCommercial-ShareAlike 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+
+

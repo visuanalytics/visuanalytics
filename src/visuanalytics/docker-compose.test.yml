@@ -1,0 +1,4 @@
+sut:
+  build: .
+  working_dir: /
+  command: python3 -m unittest discover visuanalytics

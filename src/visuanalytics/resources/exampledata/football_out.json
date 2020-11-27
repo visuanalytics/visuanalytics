@@ -1,0 +1,405 @@
+{
+  "_conf": {
+    "league": "1",
+    "output_path": "out",
+    "testing": true,
+    "h264_nvenc": false,
+    "thumbnail": true,
+    "keep_count": 3,
+    "job_name": "Fußballbericht"
+  },
+  "_pipe_id": "de97c59fb4bc4436a8af236fe6302e7a",
+  "_job_id": 1,
+  "_req": {
+    "Spiele": [
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "Borussia Dortmund",
+          "TeamId": 7
+        },
+        "Team2": {
+          "TeamName": "TSG 1899 Hoffenheim",
+          "TeamId": 123
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 0,
+          "PointsTeam2": 4,
+          "Text": "Borussia Dortmund unterlag Zuhause TSG 1899 Hoffenheim mit einem 0 zu 4 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "Bayer Leverkusen",
+          "TeamId": 6
+        },
+        "Team2": {
+          "TeamName": "1. FSV Mainz 05",
+          "TeamId": 81
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 1,
+          "PointsTeam2": 0,
+          "Text": "Bayer Leverkusen gewann gegen 1. FSV Mainz 05 1 zu 0 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "Borussia Mönchengladbach",
+          "TeamId": 87
+        },
+        "Team2": {
+          "TeamName": "Hertha BSC",
+          "TeamId": 54
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 2,
+          "PointsTeam2": 1,
+          "Text": "Borussia Mönchengladbach gewann gegen Hertha BSC 2 zu 1 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "VfL Wolfsburg",
+          "TeamId": 131
+        },
+        "Team2": {
+          "TeamName": "FC Bayern",
+          "TeamId": 40
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 0,
+          "PointsTeam2": 4,
+          "Text": "VfL Wolfsburg unterlag FC Bayern mit einem 0 zu 4 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "Eintracht Frankfurt",
+          "TeamId": 91
+        },
+        "Team2": {
+          "TeamName": "SC Paderborn 07",
+          "TeamId": 31
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 3,
+          "PointsTeam2": 2,
+          "Text": "Eintracht Frankfurt gewann Zuhause gegen SC Paderborn 07 3 zu 2 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "Werder Bremen",
+          "TeamId": 134
+        },
+        "Team2": {
+          "TeamName": "1. FC Köln",
+          "TeamId": 65
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 6,
+          "PointsTeam2": 1,
+          "Text": "Werder Bremen gewann gegen 1. FC Köln 6 zu 1 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "SC Freiburg",
+          "TeamId": 112
+        },
+        "Team2": {
+          "TeamName": "FC Schalke 04",
+          "TeamId": 9
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 4,
+          "PointsTeam2": 0,
+          "Text": "SC Freiburg gewann gegen FC Schalke 04 4 zu 0 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "FC Augsburg",
+          "TeamId": 95
+        },
+        "Team2": {
+          "TeamName": "RB Leipzig",
+          "TeamId": 1635
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 1,
+          "PointsTeam2": 2,
+          "Text": "FC Augsburg unterlag Zuhause RB Leipzig mit einem 1 zu 2 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      },
+      {
+        "LeagueName": "1. Fußball-Bundesliga 2019/2020",
+        "Team1": {
+          "TeamName": "1. FC Union Berlin",
+          "TeamId": 80
+        },
+        "Team2": {
+          "TeamName": "Fortuna Düsseldorf",
+          "TeamId": 185
+        },
+        "MatchIsFinished": true,
+        "MatchDateTime": "2020-06-27T15:30:00",
+        "MatchResults": {
+          "PointsTeam1": 3,
+          "PointsTeam2": 0,
+          "Text": "1. FC Union Berlin gewann gegen Fortuna Düsseldorf 3 zu 0 . "
+        },
+        "MatchHasResults": true,
+        "weekday": "Samstag"
+      }
+    ],
+    "Tabelle": [
+      {
+        "TeamName": "FC Bayern",
+        "TeamInfoId": 40,
+        "Points": 82,
+        "Goals": 100,
+        "OpponentGoals": 32,
+        "GoalDiff": 68,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 0,
+        "Rank_diff": 0,
+        "Text": "FC Bayern ist weiterhin an der Tabellenspitze. "
+      },
+      {
+        "TeamName": "Borussia Dortmund",
+        "TeamInfoId": 7,
+        "Points": 69,
+        "Goals": 84,
+        "OpponentGoals": 41,
+        "GoalDiff": 43,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 13,
+        "Rank_diff": 0,
+        "Text": "Borussia Dortmund liegt auf dem zweiten Platz mit 69 Punkten. "
+      },
+      {
+        "TeamName": "RB Leipzig",
+        "TeamInfoId": 1635,
+        "Points": 66,
+        "Goals": 81,
+        "OpponentGoals": 37,
+        "GoalDiff": 44,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 16,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "Borussia Mönchengladbach",
+        "TeamInfoId": 87,
+        "Points": 65,
+        "Goals": 66,
+        "OpponentGoals": 40,
+        "GoalDiff": 26,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 17,
+        "Rank_diff": 0,
+        "Text": "Borussia Mönchengladbach liegt auf dem vierten Platz mit 65 Punkten. "
+      },
+      {
+        "TeamName": "Bayer Leverkusen",
+        "TeamInfoId": 6,
+        "Points": 63,
+        "Goals": 61,
+        "OpponentGoals": 44,
+        "GoalDiff": 17,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 19,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "TSG 1899 Hoffenheim",
+        "TeamInfoId": 175,
+        "Points": 52,
+        "Goals": 53,
+        "OpponentGoals": 53,
+        "GoalDiff": 0,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 30,
+        "Rank_diff": 1
+      },
+      {
+        "TeamName": "VfL Wolfsburg",
+        "TeamInfoId": 131,
+        "Points": 49,
+        "Goals": 48,
+        "OpponentGoals": 46,
+        "GoalDiff": 2,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 33,
+        "Rank_diff": -1
+      },
+      {
+        "TeamName": "SC Freiburg",
+        "TeamInfoId": 112,
+        "Points": 48,
+        "Goals": 48,
+        "OpponentGoals": 47,
+        "GoalDiff": 1,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 34,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "Eintracht Frankfurt",
+        "TeamInfoId": 91,
+        "Points": 45,
+        "Goals": 59,
+        "OpponentGoals": 60,
+        "GoalDiff": -1,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 37,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "Hertha BSC",
+        "TeamInfoId": 54,
+        "Points": 41,
+        "Goals": 48,
+        "OpponentGoals": 59,
+        "GoalDiff": -11,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 41,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "1. FC Union Berlin",
+        "TeamInfoId": 80,
+        "Points": 41,
+        "Goals": 41,
+        "OpponentGoals": 58,
+        "GoalDiff": -17,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 41,
+        "Rank_diff": 1
+      },
+      {
+        "TeamName": "FC Schalke 04",
+        "TeamInfoId": 9,
+        "Points": 39,
+        "Goals": 38,
+        "OpponentGoals": 58,
+        "GoalDiff": -20,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 43,
+        "Rank_diff": -1
+      },
+      {
+        "TeamName": "1. FSV Mainz 05",
+        "TeamInfoId": 81,
+        "Points": 37,
+        "Goals": 44,
+        "OpponentGoals": 65,
+        "GoalDiff": -21,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 45,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "1. FC Köln",
+        "TeamInfoId": 65,
+        "Points": 36,
+        "Goals": 51,
+        "OpponentGoals": 69,
+        "GoalDiff": -18,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 46,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "FC Augsburg",
+        "TeamInfoId": 95,
+        "Points": 36,
+        "Goals": 45,
+        "OpponentGoals": 63,
+        "GoalDiff": -18,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 46,
+        "Rank_diff": 0
+      },
+      {
+        "TeamName": "Werder Bremen",
+        "TeamInfoId": 134,
+        "Points": 31,
+        "Goals": 42,
+        "OpponentGoals": 69,
+        "GoalDiff": -27,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 51,
+        "Rank_diff": 1,
+        "Text": "Auf dem 16ten Platz liegt Werder Bremen mit 31 Punkten. "
+      },
+      {
+        "TeamName": "Fortuna Düsseldorf",
+        "TeamInfoId": 185,
+        "Points": 30,
+        "Goals": 36,
+        "OpponentGoals": 67,
+        "GoalDiff": -31,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 52,
+        "Rank_diff": -1
+      },
+      {
+        "TeamName": "SC Paderborn 07",
+        "TeamInfoId": 31,
+        "Points": 20,
+        "Goals": 37,
+        "OpponentGoals": 74,
+        "GoalDiff": -37,
+        "Matches": 34,
+        "PointsDiffToFirstPlace": 62,
+        "Rank_diff": 0
+      }
+    ],
+    "Vorherige-Season": "2019",
+    "league_saison": "2019",
+    "Spieltag": "34. Spieltag"
+  },
+  "league_name": "1. Fußball Bundesliga"
+}

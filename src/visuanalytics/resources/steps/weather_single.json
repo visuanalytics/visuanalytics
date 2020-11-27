@@ -1,0 +1,2452 @@
+{
+  "id": 1,
+  "name": "weather_single",
+  "info": "Der Wetterbericht prognostiziert das Wetter für einen ausgewählten Ort für den aktuellen Tag und die darauffolgenden vier Tage.",
+  "api": {
+    "type": "request",
+    "api_key_name": "weatherbit",
+    "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
+    "params": {
+      "postal_code": "{_conf|p_code}",
+      "key": "{_api_key}",
+      "country": "{_conf|country}"
+    }
+  },
+  "transform": [
+    {
+      "type": "select",
+      "relevant_keys": [
+        "_req|data"
+      ]
+    },
+    {
+      "type": "select_range",
+      "array_key": "_req|data",
+      "range_start": 0,
+      "range_end": 5
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|data",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "_loop|data",
+          "relevant_keys": [
+            "valid_date",
+            "max_temp",
+            "min_temp",
+            "app_min_temp",
+            "app_max_temp",
+            "wind_cdir_full",
+            "wind_spd",
+            "weather|icon",
+            "weather|code",
+            "sunrise_ts",
+            "sunset_ts",
+            "rh",
+            "pop"
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "round",
+          "keys": [
+            "_loop|rh",
+            "_loop|pop",
+            "_loop|max_temp",
+            "_loop|min_temp",
+            "_loop|app_max_temp",
+            "_loop|app_min_temp"
+          ]
+        },
+        {
+          "type": "replace",
+          "keys": [
+            "_loop|max_temp",
+            "_loop|min_temp",
+            "_loop|app_max_temp",
+            "_loop|app_min_temp"
+          ],
+          "new_keys": [
+            "_loop|str_max_temp",
+            "_loop|str_min_temp",
+            "_loop|str_app_max_temp",
+            "_loop|str_app_min_temp"
+          ],
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
+        },
+        {
+          "type": "calculate",
+          "keys": [
+            "_loop|wind_spd"
+          ],
+          "action": "multiply",
+          "value_right": 3.6,
+          "decimal": 2
+        },
+        {
+          "type": "replace",
+          "keys": [
+            "_loop|wind_spd"
+          ],
+          "old_value": ".",
+          "new_value": ",",
+          "count": 1
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|wind_spd"
+          ],
+          "new_keys": [
+            "_loop|str_wind_spd"
+          ],
+          "pattern": "{_key} Kilometern pro Stunde"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|rh",
+            "_loop|pop"
+          ],
+          "new_keys": [
+            "_loop|str_rh",
+            "_loop|str_pop"
+          ],
+          "pattern": "{_key} Prozent"
+        },
+        {
+          "type": "date_weekday",
+          "keys": [
+            "_loop|valid_date"
+          ],
+          "new_keys": [
+            "_loop|weekday"
+          ],
+          "given_format": "%Y-%m-%d"
+        },
+        {
+          "type": "timestamp",
+          "keys": [
+            "_loop|sunset_ts",
+            "_loop|sunrise_ts"
+          ],
+          "new_keys": [
+            "_loop|str_sunset_ts",
+            "_loop|str_sunrise_ts"
+          ],
+          "format": "%H Uhr %M",
+          "zeropaded_off": true
+        },
+        {
+          "type": "split_string",
+          "keys": [
+            "_loop|str_sunset_ts",
+            "_loop|str_sunrise_ts"
+          ],
+          "delimiter": " Uhr ",
+          "new_keys": [
+            "_loop|sunset",
+            "_loop|sunrise"
+          ]
+        },
+        {
+          "type": "convert",
+          "keys": [
+            "_loop|sunset|0",
+            "_loop|sunset|1",
+            "_loop|sunrise|0",
+            "_loop|sunrise|1"
+          ],
+          "new_keys": [
+            "_loop|sunset_hour",
+            "_loop|sunset_minute",
+            "_loop|sunrise_hour",
+            "_loop|sunrise_minute"
+          ],
+          "to": "int"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|sunset_hour",
+            "_loop|sunrise_hour"
+          ],
+          "pattern": "{_key} Uhr"
+        },
+        {
+          "type": "wind_direction",
+          "key": "_loop|wind_cdir_full",
+          "new_key": "_loop|str_wind_cdir_full",
+          "dict": {
+            "west": {
+              "0": "West",
+              "1": "Westen"
+            },
+            "southwest": {
+              "0": "Südwest",
+              "1": "Südwesten"
+            },
+            "northwest": {
+              "0": "Nordwest",
+              "1": "Nordwesten"
+            },
+            "south": {
+              "0": "Süd",
+              "1": "Süden"
+            },
+            "east": {
+              "0": "Ost",
+              "1": "Osten"
+            },
+            "southeast": {
+              "0": "Südost",
+              "1": "Südosten"
+            },
+            "northeast": {
+              "0": "Nordost",
+              "1": "Nordosten"
+            },
+            "north": {
+              "0": "Nord",
+              "1": "Norden"
+            }
+          },
+          "delimiter": "-"
+        },
+        {
+          "type": "translate",
+          "keys": [
+            "_loop|weather|code"
+          ],
+          "new_keys": [
+            "_loop|weather|str_code_short"
+          ],
+          "dict": {
+            "200": "Gewitter",
+            "201": "Gewitter",
+            "202": "Gewitter",
+            "230": "Gewitter",
+            "231": "Gewitter",
+            "232": "Gewitter",
+            "233": "Gewitter",
+            "300": "regnerisch",
+            "301": "Nieselregen",
+            "302": "regnerisch",
+            "500": "Regen",
+            "501": "Regen",
+            "502": "Regen",
+            "511": "Eisregen",
+            "520": "Regenschauer",
+            "521": "Regenschauer",
+            "522": "Regenschauer",
+            "600": "Schnee",
+            "601": "Schnee",
+            "602": "Schnee",
+            "610": "Schnee",
+            "611": "Schneeregen",
+            "612": "Schneeregen",
+            "621": "Schneeschauer",
+            "622": "Schneeschauer",
+            "623": "windig",
+            "700": "nebelig",
+            "711": "nebelig",
+            "721": "nebelig",
+            "731": "staubig",
+            "741": "nebelig",
+            "751": "Eisnebel",
+            "800": "heiter",
+            "801": "leicht bewölkt",
+            "802": "leicht bewölkt",
+            "803": "leicht bewölkt",
+            "804": "bewölkt",
+            "900": "unbekannt"
+          }
+        },
+        {
+          "type": "random_value",
+          "keys": [
+            "_loop|weather|code"
+          ],
+          "new_keys": [
+            "_loop|weather|str_code"
+          ],
+          "dict": {
+            "200": [
+              "kommt es zu Gewittern mit leichtem Regen",
+              "ist mit Gewitter und leichtem Regen zu rechnen"
+            ],
+            "201": [
+              "kommt es zu Gewittern mit Regen",
+              "ist mit Gewitter und Regen zu rechnen"
+            ],
+            "202": [
+              "kommt es zu Gewittern mit starkem Regen",
+              "ist mit Gewitter und starkem Regen zu rechnen"
+            ],
+            "230": [
+              "kommt es zu Gewittern mit leichtem Nieselregen",
+              "ist mit Gewitter und leichtem Nieselregen zu rechnen"
+            ],
+            "231": [
+              "kommt es zu Gewittern mit Nieselregen",
+              "ist mit Gewitter und Nieselregen zu rechnen"
+            ],
+            "232": [
+              "kommt es zu Gewittern mit starkem Nieselregen",
+              "ist mit Gewitter und starkem Nieselregen zu rechnen"
+            ],
+            "233": [
+              "kommt es zu Gewittern mit Hagel",
+              "ist mit Gewitter und Hagel zu rechnen"
+            ],
+            "300": [
+              "kommt es zu leichtem Nieselregen",
+              "ist mit leichtem Nieselregen zu rechnen"
+            ],
+            "301": [
+              "kommt es zu Nieselregen",
+              "ist mit Nieselregen zu rechnen"
+            ],
+            "302": [
+              "kommt es zu starkem Nieselregen",
+              "ist mit starkem Nieselregen zu rechnen"
+            ],
+            "500": [
+              "kommt es zu leichtem Regen",
+              "ist es leicht regnerisch"
+            ],
+            "501": [
+              "kommt es zu mäßigem Regen",
+              "ist es regnerisch"
+            ],
+            "502": [
+              "kommt es zu starkem Regen",
+              "ist es stark regnerisch"
+            ],
+            "511": [
+              "kommt es zu Eisregen",
+              "ist mit Eisregen zu rechnen"
+            ],
+            "520": [
+              "kommt es zu leichtem Regenschauer",
+              "ist mit leichten Regenschauern zu rechnen"
+            ],
+            "521": [
+              "kommt es zu Regenschauer",
+              "ist mit Regenschauern zu rechnen"
+            ],
+            "522": [
+              "kommt es zu starkem Regenschauer",
+              "ist mit starken Regenschauern zu rechnen"
+            ],
+            "600": [
+              "kommt es zu leichtem Schneefall",
+              "ist mit leichtem Schneefall zu rechnen"
+            ],
+            "601": [
+              "kommt es zu Schnee",
+              "ist mit Schnee zu rechnen"
+            ],
+            "602": [
+              "kommt es zu starkem Schneefall",
+              "ist mit starkem Schneefall zu rechnen"
+            ],
+            "610": [
+              "kommt es zu einem Mix aus Schnee und Regen",
+              "ist mit einem Mix aus Schnee und Regen zu rechnen"
+            ],
+            "611": [
+              "kommt es zu Schneeregen",
+              "ist mit Schneeregen zu rechnen"
+            ],
+            "612": [
+              "kommt es zu starkem Schneeregen",
+              "ist mit starkem Schneeregen zu rechnen"
+            ],
+            "621": [
+              "kommt es zu Schneeschauer",
+              "ist mit Schneeschauern zu rechnen"
+            ],
+            "622": [
+              "kommt es zu starkem Schneeschauer",
+              "ist mit starken Schneeschauern zu rechnen"
+            ],
+            "623": [
+              "kommt es zu Windböen",
+              "ist mit Windböen zu rechnen"
+            ],
+            "700": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "711": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "721": [
+              "kommt es zu Dunst",
+              "ist mit Nebel zu rechnen"
+            ],
+            "731": [
+              "kommt es zu Staub in der Luft",
+              "ist mit Staub in der Luft zu rechnen"
+            ],
+            "741": [
+              "kommt es zu Nebel",
+              "ist mit Nebel zu rechnen"
+            ],
+            "751": [
+              "kommt es zu Eisnebel",
+              "ist mit Eisnebel zu rechnen"
+            ],
+            "800": [
+              "ist der Himmel klar",
+              "wird es heiter mit klarem Himmel"
+            ],
+            "801": [
+              "sind nur wenige Wolken am Himmel",
+              "ist es leicht bewölkt"
+            ],
+            "802": [
+              "sind vereinzelte Wolken am Himmel",
+              "ist es vereinzelt bewölkt"
+            ],
+            "803": [
+              "ist es bewölkt, vereinzelt kommt die Sonne durch"
+            ],
+            "804": [
+              "kommt es zu bedecktem Himmel",
+              "ist es bewölkt"
+            ],
+            "900": [
+              "kommt es zu unbekanntem Niederschlag",
+              "ist mit unbekanntem Niederschlag zu rechnen"
+            ]
+          }
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|wind_spd"
+          ],
+          "new_keys": [
+            "_loop|sym_wind_spd"
+          ],
+          "pattern": "{_key} km/h"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|app_max_temp",
+            "_loop|max_temp",
+            "_loop|min_temp"
+          ],
+          "new_keys": [
+            "_loop|sym_app_max_temp",
+            "_loop|sym_max_temp",
+            "_loop|sym_min_temp"
+          ],
+          "pattern": "{_key}\u00B0"
+        },
+        {
+          "type": "add_symbol",
+          "keys": [
+            "_loop|rh",
+            "_loop|pop"
+          ],
+          "new_keys": [
+            "_loop|sym_rh",
+            "_loop|sym_pop"
+          ],
+          "pattern": "{_key} %"
+        }
+      ]
+    },
+    {
+      "type": "date_now",
+      "new_key": "date_today",
+      "format": "%Y-%m-%d"
+    }
+  ],
+  "images": {
+    "weather1": {
+      "type": "pillow",
+      "path": "weather/Ort_2day0.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 246,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1065,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "L",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day_one",
+          "type": "text",
+          "pos_x": 552,
+          "pos_y": 213,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|0|weekday}"
+        },
+        {
+          "description": "week_day_two",
+          "type": "text",
+          "pos_x": 1360,
+          "pos_y": 213,
+          "preset": "weather_brown_2",
+          "pattern": "{_req|data|1|weekday}"
+        },
+        {
+          "description": "weather_discription_one",
+          "type": "text",
+          "pos_x": 520,
+          "pos_y": 570,
+          "preset": "weather_white_3",
+          "pattern": "{_req|data|0|weather|str_code_short}"
+        },
+        {
+          "description": "weather_discription_two",
+          "type": "text",
+          "pos_x": 1350,
+          "pos_y": 570,
+          "preset": "weather_brown_3",
+          "pattern": "{_req|data|1|weather|str_code_short}"
+        },
+        {
+          "description": "max_temp_one",
+          "type": "text",
+          "pos_x": 700,
+          "pos_y": 370,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|0|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_two",
+          "type": "text",
+          "pos_x": 1530,
+          "pos_y": 370,
+          "preset": "weather_brown_4",
+          "pattern": "{_req|data|1|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_one",
+          "type": "text",
+          "pos_x": 794,
+          "pos_y": 480,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|0|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_two",
+          "type": "text",
+          "pos_x": 1608,
+          "pos_y": 480,
+          "preset": "weather_brown_5",
+          "pattern": "{_req|data|1|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day1",
+          "type": "text_array",
+          "pos_x": [
+            260,
+            260,
+            260,
+            260
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text_array",
+          "pos_x": [
+            1080,
+            1080,
+            1080,
+            1080
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_var_day1",
+          "type": "text_array",
+          "pos_x": [
+            665,
+            665,
+            665,
+            665
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "{_req|data|0|sym_pop}",
+            "{_req|data|0|sym_rh}",
+            "{_req|data|0|sym_app_max_temp}",
+            "{_req|data|0|sym_wind_spd}"
+          ]
+        },
+        {
+          "description": "entry_var_day2",
+          "type": "text_array",
+          "pos_x": [
+            1480,
+            1480,
+            1480,
+            1480
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "{_req|data|1|sym_pop}",
+            "{_req|data|1|sym_rh}",
+            "{_req|data|1|sym_app_max_temp}",
+            "{_req|data|1|sym_wind_spd}"
+          ]
+        }
+      ]
+    },
+    "weather2": {
+      "type": "pillow",
+      "path": "weather/Ort_2day1.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 246,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "L",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1065,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day_one",
+          "type": "text",
+          "pos_x": 552,
+          "pos_y": 213,
+          "preset": "weather_brown_2",
+          "pattern": "{_req|data|0|weekday}"
+        },
+        {
+          "description": "week_day_two",
+          "type": "text",
+          "pos_x": 1360,
+          "pos_y": 213,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|1|weekday}"
+        },
+        {
+          "description": "weather_discription_one",
+          "type": "text",
+          "pos_x": 520,
+          "pos_y": 570,
+          "preset": "weather_brown_3",
+          "pattern": "{_req|data|0|weather|str_code_short}"
+        },
+        {
+          "description": "weather_discription_two",
+          "type": "text",
+          "pos_x": 1350,
+          "pos_y": 570,
+          "preset": "weather_white_3",
+          "pattern": "{_req|data|1|weather|str_code_short}"
+        },
+        {
+          "description": "max_temp_one",
+          "type": "text",
+          "pos_x": 700,
+          "pos_y": 370,
+          "preset": "weather_brown_4",
+          "pattern": "{_req|data|0|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_two",
+          "type": "text",
+          "pos_x": 1530,
+          "pos_y": 370,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|1|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_one",
+          "type": "text",
+          "pos_x": 794,
+          "pos_y": 480,
+          "preset": "weather_brown_5",
+          "pattern": "{_req|data|0|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_two",
+          "type": "text",
+          "pos_x": 1608,
+          "pos_y": 480,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|1|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day1",
+          "type": "text_array",
+          "pos_x": [
+            260,
+            260,
+            260,
+            260
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text_array",
+          "pos_x": [
+            1080,
+            1080,
+            1080,
+            1080
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_var_day1",
+          "type": "text_array",
+          "pos_x": [
+            665,
+            665,
+            665,
+            665
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "{_req|data|0|sym_pop}",
+            "{_req|data|0|sym_rh}",
+            "{_req|data|0|sym_app_max_temp}",
+            "{_req|data|0|sym_wind_spd}"
+          ]
+        },
+        {
+          "description": "entry_var_day2",
+          "type": "text_array",
+          "pos_x": [
+            1480,
+            1480,
+            1480,
+            1480
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "{_req|data|1|sym_pop}",
+            "{_req|data|1|sym_rh}",
+            "{_req|data|1|sym_app_max_temp}",
+            "{_req|data|1|sym_wind_spd}"
+          ]
+        }
+      ]
+    },
+    "weather3": {
+      "type": "pillow",
+      "path": "weather/Ort_2day2.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 246,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|0|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1065,
+          "pos_y": 280,
+          "size_x": 350,
+          "size_y": 350,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|1|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day",
+          "type": "text_array",
+          "pos_x": [
+            552,
+            1360
+          ],
+          "pos_y": [
+            213,
+            213
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{_req|data|0|weekday}",
+            "{_req|data|1|weekday}"
+          ]
+        },
+        {
+          "description": "weather_discription",
+          "type": "text_array",
+          "pos_x": [
+            520,
+            1350
+          ],
+          "pos_y": [
+            570,
+            570
+          ],
+          "preset": "weather_white_3",
+          "pattern": [
+            "{_req|data|0|weather|str_code_short}",
+            "{_req|data|1|weather|str_code_short}"
+          ]
+        },
+        {
+          "description": "max_temp",
+          "type": "text_array",
+          "pos_x": [
+            700,
+            1530
+          ],
+          "pos_y": [
+            370,
+            370
+          ],
+          "preset": "weather_white_4",
+          "pattern": [
+            "{_req|data|0|sym_max_temp}",
+            "{_req|data|1|sym_max_temp}"
+          ]
+        },
+        {
+          "description": "min_temp",
+          "type": "text_array",
+          "pos_x": [
+            794,
+            1608
+          ],
+          "pos_y": [
+            480,
+            480
+          ],
+          "preset": "weather_white_5",
+          "pattern": [
+            "{_req|data|0|sym_min_temp}",
+            "{_req|data|1|sym_min_temp}"
+          ]
+        },
+        {
+          "description": "entry_name_day1",
+          "type": "text_array",
+          "pos_x": [
+            260,
+            260,
+            260,
+            260
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text_array",
+          "pos_x": [
+            1080,
+            1080,
+            1080,
+            1080
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "Regen",
+            "Luftfeuchtigkeit",
+            "gefühlte Temperatur",
+            "Windgeschwindigkeit"
+          ]
+        },
+        {
+          "description": "entry_var_day1",
+          "type": "text_array",
+          "pos_x": [
+            665,
+            665,
+            665,
+            665
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "{_req|data|0|sym_pop}",
+            "{_req|data|0|sym_rh}",
+            "{_req|data|0|sym_app_max_temp}",
+            "{_req|data|0|sym_wind_spd}"
+          ]
+        },
+        {
+          "description": "entry_var_day2",
+          "type": "text_array",
+          "pos_x": [
+            1480,
+            1480,
+            1480,
+            1480
+          ],
+          "pos_y": [
+            660,
+            738,
+            806,
+            874
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "{_req|data|1|sym_pop}",
+            "{_req|data|1|sym_rh}",
+            "{_req|data|1|sym_app_max_temp}",
+            "{_req|data|1|sym_wind_spd}"
+          ]
+        }
+      ]
+    },
+    "weather4": {
+      "type": "pillow",
+      "path": "weather/Ort_3day0.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 70,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 710,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1320,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day_3",
+          "type": "text",
+          "pos_x": 347,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|2|weekday}"
+        },
+        {
+          "description": "week_day_4_5",
+          "type": "text_array",
+          "pos_x": [
+            935,
+            1567
+          ],
+          "pos_y": [
+            285,
+            285
+          ],
+          "preset": "weather_brown_2",
+          "pattern": [
+            "{_req|data|3|weekday}",
+            "{_req|data|4|weekday}"
+          ]
+        },
+        {
+          "description": "max_temp_day3",
+          "type": "text",
+          "pos_x": 462,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|2|sym_max_temp}"
+        },
+        {
+          "description": "max_temp_day4-5",
+          "type": "text_array",
+          "pos_x": [
+            1080,
+            1673
+          ],
+          "pos_y": [
+            440,
+            440
+          ],
+          "preset": "weather_brown_4",
+          "pattern": [
+            "{_req|data|3|sym_max_temp}",
+            "{_req|data|4|sym_max_temp}"
+          ]
+        },
+        {
+          "description": "min_temp_day3",
+          "type": "text",
+          "pos_x": 540,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|2|sym_min_temp}"
+        },
+        {
+          "description": "min_temp_day4-5",
+          "type": "text_array",
+          "pos_x": [
+            1150,
+            1765
+          ],
+          "pos_y": [
+            550,
+            550
+          ],
+          "preset": "weather_brown_5",
+          "pattern": [
+            "{_req|data|3|sym_min_temp}",
+            "{_req|data|4|sym_min_temp}"
+          ]
+        },
+        {
+          "description": "entry_name_day3",
+          "type": "text",
+          "pos_x": 120,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day4-5",
+          "type": "text_array",
+          "pos_x": [
+            730,
+            1342
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day3",
+          "type": "text",
+          "pos_x": 443,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|2|sym_pop}"
+        },
+        {
+          "description": "entry_name_day4-5",
+          "type": "text_array",
+          "pos_x": [
+            1055,
+            1660
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "{_req|data|3|sym_pop}",
+            "{_req|data|4|sym_pop}"
+          ]
+        }
+      ]
+    },
+    "weather5": {
+      "type": "pillow",
+      "path": "weather/Ort_3day1.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 70,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 710,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1320,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day3_5",
+          "type": "text_array",
+          "pos_x": [
+            347,
+            1567
+          ],
+          "pos_y": [
+            285,
+            285
+          ],
+          "preset": "weather_brown_2",
+          "pattern": [
+            "{_req|data|2|weekday}",
+            "{_req|data|4|weekday}"
+          ]
+        },
+        {
+          "description": "week_day4",
+          "type": "text",
+          "pos_x": 935,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|3|weekday}"
+        },
+        {
+          "description": "max_temp_day3_5",
+          "type": "text_array",
+          "pos_x": [
+            462,
+            1673
+          ],
+          "pos_y": [
+            440,
+            440
+          ],
+          "preset": "weather_brown_4",
+          "pattern": [
+            "{_req|data|2|sym_max_temp}",
+            "{_req|data|4|sym_max_temp}"
+          ]
+        },
+        {
+          "description": "max_temp_day4",
+          "type": "text",
+          "pos_x": 1080,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|3|sym_max_temp}"
+        },
+        {
+          "description": "min_temp_day3_4",
+          "type": "text_array",
+          "pos_x": [
+            540,
+            1765
+          ],
+          "pos_y": [
+            550,
+            550
+          ],
+          "preset": "weather_brown_5",
+          "pattern": [
+            "{_req|data|2|sym_min_temp}",
+            "{_req|data|4|sym_min_temp}"
+          ]
+        },
+        {
+          "description": "min_temp_day4",
+          "type": "text",
+          "pos_x": 1150,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|3|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day3_4",
+          "type": "text_array",
+          "pos_x": [
+            120,
+            1342
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day4",
+          "type": "text",
+          "pos_x": 730,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day3_5",
+          "type": "text_array",
+          "pos_x": [
+            443,
+            1660
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "{_req|data|2|sym_pop}",
+            "{_req|data|4|sym_pop}"
+          ]
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text",
+          "pos_x": 1055,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|3|sym_pop}"
+        }
+      ]
+    },
+    "weather6": {
+      "type": "pillow",
+      "path": "weather/Ort_3day2.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 70,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 710,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "L",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1320,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day_3_4",
+          "type": "text_array",
+          "pos_x": [
+            347,
+            935
+          ],
+          "pos_y": [
+            285,
+            285
+          ],
+          "preset": "weather_brown_2",
+          "pattern": [
+            "{_req|data|2|weekday}",
+            "{_req|data|3|weekday}"
+          ]
+        },
+        {
+          "description": "week_day_5",
+          "type": "text",
+          "pos_x": 1567,
+          "pos_y": 285,
+          "preset": "weather_white_2",
+          "pattern": "{_req|data|4|weekday}"
+        },
+        {
+          "description": "max_temp3-4",
+          "type": "text_array",
+          "pos_x": [
+            462,
+            1080
+          ],
+          "pos_y": [
+            440,
+            440
+          ],
+          "preset": "weather_brown_4",
+          "pattern": [
+            "{_req|data|2|sym_max_temp}",
+            "{_req|data|3|sym_max_temp}"
+          ]
+        },
+        {
+          "description": "max_temp5",
+          "type": "text",
+          "pos_x": 1673,
+          "pos_y": 440,
+          "preset": "weather_white_4",
+          "pattern": "{_req|data|4|sym_max_temp}"
+        },
+        {
+          "description": "min_temp3-4",
+          "type": "text_array",
+          "pos_x": [
+            540,
+            1150
+          ],
+          "pos_y": [
+            550,
+            550
+          ],
+          "preset": "weather_brown_5",
+          "pattern": [
+            "{_req|data|2|sym_min_temp}",
+            "{_req|data|3|sym_min_temp}"
+          ]
+        },
+        {
+          "description": "min_temp5",
+          "type": "text",
+          "pos_x": 1765,
+          "pos_y": 550,
+          "preset": "weather_white_5",
+          "pattern": "{_req|data|4|sym_min_temp}"
+        },
+        {
+          "description": "entry_name_day3-4",
+          "type": "text_array",
+          "pos_x": [
+            120,
+            730
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day5",
+          "type": "text",
+          "pos_x": 1342,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day3-4",
+          "type": "text_array",
+          "pos_x": [
+            443,
+            1055
+          ],
+          "pos_y": [
+            730,
+            730
+          ],
+          "preset": "weather_brown_6",
+          "pattern": [
+            "{_req|data|2|sym_pop}",
+            "{_req|data|3|sym_pop}"
+          ]
+        },
+        {
+          "description": "entry_name_day5",
+          "type": "text",
+          "pos_x": 1660,
+          "pos_y": 730,
+          "preset": "weather_white_6",
+          "pattern": "{_req|data|4|sym_pop}"
+        }
+      ]
+    },
+    "weather7": {
+      "type": "pillow",
+      "path": "weather/Ort_3day3.png",
+      "overlay": [
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 70,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|2|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 710,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|3|weather|icon}.png"
+        },
+        {
+          "description": "icon",
+          "type": "image",
+          "pos_x": 1320,
+          "pos_y": 420,
+          "size_x": 300,
+          "size_y": 300,
+          "color": "RGBA",
+          "path": "weather/icons/{_req|data|4|weather|icon}.png"
+        },
+        {
+          "description": "city_name",
+          "type": "text",
+          "preset": "weather_white_1",
+          "pattern": "{_conf|city_name}"
+        },
+        {
+          "description": "week_day",
+          "type": "text_array",
+          "pos_x": [
+            347,
+            935,
+            1567
+          ],
+          "pos_y": [
+            285,
+            285,
+            285
+          ],
+          "preset": "weather_white_2",
+          "pattern": [
+            "{_req|data|2|weekday}",
+            "{_req|data|3|weekday}",
+            "{_req|data|4|weekday}"
+          ]
+        },
+        {
+          "description": "max_temp",
+          "type": "text_array",
+          "pos_x": [
+            462,
+            1080,
+            1673
+          ],
+          "pos_y": [
+            440,
+            440,
+            440
+          ],
+          "preset": "weather_white_4",
+          "pattern": [
+            "{_req|data|2|sym_max_temp}",
+            "{_req|data|3|sym_max_temp}",
+            "{_req|data|4|sym_max_temp}"
+          ]
+        },
+        {
+          "description": "min_temp",
+          "type": "text_array",
+          "pos_x": [
+            540,
+            1150,
+            1765
+          ],
+          "pos_y": [
+            550,
+            550,
+            550
+          ],
+          "preset": "weather_white_5",
+          "pattern": [
+            "{_req|data|2|sym_min_temp}",
+            "{_req|data|3|sym_min_temp}",
+            "{_req|data|4|sym_min_temp}"
+          ]
+        },
+        {
+          "description": "entry_name_day3-5",
+          "type": "text_array",
+          "pos_x": [
+            120,
+            730,
+            1342
+          ],
+          "pos_y": [
+            730,
+            730,
+            730
+          ],
+          "preset": "weather_white_6",
+          "pattern": "Regen"
+        },
+        {
+          "description": "entry_name_day2",
+          "type": "text_array",
+          "pos_x": [
+            443,
+            1055,
+            1660
+          ],
+          "pos_y": [
+            730,
+            730,
+            730
+          ],
+          "preset": "weather_white_6",
+          "pattern": [
+            "{_req|data|2|sym_pop}",
+            "{_req|data|3|sym_pop}",
+            "{_req|data|4|sym_pop}"
+          ]
+        }
+      ]
+    }
+  },
+  "thumbnail": {
+    "type": "created",
+    "name": "weather3"
+  },
+  "audio": {
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am heutigen {_req|data|0|weekday} {_req|data|0|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|0|str_max_temp} Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Tiefstwerte liegen bei {_req|data|0|str_min_temp} Grad. "
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_app_temp_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|0|str_app_min_temp} und {_req|data|0|str_app_max_temp} Grad. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_pop_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|0|weekday} bei {_req|data|0|str_pop}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_rh_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit bei {_req|data|0|str_rh}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_wind_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht heute Geschwindigkeiten von {_req|data|0|str_wind_spd} und kommt aus {_req|data|0|str_wind_cdir_full}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_2",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|0|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht heute um {_req|data|0|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht heute um {_req|data|0|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|1|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht morgen um {_req|data|1|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht morgen um {_req|data|1|str_sunrise_ts} wieder auf. "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "a2": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am morgigen {_req|data|1|weekday} {_req|data|1|weather|str_code}. Die Höchstwerte erreichen in {_conf|city_name} {_req|data|1|str_max_temp} Grad. "
+          },
+          {
+            "type": "text",
+            "pattern": "Die Tiefstwerte liegen bei {_req|data|1|str_min_temp} Grad. "
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_app_temp_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|1|str_app_min_temp} und {_req|data|1|str_app_max_temp} Grad. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_pop_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|1|weekday} bei {_req|data|1|str_pop}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_rh_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit bei {_req|data|1|str_rh}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_wind_2",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht morgen Geschwindigkeiten von {_req|data|1|str_wind_spd} und kommt aus {_req|data|1|str_wind_cdir_full}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_2",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|1|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht morgen um {_req|data|1|sunset_hour} unter. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht morgen um {_req|data|1|str_sunset_ts} unter. "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "a3": {
+        "parts": [
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_3",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|2|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht am {_req|data|2|weekday} um {_req|data|2|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht am {_req|data|2|weekday} um {_req|data|2|str_sunrise_ts} wieder auf. "
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "pattern": "Am {_req|data|2|weekday} {_req|data|2|weather|str_code} bei Temperaturen von {_req|data|2|str_min_temp} bis {_req|data|2|str_max_temp} Grad. "
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_app_temp_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|2|str_app_min_temp} und {_req|data|2|str_app_max_temp} Grad. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_pop_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|2|weekday} bei {_req|data|2|str_pop}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_rh_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|2|str_rh}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_wind_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|2|str_wind_spd} und kommt aus {_req|data|2|str_wind_cdir_full}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_3",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|2|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|2|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|2|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|3|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|3|weekday} um {_req|data|3|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|3|weekday} um {_req|data|3|str_sunrise_ts} wieder auf. "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "a4": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am {_req|data|3|weekday} {_req|data|3|weather|str_code} bei Temperaturen von {_req|data|3|str_min_temp} bis {_req|data|3|str_max_temp} Grad. "
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_app_temp_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|3|str_app_min_temp} und {_req|data|3|str_app_max_temp} Grad. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_pop_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|3|weekday} bei {_req|data|3|str_pop}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_rh_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|3|str_rh}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_wind_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|3|str_wind_spd} und kommt aus {_req|data|3|str_wind_cdir_full}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_3",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|3|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|3|sunset_hour} unter "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|3|str_sunset_ts} unter "
+                  }
+                ]
+              },
+              {
+                "type": "compare",
+                "value_left": "_req|data|4|sunrise_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|4|weekday} um {_req|data|4|sunrise_hour} wieder auf. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "und geht am {_req|data|4|weekday} um {_req|data|4|str_sunrise_ts} wieder auf. "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "a5": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Am {_req|data|4|weekday} {_req|data|4|weather|str_code} bei Temperaturen von {_req|data|4|str_min_temp} bis {_req|data|4|str_max_temp} Grad. "
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_app_temp_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die gefühlten Temperaturen liegen zwischen {_req|data|4|str_app_min_temp} und {_req|data|4|str_app_max_temp} Grad. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_pop_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die Regenwahrscheinlichkeit liegt am {_req|data|4|weekday} bei {_req|data|4|str_pop}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_rh_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Die relative Luftfeuchtigkeit liegt bei {_req|data|4|str_rh}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_wind_3",
+            "on_true": [
+              {
+                "type": "text",
+                "pattern": "Der Wind erreicht Geschwindigkeiten von {_req|data|4|str_wind_spd} und kommt aus {_req|data|4|str_wind_cdir_full}. "
+              }
+            ]
+          },
+          {
+            "type": "option",
+            "check": "_conf|speech_sun_3",
+            "on_true": [
+              {
+                "type": "compare",
+                "value_left": "_req|data|4|sunset_minute",
+                "value_right": 0,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|4|sunset_hour} unter. "
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Die Sonne geht um {_req|data|4|str_sunset_ts} unter. "
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sequence": {
+    "type": "custom",
+    "pattern": [
+      {
+        "image": "weather3",
+        "time_diff": 3
+      },
+      {
+        "image": "weather1",
+        "time_diff": -3,
+        "audio_l": "a1"
+      },
+      {
+        "image": "weather2",
+        "time_diff": -4,
+        "audio_l": "a2"
+      },
+      {
+        "image": "weather3",
+        "time_diff": 4
+      },
+      {
+        "image": "weather7",
+        "time_diff": 3
+      },
+      {
+        "image": "weather4",
+        "time_diff": -3,
+        "audio_l": "a3"
+      },
+      {
+        "image": "weather5",
+        "audio_l": "a4"
+      },
+      {
+        "image": "weather6",
+        "time_diff": -5,
+        "audio_l": "a5"
+      },
+      {
+        "image": "weather7",
+        "time_diff": 5
+      }
+    ]
+  },
+  "run_config": {
+    "city_name": {
+      "type": "string",
+      "display_name": "Ort",
+      "optional": false,
+      "default_value": "Gießen"
+    },
+    "p_code": {
+      "type": "string",
+      "display_name": "Postleitzahl",
+      "optional": false,
+      "default_value": "35394"
+    },
+    "country": {
+      "type": "enum",
+      "optional": true,
+      "display_name": "Land",
+      "enum_values": [
+        {
+          "display_value": "Belgien",
+          "value": "BE"
+        },
+        {
+          "display_value": "Griechenland",
+          "value": "EL"
+        },
+        {
+          "display_value": "Litauen",
+          "value": "LT"
+        },
+        {
+          "display_value": "Portugal",
+          "value": "PT"
+        },
+        {
+          "display_value": "Bulgarien",
+          "value": "BG"
+        },
+        {
+          "display_value": "Spanien",
+          "value": "ES"
+        },
+        {
+          "display_value": "Luxemburg",
+          "value": "LU"
+        },
+        {
+          "display_value": "Rumänien",
+          "value": "RO"
+        },
+        {
+          "display_value": "Tschechien",
+          "value": "CZ"
+        },
+        {
+          "display_value": "Frankreich",
+          "value": "FR"
+        },
+        {
+          "display_value": "Ungarn",
+          "value": "HU"
+        },
+        {
+          "display_value": "Slowenien",
+          "value": "SI"
+        },
+        {
+          "display_value": "Dänemark",
+          "value": "DK"
+        },
+        {
+          "display_value": "Kroatien",
+          "value": "HR"
+        },
+        {
+          "display_value": "Malta",
+          "value": "MT"
+        },
+        {
+          "display_value": "Slowakei",
+          "value": "SK"
+        },
+        {
+          "display_value": "Deutschland",
+          "value": "DE"
+        },
+        {
+          "display_value": "Italien",
+          "value": "IT"
+        },
+        {
+          "display_value": "Niederlande",
+          "value": "NL"
+        },
+        {
+          "display_value": "Finnland",
+          "value": "FI"
+        },
+        {
+          "display_value": "Estland",
+          "value": "EE"
+        },
+        {
+          "display_value": "Zypern",
+          "value": "CY"
+        },
+        {
+          "display_value": "Österreich",
+          "value": "AT"
+        },
+        {
+          "display_value": "Schweden",
+          "value": "SE"
+        },
+        {
+          "display_value": "Irland",
+          "value": "IE"
+        },
+        {
+          "display_value": "Lettland",
+          "value": "LV"
+        },
+        {
+          "display_value": "Polen",
+          "value": "PL"
+        },
+        {
+          "display_value": "Island",
+          "value": "IS"
+        },
+        {
+          "display_value": "Norwegen",
+          "value": "NO"
+        },
+        {
+          "display_value": "Liechtenstein",
+          "value": "LI"
+        },
+        {
+          "display_value": "Schweiz",
+          "value": "CH"
+        },
+        {
+          "display_value": "Vereinigtes Königreich",
+          "value": "uk"
+        }
+      ],
+      "default_value": "DE"
+    },
+    "read": {
+      "type": "sub_params",
+      "display_name": "Zusätzlich im Video genannte Angaben",
+      "optional": false,
+      "sub_params": {
+        "speech_app_temp_2": {
+          "type": "boolean",
+          "display_name": "Gefühlte Temperaturen (2 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_app_temp_3": {
+          "type": "boolean",
+          "display_name": "Gefühlte Temperaturen (3 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_wind_2": {
+          "type": "boolean",
+          "display_name": "Wind-Daten (2 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_wind_3": {
+          "type": "boolean",
+          "display_name": "Wind-Daten (3 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_rh_2": {
+          "type": "boolean",
+          "display_name": "Relative Luftfeuchtigkeit (2 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_rh_3": {
+          "type": "boolean",
+          "display_name": "Relative Luftfeuchtigkeit (3 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_pop_2": {
+          "type": "boolean",
+          "display_name": "Regenwahrscheinlichkeit (2 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_pop_3": {
+          "type": "boolean",
+          "display_name": "Regenwahrscheinlichkeit (3 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_sun_2": {
+          "type": "boolean",
+          "display_name": "Sonnenuntergang/Sonnenaufgang (2 Tage)",
+          "optional": false,
+          "default_value": true
+        },
+        "speech_sun_3": {
+          "type": "boolean",
+          "display_name": "Sonnenuntergang/Sonnenaufgang (3 Tage)",
+          "optional": false,
+          "default_value": true
+        }
+      }
+    }
+  },
+  "presets": {
+    "weather_white_1": {
+      "anchor_point": "center",
+      "pos_x": 962,
+      "pos_y": 35,
+      "color": "white",
+      "font_size": 120,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_white_2": {
+      "anchor_point": "center",
+      "color": "white",
+      "font_size": 70,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_white_3": {
+      "anchor_point": "center",
+      "color": "white",
+      "font_size": 70,
+      "font": "fonts/Dosis-Medium.ttf"
+    },
+    "weather_white_4": {
+      "anchor_point": "center",
+      "color": "white",
+      "font_size": 110,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_white_5": {
+      "color": "white",
+      "font_size": 80,
+      "font": "fonts/Dosis-Bold.ttf",
+      "anchor_point": "center"
+    },
+    "weather_white_6": {
+      "anchor_point": "left",
+      "color": "white",
+      "font_size": 45,
+      "font": "fonts/Dosis-Regular.ttf"
+    },
+    "weather_brown_2": {
+      "anchor_point": "center",
+      "color": "#949994",
+      "font_size": 70,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_brown_3": {
+      "anchor_point": "center",
+      "color": "#949994",
+      "font_size": 70,
+      "font": "fonts/Dosis-Medium.ttf"
+    },
+    "weather_brown_4": {
+      "anchor_point": "center",
+      "color": "#949994",
+      "font_size": 110,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_brown_5": {
+      "anchor_point": "center",
+      "color": "#949994",
+      "font_size": 80,
+      "font": "fonts/Dosis-Bold.ttf"
+    },
+    "weather_brown_6": {
+      "anchor_point": "left",
+      "color": "#949994",
+      "font_size": 45,
+      "font": "fonts/Dosis-Regular.ttf"
+    }
+  }
+}

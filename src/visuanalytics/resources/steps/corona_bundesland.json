@@ -1,0 +1,542 @@
+{
+  "id": 1,
+  "name": "corona_bundesland",
+  "info": "Der Corona-Bericht enthält die aktuellen Corona Daten zu dem Angegebenem Bundesland.",
+  "precondition": {
+    "type": "date_today",
+    "request": {
+      "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=GEN%20%3D%20%27WETTERAUKREIS%27&outFields=*&outSR=4326&f=json"
+    },
+    "key": "_pre|features|0|attributes|last_update",
+    "key_split": 10,
+    "sleep_time": 600,
+    "exit": 120
+  },
+  "api": {
+    "type": "request_multiple_custom",
+    "use_loop_as_key": true,
+    "steps_value": [
+      "Aktuelle_Daten",
+      "Vorherige_Daten"
+    ],
+    "requests": [
+      {
+        "type": "request",
+        "url_pattern": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=BL%20%3D%20'{_conf|Bundesland}'&outFields=*&outSR=4326&f=json"
+      },
+      {
+        "type": "request_memory",
+        "name": "corona_bundesland",
+        "use_last": 1,
+        "alternative": {
+          "type": "input",
+          "data": [
+            {
+              "attributes": {
+                "cases": -1
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "transform": [
+    {
+      "type": "add_data",
+      "new_keys": [
+        "_req|new_cases_total"
+      ],
+      "data": 0
+    },
+    {
+      "type": "transform_array",
+      "array_key": "_req|Aktuelle_Daten|features",
+      "transform": [
+        {
+          "type": "select",
+          "array_key": "_loop|attributes",
+          "relevant_keys": [
+            "attributes|cases",
+            "attributes|cases_per_100k",
+            "attributes|cases7_per_100k",
+            "attributes|deaths",
+            "attributes|death_rate",
+            "attributes|last_update",
+            "attributes|BEZ",
+            "attributes|GEN"
+          ]
+        },
+        {
+          "type": "copy",
+          "keys": [
+            "_idx"
+          ],
+          "new_keys": [
+            "_temp|loopkey"
+          ]
+        },
+        {
+          "type": "compare",
+          "value_left": "_req|Vorherige_Daten|0|attributes|cases",
+          "value_right": -1,
+          "on_equal": [
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_loop|attributes|dif_cases7_per_100k"
+              ],
+              "data": 0
+            },
+            {
+              "type": "add_data",
+              "new_keys": [
+                "_loop|attributes|new_cases"
+              ],
+              "data": 0
+            }
+          ],
+          "on_not_equal": [
+            {
+              "type": "compare",
+              "value_left": "_req|Vorherige_Daten|{_temp|loopkey}|attributes|GEN",
+              "value_right": "_loop|attributes|GEN",
+              "on_equal": [
+                {
+                  "type": "calculate",
+                  "action": "subtract",
+                  "keys_right": [
+                    "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases7_per_100k"
+                  ],
+                  "keys": [
+                    "_loop|attributes|cases7_per_100k"
+                  ],
+                  "new_keys": [
+                    "_loop|attributes|dif_cases7_per_100k"
+                  ]
+                },
+                {
+                  "type": "calculate",
+                  "action": "subtract",
+                  "keys_right": [
+                    "_req|Vorherige_Daten|{_temp|loopkey}|attributes|cases"
+                  ],
+                  "keys": [
+                    "_loop|attributes|cases"
+                  ],
+                  "new_keys": [
+                    "_loop|attributes|new_cases"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "round",
+          "decimal": 2,
+          "keys": [
+            "_loop|attributes|dif_cases7_per_100k",
+            "_loop|attributes|cases_per_100k",
+            "_loop|attributes|cases7_per_100k",
+            "_loop|attributes|death_rate"
+          ]
+        },
+        {
+          "type": "calculate",
+          "action": "add",
+          "keys": [
+            "_req|new_cases_total"
+          ],
+          "keys_right": [
+            "_loop|attributes|new_cases"
+          ],
+          "new_keys": [
+            "_req|new_cases_total"
+          ]
+        },
+        {
+          "type": "append",
+          "keys": [
+            "_loop|attributes|cases7_per_100k",
+            "_loop|attributes|GEN",
+            "_loop|attributes|dif_cases7_per_100k"
+          ],
+          "new_keys": [
+            "_req|14d_cases7_per_100k",
+            "_req|citys",
+            "_req|dif_cases7_per_100k"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "calculate",
+      "action": "min",
+      "keys": [
+        "_req|dif_cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases7_per_100k"
+      ],
+      "save_idx_to": [
+        "_req|min_dif_cases"
+      ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|min_dif_cases}|attributes|GEN"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases_city"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|min_dif_cases}|attributes|cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|min_dif_cases_value"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "calculate",
+      "action": "max",
+      "keys": [
+        "_req|dif_cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|max_dif_cases7_per_100k"
+      ],
+      "save_idx_to": [
+        "_req|max_dif_cases"
+      ]
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|max_dif_cases}|attributes|GEN"
+      ],
+      "new_keys": [
+        "_req|max_dif_cases_city"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "add_symbol",
+      "keys": [
+        "_req|Aktuelle_Daten|features|{_req|max_dif_cases}|attributes|cases7_per_100k"
+      ],
+      "new_keys": [
+        "_req|max_dif_cases_value"
+      ],
+      "pattern": "{_key}"
+    },
+    {
+      "type": "replace",
+      "keys": [
+        "_req|min_dif_cases_value",
+        "_req|max_dif_cases_value"
+      ],
+      "old_value": ".",
+      "new_value": ",",
+      "count": 1
+    },
+    {
+      "type": "copy",
+      "keys": [
+        "_req|Aktuelle_Daten|features"
+      ],
+      "new_keys": [
+        "_req|Aktuelle_Daten"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
+        "_temp"
+      ]
+    }
+  ],
+  "storing": [
+    {
+      "name": "corona_bundesland",
+      "key": "_req|Aktuelle_Daten",
+      "count": 3
+    }
+  ],
+  "images": {
+    "corona0": {
+      "type": "diagram",
+      "plot_type": "bar_chart",
+      "data": "{_req|14d_cases7_per_100k}",
+      "label": "{_req|citys}",
+      "use+-_label": true,
+      "label_data": "{_req|dif_cases7_per_100k}",
+      "plot_size_x": 16,
+      "plot_size_y": 8,
+      "label_rotation": 0,
+      "axis_depth": 2,
+      "label_colour": {
+        "r": 0.02,
+        "g": 0.36,
+        "b": 0.49,
+        "t": 1
+      },
+      "sorted": true,
+      "grid_axis": "x",
+      "use_special_x_labels": true,
+      "x_label_hop": [
+        {
+          "value": 0,
+          "step": 5
+        },
+        {
+          "value": 80,
+          "step": 10
+        },
+        {
+          "value": 160,
+          "step": 20
+        },
+        {
+          "value": 320,
+          "step": 50
+        }
+      ],
+      "x_labels_more": [
+        {
+          "value": 0,
+          "amount": 1
+        },
+        {
+          "value": 50,
+          "amount": 2
+        },
+        {
+          "value": 60,
+          "amount": 3
+        },
+        {
+          "value": 80,
+          "amount": 2
+        },
+        {
+          "value": 120,
+          "amount": 3
+        },
+        {
+          "value": 160,
+          "amount": 2
+        },
+        {
+          "value": 230,
+          "amount": 3
+        },
+        {
+          "value": 320,
+          "amount": 2
+        },
+        {
+          "value": 500,
+          "amount": 3
+        },
+        {
+          "value": 1000,
+          "amount": 4
+        }
+      ],
+      "label_fontsize": 13,
+      "label_append": [
+        "Kassel"
+      ],
+      "label_append_value": "({_req|Aktuelle_Daten|_idx|attributes|BEZ})",
+      "bar_colors": {
+        "default": "#accfe9",
+        "list": [
+          {
+            "number": 10,
+            "color": "#528ebc"
+          },
+          {
+            "number": 20,
+            "color": "#d4a129"
+          },
+          {
+            "number": 35,
+            "color": "#ee7401"
+          },
+          {
+            "number": 50,
+            "color": "#cb1a14"
+          },
+          {
+            "number": 75,
+            "color": "#a20500"
+          },
+          {
+            "number": 150,
+            "color": "#7f0000"
+          },
+          {
+            "number": 250,
+            "color": "#520000"
+          }
+        ]
+      }
+    },
+    "corona1": {
+      "type": "pillow",
+      "path": "corona/Corona_Bundesland.png",
+      "overlay": [
+        {
+          "description": "Überschrift",
+          "type": "text",
+          "anchor_point": "center",
+          "pos_x": 960,
+          "pos_y": 20,
+          "color": "black",
+          "font_size": 110,
+          "font": "fonts/Dosis-Bold.ttf",
+          "pattern": "{_conf|Bundesland}"
+        },
+        {
+          "description": "Diagram",
+          "type": "image",
+          "pos_x": 110,
+          "pos_y": 200,
+          "color": "RGBA",
+          "image_name": "corona0",
+          "transparency": true
+        }
+      ]
+    }
+  },
+  "thumbnail": {
+  },
+  "audio": {
+    "audios": {
+      "a1": {
+        "parts": [
+          {
+            "type": "text",
+            "pattern": "Hier ist die Inzidenzrate für die Regionen in {_conf|Bundesland}."
+          },
+          {
+            "type": "compare",
+            "value_left": "_req|max_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Gestern gab es keine positiven Corona-Fälle in {_conf|Bundesland}."
+              }
+            ],
+            "on_not_equal": [
+              {
+                "type": "compare",
+                "value_left": "_req|max_dif_cases7_per_100k",
+                "value_right": 1,
+                "on_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Insgesamt gab es gestern einen neuen positiven Corona-Fall."
+                  }
+                ],
+                "on_not_equal": [
+                  {
+                    "type": "text",
+                    "pattern": "Insgesamt gab es gestern \"{_req|new_cases_total}\" neue positive Corona-Fälle. "
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "compare",
+            "value_left": "_req|max_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Es gab in keiner Region einen Anstieg der Inzidenzrate."
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "text",
+                "pattern": "Am stärksten ist die Inzidenzrate in {_req|max_dif_cases_city} gestiegen, sie liegt bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
+              }
+            ],
+            "on_lower": [
+              {
+                "type": "text",
+                "pattern": "In geringste Veränderung der Inzidenzrate seit dem Vortag liegt in {_req|max_dif_cases_city}. Hier liegt sie bei {_req|max_dif_cases_value} Fällen pro 100000 Einwohnern. "
+              }
+            ]
+          },
+          {
+            "type": "compare",
+            "value_left": "_req|min_dif_cases7_per_100k",
+            "value_right": 0,
+            "on_equal": [
+              {
+                "type": "text",
+                "pattern": "Die Inzidenzrate hat in keiner Region abgenommen."
+              }
+            ],
+            "on_higher": [
+              {
+                "type": "text",
+                "pattern": "Der geringste Zuwachs der Inzidenzrate liegt in {_req|min_dif_cases_city}, dort liegt sie bei {_req|min_dif_cases_value} Fällen pro 100000 Einwohnern. "
+              }
+            ],
+            "on_lower": [
+              {
+                "type": "text",
+                "pattern": "Die Inzidenzrate ist in {_req|min_dif_cases_city} am stärksten gesunken. Hier liegt sie bei {_req|min_dif_cases_value} Fällen pro 100000 Einwohnern. "
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sequence": {
+    "type": "custom",
+    "audio_breaks": true,
+    "pattern": [
+      {
+        "image": "corona1",
+        "audio_l": "a1",
+        "time_diff": 6
+      }
+    ]
+  },
+  "run_config": {
+    "Bundesland": {
+      "type": "string",
+      "display_name": "Bundesland",
+      "optional": false,
+      "default_value": "Hessen"
+    },
+    "marked_city": {
+      "type": "string",
+      "display_name": "markierte Stadt",
+      "optional": true
+    }
+  },
+  "presets": {
+    "corona_1": {
+      "anchor_point": "left",
+      "color": "black",
+      "font_size": 70,
+      "font": "fonts/Dosis-Medium.ttf"
+    }
+  }
+}
