@@ -116,8 +116,11 @@ def delete(values: dict, data: StepData):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    for idx, key in data.loop_key(values["keys"], values):
-        data.remove_data(key, values)
+    try:
+        for idx, key in data.loop_key(values["keys"], values):
+            data.remove_data(key, values)
+    except:
+        pass
 
 
 @register_transform

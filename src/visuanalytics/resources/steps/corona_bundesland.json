@@ -267,7 +267,12 @@
     {
       "type": "delete",
       "keys": [
-        "_temp",
+        "_temp"
+      ]
+    },
+    {
+      "type": "delete",
+      "keys": [
         "_pre"
       ]
     }
