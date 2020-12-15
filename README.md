@@ -81,7 +81,7 @@ _In den `src`-Ordner wechseln_: `cd src`
 
 _Pakete installieren_:
 
-- `pip install -r visuanalytics/requiraments.txt`
+- `pip install -r visuanalytics/requirements.txt`
 
 - Konfigurations-Dateien anlegen bzw. anpassen (diese werden unter [Konfiguration](#Configuration) beschrieben):
   - Die Datei `config.json` muss sich im Ordner `visuanalytics/instance` befinden.
