@@ -158,6 +158,26 @@
         "marked_city": "Gießen",
         "keep_count": 3
       }
+    },
+    {
+      "name": "Wetter Simpel Giessen",
+      "id": 1,
+      "steps": "weather_simpel",
+      "schedule": {
+        "times": [
+          "16:29"
+        ],
+        "daily": true,
+        "removal_time": {
+          "days": 7,
+          "hours": 10
+        }
+      },
+      "config": {
+        "thumbnail": false,
+        "keep_count": 3,
+        "p_code": "35398"
+      }
     }
   ]
 }
