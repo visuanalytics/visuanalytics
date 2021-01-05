@@ -11,6 +11,7 @@ from gtts import gTTS
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.audio.parts import part
+from visuanalytics.analytics.sequence.sequence import _audios_to_audio
 from visuanalytics.analytics.util.step_errors import raise_step_error, AudioError, InvalidContentTypeError
 from visuanalytics.analytics.util.step_pattern import data_get_pattern
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
@@ -68,21 +69,20 @@ def default(values: dict, data: StepData, config: dict):
     :return:
     """
     for key in values:
+
         text = part.audio_parts(values[key]["parts"], data)
 
-        sub_pairs = data.deep_format(config.get("sub_pairs", None), values=values)
+        if text[1]:
+            values[key] = _text_to_audio(data, values, text[0], config)
+        else:
+            audio_list = []
+            for item in values[key]["parts"]:
+                if item["type"] == "text":
+                    audio_list.append(_text_to_audio(data, values, item["pattern"], config))
+                if item["type"] == "file":
+                    audio_list.append(resources.get_audio_path(item["path"]))
 
-        if sub_pairs:
-            for key in sub_pairs:
-                value = data.get_data(key, values)
-                gtts.tokenizer.symbols.SUB_PAIRS.append((key, value))
-
-        tts = gTTS(text, lang=data.format(config["lang"]))
-
-        file_path = resources.new_temp_resource_path(data.data["_pipe_id"], data.format(config["format"]))
-        tts.save(file_path)
-
-        values[key] = file_path
+            values[key] = _audios_to_audio(audio_list, data)
 
 
 @register_generate_audio
@@ -101,17 +101,48 @@ def custom(values: dict, data: StepData, config: dict):
     for key in values:
         text = part.audio_parts(values[key]["parts"], data)
 
-        data.data["_audio"]["text"] = text
-        generate = config["generate"]
-        generate["include_headers"] = True
-        api_request(generate, data, "audio", "_audio|gen", True)
+        if text[1]:
 
-        values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
+            data.data["_audio"]["text"] = text[0]
+            generate = config["generate"]
+            generate["include_headers"] = True
+            api_request(generate, data, "audio", "_audio|gen", True)
+
+            values[key] = _save_audio(data.get_data("_audio|gen", values), data, config)
+
+        else:
+            audio_list = []
+            for item in values[key]["parts"]:
+                if item["type"] == "text":
+                    data.data["_audio"]["text"] = data.format(item["pattern"], values)
+                    generate = config["generate"]
+                    generate["include_headers"] = True
+                    api_request(generate, data, "audio", "_audio|gen", True)
+                    audio_list.append(_save_audio(data.get_data("_audio|gen", values), data, config))
+                if item["type"] == "file":
+                    audio_list.append(resources.get_audio_path(item["path"]))
+
+            values[key] = _audios_to_audio(audio_list, data)
 
 
 def _prepare_custom(values: dict, data: StepData, config: dict):
     if values is not None:
         api_request(values, data, "audio", "_audio|pre", True)
+
+
+def _text_to_audio(data: StepData, values: dict, text: str, config: dict):
+    sub_pairs = data.deep_format(config.get("sub_pairs", None), values=values)
+
+    if sub_pairs:
+        for key in sub_pairs:
+            value = data.get_data(key, values)
+            gtts.tokenizer.symbols.SUB_PAIRS.append((key, value))
+
+    tts = gTTS(data.format(text, values), lang=data.format(config["lang"]))
+
+    file_path = resources.new_temp_resource_path(data.data["_pipe_id"], data.format(config["format"]))
+    tts.save(file_path)
+    return file_path
 
 
 def _save_audio(response, data: StepData, config: dict):
