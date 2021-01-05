@@ -20,6 +20,12 @@ Name des Bilderordners.
 Wird beim Starten mit dem Wert aus der Konfigurationsdatei initialisiert.
 """
 
+AUDIO_LOCATION = "audio"
+"""
+Name des Audioordners.
+Wird beim Starten mit dem Wert aus der Konfigurationsdatei initialisiert.
+"""
+
 TEMP_LOCATION = "temp"
 """ 
 Name des Ordners für temporäre Dateien.
@@ -76,6 +82,17 @@ def get_image_path(path: str):
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(IMAGES_LOCATION, path))
+
+
+def get_audio_path(path: str):
+    """Erstellt einen absoluten Pfad zu der übergebenen Image-Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources`-Ordner.
+    :return: Absoluter Pfad zur übergebenen Ressource.
+    """
+    return get_resource_path(os.path.join(AUDIO_LOCATION, path))
 
 
 def get_temp_resource_path(path: str, pipeline_id: str):
