@@ -159,15 +159,7 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
             subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
 
         else:
-            with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
-                for i in audios:
-                    file.write("file 'file:" + i + "'\n")
-            output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
-            args1 = ["ffmpeg", "-loglevel", "8", "-f", "concat", "-safe", "0", "-i",
-                     resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
-                     "-c", "copy",
-                     output]
-            subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+            output = _audios_to_audio(audios, step_data)
 
         # Generate video
 
@@ -209,6 +201,19 @@ def _generate(images, audios, audio_l, step_data: StepData, values: dict):
 
     except subprocess.CalledProcessError as e:
         raise FFmpegError(e.returncode, e.output.decode("utf-8")) from e
+
+
+def _audios_to_audio(audios, step_data: StepData):
+    with open(resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]), "w") as file:
+        for i in audios:
+            file.write("file 'file:" + i + "'\n")
+    output = resources.new_temp_resource_path(step_data.data["_pipe_id"], "mp3")
+    args1 = ["ffmpeg", "-loglevel", "8", "-f", "concat", "-safe", "0", "-i",
+             resources.get_temp_resource_path("input.txt", step_data.data["_pipe_id"]),
+             "-c", "copy",
+             output]
+    subprocess.run(args1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
+    return output
 
 
 def _combine(sequence_out: list, step_data: StepData, values: dict):

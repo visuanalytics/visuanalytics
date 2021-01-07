@@ -13,7 +13,13 @@ AUDIO_PARTS_TYPES = {}
 
 @raise_step_error(AudioError)
 def audio_parts(values, data):
-    return "".join([f"{get_type_func(value, AUDIO_PARTS_TYPES)(value, data)} " for value in values])
+    return_string = ""
+    for value in values:
+        return_value = get_type_func(value, AUDIO_PARTS_TYPES)(value, data)
+        if not return_value[1]:
+            return "", False
+        return_string = return_string + return_value[0]
+    return return_string, True
 
 
 def register_audio_parts(func):
@@ -27,6 +33,18 @@ def register_audio_parts(func):
 
 
 @register_audio_parts
+def file(values, data):
+    """Gibt den Text unter pattern aus.
+
+    Gibt den Text unter pattern aus. Wenn dieser Ersetzungen erwartet, werden diese durchgeführt.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    return "", False
+
+
+@register_audio_parts
 def text(values, data):
     """Gibt den Text unter pattern aus.
 
@@ -35,7 +53,7 @@ def text(values, data):
     :param values: Werte aus der JSON-Datei
     :param data: Daten aus der API
     """
-    return data.format(values["pattern"], values)
+    return data.format(values["pattern"], values), True
 
 
 @register_audio_parts
