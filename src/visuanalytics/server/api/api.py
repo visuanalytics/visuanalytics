@@ -125,9 +125,9 @@ def add_topic():
 @api.route("/audio", methods=["PUT"])
 def add_topic():
     """
-    Endpunkt `/image`.
+    Endpunkt `/audio`.
 
-    Route zum hinzufügen eines Bildes für ein Thema.
+    Route zum hinzufügen eines Audiostückes.
     """
     try:
         if "audio" not in request.files:
