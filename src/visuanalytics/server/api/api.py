@@ -67,7 +67,7 @@ def add_topic():
         file_path = queries._get_steps_path(filename)
 
         if path.exists(file_path):
-            err = flask.jsonify({"err_msg": "Invalid File name"})
+            err = flask.jsonify({"err_msg": "Invalid File Name (File maybe exists already)"})
             return err, 400
 
         queries.add_topic(name, filename)
@@ -115,7 +115,7 @@ def add_image():
         file_path = queries._get_image_path(name, folder, file_extension)
 
         if path.exists(file_path):
-            err = flask.jsonify({"err_msg": "Invalid Image Name"})
+            err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
         image.save(file_path)
@@ -156,7 +156,7 @@ def add_audio():
         file_path = queries._get_audio_path(name)
 
         if path.exists(file_path):
-            err = flask.jsonify({"err_msg": "Invalid Audio File Name"})
+            err = flask.jsonify({"err_msg": "Invalid Audio File Name (Audio File maybe exists already)"})
             return err, 400
 
         audio.save(file_path)
