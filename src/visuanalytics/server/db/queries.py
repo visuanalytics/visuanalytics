@@ -4,8 +4,11 @@ import os
 import humps
 
 from visuanalytics.server.db import db
+from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL
 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
+IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
+AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
 
 
 def get_topic_names():
@@ -14,11 +17,13 @@ def get_topic_names():
     return [{"topicId": row["steps_id"], "topicName": row["steps_name"],
              "topicInfo": _get_topic_info(row["json_file_name"])} for row in res]
 
+
 def get_topic_file(topic_id):
     con = db.open_con_f()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
-    
-    return _get_file_path(res["json_file_name"]) if res is not None else None
+
+    return _get_steps_path(res["json_file_name"]) if res is not None else None
+
 
 def delete_topic(topic_id):
     con = db.open_con_f()
@@ -29,10 +34,11 @@ def delete_topic(topic_id):
     if (res.rowcount > 0):
         os.remove(file_path)
 
+
 def add_topic(name, file_name):
     con = db.open_con_f()
     con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
-                        [name, file_name])
+                [name, file_name])
     con.commit()
 
 
@@ -244,17 +250,32 @@ def _row_to_job(row):
         "topicValues": topic_values
     }
 
-def _get_file_path(json_file_name: str):
+
+def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
+
+def _get_image_path(json_file_name: str, folder: str, image_type: str):
+    if folder != '':
+        os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
+        return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
+    else:
+        return os.path.join(IMAGE_LOCATION, json_file_name) + "." + image_type
+
+
+def _get_audio_path(json_file_name: str):
+    return os.path.join(AUDIO_LOCATION, json_file_name) + ".mp3"
+
+
 def _get_topic_info(json_file_name: str):
-    try: 
+    try:
         return _get_topic_steps(json_file_name).get("info", "")
     except Exception:
         return ""
 
+
 def _get_topic_steps(json_file_name: str):
-    path_to_json = _get_file_path(json_file_name)
+    path_to_json = _get_steps_path(json_file_name)
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
 

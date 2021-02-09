@@ -85,7 +85,7 @@ def get_image_path(path: str):
 
 
 def get_audio_path(path: str):
-    """Erstellt einen absoluten Pfad zu der übergebenen Image-Ressource.
+    """Erstellt einen absoluten Pfad zu der übergebenen Audio-Ressource.
 
     Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
 

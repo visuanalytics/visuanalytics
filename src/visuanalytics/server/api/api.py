@@ -59,19 +59,107 @@ def add_topic():
             err = flask.jsonify({"err_msg": "Missing File"})
             return err, 400
 
-        if not _check_file_extention(file.filename):
+        if not _check_json_extention(file.filename):
             err = flask.jsonify({"err_msg": "Invalid file extention"})
             return err, 400
 
         filename = secure_filename(file.filename).rsplit(".", 1)[0]
-        file_path = queries._get_file_path(filename)
+        file_path = queries._get_steps_path(filename)
 
         if path.exists(file_path):
-            err = flask.jsonify({"err_msg": "Invalid File name"})
+            err = flask.jsonify({"err_msg": "Invalid File Name (File maybe exists already)"})
             return err, 400
 
         queries.add_topic(name, filename)
-        file.save(queries._get_file_path(filename))
+        file.save(queries._get_steps_path(filename))
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 500
+
+
+@api.route("/image", methods=["PUT"])
+def add_image():
+    """
+    Endpunkt `/image`.
+
+    Route zum hinzufügen eines Bildes für ein Thema.
+    """
+    try:
+        if "image" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing Image"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Image Name"})
+            return err, 400
+
+        if "folder" in request.form:
+            folder = request.form["folder"]
+        else:
+            folder = ''
+
+        image = request.files["image"]
+        name = request.form["name"]
+
+        if image.filename == '':
+            err = flask.jsonify({"err_msg": "Missing Image"})
+            return err, 400
+
+        if not _check_image_extention(image.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extension"})
+            return err, 400
+
+        file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
+        file_path = queries._get_image_path(name, folder, file_extension)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
+            return err, 400
+
+        image.save(file_path)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 500
+
+
+@api.route("/audio", methods=["PUT"])
+def add_audio():
+    """
+    Endpunkt `/audio`.
+
+    Route zum hinzufügen eines Audiostückes.
+    """
+    try:
+        if "audio" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing Audio File"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Audio File Name"})
+            return err, 400
+
+        audio = request.files["audio"]
+        name = request.form["name"]
+
+        if audio.filename == '':
+            err = flask.jsonify({"err_msg": "Missing Audio Name"})
+            return err, 400
+
+        if not _check_mp3_extention(audio.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extension"})
+            return err, 400
+
+        file_path = queries._get_audio_path(name)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid Audio File Name (Audio File maybe exists already)"})
+            return err, 400
+
+        audio.save(file_path)
         return "", 204
     except Exception:
         logger.exception("An error occurred: ")
@@ -223,5 +311,15 @@ def logs():
         return err, 400
 
 
-def _check_file_extention(filename):
+def _check_json_extention(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() == "json"
+
+
+def _check_mp3_extention(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() == "mp3"
+
+
+def _check_image_extention(filename):
+    return "." in filename and (
+            filename.rsplit(".", 1)[1].lower() == "png" or filename.rsplit(".", 1)[1].lower() == "jpeg" or
+            filename.rsplit(".", 1)[1].lower() == "jpg")
