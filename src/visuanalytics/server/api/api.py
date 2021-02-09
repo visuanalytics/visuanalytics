@@ -95,9 +95,13 @@ def add_image():
             err = flask.jsonify({"err_msg": "Missing Image Name"})
             return err, 400
 
+        if "folder" in request.form:
+            folder = request.form["folder"]
+        else:
+            folder = ''
+
         image = request.files["image"]
         name = request.form["name"]
-        folder = request.form["folder"]
 
         if image.filename == '':
             err = flask.jsonify({"err_msg": "Missing Image"})
@@ -317,4 +321,5 @@ def _check_mp3_extention(filename):
 
 def _check_image_extention(filename):
     return "." in filename and (
-            filename.rsplit(".", 1)[1].lower() == "png" or filename.rsplit(".", 1)[1].lower() == "jpeg")
+            filename.rsplit(".", 1)[1].lower() == "png" or filename.rsplit(".", 1)[1].lower() == "jpeg" or
+            filename.rsplit(".", 1)[1].lower() == "jpg")

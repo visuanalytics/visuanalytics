@@ -256,7 +256,8 @@ def _get_steps_path(json_file_name: str):
 
 
 def _get_image_path(json_file_name: str, folder: str, image_type: str):
-    if folder == '':
+    if folder != '':
+        os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
         return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
     else:
         return os.path.join(IMAGE_LOCATION, json_file_name) + "." + image_type
