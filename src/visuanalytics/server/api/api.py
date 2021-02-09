@@ -80,7 +80,7 @@ def add_topic():
 
 
 @api.route("/image", methods=["PUT"])
-def add_topic():
+def add_image():
     """
     Endpunkt `/image`.
 
@@ -123,7 +123,7 @@ def add_topic():
 
 
 @api.route("/audio", methods=["PUT"])
-def add_topic():
+def add_audio():
     """
     Endpunkt `/audio`.
 
