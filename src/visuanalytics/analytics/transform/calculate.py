@@ -139,6 +139,8 @@ def _bi_calculate(values: dict, data: StepData, op):
             # If decimal is present round
             decimal = data.get_data(decimal, values, numbers.Number)
             res = round(res, decimal)
+            if decimal == 0:
+                res = int(res)
 
         data.insert_data(new_key, res, values)
 
