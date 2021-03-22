@@ -27,6 +27,7 @@
       "Regensburg"
     ],
     "use_loop_as_key": true,
+    "timer_between_requests": 0.5,
     "url_pattern": "https://api.weatherbit.io/v2.0/forecast/daily",
     "params": {
       "city": "{_loop}",

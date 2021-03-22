@@ -3,6 +3,7 @@ Modul, welches die Funktionen bereitstellt, welche für API-Requests benötigt w
 """
 import json
 import logging
+import time
 
 import requests
 import xmltodict
@@ -113,6 +114,9 @@ def request_multiple(values: dict, data: StepData, name: str, save_key, ignore_t
         data.insert_data(save_key, {}, values)
         for _, key in data.loop_array(values["steps_value"], values):
             fetch(values, data, f"{save_key}|{key}")
+            waiting_time = data.get_data(values.get("timer_between_requests", 0.0), values, float)
+            if waiting_time > 0.0:
+                time.sleep(waiting_time)
     else:
         data.insert_data(save_key, [None] * len(values["steps_value"]), values)
         for idx, _ in data.loop_array(values["steps_value"], values):
