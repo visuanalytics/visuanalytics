@@ -85,7 +85,7 @@
           ],
           "action": "multiply",
           "value_right": 3.6,
-          "decimal": 2
+          "decimal": 0
         },
         {
           "type": "replace",
