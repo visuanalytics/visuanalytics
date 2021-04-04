@@ -40,6 +40,15 @@ COPY --chown=appuser frontend/public/visuanalytics ./visuanalytics/server/static
 # Create instance Folder
 RUN mkdir /home/appuser/visuanalytics/instance
 
+# Create volumes
+VOLUME /home/appuser/visuanalytics/out
+VOLUME /home/appuser/visuanalytics/instance/config.json
+VOLUME /home/appuser/visuanalytics/resources/jobs.json
+VOLUME /home/appuser/visuanalytics/instance/visuanalytics.db
+VOLUME /home/appuser/visuanalytics/audio
+VOLUME /home/appuser/visuanalytics/images
+VOLUME /home/appuser/visuanalytics/resources/memory
+
 # Set FONTCONFIG_PATH
 ENV FONTCONFIG_PATH=/etc/fonts
 
