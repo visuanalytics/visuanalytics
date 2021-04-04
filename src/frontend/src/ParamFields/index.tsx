@@ -7,16 +7,16 @@ import { Param, ParamValues } from '../util/param';
 import { BooleanParam } from './BooleanParam'
 
 
-interface ParamFieldProps extends ParamField {
+interface ParamFieldProps extends ParamFieldType {
     param: Param,
     hasNext: boolean;
 }
 
-interface ParamFieldsProps extends ParamField {
+interface ParamFieldsProps extends ParamFieldType {
     params: Param[] | undefined;
 }
 
-interface ParamField {
+interface ParamFieldType {
     selectParamHandler: (_s: string, _a: any, _i: number) => void,
     disabled: boolean,
     required: boolean,
