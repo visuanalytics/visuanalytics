@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  visuanalytics:
+    build: ./src
+    restart: always
+    ports:
+      - 5000:8000
+    volumes:
+      - ./src/visuanalytics/out:/out
+      - ./src/visuanalytics/instance:/home/appuser/visuanalytics/instance
+      - ./src/visuanalytics/resources:/home/appuser/visuanalytics/resources

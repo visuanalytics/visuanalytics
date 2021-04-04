@@ -1,11 +1,10 @@
 # Build React Frontend
-FROM node:14.5.0-buster-slim as build
+FROM node:14.15.1-buster-slim as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY frontend/package.json ./
 COPY frontend/package-lock.json ./
 RUN npm ci --silent
-RUN npm install react-scripts@3.4.1 -g --silent
 COPY frontend/. ./
 RUN npm run build
 
@@ -55,6 +54,14 @@ RUN rm ./visuanalytics/server/static/index.html
 
 # Create instance Folder
 RUN mkdir /home/appuser/visuanalytics/instance
+
+# Create volumes
+VOLUME /home/appuser/visuanalytics/out
+VOLUME /home/appuser/visuanalytics/instance
+VOLUME /home/appuser/visuanalytics/resources/audio
+VOLUME /home/appuser/visuanalytics/resources/images
+VOLUME /home/appuser/visuanalytics/resources/memory
+
 
 # Set FONTCONFIG_PATH
 ENV FONTCONFIG_PATH=/etc/fonts
