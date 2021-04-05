@@ -12,8 +12,8 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     data = list(map(float, data))
     days = []
     labels = None
-    if values.get("label_data", None) is not None:
-        labels = step_data.format(values["label_data"])
+    if values.get("bar_label", None) is not None:
+        labels = step_data.format(values["bar_label"])
         labels = labels[1:len(labels) - 1].split(", ")
         labels = list(map(str, labels))
     if step_data.format(values.get("label_use_date", False)):
@@ -61,29 +61,25 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
         ax.invert_yaxis()  # labels von oben nach unten
 
         bar_list = plt.barh(np.arange(len(days)), data,
-                            color=(step_data.format(values["label_colour"].get("r", 0)),
-                                   step_data.format(values["label_colour"].get("g", 0)),
-                                   step_data.format(values["label_colour"].get("b", 0)),
-                                   step_data.format(values["label_colour"].get("t", 1))))
+                            color=(step_data.format(values["label_color"].get("r", 0)),
+                                   step_data.format(values["label_color"].get("g", 0)),
+                                   step_data.format(values["label_color"].get("b", 0)),
+                                   step_data.format(values["label_color"].get("t", 1))))
 
     elif step_data.format(values["plot_type"]) == "column_chart":
         bar_list = plt.bar(days, data,
-                           color=(step_data.format(values["label_colour"].get("r", 0)),
-                                  step_data.format(values["label_colour"].get("g", 0)),
-                                  step_data.format(values["label_colour"].get("b", 0)),
-                                  step_data.format(values["label_colour"].get("t", 1))))
+                           color=(step_data.format(values["label_color"].get("r", 0)),
+                                  step_data.format(values["label_color"].get("g", 0)),
+                                  step_data.format(values["label_color"].get("b", 0)),
+                                  step_data.format(values["label_color"].get("t", 1))))
     else:
         raise
-
-    if step_data.format(values.get("use_special_x_labels", False)):
-        current_value = step_data.format(values.get("x_label_start", 0))
+    if step_data.format(values.get("use_extended_labels", False)):
+        current_value = 0
         x_label_list = [current_value]
         max_value = max(data)
-        if values.get("x_label_max_value", None) is not None:
-            max_value = step_data.format(values["x_label_max_value"])
-
         hop_value = 10
-        hop_values = values.get("x_label_hop", None)
+        hop_values = values.get("extended_labels_map", None)
         if hop_values is not None:
             for entry in hop_values:
                 if entry["value"] < max_value:
@@ -92,7 +88,7 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
             current_value = current_value + hop_value
             x_label_list.append(current_value)
         counter = 0
-        counters = values.get("x_labels_more", None)
+        counters = values.get("extended_labels_append", None)
         if counters is not None:
             for entry in counters:
                 if entry["value"] < max_value:
@@ -115,10 +111,10 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
     plt.xticks(rotation=step_data.format(values.get("label_rotation", 0)))
     plt.tight_layout()
 
-    if values.get("label_data", None) is not None:
+    if values.get("bar_label", None) is not None:
         rects = ax.patches
         for rect, label, data, days in zip(rects, labels, data, days):
-            if step_data.format(values.get("use+-_label", False)):
+            if step_data.format(values.get("show_bar_label_sign", False)):
                 if label[0] != '-' and float(label) != 0.0:
                     label = "+" + label
                 if float(label) == 0.0:
