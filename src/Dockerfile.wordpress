@@ -42,11 +42,9 @@ RUN mkdir /home/appuser/visuanalytics/instance
 
 # Create volumes
 VOLUME /home/appuser/visuanalytics/out
-VOLUME /home/appuser/visuanalytics/instance/config.json
-VOLUME /home/appuser/visuanalytics/resources/jobs.json
-VOLUME /home/appuser/visuanalytics/instance/visuanalytics.db
-VOLUME /home/appuser/visuanalytics/audio
-VOLUME /home/appuser/visuanalytics/images
+VOLUME /home/appuser/visuanalytics/instance
+VOLUME /home/appuser/visuanalytics/resources/audio
+VOLUME /home/appuser/visuanalytics/resources/images
 VOLUME /home/appuser/visuanalytics/resources/memory
 
 # Set FONTCONFIG_PATH

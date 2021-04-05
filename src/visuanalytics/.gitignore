@@ -162,7 +162,8 @@ docs/modules
 # Pyre type checker
 
 # End of https://www.gitignore.io/api/flask,python
-/resources/temp/
+/resources/temp/*
+!/resources/temp/.gitkeep
 /resources/memory/
 server/static
 server/templates
