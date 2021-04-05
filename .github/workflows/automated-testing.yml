@@ -25,6 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Frontend tests
 
+    defaults:
+      run:
+        working-directory: src/frontend
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
