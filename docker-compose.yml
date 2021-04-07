@@ -7,6 +7,6 @@ services:
     ports:
       - 5000:8000
     volumes:
-      - ./src/visuanalytics/out:/out
+      - ./src/visuanalytics/out:/home/appuser/visuanalytics/out
       - ./src/visuanalytics/instance:/home/appuser/visuanalytics/instance
       - ./src/visuanalytics/resources:/home/appuser/visuanalytics/resources
