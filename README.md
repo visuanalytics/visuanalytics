@@ -372,4 +372,4 @@ _Benötigte Software_:
 1. in den Dokumentationsordner wechseln: `cd Docs`
 2. Dokumentation generieren: `make html`
 
-Die Dokumentation befindet sich dann im Ordner `_build/html`.
+Die Dokumentation befindet sich dann im Ordner `_build/html`. 
