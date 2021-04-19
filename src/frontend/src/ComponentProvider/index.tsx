@@ -6,7 +6,7 @@ import {
 } from "../util/mainComponents";
 
 // Component das zuerst Angezeigt wird
-const startComponent: ComponentKey = "home";
+const startComponent: ComponentKey = "createInfoProvider";
 
 type ComponentContextType = {
   current: MainComponent;
