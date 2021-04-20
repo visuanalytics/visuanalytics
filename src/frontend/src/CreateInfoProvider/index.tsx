@@ -21,6 +21,7 @@ import { BasicSettings } from "./BasicSettings";
 import {useStyles} from "../Home/style";
 import JobCreate from "../JobCreate";
 import { useCallFetch } from "../Hooks/useCallFetch";
+import {TypeSelection} from "./typeSelection";
 
 /*
 Wrapper component for the creation of a new info-provider.
@@ -29,7 +30,7 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider = () => {
     //const classes = useStyles();
     //the current step of the creation process, numbered by 1 to 5
-    const [step, setStep] = React.useState(2);
+    const [step, setStep] = React.useState(1);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
 
@@ -51,7 +52,7 @@ export const CreateInfoProvider = () => {
     }
 
     const handleBack = () => {
-        //if step==1, return to dashboard context
+        //TODO: if step==1, return to dashboard context
         setStep(step-1)
     }
 
@@ -61,7 +62,10 @@ export const CreateInfoProvider = () => {
             case 1:
                 return (
                     <div>
-                        this is step 1
+                        <TypeSelection
+                            continueHandler={handleContinue}
+                            backHandler={handleBack}
+                        />
                     </div>
                 );
             case 2:
