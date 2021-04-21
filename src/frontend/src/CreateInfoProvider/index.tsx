@@ -21,7 +21,9 @@ import { BasicSettings } from "./BasicSettings";
 import {useStyles} from "../Home/style";
 import JobCreate from "../JobCreate";
 import { useCallFetch } from "../Hooks/useCallFetch";
-import {TypeSelection} from "./typeSelection";
+import { TypeSelection } from "./TypeSelection";
+import { HistoryScheduleSelection } from "./HistoryScheduleSelection";
+
 
 /*
 Wrapper component for the creation of a new info-provider.
@@ -30,7 +32,7 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider = () => {
     //const classes = useStyles();
     //the current step of the creation process, numbered by 1 to 5
-    const [step, setStep] = React.useState(1);
+    const [step, setStep] = React.useState(4);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
 
@@ -83,6 +85,13 @@ export const CreateInfoProvider = () => {
                         this is step 3
                     </div>
                 );
+            case 4:
+                return (
+                    <div>
+                        <HistoryScheduleSelection
+                        />
+                    </div>
+                )
         }
     }
     return (
