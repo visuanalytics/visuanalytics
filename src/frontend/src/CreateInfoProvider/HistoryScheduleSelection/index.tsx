@@ -25,7 +25,9 @@ import {Web} from "@material-ui/icons";
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import { de } from "date-fns/locale"
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
+import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
+import { TimeList } from "./TimeList";
+import { KeyboardTimePicker } from "@material-ui/pickers";
 
 
 interface HistoryScheduleSelectionProps {
@@ -39,20 +41,25 @@ interface HistoryScheduleSelectionProps {
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
-    //a set that holds all times added by the user
-    const [times, setTimes] = React.useState(new Set<MaterialUiPickersDate>())
+    //a set that holds all times added by the user, formatted as "hh:mm" strings
+    const [times, setTimes] = React.useState(new Set<string>())
     //an array that holds a boolean value for each weekday, true means it has been selected by the user
     const [days, setDays] = React.useState(Array(7).fill(false));
 
     /**
-     * Adds a new time to the set containing select times, if not already existant.
+     * Adds a new time to the set containing select times, if not already contained.
      * @param time The time to be added to the set.
+     * The Date will be converted to a string in the format 'hh:mm'.
      */
     const addToTimes = (time: MaterialUiPickersDate) => {
-        setTimes(new Set(times).add(time));
+        if(time!=null) {
+            const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
+            const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
+            setTimes(new Set(times).add(hours + ":" + minutes));
+        }
     }
 
-    const removeTimes = (time: MaterialUiPickersDate) => {
+    const removeTimes = (time: string) => {
         //two steps are necessary since delete returns a boolean
         const setCopy = new Set(times);
         setCopy.delete(time);
@@ -77,17 +84,23 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                 changeDay={changeDay}
              />
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={de}>
-                <TimePicker
-                value = {currentTimeSelection}
-                onChange = {setCurrentTimeSelection}
-                ampm = {false}
-                inputVariant = "standard"
-                variant = "inline"
+                <KeyboardTimePicker
+                    ampm={false}
+                    placeholder="00:00"
+                    mask="__:__"
+                    value={currentTimeSelection}
+                    onChange={setCurrentTimeSelection}
+                    invalidDateMessage={'Falsches Datumsformat'}
+                    cancelLabel={'Abbrechen'}
                 />
             </MuiPickersUtilsProvider>
-            <Button variant="outlined" onClick={() => {addToTimes(currentTimeSelection); alert(times.size);}}>
+            <Button variant="outlined" onClick={() => addToTimes(currentTimeSelection)}>
                 Zeit hinzufügen
             </Button>
+            <TimeList
+                times={times}
+                removeHandler={removeTimes}
+            />
         </div>
     )
 };

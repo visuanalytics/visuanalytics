@@ -38,7 +38,7 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
      * Helper method that returns the ordinal/index of a provided weekday.
      * @param weekday That weekday whose ordinal should be returned.
      */
-    const getDayIndex = (weekday:Weekday) => {
+    const getDayIndex = (weekday: Weekday) => {
         switch(weekday) {
             case Weekday.MONDAY:
                 return 0;
@@ -71,7 +71,7 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
     //TODO: highlight button with class based on {props.days[getDayIndex(weekday)]?"true":"false"
     const renderWeekday = (weekday: Weekday) => {
         return (
-            <Button variant="contained" size="small" onClick={() => {props.changeDay(weekday)}}>
+            <Button key={getDayIndex(weekday)} variant="contained" size="small" onClick={() => {props.changeDay(weekday)}}>
                 {getWeekdayLabel(weekday)}
             </Button>
         )
