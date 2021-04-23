@@ -23,6 +23,7 @@ import JobCreate from "../JobCreate";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { TypeSelection } from "./TypeSelection";
 import { HistoryScheduleSelection } from "./HistoryScheduleSelection";
+import {DataSelection} from "./DataSelection";
 
 
 /*
@@ -32,9 +33,11 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider = () => {
     //const classes = useStyles();
     //the current step of the creation process, numbered by 1 to 5
-    const [step, setStep] = React.useState(4);
+    const [step, setStep] = React.useState(3);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
+    //selected Data from DataSelection
+    const [selectedData, setSelectedData] = React.useState(new Set<string>());
 
 
     /**
@@ -82,7 +85,12 @@ export const CreateInfoProvider = () => {
             case 3:
                 return (
                     <div>
-                        this is step 3
+                        <DataSelection
+                            continueHandler={handleContinue}
+                            backHandler={handleBack}
+                            selectedData={selectedData}
+                            setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                        />
                     </div>
                 );
             case 4:
