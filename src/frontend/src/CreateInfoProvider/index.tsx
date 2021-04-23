@@ -24,6 +24,7 @@ import { useCallFetch } from "../Hooks/useCallFetch";
 import { TypeSelection } from "./TypeSelection";
 import { HistoryScheduleSelection } from "./HistoryScheduleSelection";
 import {DataSelection} from "./DataSelection";
+import {CreateCustomData} from "./CreateCustomData";
 
 
 /*
@@ -94,6 +95,17 @@ export const CreateInfoProvider = () => {
                     </div>
                 );
             case 4:
+                return (
+                    <div>
+                        <CreateCustomData
+                            continueHandler={handleContinue}
+                            backHandler={handleBack}
+                            selectedData={selectedData}
+                            setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                        />
+                    </div>
+                )
+            case 5:
                 return (
                     <div>
                         <HistoryScheduleSelection

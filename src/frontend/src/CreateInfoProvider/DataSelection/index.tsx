@@ -19,22 +19,46 @@ interface DataSelectionProps {
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
-    const [data, setData] = React.useState<Array<string>>([]);
+    const [data, setData] = React.useState<Array<string>>(['Temperatur', 'Windgeschwindigkeit', 'Regenwahrscheinlichkeit', 'Temperatur(gefühlt)', 'Sonnenuntergang', 'Sonnenaufgang', 'Sonnenstunden', 'data0', 'data1', 'data2']);
 
 
     const renderListItem = (data: string) => {
-        return (
-            <ListItem key={data}>
-                <ListItemSecondaryAction>
-                    <FormControlLabel
-                        control={
-                            <Checkbox onClick={(event) => checkboxHandler(data)}/>
-                        }
-                        label={data}
+
+        if (props.selectedData.has(data)) {
+            return (
+                <ListItem key={data}>
+                    <ListItemText
+                        primary={data}
+                        secondary={null}
                     />
-                </ListItemSecondaryAction>
-            </ListItem>
-        )
+                    <ListItemSecondaryAction>
+                        <FormControlLabel
+                            control={
+                                <Checkbox onClick={() => checkboxHandler(data)} checked={true}/>
+                            }
+                            label={''}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+            )
+        } else {
+            return (
+                <ListItem key={data}>
+                    <ListItemText
+                        primary={data}
+                        secondary={null}
+                    />
+                    <ListItemSecondaryAction>
+                        <FormControlLabel
+                            control={
+                                <Checkbox onClick={() => checkboxHandler(data)}/>
+                            }
+                            label={''}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+            )
+        }
     }
 
     const addToSelection = (data: string) => {
@@ -61,13 +85,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         <div>
             <div style={{width: '20%'}}>
                 <List>
-                    {data.map(renderListItem)}
+                    {data.sort((a, b) => a.localeCompare(b)).map(renderListItem)}
                 </List>
             </div>
             <div>
-                <Button variant="contained" onClick={() => setData(['data1', 'data2', 'data3', 'data4', 'data5', 'data6', 'data7', 'data8', 'data9', 'data10'])}>
-                    Test!
-                </Button>
                 <Button variant="contained" size="large" onClick={props.backHandler}>
                     zurück
                 </Button>
