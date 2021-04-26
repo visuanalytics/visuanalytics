@@ -6,6 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import {strict} from "assert";
+import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -16,23 +17,29 @@ interface CreateCustomDataProps {
 
 export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
 
-    const[customData, setCustomData] = React.useState<string>('');
+    const[customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
+    const[input, setInput] = React.useState<string>('');
 
-    const renderListItem = (data: string) => {
-        return (
-            <ListItem key={data}>
-                {data}
-            </ListItem>
-        )
+    const handleCalcButtons = (operator: string) => {
+        setInput(input + operator);
+        console.log(input);
     }
 
+    const handleDataButtons = (data: string) => {
+        setInput(input + '{' + data + '}');
+        console.log(input);
+    }
 
     return (
         <div>
-            <div style={{width: '20%'}}>
-                <List>
-                    {Array.from(props.selectedData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                </List>
+            <div>
+                <CustomDataGUI
+                    customData={customData}
+                    setCustomData={(set: Set<string>) => setCustomData(set)}
+                    input={input}
+                    handleCalcButtons={(operator: string) => handleCalcButtons(operator)}
+                    handleDataButtons={(operator: string) => handleDataButtons(operator)}
+                />
             </div>
             <div>
                 <Button variant="contained" size="large" onClick={props.backHandler}>
@@ -43,6 +50,6 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
                 </Button>
             </div>
         </div>
-    )
+    );
 
 }
