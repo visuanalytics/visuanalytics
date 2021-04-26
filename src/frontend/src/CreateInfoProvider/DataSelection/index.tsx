@@ -29,7 +29,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
     const [data, setData] = React.useState<Array<string>>(['Temperatur', 'Windgeschwindigkeit', 'Regenwahrscheinlichkeit', 'Temperatur(gefühlt)', 'Sonnenuntergang', 'Sonnenaufgang', 'Sonnenstunden', 'data0', 'data1', 'data2']);
 
-    const[listItems, setListItems] = React.useState<Array<(ListItemRepresentation|Array<ListItemRepresentation>)>>([]);
+    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
 
     //sample JSON-data to test the different depth levels and parsing
     const sampleJSON = {
@@ -56,7 +56,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const transformJSON = (jsonData: any, parent = "") => {
         let stringRep = JSON.stringify(jsonData);
         console.log(stringRep)
-        const resultArray: Array<(ListItemRepresentation|Array<ListItemRepresentation>)> = [];
+        const resultArray: Array<(ListItemRepresentation)> = [];
         let finished = true;
         stringRep = stringRep.substring(1);
         while(finished) {
@@ -99,38 +99,33 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
     /**
      * Renders a list entry for the provided list entry
-     * @param data The list item to be displayed
+     * @param data The list item to be displayed, or an array of list items
+     * Currently doesnt display a checkbox for parents, option to be added
      */
-    const renderListItem = (data: string) => {
-
-        if (props.selectedData.has(data)) {
+    const renderListItem = (data: ListItemRepresentation, level = 0) => {
+        if(Array.isArray(data.value)) {
             return (
-                <ListItem key={data}>
-                    <ListItemText
-                        primary={data}
-                        secondary={null}
-                    />
-                    <ListItemSecondaryAction>
-                        <FormControlLabel
-                            control={
-                                <Checkbox onClick={() => checkboxHandler(data)} checked={true}/>
-                            }
-                            label={''}
+                <React.Fragment>
+                    <ListItem style={{marginLeft: level*30}}key={data.keyName}>
+                        <ListItemText
+                            primary={data.keyName + " (object)"}
+                            secondary={null}
                         />
-                    </ListItemSecondaryAction>
-                </ListItem>
-            )
+                    </ListItem>
+                    {data.value.map((item) => renderListItem(item, level+1))}
+                </React.Fragment>
+        )
         } else {
             return (
-                <ListItem key={data}>
+                <ListItem style={{marginLeft: level*30}}key={data.keyName}>
                     <ListItemText
-                        primary={data}
+                        primary={data.keyName + " - " + data.value}
                         secondary={null}
                     />
                     <ListItemSecondaryAction>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(data)}/>
+                                <Checkbox onClick={() => checkboxHandler(data.keyName)} checked={props.selectedData.has(data.keyName)}/>
                             }
                             label={''}
                         />
@@ -160,7 +155,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
     /**
      * Method that handles clicking on a checkbox.
-     * @param data The name of the list item the checkbox was set for.
+     * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: string) => {
         if (props.selectedData.has(data)) {
@@ -172,11 +167,12 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         console.log(props.selectedData.values().next())
     }
 
+    //not used anymore: {data.sort((a, b) => a.localeCompare(b)).map(renderListItem)}
     return (
         <div>
             <div style={{width: '20%'}}>
                 <List>
-                    {data.sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                    {listItems.map((item) => renderListItem(item, 0))}
                 </List>
             </div>
             <div>
