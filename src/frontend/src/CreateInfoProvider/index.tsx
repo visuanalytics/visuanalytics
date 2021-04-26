@@ -25,6 +25,9 @@ import { TypeSelection } from "./TypeSelection";
 import { HistoryScheduleSelection } from "./HistoryScheduleSelection";
 import {DataSelection} from "./DataSelection";
 import {CreateCustomData} from "./CreateCustomData";
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 
 
 /*
@@ -33,8 +36,15 @@ This component manages which step is active and displays the corresponding conte
  */
 export const CreateInfoProvider = () => {
     //const classes = useStyles();
-    //the current step of the creation process, numbered by 1 to 5
-    const [step, setStep] = React.useState(2);
+    const steps = [
+        "Datenquellen-Typ",
+        "API-Einstellungen",
+        "Datenauswahl",
+        "Historisierung",
+        "Gesamtübersicht"
+    ];
+    //the current step of the creation process, numbered by 0 to 4
+    const [step, setStep] = React.useState(1);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
     //selected Data from DataSelection
@@ -58,14 +68,14 @@ export const CreateInfoProvider = () => {
     }
 
     const handleBack = () => {
-        //TODO: if step==1, return to dashboard context
+        //TODO: if step==0, return to dashboard context
         setStep(step-1)
     }
 
 
     const selectContent = (step: number) => {
         switch (step) {
-            case 1:
+            case 0:
                 return (
                     <div>
                         <TypeSelection
@@ -74,7 +84,7 @@ export const CreateInfoProvider = () => {
                         />
                     </div>
                 );
-            case 2:
+            case 1:
                 return (
                     <BasicSettings
                         continueHandler={handleContinue}
@@ -83,7 +93,7 @@ export const CreateInfoProvider = () => {
                         checkNameDuplicate={checkNameDuplicate}
                     />
                 );
-            case 3:
+            case 2:
                 return (
                     <div>
                         <DataSelection
@@ -94,7 +104,7 @@ export const CreateInfoProvider = () => {
                         />
                     </div>
                 );
-            case 4:
+            case 3:
                 return (
                     <div>
                         <CreateCustomData
@@ -105,7 +115,7 @@ export const CreateInfoProvider = () => {
                         />
                     </div>
                 )
-            case 5:
+            case 4:
                 return (
                     <div>
                         <HistoryScheduleSelection
@@ -115,8 +125,17 @@ export const CreateInfoProvider = () => {
         }
     }
     return (
-        <div>
+        <React.Fragment>
+            <Container maxWidth={"md"}>
+                <Stepper activeStep={step}>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+            </Container>
             {selectContent(step)}
-        </div>
+        </React.Fragment>
     );
-};
+}

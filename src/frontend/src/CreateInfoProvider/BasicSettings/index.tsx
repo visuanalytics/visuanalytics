@@ -19,7 +19,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {StepFrame} from "../StepFrame/stepFrame";
+import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
