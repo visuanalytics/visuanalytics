@@ -18,6 +18,13 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         hintIcons: {
             color: "white"
+        },
+        additionalParams: {
+            width: "80%",
+            margin: "auto",
+            border: "1px solid",
+            borderRadius: "5px",
+            padding: "10px"
         }
     }),
 );

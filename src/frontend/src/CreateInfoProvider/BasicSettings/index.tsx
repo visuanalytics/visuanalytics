@@ -7,7 +7,6 @@ import React from "react";
     Typography,
 } from "@material-ui/core";
 import { JobList } from "../../JobList";
-import { useStyles } from "./style";
 import AddCircleIcon from "@material-ui/icons/AddCircle";*/
 import { ComponentContext } from "../../ComponentProvider";
 /*import EditIcon from "@material-ui/icons/Edit";
@@ -20,6 +19,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import {StepFrame} from "../StepFrame/stepFrame";
+import {hintContents} from "../../util/hintContents";
+import Typography from "@material-ui/core/Typography";
+import { Grid } from "@material-ui/core";
+import { useStyles } from "./style";
+import { borders } from '@material-ui/system';
+
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -33,7 +39,7 @@ interface BasicSettingsProps {
  * The state of this component handles the input made to its children.
  */
 export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
-    //const classes = useStyles();
+    const classes = useStyles();
     const [name, setName] = React.useState("");
     const [query, setQuery] = React.useState("");
     const [key, setKey] = React.useState("");
@@ -111,9 +117,9 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
         if(displaySpinner) {
             return (
                 <div>
-                    <p>
+                    <Typography>
                         Bitte warten, während die API-Daten ermittelt werden...
-                    </p>
+                    </Typography>
                     <CircularProgress />
                 </div>
             )
@@ -121,64 +127,92 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             return (
                 <div>
                     <form>
-                        <p>
-                            Bitte wählen sie einen Namen für ihre API-Datenquelle:
-                        </p>
-                        <APIInputField
-                            defaultValue="Name der API-Datenquelle"
-                            value={name}
-                            changeHandler={(s) => {setName(s)}}
-                        />
-                        <p>
-                            Bitte geben sie die Query an, die der Info-Provider nutzen soll:
-                        </p>
-                        <APIInputField
-                            defaultValue="Ihre API-Query"
-                            value={query}
-                            changeHandler={(s) => {setQuery(s)}}
-                        />
-                        <br/>
-                        <p>
-                            Zum Hinzufügen eines weiteren Parameters an das Ende der Query Daten eingeben:
-                        </p>
-                        <APIInputField
-                            defaultValue="Parameter"
-                            value={param}
-                            changeHandler={(s) => setParam(s)}
-                        />
-                        <APIInputField
-                            defaultValue="Wert"
-                            value={paramValue}
-                            changeHandler={(s) => setParamValue(s)}
-                        />
-                        <br/>
-                        <Button disabled={param===""||paramValue===""} variant="contained" size="large" onClick={addParamToQuery}>
-                            Hinzufügen
-                        </Button>
-                        <br/>
-                        <p>
-                            Bitte geben sie den API-Key für ihre Anfragen ein:
-                        </p>
-                        <APIInputField
-                            defaultValue="Ihr API-Key"
-                            value={key}
-                            changeHandler={(s) => {setKey(s)}}
-                            noKey={noKey}
-                        />
-                        <br/>
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={noKey} onChange={(e) => setNoKey(!noKey)}/>
-                            }
-                            label="Diese API benötigt keinen Key"
-                        />
-                        <br/>
-                        <Button variant="contained" size="large" onClick={props.backHandler}>
-                            zurück
-                        </Button>
-                        <Button disabled={!(name!==""&&query!==""&&(noKey||key!==""))} variant="contained" size="large" onClick={handleProceed}>
-                            weiter
-                        </Button>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Bitte wählen sie einen Namen für ihre API-Datenquelle:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <APIInputField
+                                    defaultValue="Name der API-Datenquelle"
+                                    value={name}
+                                    changeHandler={(s) => {setName(s)}}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Bitte geben sie die Query an, die der Info-Provider nutzen soll:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <APIInputField
+                                    defaultValue="Ihre API-Query"
+                                    value={query}
+                                    changeHandler={(s) => {setQuery(s)}}
+                                />
+                            </Grid>
+                            <Grid item container className={classes.additionalParams}>
+                                <Grid item xs={12}>
+                                    <Typography variant="body1">
+                                        Weitere Parameter am Query-Ende hinzufügen:
+                                    </Typography>
+                                </Grid>
+                                <Grid item md={5} xs={12}>
+                                    <APIInputField
+                                        defaultValue="Parameter"
+                                        value={param}
+                                        changeHandler={(s) => setParam(s)}
+                                    />
+                                </Grid>
+                                <Grid item md={5} xs={12}>
+                                    <APIInputField
+                                        defaultValue="Wert"
+                                        value={paramValue}
+                                        changeHandler={(s) => setParamValue(s)}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Button disabled={param===""||paramValue===""} variant="contained" size="large" onClick={addParamToQuery}>
+                                        Hinzufügen
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Bitte geben sie den API-Key für ihre Anfragen ein:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <APIInputField
+                                    defaultValue="Ihr API-Key"
+                                    value={key}
+                                    changeHandler={(s) => {setKey(s)}}
+                                    noKey={noKey}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox checked={noKey} onChange={(e) => setNoKey(!noKey)}/>
+                                    }
+                                    label="Diese API benötigt keinen Key"
+                                />
+                            </Grid>
+                            <Grid item container xs={12} justify="space-between">
+                                <Grid item>
+                                    <Button variant="contained" size="large" onClick={props.backHandler}>
+                                        zurück
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button disabled={!(name!==""&&query!==""&&(noKey||key!==""))} variant="contained" size="large" onClick={handleProceed}>
+                                        weiter
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
                     </form>
                 </div>
             )
@@ -186,8 +220,11 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     }
 
     return (
-        <div>
+        <StepFrame
+            heading="API-Einstellungen"
+            hintContent={hintContents.basicSettings}
+        >
             {selectContent(displaySpinner)}
-        </div>
+        </StepFrame>
     );
 };

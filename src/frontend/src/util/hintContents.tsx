@@ -66,5 +66,21 @@ export const hintContents = {
         Auf dieser Seite können Sie neue Themen hinzufügen.
       </Typography>
     </div>
+  ),
+  basicSettings: (
+      <div>
+          <Typography variant="h5" gutterBottom>
+              API-Einstellungen
+          </Typography>
+          <Typography gutterBottom>
+              Auf dieser Seite legen sie die grundlegenden Einstellungen der aktuellen API fest:
+          </Typography>
+          <Typography variant="h6">API-Name</Typography>
+          <Typography gutterBottom>Der Name, mit dem die API für diesen Info-Provider gespeichert wird.</Typography>
+          <Typography variant="h6">API-Query</Typography>
+          <Typography gutterBottom>Die an die API zu stellende Anfrage als http-Query.</Typography>
+          <Typography variant="h6">API-Key</Typography>
+          <Typography gutterBottom>Ihr API-Zugangsschlüssel, den der Info-Provider nutzen soll.</Typography>
+      </div>
   )
 };

@@ -34,7 +34,7 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider = () => {
     //const classes = useStyles();
     //the current step of the creation process, numbered by 1 to 5
-    const [step, setStep] = React.useState(3);
+    const [step, setStep] = React.useState(2);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
     //selected Data from DataSelection
