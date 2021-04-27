@@ -180,7 +180,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     </Button>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12} className={classes.elementMargin}>
+                            <Grid item xs={12}>
                                 <Typography variant="body1">
                                     Bitte geben sie den API-Key für ihre Anfragen ein:
                                 </Typography>

@@ -42,11 +42,6 @@ const newDarkBlueTheme = createMuiTheme({
                 backgroundColor: '#2E97C5 !important'
             }
         },
-        MuiButton: {
-            disabled: {
-                backgroundColor: "red",
-            }
-        }
     },
     palette: {
         primary: {

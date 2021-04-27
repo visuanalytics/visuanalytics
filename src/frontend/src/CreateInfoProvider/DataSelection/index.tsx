@@ -4,11 +4,16 @@ import Button from "@material-ui/core/Button";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {CheckBox} from "@material-ui/icons";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {StepFrame} from "../StepFrame";
+import {hintContents} from "../../util/hintContents";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import {useStyles} from "./style";
 
 interface DataSelectionProps {
     continueHandler: () => void;
@@ -26,10 +31,19 @@ interface ListItemRepresentation {
 
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
+    const classes = useStyles();
 
     const [data, setData] = React.useState<Array<string>>(['Temperatur', 'Windgeschwindigkeit', 'Regenwahrscheinlichkeit', 'Temperatur(gefühlt)', 'Sonnenuntergang', 'Sonnenaufgang', 'Sonnenstunden', 'data0', 'data1', 'data2']);
 
     const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
+    let indexCounter = 0
+
+    //everytime there is a change in the source data, rebuild the list and clean the selection
+    React.useEffect(() => {
+        transformJSON(sampleJSON);
+        props.setSelectedData(new Set());
+    }, [listItems]);
 
     //sample JSON-data to test the different depth levels and parsing
     const sampleJSON = {
@@ -44,7 +58,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             data_2_2: "value4"
         },
         data_3: "value5"
-    }
+    };
 
 
     /**
@@ -103,10 +117,12 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * Currently doesnt display a checkbox for parents, option to be added
      */
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
+        indexCounter++;
+        const itemKey = indexCounter + data.keyName
         if(Array.isArray(data.value)) {
             return (
-                <React.Fragment>
-                    <ListItem style={{marginLeft: level*30}}key={data.keyName}>
+                <React.Fragment key={indexCounter + "listFragment"}>
+                    <ListItem style={{marginLeft: level*30}} key={itemKey} divider={true}>
                         <ListItemText
                             primary={data.keyName + " (object)"}
                             secondary={null}
@@ -117,23 +133,23 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         )
         } else {
             return (
-                <ListItem style={{marginLeft: level*30}}key={data.keyName}>
+                <ListItem style={{marginLeft: level*30}} key={itemKey} divider={true}>
+                    <ListItemIcon>
+                        <FormControlLabel
+                            control={
+                                <Checkbox onClick={() => checkboxHandler(itemKey)} checked={props.selectedData.has(itemKey)}/>
+                            }
+                            label={''}
+                        />
+                    </ListItemIcon>
                     <ListItemText
                         primary={data.keyName + " - " + data.value}
                         secondary={null}
                     />
-                    <ListItemSecondaryAction>
-                        <FormControlLabel
-                            control={
-                                <Checkbox onClick={() => checkboxHandler(data.keyName)} checked={props.selectedData.has(data.keyName)}/>
-                            }
-                            label={''}
-                        />
-                    </ListItemSecondaryAction>
                 </ListItem>
             )
         }
-    }
+    };
 
     /**
      * Adds an item to the set of selected list items
@@ -141,7 +157,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const addToSelection = (data: string) => {
         props.setSelectedData(new Set(props.selectedData).add(data));
-    }
+    };
 
     /**
      * Removes an item from the set of selected list items
@@ -151,40 +167,69 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const setCopy = new Set(props.selectedData);
         setCopy.delete(data);
         props.setSelectedData(setCopy);
-    }
+    };
 
     /**
      * Method that handles clicking on a checkbox.
      * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: string) => {
+        console.log(data);
+        console.log(props.selectedData.has(data));
         if (props.selectedData.has(data)) {
             removeFromSelection(data);
         } else {
             addToSelection(data)
+            console.log("new: " + props.selectedData.has(data));
         }
 
-        console.log(props.selectedData.values().next())
-    }
+        //console.log(props.selectedData.values().next())
+    };
 
     //not used anymore: {data.sort((a, b) => a.localeCompare(b)).map(renderListItem)}
     return (
-        <div>
-            <div style={{width: '20%'}}>
-                <List>
-                    {listItems.map((item) => renderListItem(item, 0))}
-                </List>
-            </div>
-            <div>
-                <Button variant="contained" size="large" onClick={props.backHandler}>
-                    zurück
-                </Button>
-                <Button variant="contained" size="large" onClick={props.continueHandler}>
-                    weiter
-                </Button>
-                <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sampleJSON))}}>Janek Test</Button>
-            </div>
-        </div>
+        <StepFrame
+            heading = "Datenauswahl"
+            hintContent = {hintContents.dataSelection}
+        >
+            <Grid container justify="space-around" className={classes.elementMargin}>
+                <Grid item xs={12}>
+                    <Typography variant="body1">
+                        Folgende Datenwerte wurden von der Request zurückgegeben:
+                    </Typography>
+                </Grid>
+                <Grid item xs={10}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key={indexCounter + "listBox"}>
+                        <List disablePadding={true} key={indexCounter + "listRoot"}>
+                            {listItems.map((item) => renderListItem(item, 0))}
+                        </List>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} className={classes.elementMargin}>
+                    <Typography variant="body1">
+                        Bitte wählen sie alle von der API zu erfassenden Daten.
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} className={classes.elementMargin}>
+                    <Typography variant="body2">
+                        Die Daten sehen fehlerhaft aus? Gehen sie einen Schritt zurück und prüfen sie Request und Key der API.
+                    </Typography>
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                            zurück
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonPrimary}>
+                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.size==0} onClick={props.continueHandler}>
+                            weiter
+                        </Button>
+                        <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sampleJSON))}}>Janek Test</Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </StepFrame>
     )
 
 }
