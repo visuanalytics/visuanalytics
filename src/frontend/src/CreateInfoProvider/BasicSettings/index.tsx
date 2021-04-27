@@ -140,8 +140,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     changeHandler={(s) => {setName(s)}}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <Typography variant="body1">
+                            <Grid item xs={12} className={classes.elementMargin}>
+                                <Typography variant="body1" >
                                     Bitte geben sie die Query an, die der Info-Provider nutzen soll:
                                 </Typography>
                             </Grid>
@@ -158,27 +158,29 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                         Weitere Parameter am Query-Ende hinzufügen:
                                     </Typography>
                                 </Grid>
-                                <Grid item md={5} xs={12}>
-                                    <APIInputField
-                                        defaultValue="Parameter"
-                                        value={param}
-                                        changeHandler={(s) => setParam(s)}
-                                    />
+                                <Grid item container xs={12} justify="space-around">
+                                    <Grid item md={5} xs={12}>
+                                        <APIInputField
+                                            defaultValue="Parameter"
+                                            value={param}
+                                            changeHandler={(s) => setParam(s)}
+                                        />
+                                    </Grid>
+                                    <Grid item md={5} xs={12}>
+                                        <APIInputField
+                                            defaultValue="Wert"
+                                            value={paramValue}
+                                            changeHandler={(s) => setParamValue(s)}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item md={5} xs={12}>
-                                    <APIInputField
-                                        defaultValue="Wert"
-                                        value={paramValue}
-                                        changeHandler={(s) => setParamValue(s)}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <Button disabled={param===""||paramValue===""} variant="contained" size="large" onClick={addParamToQuery}>
+                                <Grid item className={`${classes.addParamButton}  ${classes.blockableButtonSecondary}`}>
+                                    <Button disabled={param===""||paramValue===""} variant="contained" size="large" color="secondary" onClick={addParamToQuery}>
                                         Hinzufügen
                                     </Button>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} className={classes.elementMargin}>
                                 <Typography variant="body1">
                                     Bitte geben sie den API-Key für ihre Anfragen ein:
                                 </Typography>
@@ -191,7 +193,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     noKey={noKey}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} className={classes.elementMargin}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox checked={noKey} onChange={(e) => setNoKey(!noKey)}/>
@@ -199,14 +201,14 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     label="Diese API benötigt keinen Key"
                                 />
                             </Grid>
-                            <Grid item container xs={12} justify="space-between">
+                            <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
                                 <Grid item>
-                                    <Button variant="contained" size="large" onClick={props.backHandler}>
+                                    <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                         zurück
                                     </Button>
                                 </Grid>
-                                <Grid item>
-                                    <Button disabled={!(name!==""&&query!==""&&(noKey||key!==""))} variant="contained" size="large" onClick={handleProceed}>
+                                <Grid item className={classes.blockableButtonPrimary}>
+                                    <Button disabled={!(name!==""&&query!==""&&(noKey||key!==""))} variant="contained" size="large" color="primary" onClick={handleProceed}>
                                         weiter
                                     </Button>
                                 </Grid>

@@ -13,18 +13,37 @@ export const useStyles = makeStyles((theme: Theme) =>
         margin: {
             margin: '0 auto',
         },
-        infoIcon: {
-            fontSize: "50px",
-        },
-        hintIcons: {
-            color: "white"
-        },
         additionalParams: {
             width: "80%",
             margin: "auto",
-            border: "1px solid",
+            marginTop: "15px",
+            marginBottom: "15px",
+            borderColor: theme.palette.primary.main,
+            border: "2px solid",
             borderRadius: "5px",
-            padding: "10px"
+            padding: "15px"
+        },
+        elementMargin: {
+            marginTop: "5px"
+        },
+        addParamButton: {
+            marginTop: "12px"
+        },
+        newParamInput: {
+            marginLeft: "10px",
+            marginRight: "5px",
+        },
+        blockableButtonPrimary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.primary.main,
+                opacity: "75%"
+            }
+        },
+        blockableButtonSecondary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.secondary.main,
+                opacity: "75%"
+            }
         }
-    }),
+}),
 );

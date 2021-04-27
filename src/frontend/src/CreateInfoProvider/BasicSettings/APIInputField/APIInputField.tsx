@@ -38,6 +38,6 @@ export const APIInputField: React.FC<APIInputFieldProps> = (props) => {
     //const classes = useStyles();
     //const components = React.useContext(ComponentContext);
     return (
-        <TextField fullWidth margin="normal" disabled={props.noKey} variant="outlined" color="primary" label={props.defaultValue} value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
+        <TextField fullWidth margin="normal" disabled={props.noKey} variant="filled" color="primary" label={props.defaultValue} value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
     );
 }
