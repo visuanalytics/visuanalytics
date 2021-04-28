@@ -22,11 +22,19 @@ interface DataSelectionProps {
     setSelectedData: (set: Set<string>) => void;
 }
 
-
+/** Internal representation of a list item extracted from the JSON object.
+ * @param keyName The direct key name of the entry
+ * @param value Holds a string with the type of the value or a sub-object
+ * @param parentKeyName Holds the keyName of the parent as a full path within the JSON object
+ * @param arrayRep True when this entry represents an array, used for specific rendering
+ * @param arrayLength Holds the length of the array, if it is such
+ */
 interface ListItemRepresentation {
     keyName: string;
     value: any;
     parentKeyName: string;
+    arrayRep: boolean;
+    arrayLength: number;
 }
 
 
@@ -61,6 +69,174 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     };
 
 
+    const sample2 = {
+        "season_helper": {
+            "Envelope": {
+                "Body": {
+                    "GetMatchByMatchIDResponse": {
+                        "GetMatchByMatchIDResult": {
+                            "leagueSaison": "Text"
+                        }
+                    }
+                }
+            }
+        },
+        "Spiele": {
+            "same_type": true,
+            "length": 2,
+            "object": {
+                "MatchID": "Zahl",
+                "MatchDateTime": "Text",
+                "TimeZoneID": "Text",
+                "LeagueId": "Zahl",
+                "LeagueName": "Text",
+                "MatchDateTimeUTC": "Text",
+                "Team1": {
+                    "TeamId": "Zahl",
+                    "TeamName": "Text",
+                    "ShortName": "Text",
+                    "TeamIconUrl": "Text",
+                    "TeamGroupName": "Ohne Wert"
+                },
+                "LastUpdateDateTime": "Text",
+                "MatchIsFinished": "Wahrheitswert",
+                "MatchResults": {
+                    "same_type": true,
+                    "length": 2,
+                    "object": {
+                        "ResultID": "Zahl",
+                        "ResultName": "Text",
+                        "PointsTeam1": "Zahl",
+                        "PointsTeam2": "Zahl",
+                        "ResultOrderID": "Zahl",
+                        "ResultTypeID": "Zahl",
+                        "ResultDescription": "Text"
+                    }
+                },
+                "Goals": {
+                    "same_type": true,
+                    "length": 2,
+                    "object": {
+                        "GoalID": "Zahl",
+                        "ScoreTeam1": "Zahl",
+                        "ScoreTeam2": "Zahl",
+                        "MatchMinute": "Zahl",
+                        "GoalGetterID": "Zahl",
+                        "GoalGetterName": "Text",
+                        "IsPenalty": "Wahrheitswert",
+                        "IsOwnGoal": "Wahrheitswert",
+                        "IsOvertime": "Wahrheitswert",
+                        "Comment": "Ohne Wert"
+                    }
+                },
+                "Location": "Ohne Wert",
+                "NumberOfViewers": "Ohne Wert"
+            }
+        },
+        "Tabelle": {
+            "same_type": true,
+            "length": 2,
+            "object": {
+                "TeamInfoId": "Zahl",
+                "TeamName": "Text",
+                "Points": "Zahl",
+                "test": {
+                    "same_type": true,
+                    "length": 5,
+                    "type": "Text"
+                },
+                "test2": {
+                    "same_type": false,
+                    "length": 4,
+                    "type": [
+                        "Zahl",
+                        "Text",
+                        "Liste",
+                        "JSON"
+                    ]
+                },
+                "test3": {
+                    "same_type": true,
+                    "length": 2,
+                    "object": {
+                        "same_type": true,
+                        "length": 1,
+                        "type": "Text"
+                    }
+                }
+            }
+        },
+        "Vorherige-Season": "Text"
+    };
+
+    const sample3 = {
+        "Spiele": {
+            "same_type": true,
+            "length": 2,
+            "object": {
+                "MatchID": "Zahl",
+                "MatchDateTime": "Text",
+                "TimeZoneID": "Text",
+                "LeagueId": "Zahl",
+                "LeagueName": "Text",
+                "MatchDateTimeUTC": "Text",
+                "Team1": {
+                    "TeamId": "Zahl",
+                    "TeamName": "Text",
+                    "ShortName": "Text",
+                    "TeamIconUrl": "Text",
+                    "TeamGroupName": "Ohne Wert"
+                },
+                "LastUpdateDateTime": "Text",
+                "MatchIsFinished": "Wahrheitswert",
+                "MatchResults": {
+                    "same_type": true,
+                    "length": 2,
+                    "object": {
+                        "ResultID": "Zahl",
+                        "ResultName": "Text",
+                        "PointsTeam1": "Zahl",
+                        "PointsTeam2": "Zahl",
+                        "ResultOrderID": "Zahl",
+                        "ResultTypeID": "Zahl",
+                        "ResultDescription": "Text"
+                    }
+                },
+                "Goals": {
+                    "same_type": true,
+                    "length": 2,
+                    "object": {
+                        "GoalID": "Zahl",
+                        "ScoreTeam1": "Zahl",
+                        "ScoreTeam2": "Zahl",
+                        "MatchMinute": "Zahl",
+                        "GoalGetterID": "Zahl",
+                        "GoalGetterName": "Text",
+                        "IsPenalty": "Wahrheitswert",
+                        "IsOwnGoal": "Wahrheitswert",
+                        "IsOvertime": "Wahrheitswert",
+                        "Comment": "Ohne Wert"
+                    }
+                },
+                "Location": "Ohne Wert",
+                "NumberOfViewers": "Ohne Wert"
+            }
+        }
+    }
+
+    const sample4 = {
+        "test2": {
+            "same_type": false,
+            "length": 4,
+            "type": [
+                "Zahl",
+                "Text",
+                "Liste",
+                "JSON"
+            ]
+        }
+    }
+
     /**
      * Takes an object (supposed to be JSON data) and returns an array representation of it.
      * @param jsonData The data-Object to be turned into an array.
@@ -77,24 +253,96 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             //get the key name
             let key = stringRep.split(":", 2)[0];
             stringRep = stringRep.substring(key.length + 1);
-            key = key.substring(1, key.length-1);
+            key = key.substring(1, key.length - 1);
+            console.log("key: " + key);
+
             let value: any = "";
             //check if the value is another object
-            if (stringRep[0]==="{") {
+            if (stringRep[0] === "{") {
+                //The value is a sub-object
                 let subObject = stringRep.split("}", 1)[0] + "}"
                 let counter = 1;
-                while(subObject.split("{").length-1 != subObject.split("}").length-1) {
+                //detect the whole sub-object
+                while (subObject.split("{").length - 1 != subObject.split("}").length - 1) {
                     let splitArray = stringRep.split("}", counter);
                     subObject = "";
-                    for (let i = 0; i<counter; i++) {
+                    for (let i = 0; i < counter; i++) {
                         subObject += splitArray[i] + "}";
                     }
                     counter += 1;
-                    if(counter>3) break;
                 }
-                value = transformJSON(JSON.parse(subObject), key);
-                stringRep = stringRep.substring(subObject.length +1);
+                console.log("checking subobject: " + subObject);
+                //lookahead to the next key - if it is same_type, we know that we face an array
+                let nextKey = subObject.split(":", 2)[0];
+                //strip quotation marks and the opening curly bracket
+                nextKey = nextKey.substring(2, nextKey.length - 1);
+                console.log("nextKey: " + nextKey);
+                if(nextKey=="same_type") {
+                    //a sub array was detected
+                    let same_type_value = subObject.split(",", 2)[0];
+                    same_type_value = same_type_value.substring(nextKey.length+4);
+                    console.log(same_type_value)
+                    //we also parse the length and store it in the corresponding attribute
+                    let array_length = subObject.split(",", 2)[1];
+                    array_length = array_length.substring(9);
+                    console.log(array_length);
+                    console.log(subObject);
+                    if(same_type_value=="true") {
+                        //check if the value of nextKey is "true" - if this is the case, our value is the subobject
+                        //we now need to differentiate if the content is an object or primitives
+                        let element = subObject.substring(24 + same_type_value.length + array_length.length).split(":", 1)[0]
+                        if(element.substring(1, element.length-1)=="object") {
+                            //when the object starts with sameType as the first key, we need to mark it as array in array and not further display it
+                            let object = subObject.substring(33 + same_type_value.length + array_length.length, subObject.length-1);
+                            let objectLookahead = object.split(":")[0];
+                            if(objectLookahead.substring(2, objectLookahead.length-1)=="same_type") {
+                                value = "[Array]"
+                            } else {
+                                value = transformJSON(JSON.parse(object), parent + "|" + key)
+                            }
+                            resultArray.push({
+                                keyName: key,
+                                value: value,
+                                parentKeyName: parent,
+                                arrayRep: true,
+                                arrayLength: parseInt(array_length)
+                            })
+                        } else {
+                            //primitive contents
+                            value = subObject.substring(32 + same_type_value.length + array_length.length, subObject.length-2);
+                            resultArray.push({
+                                keyName: key,
+                                value: value,
+                                parentKeyName: parent,
+                                arrayRep: true,
+                                arrayLength: parseInt(array_length)
+                            })
+                        }
+                    } else {
+                        //if it is false, we set a string containing all the data types
+                        let object = subObject.substring(31 + same_type_value.length + array_length.length, subObject.length-1);
+                        let typeString = "";
+                        for (let x of object.substring(1, object.length-1).split(",")) {
+                            typeString+=x.substring(1, x.length-1) + ", ";
+                        }
+                        typeString = typeString.substring(0, typeString.length-2);
+                        resultArray.push({
+                            keyName: key,
+                            value: typeString,
+                            parentKeyName: parent,
+                            arrayRep: true,
+                            arrayLength: parseInt(array_length)
+                        })
+                    }
+                    //cut the handled object
+                    stringRep = stringRep.substring(subObject.length + 1);
+                    if(stringRep.length==0) finished = false;
+                    continue
+                }
+                value = transformJSON(JSON.parse(subObject), parent + "|" + key);
+                stringRep = stringRep.substring(subObject.length + 1);
             } else {
+                //the value is a type, the data is primitive
                 value = stringRep.includes(",")?stringRep.split(",", 1)[0]:stringRep.split("}", 1)[0];
                 stringRep = stringRep.substring(value.length + 1);
             }
@@ -103,7 +351,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             resultArray.push({
                 keyName: key,
                 value: value,
-                parentKeyName: parent
+                parentKeyName: parent,
+                arrayRep: false,
+                arrayLength: 0
             })
             if(stringRep.length==0) finished = false;
         }
@@ -118,26 +368,56 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
         indexCounter++;
-        const itemKey = indexCounter + data.keyName
         if(Array.isArray(data.value)) {
+            //object or array with same_type==true
             return (
                 <React.Fragment key={indexCounter + "listFragment"}>
-                    <ListItem style={{marginLeft: level*30}} key={itemKey} divider={true}>
+                    <ListItem style={{marginLeft: level * 30}}
+                              key={data.parentKeyName == "" ? data.keyName : data.parentKeyName + "|" + data.keyName}
+                              divider={true}>
+                        {data.arrayRep &&
+                        <ListItemIcon>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
+                                }
+                                label={''}
+                            />
+                        </ListItemIcon>
+                        }
                         <ListItemText
-                            primary={data.keyName + " (object)"}
+                            primary={data.arrayRep ? data.keyName + " (Array), length: " + data.arrayLength : data.keyName + " (object)"}
                             secondary={null}
                         />
                     </ListItem>
-                    {data.value.map((item) => renderListItem(item, level+1))}
+                    {data.value.map((item) => renderListItem(item, level + 1))}
                 </React.Fragment>
-        )
-        } else {
+            )
+        } else if(data.arrayRep) {
+            //array without same_type==false
             return (
-                <ListItem style={{marginLeft: level*30}} key={itemKey} divider={true}>
+                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(itemKey)} checked={props.selectedData.has(itemKey)}/>
+                                <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
+                            }
+                            label={''}
+                        />
+                    </ListItemIcon>
+                    <ListItemText
+                        primary={data.keyName + " (Array), length: " + data.arrayLength +", content types: " + data.value}
+                        secondary={null}
+                    />
+                </ListItem>
+            )
+        } else {
+            return (
+                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
+                    <ListItemIcon>
+                        <FormControlLabel
+                            control={
+                                <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
                             }
                             label={''}
                         />
@@ -225,7 +505,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.size==0} onClick={props.continueHandler}>
                             weiter
                         </Button>
-                        <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sampleJSON))}}>Janek Test</Button>
+                        <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sample2))}}>Janek Test</Button>
                     </Grid>
                 </Grid>
             </Grid>
