@@ -8,16 +8,16 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: '20px',
             paddingLeft: '75px',
             paddingRight: '75px',
+            borderColor: theme.palette.primary.main,
+            border: "10px solid"
         },
         header: {
             margin: "7px",
+            marginBottom: "15px",
+            color: theme.palette.secondary.dark,
         },
         margin: {
             margin: "30px auto",
-        },
-        button: {
-            margin: theme.spacing(1),
-            color: "#2E97C5",
         },
     })
 );

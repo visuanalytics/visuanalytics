@@ -82,5 +82,16 @@ export const hintContents = {
           <Typography variant="h6">API-Key</Typography>
           <Typography gutterBottom>Ihr API-Zugangsschlüssel, den der Info-Provider nutzen soll.</Typography>
       </div>
-  )
+  ),
+    dataSelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                API-Datenauswahl
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite legen sie fest, welche der von der API-Request gelieferten Daten der Info-Proivder erfassen soll.
+            </Typography>
+
+        </div>
+    )
 };
