@@ -44,7 +44,7 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 4
-    const [step, setStep] = React.useState(1);
+    const [step, setStep] = React.useState(2);
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
     //selected Data from DataSelection

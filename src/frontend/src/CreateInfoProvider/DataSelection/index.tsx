@@ -44,7 +44,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             data_2_2: "value4"
         },
         data_3: "value5"
-    }
+    };
 
 
     /**
@@ -106,7 +106,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         if(Array.isArray(data.value)) {
             return (
                 <React.Fragment>
-                    <ListItem style={{marginLeft: level*30}}key={data.keyName}>
+                    <ListItem style={{marginLeft: level*30}} key={data.keyName}>
                         <ListItemText
                             primary={data.keyName + " (object)"}
                             secondary={null}
@@ -117,7 +117,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         )
         } else {
             return (
-                <ListItem style={{marginLeft: level*30}}key={data.keyName}>
+                <ListItem style={{marginLeft: level*30}} key={data.keyName}>
                     <ListItemText
                         primary={data.keyName + " - " + data.value}
                         secondary={null}
@@ -133,7 +133,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </ListItem>
             )
         }
-    }
+    };
 
     /**
      * Adds an item to the set of selected list items
@@ -151,7 +151,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const setCopy = new Set(props.selectedData);
         setCopy.delete(data);
         props.setSelectedData(setCopy);
-    }
+    };
 
     /**
      * Method that handles clicking on a checkbox.
@@ -165,7 +165,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         }
 
         console.log(props.selectedData.values().next())
-    }
+    };
 
     //not used anymore: {data.sort((a, b) => a.localeCompare(b)).map(renderListItem)}
     return (
@@ -187,4 +187,4 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         </div>
     )
 
-}
+};

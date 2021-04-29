@@ -31,7 +31,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
     }
 
     return (
-        <div>
+        <React.Fragment>
             <div>
                 <CustomDataGUI
                     customData={customData}
@@ -49,7 +49,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
                     weiter
                 </Button>
             </div>
-        </div>
+        </React.Fragment>
     );
 
 }

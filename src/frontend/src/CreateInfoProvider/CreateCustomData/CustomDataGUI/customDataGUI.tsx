@@ -62,7 +62,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const makeNumberButtons = () => {
         return (
-            <div>
+            <React.Fragment>
                 <div>
                     <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleCalcButtons('0')}>
                         0
@@ -101,7 +101,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                         9
                     </Button>
                 </div>
-            </div>
+            </React.Fragment>
         )
     };
 
