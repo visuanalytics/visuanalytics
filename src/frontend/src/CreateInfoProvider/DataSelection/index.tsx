@@ -298,7 +298,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             if(objectLookahead.substring(2, objectLookahead.length-1)=="same_type") {
                                 value = "[Array]"
                             } else {
-                                value = transformJSON(JSON.parse(object), parent + "|" + key)
+                                value = transformJSON(JSON.parse(object), parent==""?key:parent + "|" + key)
                             }
                             resultArray.push({
                                 keyName: key,
@@ -339,7 +339,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     if(stringRep.length==0) finished = false;
                     continue
                 }
-                value = transformJSON(JSON.parse(subObject), parent + "|" + key);
+                value = transformJSON(JSON.parse(subObject), parent==""?key:parent + "|" + key);
                 stringRep = stringRep.substring(subObject.length + 1);
             } else {
                 //the value is a type, the data is primitive
