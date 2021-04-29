@@ -4,6 +4,7 @@ import {Button, TextareaAutosize, TextField} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
+import {Expr} from "./Expression/Expr";
 
 interface CustomDataGUIProps {
     customData: Set<string>;
@@ -14,6 +15,7 @@ interface CustomDataGUIProps {
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
+
 
     const renderListItem = (data: string) => {
         return (
@@ -29,6 +31,9 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
             </ListItem>
         );
     };
+
+    const transformData = (data: string) => {
+    }
 
     const makeCalculateButtons = () => {
         return (

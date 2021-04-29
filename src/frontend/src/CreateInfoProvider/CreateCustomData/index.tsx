@@ -7,6 +7,8 @@ import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
+import {Expr} from "./CustomDataGUI/Expression/Expr";
+
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -20,14 +22,29 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
     const[customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
     const[input, setInput] = React.useState<string>('');
 
+    const[dataAsOpj, setDataAsObj] = React.useState<Array<Expr>>(new Array<Expr>(0));
+
     const handleCalcButtons = (operator: string) => {
         setInput(input + operator);
-        console.log(input);
     }
 
     const handleDataButtons = (data: string) => {
-        setInput(input + '{' + data + '}');
-        console.log(input);
+        const newArr: Array<Expr> = dataAsOpj;
+        console.log(newArr)
+        let newLength: number = newArr.push(new Expr(true, data, ''))
+        console.log(newArr);
+        setInput(calculationToString(newArr));
+        setDataAsObj(newArr);
+    }
+
+    const calculationToString = (calculation: Array<Expr>) => {
+        let stringToShow: string = '';
+
+        for (let i: number = 0; i < calculation.length; i++) {
+            stringToShow = stringToShow + calculation[i].makeStringRep();
+        }
+
+        return stringToShow;
     }
 
     return (
