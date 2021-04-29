@@ -38,6 +38,12 @@ Name des Ordner für Memory-Dateien. Dient zum Abspeichern von vorherigen Berech
 Wird beim Starten mit dem Wert aus der Konfigurationsdatei initialisiert.
 """
 
+INFOPROVIDER_LOCATION = "infoprovider"
+"""
+Enthält den Pfad zu den Infoprovidern.
+Dieser Pfad wird bei Start des Servers in `init.py` durch den Pfad in der `config.json` überschrieben.
+"""
+
 DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
 """
 Datums- und Zeitformat in welchem die Dateien abgespeichert werden.
@@ -73,12 +79,23 @@ def get_resource_path(path: str):
     return path_from_root(os.path.join(RESOURCES_LOCATION, path))
 
 
+def get_infoprovider_path(path: str):
+    """Erstellt einen absoluten Pfad zur übergebenen Infoprovider-Ressource.
+
+    Der Pfad wird dabei aus `RESOURCES_LOCATION`, `INFOPROVIDER_LOCATION` und dem übergebenen Pfad erstellt.
+
+    :param path: Pfad zum benötigten Infoprovider, relativ zum `resources/infoprovider`-Ordner.
+    :return: Absoluter Pfad zum übergebenen Infoprovider.
+    """
+    return get_resource_path(os.path.join(INFOPROVIDER_LOCATION, path))
+
+
 def get_image_path(path: str):
     """Erstellt einen absoluten Pfad zu der übergebenen Image-Ressource.
 
-    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `IMAGE_LOCATION` und dem übergebenen Pfad.
 
-    :param path: Pfad zur Ressource, relativ zum `resources`-Ordner.
+    :param path: Pfad zur Ressource, relativ zum `resources/images`-Ordner.
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(IMAGES_LOCATION, path))
@@ -87,9 +104,9 @@ def get_image_path(path: str):
 def get_audio_path(path: str):
     """Erstellt einen absoluten Pfad zu der übergebenen Audio-Ressource.
 
-    Erstellt den Pfad aus `RESOURCES_LOCATION` und dem übergebenen Pfad.
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `AUDIO_LOCATION` und dem übergebenen Pfad.
 
-    :param path: Pfad zur Ressource, relativ zum `resources`-Ordner.
+    :param path: Pfad zur Ressource, relativ zum `resources/audio`-Ordner.
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(AUDIO_LOCATION, path))
@@ -186,6 +203,23 @@ def open_resource(path: str, mode: str = "rt"):
     return open(res_path, mode, encoding='utf-8')
 
 
+def open_infoprovider_resource(path: str, mode: str = "rt"):
+    """Gibt einen geöffneten Infoprovider zurück.
+
+    Sollte die Datei oder ein zu dieser Datei führender Ordner fehlen, so werden diese erstellt.
+
+    :param path: Pfad der zu öffnenden Datei.
+    :param mode: Der Modus, mit welcher die Datei geöffnet wird. Für eine nähere Information siehe :func:`open`
+
+    :return: Die geöffnete Datei.
+
+    :raises: OSError
+    """
+    res_path = get_infoprovider_path(path)
+    os.makedirs(os.path.dirname(res_path), exist_ok=True)
+    return open(res_path, mode, encoding='utf-8')
+
+
 def open_temp_resource(path: str, pipeline_id: str, mode: str = "rt"):
     """Öffnet die übergebene Temp-Ressource.
 
@@ -223,6 +257,21 @@ def open_specific_memory_resource(job_name: str, name: str, skip, number: int = 
     """
     return open_resource(get_specific_memory_path(job_name, name, number - 1, skip), mode)
 
+
+def delete_infoprovider_resource(path: str):
+    """Löscht den übergebenen Infoprovider aus dem resources-Ordner.
+
+    Dabei wird :func:`get_infoprovider_path` verwendet, um die richtige Ressource zu finden.
+
+    Sollte der Infoprovider nicht vorhanden sein, so wird der Löschversuch ignoriert. Wird hingegen versucht einen Ordner zu löschen, so wirft dies einen Fehler.
+
+    :param path: Infoprovider, welcher gelöscht werden soll, relativ zu `resources/infoprovider`
+
+    :raises: OSError
+    """
+
+    with contextlib.suppress(FileNotFoundError):
+        os.remove(get_infoprovider_path(path))
 
 def delete_resource(path: str):
     """Löscht die übergebene Ressource.

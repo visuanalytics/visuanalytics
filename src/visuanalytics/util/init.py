@@ -33,6 +33,7 @@ def init(config: dict):
     resources.TEMP_LOCATION = res_sub_paths["temp"]
     resources.IMAGES_LOCATION = res_sub_paths["images"]
     resources.MEMORY_LOCATION = res_sub_paths["memory"]
+    resources.INFOPROVIDER_LOCATION = config["infoprovider"]
 
     # create resources folders
     os.makedirs(resources.path_from_root(res_paths["main_path"]), exist_ok=True)
