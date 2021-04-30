@@ -18,6 +18,7 @@ import {useStyles} from "./style";
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
+    apiData: any;
     selectedData: Set<string>;
     setSelectedData: (set: Set<string>) => void;
 }
@@ -47,28 +48,14 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
     let indexCounter = 0
 
+
     //everytime there is a change in the source data, rebuild the list and clean the selection
     React.useEffect(() => {
-        transformJSON(sampleJSON);
+        transformJSON(props.apiData);
         props.setSelectedData(new Set());
-    }, [listItems]);
+    }, [props.apiData]);
 
     //sample JSON-data to test the different depth levels and parsing
-    const sampleJSON = {
-        data_1: {
-            data_1_1: 1,
-            data_1_2: "value2"
-        },
-        data_2: {
-            data_2_1: {
-                data_2_1_1: "value3"
-            },
-            data_2_2: "value4"
-        },
-        data_3: "value5"
-    };
-
-
     const sample2 = {
         "season_helper": {
             "Envelope": {
@@ -169,79 +156,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         "Vorherige-Season": "Text"
     };
 
-    const sample3 = {
-        "Spiele": {
-            "same_type": true,
-            "length": 2,
-            "object": {
-                "MatchID": "Zahl",
-                "MatchDateTime": "Text",
-                "TimeZoneID": "Text",
-                "LeagueId": "Zahl",
-                "LeagueName": "Text",
-                "MatchDateTimeUTC": "Text",
-                "Team1": {
-                    "TeamId": "Zahl",
-                    "TeamName": "Text",
-                    "ShortName": "Text",
-                    "TeamIconUrl": "Text",
-                    "TeamGroupName": "Ohne Wert"
-                },
-                "LastUpdateDateTime": "Text",
-                "MatchIsFinished": "Wahrheitswert",
-                "MatchResults": {
-                    "same_type": true,
-                    "length": 2,
-                    "object": {
-                        "ResultID": "Zahl",
-                        "ResultName": "Text",
-                        "PointsTeam1": "Zahl",
-                        "PointsTeam2": "Zahl",
-                        "ResultOrderID": "Zahl",
-                        "ResultTypeID": "Zahl",
-                        "ResultDescription": "Text"
-                    }
-                },
-                "Goals": {
-                    "same_type": true,
-                    "length": 2,
-                    "object": {
-                        "GoalID": "Zahl",
-                        "ScoreTeam1": "Zahl",
-                        "ScoreTeam2": "Zahl",
-                        "MatchMinute": "Zahl",
-                        "GoalGetterID": "Zahl",
-                        "GoalGetterName": "Text",
-                        "IsPenalty": "Wahrheitswert",
-                        "IsOwnGoal": "Wahrheitswert",
-                        "IsOvertime": "Wahrheitswert",
-                        "Comment": "Ohne Wert"
-                    }
-                },
-                "Location": "Ohne Wert",
-                "NumberOfViewers": "Ohne Wert"
-            }
-        }
-    }
-
-    const sample4 = {
-        "test2": {
-            "same_type": false,
-            "length": 4,
-            "type": [
-                "Zahl",
-                "Text",
-                "Liste",
-                "JSON"
-            ]
-        }
-    }
-
     /**
      * Takes an object (supposed to be JSON data) and returns an array representation of it.
      * @param jsonData The data-Object to be turned into an array.
      * @param parent Used for recursive calls, marks the parent of items in a sub-object.
-     * Note: Currently not supporting any kind of array within the object.
      */
     const transformJSON = (jsonData: any, parent = "") => {
         let stringRep = JSON.stringify(jsonData);

@@ -40,15 +40,70 @@ export const CreateInfoProvider = () => {
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
+        "Formeln",
         "Historisierung",
         "Gesamtübersicht"
     ];
-    //the current step of the creation process, numbered by 0 to 4
+    //the current step of the creation process, numbered by 0 to 5
     const [step, setStep] = React.useState(2);
+    // holds the key of the current API
+    const [apiKey, setApiKey] = React.useState("");
+    //holds the query of the current API
+    const [query, setQuery] = React.useState("");
+    // marks if the user selected that no key is needed right now
+    const [noKey, setNoKey] = React.useState(false);
+    //holds the selected authorization method
+    const [method, setMethod] = React.useState("");
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
-    //selected Data from DataSelection
+    // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Set<string>());
+    // contains all data created custom in step 4
+    const [customData, setcustomData] = React.useState(new Set<any>());
+    // contains all data that was selected for historization
+    const [historizedData, setHistorizedData] = React.useState(new Set<string>());
+
+
+    /**
+     * Handler for the return of a successful call to the backend (posting info-provider)
+     * @param jsonData The JSON-object delivered by the backend
+     */
+    const handleSuccess = (jsonData: any) => {
+
+    }
+
+    /**
+     * Handler for unsuccessful call to the backend (posting info-provider)
+     * @param err The error returned by the backend
+     */
+    const handleError = (err: Error) => {
+        //TODO: implement error handling
+    }
+
+    /**
+     * Method to post all settings for the Info-Proivder made by the user to the backend.
+     * The backend will use this data to create the desired Info-Provider.
+     */
+    const postInfoProvider = useCallFetch("/Infoprovider",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                api: {
+                    type: "request",
+                    api_key_name: apiKey,
+                    url_pattern: query,
+                },
+                method: noKey?"noAuth":method,
+                transform: Array.from(selectedData),
+                storing: Array.from(historizedData),
+                customData: Array.from(customData)
+            })
+        }, handleSuccess, handleError
+    );
+
 
 
     /**
@@ -65,6 +120,17 @@ export const CreateInfoProvider = () => {
 
     const handleContinue = () => {
         setStep(step+1);
+        console.log(JSON.stringify({
+            api: {
+                type: "request",
+                api_key_name: apiKey,
+                url_pattern: query,
+            },
+            method: noKey?"noAuth":method,
+            transform: Array.from(selectedData),
+            storing: Array.from(historizedData),
+            customData: Array.from(customData)
+        }));
     }
 
     const handleBack = () => {
@@ -77,12 +143,10 @@ export const CreateInfoProvider = () => {
         switch (step) {
             case 0:
                 return (
-                    <div>
-                        <TypeSelection
-                            continueHandler={handleContinue}
-                            backHandler={handleBack}
-                        />
-                    </div>
+                    <TypeSelection
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                    />
                 );
             case 1:
                 return (
@@ -91,37 +155,45 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         setApiData={setApiData}
                         checkNameDuplicate={checkNameDuplicate}
+                        query={query}
+                        setQuery={(query: string) => setQuery(query)}
+                        apiKey={apiKey}
+                        setApiKey={(key: string) => setApiKey(key)}
+                        noKey={noKey}
+                        setNoKey={(noKey: boolean) => setNoKey(noKey)}
+                        method={method}
+                        setMethod={(method: string) => setMethod(method)}
                     />
                 );
             case 2:
                 return (
-                    <div>
-                        <DataSelection
-                            continueHandler={handleContinue}
-                            backHandler={handleBack}
-                            selectedData={selectedData}
-                            setSelectedData={(set: Set<string>) => setSelectedData(set)}
-                        />
-                    </div>
+                    <DataSelection
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        apiData={apiData}
+                        selectedData={selectedData}
+                        setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                    />
                 );
             case 3:
                 return (
-                    <div>
-                        <CreateCustomData
-                            continueHandler={handleContinue}
-                            backHandler={handleBack}
-                            selectedData={selectedData}
-                            setSelectedData={(set: Set<string>) => setSelectedData(set)}
-                        />
-                    </div>
+                    <CreateCustomData
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        selectedData={selectedData}
+                        setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                    />
                 )
             case 4:
                 return (
-                    <div>
-                        <HistoryScheduleSelection
-                        />
-                    </div>
+                    <HistoryScheduleSelection
+                    />
                 )
+            /*case 5:
+                return (
+                    <CreationOverview>
+                    />
+                )*/
         }
     }
     return (

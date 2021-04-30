@@ -16,7 +16,7 @@ import { ExpandMore } from "@material-ui/icons";
 //import { PageTemplate } from "../../PageTemplate";
 import TextField from "@material-ui/core/TextField";
 
-/*
+/**
 defaultValue: value to be displayed as default an as label while writing
 value: the current value, state variable is passed here
 changeHandler: handler method that changes the value
