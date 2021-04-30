@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
-import {Expr} from "./CustomDataGUI/Expression/Expr";
+import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
 
 
 interface CreateCustomDataProps {
@@ -22,22 +22,59 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
     const[customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
     const[input, setInput] = React.useState<string>('');
 
-    const[dataAsOpj, setDataAsObj] = React.useState<Array<Expr>>(new Array<Expr>(0));
+    const[dataAsOpj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
 
-    const handleCalcButtons = (operator: string) => {
-        setInput(input + operator);
+    /**
+     * dataFlag shows if dataButton was triggered
+     */
+    const[dataFlag, setDataFlag] = React.useState<boolean>(false);
+    /**
+     * opFlag shows if operatorButton was triggered
+     */
+    const[opFlag, setOpFlag] = React.useState<boolean>(true);
+    /**
+     * NumberFlag shows if NumberButton was triggered
+     */
+    const[numberFlag, setNumberFlag] = React.useState<boolean>(false);
+
+    const handleOperatorButtons = (operator: string) => {
+        dataAsOpj.push(new StrArg(operator, true));
+        setInput(calculationToString(dataAsOpj));
+        setOpFlag(true);
+        setDataFlag(false)
+        setNumberFlag(false);
     }
 
     const handleDataButtons = (data: string) => {
-        const newArr: Array<Expr> = dataAsOpj;
-        console.log(newArr)
-        let newLength: number = newArr.push(new Expr(true, data, ''))
-        console.log(newArr);
-        setInput(calculationToString(newArr));
-        setDataAsObj(newArr);
+        dataAsOpj.push(new StrArg(data, false));
+        setInput(calculationToString(dataAsOpj));
+        setOpFlag(false);
+        setDataFlag(true);
+        setNumberFlag(true);
     }
 
-    const calculationToString = (calculation: Array<Expr>) => {
+    const handleNumberButtons = (number: string) => {
+        dataAsOpj.push(new StrArg(number, false));
+        setInput(calculationToString(dataAsOpj));
+        setOpFlag(false);
+        setDataFlag(true);
+    }
+
+    const handleBracket = (bracket: string, isLeftBracket: boolean) => {
+        if (isLeftBracket) {
+            dataAsOpj.push(new StrArg(bracket, false));
+            setInput(calculationToString(dataAsOpj));
+            setOpFlag(true);
+        } else {
+            dataAsOpj.push(new StrArg(bracket, false));
+            setInput(calculationToString(dataAsOpj));
+            setDataFlag(true);
+            setNumberFlag(true);
+        }
+
+    }
+
+    const calculationToString = (calculation: Array<StrArg>) => {
         let stringToShow: string = '';
 
         for (let i: number = 0; i < calculation.length; i++) {
@@ -47,15 +84,36 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
         return stringToShow;
     }
 
+    const handleDelete = () => {
+        for (let i: number = 0; i < dataAsOpj.length; i++) {
+            dataAsOpj.pop();
+        }
+        setInput(calculationToString(dataAsOpj));
+        setOpFlag(false);
+    }
+
+    const handleSafe = (formel: string) => {
+        if (formel.length <= 0) {
+            return
+        }
+        setCustomData(new Set(customData.add(formel)))
+    }
+
     return (
         <React.Fragment>
             <div>
                 <CustomDataGUI
                     customData={customData}
-                    setCustomData={(set: Set<string>) => setCustomData(set)}
                     input={input}
-                    handleCalcButtons={(operator: string) => handleCalcButtons(operator)}
+                    handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
                     handleDataButtons={(operator: string) => handleDataButtons(operator)}
+                    handleNumberButton={(number: string) => handleNumberButtons(number)}
+                    handleBracket={(bracket: string, isLeftBracket: boolean) => handleBracket(bracket, isLeftBracket)}
+                    handleDelete={() => handleDelete()}
+                    handleSafe={(formel: string) => handleSafe(formel)}
+                    dataFlag={dataFlag}
+                    opFlag={opFlag}
+                    numberFlag={numberFlag}
                 />
             </div>
             <div>
