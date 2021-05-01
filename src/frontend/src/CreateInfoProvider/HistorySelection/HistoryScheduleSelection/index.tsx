@@ -9,7 +9,7 @@ import React, {ChangeEvent} from "react";
 import { JobList } from "../../JobList";
 import { useStyles } from "./style";
 import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../ComponentProvider";
+import { ComponentContext } from "../../../ComponentProvider";
 /*import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ExpandMore } from "@material-ui/icons";
@@ -17,7 +17,6 @@ import { PageTemplate } from "../../PageTemplate";*/
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {useCallFetch} from "../../Hooks/useCallFetch";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Input from '@material-ui/core/Input';
 import {WeekdaySelector} from "./WeekdaySelector";
@@ -28,10 +27,12 @@ import { de } from "date-fns/locale"
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { TimeList } from "./TimeList";
 import { KeyboardTimePicker } from "@material-ui/pickers";
-
+import Grid from "@material-ui/core/Grid";
+import {useStyles} from "./style";
 
 interface HistoryScheduleSelectionProps {
-
+    handleProceed: () => void;
+    handleBack: () => void;
 };
 
 /**
@@ -39,6 +40,8 @@ interface HistoryScheduleSelectionProps {
  * The state of this component handles the input made to its children.
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
+    const classes = useStyles();
+
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
     //a set that holds all times added by the user, formatted as "hh:mm" strings
@@ -76,31 +79,51 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
         ));
     }
 
-    //const components = React.useContext(ComponentContext);
+
     return (
-        <div>
-            <WeekdaySelector
-                days={days}
-                changeDay={changeDay}
-             />
-            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={de}>
-                <KeyboardTimePicker
-                    ampm={false}
-                    placeholder="00:00"
-                    mask="__:__"
-                    value={currentTimeSelection}
-                    onChange={setCurrentTimeSelection}
-                    invalidDateMessage={'Falsches Datumsformat'}
-                    cancelLabel={'Abbrechen'}
+        <Grid container>
+            <Grid item xs={12}>
+                <WeekdaySelector
+                    days={days}
+                    changeDay={changeDay}
                 />
-            </MuiPickersUtilsProvider>
-            <Button variant="outlined" onClick={() => addToTimes(currentTimeSelection)}>
-                Zeit hinzufügen
-            </Button>
-            <TimeList
-                times={times}
-                removeHandler={removeTimes}
-            />
-        </div>
+            </Grid>
+            <Grid item xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={de}>
+                    <KeyboardTimePicker
+                        ampm={false}
+                        placeholder="00:00"
+                        mask="__:__"
+                        value={currentTimeSelection}
+                        onChange={setCurrentTimeSelection}
+                        invalidDateMessage={'Falsches Datumsformat'}
+                        cancelLabel={'Abbrechen'}
+                    />
+                </MuiPickersUtilsProvider>
+            </Grid>
+            <Grid item xs={12}>
+                <Button variant="outlined" onClick={() => addToTimes(currentTimeSelection)}>
+                    Zeit hinzufügen
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
+                <TimeList
+                    times={times}
+                    removeHandler={removeTimes}
+                />
+            </Grid>
+            <Grid item container xs={12} justify="space-between">
+                <Grid item>
+                    <Button variant="contained" size="large" color="primary" onClick={props.handleBack}>
+                        zurück
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed}>
+                        weiter
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
     )
 };

@@ -9,7 +9,7 @@ import React, {ChangeEvent} from "react";
 import { JobList } from "../../JobList";
 import { useStyles } from "./style";
 import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../../ComponentProvider";
+import { ComponentContext } from "../../../../ComponentProvider";
 /*import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ExpandMore } from "@material-ui/icons";

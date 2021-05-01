@@ -22,7 +22,7 @@ import {useStyles} from "../Home/style";
 import JobCreate from "../JobCreate";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { TypeSelection } from "./TypeSelection";
-import { HistoryScheduleSelection } from "./HistoryScheduleSelection";
+import { HistorySelection } from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
 import {CreateCustomData} from "./CreateCustomData";
 import Stepper from '@material-ui/core/Stepper';
@@ -45,7 +45,7 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(2);
+    const [step, setStep] = React.useState(4);
     // holds the key of the current API
     const [apiKey, setApiKey] = React.useState("");
     //holds the query of the current API
@@ -186,8 +186,17 @@ export const CreateInfoProvider = () => {
                 )
             case 4:
                 return (
-                    <HistoryScheduleSelection
+                    <HistorySelection
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        selectedData={selectedData}
+                        historizedData={historizedData}
+                        setHistorizedData={(set: Set<string>) => setHistorizedData(set)}
                     />
+                )
+            case 5:
+                return (
+                    <div>Step 5</div>
                 )
             /*case 5:
                 return (

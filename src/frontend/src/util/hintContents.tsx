@@ -93,5 +93,16 @@ export const hintContents = {
             </Typography>
 
         </div>
+    ),
+    historySelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Historisierungsauswahl
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite werden die zu historisierenden Daten und die Historisierungszeitpunkte festgelegt.
+            </Typography>
+
+        </div>
     )
 };
