@@ -13,12 +13,16 @@ interface CustomDataGUIProps {
     handleOperatorButtons: (operator: string) => void;
     handleDataButtons: (data: string) => void;
     handleNumberButton: (number: string) => void;
-    handleBracket: (bracket: string, isLeftBracket: boolean) => void;
+    handleRightBracket: (bracket: string) => void;
+    handleLeftBracket: (bracket: string) => void;
     handleDelete: () => void;
     handleSafe: (formel: string) => void;
     dataFlag: boolean;
     opFlag: boolean;
     numberFlag: boolean;
+    rightBracketFlag: boolean;
+    leftBracketFlag: boolean;
+    canRightBracketBePlaced: boolean;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
@@ -59,10 +63,10 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <Button variant={"contained"} size={"medium"} color={"primary"} disabled={props.opFlag} onClick={() => props.handleOperatorButtons('%')}>
                         %
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleBracket('(', true)}>
+                    <Button variant={"contained"} size={"medium"} color={"primary"} disabled={true} onClick={() => props.handleLeftBracket('(')}>
                         (
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleBracket(')', false)}>
+                    <Button variant={"contained"} size={"medium"} color={"primary"} disabled={true} onClick={() => props.handleRightBracket(')')}>
                         )
                     </Button>
                 </div>
