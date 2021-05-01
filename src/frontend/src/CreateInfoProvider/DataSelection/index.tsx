@@ -177,10 +177,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             let value: any = "";
             //check if the value is another object
             if (stringRep[0] === "{") {
-                //The value is a sub-object
+                //The value is a sub-object or an array
                 let subObject = stringRep.split("}", 1)[0] + "}"
                 let counter = 1;
-                //detect the whole sub-object
+                //detect the whole sub-object/array
                 while (subObject.split("{").length - 1 != subObject.split("}").length - 1) {
                     let splitArray = stringRep.split("}", counter);
                     subObject = "";
@@ -190,7 +190,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     counter += 1;
                 }
                 console.log("checking subobject: " + subObject);
-                //lookahead to the next key - if it is same_type, we know that we face an array
+                //lookahead to the next key - if it is same_type, we know that we have an array
                 let nextKey = subObject.split(":", 2)[0];
                 //strip quotation marks and the opening curly bracket
                 nextKey = nextKey.substring(2, nextKey.length - 1);
@@ -216,20 +216,20 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             if(objectLookahead.substring(2, objectLookahead.length-1)=="same_type") {
                                 value = "[Array]"
                             } else {
-                                value = transformJSON(JSON.parse(object), parent==""?key:parent + "|" + key)
+                                value = transformJSON(JSON.parse(object), (parent==""?key:parent + "|" + key) + "|0")
                             }
                             resultArray.push({
-                                keyName: key,
+                                keyName: key + "|0",
                                 value: value,
                                 parentKeyName: parent,
                                 arrayRep: true,
                                 arrayLength: parseInt(array_length)
                             })
                         } else {
-                            //primitive contents
+                            //primitive array contents
                             value = subObject.substring(32 + same_type_value.length + array_length.length, subObject.length-2);
                             resultArray.push({
-                                keyName: key,
+                                keyName: key + "|0",
                                 value: value,
                                 parentKeyName: parent,
                                 arrayRep: true,
@@ -245,18 +245,19 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         }
                         typeString = typeString.substring(0, typeString.length-2);
                         resultArray.push({
-                            keyName: key,
+                            keyName: key + "|0",
                             value: typeString,
                             parentKeyName: parent,
                             arrayRep: true,
                             arrayLength: parseInt(array_length)
                         })
                     }
-                    //cut the handled object
+                    //cut the handled array-object
                     stringRep = stringRep.substring(subObject.length + 1);
                     if(stringRep.length==0) finished = false;
                     continue
                 }
+                //only reached when it is an object, not an array
                 value = transformJSON(JSON.parse(subObject), parent==""?key:parent + "|" + key);
                 stringRep = stringRep.substring(subObject.length + 1);
             } else {
@@ -304,7 +305,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         </ListItemIcon>
                         }
                         <ListItemText
-                            primary={data.arrayRep ? data.keyName + " (Array), length: " + data.arrayLength : data.keyName + " (object)"}
+                            primary={data.arrayRep ? data.keyName + " (Array[0]), length: " + data.arrayLength : data.keyName + " (object)"}
                             secondary={null}
                         />
                     </ListItem>
@@ -324,7 +325,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         />
                     </ListItemIcon>
                     <ListItemText
-                        primary={data.keyName + " (Array), length: " + data.arrayLength +", content types: " + data.value}
+                        primary={data.keyName + " (Array[0]), length: " + data.arrayLength +", content types: " + data.value}
                         secondary={null}
                     />
                 </ListItem>
