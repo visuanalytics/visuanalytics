@@ -4,11 +4,29 @@ import os
 import humps
 
 from visuanalytics.server.db import db
-from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL
+from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, open_resource
 
+INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoproviders"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
+
+
+def insert_infoprovider(infoprovider):
+    #con = db.open_con_f()
+    infoprovider_name = infoprovider["infoprovider_name"]
+    infoprovider_json = {
+        "api": infoprovider["api"],
+        "transform": infoprovider["transform"],
+        "storing": infoprovider["storing"]
+    }
+
+    with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
+        json.dump(infoprovider_json, f)
+
+    #con.execute("INSERT INTO infoprovider (infoprovider_name)VALUES (?)",
+    #            [infoprovider_name])
+    #con.commit()
 
 
 def get_topic_names():
@@ -249,6 +267,10 @@ def _row_to_job(row):
         "deleteSchedule": delete_schedule,
         "topicValues": topic_values
     }
+
+
+def _get_infoprovider_path(infoprovider_name: str):
+    return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
 
 
 def _get_steps_path(json_file_name: str):
