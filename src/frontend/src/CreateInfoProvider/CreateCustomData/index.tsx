@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
+import {Grid} from "@material-ui/core";
 
 
 interface CreateCustomDataProps {
@@ -17,107 +18,94 @@ interface CreateCustomDataProps {
     setSelectedData: (set: Set<string>) => void;
 }
 
-export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
+export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
-    const[customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
-    const[input, setInput] = React.useState<string>('');
+    const [customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
+    const [input, setInput] = React.useState<string>('');
 
-    const[dataAsOpj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
+    const [dataAsOpj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
 
     /**
      * dataFlag shows if dataButton was triggered
      */
-    const[dataFlag, setDataFlag] = React.useState<boolean>(false);
+    const [dataFlag, setDataFlag] = React.useState<boolean>(false);
     /**
      * opFlag shows if operatorButton was triggered
      */
-    const[opFlag, setOpFlag] = React.useState<boolean>(true);
+    const [opFlag, setOpFlag] = React.useState<boolean>(true);
     /**
      * NumberFlag shows if NumberButton was triggered
      */
-    const[numberFlag, setNumberFlag] = React.useState<boolean>(false);
-    const[rightBracketFlag, setRightBracketFlag] = React.useState<boolean>(false);
-    const[leftBracketFlag, setLeftBracketFlag] = React.useState<boolean>(false);
+    const [numberFlag, setNumberFlag] = React.useState<boolean>(false);
+    const [rightBracketFlag, setRightBracketFlag] = React.useState<boolean>(false);
+    const [leftBracketFlag, setLeftBracketFlag] = React.useState<boolean>(false);
 
-    const[numberCount, setNumberCount] = React.useState<number>(0);
-    const[bracketCount, setBracketCount] = React.useState<number>(0);
-    const[canRightBracketBePlaced, setCanRightBracketBePlaced] = React.useState<boolean>(true);
+    const [bracketCount, setBracketCount] = React.useState<number>(-1);
+    const [canRightBracketBePlaced, setCanRightBracketBePlaced] = React.useState<boolean>(true);
 
     const handleOperatorButtons = (operator: string) => {
-        dataAsOpj.push(new StrArg(operator, true, false,0));
-        setInput(calculationToString(dataAsOpj));
-
-        setNumberCount(0);
-
         setOpFlag(true);
         setDataFlag(false)
         setNumberFlag(false);
         setRightBracketFlag(false);
         setLeftBracketFlag(false);
+
+        dataAsOpj.push(new StrArg(operator, true, false));
+        setInput(calculationToString(dataAsOpj));
     }
 
     const handleDataButtons = (data: string) => {
-        dataAsOpj.push(new StrArg(data, false, false,0));
-        setInput(calculationToString(dataAsOpj));
-
-        setNumberCount(0);
-
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
         setRightBracketFlag(false);
         setLeftBracketFlag(true);
+
+        dataAsOpj.push(new StrArg(data, false, false));
+        setInput(calculationToString(dataAsOpj));
     }
 
     const handleNumberButtons = (number: string) => {
-        setNumberCount(numberCount + 1);
-
-        dataAsOpj.push(new StrArg(number, false, true, numberCount));
-        setInput(calculationToString(dataAsOpj));
-        console.log('count ' + numberCount)
-        console.log('indexfornumbers ' + dataAsOpj[dataAsOpj.length - 1].indexForNumbers)
-        console.log('leng ' + dataAsOpj.length)
-
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(false);
         setRightBracketFlag(false);
         setLeftBracketFlag(true);
+
+        dataAsOpj.push(new StrArg(number, false, true));
+        setInput(calculationToString(dataAsOpj));
     }
 
     const handleLeftBracket = (bracket: string) => {
-        dataAsOpj.push(new StrArg(bracket, false, false, 0));
-        setInput(calculationToString(dataAsOpj));
-
-        setNumberCount(0);
         setBracketCount(bracketCount + 1);
-        console.log(bracketCount)
-        checkBrackets();
+        setCanRightBracketBePlaced(bracketCount === 0);
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
         setRightBracketFlag(true);
         setLeftBracketFlag(false);
+
+        dataAsOpj.push(new StrArg(bracket, false, false));
+        setInput(calculationToString(dataAsOpj));
     }
 
     const handleRightBracket = (bracket: string) => {
-        dataAsOpj.push(new StrArg(bracket, false, false, 0));
-        setInput(calculationToString(dataAsOpj));
-
-        setNumberCount(0);
         setBracketCount(bracketCount - 1);
-        console.log(bracketCount)
-        checkBrackets();
+        setCanRightBracketBePlaced(bracketCount === 0);
 
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
         setRightBracketFlag(false);
         setLeftBracketFlag(true);
+
+        dataAsOpj.push(new StrArg(bracket, false, false));
+        setInput(calculationToString(dataAsOpj));
     }
 
     const calculationToString = (calculation: Array<StrArg>) => {
+        console.log('stringlength ' + calculation.length);
         let stringToShow: string = '';
 
         for (let i: number = 0; i < calculation.length; i++) {
@@ -133,47 +121,15 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
             return
         }
 
-        let count: number = dataAsOpj[dataAsOpj.length - 1].indexForNumbers;
+        setDataAsObj(new Array<StrArg>(0));
+        setInput('');
+        setBracketCount(0);
 
-        if (dataAsOpj[dataAsOpj.length - 1].isNumber) {
-            for (let i: number = 0; i <= count; i++) {
-                dataAsOpj.pop();
-            }
-            setNumberCount(0);
-        } else if (dataAsOpj[dataAsOpj.length - 1].isOp) {
-            setOpFlag(false);
-            setDataFlag(false);
-            setNumberFlag(false);
-            setRightBracketFlag(false);
-            setLeftBracketFlag(true);
-
-            dataAsOpj.pop();
-        } else {
-            dataAsOpj.pop();
-        }
-
-        if (opFlag) {
-            setOpFlag(false)
-        } else {
-            setOpFlag(true)
-        }
-        if (dataFlag) {
-            setDataFlag(false)
-        } else {
-            setDataFlag(true)
-        }
-        if (rightBracketFlag) {
-            setRightBracketFlag(false)
-        } else {
-            setRightBracketFlag(true)
-        }
-        if (leftBracketFlag) {
-            setLeftBracketFlag(false)
-        } else {
-            setLeftBracketFlag(true)
-        }
-
-        setInput(calculationToString(dataAsOpj));
+        setOpFlag(true);
+        setDataFlag(false);
+        setNumberFlag(false);
+        setRightBracketFlag(false);
+        setLeftBracketFlag(false);
     }
 
     const handleSafe = (formel: string) => {
@@ -183,45 +139,43 @@ export const CreateCustomData: React.FC<CreateCustomDataProps>  = (props) => {
         setCustomData(new Set(customData.add(formel)))
     }
 
-    const checkBrackets = () => {
-        if (bracketCount === 0) {
-            setCanRightBracketBePlaced(true)
-        } else {
-            setCanRightBracketBePlaced(false);
-        }
-
-        console.log(canRightBracketBePlaced);
-    }
-
     return (
         <React.Fragment>
-            <div>
-                <CustomDataGUI
-                    customData={customData}
-                    input={input}
-                    handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
-                    handleDataButtons={(operator: string) => handleDataButtons(operator)}
-                    handleNumberButton={(number: string) => handleNumberButtons(number)}
-                    handleRightBracket={(bracket: string) => handleRightBracket(bracket)}
-                    handleLeftBracket={(bracket: string) => handleLeftBracket(bracket)}
-                    handleDelete={() => handleDelete()}
-                    handleSafe={(formel: string) => handleSafe(formel)}
-                    dataFlag={dataFlag}
-                    opFlag={opFlag}
-                    numberFlag={numberFlag}
-                    rightBracketFlag={rightBracketFlag}
-                    leftBracketFlag={leftBracketFlag}
-                    canRightBracketBePlaced={canRightBracketBePlaced}
-                />
-            </div>
-            <div>
-                <Button variant="contained" size="large" onClick={props.backHandler}>
-                    zurück
-                </Button>
-                <Button variant="contained" size="large" onClick={props.continueHandler}>
-                    weiter
-                </Button>
-            </div>
+            <form>
+                <Grid container>
+                    <Grid>
+                        <div>
+                            <CustomDataGUI
+                                customData={customData}
+                                input={input}
+                                handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
+                                handleDataButtons={(operator: string) => handleDataButtons(operator)}
+                                handleNumberButton={(number: string) => handleNumberButtons(number)}
+                                handleRightBracket={(bracket: string) => handleRightBracket(bracket)}
+                                handleLeftBracket={(bracket: string) => handleLeftBracket(bracket)}
+                                handleDelete={() => handleDelete()}
+                                handleSafe={(formel: string) => handleSafe(formel)}
+                                dataFlag={dataFlag}
+                                opFlag={opFlag}
+                                numberFlag={numberFlag}
+                                rightBracketFlag={rightBracketFlag}
+                                leftBracketFlag={leftBracketFlag}
+                                canRightBracketBePlaced={canRightBracketBePlaced}
+                            />
+                        </div>
+                    </Grid>
+                    <Grid>
+                        <div>
+                            <Button variant="contained" size="large" onClick={props.backHandler}>
+                                zurück
+                            </Button>
+                            <Button variant="contained" size="large" onClick={props.continueHandler}>
+                                weiter
+                            </Button>
+                        </div>
+                    </Grid>
+                </Grid>
+            </form>
         </React.Fragment>
     );
 

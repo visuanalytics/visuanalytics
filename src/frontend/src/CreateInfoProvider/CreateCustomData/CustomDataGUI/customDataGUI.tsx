@@ -1,11 +1,12 @@
 import {CreateCustomData} from "../index";
 import React from "react";
-import {Button, TextareaAutosize, TextField} from "@material-ui/core";
+import {Button, Grid, TextareaAutosize, TextField} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {StrArg} from "./StringRep/StrArg";
 import Checkbox from "@material-ui/core/Checkbox";
+import {RemoveRedEye} from "@material-ui/icons";
 
 interface CustomDataGUIProps {
     customData: Set<string>;
@@ -121,37 +122,41 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     return (
         <React.Fragment>
-            <div>
-                <div style={{width: '20%'}}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} required={true} onChange={event => (setText(event.target.value))}>
-                        {'Name'}
-                    </TextField>
-                    <TextareaAutosize aria-setsize={100} placeholder={props.input} readOnly={true}/>
-                    <List>
-                        {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                    </List>
+            <Grid>
+                <div>
+                    <Grid item xs={12}>
+                        <div>
+                            <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} required={true} onChange={event => (setText(event.target.value))}>
+                                {'Name'}
+                            </TextField>
+                            <TextareaAutosize rowsMin={15} defaultValue={props.input} readOnly={true}/>
+                            <List>
+                                {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            </List>
 
+                        </div>
+                    </Grid>
+                    <div>
+                        {makeCalculateButtons()}
+                    </div>
+                    <br/>
+                    <div>
+                        {makeNumberButtons()}
+                    </div>
+                    <br/>
+                    <div>
+                        <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleDelete()}>
+                            Löschen
+                        </Button>
+                        <Button variant={"contained"} size={"medium"} color={"primary"}>
+                            Ergebnis:
+                        </Button>
+                        <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleSafe(text)}>
+                            Speichern!
+                        </Button>
+                    </div>
                 </div>
-                <div>
-                    {makeCalculateButtons()}
-                </div>
-                <br/>
-                <div>
-                    {makeNumberButtons()}
-                </div>
-                <br/>
-                <div>
-                    <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleDelete()}>
-                        Löschen
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"primary"}>
-                        Ergebnis:
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"primary"} onClick={() => props.handleSafe(text)}>
-                        Speichern!
-                    </Button>
-                </div>
-            </div>
+            </Grid>
         </React.Fragment>
     );
 };
