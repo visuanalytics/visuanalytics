@@ -9,7 +9,7 @@ import React, {ChangeEvent} from "react";
 import { JobList } from "../../JobList";
 import { useStyles } from "./style";
 import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../ComponentProvider";
+import {ComponentContext} from "../../ComponentProvider";
 /*import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ExpandMore } from "@material-ui/icons";
@@ -20,6 +20,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Input from '@material-ui/core/Input';
+import {StepFrame} from "../StepFrame";
+import {hintContents} from "../../util/hintContents";
+import {useStyles} from "./styles";
+import {Grid} from "@material-ui/core";
 
 
 interface TypeSelectionProps {
@@ -31,8 +35,8 @@ interface TypeSelectionProps {
  * Component displaying the second step in the creation of a new Info-Provider.
  * The state of this component handles the input made to its children.
  */
-export const TypeSelection: React.FC<TypeSelectionProps>  = (props) => {
-    //const classes = useStyles();
+export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
+    const classes = useStyles();
     const [newSource, setNewSource] = React.useState(false);
     //duplicate is necessary to disable both options at the beginning
     const [importSource, setImportSource] = React.useState(false);
@@ -76,14 +80,14 @@ export const TypeSelection: React.FC<TypeSelectionProps>  = (props) => {
      * Also checks if the filepath given by the browser has a .json-Extension as first type check.
      */
     const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
-        if(event.target.files==null) {
+        if (event.target.files == null) {
             //TODO: error handling on null file
         } else {
             setFile(event.target.files[0]);
             setFileSelected(true);
-            if(fileUploader.current !== null) {
+            if (fileUploader.current !== null) {
                 let splittedString = fileUploader.current.value.split(".")
-                if (splittedString[splittedString.length-1] !== "json") {
+                if (splittedString[splittedString.length - 1] !== "json") {
                     //TODO: throw error since non-json file was selected
                 }
             }
@@ -96,7 +100,7 @@ export const TypeSelection: React.FC<TypeSelectionProps>  = (props) => {
      */
     const handleProceed = () => {
         //TODO: signal the choice to the parent
-        if(importSource) {
+        if (importSource) {
             //TODO: File exchange with backend, send results to parent
         }
         props.continueHandler();
@@ -106,36 +110,62 @@ export const TypeSelection: React.FC<TypeSelectionProps>  = (props) => {
     //TODO: find a prettier solution for a file upload button, possibly use external component since material-ui doesnt offer one
     //const components = React.useContext(ComponentContext);
     return (
-        <div>
-            <form>
-                <FormControlLabel
-                    control={
-                        <Checkbox checked={newSource} onChange={(e) => {if(newSource) setNewSource(false);
-                        else {setNewSource(true); setImportSource(false)}}}/>
-                    }
-                    label="Eine neue Datenquelle erstellen"
-                />
-                <br/>
-                <div>
+        <StepFrame
+            heading={"Datenquelle"}
+            hintContent={hintContents.typeSelection}
+        >
+            <Grid container justify="center" className={classes.elementMargin}>
+                <Grid item xs={12}>
                     <FormControlLabel
                         control={
-                            <Checkbox checked={importSource} onChange={(e) => {if(importSource) setImportSource(false);
-                            else {setImportSource(true); setNewSource(false)}}}/>
+                            <Checkbox checked={newSource} onChange={(e) => {
+                                if (newSource) setNewSource(false);
+                                else {
+                                    setNewSource(true);
+                                    setImportSource(false)
+                                }
+                            }}/>
+                        }
+                        label="Eine neue Datenquelle erstellen"
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox checked={importSource} onChange={(e) => {
+                                if (importSource) setImportSource(false);
+                                else {
+                                    setImportSource(true);
+                                    setNewSource(false)
+                                }
+                            }}/>
                         }
                         label="Eine bestehende Datenquelle importieren"
                     />
-                    <div>
-                        <input ref={fileUploader} disabled={!importSource} type="file" accept=".json" onChange={handleFileSelect}/>
-                    </div>
-                </div>
-                <br/>
-                <Button variant="contained" size="large" onClick={props.backHandler}>
-                    abbrechen
-                </Button>
-                <Button disabled={!(newSource||(importSource&&fileSelected))} variant="contained" size="large" onClick={handleProceed}>
-                    weiter
-                </Button>
-            </form>
-        </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <input ref={fileUploader} disabled={!importSource} type="file" accept=".json"
+                           onChange={handleFileSelect}/>
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                    <Grid item>
+                        <Button variant="contained"
+                                size="large"
+                                color={"primary"}
+                                onClick={props.backHandler}>
+                            abbrechen
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button disabled={!(newSource || (importSource && fileSelected))} variant="contained"
+                                size="large"
+                                color={"primary"}
+                                onClick={handleProceed}>
+                            weiter
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </StepFrame>
     )
 };

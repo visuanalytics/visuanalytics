@@ -45,7 +45,7 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(4);
+    const [step, setStep] = React.useState(0);
     // holds the key of the current API
     const [apiKey, setApiKey] = React.useState("");
     //holds the query of the current API

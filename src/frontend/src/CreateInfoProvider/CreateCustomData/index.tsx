@@ -9,6 +9,9 @@ import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
 import {Grid} from "@material-ui/core";
+import {useStyles} from "./style";
+import {hintContents} from "../../util/hintContents";
+import {StepFrame} from "../StepFrame";
 
 
 interface CreateCustomDataProps {
@@ -19,6 +22,8 @@ interface CreateCustomDataProps {
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
+
+    const classes = useStyles();
 
     const [customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
     const [input, setInput] = React.useState<string>('');
@@ -140,43 +145,47 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     return (
-        <React.Fragment>
-            <form>
-                <Grid container>
+        <StepFrame
+            heading="Formeln"
+            hintContent={hintContents.formeln}
+        >
+            <React.Fragment>
+                <form>
                     <Grid>
-                        <div>
-                            <CustomDataGUI
-                                customData={customData}
-                                input={input}
-                                handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
-                                handleDataButtons={(operator: string) => handleDataButtons(operator)}
-                                handleNumberButton={(number: string) => handleNumberButtons(number)}
-                                handleRightBracket={(bracket: string) => handleRightBracket(bracket)}
-                                handleLeftBracket={(bracket: string) => handleLeftBracket(bracket)}
-                                handleDelete={() => handleDelete()}
-                                handleSafe={(formel: string) => handleSafe(formel)}
-                                dataFlag={dataFlag}
-                                opFlag={opFlag}
-                                numberFlag={numberFlag}
-                                rightBracketFlag={rightBracketFlag}
-                                leftBracketFlag={leftBracketFlag}
-                                canRightBracketBePlaced={canRightBracketBePlaced}
-                            />
-                        </div>
+                        <CustomDataGUI
+                            customData={customData}
+                            input={input}
+                            handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
+                            handleDataButtons={(operator: string) => handleDataButtons(operator)}
+                            handleNumberButton={(number: string) => handleNumberButtons(number)}
+                            handleRightBracket={(bracket: string) => handleRightBracket(bracket)}
+                            handleLeftBracket={(bracket: string) => handleLeftBracket(bracket)}
+                            handleDelete={() => handleDelete()}
+                            handleSafe={(formel: string) => handleSafe(formel)}
+                            dataFlag={dataFlag}
+                            opFlag={opFlag}
+                            numberFlag={numberFlag}
+                            rightBracketFlag={rightBracketFlag}
+                            leftBracketFlag={leftBracketFlag}
+                            canRightBracketBePlaced={canRightBracketBePlaced}
+                        />
                     </Grid>
-                    <Grid>
-                        <div>
-                            <Button variant="contained" size="large" onClick={props.backHandler}>
+                    <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                        <Grid>
+                            <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                 zurück
                             </Button>
-                            <Button variant="contained" size="large" onClick={props.continueHandler}>
+                        </Grid>
+                        <Grid>
+                            <Button variant="contained" size="large" color="primary"
+                                    onClick={props.continueHandler}>
                                 weiter
                             </Button>
-                        </div>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </form>
-        </React.Fragment>
+                </form>
+            </React.Fragment>
+        </StepFrame>
     );
 
 }

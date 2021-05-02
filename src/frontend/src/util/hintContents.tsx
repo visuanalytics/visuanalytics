@@ -104,5 +104,25 @@ export const hintContents = {
             </Typography>
 
         </div>
+    ),
+    formeln: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Formeln erstellen
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie mit den ausgewählten Daten eigene Formeln und Variablen erstellen!
+            </Typography>
+        </div>
+    ),
+    typeSelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Datenquelle
+            </Typography>
+            <Typography gutterBottom>
+                Wählen Sie hier aus, woher Sie Ihre Daten beziehen wollen!
+            </Typography>
+        </div>
     )
 };

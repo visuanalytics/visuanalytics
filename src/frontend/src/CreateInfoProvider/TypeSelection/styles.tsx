@@ -7,11 +7,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         listFrame: {
             width: "100%",
-            height: 200,
-            overflow: "visible",
+            height: 400,
+            overflow: 'auto',
             overflowX: "hidden",
             marginTop: "20px",
             marginBottom: "10px"
-        },
+        }
     }),
 );
