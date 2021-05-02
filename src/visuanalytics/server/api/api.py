@@ -21,6 +21,73 @@ def close_db_con(exception):
     db.close_con_f()
 
 
+@api.route("/checkapi", methods=["POST"])
+def checkapi():
+    """
+    Endpunkt '/checkapi'.
+
+    Übermitteltes JSON enthält die API-Daten in dem Format:
+    {   'url': '<url + query>',
+        'api_key': '<api-key falls einer gegeben ist>',
+        'has_key': <true falls ein api-key gegeben ist>
+    }
+
+    Die Response enthält alle Keys die bei der gegenen API abgefragt werden können
+    """
+    api = request.json
+    try:
+        if "url" not in api:
+            err = flask.jsonify({"err_msg": "Missing URL"})
+            return err, 400
+        if "has_key" not in api:
+            err = flask.jsonify({"err_msg": "Missing Field 'has_key'"})
+            return err, 400
+        if api["has_key"] is True and "api_key" not in api:
+            err = flask.jsonify({"err_msg": "Missing API-Key"})
+            return err, 400
+
+        # Todo API-Abfragen
+        keys = None # Methode zum Umschreiben der API-Keys aufrufen
+        if keys is not None:
+            return flask.jsonify({"api_keys": keys, "status": 0})
+
+        return flask.jsonify({"status": 1, "api_keys": {}})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while checking a new api"})
+        return err, 400
+
+
+@api.route("/infoprovider", methods=["POST"])
+def add_infoprovider():
+    """
+    Endpunkt '/infoprovider'.
+
+    Route zum Hinzufügen eines Infoproviders.
+    """
+    infoprovider = request.json
+    try:
+        if "infoprovider_name" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
+            return err, 400
+        if "api" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Field 'api'"})
+            return err, 400
+        if "transform" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
+            return err, 400
+        if "storing" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
+            return err, 400
+
+        queries.insert_infoprovider(infoprovider)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding an infoprovider"})
+        return err, 400
+
+
 @api.route("/topics", methods=["GET"])
 def topics():
     """
