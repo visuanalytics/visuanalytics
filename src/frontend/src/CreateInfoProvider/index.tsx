@@ -45,7 +45,7 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(0);
+    const [step, setStep] = React.useState(3);
     // holds the key of the current API
     const [apiKey, setApiKey] = React.useState("");
     //holds the query of the current API
@@ -196,7 +196,7 @@ export const CreateInfoProvider = () => {
                 )
             case 5:
                 return (
-                    <div>Step 5</div>
+                    <div>Step 6</div>
                 )
             /*case 5:
                 return (

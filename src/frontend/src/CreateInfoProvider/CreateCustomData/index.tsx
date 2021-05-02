@@ -45,14 +45,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [rightBracketFlag, setRightBracketFlag] = React.useState<boolean>(false);
     const [leftBracketFlag, setLeftBracketFlag] = React.useState<boolean>(false);
 
-    const [bracketCount, setBracketCount] = React.useState<number>(-1);
+    const [bracketCount, setBracketCount] = React.useState<number>(0);
     const [canRightBracketBePlaced, setCanRightBracketBePlaced] = React.useState<boolean>(true);
 
     const handleOperatorButtons = (operator: string) => {
         setOpFlag(true);
         setDataFlag(false)
         setNumberFlag(false);
-        setRightBracketFlag(false);
+        setRightBracketFlag(true);
         setLeftBracketFlag(false);
 
         dataAsOpj.push(new StrArg(operator, true, false));
@@ -83,12 +83,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
     const handleLeftBracket = (bracket: string) => {
         setBracketCount(bracketCount + 1);
-        setCanRightBracketBePlaced(bracketCount === 0);
+        console.log("bracketCountAL: " + bracketCount)
+        setCanRightBracketBePlaced(bracketCount <= 0);
+        console.log("LB: " + (bracketCount <= 0))
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
-        setRightBracketFlag(true);
+        setRightBracketFlag(false);
         setLeftBracketFlag(false);
 
         dataAsOpj.push(new StrArg(bracket, false, false));
@@ -97,7 +99,9 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
     const handleRightBracket = (bracket: string) => {
         setBracketCount(bracketCount - 1);
-        setCanRightBracketBePlaced(bracketCount === 0);
+        console.log("bracketCountAR: " + bracketCount)
+        setCanRightBracketBePlaced(bracketCount <= 0);
+        console.log("RB: " + (bracketCount <= 0))
 
         setOpFlag(false);
         setDataFlag(true);
@@ -138,10 +142,13 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     const handleSafe = (formel: string) => {
-        if (formel.length <= 0) {
+        if ((formel.length <= 0) || (input.length <= 0)) {
+            console.log('Entweder kein Name oder keine Formel!')
             return
         }
-        setCustomData(new Set(customData.add(formel)))
+        setCustomData(new Set(customData.add(formel)));
+        props.setSelectedData(new Set(customData));
+        handleDelete();
     }
 
     return (
@@ -150,8 +157,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             hintContent={hintContents.formeln}
         >
             <React.Fragment>
-                <form>
-                    <Grid>
+                <Grid container justify="space-evenly" className={classes.elementMargin}>
+                    <Grid item container xs={12}>
                         <CustomDataGUI
                             customData={customData}
                             input={input}
@@ -183,7 +190,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                             </Button>
                         </Grid>
                     </Grid>
-                </form>
+                </Grid>
             </React.Fragment>
         </StepFrame>
     );

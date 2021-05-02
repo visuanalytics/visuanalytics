@@ -1,6 +1,6 @@
 import {CreateCustomData} from "../index";
 import React from "react";
-import {Box, Button, Grid, TextareaAutosize, TextField} from "@material-ui/core";
+import {Box, Button, Grid, TextareaAutosize, TextField, Typography} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
@@ -37,7 +37,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
             <ListItem key={data}>
                 <FormControlLabel
                     control={
-                        <Button variant={"outlined"} size={"small"} disabled={props.dataFlag}
+                        <Button variant={"outlined"} size={"medium"} disabled={props.dataFlag}
                                 onClick={() => props.handleDataButtons(data)}>
                             {data}
                         </Button>
@@ -51,36 +51,38 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     const makeCalculateButtons = () => {
         return (
             <React.Fragment>
-                <div>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.opFlag}
+                <Grid item container xs={12} justify={"center"}>
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
                             onClick={() => props.handleOperatorButtons('+')}>
                         +
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.opFlag}
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
                             onClick={() => props.handleOperatorButtons('-')}>
                         -
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.opFlag}
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
                             onClick={() => props.handleOperatorButtons('*')}>
                         *
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.opFlag}
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
                             onClick={() => props.handleOperatorButtons('/')}>
                         /
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.opFlag}
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
                             onClick={() => props.handleOperatorButtons('%')}>
                         %
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={true}
+                </Grid>
+                <Grid item container xs={12} justify={"center"}>
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.leftBracketFlag}
                             onClick={() => props.handleLeftBracket('(')}>
                         (
                     </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={true}
+                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.canRightBracketBePlaced}
                             onClick={() => props.handleRightBracket(')')}>
                         )
                     </Button>
-                </div>
+                </Grid>
             </React.Fragment>
         )
     };
@@ -88,7 +90,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     const makeNumberButtons = () => {
         return (
             <React.Fragment>
-                <div>
+                <Grid item container xs={12} justify={"center"}>
                     <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
                             onClick={() => props.handleNumberButton('0')}>
                         0
@@ -101,8 +103,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                             onClick={() => props.handleNumberButton('2')}>
                         2
                     </Button>
-                </div>
-                <div>
+                </Grid>
+                <Grid item container xs={12} justify={"center"}>
                     <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
                             onClick={() => props.handleNumberButton('3')}>
                         3
@@ -115,8 +117,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                             onClick={() => props.handleNumberButton('5')}>
                         5
                     </Button>
-                </div>
-                <div>
+                </Grid>
+                <Grid item container xs={12} justify={"center"}>
                     <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
                             onClick={() => props.handleNumberButton('6')}>
                         6
@@ -129,62 +131,71 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                             onClick={() => props.handleNumberButton('8')}>
                         8
                     </Button>
-                </div>
-                <div>
+                </Grid>
+                <Grid item container xs={12} justify={"center"}>
                     <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
                             onClick={() => props.handleNumberButton('9')}>
                         9
                     </Button>
-                </div>
+                </Grid>
             </React.Fragment>
         )
     };
 
+    const nameField = () => {
+        return(
+            <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
+                       required={true} onChange={event => (setText(event.target.value))}>
+                {'Name'}
+            </TextField>
+        );
+    }
+
     return (
         <React.Fragment>
-            <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
-                <Grid>
-                    <div>
-                        <Grid item xs={12}>
-                            <Grid>
-                                <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
-                                           required={true} onChange={event => (setText(event.target.value))}>
-                                    {'Name'}
-                                </TextField>
-                                <Box borderColor="primary.main" border={4} borderRadius={5}
-                                     className={classes.listFrame}>
-                                    {props.input}
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Grid>
-                            {makeCalculateButtons()}
-                        </Grid>
-                        <br/>
-                        <Grid>
-                            {makeNumberButtons()}
-                        </Grid>
-                        <br/>
-                        <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
-                            <Grid>
-                                <Button variant={"contained"} size={"medium"} color={"secondary"}
-                                        onClick={() => props.handleDelete()}>
-                                    Löschen
-                                </Button>
-                            </Grid>
-                            <Grid>
-                                <Button variant={"contained"} size={"medium"} color={"secondary"}
-                                        onClick={() => props.handleSafe(text)}>
-                                    Speichern!
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </div>
-                </Grid>
-                <Grid>
+            <Grid xs={6}>
+                {nameField()}
+            </Grid>
+            <Grid xs={6}>
+                <Typography variant={"h5"} align={"center"}>
+                    <br/>
+                    Ihre Api-Daten:
+                </Typography>
+            </Grid>
+            <Grid xs={6}>
+                <Box borderColor="primary.main" border={4} borderRadius={5}
+                     className={classes.listFrame}>
+                    {props.input}
+                </Box>
+            </Grid>
+            <Grid xs={6}>
+                <Box borderColor="primary.main"
+                     border={4}
+                     borderRadius={5}
+                     className={classes.listFrame}>
                     <List>
                         {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
                     </List>
+                </Box>
+            </Grid>
+            <Grid xs={12} justify={"center"}>
+                {makeCalculateButtons()}
+            </Grid>
+            <Grid xs={12}>
+                {makeNumberButtons()}
+            </Grid>
+            <Grid item container xs={12} justify="space-evenly" className={classes.elementMargin}>
+                <Grid>
+                    <Button variant={"contained"} size={"medium"} color={"secondary"}
+                            onClick={() => props.handleDelete()}>
+                        Löschen
+                    </Button>
+                </Grid>
+                <Grid>
+                    <Button variant={"contained"} size={"medium"} color={"secondary"}
+                            onClick={() => props.handleSafe(text)}>
+                        Speichern
+                    </Button>
                 </Grid>
             </Grid>
         </React.Fragment>

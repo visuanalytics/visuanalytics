@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         listFrame: {
             width: "100%",
-            height: 200,
+            height: 400,
             overflow: "visible",
             overflowX: "hidden",
             marginTop: "20px",
