@@ -69,7 +69,7 @@ export const CreateInfoProvider = () => {
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Set<string>());
     // contains all data created custom in step 4
-    const [customData, setCustomData] = React.useState(new Set<any>());
+    const [customData, setCustomData] = React.useState(new Set<string>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Set<string>());
 
@@ -274,6 +274,8 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         selectedData={selectedData}
                         setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                        customData={customData}
+                        setCustomData={(set:Set<string>) => setCustomData(set)}
                     />
                 )
             case 4:
@@ -282,6 +284,7 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         selectedData={selectedData}
+                        customData={customData}
                         historizedData={historizedData}
                         setHistorizedData={(set: Set<string>) => setHistorizedData(set)}
                     />
