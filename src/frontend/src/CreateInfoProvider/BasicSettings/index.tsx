@@ -44,6 +44,8 @@ interface BasicSettingsProps {
     setNoKey: (noKey: boolean) => void;
     method: string;
     setMethod: (method: string) => void;
+    name: string;
+    setName: (name: string) => void;
 };
 
 /**
@@ -55,20 +57,11 @@ type requestBackEndAnswer = {
 }
 
 /**
- * A type guard to check the type of the backends answer
- * @param pet
- */
-function isrequestBackEndAnswer(element:  any ): element is requestBackEndAnswer {
-    return (element as requestBackEndAnswer).status !== undefined
-}
-
-/**
  * Component displaying the second step in the creation of a new Info-Provider.
  * The state of this component handles the input made to its children.
  */
 export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     const classes = useStyles();
-    const [name, setName] = React.useState("");
     const [param, setParam] = React.useState("");
     const [paramValue, setParamValue] = React.useState("");
     //state variable that manages toggling between input and loading spinner
@@ -81,7 +74,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * Sends the API data for testing to the backend and displays a loading animation
      */
     const handleProceed = () => {
-        if(props.checkNameDuplicate(name)) {
+        if(props.checkNameDuplicate(props.name)) {
             //TODO: display error that the name is already in use
         } else {
             sendTestData();
@@ -170,8 +163,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             <Grid item xs={12}>
                                 <APIInputField
                                     defaultValue="Name der API-Datenquelle"
-                                    value={name}
-                                    changeHandler={(s) => {setName(s)}}
+                                    value={props.name}
+                                    changeHandler={(s) => {props.setName(s)}}
                                 />
                             </Grid>
                             <Grid item xs={12} className={classes.elementSmallMargin}>
@@ -259,7 +252,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     </Button>
                                 </Grid>
                                 <Grid item className={classes.blockableButtonPrimary}>
-                                    <Button disabled={!(name!==""&&props.query!==""&&(props.noKey||(props.apiKey!==""&&props.method!=="")))} variant="contained" size="large" color="primary" onClick={handleProceed}>
+                                    <Button disabled={!(props.name!==""&&props.query!==""&&(props.noKey||(props.apiKey!==""&&props.method!=="")))} variant="contained" size="large" color="primary" onClick={handleProceed}>
                                         weiter
                                     </Button>
                                 </Grid>

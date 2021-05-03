@@ -28,6 +28,7 @@ import {CreateCustomData} from "./CreateCustomData";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import {clear} from "@testing-library/user-event/dist/clear";
 
 
 /*
@@ -35,6 +36,8 @@ Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
 export const CreateInfoProvider = () => {
+    //unique application id used to avoid collisions in session storage
+    const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
     //const classes = useStyles();
     const steps = [
@@ -47,10 +50,12 @@ export const CreateInfoProvider = () => {
     ];
     //the current step of the creation process, numbered by 0 to 5
     const [step, setStep] = React.useState(3);
-    // holds the key of the current API
-    const [apiKey, setApiKey] = React.useState("");
+    //holds the name of the current API
+    const [apiName, setApiName] = React.useState("");
     //holds the query of the current API
     const [query, setQuery] = React.useState("");
+    // holds the key of the current API
+    const [apiKey, setApiKey] = React.useState("");
     // marks if the user selected that no key is needed right now
     const [noKey, setNoKey] = React.useState(false);
     //holds the selected authorization method
@@ -60,18 +65,93 @@ export const CreateInfoProvider = () => {
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Set<string>());
     // contains all data created custom in step 4
-    const [customData, setcustomData] = React.useState(new Set<any>());
+    const [customData, setCustomData] = React.useState(new Set<any>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Set<string>());
 
+    /**
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     */
+    React.useEffect(() => {
+        //step - disabled since it makes debugging more annoying TODO: restore when finished!!
+        //setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        //apiName
+        setApiName(sessionStorage.getItem("apiName-" + uniqueId)||"");
+        //query
+        setQuery(sessionStorage.getItem("query-" + uniqueId)||"");
+        //noKey
+        setNoKey(sessionStorage.getItem("noKey-" + uniqueId)==="true");
+        //method
+        setMethod(sessionStorage.getItem("method-" + uniqueId)||"");
+        //apiData
+        setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||""));
+        //selectedData
+        setSelectedData(new Set<string>(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"")));
+        //customData
+        setCustomData(new Set(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"")));
+        //historizedData
+        setHistorizedData(new Set(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||"")));
+    }, [])
+    //store step in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("step-" + uniqueId, step.toString());
+    }, [step])
+    //store apiName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("apiName-" + uniqueId, apiName);
+    }, [apiName])
+    //store query in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("query-" + uniqueId, query);
+    }, [query])
+    //store noKey in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("noKey-" + uniqueId, noKey?"true":"false");
+    }, [noKey])
+    //store method in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("method-" + uniqueId, method);
+    }, [method])
+    //store apiData in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("apiData-" + uniqueId, JSON.stringify(apiData));
+    }, [apiData])
+    //store selectedData in sessionStorage by converting into an array and use JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedData-" + uniqueId, JSON.stringify(Array.from(selectedData)));
+    }, [selectedData])
+    //store customData in sessionStorage by converting into an array and use JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("customData-" + uniqueId, JSON.stringify(Array.from(customData)));
+    }, [customData])
+    //store historizedData in sessionStorage by converting into an array and use JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(Array.from(historizedData)));
+    }, [historizedData])
 
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("apiName-" + uniqueId);
+        sessionStorage.removeItem("query-" + uniqueId);
+        sessionStorage.removeItem("noKey-" + uniqueId);
+        sessionStorage.removeItem("method-" + uniqueId);
+        sessionStorage.removeItem("apiData-" + uniqueId);
+        sessionStorage.removeItem("selectedData-" + uniqueId);
+        sessionStorage.removeItem("customData-" + uniqueId);
+        sessionStorage.removeItem("historizedData-" + uniqueId);
+    }
 
     /**
      * Handler for the return of a successful call to the backend (posting info-provider)
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-
+      clearSessionStorage();
     }
 
     /**
@@ -165,6 +245,8 @@ export const CreateInfoProvider = () => {
                         setNoKey={(noKey: boolean) => setNoKey(noKey)}
                         method={method}
                         setMethod={(method: string) => setMethod(method)}
+                        name={apiName}
+                        setName={(name: string) => setApiName(name)}
                     />
                 );
             case 2:

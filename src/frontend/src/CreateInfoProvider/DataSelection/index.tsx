@@ -52,7 +52,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //everytime there is a change in the source data, rebuild the list and clean the selection
     React.useEffect(() => {
         transformJSON(props.apiData);
-        props.setSelectedData(new Set());
+        //props.setSelectedData(new Set());
     }, [props.apiData]);
 
     //sample JSON-data to test the different depth levels and parsing
