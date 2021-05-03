@@ -19,100 +19,145 @@ interface CreateCustomDataProps {
     backHandler: () => void;
     selectedData: Set<string>;
     setSelectedData: (set: Set<string>) => void;
+    customData: Set<string>;
+    setCustomData: (set: Set<string>) => void;
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
     const classes = useStyles();
 
-    const [customData, setCustomData] = React.useState<Set<string>>(new Set(props.selectedData));
+    /**
+     * Input ist the created Formel. It is build with the Buttons.
+     */
     const [input, setInput] = React.useState<string>('');
 
-    const [dataAsOpj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
+    /**
+     * An Array filled with StrArg-Objects.
+     */
+    const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
 
     /**
-     * dataFlag shows if dataButton was triggered
+     * dataFlag represents the status of dataButtons. If it ist true the dataButtons will be disabled.
      */
     const [dataFlag, setDataFlag] = React.useState<boolean>(false);
     /**
-     * opFlag shows if operatorButton was triggered
+     * opFlag represents the status of OperatorButtons. If it ist true the OperatorButtons will be disabled.
      */
     const [opFlag, setOpFlag] = React.useState<boolean>(true);
     /**
-     * NumberFlag shows if NumberButton was triggered
+     * numberFlag represents the status of NumberButtons. If it ist true the NumberButtons will be disabled.
      */
     const [numberFlag, setNumberFlag] = React.useState<boolean>(false);
-    const [rightBracketFlag, setRightBracketFlag] = React.useState<boolean>(false);
-    const [leftBracketFlag, setLeftBracketFlag] = React.useState<boolean>(false);
+    /**
+     * rightParenFlag represents the status of rightParenButton. If it ist true the rightParenButton will be disabled.
+     */
+    const [rightParenFlag, setRightParenFlag] = React.useState<boolean>(false);
+    /**
+     * leftParenFlag represents the status of leftParenButton. If it ist true the leftParenButton will be disabled.
+     */
+    const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(false);
 
-    const [bracketCount, setBracketCount] = React.useState<number>(0);
-    const [canRightBracketBePlaced, setCanRightBracketBePlaced] = React.useState<boolean>(true);
+    /**
+     * Shows how much the leftParenButton was triggered.
+     * Is used to check if the number of right and left parens is even
+     */
+    const [leftParenCount, setLeftParenCount] = React.useState<number>(0);
+    /**
+     * Shows how much the rightParenButton was triggered
+     * Is used to check if the number of right and left parens is even
+     */
+    const [rightParenCount, setRightParenCount] = React.useState<number>(0);
 
+    /**
+     * Handler for operatorButtons.
+     * The flags an the input is updated.
+     * @param operator => +, -, *, /, %
+     */
     const handleOperatorButtons = (operator: string) => {
         setOpFlag(true);
         setDataFlag(false)
         setNumberFlag(false);
-        setRightBracketFlag(true);
-        setLeftBracketFlag(false);
+        setRightParenFlag(true);
+        setLeftParenFlag(false);
 
-        dataAsOpj.push(new StrArg(operator, true, false));
-        setInput(calculationToString(dataAsOpj));
+        dataAsObj.push(new StrArg(operator, true));
+        setInput(calculationToString(dataAsObj));
     }
 
+    /**
+     * Handler for dataButtons.
+     * The flags an the input is updated.
+     * @param data => the content of selectedData from the data-selection-step
+     */
     const handleDataButtons = (data: string) => {
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
-        setRightBracketFlag(false);
-        setLeftBracketFlag(true);
+        setRightParenFlag(false);
+        setLeftParenFlag(true);
 
-        dataAsOpj.push(new StrArg(data, false, false));
-        setInput(calculationToString(dataAsOpj));
+        dataAsObj.push(new StrArg(data, false));
+        setInput(calculationToString(dataAsObj));
     }
 
+    /**
+     * Handler for numberButtons.
+     * The flags an the input is updated.
+     * @param number => 0,1,2,3,4,5,6,7,8,9
+     */
     const handleNumberButtons = (number: string) => {
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(false);
-        setRightBracketFlag(false);
-        setLeftBracketFlag(true);
+        setRightParenFlag(false);
+        setLeftParenFlag(true);
 
-        dataAsOpj.push(new StrArg(number, false, true));
-        setInput(calculationToString(dataAsOpj));
+        dataAsObj.push(new StrArg(number, false));
+        setInput(calculationToString(dataAsObj));
     }
 
+    /**
+     * Handler for the leftBracketButton. Adds 1 to the leftParenCounter and pushes an Object with ( in dataAsObj.
+     * The flags an the input is updated.
+     * @param bracket => (
+     */
     const handleLeftBracket = (bracket: string) => {
-        setBracketCount(bracketCount + 1);
-        console.log("bracketCountAL: " + bracketCount)
-        setCanRightBracketBePlaced(bracketCount <= 0);
-        console.log("LB: " + (bracketCount <= 0))
+        setLeftParenCount(leftParenCount + 1);
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
-        setRightBracketFlag(false);
-        setLeftBracketFlag(false);
+        setRightParenFlag(false);
+        setLeftParenFlag(false);
 
-        dataAsOpj.push(new StrArg(bracket, false, false));
-        setInput(calculationToString(dataAsOpj));
+        dataAsObj.push(new StrArg(bracket, false));
+        setInput(calculationToString(dataAsObj));
     }
 
+    /**
+     * Handler for the rightBracketButton. Adds 1 to the rightParenCounter and pushes an Object with ) in dataAsObj.
+     * The flags an the input is updated.
+     * @param bracket => )
+     */
     const handleRightBracket = (bracket: string) => {
-        setBracketCount(bracketCount - 1);
-        console.log("bracketCountAR: " + bracketCount)
-        setCanRightBracketBePlaced(bracketCount <= 0);
-        console.log("RB: " + (bracketCount <= 0))
+        setRightParenCount(rightParenCount + 1);
 
         setOpFlag(false);
         setDataFlag(true);
         setNumberFlag(true);
-        setRightBracketFlag(false);
-        setLeftBracketFlag(true);
+        setRightParenFlag(false);
+        setLeftParenFlag(true);
 
-        dataAsOpj.push(new StrArg(bracket, false, false));
-        setInput(calculationToString(dataAsOpj));
+        dataAsObj.push(new StrArg(bracket, false));
+        setInput(calculationToString(dataAsObj));
     }
 
+    /**
+     * This method receives an array with string-arguments and creates the output string with makeStringRep()
+     * @param calculation the Array that should be transformed
+     *
+     */
     const calculationToString = (calculation: Array<StrArg>) => {
         console.log('stringlength ' + calculation.length);
         let stringToShow: string = '';
@@ -124,30 +169,41 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         return stringToShow;
     }
 
+    /**
+     * Handler for the Delete-Button. Cancels if the Input-Box is empty. Refreshes all counters and flags and sets
+     * DataAsObj empty.
+     */
     const handleDelete = () => {
-        if (dataAsOpj[dataAsOpj.length - 1] === undefined) {
+        if (dataAsObj[dataAsObj.length - 1] === undefined) {
             console.log('leer!');
             return
         }
 
         setDataAsObj(new Array<StrArg>(0));
         setInput('');
-        setBracketCount(0);
+
+        setRightParenCount(0);
+        setLeftParenCount(0);
 
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
-        setRightBracketFlag(false);
-        setLeftBracketFlag(false);
+        setRightParenFlag(false);
+        setLeftParenFlag(false);
     }
 
+    /**
+     * Handle for the Safe-Button. Cancels if the Name-Field or the Input-Box field is empty. Safes the formel
+     * in CustomData and refreshes the Input-Box.
+     * @param formel the name of the formel
+     */
+        //TODO: name-field should also be refreshed
     const handleSafe = (formel: string) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
             console.log('Entweder kein Name oder keine Formel!')
             return
         }
-        setCustomData(new Set(customData.add(formel)));
-        props.setSelectedData(new Set(customData));
+        props.setCustomData(new Set(props.customData.add(formel)));
         handleDelete();
     }
 
@@ -160,7 +216,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
                     <Grid item container xs={12}>
                         <CustomDataGUI
-                            customData={customData}
+                            selectedData={props.selectedData}
+                            customData={props.customData}
                             input={input}
                             handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
                             handleDataButtons={(operator: string) => handleDataButtons(operator)}
@@ -172,18 +229,19 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                             dataFlag={dataFlag}
                             opFlag={opFlag}
                             numberFlag={numberFlag}
-                            rightBracketFlag={rightBracketFlag}
-                            leftBracketFlag={leftBracketFlag}
-                            canRightBracketBePlaced={canRightBracketBePlaced}
+                            rightBracketFlag={rightParenFlag}
+                            leftBracketFlag={leftParenFlag}
+                            leftParenCount={leftParenCount}
+                            rightParenCount={rightParenCount}
                         />
                     </Grid>
                     <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
-                        <Grid>
+                        <Grid item>
                             <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                 zurück
                             </Button>
                         </Grid>
-                        <Grid>
+                        <Grid item>
                             <Button variant="contained" size="large" color="primary"
                                     onClick={props.continueHandler}>
                                 weiter

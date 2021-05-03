@@ -40,6 +40,7 @@ interface HistorySelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     selectedData: Set<string>;
+    customData: Set<any>;
     historizedData: Set<string>;
     setHistorizedData: (set: Set<string>) => void;
 };
@@ -80,6 +81,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         handleSkipProceed={props.continueHandler}
                         handleBack={props.backHandler}
                         selectedData={props.selectedData}
+                        customData={props.customData}
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
                     />

@@ -40,6 +40,7 @@ interface HistoryDataSelectionProps {
     handleSkipProceed: () => void;
     handleBack: () => void;
     selectedData: Set<string>;
+    customData: Set<any>;
     historizedData: Set<string>;
     setHistorizedData: (set: Set<string>) => void;
 };
@@ -132,6 +133,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
             <Grid item xs={10}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key="listBox">
                     <List disablePadding={true} key="listRoot2">
+                        {Array.from(props.customData).map((item) => renderListItem(item))}
                         {Array.from(props.selectedData).map((item) => renderListItem(item))}
                     </List>
                 </Box>

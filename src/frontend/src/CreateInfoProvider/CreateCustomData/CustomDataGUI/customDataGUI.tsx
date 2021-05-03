@@ -1,4 +1,3 @@
-import {CreateCustomData} from "../index";
 import React from "react";
 import {Box, Button, Grid, TextareaAutosize, TextField, Typography} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,6 +9,7 @@ import {RemoveRedEye} from "@material-ui/icons";
 import {useStyles} from "../../style";
 
 interface CustomDataGUIProps {
+    selectedData: Set<string>;
     customData: Set<string>;
     input: string;
     handleOperatorButtons: (operator: string) => void;
@@ -24,14 +24,23 @@ interface CustomDataGUIProps {
     numberFlag: boolean;
     rightBracketFlag: boolean;
     leftBracketFlag: boolean;
-    canRightBracketBePlaced: boolean;
+    leftParenCount: number;
+    rightParenCount: number;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
+    /**
+     * safes and represents the name-field for a new formel.
+     */
     const [text, setText] = React.useState<string>('');
+
     const classes = useStyles();
 
+    /**
+     * Renders the dataButtons. All content from selectedData and customData is shown.
+     * @param data the name of the data-value
+     */
     const renderListItem = (data: string) => {
         return (
             <ListItem key={data}>
@@ -48,6 +57,9 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
         );
     };
 
+    /**
+     * creates the operatorButtons and the right and left parenButtons
+     */
     const makeCalculateButtons = () => {
         return (
             <React.Fragment>
@@ -74,19 +86,31 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     </Button>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.leftBracketFlag}
-                            onClick={() => props.handleLeftBracket('(')}>
-                        (
-                    </Button>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.canRightBracketBePlaced}
-                            onClick={() => props.handleRightBracket(')')}>
-                        )
-                    </Button>
+                    <Grid item>
+                        <Button disabled={props.leftBracketFlag}
+                                onClick={() => props.handleLeftBracket('(')}
+                                variant={"contained"}
+                                size={"large"} color={"secondary"}
+                        >
+                            (
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightBracketFlag}
+                                variant={"contained"} size={"large"}
+                                color={"secondary"}
+                                onClick={() => props.handleRightBracket(')')}>
+                            )
+                        </Button>
+                    </Grid>
                 </Grid>
             </React.Fragment>
         )
     };
 
+    /**
+     * creates the numberButtons
+     */
     const makeNumberButtons = () => {
         return (
             <React.Fragment>
@@ -142,60 +166,57 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
         )
     };
 
-    const nameField = () => {
-        return(
-            <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
-                       required={true} onChange={event => (setText(event.target.value))}>
-                {'Name'}
-            </TextField>
-        );
-    }
-
     return (
         <React.Fragment>
-            <Grid xs={6}>
-                {nameField()}
-            </Grid>
-            <Grid xs={6}>
-                <Typography variant={"h5"} align={"center"}>
-                    <br/>
-                    Ihre Api-Daten:
-                </Typography>
-            </Grid>
-            <Grid xs={6}>
-                <Box borderColor="primary.main" border={4} borderRadius={5}
-                     className={classes.listFrame}>
-                    {props.input}
-                </Box>
-            </Grid>
-            <Grid xs={6}>
-                <Box borderColor="primary.main"
-                     border={4}
-                     borderRadius={5}
-                     className={classes.listFrame}>
-                    <List>
-                        {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                    </List>
-                </Box>
-            </Grid>
-            <Grid xs={12} justify={"center"}>
-                {makeCalculateButtons()}
-            </Grid>
-            <Grid xs={12}>
-                {makeNumberButtons()}
-            </Grid>
-            <Grid item container xs={12} justify="space-evenly" className={classes.elementLargeMargin}>
-                <Grid>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"}
-                            onClick={() => props.handleDelete()}>
-                        Löschen
-                    </Button>
+            <Grid container>
+                <Grid item xs={6}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
+                               required={true} onChange={event => (setText(event.target.value))}>
+                        {'Name'}
+                    </TextField>
                 </Grid>
-                <Grid>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"}
-                            onClick={() => props.handleSafe(text)}>
-                        Speichern
-                    </Button>
+                <Grid item xs={6}>
+                    <Typography variant={"h5"} align={"center"}>
+                        <br/>
+                        Ihre Api-Daten:
+                    </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                         className={classes.listFrame}>
+                        {props.input}
+                    </Box>
+                </Grid>
+                <Grid item xs={6}>
+                    <Box borderColor="primary.main"
+                         border={4}
+                         borderRadius={5}
+                         className={classes.listFrame}>
+                        <List>
+                            {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            {Array.from(props.selectedData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                        </List>
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+                    {makeCalculateButtons()}
+                </Grid>
+                <Grid item xs={12}>
+                    {makeNumberButtons()}
+                </Grid>
+                <Grid item container xs={12} justify="space-evenly" className={classes.elementLargeMargin}>
+                    <Grid item>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"}
+                                onClick={() => props.handleDelete()}>
+                            Löschen
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"}
+                                onClick={() => props.handleSafe(text)}>
+                            Speichern
+                        </Button>
+                    </Grid>
                 </Grid>
             </Grid>
         </React.Fragment>
