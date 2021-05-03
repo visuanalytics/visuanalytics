@@ -49,13 +49,17 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(3);
+    const [step, setStep] = React.useState(1);
+    //name of the info-provider
+    const [name, setName] = React.useState("");
     //holds the name of the current API
     const [apiName, setApiName] = React.useState("");
     //holds the query of the current API
     const [query, setQuery] = React.useState("");
     // holds the key of the current API
-    const [apiKey, setApiKey] = React.useState("");
+    const [apiKeyInput1, setApiKeyInput1] = React.useState("");
+    // holds the key of the current API
+    const [apiKeyInput2, setApiKeyInput2] = React.useState("");
     // marks if the user selected that no key is needed right now
     const [noKey, setNoKey] = React.useState(false);
     //holds the selected authorization method
@@ -166,16 +170,17 @@ export const CreateInfoProvider = () => {
      * Method to post all settings for the Info-Proivder made by the user to the backend.
      * The backend will use this data to create the desired Info-Provider.
      */
-    const postInfoProvider = useCallFetch("/Infoprovider",
+    const postInfoProvider = useCallFetch("/infoprovider",
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+                infoprovider_name: name,
                 api: {
                     type: "request",
-                    api_key_name: apiKey,
+                    api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2,
                     url_pattern: query,
                 },
                 method: noKey?"noAuth":method,
@@ -203,9 +208,10 @@ export const CreateInfoProvider = () => {
     const handleContinue = () => {
         setStep(step+1);
         console.log(JSON.stringify({
+            infoprovider_name: name,
             api: {
                 type: "request",
-                api_key_name: apiKey,
+                api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2,
                 url_pattern: query,
             },
             method: noKey?"noAuth":method,
@@ -239,8 +245,10 @@ export const CreateInfoProvider = () => {
                         checkNameDuplicate={checkNameDuplicate}
                         query={query}
                         setQuery={(query: string) => setQuery(query)}
-                        apiKey={apiKey}
-                        setApiKey={(key: string) => setApiKey(key)}
+                        apiKeyInput1={apiKeyInput1}
+                        setApiKeyInput1={(key: string) => setApiKeyInput1(key)}
+                        apiKeyInput2={apiKeyInput2}
+                        setApiKeyInput2={(key: string) => setApiKeyInput2(key)}
                         noKey={noKey}
                         setNoKey={(noKey: boolean) => setNoKey(noKey)}
                         method={method}

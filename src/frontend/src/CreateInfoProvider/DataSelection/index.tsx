@@ -294,16 +294,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     <ListItem style={{marginLeft: level * 30}}
                               key={data.parentKeyName == "" ? data.keyName : data.parentKeyName + "|" + data.keyName}
                               divider={true}>
-                        {data.arrayRep &&
-                        <ListItemIcon>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
-                                }
-                                label={''}
-                            />
-                        </ListItemIcon>
-                        }
                         <ListItemText
                             primary={data.arrayRep ? data.keyName + " (Array[0]), length: " + data.arrayLength : data.keyName + " (object)"}
                             secondary={null}
