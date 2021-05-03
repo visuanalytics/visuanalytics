@@ -9,7 +9,7 @@ import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
 import {Grid} from "@material-ui/core";
-import {useStyles} from "./style";
+import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 
@@ -157,7 +157,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             hintContent={hintContents.formeln}
         >
             <React.Fragment>
-                <Grid container justify="space-evenly" className={classes.elementMargin}>
+                <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
                     <Grid item container xs={12}>
                         <CustomDataGUI
                             customData={customData}
@@ -177,7 +177,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                             canRightBracketBePlaced={canRightBracketBePlaced}
                         />
                     </Grid>
-                    <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                    <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                         <Grid>
                             <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                 zurück

@@ -32,7 +32,7 @@ import List from "@material-ui/core/List";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
-import {useStyles} from "./style";
+import {useStyles} from "../../style";
 
 
 interface HistoryDataSelectionProps {
@@ -123,7 +123,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
 
     //currently not containing custom data since it was not finished at that time
     return (
-        <Grid container justify="space-around" className={classes.elementMargin}>
+        <Grid container justify="space-around" className={classes.elementLargeMargin}>
             <Grid item xs={12}>
                 <Typography variant="body1">
                     Bitte wählen sie die zu historisierenden Daten aus:
@@ -136,7 +136,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                     </List>
                 </Box>
             </Grid>
-            <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.handleBack}>
                         zurück

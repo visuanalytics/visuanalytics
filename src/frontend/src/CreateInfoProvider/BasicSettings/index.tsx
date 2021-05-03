@@ -24,7 +24,7 @@ import {hintContents} from "../../util/hintContents";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select"
-import { useStyles } from "./style";
+import { useStyles } from "../style";
 import { borders } from '@material-ui/system';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -174,7 +174,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     changeHandler={(s) => {setName(s)}}
                                 />
                             </Grid>
-                            <Grid item xs={12} className={classes.elementMargin}>
+                            <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <Typography variant="body1" >
                                     Bitte geben sie die Query an, die der Info-Provider nutzen soll:
                                 </Typography>
@@ -244,7 +244,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     </FormControl>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12} className={classes.elementMargin}>
+                            <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox checked={props.noKey} onChange={(e) => props.setNoKey(!props.noKey)}/>
@@ -252,7 +252,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     label="Diese API benötigt keinen Key"
                                 />
                             </Grid>
-                            <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                            <Grid item container xs={12} justify="space-between" className={classes.elementSmallMargin}>
                                 <Grid item>
                                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                         zurück

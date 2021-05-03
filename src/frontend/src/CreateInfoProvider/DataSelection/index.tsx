@@ -13,7 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
-import {useStyles} from "./style";
+import {useStyles} from "../style";
 
 interface DataSelectionProps {
     continueHandler: () => void;
@@ -391,7 +391,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             heading = "Datenauswahl"
             hintContent = {hintContents.dataSelection}
         >
-            <Grid container justify="space-around" className={classes.elementMargin}>
+            <Grid container justify="space-around" className={classes.elementLargeMargin}>
                 <Grid item xs={12}>
                     <Typography variant="body1">
                         Folgende Datenwerte wurden von der Request zurückgegeben:
@@ -404,17 +404,17 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         </List>
                     </Box>
                 </Grid>
-                <Grid item xs={12} className={classes.elementMargin}>
+                <Grid item xs={12} className={classes.elementLargeMargin}>
                     <Typography variant="body1">
                         Bitte wählen sie alle von der API zu erfassenden Daten.
                     </Typography>
                 </Grid>
-                <Grid item xs={12} className={classes.elementMargin}>
+                <Grid item xs={12} className={classes.elementLargeMargin}>
                     <Typography variant="body2">
                         Die Daten sehen fehlerhaft aus? Gehen sie einen Schritt zurück und prüfen sie Request und Key der API.
                     </Typography>
                 </Grid>
-                <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück

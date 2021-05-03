@@ -22,7 +22,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Input from '@material-ui/core/Input';
 import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
-import {useStyles} from "./styles";
+import {useStyles} from "../style";
 import {Grid} from "@material-ui/core";
 
 
@@ -114,7 +114,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
             heading={"Datenquelle"}
             hintContent={hintContents.typeSelection}
         >
-            <Grid container justify="center" className={classes.elementMargin}>
+            <Grid container justify="center" className={classes.elementLargeMargin}>
                 <Grid item xs={12}>
                     <FormControlLabel
                         control={
@@ -147,7 +147,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                     <input ref={fileUploader} disabled={!importSource} type="file" accept=".json"
                            onChange={handleFileSelect}/>
                 </Grid>
-                <Grid item container xs={12} justify="space-between" className={classes.elementMargin}>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained"
                                 size="large"

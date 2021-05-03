@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import {StrArg} from "./StringRep/StrArg";
 import Checkbox from "@material-ui/core/Checkbox";
 import {RemoveRedEye} from "@material-ui/icons";
-import {useStyles} from "../../DataSelection/style";
+import {useStyles} from "../../style";
 
 interface CustomDataGUIProps {
     customData: Set<string>;
@@ -184,7 +184,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
             <Grid xs={12}>
                 {makeNumberButtons()}
             </Grid>
-            <Grid item container xs={12} justify="space-evenly" className={classes.elementMargin}>
+            <Grid item container xs={12} justify="space-evenly" className={classes.elementLargeMargin}>
                 <Grid>
                     <Button variant={"contained"} size={"medium"} color={"secondary"}
                             onClick={() => props.handleDelete()}>

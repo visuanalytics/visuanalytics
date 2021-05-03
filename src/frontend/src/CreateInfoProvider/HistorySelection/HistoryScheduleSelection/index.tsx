@@ -28,7 +28,7 @@ import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 import { TimeList } from "./TimeList";
 import { KeyboardTimePicker } from "@material-ui/pickers";
 import Grid from "@material-ui/core/Grid";
-import {useStyles} from "./style";
+import {useStyles} from "../../style";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;

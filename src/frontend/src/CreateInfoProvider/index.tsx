@@ -35,6 +35,7 @@ Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
 export const CreateInfoProvider = () => {
+
     //const classes = useStyles();
     const steps = [
         "Datenquellen-Typ",
@@ -62,6 +63,7 @@ export const CreateInfoProvider = () => {
     const [customData, setcustomData] = React.useState(new Set<any>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Set<string>());
+
 
 
     /**
