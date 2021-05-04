@@ -49,13 +49,13 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
     let indexCounter = 0
 
-
+    /*
     //everytime there is a change in the source data, rebuild the list and clean the selection
     React.useEffect(() => {
         transformJSON(props.apiData);
         //props.setSelectedData(new Array());
     }, [props.apiData]);
-
+    */
     //sample JSON-data to test the different depth levels and parsing
     const sample2 = {
         "season_helper": {
@@ -196,7 +196,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 //strip quotation marks and the opening curly bracket
                 nextKey = nextKey.substring(2, nextKey.length - 1);
                 console.log("nextKey: " + nextKey);
-                if(nextKey=="same_type") {
+                if(nextKey==="same_type") {
                     //a sub array was detected
                     let same_type_value = subObject.split(",", 2)[0];
                     same_type_value = same_type_value.substring(nextKey.length+4);
@@ -206,18 +206,18 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     array_length = array_length.substring(9);
                     console.log(array_length);
                     console.log(subObject);
-                    if(same_type_value=="true") {
+                    if(same_type_value==="true") {
                         //check if the value of nextKey is "true" - if this is the case, our value is the subobject
                         //we now need to differentiate if the content is an object or primitives
                         let element = subObject.substring(24 + same_type_value.length + array_length.length).split(":", 1)[0]
-                        if(element.substring(1, element.length-1)=="object") {
+                        if(element.substring(1, element.length-1)==="object") {
                             //when the object starts with sameType as the first key, we need to mark it as array in array and not further display it
                             let object = subObject.substring(33 + same_type_value.length + array_length.length, subObject.length-1);
                             let objectLookahead = object.split(":")[0];
-                            if(objectLookahead.substring(2, objectLookahead.length-1)=="same_type") {
+                            if(objectLookahead.substring(2, objectLookahead.length-1)==="same_type") {
                                 value = "[Array]"
                             } else {
-                                value = transformJSON(JSON.parse(object), (parent==""?key:parent + "|" + key) + "|0")
+                                value = transformJSON(JSON.parse(object), (parent===""?key:parent + "|" + key) + "|0")
                             }
                             resultArray.push({
                                 keyName: key + "|0",
@@ -255,11 +255,11 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     }
                     //cut the handled array-object
                     stringRep = stringRep.substring(subObject.length + 1);
-                    if(stringRep.length==0) finished = false;
+                    if(stringRep.length===0) finished = false;
                     continue
                 }
                 //only reached when it is an object, not an array
-                value = transformJSON(JSON.parse(subObject), parent==""?key:parent + "|" + key);
+                value = transformJSON(JSON.parse(subObject), parent===""?key:parent + "|" + key);
                 stringRep = stringRep.substring(subObject.length + 1);
             } else {
                 //the value is a type, the data is primitive
@@ -275,7 +275,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 arrayRep: false,
                 arrayLength: 0
             })
-            if(stringRep.length==0) finished = false;
+            if(stringRep.length===0) finished = false;
         }
         return resultArray;
     };
@@ -290,11 +290,11 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
         indexCounter++;
         if(Array.isArray(data.value)) {
-            //object or array with same_type==true
+            //object or array with same_type===true
             return (
                 <React.Fragment key={indexCounter + "listFragment"}>
                     <ListItem style={{marginLeft: level * 30}}
-                              key={data.parentKeyName == "" ? data.keyName : data.parentKeyName + "|" + data.keyName}
+                              key={data.parentKeyName === "" ? data.keyName : data.parentKeyName + "|" + data.keyName}
                               divider={true}>
                         <ListItemText
                             primary={data.arrayRep ? data.keyName + " (Array[0]), length: " + data.arrayLength : data.keyName + " (object)"}
@@ -306,12 +306,12 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             )
         } else if(data.arrayRep) {
             const selectedDataObj: SelectedDataItem = {
-                key: data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName,
+                key: data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName,
                 type: "Array"
             }
-            //array without same_type==false
+            //array without same_type===false
             return (
-                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
+                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
                         <FormControlLabel
                             control={
@@ -328,11 +328,11 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             )
         } else {
             const selectedDataObj: SelectedDataItem = {
-                key: data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName,
+                key: data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName,
                 type: data.value
             }
             return (
-                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
+                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
                         <FormControlLabel
                             control={
@@ -422,7 +422,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonPrimary}>
-                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length==0} onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={props.continueHandler}>
                             weiter
                         </Button>
                         <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sample2))}}>Janek Test</Button>

@@ -47,6 +47,7 @@ interface BasicSettingsProps {
     setMethod: (method: string) => void;
     name: string;
     setName: (name: string) => void;
+    reportError: (message: string) => void;
 };
 
 /**
@@ -75,12 +76,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * Sends the API data for testing to the backend and displays a loading animation
      */
     const handleProceed = () => {
-        if(props.checkNameDuplicate(props.name)) {
-            //TODO: display error that the name is already in use
-        } else {
-            sendTestData();
-            setDisplaySpinner(true);
-        }
+        sendTestData();
+        setDisplaySpinner(true);
     }
     /**
      * Handler for a successful request to the backend for receiving the API data.
@@ -90,19 +87,19 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
    const handleSuccess = (jsonData: any) => {
        const data = jsonData as requestBackEndAnswer;
        if(data.status!=0) {
-           //TODO: error handling
+           props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
        }
        props.setApiData(data.api_keys);
        props.continueHandler();
    }
-   //TODO: create error message display, possibly reuse util/Notification
+
     /**
      * Handler for errors happening when requesting the backend.
      * Will display an error message and not proceed.
      * @param err Error delivered by the backend
      */
    const handleError = (err: Error) => {
-        alert(err);
+        props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");
         setDisplaySpinner(false);
     }
 
@@ -126,7 +123,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * Values will be taken from the corresponding input fields.
     */
     const addParamToQuery = () => {
-        if (!(param==""||paramValue=="")) {
+        if (!(param===""||paramValue==="")) {
             if (props.query.includes("?")) {
                 props.setQuery(props.query + "&" + param + "=" + paramValue);
             } else {
@@ -148,7 +145,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth", "DigestAuth"];
             const methodIndex = methodIndexList.indexOf(props.method);
             const targetIndex = methodIndexList.indexOf(e.target.value as string)
-            if((methodIndex<=1&&targetIndex>1)||(methodIndex==2&&targetIndex!=2)||(methodIndex>2&&targetIndex<=2)) {
+            if((methodIndex<=1&&targetIndex>1)||(methodIndex===2&&targetIndex!=2)||(methodIndex>2&&targetIndex<=2)) {
                 props.setApiKeyInput1("");
                 props.setApiKeyInput2("")
             }
@@ -187,6 +184,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     defaultValue="Name der API-Datenquelle"
                                     value={props.name}
                                     changeHandler={(s) => {props.setName(s)}}
+                                    errorText="Dieser Name wird bereits für eine andere API verwendet!"
+                                    checkNameDuplicate={props.checkNameDuplicate}
                                 />
                             </Grid>
                             <Grid item xs={12} className={classes.elementSmallMargin}>
@@ -288,7 +287,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     </Button>
                                 </Grid>
                                 <Grid item className={classes.blockableButtonPrimary}>
-                                    <Button disabled={!(props.name!==""&&props.query!==""&&(props.noKey||(props.apiKeyInput1!==""&&props.apiKeyInput2!==""&&props.method!=="")))} variant="contained" size="large" color="primary" onClick={handleProceed}>
+                                    <Button disabled={!(props.name!==""&&props.query!==""&&(props.noKey||(props.apiKeyInput1!==""&&props.apiKeyInput2!==""&&props.method!==""))&&!props.checkNameDuplicate(props.name))} variant="contained" size="large" color="primary" onClick={handleProceed}>
                                         weiter
                                     </Button>
                                 </Grid>

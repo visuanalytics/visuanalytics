@@ -30,6 +30,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {clear} from "@testing-library/user-event/dist/clear";
 import {SettingsOverview} from "./SettingsOverview";
+import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
 
 
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
@@ -170,7 +171,16 @@ export const CreateInfoProvider = () => {
     }
 
 
+    // setup for error notification
+    const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
+        open: false,
+        message: "",
+        severity: "error",
+    });
 
+    const reportError = (message: string) => {
+        dispatchMessage({ type: "reportError", message: message });
+    };
 
     /**
      * Handler for the return of a successful call to the backend (posting info-provider)
@@ -185,7 +195,7 @@ export const CreateInfoProvider = () => {
      * @param err The error returned by the backend
      */
     const handleError = (err: Error) => {
-        //TODO: implement error handling
+        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
     /**
@@ -223,7 +233,7 @@ export const CreateInfoProvider = () => {
     const checkNameDuplicate = (name: string) => {
         //if(name is contained) return true
         //else return false
-        return false //TODO: to be removed when the check is implemented
+        return false; //TODO: to be removed when the check is implemented
     }
 
     /**
@@ -287,6 +297,7 @@ export const CreateInfoProvider = () => {
                         setMethod={(method: string) => setMethod(method)}
                         name={apiName}
                         setName={(name: string) => setApiName(name)}
+                        reportError={reportError}
                     />
                 );
             case 2:
@@ -348,6 +359,12 @@ export const CreateInfoProvider = () => {
                 </Stepper>
             </Container>
             {selectContent(step)}
+            <CenterNotification
+                handleClose={() => dispatchMessage({ type: "close" })}
+                open={message.open}
+                message={message.message}
+                severity={message.severity}
+            />
         </React.Fragment>
     );
 }

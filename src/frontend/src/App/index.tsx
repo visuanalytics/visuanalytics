@@ -54,6 +54,9 @@ const newDarkBlueTheme = createMuiTheme({
             light: '#95dcd3',
             dark: '#337B73'
         },
+        error: {
+            main: '#B00020'
+        }
     }
 });
 
