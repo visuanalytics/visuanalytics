@@ -13,7 +13,7 @@ AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 
 
 def insert_infoprovider(infoprovider):
-    #con = db.open_con_f()
+    con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
     infoprovider_json = {
         "api": infoprovider["api"],
@@ -24,9 +24,27 @@ def insert_infoprovider(infoprovider):
     with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
         json.dump(infoprovider_json, f)
 
-    #con.execute("INSERT INTO infoprovider (infoprovider_name)VALUES (?)",
-    #            [infoprovider_name])
-    #con.commit()
+    con.execute("INSERT INTO infoprovider (infoprovider_name)VALUES (?)",
+                [infoprovider_name])
+    con.commit()
+
+
+def delete_infoprovider(infoprovider_id):
+    con = db.open_con_f()
+    file_path = get_infoprovider_file(infoprovider_id)
+    res = con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
+    con.commit()
+
+    if (res.rowcount > 0):
+        os.remove(file_path)
+
+
+def get_infoprovider_file(infoprovider_id):
+    con = db.open_con_f()
+    res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+
+    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
 
 
 def get_topic_names():
