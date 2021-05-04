@@ -32,6 +32,22 @@ import {clear} from "@testing-library/user-event/dist/clear";
 import {SettingsOverview} from "./SettingsOverview";
 
 
+//TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
+//data type for elements contained in selectedData
+export type SelectedDataItem = {
+    key: string;
+    type: String;
+}
+
+/**
+ * Returns a set that only contains the keys from selectedData.
+ */
+export const extractKeysFromSelection = (selectedData: Set<SelectedDataItem>) => {
+    const keySet = new Set<string>();
+    Array.from(selectedData).forEach((item) => keySet.add(item.key))
+    return keySet;
+}
+
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
@@ -41,6 +57,7 @@ export const CreateInfoProvider = () => {
     const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
     //const classes = useStyles();
+    // contains the names of the steps to be displayed in the stepper
     const steps = [
         "Datenquellen-Typ",
         "API-Einstellungen",
@@ -50,7 +67,8 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(5);
+
+    const [step, setStep] = React.useState(2);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -68,7 +86,7 @@ export const CreateInfoProvider = () => {
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
     // contains selected data from DataSelection
-    const [selectedData, setSelectedData] = React.useState(new Set<string>());
+    const [selectedData, setSelectedData] = React.useState(new Set<SelectedDataItem>());
     // contains all data created custom in step 4
     const [customData, setCustomData] = React.useState(new Set<string>());
     // contains all data that was selected for historization
@@ -92,7 +110,7 @@ export const CreateInfoProvider = () => {
         //apiData
         setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||""));
         //selectedData
-        setSelectedData(new Set<string>(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"")));
+        setSelectedData(new Set<SelectedDataItem>(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"")));
         //customData
         setCustomData(new Set(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"")));
         //historizedData
@@ -151,6 +169,9 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("historizedData-" + uniqueId);
     }
 
+
+
+
     /**
      * Handler for the return of a successful call to the backend (posting info-provider)
      * @param jsonData The JSON-object delivered by the backend
@@ -168,7 +189,7 @@ export const CreateInfoProvider = () => {
     }
 
     /**
-     * Method to post all settings for the Info-Proivder made by the user to the backend.
+     * Method to post all settings for the Info-Provider made by the user to the backend.
      * The backend will use this data to create the desired Info-Provider.
      */
     const postInfoProvider = useCallFetch("/infoprovider",
@@ -182,7 +203,7 @@ export const CreateInfoProvider = () => {
                 api: {
                     type: "request",
                     api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2,
-                    url_pattern: query,
+                    url_pattern: query
                 },
                 method: noKey?"noAuth":method,
                 transform: Array.from(selectedData),
@@ -205,7 +226,10 @@ export const CreateInfoProvider = () => {
         return false //TODO: to be removed when the check is implemented
     }
 
-
+    /**
+     * Handler for continue button that is passed to all sub-component as props.
+     * Increments the step.
+     */
     const handleContinue = () => {
         setStep(step+1);
         console.log(JSON.stringify({
@@ -222,12 +246,19 @@ export const CreateInfoProvider = () => {
         }));
     }
 
+    /**
+     * Handler for back button that is passed to all sub-components as props.
+     * Decrements the step or returns to the dashboard if the step was 0.
+     */
     const handleBack = () => {
         //TODO: if step==0, return to dashboard context
         setStep(step-1)
     }
 
-
+    /**
+     * Returns the rendered component based on the current step.
+     * @param step The number of the current step
+     */
     const selectContent = (step: number) => {
         switch (step) {
             case 0:
@@ -265,7 +296,7 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         apiData={apiData}
                         selectedData={selectedData}
-                        setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                        setSelectedData={(set: Set<SelectedDataItem>) => setSelectedData(set)}
                     />
                 );
             case 3:
@@ -274,7 +305,7 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         selectedData={selectedData}
-                        setSelectedData={(set: Set<string>) => setSelectedData(set)}
+                        setSelectedData={(set: Set<SelectedDataItem>) => setSelectedData(set)}
                         customData={customData}
                         setCustomData={(set:Set<string>) => setCustomData(set)}
                     />
@@ -284,7 +315,7 @@ export const CreateInfoProvider = () => {
                     <HistorySelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        selectedData={selectedData}
+                        selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
                         historizedData={historizedData}
                         setHistorizedData={(set: Set<string>) => setHistorizedData(set)}
@@ -297,7 +328,7 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         name={name}
                         setName={(name: string) => setName(name)}
-                        selectedData={selectedData}
+                        selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
                         historizedData={historizedData}
                     />

@@ -14,13 +14,14 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import {useStyles} from "../style";
+import {extractKeysFromSelection, SelectedDataItem} from "../"
 
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     apiData: any;
-    selectedData: Set<string>;
-    setSelectedData: (set: Set<string>) => void;
+    selectedData: Set<SelectedDataItem>;
+    setSelectedData: (set: Set<SelectedDataItem>) => void;
 }
 
 /** Internal representation of a list item extracted from the JSON object.
@@ -283,6 +284,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     /**
      * Renders a list entry for the provided list entry
      * @param data The list item to be displayed, or an array of list items
+     * @param level Used to identify how deep the item is placed within the structure, will cause a left margin when displayed
      * Currently doesnt display a checkbox for parents, option to be added
      */
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
@@ -303,13 +305,17 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </React.Fragment>
             )
         } else if(data.arrayRep) {
+            const selectedDataObj: SelectedDataItem = {
+                key: data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName,
+                type: "Array"
+            }
             //array without same_type==false
             return (
                 <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
+                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).has(selectedDataObj.key)}/>
                             }
                             label={''}
                         />
@@ -321,12 +327,16 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </ListItem>
             )
         } else {
+            const selectedDataObj: SelectedDataItem = {
+                key: data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName,
+                type: data.value
+            }
             return (
                 <ListItem style={{marginLeft: level*30}} key={data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)} checked={props.selectedData.has(data.parentKeyName==""?data.keyName:data.parentKeyName + "|" + data.keyName)}/>
+                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).has(selectedDataObj.key)}/>
                             }
                             label={''}
                         />
@@ -344,7 +354,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * Adds an item to the set of selected list items
      * @param data The item to be added
      */
-    const addToSelection = (data: string) => {
+    const addToSelection = (data: SelectedDataItem) => {
         props.setSelectedData(new Set(props.selectedData).add(data));
     };
 
@@ -352,24 +362,26 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * Removes an item from the set of selected list items
      * @param data The item to be removed
      */
-    const  removeFromSelection = (data: string) => {
-        const setCopy = new Set(props.selectedData);
+    const  removeFromSelection = (data: SelectedDataItem) => {
+        /*const setCopy = new Set(props.selectedData);
         setCopy.delete(data);
-        props.setSelectedData(setCopy);
+        props.setSelectedData(setCopy);*/
+        props.setSelectedData(new Set(Array.from(props.selectedData).filter((item) => {
+            return item.key !== data.key;
+        })));
     };
 
     /**
      * Method that handles clicking on a checkbox.
      * @param data The name of the list item key the checkbox was set for.
      */
-    const checkboxHandler = (data: string) => {
+    const checkboxHandler = (data: SelectedDataItem) => {
         console.log(data);
-        console.log(props.selectedData.has(data));
-        if (props.selectedData.has(data)) {
+        if (extractKeysFromSelection(props.selectedData).has(data.key)) {
             removeFromSelection(data);
         } else {
             addToSelection(data)
-            console.log("new: " + props.selectedData.has(data));
+            console.log("new: " + extractKeysFromSelection(props.selectedData).has(data.key));
         }
 
         //console.log(props.selectedData.values().next())

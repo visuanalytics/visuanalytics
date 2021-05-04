@@ -7,9 +7,10 @@ import {StrArg} from "./StringRep/StrArg";
 import Checkbox from "@material-ui/core/Checkbox";
 import {RemoveRedEye} from "@material-ui/icons";
 import {useStyles} from "../../style";
+import {SelectedDataItem} from "../../index";
 
 interface CustomDataGUIProps {
-    selectedData: Set<string>;
+    selectedData: Set<SelectedDataItem>;
     customData: Set<string>;
     input: string;
     handleOperatorButtons: (operator: string) => void;
@@ -194,7 +195,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                          className={classes.listFrame}>
                         <List>
                             {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                            {Array.from(props.selectedData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            {Array.from(props.selectedData).sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
                         </List>
                     </Box>
                 </Grid>

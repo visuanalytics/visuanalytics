@@ -12,13 +12,14 @@ import {Grid} from "@material-ui/core";
 import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
+import {SelectedDataItem} from "../index";
 
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
     backHandler: () => void;
-    selectedData: Set<string>;
-    setSelectedData: (set: Set<string>) => void;
+    selectedData: Set<SelectedDataItem>;
+    setSelectedData: (set: Set<SelectedDataItem>) => void;
     customData: Set<string>;
     setCustomData: (set: Set<string>) => void;
 }
