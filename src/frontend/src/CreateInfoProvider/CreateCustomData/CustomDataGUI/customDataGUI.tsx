@@ -10,8 +10,8 @@ import {useStyles} from "../../style";
 import {SelectedDataItem} from "../../index";
 
 interface CustomDataGUIProps {
-    selectedData: Set<SelectedDataItem>;
-    customData: Set<string>;
+    selectedData: Array<SelectedDataItem>;
+    customData: Array<string>;
     input: string;
     handleOperatorButtons: (operator: string) => void;
     handleDataButtons: (data: string) => void;
@@ -194,8 +194,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                          borderRadius={5}
                          className={classes.listFrame}>
                         <List>
-                            {Array.from(props.customData).sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                            {Array.from(props.selectedData).sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
+                            {props.customData.slice().sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
                         </List>
                     </Box>
                 </Grid>

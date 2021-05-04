@@ -31,7 +31,7 @@ import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 
 interface TimeListProps {
-    times: Set<string>;
+    times: Array<string>;
     removeHandler: (time: string) => void;
 };
 
@@ -64,7 +64,7 @@ export const TimeList: React.FC<TimeListProps>  = (props) => {
     return (
         <div style={{width: '20%'}}>
             <List>
-                {Array.from(props.times).map(renderListItem)}
+                {props.times.map(renderListItem)}
             </List>
         </div>
     )

@@ -35,9 +35,9 @@ interface SettingsOverviewProps {
     backHandler: () => void;
     name: string;
     setName: (name: string) => void;
-    selectedData: Set<string>;
-    customData: Set<string>;
-    historizedData: Set<string>;
+    selectedData: Array<string>;
+    customData: Array<string>;
+    historizedData: Array<string>;
 }
 
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
@@ -70,8 +70,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
-                                {Array.from(props.selectedData).map((item: string) => renderListItem(item))}
-                                {Array.from(props.customData).map((item: string) => renderListItem(item))}
+                                {props.selectedData.map((item: string) => renderListItem(item))}
+                                {props.customData.map((item: string) => renderListItem(item))}
                             </List>
                         </Box>
                     </Grid>
@@ -85,7 +85,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
-                                {Array.from(props.historizedData).map((item: string) => renderListItem(item))}
+                                {props.historizedData.map((item: string) => renderListItem(item))}
                             </List>
                         </Box>
                     </Grid>

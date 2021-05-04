@@ -18,10 +18,10 @@ import {SelectedDataItem} from "../index";
 interface CreateCustomDataProps {
     continueHandler: () => void;
     backHandler: () => void;
-    selectedData: Set<SelectedDataItem>;
-    setSelectedData: (set: Set<SelectedDataItem>) => void;
-    customData: Set<string>;
-    setCustomData: (set: Set<string>) => void;
+    selectedData: Array<SelectedDataItem>;
+    setSelectedData: (array: Array<SelectedDataItem>) => void;
+    customData: Array<string>;
+    setCustomData: (array: Array<string>) => void;
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
@@ -204,7 +204,9 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             console.log('Entweder kein Name oder keine Formel!')
             return
         }
-        props.setCustomData(new Set(props.customData.add(formel)));
+        const arCopy = props.customData.slice();
+        arCopy.push(formel);
+        props.setCustomData(arCopy);
         handleDelete();
     }
 

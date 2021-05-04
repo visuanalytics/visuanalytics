@@ -20,8 +20,8 @@ interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     apiData: any;
-    selectedData: Set<SelectedDataItem>;
-    setSelectedData: (set: Set<SelectedDataItem>) => void;
+    selectedData: Array<SelectedDataItem>;
+    setSelectedData: (array: Array<SelectedDataItem>) => void;
 }
 
 /** Internal representation of a list item extracted from the JSON object.
@@ -53,7 +53,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     //everytime there is a change in the source data, rebuild the list and clean the selection
     React.useEffect(() => {
         transformJSON(props.apiData);
-        //props.setSelectedData(new Set());
+        //props.setSelectedData(new Array());
     }, [props.apiData]);
 
     //sample JSON-data to test the different depth levels and parsing
@@ -315,7 +315,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     <ListItemIcon>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).has(selectedDataObj.key)}/>
+                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
                             }
                             label={''}
                         />
@@ -336,7 +336,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     <ListItemIcon>
                         <FormControlLabel
                             control={
-                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).has(selectedDataObj.key)}/>
+                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
                             }
                             label={''}
                         />
@@ -355,7 +355,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * @param data The item to be added
      */
     const addToSelection = (data: SelectedDataItem) => {
-        props.setSelectedData(new Set(props.selectedData).add(data));
+        const arCopy = props.selectedData.slice()
+        arCopy.push(data)
+        props.setSelectedData(arCopy);
     };
 
     /**
@@ -363,12 +365,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * @param data The item to be removed
      */
     const  removeFromSelection = (data: SelectedDataItem) => {
-        /*const setCopy = new Set(props.selectedData);
-        setCopy.delete(data);
-        props.setSelectedData(setCopy);*/
-        props.setSelectedData(new Set(Array.from(props.selectedData).filter((item) => {
+        props.setSelectedData(props.selectedData.filter((item) => {
             return item.key !== data.key;
-        })));
+        }));
     };
 
     /**
@@ -377,11 +376,11 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const checkboxHandler = (data: SelectedDataItem) => {
         console.log(data);
-        if (extractKeysFromSelection(props.selectedData).has(data.key)) {
+        if (extractKeysFromSelection(props.selectedData).includes(data.key)) {
             removeFromSelection(data);
         } else {
             addToSelection(data)
-            console.log("new: " + extractKeysFromSelection(props.selectedData).has(data.key));
+            console.log("new: " + extractKeysFromSelection(props.selectedData).includes(data.key));
         }
 
         //console.log(props.selectedData.values().next())
@@ -423,7 +422,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonPrimary}>
-                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.size==0} onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length==0} onClick={props.continueHandler}>
                             weiter
                         </Button>
                         <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sample2))}}>Janek Test</Button>

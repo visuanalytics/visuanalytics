@@ -42,10 +42,10 @@ export type SelectedDataItem = {
 /**
  * Returns a set that only contains the keys from selectedData.
  */
-export const extractKeysFromSelection = (selectedData: Set<SelectedDataItem>) => {
-    const keySet = new Set<string>();
-    Array.from(selectedData).forEach((item) => keySet.add(item.key))
-    return keySet;
+export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) => {
+    const keyArray = new Array<string>();
+    selectedData.forEach((item) => keyArray.push(item.key));
+    return keyArray;
 }
 
 /*
@@ -86,11 +86,11 @@ export const CreateInfoProvider = () => {
     //holds the data delivered from the currently created API
     const [apiData, setApiData] = React.useState({});
     // contains selected data from DataSelection
-    const [selectedData, setSelectedData] = React.useState(new Set<SelectedDataItem>());
+    const [selectedData, setSelectedData] = React.useState(new Array<SelectedDataItem>());
     // contains all data created custom in step 4
-    const [customData, setCustomData] = React.useState(new Set<string>());
+    const [customData, setCustomData] = React.useState(new Array<string>());
     // contains all data that was selected for historization
-    const [historizedData, setHistorizedData] = React.useState(new Set<string>());
+    const [historizedData, setHistorizedData] = React.useState(new Array<string>());
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -110,11 +110,11 @@ export const CreateInfoProvider = () => {
         //apiData
         setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||""));
         //selectedData
-        setSelectedData(new Set<SelectedDataItem>(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"")));
+        setSelectedData(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||""));
         //customData
-        setCustomData(new Set(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"")));
+        setCustomData(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||""));
         //historizedData
-        setHistorizedData(new Set(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||"")));
+        setHistorizedData(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||""));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -142,15 +142,15 @@ export const CreateInfoProvider = () => {
     }, [apiData])
     //store selectedData in sessionStorage by converting into an array and use JSON.stringify on it
     React.useEffect(() => {
-        sessionStorage.setItem("selectedData-" + uniqueId, JSON.stringify(Array.from(selectedData)));
+        sessionStorage.setItem("selectedData-" + uniqueId, JSON.stringify(selectedData));
     }, [selectedData])
     //store customData in sessionStorage by converting into an array and use JSON.stringify on it
     React.useEffect(() => {
-        sessionStorage.setItem("customData-" + uniqueId, JSON.stringify(Array.from(customData)));
+        sessionStorage.setItem("customData-" + uniqueId, JSON.stringify(customData));
     }, [customData])
     //store historizedData in sessionStorage by converting into an array and use JSON.stringify on it
     React.useEffect(() => {
-        sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(Array.from(historizedData)));
+        sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(historizedData));
     }, [historizedData])
 
 
@@ -206,9 +206,9 @@ export const CreateInfoProvider = () => {
                     url_pattern: query
                 },
                 method: noKey?"noAuth":method,
-                transform: Array.from(selectedData),
-                storing: Array.from(historizedData),
-                customData: Array.from(customData)
+                transform: extractKeysFromSelection(selectedData),
+                storing: historizedData,
+                customData: customData
             })
         }, handleSuccess, handleError
     );
@@ -240,9 +240,9 @@ export const CreateInfoProvider = () => {
                 url_pattern: query,
             },
             method: noKey?"noAuth":method,
-            transform: Array.from(selectedData),
-            storing: Array.from(historizedData),
-            customData: Array.from(customData)
+            transform: extractKeysFromSelection(selectedData),
+            storing: historizedData,
+            customData: customData
         }));
     }
 
@@ -296,7 +296,7 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         apiData={apiData}
                         selectedData={selectedData}
-                        setSelectedData={(set: Set<SelectedDataItem>) => setSelectedData(set)}
+                        setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
                     />
                 );
             case 3:
@@ -305,9 +305,9 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         selectedData={selectedData}
-                        setSelectedData={(set: Set<SelectedDataItem>) => setSelectedData(set)}
+                        setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
                         customData={customData}
-                        setCustomData={(set:Set<string>) => setCustomData(set)}
+                        setCustomData={(set:Array<string>) => setCustomData(set)}
                     />
                 )
             case 4:
@@ -318,7 +318,7 @@ export const CreateInfoProvider = () => {
                         selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
                         historizedData={historizedData}
-                        setHistorizedData={(set: Set<string>) => setHistorizedData(set)}
+                        setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                     />
                 )
             case 5:

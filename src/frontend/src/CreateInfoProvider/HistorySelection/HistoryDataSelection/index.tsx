@@ -39,10 +39,10 @@ interface HistoryDataSelectionProps {
     handleProceed: () => void;
     handleSkipProceed: () => void;
     handleBack: () => void;
-    selectedData: Set<string>;
-    customData: Set<any>;
-    historizedData: Set<string>;
-    setHistorizedData: (set: Set<string>) => void;
+    selectedData: Array<string>;
+    customData: Array<any>;
+    historizedData: Array<string>;
+    setHistorizedData: (array: Array<string>) => void;
 };
 
 /**
@@ -57,8 +57,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * If data was selected, the time choice is presented, otherwise it is skipped.
      */
     const checkProceedMethod = () => {
-        console.log(props.historizedData.size==0);
-        if(props.historizedData.size==0) {
+        console.log(props.historizedData.length==0);
+        if(props.historizedData.length==0) {
             props.handleSkipProceed();
         } else {
             props.handleProceed();
@@ -70,7 +70,9 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * @param data The item to be added
      */
     const addToHistorySelection = (data: string) => {
-        props.setHistorizedData(new Set(props.historizedData).add(data));
+        const arCopy = props.historizedData.slice();
+        arCopy.push(data);
+        props.setHistorizedData(arCopy);
     };
 
     /**
@@ -78,9 +80,9 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * @param data The item to be removed
      */
     const  removeFromHistorySelection = (data: string) => {
-        const setCopy = new Set(props.historizedData);
-        setCopy.delete(data);
-        props.setHistorizedData(setCopy);
+        props.setHistorizedData(props.historizedData.filter((item) => {
+            return item!== data;
+        }));
     };
 
     /**
@@ -89,12 +91,12 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      */
     const checkboxHandler = (data: string) => {
         console.log(data);
-        console.log(props.historizedData.has(data));
-        if (props.historizedData.has(data)) {
+        console.log(props.historizedData.includes(data));
+        if (props.historizedData.includes(data)) {
             removeFromHistorySelection(data);
         } else {
             addToHistorySelection(data)
-            console.log("new: " + props.historizedData.has(data));
+            console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
     };
@@ -109,7 +111,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                 <ListItemIcon>
                     <FormControlLabel
                         control={
-                            <Checkbox onClick={() => checkboxHandler(item)} checked={props.historizedData.has(item)}/>
+                            <Checkbox onClick={() => checkboxHandler(item)} checked={props.historizedData.includes(item)}/>
                         }
                         label={''}
                     />
@@ -133,8 +135,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
             <Grid item xs={10}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key="listBox">
                     <List disablePadding={true} key="listRoot2">
-                        {Array.from(props.customData).map((item) => renderListItem(item))}
-                        {Array.from(props.selectedData).map((item) => renderListItem(item))}
+                        {props.customData.map((item) => renderListItem(item))}
+                        {props.selectedData.map((item) => renderListItem(item))}
                     </List>
                 </Box>
             </Grid>

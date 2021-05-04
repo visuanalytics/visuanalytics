@@ -45,28 +45,29 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
     //a set that holds all times added by the user, formatted as "hh:mm" strings
-    const [times, setTimes] = React.useState(new Set<string>())
+    const [times, setTimes] = React.useState(new Array<string>())
     //an array that holds a boolean value for each weekday, true means it has been selected by the user
     const [days, setDays] = React.useState(Array(7).fill(false));
 
     /**
-     * Adds a new time to the set containing select times, if not already contained.
-     * @param time The time to be added to the set.
+     * Adds a new time to the array containing select times, if not already contained.
+     * @param time The time to be added to the array.
      * The Date will be converted to a string in the format 'hh:mm'.
      */
     const addToTimes = (time: MaterialUiPickersDate) => {
         if(time!=null) {
             const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
             const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
-            setTimes(new Set(times).add(hours + ":" + minutes));
+            const arCopy = times.slice();
+            arCopy.push(hours + ":" + minutes);
+            setTimes(arCopy);
         }
     }
 
     const removeTimes = (time: string) => {
-        //two steps are necessary since delete returns a boolean
-        const setCopy = new Set(times);
-        setCopy.delete(time);
-        setTimes(setCopy);
+        setTimes(times.filter((item) => {
+            return item!==time;
+        }));
     }
 
     /**

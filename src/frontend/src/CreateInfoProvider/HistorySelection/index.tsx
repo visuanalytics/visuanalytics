@@ -39,10 +39,10 @@ import {StepFrame} from "../StepFrame";
 interface HistorySelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
-    selectedData: Set<string>;
-    customData: Set<any>;
-    historizedData: Set<string>;
-    setHistorizedData: (set: Set<string>) => void;
+    selectedData: Array<string>;
+    customData: Array<any>;
+    historizedData: Array<string>;
+    setHistorizedData: (array: Array<string>) => void;
 };
 
 /**
