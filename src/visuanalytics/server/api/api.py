@@ -24,7 +24,7 @@ def close_db_con(exception):
 @api.route("/checkapi", methods=["POST"])
 def checkapi():
     """
-    Endpunkt '/checkapi'.
+    Endpunkt `/checkapi`.
 
     Übermitteltes JSON enthält die API-Daten in dem Format:
     {   'url': '<url + query>',
@@ -34,24 +34,98 @@ def checkapi():
 
     Die Response enthält alle Keys die bei der gegenen API abgefragt werden können
     """
-    api = request.json
+    api_info = request.json
     try:
-        if "url" not in api:
+        if "url" not in api_info:
             err = flask.jsonify({"err_msg": "Missing URL"})
             return err, 400
-        if "has_key" not in api:
+        if "has_key" not in api_info:
             err = flask.jsonify({"err_msg": "Missing Field 'has_key'"})
             return err, 400
-        if api["has_key"] is True and "api_key" not in api:
+        if api_info["has_key"] is True and "api_key" not in api_info:
             err = flask.jsonify({"err_msg": "Missing API-Key"})
             return err, 400
 
         # Todo API-Abfragen
-        keys = None # Methode zum Umschreiben der API-Keys aufrufen
+        keys = None  # Methode zum Umschreiben der API-Keys aufrufen
         if keys is not None:
             return flask.jsonify({"api_keys": keys, "status": 0})
 
-        return flask.jsonify({"status": 1, "api_keys": {}})
+        # return flask.jsonify({"status": 1, "api_keys": {}})
+        # Temporary
+        return flask.jsonify({
+            "status": 0,
+            "api_keys": {
+                "Spiele": [
+                    {
+                        "same_type": True,
+                        "length": 5,
+                        "object": {
+                            "MatchID": "number",
+                            "MatchDateTime": "dateTime",
+                            "TimeZoneID": "string",
+                            "LeagueId": "number",
+                            "LeagueName": "string",
+                            "MatchDateTimeUTC": "dateTime",
+                            "Group": {
+                                "GroupName": "string",
+                                "GroupOderID": "number",
+                                "GroupID": "number"
+                            },
+                            "Team1": {
+                                "TeamId": "number",
+                                "TeamName": "string",
+                                "ShortName": "string",
+                                "TeamIconUrl": "string",
+                                "TeamGroupName": None
+                            },
+                            "Team2": {
+                                "TeamId": "number",
+                                "TeamName": "string",
+                                "ShortName": "string",
+                                "TeamIconUrl": "string",
+                                "TeamGroupName": None
+                            },
+                            "LastUpdateDateTime": "dateTime",
+                            "MatchIsFinished": True,
+                            "MatchResults": [
+                                {
+                                    "same_type": True,
+                                    "length": 2,
+                                    "object": {
+                                        "ResultID": "number",
+                                        "ResultName": "string",
+                                        "PointsTeam1": "number",
+                                        "PointsTeam2": "number",
+                                        "ResultOrderID": "number",
+                                        "ResultTypeID": "number",
+                                        "ResultDescription": "string"
+                                    }
+                                }
+                            ],
+                            "Goals": [
+                                {
+                                    "same_type": True,
+                                    "length": 4,
+                                    "object": {
+                                        "GoalID": "number",
+                                        "ScoreTeam1": "number",
+                                        "ScoreTeam2": "number",
+                                        "MatchMinute": "number",
+                                        "GoalGetterID": "number",
+                                        "GoalGetterName": "string",
+                                        "IsPenalty": "boolean",
+                                        "IsOwnGoal": "boolean",
+                                        "IsOvertime": "boolean",
+                                        "Comment": None
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        })
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while checking a new api"})
@@ -61,7 +135,7 @@ def checkapi():
 @api.route("/infoprovider", methods=["POST"])
 def add_infoprovider():
     """
-    Endpunkt '/infoprovider'.
+    Endpunkt `/infoprovider`.
 
     Route zum Hinzufügen eines Infoproviders.
     """
@@ -85,6 +159,43 @@ def add_infoprovider():
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while adding an infoprovider"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
+def delete_infoprovider(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>`.
+
+    Route zum Löschen eines Infoproviders.
+    """
+    try:
+        queries.delete_infoprovider(infoprovider_id)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>", methods=["GET"])
+def get_infoprovider(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>`.
+
+    Response enthält das Json zum Infoprovider.
+    """
+    try:
+        file_path = queries.get_infoprovider_file(infoprovider_id)
+
+        if file_path is None:
+            err = flask.jsonify({"err_msg": "Unknown infoprovider"})
+            return err, 400
+
+        return send_file(file_path, "application/json", True)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred"})
         return err, 400
 
 
