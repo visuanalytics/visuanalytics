@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Fr Apr 30 18:34:42 2021
+-- File generated with SQLiteStudio v3.3.3 on Di Mai 4 11:22:41 2021
 --
 -- Text encoding used: System
 --
@@ -37,10 +37,13 @@ CREATE TABLE image (
 DROP TABLE IF EXISTS infoprovider;
 
 CREATE TABLE infoprovider (
-    infoprovider_id   INTEGER PRIMARY KEY AUTOINCREMENT
-                              UNIQUE
-                              NOT NULL,
-    infoprovider_name VARCHAR NOT NULL
+    infoprovider_id           INTEGER PRIMARY KEY AUTOINCREMENT
+                                      UNIQUE
+                                      NOT NULL,
+    infoprovider_name         VARCHAR NOT NULL,
+    schedule_historisation_id INTEGER REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
+                                                                                                    ON UPDATE CASCADE
+                                      NOT NULL
 );
 
 
