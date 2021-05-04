@@ -12,6 +12,12 @@ IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
 
 
+def get_infoprovider_list():
+    con = db.open_con_f()
+    res = con.execute("SELECT infoprovider_id, infoprovider_name FROM infoprovider")
+    return [{"infoprovider_id": row["infoprovider_id"], "infoprovider_name": row["infoprovider_name"]} for row in res]
+
+
 def insert_infoprovider(infoprovider):
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
@@ -29,22 +35,51 @@ def insert_infoprovider(infoprovider):
     con.commit()
 
 
+def get_infoprovider_file(infoprovider_id):
+    con = db.open_con_f()
+    res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
+
+
+def update_infoprovider(infoprovider_id, updated_data):
+    con = db.open_con_f()
+    file_path = get_infoprovider_file(infoprovider_id)
+    infoprovider_json = {
+        "api": updated_data["api"],
+        "transform": updated_data["transform"],
+        "storing": updated_data["storing"]
+    }
+
+    for key, value in updated_data.items():
+        if key == "infoprovider_name":
+            con.execute("UPDATE infoprovider SET infoprovider_name =? WHERE infoprovider_id=?",
+                        [value, infoprovider_id])
+        if key == "schedule":
+            old_schedule_id = con.execute("SELECT schedule_historisation_id FROM infoprovider WHERE infoprovider_id=?",
+                                          [infoprovider_id]).fetchone()["schedule_historisation_id"]
+            con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [old_schedule_id])
+            con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?",
+                        [old_schedule_id])
+            schedule_id = _insert_historisation_schedule(con, value)
+            con.execute("UPDATE infoprovider SET schedule_historisation_id=? WHERE infoprovider_id=?",
+                        [schedule_id, infoprovider_id])
+    con.commit()
+
+    if file_path is not None:
+        os.remove(file_path)
+        with open_resource(file_path, "wt") as f:
+            json.dump(infoprovider_json, f)
+
+
 def delete_infoprovider(infoprovider_id):
     con = db.open_con_f()
     file_path = get_infoprovider_file(infoprovider_id)
     res = con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
     con.commit()
 
-    if (res.rowcount > 0):
+    if res.rowcount > 0:
         os.remove(file_path)
-
-
-def get_infoprovider_file(infoprovider_id):
-    con = db.open_con_f()
-    res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
-                      [infoprovider_id]).fetchone()
-
-    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
 
 
 def get_topic_names():
@@ -198,6 +233,16 @@ def _insert_param_values(con, job_id, topic_values):
                   humps.decamelize(v["type"]))
                  for k, v in t["values"].items()]
         con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
+
+
+def _insert_historisation_schedule(con, schedule):
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
+    schedule_id = con.execute("INSERT INTO schedule_historisation(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
+                              [type, time, date, time_interval]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(schedule_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
 
 
 def _insert_schedule(con, schedule):
