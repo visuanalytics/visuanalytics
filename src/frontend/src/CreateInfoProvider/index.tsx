@@ -29,6 +29,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {clear} from "@testing-library/user-event/dist/clear";
+import {SettingsOverview} from "./SettingsOverview";
 
 
 /*
@@ -49,7 +50,7 @@ export const CreateInfoProvider = () => {
         "Gesamtübersicht"
     ];
     //the current step of the creation process, numbered by 0 to 5
-    const [step, setStep] = React.useState(1);
+    const [step, setStep] = React.useState(5);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -291,13 +292,17 @@ export const CreateInfoProvider = () => {
                 )
             case 5:
                 return (
-                    <div>Step 6</div>
-                )
-            /*case 5:
-                return (
-                    <CreationOverview>
+                    <SettingsOverview
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        name={name}
+                        setName={(name: string) => setName(name)}
+                        selectedData={selectedData}
+                        customData={customData}
+                        historizedData={historizedData}
                     />
-                )*/
+                )
+
         }
     }
     return (
