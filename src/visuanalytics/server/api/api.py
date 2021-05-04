@@ -11,6 +11,10 @@ from os import path
 
 from visuanalytics.server.db import db, queries
 
+from ast2json import str2json
+from base64 import b64encode
+from visuanalytics.analytics.apis.checkapi import check_api
+
 logger = logging.getLogger()
 
 api = Blueprint('api', __name__)
@@ -36,99 +40,54 @@ def checkapi():
     """
     api_info = request.json
     try:
-        if "url" not in api_info:
+        if "url_pattern" not in api_info["api"]:
             err = flask.jsonify({"err_msg": "Missing URL"})
             return err, 400
-        if "has_key" not in api_info:
-            err = flask.jsonify({"err_msg": "Missing Field 'has_key'"})
+
+        if "method" not in api_info:
+            err = flask.jsonify({"err_msg": "Missing Field 'method'"})
             return err, 400
-        if api_info["has_key"] is True and "api_key" not in api_info:
+
+        if "api_key_name" not in api_info["api"]:
             err = flask.jsonify({"err_msg": "Missing API-Key"})
             return err, 400
 
-        # Todo API-Abfragen
-        keys = None  # Methode zum Umschreiben der API-Keys aufrufen
-        if keys is not None:
-            return flask.jsonify({"api_keys": keys, "status": 0})
+        if "response_type" not in api_info:
+            err = flask.jsonify({"err_msg": "Missing field 'response_type'"})
+            return err, 400
 
-        # return flask.jsonify({"status": 1, "api_keys": {}})
-        # Temporary
-        return flask.jsonify({
-            "status": 0,
-            "api_keys": {
-                "Spiele": [
-                    {
-                        "same_type": True,
-                        "length": 5,
-                        "object": {
-                            "MatchID": "number",
-                            "MatchDateTime": "dateTime",
-                            "TimeZoneID": "string",
-                            "LeagueId": "number",
-                            "LeagueName": "string",
-                            "MatchDateTimeUTC": "dateTime",
-                            "Group": {
-                                "GroupName": "string",
-                                "GroupOderID": "number",
-                                "GroupID": "number"
-                            },
-                            "Team1": {
-                                "TeamId": "number",
-                                "TeamName": "string",
-                                "ShortName": "string",
-                                "TeamIconUrl": "string",
-                                "TeamGroupName": None
-                            },
-                            "Team2": {
-                                "TeamId": "number",
-                                "TeamName": "string",
-                                "ShortName": "string",
-                                "TeamIconUrl": "string",
-                                "TeamGroupName": None
-                            },
-                            "LastUpdateDateTime": "dateTime",
-                            "MatchIsFinished": True,
-                            "MatchResults": [
-                                {
-                                    "same_type": True,
-                                    "length": 2,
-                                    "object": {
-                                        "ResultID": "number",
-                                        "ResultName": "string",
-                                        "PointsTeam1": "number",
-                                        "PointsTeam2": "number",
-                                        "ResultOrderID": "number",
-                                        "ResultTypeID": "number",
-                                        "ResultDescription": "string"
-                                    }
-                                }
-                            ],
-                            "Goals": [
-                                {
-                                    "same_type": True,
-                                    "length": 4,
-                                    "object": {
-                                        "GoalID": "number",
-                                        "ScoreTeam1": "number",
-                                        "ScoreTeam2": "number",
-                                        "MatchMinute": "number",
-                                        "GoalGetterID": "number",
-                                        "GoalGetterName": "string",
-                                        "IsPenalty": "boolean",
-                                        "IsOwnGoal": "boolean",
-                                        "IsOvertime": "boolean",
-                                        "Comment": None
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        })
+        header, parameter = _generate_request_dicts(api_info["api"], api_info["method"])
+        req_data = {
+            "method": api_info["api"].get("method", "get"),
+            "url": api_info["api"]["url_pattern"],
+            "headers": header,
+            "params": parameter,
+            "response_type": api_info["response_type"]
+        }
+
+        keys, success = check_api(req_data)
+        if success:
+            return flask.jsonify({"status": 0, "api_keys": keys})
+
+        return flask.jsonify({"status": 1, "api_keys": keys})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while checking a new api"})
+        return err, 400
+
+
+@api.route("/infoproviders", methods=["GET"])
+def get_all_infoproviders():
+    """
+    Endpunkt `/infoproviders`.
+
+    Response enthält alle, in der Datenbank enthaltenen, Infoprovider.
+    """
+    try:
+        return flask.jsonify(queries.get_infoprovider_list()), 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading all infoproviders"})
         return err, 400
 
 
@@ -154,27 +113,12 @@ def add_infoprovider():
             err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
             return err, 400
 
+
         queries.insert_infoprovider(infoprovider)
         return "", 204
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while adding an infoprovider"})
-        return err, 400
-
-
-@api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
-def delete_infoprovider(infoprovider_id):
-    """
-    Endpunkt `/infoprovider/<infoprovider_id>`.
-
-    Route zum Löschen eines Infoproviders.
-    """
-    try:
-        queries.delete_infoprovider(infoprovider_id)
-        return "", 204
-    except Exception:
-        logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
         return err, 400
 
 
@@ -196,6 +140,80 @@ def get_infoprovider(infoprovider_id):
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>", methods=["PUT"])
+def update_infoprovider(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>`.
+
+    Route zum Ändern eines Infoproviders.
+    """
+    updated_data = request.json
+    try:
+        if "infoprovider_name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
+            return err, 400
+        if "schedule" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing schedule"})
+            return err, 400
+        if "api" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'api'"})
+            return err, 400
+        if "transform" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'transform'"})
+            return err, 400
+        if "storing" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing 'storing'"})
+            return err, 400
+
+        queries.update_infoprovider(infoprovider_id, updated_data)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while updating an infoprovider"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
+def delete_infoprovider(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>`.
+
+    Route zum Löschen eines Infoproviders.
+    """
+    try:
+        queries.delete_infoprovider(infoprovider_id)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
+        return err, 400
+
+
+@api.route("/testformula", methods=["POST"])
+def testformula():
+    """
+    Endpunkt `/testformula`.
+
+    Route zum Testen einer gegebenen Formel.
+    Die Response enthält
+    """
+    formula = request.json
+    try:
+        if "formula" not in formula:
+            err = flask.jsonify({"err_msg": "Missing field 'formula'"})
+            return err, 400
+
+        try:
+            str2json(formula["formula"])
+            return flask.jsonify({"accepted": True})
+        except Exception:
+            return flask.jsonify({"accepted": False})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while testing a formula"})
         return err, 400
 
 
@@ -487,6 +505,28 @@ def logs():
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while getting the logs"})
         return err, 400
+
+
+def _generate_request_dicts(apiInfo, method):
+    header = {}
+    parameter = {}
+    if method == "BearerToken":
+        header.update({"Authorization": "Bearer " + apiInfo["api_key_name"]})
+    elif method == "noAuth":
+        return header, parameter
+    else:
+        api_key_name = apiInfo["api_key_name"].split("||")
+        key1 = api_key_name[0]
+        key2 = api_key_name[1]
+
+        if method == "BasicAuth":
+            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8")).decode("utf-8")})
+        elif method == "KeyInHeader":
+            header.update({key1: key2})
+        elif method == "KeyInQuery":
+            parameter.update({key1: key2})
+
+    return header, parameter
 
 
 def _check_json_extention(filename):
