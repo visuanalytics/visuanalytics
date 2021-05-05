@@ -20,6 +20,7 @@ interface CustomDataGUIProps {
     handleRightParen: (paren: string) => void;
     handleLeftParen: (paren: string) => void;
     handleDelete: () => void;
+    fullDelete: () => void;
     handleSave: (formel: string) => void;
     dataFlag: boolean;
     opFlag: boolean;
@@ -189,7 +190,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item container xs={12} justify={"center"}>
                     <Grid item className={classes.blockableButtonSecondary}>
                         <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('9')} className={classes.blockableButtonSecondary}>
+                                onClick={() => props.handleNumberButton('9')}
+                                className={classes.blockableButtonSecondary}>
                             9
                         </Button>
                     </Grid>
@@ -240,6 +242,12 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <Grid item>
                         <Button variant={"contained"} size={"medium"} color={"secondary"}
                                 onClick={() => props.handleDelete()}>
+                            Zurück
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"}
+                                onClick={() => props.fullDelete()}>
                             Löschen
                         </Button>
                     </Grid>

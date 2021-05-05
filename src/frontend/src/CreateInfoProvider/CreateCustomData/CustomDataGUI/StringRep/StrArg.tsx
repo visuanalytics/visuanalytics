@@ -1,5 +1,5 @@
 /**
- * The String-Argument-Class represents an Object that is created when a Button of the Calculator is triggered
+ * The String-Argument-Class represents an Object that is created when a Button of the Calculator is triggered.
  */
 export class StrArg {
 
@@ -12,9 +12,27 @@ export class StrArg {
      */
     isOp: boolean;
 
-    constructor(strRep: string, isOp: boolean) {
+    /**
+     * Shows if the Object holds a right Paren.
+     */
+    isRightParen: boolean;
+
+    /**
+     * Shows if the Object holds a left Paren.
+     */
+    isLeftParen: boolean;
+
+    /**
+     * Shows if the Object holds a Number.
+     */
+    isNumber: boolean;
+
+    constructor(strRep: string, isOp: boolean, isRightParen: boolean, isLeftParen: boolean, isNumber: boolean) {
         this.stringRep = strRep;
         this.isOp = isOp;
+        this.isRightParen = isRightParen;
+        this.isLeftParen = isLeftParen;
+        this.isNumber = isNumber;
     }
 
     /**
