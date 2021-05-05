@@ -75,7 +75,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(true);
         setLeftParenFlag(false);
 
-        dataAsObj.push(new StrArg(operator, true));
+        dataAsObj.push(new StrArg(operator, true, false, false, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -91,7 +91,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(false);
         setLeftParenFlag(true);
 
-        dataAsObj.push(new StrArg(data, false));
+        dataAsObj.push(new StrArg(data, false, false, false, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -107,7 +107,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(false);
         setLeftParenFlag(true);
 
-        dataAsObj.push(new StrArg(number, false));
+        dataAsObj.push(new StrArg(number, false, false, false, true));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -122,10 +122,10 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setOpFlag(true);
         setDataFlag(false);
         setNumberFlag(false);
-        setRightParenFlag(false);
+        setRightParenFlag(true);
         setLeftParenFlag(false);
 
-        dataAsObj.push(new StrArg(paren, false));
+        dataAsObj.push(new StrArg(paren, false, false, true, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -143,7 +143,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(false);
         setLeftParenFlag(true);
 
-        dataAsObj.push(new StrArg(paren, false));
+        dataAsObj.push(new StrArg(paren, false, true, false, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -164,9 +164,62 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handler for the Delete-Button. Cancels if the Input-Box is empty. Refreshes all counters and flags and sets DataAsObj empty.
+     * Handler for the Delete-Button. There is a different procedure depending on the StrArg-Object that has to be deleted.
+     * To achieve that the flags in StrArg will be tested.
+     * If dataAsObj holds only on StrArg or ist empty fullDelete() will be called.
      */
     const handleDelete = () => {
+
+        if (dataAsObj.length <= 1) {
+            fullDelete()
+        } else if (dataAsObj[dataAsObj.length - 1].isOp) {
+            setOpFlag(false);
+            setDataFlag(true)
+            setNumberFlag(true);
+            setRightParenFlag(false);
+            setLeftParenFlag(true);
+        } else if (dataAsObj[dataAsObj.length - 1].isRightParen) {
+
+            if (!dataAsObj[dataAsObj.length - 2]) {
+                setOpFlag(true);
+                setDataFlag(false);
+                setNumberFlag(false);
+                setRightParenFlag(true);
+                setLeftParenFlag(false);
+            }
+            setRightParenCount(rightParenCount - 1);
+
+        } else if (dataAsObj[dataAsObj.length - 1].isLeftParen) {
+
+            setLeftParenCount(leftParenCount - 1);
+
+        } else if (dataAsObj[dataAsObj.length - 1].isNumber) {
+
+            if (!dataAsObj[dataAsObj.length - 2].isNumber) {
+                setOpFlag(true);
+                setDataFlag(false);
+                setNumberFlag(false);
+                setRightParenFlag(true);
+                setLeftParenFlag(false);
+            }
+
+        } else {
+            setOpFlag(true);
+            setDataFlag(false);
+            setNumberFlag(false);
+            setRightParenFlag(true);
+            setLeftParenFlag(false);
+        }
+
+        dataAsObj.pop();
+        setInput(calculationToString(dataAsObj));
+    }
+
+    /**
+     * Deletes the complete Input and refreshes counter and flags. After this dataAsObj will be empty.
+     * Cancels if the Input-Box is empty.
+     */
+    const fullDelete = () => {
         if (dataAsObj[dataAsObj.length - 1] === undefined) {
             console.log('leer!');
             return
@@ -198,7 +251,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         const arCopy = props.customData.slice();
         arCopy.push(formel);
         props.setCustomData(arCopy);
-        handleDelete();
+        fullDelete();
     }
 
     return (
@@ -218,6 +271,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         handleRightParen={(paren: string) => handleRightParen(paren)}
                         handleLeftParen={(paren: string) => handleLeftParen(paren)}
                         handleDelete={() => handleDelete()}
+                        fullDelete={() => fullDelete()}
                         handleSave={(formel: string) => handleSave(formel)}
                         dataFlag={dataFlag}
                         opFlag={opFlag}
