@@ -3,7 +3,7 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-
+import { Schedule } from "..";
 
 interface HistorySelectionProps {
     continueHandler: () => void;
@@ -12,6 +12,8 @@ interface HistorySelectionProps {
     customData: Array<any>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
+    schedule: Schedule;
+    selectSchedule: (schedule: Schedule) => void;
 };
 
 /**
@@ -60,6 +62,8 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                     <HistoryScheduleSelection
                         handleProceed={props.continueHandler}
                         handleBack={handleScheduleBack}
+                        schedule={props.schedule}
+                        selectSchedule={props.selectSchedule}
                     />
                 )
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
 import { BasicSettings } from "./BasicSettings";
 import { useCallFetch } from "../Hooks/useCallFetch";
@@ -18,6 +18,13 @@ import {SettingsOverview} from "./SettingsOverview";
 export type SelectedDataItem = {
     key: string;
     type: String;
+}
+
+export type Schedule = {
+    type: string;
+    weekdays: [] | null;
+    time: Date | null;
+    interval: string | null;
 }
 
 /**
@@ -49,7 +56,7 @@ export const CreateInfoProvider = () => {
     ];
     //the current step of the creation process, numbered by 0 to 5
 
-    const [step, setStep] = React.useState(2);
+    const [step, setStep] = React.useState(3);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -72,6 +79,8 @@ export const CreateInfoProvider = () => {
     const [customData, setCustomData] = React.useState(new Array<string>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
+    // Contains the JSON for historisation schedule selection
+    const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: null, time: null, weekdays: null});
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -310,6 +319,8 @@ export const CreateInfoProvider = () => {
                         customData={customData}
                         historizedData={historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
+                        schedule={schedule}
+                        selectSchedule={selectSchedule}
                     />
                 )
             case 5:

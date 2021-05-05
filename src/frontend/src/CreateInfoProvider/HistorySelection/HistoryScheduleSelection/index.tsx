@@ -9,11 +9,17 @@ import { KeyboardTimePicker } from "@material-ui/pickers";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns"
 import { de } from "date-fns/locale"
-
+import Radio from "@material-ui/core/Radio";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import List from "@material-ui/core/List";
+import Collapse from "@material-ui/core/Collapse";
+import {Schedule} from "../../index";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
     handleBack: () => void;
+    schedule: Schedule;
+    selectSchedule: (schedule: Schedule) => void;
 };
 
 /**
@@ -61,13 +67,55 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
         ));
     }
 
+    const changeToWeekly = () => {
+        props.selectSchedule({... props.schedule, type: "weekly"});
+    }
+
+    const changeToDaily = () => {
+        props.selectSchedule({... props.schedule, type: "daily"});
+    }
+
+    const changeToInterval = () => {
+        props.selectSchedule({... props.schedule, type: "interval"});
+    }
 
     return (
         <Grid container>
             <Grid item xs={12}>
-                <WeekdaySelector
-                    days={days}
-                    changeDay={changeDay}
+                <FormControlLabel value="weekly" control={
+                    <Radio
+                        checked={props.schedule.type === "weekly"}
+                        value="weekly"
+                        onChange={changeToWeekly
+                    }/>
+                } label="Wochentag"
+                />
+                <Collapse in={props.schedule.type === "weekly"}>
+                    <Grid item xs={12}>
+                        <WeekdaySelector
+                            days={days}
+                            changeDay={changeDay}
+                        />
+                    </Grid>
+                </Collapse>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControlLabel value="daily" control={
+                    <Radio checked={props.schedule.type === "daily"}
+                           value="daily"
+                           onChange={changeToDaily}
+                    />
+                } label="Täglich"
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <FormControlLabel value="interval" control={
+                    <Radio
+                        checked={props.schedule.type === "interval"}
+                        value="interval"
+                        onChange={changeToInterval}
+                    />
+                } label="Intervall"
                 />
             </Grid>
             <Grid item xs={12}>
