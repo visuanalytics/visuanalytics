@@ -1,25 +1,6 @@
-import React, {ChangeEvent} from "react";
-/*import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../../JobList";
-import { useStyles } from "./style";
-import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../../../ComponentProvider";
-/*import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../../PageTemplate";*/
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Input from '@material-ui/core/Input';
+import React from "react";
 import { Weekday, getWeekdayLabel } from "../../../../util/schedule";
+import Button from "@material-ui/core/Button";
 
 
 interface WeekdaySelectorProps {

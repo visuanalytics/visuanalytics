@@ -1,36 +1,16 @@
-import React, {useCallback} from "react";
-import {
-    Container,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText, Paper,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../JobList";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { ComponentContext } from "../ComponentProvider";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../PageTemplate";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import React from "react";
+import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
 import { BasicSettings } from "./BasicSettings";
-import {useStyles} from "../Home/style";
-import JobCreate from "../JobCreate";
 import { useCallFetch } from "../Hooks/useCallFetch";
 import { TypeSelection } from "./TypeSelection";
 import { HistorySelection } from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
 import {CreateCustomData} from "./CreateCustomData";
+import Container from "@material-ui/core/Container";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import {clear} from "@testing-library/user-event/dist/clear";
 import {SettingsOverview} from "./SettingsOverview";
-import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
 
 
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary

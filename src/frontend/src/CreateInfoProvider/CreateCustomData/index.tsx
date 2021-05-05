@@ -1,19 +1,12 @@
 import React from "react";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import List from "@material-ui/core/List";
-import Button from "@material-ui/core/Button";
-import {strict} from "assert";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
-import {Grid} from "@material-ui/core";
 import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import {SelectedDataItem} from "../index";
-
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;

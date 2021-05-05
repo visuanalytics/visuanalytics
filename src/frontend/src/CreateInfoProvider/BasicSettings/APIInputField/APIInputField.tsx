@@ -1,19 +1,4 @@
 import React from "react";
-import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-//import { JobList } from "../../JobList";
-//import { useStyles } from "./style";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { ComponentContext } from "../../../ComponentProvider";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-//import { PageTemplate } from "../../PageTemplate";
 import TextField from "@material-ui/core/TextField";
 
 /**

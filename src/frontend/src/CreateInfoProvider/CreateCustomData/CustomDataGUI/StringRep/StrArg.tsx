@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * The String-Argument-Class represents an Object that is created when a Button of the Calculator is triggered
  */

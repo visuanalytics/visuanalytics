@@ -1,33 +1,10 @@
-import React, {ChangeEvent} from "react";
-/*import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../../JobList";
-import { useStyles } from "./style";
-import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../../../ComponentProvider";
-/*import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../../PageTemplate";*/
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Input from '@material-ui/core/Input';
-import {Web} from "@material-ui/icons";
+import React from "react";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 
 interface TimeListProps {

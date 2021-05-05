@@ -1,34 +1,19 @@
 import React from "react";
-/*import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../../JobList";
-import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../ComponentProvider";
-/*import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../../PageTemplate";*/
 import { APIInputField } from "./APIInputField/APIInputField";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
+import { useStyles } from "../style";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select"
-import { useStyles } from "../style";
-import { borders } from '@material-ui/system';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import {FormControl} from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -86,7 +71,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      */
    const handleSuccess = (jsonData: any) => {
        const data = jsonData as requestBackEndAnswer;
-       if(data.status!=0) {
+       if(data.status!==0) {
            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
        }
        props.setApiData(data.api_keys);
@@ -112,9 +97,13 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                url: props.query,
-                api_key: props.noKey?"":props.apiKeyInput1 + "||" + props.apiKeyInput2,
-                has_key: !props.noKey
+                api: {
+                    type: "request",
+                    api_key_name: props.method==="BearerToken"?props.apiKeyInput1:props.apiKeyInput1 + "||" + props.apiKeyInput2,
+                    url_pattern: props.query
+                },
+                method: props.noKey?"noAuth":props.method,
+                response_type: "json"
             })
         }, handleSuccess, handleError
     );
@@ -140,12 +129,12 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      *
      */
     const handleMethodChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        if(e.target!=null) {
+        if(e.target!==null) {
             //check if the categories of the elements change, in this case empty the input
             const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth", "DigestAuth"];
             const methodIndex = methodIndexList.indexOf(props.method);
             const targetIndex = methodIndexList.indexOf(e.target.value as string)
-            if((methodIndex<=1&&targetIndex>1)||(methodIndex===2&&targetIndex!=2)||(methodIndex>2&&targetIndex<=2)) {
+            if((methodIndex<=1&&targetIndex>1)||(methodIndex===2&&targetIndex!==2)||(methodIndex>2&&targetIndex<=2)) {
                 props.setApiKeyInput1("");
                 props.setApiKeyInput2("")
             }

@@ -1,20 +1,19 @@
-import React, {ChangeEvent} from "react";
+import React from "react";
+import {useStyles} from "../style";
+import {extractKeysFromSelection, SelectedDataItem} from "../"
+import {StepFrame} from "../StepFrame";
+import {hintContents} from "../../util/hintContents";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import {StepFrame} from "../StepFrame";
-import {hintContents} from "../../util/hintContents";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
-import {useStyles} from "../style";
-import {extractKeysFromSelection, SelectedDataItem} from "../"
+
 
 interface DataSelectionProps {
     continueHandler: () => void;
@@ -42,8 +41,6 @@ interface ListItemRepresentation {
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
-
-    const [data, setData] = React.useState<Array<string>>(['Temperatur', 'Windgeschwindigkeit', 'Regenwahrscheinlichkeit', 'Temperatur(gefühlt)', 'Sonnenuntergang', 'Sonnenaufgang', 'Sonnenstunden', 'data0', 'data1', 'data2']);
 
     const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
@@ -182,7 +179,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 let subObject = stringRep.split("}", 1)[0] + "}"
                 let counter = 1;
                 //detect the whole sub-object/array
-                while (subObject.split("{").length - 1 != subObject.split("}").length - 1) {
+                while (subObject.split("{").length - 1 !== subObject.split("}").length - 1) {
                     let splitArray = stringRep.split("}", counter);
                     subObject = "";
                     for (let i = 0; i < counter; i++) {
@@ -267,7 +264,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 stringRep = stringRep.substring(value.length + 1);
             }
             //get the returned array or the read value and store it in the listItem
-            if(value.includes('\"')) value = value.substring(1, value.length-1);
+            if(value.includes('"')) value = value.substring(1, value.length-1);
             resultArray.push({
                 keyName: key,
                 value: value,

@@ -1,14 +1,10 @@
 import React from "react";
 import { useStyles } from "./style";
-import {
-    Container,
-    Paper,
-    Grid,
-    Typography,
-    Tooltip,
-    IconButton,
-} from "@material-ui/core";
 import { HintButton } from "../../util/HintButton";
+import Container from "@material-ui/core/Container"
+import Paper from "@material-ui/core/Paper"
+import Grid from "@material-ui/core/Grid"
+import Typography from "@material-ui/core/Typography"
 
 interface Props {
     heading: string;

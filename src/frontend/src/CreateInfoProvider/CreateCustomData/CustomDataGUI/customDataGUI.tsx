@@ -1,13 +1,14 @@
 import React from "react";
-import {Box, Button, Grid, TextareaAutosize, TextField, Typography} from "@material-ui/core";
+import {useStyles} from "../../style";
+import {SelectedDataItem} from "../../index";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
-import {StrArg} from "./StringRep/StrArg";
-import Checkbox from "@material-ui/core/Checkbox";
-import {RemoveRedEye} from "@material-ui/icons";
-import {useStyles} from "../../style";
-import {SelectedDataItem} from "../../index";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;

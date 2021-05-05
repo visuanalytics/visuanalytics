@@ -1,30 +1,7 @@
-import React, {ChangeEvent} from "react";
-/*import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../../JobList";
-import { useStyles } from "./style";
-import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../../ComponentProvider";
-/*import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../../PageTemplate";*/
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Input from '@material-ui/core/Input';
-import {Web} from "@material-ui/icons";
-import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers"
-import DateFnsUtils from "@date-io/date-fns"
-import { de } from "date-fns/locale"
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { KeyboardTimePicker } from "@material-ui/pickers";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
@@ -57,8 +34,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * If data was selected, the time choice is presented, otherwise it is skipped.
      */
     const checkProceedMethod = () => {
-        console.log(props.historizedData.length==0);
-        if(props.historizedData.length==0) {
+        console.log(props.historizedData.length===0);
+        if(props.historizedData.length===0) {
             props.handleSkipProceed();
         } else {
             props.handleProceed();

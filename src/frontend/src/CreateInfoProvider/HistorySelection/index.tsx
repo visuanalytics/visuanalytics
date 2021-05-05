@@ -1,35 +1,4 @@
-import React, {ChangeEvent} from "react";
-/*import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@material-ui/core";
-import { JobList } from "../../JobList";
-import { useStyles } from "./style";
-import AddCircleIcon from "@material-ui/icons/AddCircle";*/
-import { ComponentContext } from "../../ComponentProvider";
-/*import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { ExpandMore } from "@material-ui/icons";
-import { PageTemplate } from "../../PageTemplate";*/
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {useCallFetch} from "../../Hooks/useCallFetch";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Input from '@material-ui/core/Input';
-import {Web} from "@material-ui/icons";
-import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers"
-import DateFnsUtils from "@date-io/date-fns"
-import { de } from "date-fns/locale"
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import { KeyboardTimePicker } from "@material-ui/pickers";
-import {TypeSelection} from "../TypeSelection";
-import {BasicSettings} from "../BasicSettings";
-import {DataSelection} from "../DataSelection";
-import {CreateCustomData} from "../CreateCustomData";
+import React from "react";
 import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
