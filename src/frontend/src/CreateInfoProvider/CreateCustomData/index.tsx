@@ -29,7 +29,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const classes = useStyles();
 
     /**
-     * Input ist the created Formel. It is build with the Buttons.
+     * Input is the created formula as a string. It is build with the Buttons.
      */
     const [input, setInput] = React.useState<string>('');
 
@@ -60,19 +60,19 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(false);
 
     /**
-     * Shows how much the leftParenButton was triggered.
-     * Is used to check if the number of right and left parens is even
+     * Counts how many left parentheses are included in the formula.
+     * Is used to check if the number of right and left parens is even.
      */
     const [leftParenCount, setLeftParenCount] = React.useState<number>(0);
     /**
-     * Shows how much the rightParenButton was triggered
-     * Is used to check if the number of right and left parens is even
+     * Counts how many right parentheses are included in the formula.
+     * Is used to check if the number of right and left parens is even.
      */
     const [rightParenCount, setRightParenCount] = React.useState<number>(0);
 
     /**
      * Handler for operatorButtons.
-     * The flags an the input is updated.
+     * The flags and the input are updated.
      * @param operator => +, -, *, /, %
      */
     const handleOperatorButtons = (operator: string) => {
@@ -88,7 +88,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
     /**
      * Handler for dataButtons.
-     * The flags an the input is updated.
+     * The flags and the input are updated.
      * @param data => the content of selectedData from the data-selection-step
      */
     const handleDataButtons = (data: string) => {
@@ -104,7 +104,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
     /**
      * Handler for numberButtons.
-     * The flags an the input is updated.
+     * The flags and the input are updated.
      * @param number => 0,1,2,3,4,5,6,7,8,9
      */
     const handleNumberButtons = (number: string) => {
@@ -119,11 +119,11 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handler for the leftBracketButton. Adds 1 to the leftParenCounter and pushes an Object with ( in dataAsObj.
+     * Handler for the leftParenButton. Adds 1 to the leftParenCounter and pushes an Object with ( in dataAsObj.
      * The flags an the input is updated.
-     * @param bracket => (
+     * @param paren => (
      */
-    const handleLeftBracket = (bracket: string) => {
+    const handleLeftParen = (paren: string) => {
         setLeftParenCount(leftParenCount + 1);
 
         setOpFlag(true);
@@ -132,16 +132,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(false);
         setLeftParenFlag(false);
 
-        dataAsObj.push(new StrArg(bracket, false));
+        dataAsObj.push(new StrArg(paren, false));
         setInput(calculationToString(dataAsObj));
     }
 
     /**
-     * Handler for the rightBracketButton. Adds 1 to the rightParenCounter and pushes an Object with ) in dataAsObj.
+     * Handler for the rightParenButton. Adds 1 to the rightParenCounter and pushes an Object with ) in dataAsObj.
      * The flags an the input is updated.
-     * @param bracket => )
+     * @param paren => )
      */
-    const handleRightBracket = (bracket: string) => {
+    const handleRightParen = (paren: string) => {
         setRightParenCount(rightParenCount + 1);
 
         setOpFlag(false);
@@ -150,7 +150,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         setRightParenFlag(false);
         setLeftParenFlag(true);
 
-        dataAsObj.push(new StrArg(bracket, false));
+        dataAsObj.push(new StrArg(paren, false));
         setInput(calculationToString(dataAsObj));
     }
 
@@ -171,8 +171,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handler for the Delete-Button. Cancels if the Input-Box is empty. Refreshes all counters and flags and sets
-     * DataAsObj empty.
+     * Handler for the Delete-Button. Cancels if the Input-Box is empty. Refreshes all counters and flags and sets DataAsObj empty.
      */
     const handleDelete = () => {
         if (dataAsObj[dataAsObj.length - 1] === undefined) {
@@ -194,12 +193,11 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handle for the Safe-Button. Cancels if the Name-Field or the Input-Box field is empty. Safes the formel
-     * in CustomData and refreshes the Input-Box.
+     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Saves the formel in CustomData and refreshes the Input-Box.
      * @param formel the name of the formel
      */
         //TODO: name-field should also be refreshed
-    const handleSafe = (formel: string) => {
+    const handleSave = (formel: string) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
             console.log('Entweder kein Name oder keine Formel!')
             return
@@ -215,44 +213,41 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             heading="Formeln"
             hintContent={hintContents.formeln}
         >
-            <React.Fragment>
-                <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
-                    <Grid item container xs={12}>
-                        <CustomDataGUI
-                            selectedData={props.selectedData}
-                            customData={props.customData}
-                            input={input}
-                            handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
-                            handleDataButtons={(operator: string) => handleDataButtons(operator)}
-                            handleNumberButton={(number: string) => handleNumberButtons(number)}
-                            handleRightBracket={(bracket: string) => handleRightBracket(bracket)}
-                            handleLeftBracket={(bracket: string) => handleLeftBracket(bracket)}
-                            handleDelete={() => handleDelete()}
-                            handleSafe={(formel: string) => handleSafe(formel)}
-                            dataFlag={dataFlag}
-                            opFlag={opFlag}
-                            numberFlag={numberFlag}
-                            rightBracketFlag={rightParenFlag}
-                            leftBracketFlag={leftParenFlag}
-                            leftParenCount={leftParenCount}
-                            rightParenCount={rightParenCount}
-                        />
+            <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
+                <Grid item container xs={12}>
+                    <CustomDataGUI
+                        selectedData={props.selectedData}
+                        customData={props.customData}
+                        input={input}
+                        handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
+                        handleDataButtons={(operator: string) => handleDataButtons(operator)}
+                        handleNumberButton={(number: string) => handleNumberButtons(number)}
+                        handleRightParen={(paren: string) => handleRightParen(paren)}
+                        handleLeftParen={(paren: string) => handleLeftParen(paren)}
+                        handleDelete={() => handleDelete()}
+                        handleSave={(formel: string) => handleSave(formel)}
+                        dataFlag={dataFlag}
+                        opFlag={opFlag}
+                        numberFlag={numberFlag}
+                        rightParenFlag={rightParenFlag}
+                        leftParenFlag={leftParenFlag}
+                        leftParenCount={leftParenCount}
+                        rightParenCount={rightParenCount}
+                    />
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                            zurück
+                        </Button>
                     </Grid>
-                    <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
-                        <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
-                                zurück
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" size="large" color="primary"
-                                    onClick={props.continueHandler}>
-                                weiter
-                            </Button>
-                        </Grid>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
+                            weiter
+                        </Button>
                     </Grid>
                 </Grid>
-            </React.Fragment>
+            </Grid>
         </StepFrame>
     );
 

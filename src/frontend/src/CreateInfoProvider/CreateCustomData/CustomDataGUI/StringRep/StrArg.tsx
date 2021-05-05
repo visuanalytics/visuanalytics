@@ -1,8 +1,7 @@
 import React from "react";
 
 /**
- * The String-Argument-Class represents an Object that is created
- * when an Button of the Calculator is triggered
+ * The String-Argument-Class represents an Object that is created when a Button of the Calculator is triggered
  */
 export class StrArg {
 
@@ -21,8 +20,7 @@ export class StrArg {
     }
 
     /**
-     * This Method makes the right String-Representation. If the Object holds an Operator
-     * it ist surrounded by Blank-Charakters
+     * This Method generates the correct string-representation. If the object holds an Operator it is surrounded by Blank-Charakters
      */
     public makeStringRep (): string {
         if (this.isOp) {

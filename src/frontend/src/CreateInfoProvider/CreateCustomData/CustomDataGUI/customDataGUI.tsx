@@ -16,15 +16,15 @@ interface CustomDataGUIProps {
     handleOperatorButtons: (operator: string) => void;
     handleDataButtons: (data: string) => void;
     handleNumberButton: (number: string) => void;
-    handleRightBracket: (bracket: string) => void;
-    handleLeftBracket: (bracket: string) => void;
+    handleRightParen: (paren: string) => void;
+    handleLeftParen: (paren: string) => void;
     handleDelete: () => void;
-    handleSafe: (formel: string) => void;
+    handleSave: (formel: string) => void;
     dataFlag: boolean;
     opFlag: boolean;
     numberFlag: boolean;
-    rightBracketFlag: boolean;
-    leftBracketFlag: boolean;
+    rightParenFlag: boolean;
+    leftParenFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
 }
@@ -63,49 +63,59 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
      */
     const makeCalculateButtons = () => {
         return (
-            <React.Fragment>
+            <Grid container>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                            onClick={() => props.handleOperatorButtons('+')}>
-                        +
-                    </Button>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                            onClick={() => props.handleOperatorButtons('-')}>
-                        -
-                    </Button>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                            onClick={() => props.handleOperatorButtons('*')}>
-                        *
-                    </Button>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                            onClick={() => props.handleOperatorButtons('/')}>
-                        /
-                    </Button>
-                    <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                            onClick={() => props.handleOperatorButtons('%')}>
-                        %
-                    </Button>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('+')}>
+                            +
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('-')}>
+                            -
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('*')}>
+                            *
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('/')}>
+                            /
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('%')}>
+                            %
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <Grid item>
-                        <Button disabled={props.leftBracketFlag}
-                                onClick={() => props.handleLeftBracket('(')}
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button disabled={props.leftParenFlag}
+                                onClick={() => props.handleLeftParen('(')}
                                 variant={"contained"}
                                 size={"large"} color={"secondary"}
                         >
                             (
                         </Button>
                     </Grid>
-                    <Grid item>
-                        <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightBracketFlag}
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightParenFlag}
                                 variant={"contained"} size={"large"}
                                 color={"secondary"}
-                                onClick={() => props.handleRightBracket(')')}>
+                                onClick={() => props.handleRightParen(')')}>
                             )
                         </Button>
                     </Grid>
                 </Grid>
-            </React.Fragment>
+            </Grid>
         )
     };
 
@@ -114,56 +124,76 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
      */
     const makeNumberButtons = () => {
         return (
-            <React.Fragment>
+            <Grid container>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('0')}>
-                        0
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('1')}>
-                        1
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('2')}>
-                        2
-                    </Button>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('0')}>
+                            0
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('1')}>
+                            1
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('2')}>
+                            2
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('3')}>
-                        3
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('4')}>
-                        4
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('5')}>
-                        5
-                    </Button>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('3')}>
+                            3
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('4')}>
+                            4
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('5')}>
+                            5
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('6')}>
-                        6
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('7')}>
-                        7
-                    </Button>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('8')}>
-                        8
-                    </Button>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('6')}>
+                            6
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('7')}>
+                            7
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('8')}>
+                            8
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                            onClick={() => props.handleNumberButton('9')}>
-                        9
-                    </Button>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('9')} className={classes.blockableButtonSecondary}>
+                            9
+                        </Button>
+                    </Grid>
                 </Grid>
-            </React.Fragment>
+            </Grid>
         )
     };
 
@@ -214,7 +244,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"medium"} color={"secondary"}
-                                onClick={() => props.handleSafe(text)}>
+                                onClick={() => props.handleSave(text)}>
                             Speichern
                         </Button>
                     </Grid>
