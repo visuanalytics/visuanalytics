@@ -33,8 +33,6 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
     //a set that holds all times added by the user, formatted as "hh:mm" strings
     const [times, setTimes] = React.useState(new Array<string>())
-    //an array that holds a boolean value for each weekday, true means it has been selected by the user
-    const [days, setDays] = React.useState(Array(7).fill(false));
 
     /**
      * Adds a new time to the array containing select times, if not already contained.
@@ -61,10 +59,17 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      * Method that toggles the boolean values for selected weekdays, should be called whenever the user selects or unselects.
      * @param dayNumber Numeric representation of the weekday that should be toggled on/off.
      */
-    const changeDay = (dayNumber: number) => {
-        setDays(days.map((selected, index) =>
-            index===dayNumber?!selected:selected
-        ));
+    const addDay = (dayNumber: number) => {
+        props.selectSchedule({...props.schedule, weekdays: props.schedule.weekdays?.concat([dayNumber])})
+    }
+
+    const removeDay = (dayNumber: number) => {
+        props.selectSchedule({...props.schedule, weekdays: props.schedule.weekdays?.filter((value, index, arr) => value !== dayNumber)})
+    }
+
+    const toggleSelectedDay = (dayNumber: number) => {
+        if(props.schedule.weekdays?.includes(dayNumber)) removeDay(dayNumber);
+        else addDay(dayNumber);
     }
 
     const changeToWeekly = () => {
@@ -88,13 +93,13 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                         value="weekly"
                         onChange={changeToWeekly
                     }/>
-                } label="Wochentag"
+                } label={"Wochentag"}
                 />
                 <Collapse in={props.schedule.type === "weekly"}>
                     <Grid item xs={12}>
                         <WeekdaySelector
-                            days={days}
-                            changeDay={changeDay}
+                            days={props.schedule.weekdays}
+                            toggleSelectedDay={toggleSelectedDay}
                         />
                     </Grid>
                 </Collapse>
