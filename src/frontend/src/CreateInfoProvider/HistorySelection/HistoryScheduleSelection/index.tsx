@@ -1,6 +1,4 @@
 import React from "react";
-import {useStyles} from "../../style";
-import { TimeList } from "./TimeList";
 import {WeekdaySelector} from "./WeekdaySelector";
 import Button from "@material-ui/core/Button";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
@@ -11,9 +9,11 @@ import DateFnsUtils from "@date-io/date-fns"
 import { de } from "date-fns/locale"
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import List from "@material-ui/core/List";
 import Collapse from "@material-ui/core/Collapse";
 import {Schedule} from "../../index";
+import Typography from "@material-ui/core/Typography";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
@@ -27,32 +27,21 @@ interface HistoryScheduleSelectionProps {
  * The state of this component handles the input made to its children.
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
-    const classes = useStyles();
 
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
-    //a set that holds all times added by the user, formatted as "hh:mm" strings
-    const [times, setTimes] = React.useState(new Array<string>())
 
     /**
      * Adds a new time to the array containing select times, if not already contained.
      * @param time The time to be added to the array.
      * The Date will be converted to a string in the format 'hh:mm'.
      */
-    const addToTimes = (time: MaterialUiPickersDate) => {
+    const setScheduleTime = (time: MaterialUiPickersDate) => {
         if(time!=null) {
             const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
             const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
-            const arCopy = times.slice();
-            arCopy.push(hours + ":" + minutes);
-            setTimes(arCopy);
+            props.selectSchedule({...props.schedule, time: hours + ":" + minutes});
         }
-    }
-
-    const removeTimes = (time: string) => {
-        setTimes(times.filter((item) => {
-            return item!==time;
-        }));
     }
 
     /**
@@ -82,6 +71,20 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
 
     const changeToInterval = () => {
         props.selectSchedule({... props.schedule, type: "interval"});
+    }
+
+    const setInterval = (event: React.ChangeEvent<{value: unknown}>) => {
+        props.selectSchedule({...props.schedule, interval: event.target.value as string})
+    }
+
+    const handleContinue = () => {
+        setScheduleTime(props.schedule.type === "interval" ? new Date() : currentTimeSelection);
+
+        // Clean the unnecessary fields in the schedule object
+        if(props.schedule.type !== "weekly") props.selectSchedule({...props.schedule, weekdays: []});
+        if(props.schedule.type !== "interval") props.selectSchedule({...props.schedule, interval: undefined});
+
+        props.handleProceed();
     }
 
     return (
@@ -122,6 +125,20 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     />
                 } label="Intervall"
                 />
+                <Collapse in={props.schedule.type === "interval"}>
+                    <FormControlLabel control={
+                        <Select value={props.schedule.interval === undefined ? "halfday" : props.schedule.interval} onChange={setInterval}>
+                            <MenuItem value={"minute"}>Jede Minute</MenuItem>
+                            <MenuItem value={"quarter"}>Alle 15 Minuten</MenuItem>
+                            <MenuItem value={"half"}>Alle 30 Minuten</MenuItem>
+                            <MenuItem value={"threequarter"}>Alle 45 Minuten</MenuItem>
+                            <MenuItem value={"hour"}>Alle 60 Minuten</MenuItem>
+                            <MenuItem value={"quartday"}>Alle 6 Stunden</MenuItem>
+                            <MenuItem value={"halfday"}>Alle 12 Stunden</MenuItem>
+                        </Select>
+                    } label={"Intervallwahl"}
+                    />
+                </Collapse>
             </Grid>
             <Grid item xs={12}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={de}>
@@ -129,24 +146,21 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                         ampm={false}
                         placeholder="00:00"
                         mask="__:__"
-                        value={currentTimeSelection}
+                        value={props.schedule.type === "interval" ? new Date() : currentTimeSelection}
                         onChange={setCurrentTimeSelection}
                         invalidDateMessage={'Falsches Datumsformat'}
                         cancelLabel={'Abbrechen'}
+                        disabled={props.schedule.type === "interval"}
                     />
                 </MuiPickersUtilsProvider>
             </Grid>
-            <Grid item xs={12}>
-                <Button variant="outlined" onClick={() => addToTimes(currentTimeSelection)}>
-                    Zeit hinzufügen
-                </Button>
-            </Grid>
-            <Grid item xs={12}>
-                <TimeList
-                    times={times}
-                    removeHandler={removeTimes}
-                />
-            </Grid>
+            <Collapse in={props.schedule.type === "interval"}>
+                <Grid item xs={12}>
+                    <Typography variant="body2">
+                        Bei der Historisierung in Intervallen, wird automatisch die aktuellste Zeit gewählt.
+                    </Typography>
+                </Grid>
+            </Collapse>
             <Grid item container xs={12} justify="space-between">
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.handleBack}>
@@ -154,7 +168,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed}>
+                    <Button variant="contained" size="large" color="primary" onClick={handleContinue}>
                         weiter
                     </Button>
                 </Grid>
