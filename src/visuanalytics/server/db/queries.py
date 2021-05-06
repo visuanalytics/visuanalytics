@@ -2,6 +2,7 @@ import json
 import os
 
 import humps
+import copy
 
 from visuanalytics.server.db import db
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, open_resource
@@ -26,13 +27,34 @@ def insert_infoprovider(infoprovider):
         "transform": infoprovider["transform"],
         "storing": infoprovider["storing"]
     }
+    count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [infoprovider_name]).fetchone()["COUNT(*)"]
+    if count > 0:
+        return False
 
     with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
         json.dump(infoprovider_json, f)
 
-    con.execute("INSERT INTO infoprovider (infoprovider_name)VALUES (?)",
-                [infoprovider_name])
+    if "schedule" in infoprovider:
+        schedule_historisation = infoprovider["schedule"]
+        schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
+        con.execute("INSERT INTO infoprovider (infoprovider_name, schedule_historisation_id) VALUES (?, ?)",
+                    [infoprovider_name, schedule_historisation_id])
+
     con.commit()
+
+    return True
+
+
+def show_schedule():
+    con = db.open_con_f()
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation")
+    return [{"schedule_historisation_id": row["schedule_historisation_id"], "type": row["type"]} for row in res]
+
+
+def show_weekly():
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM schedule_historisation_weekday")
+    return [{"schedule_weekday_historisation_id": row["schedule_weekday_historisation_id"], "weekday": row["weekday"], "schedule_historisation_id": row["schedule_historisation_id"]} for row in res]
 
 
 def get_infoprovider_file(infoprovider_id):
@@ -42,19 +64,50 @@ def get_infoprovider_file(infoprovider_id):
     return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
 
 
+def get_infoprovider(infoprovider_id):
+    con = db.open_con_f()
+    infoprovider_json = {}
+    weekdays = []
+    with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
+        infoprovider_json.update({"json": json.loads(f.read())})
+    res = con.execute("SELECT * FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?",
+                           [infoprovider_id]).fetchone()
+    infoprovider_json.update({"infoprovider_name": res["infoprovider_name"]})
+    infoprovider_json.update({"schedule": {
+        "type": res["type"],
+        "time": res["time"],
+        "date": res["date"],
+        "time_interval": res["time_interval"]
+    }})
+    if res["type"] == "weekly":
+        weekly = con.execute("SELECT weekday FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+        for value in weekly:
+            weekdays.append(value["weekday"])
+        infoprovider_json["schedule"].update({"weekday": weekdays})
+    return infoprovider_json
+
+
 def update_infoprovider(infoprovider_id, updated_data):
     con = db.open_con_f()
     file_path = get_infoprovider_file(infoprovider_id)
-    infoprovider_json = {
-        "api": updated_data["api"],
-        "transform": updated_data["transform"],
-        "storing": updated_data["storing"]
-    }
+
+    with open_resource(file_path, "r") as f:
+        old_infoprovider_json = json.loads(f.read())
+        new_infoprovider_json = copy.deepcopy(old_infoprovider_json)
 
     for key, value in updated_data.items():
         if key == "infoprovider_name":
             con.execute("UPDATE infoprovider SET infoprovider_name =? WHERE infoprovider_id=?",
                         [value, infoprovider_id])
+        if key == "api":
+            print("changed api")
+            new_infoprovider_json.update({"api": value})
+        if key == "transform":
+            print("changed transform")
+            new_infoprovider_json.update({"transform": value})
+        if key == "storing":
+            print("changed storing")
+            new_infoprovider_json.update({"storing": value})
         if key == "schedule":
             old_schedule_id = con.execute("SELECT schedule_historisation_id FROM infoprovider WHERE infoprovider_id=?",
                                           [infoprovider_id]).fetchone()["schedule_historisation_id"]
@@ -64,22 +117,29 @@ def update_infoprovider(infoprovider_id, updated_data):
             schedule_id = _insert_historisation_schedule(con, value)
             con.execute("UPDATE infoprovider SET schedule_historisation_id=? WHERE infoprovider_id=?",
                         [schedule_id, infoprovider_id])
-    con.commit()
 
-    if file_path is not None:
-        os.remove(file_path)
-        with open_resource(file_path, "wt") as f:
-            json.dump(infoprovider_json, f)
+    with open_resource(file_path, "w") as f:
+        if sorted(old_infoprovider_json.items()) != sorted(new_infoprovider_json.items()):
+            json.dump(new_infoprovider_json, f)
+        else:
+            json.dump(old_infoprovider_json, f)
+
+    con.commit()
 
 
 def delete_infoprovider(infoprovider_id):
     con = db.open_con_f()
-    file_path = get_infoprovider_file(infoprovider_id)
-    res = con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
-    con.commit()
-
-    if res.rowcount > 0:
+    res = con.execute("SELECT * FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+    if res is not None:
+        file_path = get_infoprovider_file(infoprovider_id)
         os.remove(file_path)
+        _remove_historisation_schedule(con, infoprovider_id)
+        con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
+        con.commit()
+        return True
+    con.commit()
+    return False
 
 
 def get_topic_names():
@@ -241,8 +301,16 @@ def _insert_historisation_schedule(con, schedule):
                               [type, time, date, time_interval]).lastrowid
     if type == "weekly":
         id_weekdays = [(schedule_id, d) for d in weekdays]
-        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_id, weekday) VALUES(?, ?)", id_weekdays)
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
     return schedule_id
+
+
+def _remove_historisation_schedule(con, infoprovider_id):
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    if res["type"] == "weekly":
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+    
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
 
 
 def _insert_schedule(con, schedule):
