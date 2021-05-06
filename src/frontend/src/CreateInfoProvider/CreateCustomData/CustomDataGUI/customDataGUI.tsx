@@ -1,5 +1,5 @@
 import React from "react";
-import {useStyles} from "../../style";
+import {useStyles} from "../style";
 import {SelectedDataItem} from "../../index";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -14,6 +14,7 @@ interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
     customData: Array<string>;
     input: string;
+    setName: (name: string) => void;
     handleOperatorButtons: (operator: string) => void;
     handleDataButtons: (data: string) => void;
     handleNumberButton: (number: string) => void;
@@ -33,11 +34,6 @@ interface CustomDataGUIProps {
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
-    /**
-     * safes and represents the name-field for a new formel.
-     */
-    const [text, setText] = React.useState<string>('');
-
     const classes = useStyles();
 
     /**
@@ -49,7 +45,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
             <ListItem key={data}>
                 <FormControlLabel
                     control={
-                        <Button variant={"outlined"} size={"medium"} disabled={props.dataFlag}
+                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                 onClick={() => props.handleDataButtons(data)}>
                             {data}
                         </Button>
@@ -60,203 +56,190 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
         );
     };
 
-    /**
-     * creates the operatorButtons and the right and left parenButtons
-     */
-    const makeCalculateButtons = () => {
+    const makeButtons = () => {
         return (
             <Grid container>
-                <Grid item container xs={12} justify={"center"}>
+                <Grid item container xs={12} justify={"space-evenly"}>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('+')}>
                             +
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('-')}>
                             -
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('*')}>
                             *
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('/')}>
                             /
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={props.opFlag}
-                                onClick={() => props.handleOperatorButtons('%')}>
-                            %
-                        </Button>
-                    </Grid>
                 </Grid>
-                <Grid item container xs={12} justify={"center"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button disabled={props.leftParenFlag}
-                                onClick={() => props.handleLeftParen('(')}
-                                variant={"contained"}
-                                size={"large"} color={"secondary"}
-                        >
-                            (
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightParenFlag}
-                                variant={"contained"} size={"large"}
-                                color={"secondary"}
-                                onClick={() => props.handleRightParen(')')}>
-                            )
-                        </Button>
-                    </Grid>
+                <Grid item xs={12}>
+                    <br/>
                 </Grid>
-            </Grid>
-        )
-    };
-
-    /**
-     * creates the numberButtons
-     */
-    const makeNumberButtons = () => {
-        return (
-            <Grid container>
-                <Grid item container xs={12} justify={"center"}>
+                <Grid item container xs={12} justify={"space-evenly"}>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('0')}>
-                            0
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('1')}>
-                            1
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('2')}>
-                            2
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid item container xs={12} justify={"center"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('3')}>
-                            3
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('4')}>
-                            4
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('5')}>
-                            5
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid item container xs={12} justify={"center"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('6')}>
-                            6
-                        </Button>
-                    </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('7')}>
                             7
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('8')}>
                             8
                         </Button>
                     </Grid>
-                </Grid>
-                <Grid item container xs={12} justify={"center"}>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"} disabled={props.numberFlag}
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('9')}
                                 className={classes.blockableButtonSecondary}>
                             9
                         </Button>
                     </Grid>
-                </Grid>
-            </Grid>
-        )
-    };
-
-    return (
-        <React.Fragment>
-            <Grid container>
-                <Grid item xs={6}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
-                               required={true} onChange={event => (setText(event.target.value))}>
-                        {'Name'}
-                    </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                    <Typography variant={"h5"} align={"center"}>
-                        <br/>
-                        Ihre Api-Daten:
-                    </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box borderColor="primary.main" border={4} borderRadius={5}
-                         className={classes.listFrame}>
-                        {props.input}
-                    </Box>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box borderColor="primary.main"
-                         border={4}
-                         borderRadius={5}
-                         className={classes.listFrame}>
-                        <List>
-                            {props.customData.slice().sort((a, b) => a.localeCompare(b)).map(renderListItem)}
-                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
-                        </List>
-                    </Box>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
+                                onClick={() => props.handleOperatorButtons('%')}>
+                            %
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    {makeCalculateButtons()}
+                    <br/>
+                </Grid>
+                <Grid item container xs={12} justify={"space-evenly"}>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('4')}>
+                            4
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('5')}>
+                            5
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('6')}
+                                className={classes.blockableButtonSecondary}>
+                            6
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button disabled={props.leftParenFlag}
+                                onClick={() => props.handleLeftParen('(')}
+                                variant={"contained"}
+                                size={"large"} color={"primary"}
+                        >
+                            (
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
-                    {makeNumberButtons()}
+                    <br/>
                 </Grid>
-                <Grid item container xs={12} justify="space-evenly" className={classes.elementLargeMargin}>
+                <Grid item container xs={12} justify={"space-evenly"}>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('1')}>
+                            1
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('2')}>
+                            2
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('3')}
+                                className={classes.blockableButtonSecondary}>
+                            3
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightParenFlag}
+                                variant={"contained"} size={"large"}
+                                color={"primary"}
+                                onClick={() => props.handleRightParen(')')}>
+                            )
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <br/>
+                </Grid>
+                <Grid item container xs={12} justify={"space-around"}>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
+                                onClick={() => props.handleNumberButton('0')}>
+                            0
+                        </Button>
+                    </Grid>
                     <Grid item>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"}
+                        <Button variant={"contained"} size={"small"} color={"secondary"} className={classes.blockableButtonPrimary}
                                 onClick={() => props.handleDelete()}>
                             Zurück
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"}
+                        <Button variant={"contained"} size={"small"} color={"secondary"} className={classes.blockableButtonPrimary}
                                 onClick={() => props.fullDelete()}>
                             Löschen
                         </Button>
                     </Grid>
-                    <Grid item>
-                        <Button variant={"contained"} size={"medium"} color={"secondary"}
-                                onClick={() => props.handleSave(text)}>
-                            Speichern
-                        </Button>
+                </Grid>
+            </Grid>
+        )
+    }
+
+    return (
+        <React.Fragment>
+            <Grid container>
+                <Grid item xs={6}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} defaultValue={"Name"}
+                               required={true} onChange={event => (props.setName(event.target.value))}>
+                    </TextField>
+                </Grid>
+                <Grid item xs={6}>
+                    <Typography variant={"h5"} align={"center"} className={classes.header}>
+                        <br/>
+                        Ihre Api-Daten:
+                    </Typography>
+                </Grid>
+                <Grid container item xs={6} justify={"flex-start"}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                         className={classes.listFrame}>
+                        {props.input}
+                    </Box>
+                    <Grid item xs={12}>
+                        {makeButtons()}
                     </Grid>
+                </Grid>
+                <Grid item container xs={6} justify={"flex-end"}>
+                    <Box borderColor="primary.main"
+                         border={4}
+                         borderRadius={5}
+                         className={classes.listFrameData}>
+                        <List>
+                            {props.customData.slice().sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
+                        </List>
+                    </Box>
                 </Grid>
             </Grid>
         </React.Fragment>
