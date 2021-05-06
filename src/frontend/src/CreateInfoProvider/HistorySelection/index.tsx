@@ -4,17 +4,18 @@ import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import { Schedule } from "..";
+import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface HistorySelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     selectedData: Array<string>;
-    customData: Array<any>;
+    customData: Array<formelObj>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
-};
+}
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.

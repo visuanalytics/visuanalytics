@@ -1,20 +1,21 @@
 import React from "react";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
-import {StrArg} from "./CustomDataGUI/StringRep/StrArg";
+import {StrArg} from "./CustomDataGUI/formelObjects/StrArg";
 import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import {SelectedDataItem} from "../index";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
     backHandler: () => void;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
-    customData: Array<string>;
-    setCustomData: (array: Array<string>) => void;
+    customData: Array<formelObj>;
+    setCustomData: (array: Array<formelObj>) => void;
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
@@ -253,14 +254,15 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             return
         }
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
-            if (props.customData[i] === formel) {
+            if (props.customData[i].formelName === formel) {
                 alert('Variable ist schon vergeben!');
                 return;
             }
         }
         const arCopy = props.customData.slice();
-        arCopy.push(formel);
+        arCopy.push(new formelObj(formel, input));
         props.setCustomData(arCopy);
+        console.log(props.customData);
         fullDelete();
         setName('');
     }
