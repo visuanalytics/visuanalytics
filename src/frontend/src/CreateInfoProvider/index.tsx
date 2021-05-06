@@ -11,6 +11,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
+import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
 
 
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
@@ -76,7 +77,7 @@ export const CreateInfoProvider = () => {
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Array<SelectedDataItem>());
     // contains all data created custom in step 4
-    const [customData, setCustomData] = React.useState(new Array<string>());
+    const [customData, setCustomData] = React.useState(new Array<formelObj>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
@@ -305,9 +306,9 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         selectedData={selectedData}
-                        setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
+                        setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
-                        setCustomData={(set:Array<string>) => setCustomData(set)}
+                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
                     />
                 )
             case 4:

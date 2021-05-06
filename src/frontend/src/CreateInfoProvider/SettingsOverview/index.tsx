@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
@@ -16,7 +17,7 @@ interface SettingsOverviewProps {
     name: string;
     setName: (name: string) => void;
     selectedData: Array<string>;
-    customData: Array<string>;
+    customData: Array<formelObj>;
     historizedData: Array<string>;
 }
 
@@ -51,7 +52,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
                                 {props.selectedData.map((item: string) => renderListItem(item))}
-                                {props.customData.map((item: string) => renderListItem(item))}
+                                {props.customData.map((item: formelObj) => renderListItem(item.formelName))}
                             </List>
                         </Box>
                     </Grid>

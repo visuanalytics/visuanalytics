@@ -9,10 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
+import {formelObj} from "./formelObjects/formelObj";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
-    customData: Array<string>;
+    customData: Array<formelObj>;
     input: string;
     name: string;
     setName: (name: string) => void;
@@ -237,7 +238,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                          borderRadius={5}
                          className={classes.listFrameData}>
                         <List>
-                            {props.customData.slice().sort((a, b) => a.localeCompare(b)).map(renderListItem)}
+                            {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItem(name.formelName))}
                             {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItem(item.key))}
                         </List>
                     </Box>

@@ -10,6 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
+import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 
 interface HistoryDataSelectionProps {
@@ -17,10 +18,10 @@ interface HistoryDataSelectionProps {
     handleSkipProceed: () => void;
     handleBack: () => void;
     selectedData: Array<string>;
-    customData: Array<any>;
+    customData: Array<formelObj>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
-};
+}
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
@@ -112,7 +113,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
             <Grid item xs={10}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key="listBox">
                     <List disablePadding={true} key="listRoot2">
-                        {props.customData.map((item) => renderListItem(item))}
+                        {props.customData.map((item) => renderListItem(item.formelName))}
                         {props.selectedData.map((item) => renderListItem(item))}
                     </List>
                 </Box>
