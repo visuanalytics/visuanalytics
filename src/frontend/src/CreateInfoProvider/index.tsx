@@ -309,6 +309,7 @@ export const CreateInfoProvider = () => {
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
                         setCustomData={(array:Array<formelObj>) => setCustomData(array)}
+                        reportError={reportError}
                     />
                 )
             case 4:

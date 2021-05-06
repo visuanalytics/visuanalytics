@@ -8,6 +8,8 @@ import {SelectedDataItem} from "../index";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
+import {useCallFetch} from "../../Hooks/useCallFetch";
+import {stringify} from "querystring";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -16,6 +18,15 @@ interface CreateCustomDataProps {
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     customData: Array<formelObj>;
     setCustomData: (array: Array<formelObj>) => void;
+    reportError: (message: string) => void;
+}
+
+/**
+ * Defines the type that is expected for the backends answer to our request
+ */
+type requestBackendAnswer = {
+    status: boolean
+    error: string
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
@@ -259,13 +270,67 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 return;
             }
         }
+
+        //TODO: erst möglich, wenn das backend läuft!
+        //sendTestData();
+
+        //nur übergangsweise, zum testen
+
         const arCopy = props.customData.slice();
-        arCopy.push(new formelObj(formel, input));
+        arCopy.push(new formelObj(name, input));
         props.setCustomData(arCopy);
         console.log(props.customData);
         fullDelete();
         setName('');
+
     }
+
+    /**
+     * The method is called when there was no problem with the communication to the backend.
+     * The backend has received the formula-string an answers with true or false depending on the result of the formula-check
+     * @param jsonData the json-data send by the backend
+     */
+    const handleSuccess = (jsonData: any) => {
+
+        const data = jsonData as requestBackendAnswer;
+
+        if (data.status) {
+            const arCopy = props.customData.slice();
+            arCopy.push(new formelObj(name, input));
+            props.setCustomData(arCopy);
+            console.log(props.customData);
+            fullDelete();
+            setName('');
+        } else {
+            props.reportError(data.error);
+        }
+
+    }
+
+    /**
+     * Handler for errors happening when requesting the backend.
+     * Will display an error message and not proceed.
+     * @param err error to be displayed
+     */
+    const handleError = (err: Error) => {
+        props.reportError("Fehler: In der Formel liegt ein Fehler vor! :  (" + err.message + ")");
+    }
+
+    /**
+     * Method to post the formula-string as json to the backend in order to receive the answer of the syntax-check.
+     */
+    const sendTestData = useCallFetch("/testFormel", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            body: JSON.stringify(
+                {
+                    formula: input
+                }
+            )
+        }, handleSuccess, handleError
+    );
 
     return (
         <StepFrame
@@ -304,7 +369,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={!(rightParenCount >= leftParenCount)}
+                        <Button variant={"contained"} size={"large"} color={"secondary"}
+                                disabled={!(rightParenCount >= leftParenCount)}
                                 onClick={() => handleSave(name)}>
                             Speichern
                         </Button>
