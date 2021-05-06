@@ -40,16 +40,20 @@ def checkapi():
     """
     api_info = request.json
     try:
+        if "api" not in api_info:
+            err = flask.jsonify({"err_msg": "Missing field 'api'"})
+            return err, 400
+
+        if "api_key_name" not in api_info["api"]:
+            err = flask.jsonify({"err_msg": "Missing API-Key"})
+            return err, 400
+
         if "url_pattern" not in api_info["api"]:
             err = flask.jsonify({"err_msg": "Missing URL"})
             return err, 400
 
         if "method" not in api_info:
             err = flask.jsonify({"err_msg": "Missing Field 'method'"})
-            return err, 400
-
-        if "api_key_name" not in api_info["api"]:
-            err = flask.jsonify({"err_msg": "Missing API-Key"})
             return err, 400
 
         if "response_type" not in api_info:
@@ -66,28 +70,12 @@ def checkapi():
         }
 
         keys, success = check_api(req_data)
-        if success:
-            return flask.jsonify({"status": 0, "api_keys": keys})
 
-        return flask.jsonify({"status": 1, "api_keys": keys})
+        return flask.jsonify({"status": 0, "api_keys": keys}) if success else flask.jsonify({"status": 1, "api_keys": keys})
+
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while checking a new api"})
-        return err, 400
-
-
-@api.route("/infoproviders", methods=["GET"])
-def get_all_infoproviders():
-    """
-    Endpunkt `/infoproviders`.
-
-    Response enthält alle, in der Datenbank enthaltenen, Infoprovider.
-    """
-    try:
-        return flask.jsonify(queries.get_infoprovider_list()), 204
-    except Exception:
-        logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred while loading all infoproviders"})
         return err, 400
 
 
@@ -103,18 +91,28 @@ def add_infoprovider():
         if "infoprovider_name" not in infoprovider:
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
+
         if "api" not in infoprovider:
             err = flask.jsonify({"err_msg": "Missing Field 'api'"})
             return err, 400
+
         if "transform" not in infoprovider:
             err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
             return err, 400
+
         if "storing" not in infoprovider:
             err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
             return err, 400
 
+        if "schedule" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
+            return err, 400
 
-        queries.insert_infoprovider(infoprovider)
+        if not queries.insert_infoprovider(infoprovider):
+            err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
+                                            f"{infoprovider['infoprovider_name']}"})
+            return err, 400
+
         return "", 204
     except Exception:
         logger.exception("An error occurred: ")
@@ -122,24 +120,44 @@ def add_infoprovider():
         return err, 400
 
 
-@api.route("/infoprovider/<infoprovider_id>", methods=["GET"])
-def get_infoprovider(infoprovider_id):
+@api.route("/showschedule", methods=["GET"])
+def show_schedule():
     """
-    Endpunkt `/infoprovider/<infoprovider_id>`.
-
-    Response enthält das Json zum Infoprovider.
+    Method for testing only. Will be removed later on!
     """
     try:
-        file_path = queries.get_infoprovider_file(infoprovider_id)
-
-        if file_path is None:
-            err = flask.jsonify({"err_msg": "Unknown infoprovider"})
-            return err, 400
-
-        return send_file(file_path, "application/json", True)
+        return flask.jsonify(queries.show_schedule())
     except Exception:
         logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred"})
+        err = flask.jsonify({"err_msg": "An error occurred while loading all infoproviders"})
+        return err, 400
+
+
+@api.route("/showweekly", methods=["GET"])
+def show_weekly():
+    """
+        Method for testing only. Will be removed later on!
+    """
+    try:
+        return flask.jsonify(queries.show_weekly())
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading all infoproviders"})
+        return err, 400
+
+
+@api.route("/infoprovider/all", methods=["GET"])
+def get_all_infoproviders():
+    """
+    Endpunkt `/infoproviders`.
+
+    Response enthält alle, in der Datenbank enthaltenen, Infoprovider.
+    """
+    try:
+        return flask.jsonify(queries.get_infoprovider_list())
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading all infoproviders"})
         return err, 400
 
 
@@ -152,27 +170,33 @@ def update_infoprovider(infoprovider_id):
     """
     updated_data = request.json
     try:
-        if "infoprovider_name" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
-            return err, 400
-        if "schedule" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing schedule"})
-            return err, 400
-        if "api" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing field 'api'"})
-            return err, 400
-        if "transform" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing field 'transform'"})
-            return err, 400
-        if "storing" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing 'storing'"})
-            return err, 400
-
         queries.update_infoprovider(infoprovider_id, updated_data)
         return "", 204
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while updating an infoprovider"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>", methods=["GET"])
+def get_infoprovider(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>`.
+
+    Response enthält das Json zum Infoprovider.
+    """
+    try:
+        infoprovider_json = queries.get_infoprovider(infoprovider_id)
+
+        if infoprovider_json is {}:
+            err = flask.jsonify({"err_msg": "Unknown infoprovider"})
+            return err, 400
+
+        # return send_file(file_path, "application/json", True)
+        return flask.jsonify(infoprovider_json)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading an Infoprovider"})
         return err, 400
 
 
@@ -184,8 +208,8 @@ def delete_infoprovider(infoprovider_id):
     Route zum Löschen eines Infoproviders.
     """
     try:
-        queries.delete_infoprovider(infoprovider_id)
-        return "", 204
+        return flask.jsonify({"status": "successful"}) if queries.delete_infoprovider(infoprovider_id) else \
+            flask.jsonify({"err_msg": f"Infoprovider with ID {infoprovider_id} could not be removed"})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
@@ -507,20 +531,21 @@ def logs():
         return err, 400
 
 
-def _generate_request_dicts(apiInfo, method):
+def _generate_request_dicts(api_info, method):
     header = {}
     parameter = {}
     if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + apiInfo["api_key_name"]})
+        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
     elif method == "noAuth":
         return header, parameter
     else:
-        api_key_name = apiInfo["api_key_name"].split("||")
+        api_key_name = api_info["api_key_name"].split("||")
         key1 = api_key_name[0]
         key2 = api_key_name[1]
 
         if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8")).decode("utf-8")})
+            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
+                          .decode("utf-8")})
         elif method == "KeyInHeader":
             header.update({key1: key2})
         elif method == "KeyInQuery":
