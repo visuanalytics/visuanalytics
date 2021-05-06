@@ -243,19 +243,26 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Saves the formel in CustomData and refreshes the Input-Box.
+     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Also checks if the name is already in use.
+     * Saves the formel in CustomData and refreshes the Input-Box.
      * @param formel the name of the formel
      */
-        //TODO: name-field should also be refreshed
     const handleSave = (formel: string) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
             alert('Entweder ist kein Name oder keine Formel angegeben!');
             return
         }
+        for (let i: number = 0; i <= props.customData.length - 1; i++) {
+            if (props.customData[i] === formel) {
+                alert('Variable ist schon vergeben!');
+                return;
+            }
+        }
         const arCopy = props.customData.slice();
         arCopy.push(formel);
         props.setCustomData(arCopy);
         fullDelete();
+        setName('');
     }
 
     return (
@@ -269,6 +276,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         selectedData={props.selectedData}
                         customData={props.customData}
                         input={input}
+                        name={name}
                         setName={(name: string) => setName(name)}
                         handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
                         handleDataButtons={(operator: string) => handleDataButtons(operator)}
@@ -296,7 +304,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"secondary"} disabled={!(rightParenCount >= leftParenCount)}
                                 onClick={() => handleSave(name)}>
-                            Testen und Speichern
+                            Speichern
                         </Button>
                     </Grid>
                     <Grid item>

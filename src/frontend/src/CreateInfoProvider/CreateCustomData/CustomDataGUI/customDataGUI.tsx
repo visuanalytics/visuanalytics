@@ -14,6 +14,7 @@ interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
     customData: Array<string>;
     input: string;
+    name: string;
     setName: (name: string) => void;
     handleOperatorButtons: (operator: string) => void;
     handleDataButtons: (data: string) => void;
@@ -211,8 +212,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
         <React.Fragment>
             <Grid container>
                 <Grid item xs={6}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} defaultValue={"Name"}
-                               required={true} onChange={event => (props.setName(event.target.value))}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Name"} value={props.name}
+                               onChange={event => (props.setName(event.target.value))}>
                     </TextField>
                 </Grid>
                 <Grid item xs={6}>
