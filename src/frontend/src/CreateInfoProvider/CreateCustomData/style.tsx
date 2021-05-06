@@ -11,7 +11,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         listFrame: {
             width: "100%",
-            height: 400,
+            height: 100,
             overflow: 'auto',
             overflowX: "hidden",
             marginTop: "20px",
@@ -19,23 +19,20 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         listFrameData: {
             width: "80%",
-            height: 650,
+            height: 400,
             overflow: 'auto',
             overflowX: "hidden",
             marginTop: "20px",
             marginBottom: "10px"
         },
         blockableButtonPrimary: {
-            '& .Mui-disabled': {
-                backgroundColor: theme.palette.error.main,
-                opacity: "75%"
-            }
+            backgroundColor: theme.palette.error.main,
+            color: "white",
         },
         blockableButtonSecondary: {
             '& .Mui-disabled': {
                 backgroundColor: theme.palette.primary.light,
-                opacity: "75%",
-                width: "100%"
+                opacity: "75%"
             }
         }
     }),

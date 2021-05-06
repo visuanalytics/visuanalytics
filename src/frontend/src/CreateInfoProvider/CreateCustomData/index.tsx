@@ -27,6 +27,11 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [input, setInput] = React.useState<string>('');
 
     /**
+     * safes and represents the name-field for a new formel.
+     */
+    const [name, setName] = React.useState<string>('');
+
+    /**
      * An Array filled with StrArg-Objects.
      */
     const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
@@ -264,6 +269,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         selectedData={props.selectedData}
                         customData={props.customData}
                         input={input}
+                        setName={(name: string) => setName(name)}
                         handleOperatorButtons={(operator: string) => handleOperatorButtons(operator)}
                         handleDataButtons={(operator: string) => handleDataButtons(operator)}
                         handleNumberButton={(number: string) => handleNumberButtons(number)}
@@ -285,6 +291,12 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant={"contained"} size={"large"} color={"secondary"} disabled={!(rightParenCount >= leftParenCount)}
+                                onClick={() => handleSave(name)}>
+                            Testen und Speichern
                         </Button>
                     </Grid>
                     <Grid item>
