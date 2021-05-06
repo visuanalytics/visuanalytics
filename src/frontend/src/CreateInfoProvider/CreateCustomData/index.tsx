@@ -237,7 +237,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const fullDelete = () => {
         if (dataAsObj[dataAsObj.length - 1] === undefined) {
-            alert('Das Eingabefeld ist leer!');
+            props.reportError('Das Eingabefeld ist leer!');
             return
         }
 
@@ -261,12 +261,12 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const handleSave = (formel: string) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
-            alert('Entweder ist kein Name oder keine Formel angegeben!');
+            props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
         }
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formel) {
-                alert('Variable ist schon vergeben!');
+                props.reportError('Variable ist schon vergeben!');
                 return;
             }
         }

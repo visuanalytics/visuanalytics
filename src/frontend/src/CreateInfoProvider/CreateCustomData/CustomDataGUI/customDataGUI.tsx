@@ -193,13 +193,13 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant={"contained"} size={"small"} color={"secondary"} className={classes.blockableButtonPrimary}
+                        <Button variant={"contained"} size={"small"} color={"primary"} className={classes.blockableButtonPrimary}
                                 onClick={() => props.handleDelete()}>
                             Zurück
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant={"contained"} size={"small"} color={"secondary"} className={classes.blockableButtonPrimary}
+                        <Button variant={"contained"} size={"small"} color={"primary"} className={classes.blockableButtonPrimary}
                                 onClick={() => props.fullDelete()}>
                             Löschen
                         </Button>
