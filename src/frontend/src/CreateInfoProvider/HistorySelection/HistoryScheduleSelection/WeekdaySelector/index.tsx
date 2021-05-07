@@ -14,6 +14,7 @@ interface WeekdaySelectorProps {
  * The state of this component handles the input made to its children.
  */
 export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
+    const classes = useStyles();
 
     /**
      * Helper method that returns the ordinal/index of a provided weekday.
@@ -52,7 +53,7 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
     //TODO: highlight button with class based on {props.days[getDayIndex(weekday)]?"true":"false"
     const renderWeekday = (weekday: Weekday) => {
         return (
-            <Button key={getDayIndex(weekday)} variant="contained" size="small" onClick={() => props.toggleSelectedDay(weekday)} color={props.days?.includes(weekday) ? "primary" : "secondary"}>
+            <Button key={getDayIndex(weekday)} variant="contained" size="small" onClick={() => props.toggleSelectedDay(weekday)} className={props.days?.includes(weekday) ? classes.weekdaySelected : classes.weekday}>
                 {getWeekdayLabel(weekday)}
             </Button>
         )
