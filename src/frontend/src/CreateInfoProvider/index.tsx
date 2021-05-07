@@ -231,19 +231,22 @@ export const CreateInfoProvider = () => {
      * Increments the step.
      */
     const handleContinue = () => {
-        setStep(step+1);
-        console.log(JSON.stringify({
-            infoprovider_name: name,
-            api: {
-                type: "request",
-                api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2,
-                url_pattern: query,
-            },
-            method: noKey?"noAuth":method,
-            transform: extractKeysFromSelection(selectedData),
-            storing: historizedData,
-            customData: customData
-        }));
+        if(step===5) postInfoProvider();
+        else {
+            setStep(step + 1);
+            console.log(JSON.stringify({
+                infoprovider_name: name,
+                api: {
+                    type: "request",
+                    api_key_name: method === "BearerToken" ? apiKeyInput1 : apiKeyInput1 + "||" + apiKeyInput2,
+                    url_pattern: query,
+                },
+                method: noKey ? "noAuth" : method,
+                transform: extractKeysFromSelection(selectedData),
+                storing: historizedData,
+                customData: customData
+            }));
+        }
     }
 
     /**

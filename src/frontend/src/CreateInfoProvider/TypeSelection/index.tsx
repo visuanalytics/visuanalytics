@@ -85,6 +85,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
         //TODO: signal the choice to the parent
         if (importSource) {
             //TODO: File exchange with backend, send results to parent
+            sendTestData();
         }
         props.continueHandler();
     }

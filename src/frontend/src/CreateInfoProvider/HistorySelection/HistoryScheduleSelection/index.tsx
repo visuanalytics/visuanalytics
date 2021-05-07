@@ -62,15 +62,15 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     }
 
     const changeToWeekly = () => {
-        props.selectSchedule({... props.schedule, type: "weekly"});
+        props.selectSchedule({...props.schedule, type: "weekly"});
     }
 
     const changeToDaily = () => {
-        props.selectSchedule({... props.schedule, type: "daily"});
+        props.selectSchedule({...props.schedule, type: "daily"});
     }
 
     const changeToInterval = () => {
-        props.selectSchedule({... props.schedule, type: "interval"});
+        props.selectSchedule({...props.schedule, type: "interval"});
     }
 
     const setInterval = (event: React.ChangeEvent<{value: unknown}>) => {
@@ -94,8 +94,8 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     <Radio
                         checked={props.schedule.type === "weekly"}
                         value="weekly"
-                        onChange={changeToWeekly
-                    }/>
+                        onChange={changeToWeekly}
+                    />
                 } label={"Wochentag"}
                 />
                 <Collapse in={props.schedule.type === "weekly"}>
@@ -157,7 +157,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
             <Collapse in={props.schedule.type === "interval"}>
                 <Grid item xs={12}>
                     <Typography variant="body2">
-                        Bei der Historisierung in Intervallen, wird automatisch die aktuellste Zeit gewählt.
+                        Bei der Historisierung in Intervallen wird automatisch die aktuellste Zeit gewählt.
                     </Typography>
                 </Grid>
             </Collapse>

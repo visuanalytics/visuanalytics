@@ -9,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import {stringify} from "querystring";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
