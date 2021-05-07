@@ -161,7 +161,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const transformJSON = (jsonData: any, parent = "") => {
         let stringRep = JSON.stringify(jsonData);
-        console.log(stringRep)
+        //console.log(stringRep)
         const resultArray: Array<(ListItemRepresentation)> = [];
         let finished = true;
         stringRep = stringRep.substring(1);
@@ -170,7 +170,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             let key = stringRep.split(":", 2)[0];
             stringRep = stringRep.substring(key.length + 1);
             key = key.substring(1, key.length - 1);
-            console.log("key: " + key);
+            //console.log("key: " + key);
 
             let value: any = "";
             //check if the value is another object
@@ -187,22 +187,22 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     }
                     counter += 1;
                 }
-                console.log("checking subobject: " + subObject);
+                //console.log("checking subobject: " + subObject);
                 //lookahead to the next key - if it is same_type, we know that we have an array
                 let nextKey = subObject.split(":", 2)[0];
                 //strip quotation marks and the opening curly bracket
                 nextKey = nextKey.substring(2, nextKey.length - 1);
-                console.log("nextKey: " + nextKey);
+                //console.log("nextKey: " + nextKey);
                 if(nextKey==="same_type") {
                     //a sub array was detected
                     let same_type_value = subObject.split(",", 2)[0];
                     same_type_value = same_type_value.substring(nextKey.length+4);
-                    console.log(same_type_value)
+                    //console.log(same_type_value)
                     //we also parse the length and store it in the corresponding attribute
                     let array_length = subObject.split(",", 2)[1];
                     array_length = array_length.substring(9);
-                    console.log(array_length);
-                    console.log(subObject);
+                    //console.log(array_length);
+                    //console.log(subObject);
                     if(same_type_value==="true") {
                         //check if the value of nextKey is "true" - if this is the case, our value is the subobject
                         //we now need to differentiate if the content is an object or primitives
@@ -372,12 +372,12 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: SelectedDataItem) => {
-        console.log(data);
+        //console.log(data);
         if (extractKeysFromSelection(props.selectedData).includes(data.key)) {
             removeFromSelection(data);
         } else {
             addToSelection(data)
-            console.log("new: " + extractKeysFromSelection(props.selectedData).includes(data.key));
+            //console.log("new: " + extractKeysFromSelection(props.selectedData).includes(data.key));
         }
 
         //console.log(props.selectedData.values().next())

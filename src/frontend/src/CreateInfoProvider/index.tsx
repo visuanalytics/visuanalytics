@@ -35,7 +35,6 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     const keyArray = new Array<string>();
     //check was added since tests failed otherwise
     if(Array.isArray(selectedData)) {
-        console.log("works: " +  selectedData.length);
         selectedData.forEach((item) => keyArray.push(item.key));
     }
     return keyArray;
