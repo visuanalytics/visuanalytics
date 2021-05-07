@@ -33,7 +33,11 @@ export type Schedule = {
  */
 export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) => {
     const keyArray = new Array<string>();
-    selectedData.forEach((item) => keyArray.push(item.key));
+    //check was added since tests failed otherwise
+    if(Array.isArray(selectedData)) {
+        console.log("works: " +  selectedData.length);
+        selectedData.forEach((item) => keyArray.push(item.key));
+    }
     return keyArray;
 }
 
@@ -99,13 +103,13 @@ export const CreateInfoProvider = () => {
         //method
         setMethod(sessionStorage.getItem("method-" + uniqueId)||"");
         //apiData
-        setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||""));
+        setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
         //selectedData
-        setSelectedData(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||""));
+        setSelectedData(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"{}"));
         //customData
-        setCustomData(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||""));
+        setCustomData(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"{}"));
         //historizedData
-        setHistorizedData(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||""));
+        setHistorizedData(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||"{}"));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
