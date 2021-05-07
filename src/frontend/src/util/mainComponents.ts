@@ -9,6 +9,7 @@ import { JobLogs } from "../JobLogs";
 import DescriptionIcon from "@material-ui/icons/Description";
 import CreateIcon from "@material-ui/icons/Create";
 import { AddTopic } from "../AddTopic";
+import { CreateInfoProvider } from "../CreateInfoProvider"
 
 export type MainComponent = {
   component: FC;
@@ -46,9 +47,14 @@ export const mainComponents: MainComponents = {
     icon: CreateIcon,
     navName: "Themen",
   },
+  createInfoProvider: {
+    component: CreateInfoProvider,
+    icon: HomeIcon,
+    navName: "createInfoProvider",
+  }
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic";
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider";

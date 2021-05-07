@@ -66,5 +66,63 @@ export const hintContents = {
         Auf dieser Seite können Sie neue Themen hinzufügen.
       </Typography>
     </div>
-  )
+  ),
+  basicSettings: (
+      <div>
+          <Typography variant="h5" gutterBottom>
+              API-Einstellungen
+          </Typography>
+          <Typography gutterBottom>
+              Auf dieser Seite legen sie die grundlegenden Einstellungen der aktuellen API fest:
+          </Typography>
+          <Typography variant="h6">API-Name</Typography>
+          <Typography gutterBottom>Der Name, mit dem die API für diesen Info-Provider gespeichert wird.</Typography>
+          <Typography variant="h6">API-Query</Typography>
+          <Typography gutterBottom>Die an die API zu stellende Anfrage als http-Query.</Typography>
+          <Typography variant="h6">API-Key</Typography>
+          <Typography gutterBottom>Ihr API-Zugangsschlüssel, den der Info-Provider nutzen soll.</Typography>
+      </div>
+  ),
+    dataSelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                API-Datenauswahl
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite legen sie fest, welche der von der API-Request gelieferten Daten der Info-Proivder erfassen soll.
+            </Typography>
+
+        </div>
+    ),
+    historySelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Historisierungsauswahl
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite werden die zu historisierenden Daten und die Historisierungszeitpunkte festgelegt.
+            </Typography>
+
+        </div>
+    ),
+    formeln: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Formeln erstellen
+            </Typography>
+            <Typography gutterBottom>
+                Auf dieser Seite können Sie mit den ausgewählten Daten eigene Formeln und Variablen erstellen!
+            </Typography>
+        </div>
+    ),
+    typeSelection: (
+        <div>
+            <Typography variant="h5" gutterBottom>
+                Datenquelle
+            </Typography>
+            <Typography gutterBottom>
+                Wählen Sie hier aus, woher Sie Ihre Daten beziehen wollen!
+            </Typography>
+        </div>
+    )
 };
