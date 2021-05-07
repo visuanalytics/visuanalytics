@@ -71,7 +71,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Box>
                     </Grid>
                 </Grid>
-                <Grid container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück

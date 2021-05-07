@@ -189,11 +189,21 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         if (dataAsObj.length <= 1) {
             fullDelete()
         } else if (dataAsObj[dataAsObj.length - 1].isOp) {
-            setOpFlag(false);
-            setDataFlag(true)
-            setNumberFlag(true);
-            setRightParenFlag(false);
-            setLeftParenFlag(true);
+
+            if (dataAsObj[dataAsObj.length - 2].isNumber) {
+                setOpFlag(false);
+                setDataFlag(true)
+                setNumberFlag(false);
+                setRightParenFlag(false);
+                setLeftParenFlag(true);
+            } else {
+                setOpFlag(false);
+                setDataFlag(true)
+                setNumberFlag(true);
+                setRightParenFlag(false);
+                setLeftParenFlag(true);
+            }
+
         } else if (dataAsObj[dataAsObj.length - 1].isRightParen) {
 
             if (!dataAsObj[dataAsObj.length - 2]) {
@@ -255,6 +265,23 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
+     * The method deletes the chosen formula.
+     * @param formelName is the name of the formula that has to be deleted.
+     */
+    const deleteCustomData = (formelName: string) => {
+
+        for (let i: number = 0; i <= props.customData.length - 1; i++) {
+            if (props.customData[i].formelName === formelName) {
+                const arCopy = props.customData.slice();
+                arCopy.splice(i, 1);
+                props.setCustomData(arCopy);
+                return
+            }
+        }
+
+    }
+
+    /**
      * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Also checks if the name is already in use.
      * Saves the formel in CustomData and refreshes the Input-Box.
      * @param formel the name of the formel
@@ -271,18 +298,17 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             }
         }
 
-        //TODO: erst möglich, wenn das backend läuft!
-        //sendTestData();
+        //funktioniert nur, wenn das backend läuft:
+        sendTestData();
 
         //nur übergangsweise, zum testen
-
+        /*
         const arCopy = props.customData.slice();
         arCopy.push(new formelObj(name, input));
         props.setCustomData(arCopy);
-        console.log(props.customData);
         fullDelete();
         setName('');
-
+        */
     }
 
     /**
@@ -298,7 +324,6 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             const arCopy = props.customData.slice();
             arCopy.push(new formelObj(name, input));
             props.setCustomData(arCopy);
-            console.log(props.customData);
             fullDelete();
             setName('');
         } else {
@@ -352,6 +377,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                         handleLeftParen={(paren: string) => handleLeftParen(paren)}
                         handleDelete={() => handleDelete()}
                         fullDelete={() => fullDelete()}
+                        deleteCustomData={(formelName: string) => deleteCustomData(formelName)}
                         handleSave={(formel: string) => handleSave(formel)}
                         dataFlag={dataFlag}
                         opFlag={opFlag}
