@@ -33,10 +33,7 @@ export type Schedule = {
  */
 export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) => {
     const keyArray = new Array<string>();
-    //check was added since tests failed otherwise
-    if(Array.isArray(selectedData)) {
-        selectedData.forEach((item) => keyArray.push(item.key));
-    }
+    selectedData.forEach((item) => keyArray.push(item.key));
     return keyArray;
 }
 
@@ -104,11 +101,11 @@ export const CreateInfoProvider = () => {
         //apiData
         setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
         //selectedData
-        setSelectedData(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"{}"));
+        setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
-        setCustomData(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"{}"));
+        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
-        setHistorizedData(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||"{}"));
+        setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
