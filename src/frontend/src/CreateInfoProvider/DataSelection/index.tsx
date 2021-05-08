@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
-
+import {ListItemRepresentation} from "../"
 
 interface DataSelectionProps {
     continueHandler: () => void;
@@ -21,28 +21,16 @@ interface DataSelectionProps {
     apiData: any;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
+    listItems: Array<ListItemRepresentation>;
+    setListItems: (array: Array<ListItemRepresentation>) => void;
 }
 
-/** Internal representation of a list item extracted from the JSON object.
- * @param keyName The direct key name of the entry
- * @param value Holds a string with the type of the value or a sub-object
- * @param parentKeyName Holds the keyName of the parent as a full path within the JSON object
- * @param arrayRep True when this entry represents an array, used for specific rendering
- * @param arrayLength Holds the length of the array, if it is such
- */
-interface ListItemRepresentation {
-    keyName: string;
-    value: any;
-    parentKeyName: string;
-    arrayRep: boolean;
-    arrayLength: number;
-}
+
 
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
 
-    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
     let indexCounter = 0
 
@@ -63,6 +51,14 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             "leagueSaison": "Text"
                         }
                     }
+                }
+            },
+            "ArrayInObject": {
+                "same_type": true,
+                "length": 3,
+                "object": {
+                    "Attribute0": "Zahl",
+                    "Attribute1": "Text",
                 }
             }
         },
@@ -398,7 +394,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 <Grid item xs={10}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key={indexCounter + "listBox"}>
                         <List disablePadding={true} key={indexCounter + "listRoot"}>
-                            {listItems.map((item) => renderListItem(item, 0))}
+                            {props.listItems.map((item) => renderListItem(item, 0))}
                         </List>
                     </Box>
                 </Grid>
@@ -422,7 +418,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={props.continueHandler}>
                             weiter
                         </Button>
-                        <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sample2))}}>Janek Test</Button>
+                        <Button variant="contained" size="large" onClick={(event) => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>
                     </Grid>
                 </Grid>
             </Grid>

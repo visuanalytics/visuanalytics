@@ -12,6 +12,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
+import {DiagramCreation} from "./DiagramCreation";
 
 
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
@@ -28,15 +29,42 @@ export type Schedule = {
     interval?: string;
 }
 
+/** Internal representation of a list item extracted from the JSON object.
+ * @param keyName The direct key name of the entry
+ * @param value Holds a string with the type of the value or a sub-object
+ * @param parentKeyName Holds the keyName of the parent as a full path within the JSON object
+ * @param arrayRep True when this entry represents an array, used for specific rendering
+ * @param arrayLength Holds the length of the array, if it is such
+ */
+export type ListItemRepresentation = {
+    keyName: string;
+    value: any;
+    parentKeyName: string;
+    arrayRep: boolean;
+    arrayLength: number;
+}
+//Type providing constants for all supported diagram types
+export type diagramType = "horizontalBarChart" | "verticalBarChart" | "pieChart"
+
+/**
+ * Represents a diagram created by the user.
+ * @param name Name of the diagram, has to be unique
+ * @param variant displays the type of diagram defined.
+ */
+export type Diagram = {
+    name: string;
+    variant: diagramType;
+}
+
+
+
+
 /**
  * Returns a set that only contains the keys from selectedData.
  */
 export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) => {
     const keyArray = new Array<string>();
-    //check was added since tests failed otherwise
-    if(Array.isArray(selectedData)) {
-        selectedData.forEach((item) => keyArray.push(item.key));
-    }
+    selectedData.forEach((item) => keyArray.push(item.key));
     return keyArray;
 }
 
@@ -56,11 +84,12 @@ export const CreateInfoProvider = () => {
         "Datenauswahl",
         "Formeln",
         "Historisierung",
+        "Diagrammerstellung",
         "Gesamtübersicht"
     ];
-    //the current step of the creation process, numbered by 0 to 5
+    //the current step of the creation process, numbered by 0 to 6
 
-    const [step, setStep] = React.useState(2);
+    const [step, setStep] = React.useState(5);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -85,6 +114,10 @@ export const CreateInfoProvider = () => {
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
     const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: undefined, time: undefined, weekdays: []});
+    //holds all list item representations generated in step 2, stored he to be passed to diagrams
+    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    //holds all diagrams created by the user
+    const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -104,11 +137,15 @@ export const CreateInfoProvider = () => {
         //apiData
         setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
         //selectedData
-        setSelectedData(JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)||"{}"));
+        setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
-        setCustomData(JSON.parse(sessionStorage.getItem("customData-" + uniqueId)||"{}"));
+        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
-        setHistorizedData(JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)||"{}"));
+        setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
+        //listItems (less calculations will be necessary this way)
+        setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        //diagrams (less calculations will be necessary this way)
+        setDiagrams(sessionStorage.getItem("diagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("diagrams-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -146,6 +183,13 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(historizedData));
     }, [historizedData])
+    //store listItems in sessionStorage by converting into an array and use JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
+    }, [listItems])
+    React.useEffect(() => {
+        sessionStorage.setItem("diagrams-" + uniqueId, JSON.stringify(diagrams));
+    }, [diagrams])
 
 
     /**
@@ -161,6 +205,8 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("selectedData-" + uniqueId);
         sessionStorage.removeItem("customData-" + uniqueId);
         sessionStorage.removeItem("historizedData-" + uniqueId);
+        sessionStorage.removeItem("listItems-" + uniqueId);
+        sessionStorage.removeItem("diagrams-" + uniqueId);
     }
 
 
@@ -304,6 +350,8 @@ export const CreateInfoProvider = () => {
                         apiData={apiData}
                         selectedData={selectedData}
                         setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
+                        listItems={listItems}
+                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                     />
                 );
             case 3:
@@ -332,6 +380,17 @@ export const CreateInfoProvider = () => {
                     />
                 )
             case 5:
+                return (
+                    <DiagramCreation
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        listItems={listItems}
+                        historizedData={historizedData}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                    />
+                )
+            case 6:
                 return (
                     <SettingsOverview
                         continueHandler={handleContinue}
