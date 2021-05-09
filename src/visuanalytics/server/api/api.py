@@ -136,7 +136,7 @@ def show_schedule():
 @api.route("/showweekly", methods=["GET"])
 def show_weekly():
     """
-        Method for testing only. Will be removed later on!
+    Method for testing only. Will be removed later on!
     """
     try:
         return flask.jsonify(queries.show_weekly())
@@ -167,11 +167,17 @@ def update_infoprovider(infoprovider_id):
     Endpunkt `/infoprovider/<infoprovider_id>`.
 
     Route zum Ändern eines Infoproviders.
+
+    :param infoprovider_id: ID des Infoproviders.
     """
     updated_data = request.json
     try:
-        queries.update_infoprovider(infoprovider_id, updated_data)
-        return "", 204
+        """if not queries.update_infoprovider(infoprovider_id, updated_data):
+            err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
+                                            f"{infoprovider['infoprovider_name']}"})
+            return err, 400
+        return "", 204"""
+        return flask.jsonify(queries.update_infoprovider(infoprovider_id, updated_data))
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while updating an infoprovider"})
@@ -184,6 +190,7 @@ def get_infoprovider(infoprovider_id):
     Endpunkt `/infoprovider/<infoprovider_id>`.
 
     Response enthält das Json zum Infoprovider.
+    :param infoprovider_id: ID des Infoproviders.
     """
     try:
         infoprovider_json = queries.get_infoprovider(infoprovider_id)
@@ -206,6 +213,8 @@ def delete_infoprovider(infoprovider_id):
     Endpunkt `/infoprovider/<infoprovider_id>`.
 
     Route zum Löschen eines Infoproviders.
+
+    :param infoprovider_id: ID des Infoproviders.
     """
     try:
         return flask.jsonify({"status": "successful"}) if queries.delete_infoprovider(infoprovider_id) else \
@@ -222,7 +231,7 @@ def testformula():
     Endpunkt `/testformula`.
 
     Route zum Testen einer gegebenen Formel.
-    Die Response enthält
+    Die Response enthält einen boolschen Wert welcher angibt ob die Formel syntaktisch richtig ist.
     """
     formula = request.json
     try:
@@ -534,6 +543,30 @@ def logs():
 def _generate_request_dicts(api_info, method):
     header = {}
     parameter = {}
+    if method == "BearerToken":
+        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
+    elif method == "noAuth":
+        return header, parameter
+    else:
+        api_key_name = api_info["api_key_name"].split("||")
+        key1 = api_key_name[0]
+        key2 = api_key_name[1]
+
+        if method == "BasicAuth":
+            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
+                          .decode("utf-8")})
+        elif method == "KeyInHeader":
+            header.update({key1: key2})
+        elif method == "KeyInQuery":
+            parameter.update({key1: key2})
+
+    return header, parameter
+
+
+def _generate_request_dicts(api_info, method):
+    header = {}
+    parameter = {}
+    # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
     if method == "BearerToken":
         header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
     elif method == "noAuth":
