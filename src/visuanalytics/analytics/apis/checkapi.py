@@ -28,16 +28,26 @@ def check_api(req_data):
 
     try:
         if req_data["response_type"] == "xml":
-            return get_content(json.loads(json.dumps(xmltodict.parse(response.content), indent=4))), True
+            content = get_content(json.loads(json.dumps(xmltodict.parse(response.content), indent=4)))
+            if "error" in content:
+                return {
+                    "err_msg": "An error occurred while loading the api-data"
+                }, False
+            return content, True
         elif req_data["response_type"] == "json":
-            return get_content(response.json()), True
+            content = get_content(response.json())
+            if "error" in content:
+                return {
+                    "err_msg": "An error occurred while loading the api-data"
+                }, False
+            return content, True
         else:
             return {
                 "err_msg": f"Content-Type {req_data['repsonse_type']} of api-request not supported"
             }, False
     except Exception:
         return {
-            "err_msg": "response_type does not match actual response type"
+            "err_msg": "An error occurred while loading the api-data"
         }, False
 
 
