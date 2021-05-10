@@ -53,12 +53,24 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     }
                 }
             },
-            "ArrayInObject": {
-                "same_type": true,
-                "length": 3,
-                "object": {
-                    "Attribute0": "Zahl",
-                    "Attribute1": "Text",
+            "InnerObject": {
+                "ArrayInObject": {
+                    "same_type": true,
+                    "length": 3,
+                    "object": {
+                        "Attribute0": "Zahl",
+                        "Attribute1": "Text",
+                    }
+                },
+                "NumericArray": {
+                    "same_type": true,
+                    "length": 6,
+                    "type": "Zahl"
+                },
+                "TextArray": {
+                    "same_type": true,
+                    "length": 3,
+                    "type": "Text"
                 }
             }
         },
@@ -147,7 +159,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 }
             }
         },
-        "Vorherige-Season": "Text"
+        "Vorherige-Season": "Text",
+        "Test-Zahl": "Zahl"
     };
 
     /**

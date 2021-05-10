@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../style";
+import { useStyles } from "./style";
 import {Diagram, extractKeysFromSelection, ListItemRepresentation, SelectedDataItem} from "../"
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
@@ -26,6 +26,8 @@ task 8: for historized data: choosing options for y/values: currentDate - n * in
 task 9: for historized data: choose names for the axis (possibly add functionality for date or something?)
 task 10: create data format to represent created diagrams
 task 11: test button for sending the diagram data to the backend to generate a preview (with random data?)
+task 12: sessionStorage compatability
+task 13: pass diagrams to wrapper
  */
 
 
@@ -36,6 +38,7 @@ interface DiagramCreationProps {
     historizedData: Array<string>;
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
+    selectedData: Array<SelectedDataItem>
 };
 
 
@@ -50,18 +53,27 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [diagramStep, setDiagramStep] = React.useState(0);
     //holds the ListItemRepresentation of all arrays compatible with diagrams
     const [compatibleArrays, setCompatibleArrays] = React.useState<Array<ListItemRepresentation>>([]);
+    //holds the strings of all historized data compatible with diagrams
+    const [compatibleHistorized, setCompatibleHistorized] = React.useState<Array<string>>([]);
     //holds the array selected for the current diagram
     const [currentArray, setCurrentArray] = React.useState<ListItemRepresentation>({} as ListItemRepresentation);
+    //holds the historized data selected for the current diagram
+    const [currentHistorized, setCurrentHistorized] = React.useState<string>("");
 
 
     React.useEffect(() => {
-        console.log(props.listItems)
-        getCompatibleArrays(props.listItems);
+        //console.log(props.listItems)
+        //getCompatibleArrays(props.listItems);
+
     }, [])
 
     React.useEffect(() => {
         setCompatibleArrays(getCompatibleArrays(props.listItems))
     }, [props.listItems])
+
+    React.useEffect(() => {
+        setCompatibleHistorized(getCompatibleHistorized(props.historizedData))
+    }, [props.historizedData])
 
     /*
     export type ListItemRepresentation = {
@@ -73,7 +85,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     }
      */
 
-
+    //TODO: number check is missing
     /**
      * Runs through the provided array of listItems recursively and returns all arrays that are compatible for diagram usage.
      * @param listItems The array to be processed.
@@ -87,10 +99,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             if(item.arrayRep) {
                 if(Array.isArray(item.value)) {
                     //this is an array containing objects
-                    compatibleArrays.push(item);
+                    //check if the object contains a numeric value
+                    if(checkObjectForNumeric(item.value)) compatibleArrays.push(item);
                 } else if(item.value!=="[Array]"&&!item.value.includes(",")) {
                     //when the value is not array and has no commata, the array contains primitive values of the same type
-                    compatibleArrays.push(item)
+                    //check if the primitive type is numeric
+                    if(item.value==="Zahl")compatibleArrays.push(item)
                 }
             } else if(Array.isArray(item.value)) {
                 //this is an object, we need to check if one of its values is an array
@@ -101,12 +115,31 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     }
 
     /**
+     * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
+     * @param object The object to be checked
+     * Returns true if a numeric attribute is contained, false if not.
+     */
+    const checkObjectForNumeric = (object: Array<ListItemRepresentation>) => {
+        for(let index = 0; index < object.length; ++index) {
+            if(object[index].value==="Zahl") return true;
+        }
+        return false;
+    }
+
+    /**
      * Filters the selected historized data by which is compatible with diagrams.
      * Only numeric values are allowed.
+     * Uses props.selectedData to check the types in order to prevent having to pass types with historizedData.
      */
-    const getCompatibleHistorized = () => {
-        return new Array<string>();
-        //TODO: implement this method, possibly get types from selectedData
+    const getCompatibleHistorized = (historizedData: Array<string>) => {
+        console.log("getting compatible historized");
+        const compatibleHistorized: Array<string> = []
+        historizedData.forEach((item) => {
+            props.selectedData.forEach((data) => {
+                if(data.key===item&&data.type==="Zahl") compatibleHistorized.push(item)
+            })
+        })
+        return compatibleHistorized;
     }
 
     /**
@@ -130,12 +163,15 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             case 1:
                 return (
                     <DiagramTypeSelect
-                        continueHandler={props.continueHandler}
+                        continueArray={() => setDiagramStep(2)}
+                        continueHistorized={() =>  setDiagramStep(2)}
                         backHandler={() => setDiagramStep(diagramStep-1)}
-                        historizedData={props.historizedData}
                         compatibleArrays={compatibleArrays}
+                        compatibleHistorized={compatibleHistorized}
                         currentArray={currentArray}
                         setCurrentArray={((item: ListItemRepresentation) => setCurrentArray(item))}
+                        currentHistorized={currentHistorized}
+                        setCurrentHistorized={(data: string) => setCurrentHistorized(data)}
                     />
                 );
             case 2:

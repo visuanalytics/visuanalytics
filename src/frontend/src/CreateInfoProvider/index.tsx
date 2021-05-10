@@ -388,6 +388,7 @@ export const CreateInfoProvider = () => {
                         historizedData={historizedData}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        selectedData={selectedData}
                     />
                 )
             case 6:
