@@ -10,6 +10,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import { Schedule } from "..";
+import { ScheduleTypeTable } from "./ScheduleTypeTable";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
@@ -19,6 +21,7 @@ interface SettingsOverviewProps {
     selectedData: Array<string>;
     customData: Array<formelObj>;
     historizedData: Array<string>;
+    schedule: Schedule;
 }
 
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
@@ -68,10 +71,22 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                             <List disablePadding={true}>
                                 {props.historizedData.map((item: string) => renderListItem(item))}
                             </List>
+                            {props.schedule.type !== "" &&
+                            <Grid item xs={12}>
+                                <Typography variant="h6">
+                                    Historisierungszeiten
+                                </Typography>
+                            </Grid>
+                            }
+                            {props.schedule.type !== "" &&
+                            <Grid item xs={12}>
+                                <ScheduleTypeTable schedule={props.schedule}/>
+                            </Grid>
+                            }
                         </Box>
                     </Grid>
-                </Grid>
-                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                    <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
+                    </Grid>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück

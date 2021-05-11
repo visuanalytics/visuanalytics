@@ -338,6 +338,7 @@ export const CreateInfoProvider = () => {
                         selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
                         historizedData={historizedData}
+                        schedule={schedule}
                     />
                 )
 

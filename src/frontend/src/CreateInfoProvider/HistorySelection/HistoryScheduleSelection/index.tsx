@@ -31,15 +31,20 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
+    React.useEffect(() => {
+        setScheduleTime(currentTimeSelection)
+    }, [currentTimeSelection])
+
     /**
      * Adds a new time to the array containing select times, if not already contained.
      * @param time The time to be added to the array.
      * The Date will be converted to a string in the format 'hh:mm'.
      */
-    const setScheduleTime = (time: MaterialUiPickersDate) => {
+    const setScheduleTime = async (time: MaterialUiPickersDate) => {
         if(time!=null) {
             const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
             const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
+            console.log(hours);
             props.selectSchedule({...props.schedule, time: hours + ":" + minutes});
         }
     }
@@ -75,16 +80,6 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
 
     const setInterval = (event: React.ChangeEvent<{value: unknown}>) => {
         props.selectSchedule({...props.schedule, interval: event.target.value as string})
-    }
-
-    const handleContinue = () => {
-        setScheduleTime(props.schedule.type === "interval" ? new Date() : currentTimeSelection);
-
-        // Clean the unnecessary fields in the schedule object
-        if(props.schedule.type !== "weekly") props.selectSchedule({...props.schedule, weekdays: []});
-        if(props.schedule.type !== "interval") props.selectSchedule({...props.schedule, interval: undefined});
-
-        props.handleProceed();
     }
 
     return (
@@ -168,7 +163,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={handleContinue}>
+                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed}>
                         weiter
                     </Button>
                 </Grid>
