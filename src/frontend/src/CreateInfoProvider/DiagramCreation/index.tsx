@@ -1,7 +1,6 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { useStyles } from "./style";
-import {Diagram, extractKeysFromSelection, ListItemRepresentation, SelectedDataItem} from "../"
-import {hintContents} from "../../util/hintContents";
+import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType} from "../index"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -15,19 +14,19 @@ import {HistorizedDiagramCreator} from "./HistorizedDiagramCreator";
 task 1: pass listItems from dataSelection and history selection from HistorySelection -> DONE
 task 2: write method that lists all arrays that fit the requirements -> DONE
 task 3: show overview of existing diagrams and give option to use a new one -> DONE
-NOT DONE:
-
 task 4: choose if array or historized data
-task 5: choose the array (filter all arrays from apiData) - can only contain numbers or objects
+task 5: choose the array (filter all arrays from apiData) - can only contain numbers or objects that contain numbers
      if object: choose which property is meant for y/value (number) and which is meant for x/name (string)
-task 6: choose diagram type
-task 7: for arrays: display the length got and set the maximum amount of items to be used, display warning that it could possibly deliver less values
+ task 6: choose diagram type
+ task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
+NOT DONE:
 task 8: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 9: for historized data: choose names for the axis (possibly add functionality for date or something?)
 task 10: create data format to represent created diagrams
 task 11: test button for sending the diagram data to the backend to generate a preview (with random data?)
-task 12: sessionStorage compatability
+task 12: sessionStorage compatibility
 task 13: pass diagrams to wrapper
+task 14: rearrange structure
  */
 
 
@@ -38,8 +37,9 @@ interface DiagramCreationProps {
     historizedData: Array<string>;
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
-    selectedData: Array<SelectedDataItem>
-};
+    selectedData: Array<SelectedDataItem>;
+    reportError: (message: string) => void;
+}
 
 
 /**
@@ -59,33 +59,17 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [currentArray, setCurrentArray] = React.useState<ListItemRepresentation>({} as ListItemRepresentation);
     //holds the historized data selected for the current diagram
     const [currentHistorized, setCurrentHistorized] = React.useState<string>("");
+    //holds the currently selected array numeric attribute
+    const [arrayNumericAttribute, setArrayNumericAttribute] = React.useState<string>("");
+    //holds the currently selected string attribute for the array
+    const [arrayStringAttribute, setArrayStringAttribute] = React.useState<string>("")
+    //holds the currently selected diagram type
+    const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
+    //the amount of items selected to be taken from the array
+    const [amount, setAmount] = React.useState<number>(1);
+    //contains all custom labels set by the user - size depends on amount
+    const [labelArray, setLabelArray] = React.useState<Array<string>>(Array(1).fill(""));
 
-
-    React.useEffect(() => {
-        //console.log(props.listItems)
-        //getCompatibleArrays(props.listItems);
-
-    }, [])
-
-    React.useEffect(() => {
-        setCompatibleArrays(getCompatibleArrays(props.listItems))
-    }, [props.listItems])
-
-    React.useEffect(() => {
-        setCompatibleHistorized(getCompatibleHistorized(props.historizedData))
-    }, [props.historizedData])
-
-    /*
-    export type ListItemRepresentation = {
-        keyName: string;
-        value: any;
-        parentKeyName: string;
-        arrayRep: boolean;
-        arrayLength: number;
-    }
-     */
-
-    //TODO: number check is missing
     /**
      * Runs through the provided array of listItems recursively and returns all arrays that are compatible for diagram usage.
      * @param listItems The array to be processed.
@@ -93,7 +77,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Arrays containing arrays or arrays containing different primitive types are not compatible.
      * Arrays contained in objects contained in arrays are also not compatible.
      */
-    const getCompatibleArrays = (listItems: Array<ListItemRepresentation>) => {
+    const getCompatibleArrays = useCallback((listItems: Array<ListItemRepresentation>) => {
         let compatibleArrays: Array<ListItemRepresentation> = []
         listItems.forEach((item) => {
             if(item.arrayRep) {
@@ -112,7 +96,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             }
         })
         return compatibleArrays;
-    }
+    }, [])
 
     /**
      * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
@@ -131,8 +115,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Only numeric values are allowed.
      * Uses props.selectedData to check the types in order to prevent having to pass types with historizedData.
      */
-    const getCompatibleHistorized = (historizedData: Array<string>) => {
-        console.log("getting compatible historized");
+    const getCompatibleHistorized = useCallback((historizedData: Array<string>) => {
+        //console.log("getting compatible historized");
         const compatibleHistorized: Array<string> = []
         historizedData.forEach((item) => {
             props.selectedData.forEach((data) => {
@@ -140,7 +124,29 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             })
         })
         return compatibleHistorized;
+    }, [props.selectedData])
+
+    /*
+     * Update the lists whenever the source data changes
+     */
+    React.useEffect(() => {
+        setCompatibleArrays(getCompatibleArrays(props.listItems))
+    }, [props.listItems, getCompatibleArrays])
+
+    React.useEffect(() => {
+        setCompatibleHistorized(getCompatibleHistorized(props.historizedData))
+    }, [props.historizedData, getCompatibleHistorized])
+
+
+    const amountChangeHandler = (newAmount: number) => {
+        setAmount(newAmount);
+        const newLabels = new Array(newAmount).fill("");
+        for(let i = 0; i < newLabels.length&&i<labelArray.length; i++) {
+            newLabels[i] = labelArray[i];
+        }
+        setLabelArray(newLabels);
     }
+
 
     /**
      * Selects the displayed content based on the current step
@@ -178,14 +184,26 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 return (
                     <ArrayDiagramCreator
                         continueHandler={props.continueHandler}
-                        backHandler={props.backHandler}
+                        backHandler={() => setDiagramStep(1)}
+                        currentArray={currentArray}
+                        arrayNumericAttribute={arrayNumericAttribute}
+                        setArrayNumericAttribute={(attribute: string) => setArrayNumericAttribute(attribute)}
+                        arrayStringAttribute={arrayStringAttribute}
+                        setArrayStringAttribute={(attribute: string) => setArrayStringAttribute(attribute)}
+                        diagramType={diagramType}
+                        setDiagramType={(type: diagramType) => setDiagramType(type)}
+                        amount={amount}
+                        setAmount={(amount: number) => amountChangeHandler(amount)}
+                        reportError={props.reportError}
+                        labelArray={labelArray}
+                        setLabelArray={(array: Array<string>) => setLabelArray(array)}
                     />
                 );
             case 3:
                 return (
                     <HistorizedDiagramCreator
                         continueHandler={props.continueHandler}
-                        backHandler={props.backHandler}
+                        backHandler={() => setDiagramStep(1)}
                     />
                 );
         }

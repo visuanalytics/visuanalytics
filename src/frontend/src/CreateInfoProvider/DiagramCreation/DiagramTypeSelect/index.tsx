@@ -4,10 +4,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import {WeekdaySelector} from "../../HistorySelection/HistoryScheduleSelection/WeekdaySelector";
 import Collapse from "@material-ui/core/Collapse";
 import {ListItemRepresentation} from "../../index";
-import {FormLabel, RadioGroup} from "@material-ui/core";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControl from "@material-ui/core/FormControl";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -23,7 +22,7 @@ interface DiagramTypeSelectProps {
     setCurrentArray: (item: ListItemRepresentation) => void;
     currentHistorized: string;
     setCurrentHistorized: (data: string) => void;
-};
+}
 
 
 /**
@@ -74,7 +73,10 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         else props.continueHistorized();
     }
 
-
+    /**
+     * Handler for type input change.
+     * @param event The change event.
+     */
     const typeChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedType((event.target as HTMLInputElement).value);
     }
@@ -84,8 +86,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param event The change event
      */
     const arrayChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+
         props.compatibleArrays.forEach((item) => {
-            if(item.parentKeyName + item.keyName==event.target.value) props.setCurrentArray(item)
+            if((item.parentKeyName===""?item.keyName:item.parentKeyName + "|" + item.keyName)===event.target.value) props.setCurrentArray(item)
         })
         setArrayChosen(true);
         //console.log(props.currentArray);
@@ -105,7 +108,12 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
 
         <Grid container>
             <Grid item xs={12}>
-                <FormControl className={classes.fullWidthFormControl}>
+                <Typography variant="body1">
+                    Bitte wählen sie aus, ob das Diagramm aus einem Array oder aus historisierten Daten erstellt werden soll:
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <FormControl fullWidth>
                     <RadioGroup value={selectedType} onChange={typeChangeHandler}>
                         <Grid item xs={12}>
                             <FormControlLabel value="Array" control={

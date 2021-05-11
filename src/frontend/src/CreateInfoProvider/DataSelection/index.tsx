@@ -58,8 +58,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     "same_type": true,
                     "length": 3,
                     "object": {
-                        "Attribute0": "Zahl",
-                        "Attribute1": "Text",
+                        "Menge": "Zahl",
+                        "Gewicht": "Zahl",
+                        "Bezeichnung": "Text",
+                        "Kürzel": "Text"
                     }
                 },
                 "NumericArray": {

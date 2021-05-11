@@ -44,7 +44,7 @@ export type ListItemRepresentation = {
     arrayLength: number;
 }
 //Type providing constants for all supported diagram types
-export type diagramType = "horizontalBarChart" | "verticalBarChart" | "pieChart"
+export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
 
 /**
  * Represents a diagram created by the user.
@@ -118,6 +118,7 @@ export const CreateInfoProvider = () => {
     const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //holds all diagrams created by the user
     const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
+
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -389,6 +390,7 @@ export const CreateInfoProvider = () => {
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         selectedData={selectedData}
+                        reportError={reportError}
                     />
                 )
             case 6:

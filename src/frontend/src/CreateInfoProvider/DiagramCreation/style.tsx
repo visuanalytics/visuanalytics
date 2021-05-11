@@ -30,9 +30,6 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.primary.main,
                 opacity: "75%"
             }
-        },
-        fullWidthFormControl: {
-            width: "100%"
         }
-    }),
+    })
 );
