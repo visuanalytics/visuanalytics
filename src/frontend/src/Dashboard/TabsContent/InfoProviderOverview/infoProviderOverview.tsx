@@ -1,23 +1,47 @@
 import React from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {Grid, IconButton, Typography} from "@material-ui/core";
-import {ComponentContext} from "../../ComponentProvider";
-import {hintContents} from "../../util/hintContents";
-import {StepFrame} from "../../CreateInfoProvider/StepFrame";
-import {useStyles} from "../style";
+import {ComponentContext} from "../../../ComponentProvider";
+import {hintContents} from "../../../util/hintContents";
+import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
+import {useStyles} from "../../style";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
-import {JobList} from "../../JobList";
+import {InfoProviderList} from "./InfoProviderList";
+import {useCallFetch} from "../../../Hooks/useCallFetch";
 
 interface InfoProviderOverviewProps {
     test: string;
 }
+
+type requestBackendAnswer = JSON
 
 export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props) => {
 
     const classes = useStyles();
 
     const components = React.useContext(ComponentContext);
+
+    const[infoprovider, setInfoProvider] = React.useState<Array<String>>();
+
+    const handleSuccess = (jsonData: any) => {
+        const data = jsonData as requestBackendAnswer;
+        const json: string = JSON.stringify(jsonData)
+        console.log(json);
+    }
+
+    const handleError= (err: Error) => {
+        alert('Fehler! : ' + err)
+    }
+
+    const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        }, handleSuccess, handleError
+    );
+
 
     return(
         <StepFrame
@@ -43,7 +67,7 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5}
                              className={classes.listFrame}>
-                            Liste
+                            <InfoProviderList/>
                         </Box>
                     </Grid>
                     <Grid item container xs={12} justify={"space-evenly"}>
@@ -58,8 +82,9 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"primary"}>
-                                Bearbeiten
+                            <Button variant={"contained"} size={"large"} color={"primary"}
+                            onClick={() => getAll()}>
+                                Test
                             </Button>
                         </Grid>
                     </Grid>

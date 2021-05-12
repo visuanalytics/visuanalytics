@@ -57,7 +57,7 @@ export const CreateInfoProvider = () => {
     ];
     //the current step of the creation process, numbered by 0 to 5
 
-    const [step, setStep] = React.useState(5);
+    const [step, setStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API

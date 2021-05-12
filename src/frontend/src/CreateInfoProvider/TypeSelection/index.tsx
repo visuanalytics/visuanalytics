@@ -146,7 +146,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         <Button variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={() => components?.setCurrent("home")}>
+                                onClick={() => components?.setCurrent("dashboard")}>
                             abbrechen
                         </Button>
                     </Grid>
