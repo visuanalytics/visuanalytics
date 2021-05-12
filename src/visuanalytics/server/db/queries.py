@@ -2,13 +2,212 @@ import json
 import os
 
 import humps
+import copy
 
 from visuanalytics.server.db import db
-from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL
+from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, open_resource
 
+INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
+
+
+def get_infoprovider_list():
+    """
+    Methode für das Laden aller Infoprovider.
+
+    :return: Liste von Namen und ID's aller Infoprovider.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT infoprovider_id, infoprovider_name FROM infoprovider")
+    return [{"infoprovider_id": row["infoprovider_id"], "infoprovider_name": row["infoprovider_name"]} for row in res]
+
+
+def insert_infoprovider(infoprovider):
+    """
+    Methode für das einfügen eines neuen Infoproviders.
+
+    :param infoprovider: Ein Dictionary welches den Namen des Infoproviders, den Schedule sowie die Steps 'api', 'transform' und 'storing' enthält.
+    :return: Gibt einen boolschen Wert zurück welcher den Status.
+    """
+    con = db.open_con_f()
+    infoprovider_name = infoprovider["infoprovider_name"]
+    # Json für das Speicher vorbereiten
+    infoprovider_json = {
+        "api": infoprovider["api"],
+        "transform": infoprovider["transform"],
+        "storing": infoprovider["storing"]
+    }
+    # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
+    count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [infoprovider_name]).fetchone()["COUNT(*)"]
+    if count > 0:
+        return False
+
+    # Json in den Ordner "/infoproviders" speichern
+    with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
+        json.dump(infoprovider_json, f)
+
+    # Schedule in die entsprechenden Tabellen einfügen
+    if "schedule" in infoprovider:
+        schedule_historisation = infoprovider["schedule"]
+        schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
+        con.execute("INSERT INTO infoprovider (infoprovider_name, schedule_historisation_id) VALUES (?, ?)",
+                    [infoprovider_name, schedule_historisation_id])
+
+    con.commit()
+
+    return True
+
+
+def show_schedule():
+    """
+    For Testing purposes only
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation")
+    return [{"schedule_historisation_id": row["schedule_historisation_id"], "type": row["type"]} for row in res]
+
+
+def show_weekly():
+    """
+    For testing purposes only
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM schedule_historisation_weekday")
+    return [{"schedule_weekday_historisation_id": row["schedule_weekday_historisation_id"], "weekday": row["weekday"], "schedule_historisation_id": row["schedule_historisation_id"]} for row in res]
+
+
+def get_infoprovider_file(infoprovider_id):
+    """
+    Generiert den Pfad zu der Datei eines gegebenen Infoproviders.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :return: Pfad zur Json datei des Infoproviders.
+    """
+    con = db.open_con_f()
+    # Namen des gegebenen Infoproviders laden
+    res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+
+    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
+
+
+def get_infoprovider(infoprovider_id):
+    """
+    Methode für das Laden eines Infoproviders anhand seiner ID.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
+    """
+    con = db.open_con_f()
+    infoprovider_json = {}
+    weekdays = []
+    # Laden der Json-Datei des Infoproviders
+    with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
+        infoprovider_json.update({"json": json.loads(f.read())})
+    # Laden des Schedules
+    res = con.execute("SELECT * FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?",
+                           [infoprovider_id]).fetchone()
+    infoprovider_json.update({"infoprovider_name": res["infoprovider_name"]})
+    infoprovider_json.update({"schedule": {
+        "type": res["type"],
+        "time": res["time"],
+        "date": res["date"],
+        "time_interval": res["time_interval"]
+    }})
+    # Falls der Schedule-Typ "weekly" ist müssen die Wochentage ebenfalls geladen werden
+    if res["type"] == "weekly":
+        weekly = con.execute("SELECT weekday FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+        for value in weekly:
+            weekdays.append(value["weekday"])
+        infoprovider_json["schedule"].update({"weekday": weekdays})
+    return infoprovider_json
+
+
+def update_infoprovider(infoprovider_id, updated_data):
+    """
+    Methode mit der die Daten eines Infoproviders verändert werden können.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :param updated_data: Dictionary welches die Keys 'infoprovider_name', 'api', 'transform', 'storing' oder 'schedule' enthalten kann. Ist ein Key nicht vorhanden so werden die entprechenden Daten auch nicht verändert.
+    """
+    con = db.open_con_f()
+    file_path = get_infoprovider_file(infoprovider_id)
+
+    # Laden der alten Json-Datei und Kopie erstellen
+    with open_resource(file_path, "r") as f:
+        old_infoprovider_json = json.loads(f.read())
+        new_infoprovider_json = copy.deepcopy(old_infoprovider_json)
+
+    # Nur die Daten updated für die Keys vorhanden sind
+    for key, value in updated_data.items():
+        if key == "infoprovider_name":
+            # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
+            count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [value]).fetchone()["COUNT(*)"]
+            if count > 0:
+                return {"err_msg": f"There already exists an infoprovider with the name {value}"}
+            con.execute("UPDATE infoprovider SET infoprovider_name =? WHERE infoprovider_id=?",
+                        [value, infoprovider_id])
+            # Alte Datei löschen und neuen Namen in Datei-Pfad einbauen
+            os.remove(file_path)
+            file_path = get_infoprovider_file(infoprovider_id)
+        if key == "api":
+            print("changed api")
+            new_infoprovider_json.update({"api": value})
+        if key == "transform":
+            print("changed transform")
+            new_infoprovider_json.update({"transform": value})
+        if key == "storing":
+            print("changed storing")
+            new_infoprovider_json.update({"storing": value})
+        if key == "schedule":
+            # Alte Schedule-ID abspeichern
+            old_schedule_id = con.execute("SELECT schedule_historisation_id FROM infoprovider WHERE infoprovider_id=?",
+                                          [infoprovider_id]).fetchone()["schedule_historisation_id"]
+            # Alten Schedule löschen
+            con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [old_schedule_id])
+            # Alte Einträge aus der Tabelle schedule_historisation_weekday löschen
+            con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?",
+                        [old_schedule_id])
+            # Neuen Schedule einfügen (neue weekdays werden ebenfalls eingefügt)
+            schedule_id = _insert_historisation_schedule(con, value)
+            # Neue schedule-id in der infoprovider-tabelle eintragen
+            con.execute("UPDATE infoprovider SET schedule_historisation_id=? WHERE infoprovider_id=?",
+                        [schedule_id, infoprovider_id])
+
+    # Bei Änderungen in der Json-Datei ebendiese abspeichern
+    with open_resource(file_path, "w") as f:
+        if sorted(old_infoprovider_json.items()) != sorted(new_infoprovider_json.items()):
+            json.dump(new_infoprovider_json, f)
+        else:
+            json.dump(old_infoprovider_json, f)
+
+    con.commit()
+    return {}
+
+
+def delete_infoprovider(infoprovider_id):
+    """
+    Entfernt den Infoprovider mit der gegebenen ID.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
+    """
+    con = db.open_con_f()
+    # Prüfen ob der Infoproivder vorhanden ist
+    res = con.execute("SELECT * FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+    if res is not None:
+        # Json-Datei, Schedule und Infoprovider-Eintrag löschen
+        file_path = get_infoprovider_file(infoprovider_id)
+        os.remove(file_path)
+        _remove_historisation_schedule(con, infoprovider_id)
+        con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
+        con.commit()
+        return True
+    con.commit()
+    return False
 
 
 def get_topic_names():
@@ -164,6 +363,72 @@ def _insert_param_values(con, job_id, topic_values):
         con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
 
 
+def _insert_historisation_schedule(con, schedule):
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
+    schedule_id = con.execute("INSERT INTO schedule_historisation(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
+                              [type, time, date, time_interval]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(schedule_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
+
+
+def _remove_historisation_schedule(con, infoprovider_id):
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    if res["type"] == "weekly":
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+    
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+
+
+def _insert_historisation_schedule(con, schedule):
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
+    schedule_id = con.execute("INSERT INTO schedule_historisation(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
+                              [type, time, date, time_interval]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(schedule_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
+
+
+def _remove_historisation_schedule(con, infoprovider_id):
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    if res["type"] == "weekly":
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+    
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+
+
+def _insert_historisation_schedule(con, schedule):
+    """
+    Trägt gegebenen Schedule in die Tabellen schedule_historisation und schedule_historisation_weekday ein.
+
+    :param con: Variable welche auf die Datenbank verweist.
+    :param schedule: Schedule als Dictionary.
+    """
+    type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
+    schedule_id = con.execute("INSERT INTO schedule_historisation(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
+                              [type, time, date, time_interval]).lastrowid
+    if type == "weekly":
+        id_weekdays = [(schedule_id, d) for d in weekdays]
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
+    return schedule_id
+
+
+def _remove_historisation_schedule(con, infoprovider_id):
+    """
+    Entfernt den Schedule eines Infoproviders.
+
+    :param con: Variable welche auf die Datenbank verweist.
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    if res["type"] == "weekly":
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+
+
 def _insert_schedule(con, schedule):
     type, time, date, weekdays, time_interval = _unpack_schedule(schedule)
     schedule_id = con.execute("INSERT INTO schedule(type, time, date, time_interval) VALUES (?, ?, ?, ?)",
@@ -249,6 +514,10 @@ def _row_to_job(row):
         "deleteSchedule": delete_schedule,
         "topicValues": topic_values
     }
+
+
+def _get_infoprovider_path(infoprovider_name: str):
+    return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
 
 
 def _get_steps_path(json_file_name: str):
