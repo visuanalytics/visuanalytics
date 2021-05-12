@@ -25,6 +25,38 @@ def close_db_con(exception):
     db.close_con_f()
 
 
+@api.route("/infprovtestdatensatz", methods=["GET"])
+def infprovtestdatensatz():
+    try:
+        queries.get_infoprovider(1)
+        return flask.jsonify(""), 400
+    except Exception:
+        infoprovider = {
+            "infoprovider_name": "Test1",
+            "api": {
+                "url": "testUrl"
+            },
+            "transform": [
+                0
+            ],
+            "storing": [
+                0
+            ],
+            "schedule": {
+                "type": "daily",
+                "time": "13:30"
+            }
+        }
+        queries.insert_infoprovider(infoprovider)
+        infoprovider["infoprovider_name"] = "Test2"
+        queries.insert_infoprovider(infoprovider)
+        infoprovider["infoprovider_name"] = "Test3"
+        queries.insert_infoprovider(infoprovider)
+        infoprovider["infoprovider_name"] = "Test4"
+        queries.insert_infoprovider(infoprovider)
+        return "", 200
+
+
 @api.route("/checkapi", methods=["POST"])
 def checkapi():
     """
