@@ -12,5 +12,5 @@ pydub==0.25.1
 kiwisolver==1.0.1
 
 # Server requirements
-flask==1.1.2
+flask==2.0.0
 gunicorn==20.0.4
