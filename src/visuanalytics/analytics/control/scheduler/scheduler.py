@@ -11,6 +11,7 @@ import uuid
 from datetime import datetime, time as dt_time, timedelta
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
+from visuanalytics.analytics.control.procedures.infoproviderPipeline import InfoproviderPipeline
 from visuanalytics.server.db import job
 from visuanalytics.util import config_manager
 
@@ -108,6 +109,16 @@ class Scheduler(object):
                             log_to_db
                             ).start)
         t.start()
+
+    def _start_infoprovider(self, infoprovider_id: int, infoprovider_name: str, log_to_db=False):
+        print("Infoprovider --> Start (TODO)")
+        """t = threading.Thread(
+            target=Infoprovider_Pipeline(infoprovider_id,
+                                         uuid.uuid4().hex,
+                                         infoprovider_name,
+                                         log_to_db
+                                         ).start)
+        t.start()"""
 
     @ignore_errors
     def _check_all(self, now):
