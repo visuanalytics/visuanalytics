@@ -24,8 +24,8 @@ interface CreateCustomDataProps {
  * Defines the type that is expected for the backends answer to our request
  */
 type requestBackendAnswer = {
-    status: boolean
-    error: string
+    accepted: boolean
+    //error: string
 }
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
@@ -319,14 +319,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         const data = jsonData as requestBackendAnswer;
 
-        if (data.status) {
+        console.log(data.accepted)
+
+        if (data.accepted) {
             const arCopy = props.customData.slice();
             arCopy.push(new formelObj(name, input));
             props.setCustomData(arCopy);
             fullDelete();
             setName('');
         } else {
-            props.reportError(data.error);
+            props.reportError('backend sagt nein!');
         }
 
     }
@@ -343,7 +345,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     /**
      * Method to post the formula-string as json to the backend in order to receive the answer of the syntax-check.
      */
-    const sendTestData = useCallFetch("/testFormel", {
+    const sendTestData = useCallFetch("/visuanalytics/testformula", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json\n"

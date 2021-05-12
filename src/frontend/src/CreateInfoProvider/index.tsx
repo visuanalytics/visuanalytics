@@ -192,7 +192,7 @@ export const CreateInfoProvider = () => {
      * Method to post all settings for the Info-Provider made by the user to the backend.
      * The backend will use this data to create the desired Info-Provider.
      */
-    const postInfoProvider = useCallFetch("/infoprovider",
+    const postInfoProvider = useCallFetch("visuanalytics/infoprovider",
         {
             method: "POST",
             headers: {
