@@ -7,6 +7,7 @@ import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
+import {JobList} from "../../JobList";
 
 interface InfoProviderOverviewProps {
     test: string;

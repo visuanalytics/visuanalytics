@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Grid} from "@material-ui/core";
+import {ComponentContext} from "../../ComponentProvider";
 
 
 interface TypeSelectionProps {
@@ -90,6 +91,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
         props.continueHandler();
     }
 
+    const components = React.useContext(ComponentContext);
 
     //TODO: find a prettier solution for a file upload button, possibly use external component since material-ui doesnt offer one
     //const components = React.useContext(ComponentContext);
@@ -136,7 +138,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         <Button variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={props.backHandler}>
+                                onClick={() => components?.setCurrent("home")}>
                             abbrechen
                         </Button>
                     </Grid>
