@@ -3,7 +3,7 @@ import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import {useStyles} from "../style";
 import Button from "@material-ui/core/Button";
-import {Grid} from "@material-ui/core";
+import {Grid, TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
@@ -37,6 +37,12 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
             hintContent={hintContents.basicSettings}
         >
             <Grid container justify="space-between">
+                <Grid item xs={12}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
+                               value={props.name}
+                               onChange={event => (props.setName(event.target.value))}>
+                    </TextField>
+                </Grid>
                 <Grid item xs={12}>
                     <Typography variant="body1">
                         Übersicht über ausgewählte Daten
