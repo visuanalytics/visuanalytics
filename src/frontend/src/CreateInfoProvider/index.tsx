@@ -12,7 +12,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
-import {DiagramCreation} from "./DiagramCreation";
+import {ArrayDiagramProperties, DiagramCreation, HistorizedDiagramProperties} from "./DiagramCreation";
 
 
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
@@ -55,6 +55,9 @@ export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "v
 export type Diagram = {
     name: string;
     variant: diagramType;
+    sourceType: string;
+    arrayObjects?: Array<ArrayDiagramProperties>;
+    historizedObjects?: Array<HistorizedDiagramProperties>;
 }
 
 

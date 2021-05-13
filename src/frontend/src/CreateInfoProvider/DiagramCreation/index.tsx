@@ -27,9 +27,8 @@ task 5: choose the array (filter all arrays from apiData) - can only contain num
  task 8: enable usage with multiple arrays and multiple historized data
 task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 10: for historized data: choose names for the axis,
-
+task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
 NOT DONE:
-task 11: create data format to represent created diagrams, create with finalizing, show in overview
 task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
 task 13: sessionStorage compatibility
 task 14: pass diagrams to wrapper
@@ -37,6 +36,7 @@ task 15: rearrange structure
 task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
 styles: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
 others: formula support needs to be cleared, add functionality for date/timestamp as names on historized
+more: edit feature? preview in overview?
  */
 
 /**
@@ -86,8 +86,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
     //holds the current step in the diagram creation process
     const [diagramStep, setDiagramStep] = React.useState(0);
-    //holds the last step before the current one - necessary to go back from finalizing to creator
-    const [lastDiagramStep, setLastDiagramStep] = React.useState(0);
+    //holds the source type currently used
+    const [diagramSource, setDiagramSource] = React.useState<string>("");
     //holds the ListItemRepresentation of all arrays compatible with diagrams
     const [compatibleArrays, setCompatibleArrays] = React.useState<Array<ListItemRepresentation>>([]);
     //holds the strings of all historized data compatible with diagrams
@@ -108,6 +108,44 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
     //the amount of items selected to be taken from the array
     const [amount, setAmount] = React.useState<number>(1);
+
+
+    /**
+     * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
+     */
+    const finishCreate = () => {
+        //create the diagram object and add it to the array holding them
+        const diagramObject = {
+            name: diagramName,
+            variant: diagramType,
+            sourceType: diagramSource,
+            historizedObjects: historizedObjects
+        }
+        const arCopy = props.diagrams.slice();
+        arCopy.push(diagramObject);
+        props.setDiagrams(arCopy);
+        //empty all selection states to prepare for the next diagram
+        setDiagramSource("");
+        setDiagramName("");
+        setDiagramType("verticalBarChart");
+        setArrayObjects([]);
+        setHistorizedObjects([]);
+        setAmount(1);
+        //go back to overview
+        setDiagramStep(0);
+    }
+
+    /**
+     * Checks if the currently entered name is already contained in the diagrams array.
+     */
+    const isNameDuplicate = () => {
+        for (let index=0; index < props.diagrams.length; index++) {
+            if(props.diagrams[index].name===diagramName) return true;
+        }
+        return false;
+    }
+
+
 
 
     /**
@@ -256,26 +294,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     }
 
     /**
-     * Checks if the currently entered name is already contained in the diagrams array.
-     */
-    const isNameDuplicate = () => {
-        for (let index=0; index < props.diagrams.length; index++) {
-            if(props.diagrams[index].name===diagramName) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
-     */
-    const finishCreate = () => {
-        //TODO: implement object creation
-        //TODO: empty all selection states for a renewed selection
-        //go back to overview
-        setDiagramStep(0);
-    }
-
-    /**
      * Selects the displayed content based on the current step
      * 0: Overview of created diagrams with option for more
      * 1: TypeSelection, also includes Selection of concrete Array
@@ -292,6 +310,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         backHandler={props.backHandler}
                         createDiagramHandler={() => setDiagramStep(diagramStep+1)}
                         diagrams={props.diagrams}
+                        setDiagrams={props.setDiagrams}
                     />
                 );
             case 1:
@@ -299,11 +318,11 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                     <DiagramTypeSelect
                         continueArray={() => {
                             setDiagramStep(2);
-                            setLastDiagramStep(2);
+                            setDiagramSource("Array");
                         }}
                         continueHistorized={() =>  {
                             setDiagramStep(3);
-                            setLastDiagramStep(3);
+                            setDiagramSource("Historized");
                         }}
                         backHandler={() => setDiagramStep(diagramStep-1)}
                         compatibleArrays={compatibleArrays}
@@ -358,7 +377,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         </Grid>
                         <Grid item container xs={12} justify="space-between">
                             <Grid item>
-                                <Button variant="contained" size="large" color="primary" onClick={() => setDiagramStep(lastDiagramStep)}>
+                                <Button variant="contained" size="large" color="primary" onClick={() => setDiagramStep(diagramSource==="Array"?2:3)}>
                                     zurück
                                 </Button>
                             </Grid>

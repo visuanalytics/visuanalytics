@@ -97,8 +97,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     }
 
     /**
-     * Method to post all settings for the Info-Provider made by the user to the backend.
-     * The backend will use this data to create the desired Info-Provider.
+     * Method to get a preview of the created diagram.
+     * The backend creates the diagram with the given settings and return it as an image.
      */
     const getTestImage = useCallFetch("/testdiagram",
         {
