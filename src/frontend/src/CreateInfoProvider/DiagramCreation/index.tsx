@@ -1,11 +1,16 @@
 import React, {useCallback} from "react";
 import { useStyles } from "./style";
-import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType} from "../index"
+import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule} from "../index"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
 import {ArrayDiagramCreator} from "./ArrayDiagramCreator";
 import {HistorizedDiagramCreator} from "./HistorizedDiagramCreator";
+import Grid from "@material-ui/core/Grid";
+import {TextField} from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
 
 
 
@@ -20,16 +25,18 @@ task 5: choose the array (filter all arrays from apiData) - can only contain num
  task 6: choose diagram type
  task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
  task 8: enable usage with multiple arrays and multiple historized data
+task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
+task 10: for historized data: choose names for the axis,
 
 NOT DONE:
-task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
-task 10: for historized data: choose names for the axis, add functionality for date/timestamp
-task 11: create data format to represent created diagrams
+task 11: create data format to represent created diagrams, create with finalizing, show in overview
 task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
 task 13: sessionStorage compatibility
 task 14: pass diagrams to wrapper
 task 15: rearrange structure
 task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
+styles: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
+others: formula support needs to be cleared, add functionality for date/timestamp as names on historized
  */
 
 /**
@@ -46,6 +53,16 @@ export type ArrayDiagramProperties = {
     customLabels: boolean;
 }
 
+/**
+ * Represents historized data selected for diagram creation and holds attributes for all settings
+ */
+export type HistorizedDiagramProperties = {
+    name: string;
+    labelArray: Array<string>;
+    color: string;
+    intervalSizes: Array<number>;
+}
+
 
 interface DiagramCreationProps {
     continueHandler: () => void;
@@ -56,6 +73,7 @@ interface DiagramCreationProps {
     setDiagrams: (array: Array<Diagram>) => void;
     selectedData: Array<SelectedDataItem>;
     reportError: (message: string) => void;
+    schedule: Schedule;
 }
 
 
@@ -68,19 +86,24 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
     //holds the current step in the diagram creation process
     const [diagramStep, setDiagramStep] = React.useState(0);
+    //holds the last step before the current one - necessary to go back from finalizing to creator
+    const [lastDiagramStep, setLastDiagramStep] = React.useState(0);
     //holds the ListItemRepresentation of all arrays compatible with diagrams
     const [compatibleArrays, setCompatibleArrays] = React.useState<Array<ListItemRepresentation>>([]);
     //holds the strings of all historized data compatible with diagrams
     const [compatibleHistorized, setCompatibleHistorized] = React.useState<Array<string>>([]);
 
 
-    //holds the historized data selected for the current diagram
-    const [selectedHistorized, setSelectedHistorized] = React.useState<Array<string>>([]);
+
 
     //holds all array object representations currently used for a diagram
     const [arrayObjects, setArrayObjects] = React.useState<Array<ArrayDiagramProperties>>([]);
+    //holds all historized data object representations currently used for a diagram
+    const [historizedObjects, setHistorizedObjects] = React.useState<Array<HistorizedDiagramProperties>>([]);
 
 
+    //holds the name for the currently created diagram
+    const [diagramName, setDiagramName] = React.useState<string>("");
     //holds the currently selected diagram type
     const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
     //the amount of items selected to be taken from the array
@@ -157,21 +180,49 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
     const amountChangeHandler = (newAmount: number) => {
         setAmount(newAmount);
-        const newArrayObjects: Array<ArrayDiagramProperties> = new Array(arrayObjects.length);
-        arrayObjects.forEach((item, index) => {
-            const newLabels = new Array(newAmount).fill("");
-            for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
-                newLabels[i] = item.labelArray[i];
-            }
-            newArrayObjects[index] = {
-                ...item,
-                labelArray: newLabels
-            };
-        })
-        setArrayObjects(newArrayObjects);
-        //TODO also for historized)
+        if(diagramStep===2) {
+            //changes come from array creation
+            const newArrayObjects: Array<ArrayDiagramProperties> = new Array(arrayObjects.length);
+            arrayObjects.forEach((item, index) => {
+                const newLabels = new Array(newAmount).fill("");
+                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                    newLabels[i] = item.labelArray[i];
+                }
+                newArrayObjects[index] = {
+                    ...item,
+                    labelArray: newLabels
+                };
+            })
+            setArrayObjects(newArrayObjects);
+        } else if (diagramStep===3) {
+            //changes come from historized creation
+            const newHistorizedObjects: Array<HistorizedDiagramProperties> = new Array(historizedObjects.length);
+            historizedObjects.forEach((item, index) => {
+                //change label Array
+                const newLabels = new Array(newAmount).fill("");
+                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                    newLabels[i] = item.labelArray[i];
+                }
+                //change interval Array
+                const newIntervalSizes = new Array(newAmount).fill(0);
+                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                    newIntervalSizes[i] = item.intervalSizes[i];
+                }
+                newHistorizedObjects[index] = {
+                    ...item,
+                    labelArray: newLabels,
+                    intervalSizes: newIntervalSizes
+                };
+            })
+            setHistorizedObjects(newHistorizedObjects);
+        }
     }
 
+    /**
+     * Replaces an object within the array holding the object representations of all arrays in use
+     * @param object The new object
+     * @param ordinal Index of the object to be replaced
+     */
     const changeObjectInArrayObjects = (object: ArrayDiagramProperties, ordinal: number) => {
         /*//find the ordinal of the object by comparing keys
         let ordinal = -1;
@@ -191,11 +242,46 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     }
 
     /**
+     * Replaces an object within the array holding the object representations of all historized data in use
+     * @param object The new object
+     * @param ordinal Index of the object to be replaced
+     */
+    const changeObjectInHistorizedObjects = (object: HistorizedDiagramProperties, ordinal: number) => {
+        const arCopy = historizedObjects.slice();
+        //this check should never fail
+        if(ordinal>=0) {
+            arCopy[ordinal] = object;
+        }
+        setHistorizedObjects(arCopy);
+    }
+
+    /**
+     * Checks if the currently entered name is already contained in the diagrams array.
+     */
+    const isNameDuplicate = () => {
+        for (let index=0; index < props.diagrams.length; index++) {
+            if(props.diagrams[index].name===diagramName) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
+     */
+    const finishCreate = () => {
+        //TODO: implement object creation
+        //TODO: empty all selection states for a renewed selection
+        //go back to overview
+        setDiagramStep(0);
+    }
+
+    /**
      * Selects the displayed content based on the current step
      * 0: Overview of created diagrams with option for more
      * 1: TypeSelection, also includes Selection of concrete Array
      * 2: Diagram Editor for Arrays
      * 3: Diagram Editor for historized data
+     * 4: finalize creation
      */
     const selectContent = (step: number) => {
         switch (step) {
@@ -211,21 +297,25 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             case 1:
                 return (
                     <DiagramTypeSelect
-                        continueArray={() => setDiagramStep(2)}
-                        continueHistorized={() =>  setDiagramStep(2)}
+                        continueArray={() => {
+                            setDiagramStep(2);
+                            setLastDiagramStep(2);
+                        }}
+                        continueHistorized={() =>  {
+                            setDiagramStep(3);
+                            setLastDiagramStep(3);
+                        }}
                         backHandler={() => setDiagramStep(diagramStep-1)}
                         compatibleArrays={compatibleArrays}
                         compatibleHistorized={compatibleHistorized}
-                        arrayObjects={arrayObjects}
-                        setArrayObjects={((array: Array<ArrayDiagramProperties>) => setArrayObjects(array))}
-                        selectedHistorized={selectedHistorized}
-                        setSelectedHistorized={(array: Array<string>) => setSelectedHistorized(array)}
+                        setArrayObjects={(arrayObjects: Array<ArrayDiagramProperties>) => setArrayObjects(arrayObjects)}
+                        setHistorizedObjects={(historizedObjects: Array<HistorizedDiagramProperties>) => setHistorizedObjects(historizedObjects)}
                     />
                 );
            case 2:
                 return (
                     <ArrayDiagramCreator
-                        continueHandler={props.continueHandler}
+                        continueHandler={() => setDiagramStep(4)}
                         backHandler={() => setDiagramStep(1)}
                         arrayObjects={arrayObjects}
                         setArrayObjects={(arrayObjects: Array<ArrayDiagramProperties>) => setArrayObjects(arrayObjects)}
@@ -240,10 +330,47 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             case 3:
                 return (
                     <HistorizedDiagramCreator
-                        continueHandler={props.continueHandler}
+                        continueHandler={() => setDiagramStep(4)}
                         backHandler={() => setDiagramStep(1)}
+                        historizedObjects={historizedObjects}
+                        setHistorizedObjects={(historizedObjects: Array<HistorizedDiagramProperties>) => setHistorizedObjects(historizedObjects)}
+                        changeObjectInHistorizedObjects={changeObjectInHistorizedObjects}
+                        diagramType={diagramType}
+                        setDiagramType={(type: diagramType) => setDiagramType(type)}
+                        amount={amount}
+                        setAmount={(amount: number) => amountChangeHandler(amount)}
+                        reportError={props.reportError}
+                        schedule={props.schedule}
                     />
                 );
+            case 4:
+                return (
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">
+                                Bitte wählen sie einen Namen für das Diagramm, um die Erstellung abzuschließen:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <FormControl fullWidth>
+                                <TextField error={isNameDuplicate()} helperText={isNameDuplicate()?"Dieser Name wird bereits durch ein Diagramm anderes verwendet":null} variant="outlined" label="Diagramm-Name" value={diagramName} onChange={(e) => setDiagramName(e.target.value)}/>
+                            </FormControl>
+                        </Grid>
+                        <Grid item container xs={12} justify="space-between">
+                            <Grid item>
+                                <Button variant="contained" size="large" color="primary" onClick={() => setDiagramStep(lastDiagramStep)}>
+                                    zurück
+                                </Button>
+                            </Grid>
+                            <Grid item className={classes.blockableButtonPrimary}>
+                                <Button disabled={diagramName===""} variant="contained" size="large" color="primary" onClick={() => finishCreate()}>
+                                    weiter
+                                </Button>
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+                )
         }
     }
 

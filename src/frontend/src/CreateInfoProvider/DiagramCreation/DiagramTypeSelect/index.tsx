@@ -15,7 +15,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
-import {ArrayDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
 
 
 interface DiagramTypeSelectProps {
@@ -24,10 +24,8 @@ interface DiagramTypeSelectProps {
     backHandler: () => void;
     compatibleArrays: Array<ListItemRepresentation>
     compatibleHistorized: Array<string>;
-    arrayObjects: Array<ArrayDiagramProperties>;
-    setArrayObjects: (array: Array<ArrayDiagramProperties>) => void;
-    selectedHistorized: Array<string>;
-    setSelectedHistorized: (array: Array<string>) => void;
+    setArrayObjects: (arrayObjects: Array<ArrayDiagramProperties>) => void;
+    setHistorizedObjects: (historizedObjects: Array<HistorizedDiagramProperties>) => void;
 }
 
 
@@ -37,6 +35,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     const [selectedType, setSelectedType] = React.useState("");
     //holds the keys of all selected arrays
     const [selectedArrays, setSelectedArrays] = React.useState<Array<string>>([]);
+    //holds the historized data selected for the current diagram
+    const [selectedHistorized, setSelectedHistorized] = React.useState<Array<string>>([]);
 
     /**
      * Creates objects for all selected arrays and returns an array with them
@@ -71,6 +71,22 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         return arrayObjects;
     }
 
+    /**
+     * Creates objects for all selected historized data and returns an array with them
+     */
+    const createHistorizedObjects = () => {
+        const historizedObjects: Array<HistorizedDiagramProperties> = [];
+        selectedHistorized.forEach((item) => {
+                const historizedObject = {
+                    name: item,
+                    labelArray: new Array(1).fill(""),
+                    color: "#000000",
+                    intervalSizes: new Array(1).fill(0),
+                }
+                historizedObjects.push(historizedObject);
+        })
+        return historizedObjects;
+    }
 
     /**
      * Handler called when clicking the continue button.
@@ -78,9 +94,14 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Also gets the ListItems that belong to the selected elements and creates their objects
      */
     const continueHandler = () => {
-        props.setArrayObjects(createArrayObjects());
-        if(selectedType==="Array") props.continueArray();
-        else props.continueHistorized();
+        if(selectedType==="Array") {
+            props.setArrayObjects(createArrayObjects());
+            props.continueArray();
+        }
+        else {
+            props.setHistorizedObjects(createHistorizedObjects());
+            props.continueHistorized();
+        }
     }
 
     /**
@@ -116,9 +137,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param data The item to be added
      */
     const addToHistorizedSelection = (data: string) => {
-        const arCopy = props.selectedHistorized.slice()
+        const arCopy = selectedHistorized.slice()
         arCopy.push(data)
-        props.setSelectedHistorized(arCopy);
+        setSelectedHistorized(arCopy);
     };
 
     /**
@@ -126,7 +147,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param data The item to be removed
      */
     const  removeFromHistorizedSelection = (data: string) => {
-        props.setSelectedHistorized(props.selectedHistorized.filter((item) => {
+        setSelectedHistorized(selectedHistorized.filter((item) => {
             return item !== data;
         }));
     };
@@ -150,7 +171,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param data The name of the list item key the checkbox was set for.
      */
     const historizedCheckboxHandler = (data: string) => {
-        if (props.selectedHistorized.includes(data)) {
+        if (selectedHistorized.includes(data)) {
             removeFromHistorizedSelection(data);
         } else {
             addToHistorizedSelection(data)
@@ -192,7 +213,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemIcon>
                     <FormControlLabel
                         control={
-                            <Checkbox onClick={() => historizedCheckboxHandler(item)} checked={props.selectedHistorized.includes(item)}/>
+                            <Checkbox onClick={() => historizedCheckboxHandler(item)} checked={selectedHistorized.includes(item)}/>
                         }
                         label={''}
                     />
@@ -274,7 +295,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!((selectedType==="Array"&&selectedArrays.length!==0)||(selectedType==="HistorizedData"&&props.selectedHistorized.length!==0))} variant="contained" size="large" color="primary" onClick={continueHandler}>
+                    <Button disabled={!((selectedType==="Array"&&selectedArrays.length!==0)||(selectedType==="HistorizedData"&&selectedHistorized.length!==0))} variant="contained" size="large" color="primary" onClick={continueHandler}>
                         weiter
                     </Button>
                 </Grid>

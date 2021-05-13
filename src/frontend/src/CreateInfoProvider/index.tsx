@@ -43,6 +43,7 @@ export type ListItemRepresentation = {
     arrayRep: boolean;
     arrayLength: number;
 }
+
 //Type providing constants for all supported diagram types
 export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
 
@@ -391,6 +392,7 @@ export const CreateInfoProvider = () => {
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         selectedData={selectedData}
                         reportError={reportError}
+                        schedule={schedule}
                     />
                 )
             case 6:

@@ -28,10 +28,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     const renderDiagramListItem = (item: Diagram) => {
         return (
             <ListItem key={item.name}>
-                <ListItemText>
-                    primary=item.name
-                    secondary=null
-                </ListItemText>
+                <ListItemText
+                    primary={item.name}
+                    secondary={null}
+                />
             </ListItem>
         )
     }

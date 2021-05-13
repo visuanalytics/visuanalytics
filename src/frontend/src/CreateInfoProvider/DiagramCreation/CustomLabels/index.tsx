@@ -7,37 +7,49 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
-import {ArrayDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
 
 interface CustomLabelsProps {
     amount: number;
-    arrayObjects: Array<ArrayDiagramProperties>
-    selectedArrayOrdinal: number;
-    changeObjectInArrayObjects: (object: ArrayDiagramProperties, ordinal: number) => void;
+    arrayObjects?: Array<ArrayDiagramProperties>
+    selectedArrayOrdinal?: number;
+    historizedObjects?: Array<HistorizedDiagramProperties>
+    selectedHistorizedOrdinal?: number;
+    changeObjectInArrayObjects?: (object: ArrayDiagramProperties, ordinal: number) => void;
+    changeObjectInHistorizedObjects?: (object: HistorizedDiagramProperties, ordinal: number) => void;
 }
 
 export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
     const classes = useStyles();
 
     /**
-     * Event handler for changing one of the input field.
+     * Event handler for changing one of the input field. Behaves differently
      * @param event The event caused by the change, holding the new value.
      * @param ordinal The ordinal of the element whose value was changed.
      */
     const labelChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, ordinal: number) => {
-        const newLabels = [...props.arrayObjects[props.selectedArrayOrdinal].labelArray];
-        newLabels[ordinal] = event.target.value;
-        const objCopy = {
-            ...props.arrayObjects[props.selectedArrayOrdinal],
-            labelArray: newLabels
+        if(props.arrayObjects!==undefined&&props.selectedArrayOrdinal!==undefined&&props.changeObjectInArrayObjects!==undefined) {
+            const newLabels = [...props.arrayObjects[props.selectedArrayOrdinal].labelArray];
+            newLabels[ordinal] = event.target.value;
+            const objCopy = {
+                ...props.arrayObjects[props.selectedArrayOrdinal],
+                labelArray: newLabels
+            }
+            props.changeObjectInArrayObjects(objCopy, props.selectedArrayOrdinal);
+        } else if(props.historizedObjects!==undefined&&props.selectedHistorizedOrdinal!==undefined&&props.changeObjectInHistorizedObjects!==undefined) {
+            const newLabels = [...props.historizedObjects[props.selectedHistorizedOrdinal].labelArray];
+            newLabels[ordinal] = event.target.value;
+            const objCopy = {
+                ...props.historizedObjects[props.selectedHistorizedOrdinal],
+                labelArray: newLabels
+            }
+            props.changeObjectInHistorizedObjects(objCopy, props.selectedHistorizedOrdinal);
         }
-        props.changeObjectInArrayObjects(objCopy, props.selectedArrayOrdinal);
     }
 
     /**
-     * Renders an item to be displayed in the list of numeric attributes.
-     * @param item The item to be displayed
-     * Will not display the full path since the names are unique within one object.
+     * Renders a list of textfields for setting the custom labels.
+     * @param ordinal Number of the item/textfield  to be displayed
      */
     const renderLabelInput = (ordinal: number) => {
         return (
@@ -51,7 +63,7 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         <FormControl fullWidth>
-                            <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+                            {renderTextField(ordinal)}
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -59,6 +71,23 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
         )
     }
 
+    /**
+     * Renders a single text field do be displayed in the label choices.
+     * Necessary to differentiate between such with arrayObject as value and such with historizedObject as value.
+     * @param ordinal Number of the item/textfield to be displayed
+     */
+    const renderTextField = (ordinal: number) => {
+        if(props.arrayObjects!==undefined&&props.selectedArrayOrdinal!==undefined) {
+            return (
+                <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+            )
+        } else if (props.historizedObjects!==undefined&&props.selectedHistorizedOrdinal!==undefined) {
+            return (
+                <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.historizedObjects[props.selectedHistorizedOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+            )
+        }
+
+    }
 
 
     return(

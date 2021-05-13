@@ -10,17 +10,16 @@ import Typography from "@material-ui/core/Typography";
 import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
-import {ArrayDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
 
 interface BasicDiagramSettingsProps {
-    arrayObjects: Array<ArrayDiagramProperties>;
+    arrayObjects?: Array<ArrayDiagramProperties>;
     diagramType: diagramType;
     setDiagramType: (type: diagramType) => void;
     amount: number;
     setAmount: (amount: number) => void;
 }
 
-//TODO: no warning display for historized option
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
@@ -34,10 +33,12 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
      * Returns true if at least one does, false if none.
      */
     const evaluateAmount = () => {
-        for (let index = 0; index<props.arrayObjects.length; index++) {
-            if(props.amount>props.arrayObjects[index].listItem.arrayLength) return true;
+        if(props.arrayObjects!==undefined) {
+            for (let index = 0; index<props.arrayObjects!.length; index++) {
+                if(props.amount>props.arrayObjects![index].listItem.arrayLength) return true;
+            }
+            return false;
         }
-        return false;
     }
 
     /**
@@ -107,8 +108,8 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     {diagramIconSelector()}
                 </Grid>
             </Grid>
-            <Grid item container xs={12} justify="space-between">
-                <Grid item>
+            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"space-between":"flex-start"}>
+                <Grid item xs={3}>
                     <Typography>
                         Anzahl der Elemente:
                     </Typography>
@@ -116,13 +117,15 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                 <Grid item xs={3}>
                     <TextField type="number" variant="outlined"  margin="normal" label="Anzahl"  inputProps={{ min: 1}} value={props.amount} onChange={amountHandler}/>
                 </Grid>
-                <Grid item xs={6}>
+                {props.arrayObjects!==undefined&&
+                    <Grid item xs={6}>
                     {evaluateAmount()&&
                     <Alert severity="warning">
                         <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von mindestens einem Array.
                     </Alert>
                     }
                 </Grid>
+                }
             </Grid>
         </React.Fragment>
     )

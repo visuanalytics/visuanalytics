@@ -163,8 +163,6 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
     }
 
-    //TODO: display messages when primitive array to prevent new distances
-
     const delayedColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
