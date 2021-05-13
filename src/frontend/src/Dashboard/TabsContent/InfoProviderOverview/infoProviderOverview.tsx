@@ -1,6 +1,6 @@
 import React from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import {Grid, IconButton, Typography} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {ComponentContext} from "../../../ComponentProvider";
 import {hintContents} from "../../../util/hintContents";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";

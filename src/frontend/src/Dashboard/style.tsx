@@ -1,4 +1,5 @@
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import HomeIcon from "@material-ui/icons/Home";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -17,22 +18,21 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
-        stepPaper: {
-            padding: '0 0 20px',
-            zIndex: 0,
-            position: 'relative'
+        tab: {
+            width: "80%",
+            backgroundColor: theme.palette.primary.light,
+            color: "#000000",
+            '& .Mui-selected': {
+                backgroundColor: theme.palette.primary.dark,
+                color: "#FFFFFF"
+            },
+            '& .MuiTabs-indicator': {
+                backgroundColor: theme.palette.secondary.main,
+                height: 5
+            }
         },
-        paper: {
-            padding: '20px',
-        },
-        margin: {
-            margin: '0 auto',
-        },
-        infoIcon: {
-            fontSize: "50px",
-        },
-        hintIcons: {
-            color: "white"
+        test: {
+            height: 75
         }
     }),
 );
