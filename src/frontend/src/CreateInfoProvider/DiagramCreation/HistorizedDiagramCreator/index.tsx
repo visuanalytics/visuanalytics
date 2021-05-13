@@ -52,7 +52,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      * Checks if properties are selected for each object and/or a string is typed for custom labels when it is selected
      */
     const checkProceed = () => {
-        return false;
+        for (let i = 0; i < props.historizedObjects.length; i++) {
+            const item = props.historizedObjects[i];
+            for (let j = 0; j < item.labelArray.length; j++) {
+                if(item.labelArray[j]==="") return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -157,7 +163,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     const getIntervalDisplay = () => {
         //check for weekly
         if(props.schedule.type==="weekly") {
-            if(props.schedule.weekdays!==undefined) {
+            if(props.schedule.weekdays!==undefined&&props.schedule.weekdays.length!==0) {
                 //check if every day is selected
                 if(props.schedule.weekdays.reduce((sum, value) => sum+value)===21 &&props.schedule.weekdays.includes(0)) {
                     return "24h";
