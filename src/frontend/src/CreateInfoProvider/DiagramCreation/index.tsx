@@ -19,15 +19,32 @@ task 5: choose the array (filter all arrays from apiData) - can only contain num
      if object: choose which property is meant for y/value (number) and which is meant for x/name (string)
  task 6: choose diagram type
  task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
+ task 8: enable usage with multiple arrays and multiple historized data
+
 NOT DONE:
-task 8: for historized data: choosing options for y/values: currentDate - n * interval between historizations
-task 9: for historized data: choose names for the axis (possibly add functionality for date or something?)
-task 10: create data format to represent created diagrams
-task 11: test button for sending the diagram data to the backend to generate a preview (with random data?)
-task 12: sessionStorage compatibility
-task 13: pass diagrams to wrapper
-task 14: rearrange structure
+task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
+task 10: for historized data: choose names for the axis, add functionality for date/timestamp
+task 11: create data format to represent created diagrams
+task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
+task 13: sessionStorage compatibility
+task 14: pass diagrams to wrapper
+task 15: rearrange structure
+task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
  */
+
+/**
+ * Represents an array selected for diagram creation and holds attributes for all settings
+ */
+export type ArrayDiagramProperties = {
+    listItem: ListItemRepresentation;
+    numericAttribute: string;
+    stringAttribute: string;
+    labelArray: Array<string>;
+    color: string;
+    numericAttributes: Array<ListItemRepresentation>;
+    stringAttributes: Array<ListItemRepresentation>
+    customLabels: boolean;
+}
 
 
 interface DiagramCreationProps {
@@ -55,20 +72,20 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [compatibleArrays, setCompatibleArrays] = React.useState<Array<ListItemRepresentation>>([]);
     //holds the strings of all historized data compatible with diagrams
     const [compatibleHistorized, setCompatibleHistorized] = React.useState<Array<string>>([]);
-    //holds the array selected for the current diagram
-    const [currentArray, setCurrentArray] = React.useState<ListItemRepresentation>({} as ListItemRepresentation);
+
+
     //holds the historized data selected for the current diagram
-    const [currentHistorized, setCurrentHistorized] = React.useState<string>("");
-    //holds the currently selected array numeric attribute
-    const [arrayNumericAttribute, setArrayNumericAttribute] = React.useState<string>("");
-    //holds the currently selected string attribute for the array
-    const [arrayStringAttribute, setArrayStringAttribute] = React.useState<string>("")
+    const [selectedHistorized, setSelectedHistorized] = React.useState<Array<string>>([]);
+
+    //holds all array object representations currently used for a diagram
+    const [arrayObjects, setArrayObjects] = React.useState<Array<ArrayDiagramProperties>>([]);
+
+
     //holds the currently selected diagram type
     const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
     //the amount of items selected to be taken from the array
     const [amount, setAmount] = React.useState<number>(1);
-    //contains all custom labels set by the user - size depends on amount
-    const [labelArray, setLabelArray] = React.useState<Array<string>>(Array(1).fill(""));
+
 
     /**
      * Runs through the provided array of listItems recursively and returns all arrays that are compatible for diagram usage.
@@ -140,13 +157,38 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
     const amountChangeHandler = (newAmount: number) => {
         setAmount(newAmount);
-        const newLabels = new Array(newAmount).fill("");
-        for(let i = 0; i < newLabels.length&&i<labelArray.length; i++) {
-            newLabels[i] = labelArray[i];
-        }
-        setLabelArray(newLabels);
+        const newArrayObjects: Array<ArrayDiagramProperties> = new Array(arrayObjects.length);
+        arrayObjects.forEach((item, index) => {
+            const newLabels = new Array(newAmount).fill("");
+            for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                newLabels[i] = item.labelArray[i];
+            }
+            newArrayObjects[index] = {
+                ...item,
+                labelArray: newLabels
+            };
+        })
+        setArrayObjects(newArrayObjects);
+        //TODO also for historized)
     }
 
+    const changeObjectInArrayObjects = (object: ArrayDiagramProperties, ordinal: number) => {
+        /*//find the ordinal of the object by comparing keys
+        let ordinal = -1;
+        for(let index = 0; index < arrayObjects.length; ++index) {
+            const element = arrayObjects[index];
+            if((element.listItem.parentKeyName===""?element.listItem.keyName:element.listItem.parentKeyName + "|" + element.listItem.keyName)===(object.listItem.parentKeyName===""?object.listItem.keyName:object.listItem.parentKeyName + "|" + object.listItem.keyName)) {
+                ordinal = index;
+                break;
+            }
+        }*/
+        const arCopy = arrayObjects.slice();
+        //this check should never fail
+        if(ordinal>=0) {
+            arCopy[ordinal] = object;
+        }
+        setArrayObjects(arCopy);
+    }
 
     /**
      * Selects the displayed content based on the current step
@@ -174,29 +216,25 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         backHandler={() => setDiagramStep(diagramStep-1)}
                         compatibleArrays={compatibleArrays}
                         compatibleHistorized={compatibleHistorized}
-                        currentArray={currentArray}
-                        setCurrentArray={((item: ListItemRepresentation) => setCurrentArray(item))}
-                        currentHistorized={currentHistorized}
-                        setCurrentHistorized={(data: string) => setCurrentHistorized(data)}
+                        arrayObjects={arrayObjects}
+                        setArrayObjects={((array: Array<ArrayDiagramProperties>) => setArrayObjects(array))}
+                        selectedHistorized={selectedHistorized}
+                        setSelectedHistorized={(array: Array<string>) => setSelectedHistorized(array)}
                     />
                 );
-            case 2:
+           case 2:
                 return (
                     <ArrayDiagramCreator
                         continueHandler={props.continueHandler}
                         backHandler={() => setDiagramStep(1)}
-                        currentArray={currentArray}
-                        arrayNumericAttribute={arrayNumericAttribute}
-                        setArrayNumericAttribute={(attribute: string) => setArrayNumericAttribute(attribute)}
-                        arrayStringAttribute={arrayStringAttribute}
-                        setArrayStringAttribute={(attribute: string) => setArrayStringAttribute(attribute)}
+                        arrayObjects={arrayObjects}
+                        setArrayObjects={(arrayObjects: Array<ArrayDiagramProperties>) => setArrayObjects(arrayObjects)}
+                        changeObjectInArrayObjects={changeObjectInArrayObjects}
                         diagramType={diagramType}
                         setDiagramType={(type: diagramType) => setDiagramType(type)}
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
-                        labelArray={labelArray}
-                        setLabelArray={(array: Array<string>) => setLabelArray(array)}
                     />
                 );
             case 3:

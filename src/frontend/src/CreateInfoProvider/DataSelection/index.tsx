@@ -54,6 +54,14 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 }
             },
             "InnerObject": {
+                "NoStringAttributeArray": {
+                    "same_type": true,
+                    "length": 3,
+                    "object": {
+                        "Zahl1": "Zahl",
+                        "Zahl2": "Zahl"
+                    }
+                },
                 "ArrayInObject": {
                     "same_type": true,
                     "length": 3,

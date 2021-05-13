@@ -7,18 +7,17 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
+import {ArrayDiagramProperties} from "../index";
 
 interface CustomLabelsProps {
     amount: number;
-    labelArray: Array<string>
-    setLabelArray: (array: Array<string>) => void;
+    arrayObjects: Array<ArrayDiagramProperties>
+    selectedArrayOrdinal: number;
+    changeObjectInArrayObjects: (object: ArrayDiagramProperties, ordinal: number) => void;
 }
 
 export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
     const classes = useStyles();
-
-
-
 
     /**
      * Event handler for changing one of the input field.
@@ -26,9 +25,13 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
      * @param ordinal The ordinal of the element whose value was changed.
      */
     const labelChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, ordinal: number) => {
-        const newLabels = [...props.labelArray];
+        const newLabels = [...props.arrayObjects[props.selectedArrayOrdinal].labelArray];
         newLabels[ordinal] = event.target.value;
-        props.setLabelArray(newLabels);
+        const objCopy = {
+            ...props.arrayObjects[props.selectedArrayOrdinal],
+            labelArray: newLabels
+        }
+        props.changeObjectInArrayObjects(objCopy, props.selectedArrayOrdinal);
     }
 
     /**
@@ -48,7 +51,7 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
                     </Grid>
                     <Grid item xs={8}>
                         <FormControl fullWidth>
-                            <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+                            <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
                         </FormControl>
                     </Grid>
                 </Grid>

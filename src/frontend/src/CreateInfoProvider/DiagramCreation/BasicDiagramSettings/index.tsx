@@ -10,9 +10,10 @@ import Typography from "@material-ui/core/Typography";
 import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
+import {ArrayDiagramProperties} from "../index";
 
 interface BasicDiagramSettingsProps {
-    currentArray: ListItemRepresentation;
+    arrayObjects: Array<ArrayDiagramProperties>;
     diagramType: diagramType;
     setDiagramType: (type: diagramType) => void;
     amount: number;
@@ -27,6 +28,17 @@ interface BasicDiagramSettingsProps {
  */
 export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props) => {
     const classes = useStyles();
+
+    /**
+     * Checks if the selected amount exceeds any of the array sizes.
+     * Returns true if at least one does, false if none.
+     */
+    const evaluateAmount = () => {
+        for (let index = 0; index<props.arrayObjects.length; index++) {
+            if(props.amount>props.arrayObjects[index].listItem.arrayLength) return true;
+        }
+        return false;
+    }
 
     /**
      * Returns the diagram for the currently selected type be be displayed
@@ -79,13 +91,9 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
             <Grid item container xs={12} justify="space-between">
                 <Grid item xs={7}>
                     <FormControl fullWidth variant="outlined">
-                        <InputLabel id="diagramType">Diagrammtyp</InputLabel>
                         <Select
-                            labelId="diagramType"
-                            id="diagramTypeSelect"
                             value={props.diagramType}
                             onChange={diagramTypeChangeHandler}
-                            label="Diagrammtyp"
                         >
                             <MenuItem value={"verticalBarChart"}>Säulendiagramm</MenuItem>
                             <MenuItem value={"horizontalBarChart"}>Balkendiagramm</MenuItem>
@@ -109,9 +117,9 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     <TextField type="number" variant="outlined"  margin="normal" label="Anzahl"  inputProps={{ min: 1}} value={props.amount} onChange={amountHandler}/>
                 </Grid>
                 <Grid item xs={6}>
-                    {props.amount>props.currentArray.arrayLength&&
+                    {evaluateAmount()&&
                     <Alert severity="warning">
-                        <strong>Warnung:</strong> Die gewählte Größe überschreitet die Array-Größe bei den Testdaten.
+                        <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von mindestens einem Array.
                     </Alert>
                     }
                 </Grid>
