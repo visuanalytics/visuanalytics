@@ -251,7 +251,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item xs={6}>
                     <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Name"}
                                value={props.name}
-                               onChange={event => (props.setName(event.target.value))}>
+                               onChange={event => (props.setName(event.target.value.replace(' ', '_')))}>
                     </TextField>
                 </Grid>
                 <Grid item xs={6}>

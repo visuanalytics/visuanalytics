@@ -37,6 +37,7 @@
   "resources": {
     "main_path": "resources",
     "sub_paths": {
+      "infoprovider": "infoprovider",
       "images": "images",
       "temp": "temp",
       "memory": "memory"
