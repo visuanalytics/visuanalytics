@@ -140,6 +140,10 @@ def add_infoprovider():
             err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
             return err, 400
 
+        """if "formulas" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
+            return err, 400"""
+
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
                                             f"{infoprovider['infoprovider_name']}"})
@@ -152,10 +156,13 @@ def add_infoprovider():
         return err, 400
 
 
-@api.route("/showschedule", methods=["GET"])
+@api.route("/infoprovider/schedules", methods=["GET"])
 def show_schedule():
     """
-    Method for testing only. Will be removed later on!
+    Endpunkt '/infoprovider/schedules'.
+
+    Response enthält eine Liste von Einträgen aus der Tabelle "schedule_historisation".
+    Jeder Eintrag enthält die Keys schedule_historisation_id und den Typ des Schedules.
     """
     try:
         return flask.jsonify(queries.show_schedule())
@@ -165,10 +172,13 @@ def show_schedule():
         return err, 400
 
 
-@api.route("/showweekly", methods=["GET"])
+@api.route("/infoprovider/showweekly", methods=["GET"])
 def show_weekly():
     """
-    Method for testing only. Will be removed later on!
+    Endpunkt '/infoprovider/showweekly'.
+
+    Response enthält eine Liste von Einträgen aus der Tabelle "schedule_historisation_weekday".
+    Jeder Eintrag enthält die Keys schedule_historisation_id, schedule_weekday_historisation_id und weekday.
     """
     try:
         return flask.jsonify(queries.show_weekly())
@@ -271,11 +281,12 @@ def testformula():
             err = flask.jsonify({"err_msg": "Missing field 'formula'"})
             return err, 400
 
-        try:
-            str2json(formula["formula"])
-            return flask.jsonify({"accepted": True})
-        except Exception:
-            return flask.jsonify({"accepted": False})
+        str2json(formula["formula"])
+        return flask.jsonify({"accepted": True})
+
+    except SyntaxError:
+        return flask.jsonify({"accepted": False})
+
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while testing a formula"})
