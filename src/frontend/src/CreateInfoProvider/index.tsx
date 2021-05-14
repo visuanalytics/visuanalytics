@@ -23,9 +23,9 @@ export type SelectedDataItem = {
 
 export type Schedule = {
     type: string;
-    weekdays?: number[];
-    time?: string;
-    interval?: string;
+    weekdays: number[];
+    time: string;
+    interval: string;
 }
 
 /**
@@ -81,7 +81,7 @@ export const CreateInfoProvider = () => {
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
-    const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: undefined, time: undefined, weekdays: []});
+    const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: "halfday", time: "", weekdays: []});
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -177,7 +177,7 @@ export const CreateInfoProvider = () => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-      clearSessionStorage();
+        clearSessionStorage();
     }
 
     /**

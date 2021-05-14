@@ -85,8 +85,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                             }
                         </Box>
                     </Grid>
-                    <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
-                    </Grid>
+                </Grid>
+                <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück
@@ -99,7 +99,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-
         </StepFrame>
     );
 }

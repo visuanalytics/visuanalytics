@@ -122,7 +122,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                 />
                 <Collapse in={props.schedule.type === "interval"}>
                     <FormControlLabel control={
-                        <Select value={props.schedule.interval === undefined ? "halfday" : props.schedule.interval} onChange={setInterval}>
+                        <Select value={props.schedule.interval === "" ? "halfday" : props.schedule.interval} onChange={setInterval}>
                             <MenuItem value={"minute"}>Jede Minute</MenuItem>
                             <MenuItem value={"quarter"}>Alle 15 Minuten</MenuItem>
                             <MenuItem value={"half"}>Alle 30 Minuten</MenuItem>
