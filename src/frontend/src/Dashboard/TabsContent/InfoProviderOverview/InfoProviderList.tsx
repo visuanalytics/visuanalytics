@@ -1,31 +1,38 @@
 import React from "react";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {List} from "@material-ui/core";
+import {Box, List, Typography} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Button from "@material-ui/core/Button";
+import {useStyles} from "../../style";
 
 interface InfoProviderListProps {
-   // infoprovider: Array<JSON>;
-    //setInfoprovider: (data: Array<JSON>) => void;
+    infoprovider: Array<string>;
+    //setInfoprovider: (data: Array<string>) => void;
 }
 
 
 export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
 
+    const classes = useStyles();
 
-    const renderListItem = (data: JSON) => {
+    const renderListItem = (data: string) => {
         return (
-            <ListItem key={JSON.stringify(data)}>
-                {JSON.stringify(data)}
+            <ListItem key={data}>
+                <Box border={3} borderRadius={10}
+                     className={classes.infoProvBorder}>
+                    <Typography>
+                        {data}
+                    </Typography>
+                </Box>
             </ListItem>
         );
     };
 
     return(
         <List>
-            1
+            {props.infoprovider.map((e) => renderListItem(e))}
         </List>
     );
 }

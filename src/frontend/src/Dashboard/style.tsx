@@ -18,6 +18,15 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        infoProvBorder: {
+            width: "50%",
+            height: 28,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px",
+            borderColor: theme.palette.secondary.main
+        },
         tab: {
             width: "80%",
             backgroundColor: theme.palette.primary.light,

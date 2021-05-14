@@ -14,7 +14,12 @@ interface InfoProviderOverviewProps {
     test: string;
 }
 
-type requestBackendAnswer = JSON
+type jsonRef = {
+    infoprovider_id: number;
+    infoprovider_name: string;
+}
+
+type requestBackendAnswer = Array<jsonRef>
 
 export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props) => {
 
@@ -22,16 +27,22 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
 
     const components = React.useContext(ComponentContext);
 
-    const[infoprovider, setInfoProvider] = React.useState<Array<String>>();
+    const [infoprovider, setInfoProvider] = React.useState(new Array<string>());
 
     const handleSuccess = (jsonData: any) => {
         const data = jsonData as requestBackendAnswer;
-        const json: string = JSON.stringify(jsonData)
-        console.log(json);
+        const newArray = new Array<string>();
+
+        data.forEach(item => {
+            newArray.push(item.infoprovider_name)
+        });
+
+        setInfoProvider(newArray);
     }
 
-    const handleError= (err: Error) => {
-        alert('Fehler! : ' + err)
+    const handleError = (err: Error) => {
+        console.log('error');
+        alert('Fehler! : ' + err);
     }
 
     const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
@@ -42,8 +53,18 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
         }, handleSuccess, handleError
     );
 
+    //test method that you only have to use once
+    //only if the database is deleted you have to use the method again
+    const testInfo = useCallFetch("/visuanalytics/infprovtestdatensatz", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        }, handleSuccess, handleError
+    );
 
-    return(
+
+    return (
         <StepFrame
             heading="Willkommen bei VisuAnalytics!"
             hintContent={hintContents.infoProviderOverview}
@@ -67,7 +88,9 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5}
                              className={classes.listFrame}>
-                            <InfoProviderList/>
+                            <InfoProviderList
+                                infoprovider={infoprovider}
+                            />
                         </Box>
                     </Grid>
                     <Grid item container xs={12} justify={"space-evenly"}>
@@ -77,14 +100,14 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"primary"}>
-                                Exportieren
+                            <Button variant={"contained"} size={"large"} color={"primary"}
+                                    onClick={() => getAll()}>
+                                getAll
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"primary"}
-                            onClick={() => getAll()}>
-                                Test
+                            <Button variant={"contained"} size={"large"} color={"primary"}>
+                                test
                             </Button>
                         </Grid>
                     </Grid>
@@ -92,5 +115,4 @@ export const InfoProviderOverview: React.FC<InfoProviderOverviewProps> = (props)
             </Grid>
         </StepFrame>
     );
-
 }
