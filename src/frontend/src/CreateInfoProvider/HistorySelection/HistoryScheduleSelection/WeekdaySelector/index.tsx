@@ -2,7 +2,6 @@ import React from "react";
 import { Weekday, getWeekdayLabel } from "../../../../util/schedule";
 import Button from "@material-ui/core/Button";
 import { useStyles } from "../../../style";
-import {ToggleButton} from "@material-ui/lab";
 
 
 interface WeekdaySelectorProps {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {WeekdaySelector} from "./WeekdaySelector";
 import Button from "@material-ui/core/Button";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
@@ -35,22 +35,17 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
     React.useEffect(() => {
-        setScheduleTime(currentTimeSelection)
-    }, [currentTimeSelection])
-
-    /**
-     * Adds a new time to the array containing select times, if not already contained.
-     * @param time The time to be added to the array.
-     * The Date will be converted to a string in the format 'hh:mm'.
-     */
-    const setScheduleTime = async (time: MaterialUiPickersDate) => {
-        if(time!=null) {
-            const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
-            const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
-            console.log(hours);
-            props.selectSchedule({...props.schedule, time: hours + ":" + minutes});
+        const setScheduleTime = (time: MaterialUiPickersDate) => {
+            if(time!=null) {
+                const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
+                const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
+                props.selectSchedule({...props.schedule, time: hours + ":" + minutes});
+            }
         }
-    }
+        setScheduleTime(currentTimeSelection);
+    }, [currentTimeSelection]);
+
+
 
     /**
      * Method that toggles the boolean values for selected weekdays, should be called whenever the user selects or unselects.

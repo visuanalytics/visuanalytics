@@ -1,11 +1,5 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
-import {Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
 import { Schedule } from "../..";
 
 interface ScheduleTypeTableProps {
