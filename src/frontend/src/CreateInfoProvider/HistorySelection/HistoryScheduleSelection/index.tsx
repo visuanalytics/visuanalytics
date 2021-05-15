@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React from "react";
 import {WeekdaySelector} from "./WeekdaySelector";
 import Button from "@material-ui/core/Button";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
@@ -34,18 +34,15 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
-    React.useEffect(() => {
-        const setScheduleTime = (time: MaterialUiPickersDate) => {
-            if(time!=null) {
-                const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
-                const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
-                props.selectSchedule({...props.schedule, time: hours + ":" + minutes});
-            }
+
+    const setScheduleTime = (time: MaterialUiPickersDate) => {
+        if(time!=null) {
+            const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
+            const minutes = time.getMinutes()>9?time.getMinutes().toString():"0" + time.getMinutes();
+            return hours + ":" + minutes;
         }
-        setScheduleTime(currentTimeSelection);
-    }, [currentTimeSelection]);
-
-
+        return "";
+    }
 
     /**
      * Method that toggles the boolean values for selected weekdays, should be called whenever the user selects or unselects.
@@ -78,6 +75,11 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
 
     const setInterval = (event: React.ChangeEvent<{value: unknown}>) => {
         props.selectSchedule({...props.schedule, interval: event.target.value as string})
+    }
+
+    const handleProceed = () => {
+        props.selectSchedule({...props.schedule, time: setScheduleTime(currentTimeSelection)});
+        props.handleProceed();
     }
 
     return (
@@ -161,7 +163,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed} disabled={props.schedule.type === "weekly" && props.schedule.weekdays.length === 0}>
+                    <Button variant="contained" size="large" color="primary" onClick={handleProceed} disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes()))}>
                         weiter
                     </Button>
                 </Grid>
