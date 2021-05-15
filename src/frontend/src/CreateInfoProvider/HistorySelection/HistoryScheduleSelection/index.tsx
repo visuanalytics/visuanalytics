@@ -14,6 +14,7 @@ import {Schedule} from "../../index";
 import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { useStyles } from "../../style";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
@@ -27,6 +28,8 @@ interface HistoryScheduleSelectionProps {
  * The state of this component handles the input made to its children.
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
+
+    const classes = useStyles();
 
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
@@ -162,8 +165,8 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                         zurück
                     </Button>
                 </Grid>
-                <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed}>
+                <Grid item className={classes.blockableButtonPrimary}>
+                    <Button variant="contained" size="large" color="primary" onClick={props.handleProceed} disabled={props.schedule.type === "weekly" && props.schedule.weekdays.length === 0}>
                         weiter
                     </Button>
                 </Grid>

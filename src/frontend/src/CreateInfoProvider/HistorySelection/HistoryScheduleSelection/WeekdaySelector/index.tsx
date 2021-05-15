@@ -2,6 +2,7 @@ import React from "react";
 import { Weekday, getWeekdayLabel } from "../../../../util/schedule";
 import Button from "@material-ui/core/Button";
 import { useStyles } from "../../../style";
+import {ToggleButton} from "@material-ui/lab";
 
 
 interface WeekdaySelectorProps {
@@ -50,10 +51,10 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
         Weekday.SUNDAY
     ]
 
-    //TODO: highlight button with class based on {props.days[getDayIndex(weekday)]?"true":"false"
+    // TODO possibily switch to toggle buttons for better accessibility, but current solution is working too.
     const renderWeekday = (weekday: Weekday) => {
         return (
-            <Button key={getDayIndex(weekday)} variant="contained" size="small" onClick={() => props.toggleSelectedDay(weekday)} className={props.days?.includes(weekday) ? classes.weekdaySelected : classes.weekday}>
+            <Button key={getDayIndex(weekday)} variant="contained" size="small" className={props.days?.includes(weekday) ? classes.weekdaySelected : classes.weekday} onClick={() => props.toggleSelectedDay(weekday)} aria-label={props.days?.includes(weekday) ? getWeekdayLabel(weekday) + " ausgewählt" : getWeekdayLabel(weekday) + " nicht ausgewählt"}>
                 {getWeekdayLabel(weekday)}
             </Button>
         )

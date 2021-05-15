@@ -71,13 +71,17 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                             <List disablePadding={true}>
                                 {props.historizedData.map((item: string) => renderListItem(item))}
                             </List>
-                            {props.schedule.type !== "" &&
-                            <Grid item xs={12}>
-                                <Typography variant="h6">
-                                    Historisierungszeiten
-                                </Typography>
-                            </Grid>
-                            }
+                        </Box>
+                    </Grid>
+                    {props.schedule.type !== "" &&
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Historisierungszeiten
+                        </Typography>
+                    </Grid>
+                    }
+                    <Grid item xs={12}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5}>
                             {props.schedule.type !== "" &&
                             <Grid item xs={12}>
                                 <ScheduleTypeTable schedule={props.schedule}/>
