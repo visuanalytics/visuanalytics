@@ -22,9 +22,9 @@ class DbScheduler(Scheduler):
             logger.info(f"Job {job_id}: '{job_name}' started")
             self._start_job(job_id, job_name, json_file_name, config, True)
         else:
-            infoprovider_name = job.get_infoprovider_run_info(str(job_id))
+            infoprovider_name, json_file_name, config = job.get_infoprovider_run_info(str(job_id))
             logger.info(f"Infoprovider {job_id}: '{infoprovider_name}' started")
-            self._start_infoprovider(job_id, infoprovider_name, True)
+            self._start_infoprovider(job_id, infoprovider_name, json_file_name, config, True)
 
     @ignore_errors
     def __check(self, row, now, is_job):

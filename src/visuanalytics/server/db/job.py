@@ -111,7 +111,7 @@ def get_infoprovider_run_info(infoprovider_id):
         res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                           [infoprovider_id]).fetchall()
 
-        return res[0]["infoprovider_name"]
+        return res[0]["infoprovider_name"], res[0]["infoprovider_name"], {}
 
 
 def insert_log(job_id: int, state: int, start_time: datetime):

@@ -110,15 +110,19 @@ class Scheduler(object):
                             ).start)
         t.start()
 
-    def _start_infoprovider(self, infoprovider_id: int, infoprovider_name: str, log_to_db=False):
-        print("Infoprovider --> Start (TODO)")
-        """t = threading.Thread(
-            target=Infoprovider_Pipeline(infoprovider_id,
-                                         uuid.uuid4().hex,
-                                         infoprovider_name,
-                                         log_to_db
-                                         ).start)
-        t.start()"""
+    def _start_infoprovider(self, infoprovider_id: int, infoprovider_name: str, steps_name: str, config: dict, log_to_db=False):
+        # Add base_config if exists
+        config = {**config_manager.STEPS_BASE_CONFIG, **config}
+        config["job_name"] = re.sub(r'\s+', '-', infoprovider_name.strip())
+
+        t = threading.Thread(
+            target=InfoproviderPipeline(infoprovider_id,
+                                        uuid.uuid4().hex,
+                                        infoprovider_name,
+                                        config,
+                                        log_to_db
+                                        ).start)
+        t.start()
 
     @ignore_errors
     def _check_all(self, now):
