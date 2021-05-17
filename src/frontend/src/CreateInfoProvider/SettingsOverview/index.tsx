@@ -10,6 +10,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import { Schedule } from "..";
+import { ScheduleTypeTable } from "./ScheduleTypeTable";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
@@ -19,6 +21,7 @@ interface SettingsOverviewProps {
     selectedData: Array<string>;
     customData: Array<formelObj>;
     historizedData: Array<string>;
+    schedule: Schedule;
 }
 
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
@@ -64,10 +67,26 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
                             <List disablePadding={true}>
                                 {props.historizedData.map((item: string) => renderListItem(item))}
                             </List>
+                        </Box>
+                    </Grid>
+                    {props.schedule.type !== "" &&
+                    <Grid item xs={12}>
+                        <Typography variant="h6">
+                            Historisierungszeiten
+                        </Typography>
+                    </Grid>
+                    }
+                    <Grid item xs={12}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5}>
+                            {props.schedule.type !== "" &&
+                            <Grid item xs={12}>
+                                <ScheduleTypeTable schedule={props.schedule}/>
+                            </Grid>
+                            }
                         </Box>
                     </Grid>
                 </Grid>
@@ -84,7 +103,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-
         </StepFrame>
     );
 }
