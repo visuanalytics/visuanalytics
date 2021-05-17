@@ -1,6 +1,6 @@
 import React, {useCallback} from "react";
 import { useStyles } from "./style";
-import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule} from "../index"
+import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../index"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -29,16 +29,17 @@ task 5: choose the array (filter all arrays from apiData) - can only contain num
 task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 10: for historized data: choose names for the axis,
 task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
-others: formula support needs to be cleared
+task 12: formula support (formula will only contain numbers), add functionality for date/timestamp as names on historized
 NOT DONE:
-task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
 task 13: sessionStorage compatibility
+task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
+
 task 14: pass diagrams to wrapper
 task 15: rearrange structure
 task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
-styles: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
-, add functionality for date/timestamp as names on historized
-more: edit feature? preview in overview?
+task 19:: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
+task 20: edit feature
+preview in overview?
  */
 
 /**
@@ -110,6 +111,67 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
 
     /**
+     * Restores all data of the current session when the page is reloaded. Used to not loose data on reloading the page.
+     */
+    React.useEffect(() => {
+        //diagramStep
+        setDiagramStep(Number(sessionStorage.getItem("diagramStep-" + uniqueId)||0));
+        //diagramSource
+        setDiagramSource(sessionStorage.getItem("diagramSource-" + uniqueId)||"");
+        //arrayObjects
+        setArrayObjects(JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)||"{}"));
+        //historizedObjects
+        setHistorizedObjects(JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)||"{}"));
+        //diagramName
+        setDiagramName(sessionStorage.getItem("diagramName-" + uniqueId)||"");
+        //diagramType
+        setDiagramType(sessionStorage.getItem("diagramType-" + uniqueId) as diagramType||"verticalBarChart");
+        //amount
+        setAmount(Number(sessionStorage.getItem("amount-" + uniqueId)||1));
+    }, [])
+    //store step in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramStep-" + uniqueId, diagramStep.toString());
+    }, [diagramStep])
+    //store diagramSource in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramSource-" + uniqueId, diagramSource);
+    }, [diagramSource])
+    //store arrayObjects in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("arrayObjects-" + uniqueId, JSON.stringify(arrayObjects));
+    }, [arrayObjects])
+    //store historizedObjects in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("historizedObjects-" + uniqueId, JSON.stringify(historizedObjects));
+    }, [historizedObjects])
+    //store diagramName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramName-" + uniqueId, diagramName);
+    }, [diagramName])
+    //store diagramType in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramType-" + uniqueId, diagramType);
+    }, [diagramType])
+    //store amount in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("amount-" + uniqueId, amount.toString());
+    }, [amount])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("diagramStep-" + uniqueId);
+        sessionStorage.removeItem("diagramSource-" + uniqueId);
+        sessionStorage.removeItem("arrayObjects-" + uniqueId);
+        sessionStorage.removeItem("historizedObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramName-" + uniqueId);
+        sessionStorage.removeItem("diagramType-" + uniqueId);
+        sessionStorage.removeItem("amount-" + uniqueId);
+    }
+
+    /**
      * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
      */
     const finishCreate = () => {
@@ -130,6 +192,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         setArrayObjects([]);
         setHistorizedObjects([]);
         setAmount(1);
+        //since we dont want default values in sessionStorage we empty it here
+        clearSessionStorage();
         //go back to overview
         setDiagramStep(0);
     }
@@ -204,7 +268,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             })
         })
         return compatibleHistorized;
-    }, [props.selectedData])
+    }, [props.selectedData, props.customData])
 
     /*
      * Update the lists whenever the source data changes

@@ -2,7 +2,7 @@ import React from "react";
 import { useStyles } from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, Schedule} from "../../index";
+import {ListItemRepresentation, diagramType, Schedule, uniqueId} from "../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -47,6 +47,18 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     const [selectedHistorizedOrdinal, setSelectedHistorizedOrdinal] = React.useState<number>(0);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
+
+    /**
+     * Restore the selected ordinal from sessionStorage to not loose it on reload.
+     */
+    React.useEffect(() => {
+        //diagramStep
+        setSelectedHistorizedOrdinal(Number(sessionStorage.getItem("selectedHistorizedOrdinal-" + uniqueId) || 0));
+    }, [])
+    //store selectedArrayOrdinal in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedHistorizedOrdinal-" + uniqueId, selectedHistorizedOrdinal.toString());
+    }, [selectedHistorizedOrdinal])
 
 
 
@@ -420,7 +432,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary"  onClick={props.continueHandler}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary" onClick={() => {sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId); props.continueHandler();}}>
                         weiter
                     </Button>
                 </Grid>

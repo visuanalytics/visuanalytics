@@ -38,6 +38,34 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     //holds the historized data selected for the current diagram
     const [selectedHistorized, setSelectedHistorized] = React.useState<Array<string>>([]);
 
+
+    /**
+     * Used for arrays that contain objects. Returns all attributes that are numeric to present them as a choice to the user.
+     * @param object The object contained in the array.
+     */
+    const getNumericAttributes = (object: Array<ListItemRepresentation>) => {
+        const numericAttributes: Array<ListItemRepresentation> = []
+        for(let index = 0; index < object.length; ++index) {
+            //console.log("checking: " + object[index].keyName);
+            if(object[index].value==="Zahl") numericAttributes.push(object[index]);
+        }
+        return numericAttributes;
+    }
+
+    /**
+     * Used for arrays that contain objects. Returns all attributes that are strings/text to present them as a choice to the user.
+     * @param object The object contained in the array.
+     */
+    const getStringAttributes = (object: Array<ListItemRepresentation>) => {
+        const stringAttributes: Array<ListItemRepresentation> = []
+        for(let index = 0; index < object.length; ++index) {
+            //console.log("checking: " + object[index].keyName);
+            if(object[index].value==="Text") stringAttributes.push(object[index]);
+        }
+        return stringAttributes;
+    }
+
+
     /**
      * Creates objects for all selected arrays and returns an array with them
      */
@@ -55,15 +83,17 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
             }
             //this check should always be true but is added for type reasons
             if(Object.keys(item).length!==0) {
+                const numericAttributes = getNumericAttributes(item.value);
+                const stringAttributes = getStringAttributes(item.value);
                 const arrayObject = {
                     listItem: item,
                     numericAttribute: "",
                     stringAttribute: "",
                     labelArray: new Array(1).fill(""),
                     color: "#000000",
-                    numericAttributes: [],
-                    stringAttributes: [],
-                    customLabels: false
+                    numericAttributes: numericAttributes,
+                    stringAttributes: stringAttributes,
+                    customLabels: stringAttributes.length===0
                 }
                 arrayObjects.push(arrayObject);
             }

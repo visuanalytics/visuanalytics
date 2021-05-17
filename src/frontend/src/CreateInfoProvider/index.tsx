@@ -72,13 +72,14 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
+//unique application id used to avoid collisions in session storage
+export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
+
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
 export const CreateInfoProvider = () => {
-    //unique application id used to avoid collisions in session storage
-    const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper

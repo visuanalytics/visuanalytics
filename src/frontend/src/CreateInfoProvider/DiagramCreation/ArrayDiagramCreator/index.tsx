@@ -2,7 +2,7 @@ import React from "react";
 import { useStyles } from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType} from "../../index";
+import {ListItemRepresentation, diagramType, uniqueId} from "../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -37,32 +37,23 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     //timeout counter used for delayed color change
     let timeOut = 0;
 
-    //true when the user has selected to use custom labels
-    const [customLabels, setCustomLabels] = React.useState(false);
     //holds the currently selected arrayObject
     const [selectedArrayOrdinal, setSelectedArrayOrdinal] = React.useState<number>(0);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
 
 
-    //when loading for the first time, calculate the attributes for all arrays selected
-    //this prevents unecessary calculations since there will be no change within one load
+    /**
+     * Restore the selected ordinal from sessionStorage to not loose it on reload.
+     */
     React.useEffect(() => {
-        console.log("calculating attributes");
-        const newArrayObjects: Array<ArrayDiagramProperties> = new Array(props.arrayObjects.length);
-        props.arrayObjects.forEach((item, index) => {
-            const newNumericAttributes = getNumericAttributes(item.listItem.value);
-            const newStringAttributes = getStringAttributes(item.listItem.value);
-            const newCustomLabels = newStringAttributes.length===0;
-            newArrayObjects[index] = {
-                ...item,
-                numericAttributes: newNumericAttributes,
-                stringAttributes: newStringAttributes,
-                customLabels: newCustomLabels
-            };
-        })
-        props.setArrayObjects(newArrayObjects);
+        //diagramStep
+        setSelectedArrayOrdinal(Number(sessionStorage.getItem("selectedArrayOrdinal-" + uniqueId) || 0));
     }, [])
+    //store selectedArrayOrdinal in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedArrayOrdinal-" + uniqueId, selectedArrayOrdinal.toString());
+    }, [selectedArrayOrdinal])
 
     /**
      * Checks if proceeding is possible and returns true if this is the case.
@@ -125,32 +116,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     }
 
 
-    /**
-     * Used for arrays that contain objects. Returns all attributes that are numeric to present them as a choice to the user.
-     * @param object The object contained in the array.
-     */
-    const getNumericAttributes = (object: Array<ListItemRepresentation>) => {
-        console.log(props.arrayObjects)
-        const numericAttributes: Array<ListItemRepresentation> = []
-        for(let index = 0; index < object.length; ++index) {
-            //console.log("checking: " + object[index].keyName);
-            if(object[index].value==="Zahl") numericAttributes.push(object[index]);
-        }
-        return numericAttributes;
-    }
 
-    /**
-     * Used for arrays that contain objects. Returns all attributes that are strings/text to present them as a choice to the user.
-     * @param object The object contained in the array.
-     */
-    const getStringAttributes = (object: Array<ListItemRepresentation>) => {
-        const stringAttributes: Array<ListItemRepresentation> = []
-        for(let index = 0; index < object.length; ++index) {
-            //console.log("checking: " + object[index].keyName);
-            if(object[index].value==="Text") stringAttributes.push(object[index]);
-        }
-        return stringAttributes;
-    }
 
 
     /**
@@ -403,7 +369,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary"  onClick={props.continueHandler}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary"  onClick={() => {sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId); props.continueHandler();}}>
                         weiter
                     </Button>
                 </Grid>
