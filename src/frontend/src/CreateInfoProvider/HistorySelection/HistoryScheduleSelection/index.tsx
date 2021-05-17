@@ -15,6 +15,8 @@ import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { useStyles } from "../../style";
+import FormControl from "@material-ui/core/FormControl";
+import {InputLabel} from "@material-ui/core";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
@@ -121,21 +123,23 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                 } label="Intervall"
                 />
                 <Collapse in={props.schedule.type === "interval"}>
-                    <FormControlLabel control={
-                        <Select value={props.schedule.interval === "" ? "halfday" : props.schedule.interval} onChange={setInterval}>
-                            <MenuItem value={"minute"}>Jede Minute</MenuItem>
-                            <MenuItem value={"quarter"}>Alle 15 Minuten</MenuItem>
-                            <MenuItem value={"half"}>Alle 30 Minuten</MenuItem>
-                            <MenuItem value={"threequarter"}>Alle 45 Minuten</MenuItem>
-                            <MenuItem value={"hour"}>Alle 60 Minuten</MenuItem>
-                            <MenuItem value={"quartday"}>Alle 6 Stunden</MenuItem>
-                            <MenuItem value={"halfday"}>Alle 12 Stunden</MenuItem>
-                        </Select>
-                    } label={"Intervallwahl"}
-                    />
+                    <Grid item xs={12} className={classes.elementSmallMargin}>
+                        <FormControl>
+                            <InputLabel id="demo-simple-select-label">Intervallwahl</InputLabel>
+                            <Select value={props.schedule.interval === "" ? "halfday" : props.schedule.interval} onChange={setInterval}>
+                                <MenuItem value={"minute"}>Jede Minute</MenuItem>
+                                <MenuItem value={"quarter"}>Alle 15 Minuten</MenuItem>
+                                <MenuItem value={"half"}>Alle 30 Minuten</MenuItem>
+                                <MenuItem value={"threequarter"}>Alle 45 Minuten</MenuItem>
+                                <MenuItem value={"hour"}>Alle 60 Minuten</MenuItem>
+                                <MenuItem value={"quartday"}>Alle 6 Stunden</MenuItem>
+                                <MenuItem value={"halfday"}>Alle 12 Stunden</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
                 </Collapse>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.elementSmallMargin}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils} locale={de}>
                     <KeyboardTimePicker
                         ampm={false}
@@ -150,13 +154,13 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                 </MuiPickersUtilsProvider>
             </Grid>
             <Collapse in={props.schedule.type === "interval"}>
-                <Grid item xs={12}>
+                <Grid item xs={12} className={classes.elementSmallMargin}>
                     <Typography variant="body2">
                         Bei der Historisierung in Intervallen wird automatisch die aktuellste Zeit gewählt.
                     </Typography>
                 </Grid>
             </Collapse>
-            <Grid item container xs={12} justify="space-between">
+            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.handleBack}>
                         zurück

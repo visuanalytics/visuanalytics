@@ -1,5 +1,5 @@
 import React from "react";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@material-ui/core";
 import { Schedule } from "../..";
 
 interface ScheduleTypeTableProps {
@@ -24,10 +24,11 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
                 return "This should never happen."
         }
     }
+
     const getWeekdayString = (weekdayNumber: number) => {
         switch (weekdayNumber) {
             case 0:
-                return "mo";
+                return "Mo";
             case 1:
                 return "Di";
             case 2:
@@ -82,12 +83,7 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
     return(
         <TableContainer component={Paper}>
             <Table aria-label="Historisierungszeiten">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Attribut</TableCell>
-                        <TableCell>Wert</TableCell>
-                    </TableRow>
-                </TableHead>
+
                 <TableBody>
                     {generateTableRows().map((row) => (
                         <TableRow key={row.attribute}>

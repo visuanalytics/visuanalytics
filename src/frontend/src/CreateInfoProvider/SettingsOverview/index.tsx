@@ -67,7 +67,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
                             <List disablePadding={true}>
                                 {props.historizedData.map((item: string) => renderListItem(item))}
                             </List>

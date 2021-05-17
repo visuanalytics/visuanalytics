@@ -53,7 +53,7 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
     // TODO possibily switch to toggle buttons for better accessibility, but current solution is working too.
     const renderWeekday = (weekday: Weekday) => {
         return (
-            <Button key={getDayIndex(weekday)} variant="contained" size="small" className={props.days?.includes(weekday) ? classes.weekdaySelected : classes.weekday} onClick={() => props.toggleSelectedDay(weekday)} aria-label={props.days?.includes(weekday) ? getWeekdayLabel(weekday) + " ausgewählt" : getWeekdayLabel(weekday) + " nicht ausgewählt"}>
+            <Button color="primary" key={getDayIndex(weekday)} variant="contained" size="small" className={props.days?.includes(weekday) ? classes.weekdaySelected : ""} onClick={() => props.toggleSelectedDay(weekday)} aria-label={props.days?.includes(weekday) ? getWeekdayLabel(weekday) + " ausgewählt" : getWeekdayLabel(weekday) + " nicht ausgewählt"}>
                 {getWeekdayLabel(weekday)}
             </Button>
         )
@@ -62,8 +62,8 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
     //TODO: Create a container that holds all the buttons
     //const components = React.useContext(ComponentContext);
     return (
-        <div>
+        <React.Fragment>
             {weekdays.map(renderWeekday)}
-        </div>
+        </React.Fragment>
     )
 };

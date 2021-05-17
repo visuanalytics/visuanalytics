@@ -15,6 +15,8 @@ interface HistorySelectionProps {
     setHistorizedData: (array: Array<string>) => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
+    historySelectionStep: number;
+    setHistorySelectionStep: (step: number) => void;
 }
 
 /**
@@ -22,30 +24,28 @@ interface HistorySelectionProps {
  * The state of this component handles the input made to its children.
  */
 export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
-    //represents the current step: 1 is data selection, 2 is time selection
-    const [step, setStep] = React.useState(1);
 
     /**
      * Handles clicks on the proceed button in the data selection
      */
     const handleDataProceed = () => {
-        setStep(2);
+        props.setHistorySelectionStep(2);
     }
 
     /**
      * Handles clicks on the back button in time selection
      */
     const handleScheduleBack = () => {
-        setStep(1);
+        props.setHistorySelectionStep(1);
     }
 
 
     //const components = React.useContext(ComponentContext);
     /**
-     * Renders content based on the current step
+     * Renders content based on the current historySelectionStep
      */
     const getContent = () => {
-        switch (step) {
+        switch (props.historySelectionStep) {
             case 1:
                 return (
                     <HistoryDataSelection

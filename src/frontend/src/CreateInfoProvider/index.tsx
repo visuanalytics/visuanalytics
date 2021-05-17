@@ -81,7 +81,9 @@ export const CreateInfoProvider = () => {
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
-    const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: "halfday", time: "", weekdays: []});
+    const [schedule, setSchedule] = useState<Schedule>({type: "weekly", interval: "halfday", time: "", weekdays: []});
+    //represents the current historySelectionStep: 1 is data selection, 2 is time selection
+    const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -106,6 +108,10 @@ export const CreateInfoProvider = () => {
         setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
         setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
+        //schedule
+        setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "weekly", interval: "halfday", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+        //historySelectionStep
+        setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -143,6 +149,14 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(historizedData));
     }, [historizedData])
+    //store schedule in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
+    }, [schedule])
+    //store historySelectionStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
+    }, [historySelectionStep])
 
 
     /**
@@ -325,7 +339,9 @@ export const CreateInfoProvider = () => {
                         historizedData={historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={schedule}
-                        selectSchedule={selectSchedule}
+                        selectSchedule={setSchedule}
+                        historySelectionStep={historySelectionStep}
+                        setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
                     />
                 )
             case 5:
