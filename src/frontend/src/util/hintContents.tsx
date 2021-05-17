@@ -113,6 +113,9 @@ export const hintContents = {
             <Typography gutterBottom>
                 Auf dieser Seite können Sie mit den ausgewählten Daten eigene Formeln und Variablen erstellen!
             </Typography>
+            <Typography>
+                Tipp: Es werden nur die Werte zur Auswahl angezeigt, die eine Zahl beinhalten!
+            </Typography>
         </div>
     ),
     typeSelection: (

@@ -1,5 +1,4 @@
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import HomeIcon from "@material-ui/icons/Home";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,16 +15,18 @@ export const useStyles = makeStyles((theme: Theme) =>
             overflow: 'auto',
             overflowX: "hidden",
             marginTop: "20px",
-            marginBottom: "10px"
+            marginBottom: "10px",
+            color: theme.palette.primary.main
         },
         infoProvBorder: {
-            width: "50%",
-            height: 28,
-            overflow: 'auto',
-            overflowX: "hidden",
-            marginTop: "20px",
-            marginBottom: "10px",
-            borderColor: theme.palette.secondary.main
+            width: "60%",
+            height: 50,
+            borderColor: theme.palette.primary.dark,
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
         },
         tab: {
             width: "80%",
@@ -40,8 +41,20 @@ export const useStyles = makeStyles((theme: Theme) =>
                 height: 5
             }
         },
-        test: {
-            height: 75
+        tabs: {
+           height: 75
+        },
+        settings: {
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000"
+        },
+        delete: {
+            backgroundColor: theme.palette.error.main,
+            color: "#FFFFFF",
+            marginLeft: 20
+        },
+        infoProvName: {
+            margin: "auto"
         }
     }),
 );

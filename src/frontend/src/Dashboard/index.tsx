@@ -1,11 +1,6 @@
-import React, {ReactElement, useState} from "react";
+import React from "react";
 import {
-    AppBar, Box, Grid, IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText, Tab, Tabs,
-    Typography,
+    AppBar, Grid, Tab, Tabs
 } from "@material-ui/core";
 import {useStyles} from "./style";
 import {
@@ -49,16 +44,16 @@ export const DashboardTabs = () =>  {
                 <AppBar position="static" className={classes.tab}>
                     <Tabs centered variant={'fullWidth'} value={value} onChange={handleChange}
                           aria-label="simple tabs example"
-                          className={classes.test} >
-                        <Tab icon={<AirplayRounded/>} label="Info-Provider" className={classes.test}/>
-                        <Tab icon={<CropOriginalRounded/>} label="Szenen" className={classes.test}/>
-                        <Tab icon={<OndemandVideoRounded/>} label="Videos" className={classes.test}/>
+                          className={classes.tabs} >
+                        <Tab icon={<AirplayRounded/>} label="Info-Provider" className={classes.tabs}/>
+                        <Tab icon={<CropOriginalRounded/>} label="Szenen" className={classes.tabs}/>
+                        <Tab icon={<OndemandVideoRounded/>} label="Videos" className={classes.tabs}/>
                     </Tabs>
                 </AppBar>
             </Grid>
             <Grid item xs={12}>
                 <TabContent value={value} index={0}>
-                    <InfoProviderOverview test={'Info-Provider'}/>
+                    <InfoProviderOverview/>
                 </TabContent>
             </Grid>
             <Grid item xs={12}>
