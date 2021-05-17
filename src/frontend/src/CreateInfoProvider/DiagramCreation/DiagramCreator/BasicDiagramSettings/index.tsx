@@ -1,7 +1,7 @@
 import React from "react";
-import { useStyles } from "../style";
+import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
-import {ListItemRepresentation, diagramType} from "../../index";
+import {ListItemRepresentation, diagramType} from "../../../index";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
 
 interface BasicDiagramSettingsProps {
     arrayObjects?: Array<ArrayDiagramProperties>;
@@ -115,7 +115,7 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     </Typography>
                 </Grid>
                 <Grid item xs={3}>
-                    <TextField type="number" variant="outlined"  margin="normal" label="Anzahl"  inputProps={{ min: 1}} value={props.amount} onChange={amountHandler}/>
+                    <TextField type="number" variant="outlined"  margin="normal" label="Anzahl"  inputProps={{ min: 1, max: 50}} value={props.amount} onChange={amountHandler}/>
                 </Grid>
                 {props.arrayObjects!==undefined&&
                     <Grid item xs={6}>

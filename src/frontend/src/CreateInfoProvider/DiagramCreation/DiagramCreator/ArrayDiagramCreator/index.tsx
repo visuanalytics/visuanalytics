@@ -1,8 +1,8 @@
 import React from "react";
-import { useStyles } from "../style";
+import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, uniqueId} from "../../index";
+import {ListItemRepresentation, diagramType, uniqueId} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -10,9 +10,9 @@ import FormControl from "@material-ui/core/FormControl";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import {BasicDiagramSettings} from "../BasicDiagramSettings";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {useCallFetch} from "../../../../Hooks/useCallFetch";
 import {CustomLabels} from "../CustomLabels";
-import {ArrayDiagramProperties} from "../index";
+import {ArrayDiagramProperties} from "../../index";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -26,6 +26,7 @@ interface ArrayDiagramCreatorProps {
     changeObjectInArrayObjects: (object: ArrayDiagramProperties, ordinal: number) => void;
     diagramType: diagramType;
     setDiagramType: (type: diagramType) => void;
+    setDiagramName: (name: string) => void;
     amount: number;
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
@@ -41,7 +42,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     const [selectedArrayOrdinal, setSelectedArrayOrdinal] = React.useState<number>(0);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
-
+    //boolean flag used for opening and closing the cancel dialog
+    const [cancelOpen, setCancelOpen] = React.useState(false);
 
     /**
      * Restore the selected ordinal from sessionStorage to not loose it on reload.
@@ -54,6 +56,23 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     React.useEffect(() => {
         sessionStorage.setItem("selectedArrayOrdinal-" + uniqueId, selectedArrayOrdinal.toString());
     }, [selectedArrayOrdinal])
+
+    /**
+     * Handler method for the back button.
+     * Resets the settings and clears things from sessionStorage to avoid further problems.
+     */
+    const backHandler = () => {
+        props.setAmount(1);
+        props.setArrayObjects([]);
+        props.setDiagramType("verticalBarChart");
+        props.setDiagramName("");
+        sessionStorage.removeItem("amount-" + uniqueId);
+        sessionStorage.removeItem("arrayObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramType-" + uniqueId);
+        sessionStorage.removeItem("diagramName-" + uniqueId);
+        props.backHandler();
+    }
+
 
     /**
      * Checks if proceeding is possible and returns true if this is the case.
@@ -364,7 +383,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                    <Button variant="contained" size="large" color="primary" onClick={() => setCancelOpen(true)}>
                         zurück
                     </Button>
                 </Grid>
@@ -386,6 +405,30 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                         <Button variant="contained" onClick={() => setPreviewOpen(false)}>
                             schließen
                         </Button>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+            <Dialog onClose={() => setCancelOpen(false)} aria-labelledby="deleteDialog-title" open={cancelOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Zurück zur Datenauswahl?
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Alle bisherigen Einstellungen gehen dabei verloren.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained" onClick={() => setCancelOpen(false)}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" onClick={backHandler} className={classes.redDeleteButton}>
+                                zurück
+                            </Button>
+                        </Grid>
                     </Grid>
                 </DialogActions>
             </Dialog>

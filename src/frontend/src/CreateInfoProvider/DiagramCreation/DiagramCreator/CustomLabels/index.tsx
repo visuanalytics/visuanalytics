@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../style";
+import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
 
 interface CustomLabelsProps {
     amount: number;

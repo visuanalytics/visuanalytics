@@ -4,8 +4,8 @@ import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
-import {ArrayDiagramCreator} from "./ArrayDiagramCreator";
-import {HistorizedDiagramCreator} from "./HistorizedDiagramCreator";
+import {ArrayDiagramCreator} from "./DiagramCreator/ArrayDiagramCreator";
+import {HistorizedDiagramCreator} from "./DiagramCreator/HistorizedDiagramCreator";
 import Grid from "@material-ui/core/Grid";
 import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -30,14 +30,15 @@ task 9: for historized data: choosing options for y/values: currentDate - n * in
 task 10: for historized data: choose names for the axis,
 task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
 task 12: formula support (formula will only contain numbers), add functionality for date/timestamp as names on historized
-NOT DONE:
 task 13: sessionStorage compatibility
-task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
+NOT DONE:
+task 14: rearrange structure
+task 12: data format for backend and preview functionality
 
 task 14: pass diagrams to wrapper
-task 15: rearrange structure
+
 task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
-task 19:: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
+task 19: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
 task 20: edit feature
 preview in overview?
  */
@@ -119,9 +120,13 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         //diagramSource
         setDiagramSource(sessionStorage.getItem("diagramSource-" + uniqueId)||"");
         //arrayObjects
-        setArrayObjects(JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)||"{}"));
+       // setArrayObjects(JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)||"{}"));
+        setArrayObjects(sessionStorage.getItem("arrayObjects-" + uniqueId)===null?new Array<ArrayDiagramProperties>():JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)!));
+
         //historizedObjects
-        setHistorizedObjects(JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)||"{}"));
+        //setHistorizedObjects(JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)||"{}"));
+        setHistorizedObjects(sessionStorage.getItem("historizedObjects-" + uniqueId)===null?new Array<HistorizedDiagramProperties>():JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)!));
+
         //diagramName
         setDiagramName(sessionStorage.getItem("diagramName-" + uniqueId)||"");
         //diagramType
@@ -407,6 +412,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         changeObjectInArrayObjects={changeObjectInArrayObjects}
                         diagramType={diagramType}
                         setDiagramType={(type: diagramType) => setDiagramType(type)}
+                        setDiagramName={(name: string) => setDiagramName(name)}
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
@@ -422,6 +428,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         changeObjectInHistorizedObjects={changeObjectInHistorizedObjects}
                         diagramType={diagramType}
                         setDiagramType={(type: diagramType) => setDiagramType(type)}
+                        setDiagramName={(name: string) => setDiagramName(name)}
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
