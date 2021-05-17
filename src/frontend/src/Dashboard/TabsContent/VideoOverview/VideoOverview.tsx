@@ -1,8 +1,8 @@
 import React from "react";
-import {StepFrame} from "../../CreateInfoProvider/StepFrame";
-import {hintContents} from "../../util/hintContents";
+import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
+import {hintContents} from "../../../util/hintContents";
 import {Grid} from "@material-ui/core";
-import {useStyles} from "../style";
+import {useStyles} from "../../style";
 
 interface VideoOverviewProps {
     test: string;

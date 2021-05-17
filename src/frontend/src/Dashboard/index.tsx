@@ -7,8 +7,8 @@ import {
     AirplayRounded, CropOriginalRounded, OndemandVideoRounded
 } from "@material-ui/icons";
 import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/infoProviderOverview";
-import {SceneOverview} from "./TabsContent/SceneOverview"
-import {VideoOverview} from "./TabsContent/VideoOverview"
+import {SceneOverview} from "./TabsContent/SceneOverview/SceneOverview"
+import {VideoOverview} from "./TabsContent/VideoOverview/VideoOverview"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -16,6 +16,9 @@ interface TabPanelProps {
     value: any;
 }
 
+/**
+ * Component to render the content in one tab. Value and index is used to switch correct between all tabs.
+ */
 export const TabContent = (props: TabPanelProps) => {
     const {children, value, index} = props;
 
@@ -30,6 +33,10 @@ export const TabContent = (props: TabPanelProps) => {
     );
 }
 
+/**
+ * Renders the tabs shown in the dashboard. Main elements are the AppBar that ist holding the tabs,
+ * the tabs itself and the icons and content shown in one tab
+ */
 export const DashboardTabs = () =>  {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
@@ -70,6 +77,9 @@ export const DashboardTabs = () =>  {
     );
 }
 
+/**
+ * Used to put all together and renders dashboard within the other components.
+ */
 export const Dashboard = () => {
     const classes = useStyles();
 
