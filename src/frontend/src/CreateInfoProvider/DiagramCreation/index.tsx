@@ -11,6 +11,7 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
+import { formelObj } from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 
 
@@ -69,6 +70,7 @@ interface DiagramCreationProps {
     backHandler: () => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
+    customData: Array<formelObj>
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     selectedData: Array<SelectedDataItem>;
@@ -92,16 +94,10 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [compatibleArrays, setCompatibleArrays] = React.useState<Array<ListItemRepresentation>>([]);
     //holds the strings of all historized data compatible with diagrams
     const [compatibleHistorized, setCompatibleHistorized] = React.useState<Array<string>>([]);
-
-
-
-
     //holds all array object representations currently used for a diagram
     const [arrayObjects, setArrayObjects] = React.useState<Array<ArrayDiagramProperties>>([]);
     //holds all historized data object representations currently used for a diagram
     const [historizedObjects, setHistorizedObjects] = React.useState<Array<HistorizedDiagramProperties>>([]);
-
-
     //holds the name for the currently created diagram
     const [diagramName, setDiagramName] = React.useState<string>("");
     //holds the currently selected diagram type
@@ -199,6 +195,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         historizedData.forEach((item) => {
             props.selectedData.forEach((data) => {
                 if(data.key===item&&data.type==="Zahl") compatibleHistorized.push(item)
+            })
+            props.customData.forEach((data) => {
+                if(data.formelName===item) compatibleHistorized.push(item)
             })
         })
         return compatibleHistorized;

@@ -391,6 +391,7 @@ export const CreateInfoProvider = () => {
                         backHandler={handleBack}
                         listItems={listItems}
                         historizedData={historizedData}
+                        customData={customData}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         selectedData={selectedData}
