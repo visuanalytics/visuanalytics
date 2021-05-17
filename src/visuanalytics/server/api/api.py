@@ -214,27 +214,27 @@ def update_infoprovider(infoprovider_id):
     """
     updated_data = request.json
     try:
-        if "infoprovider_name" not in infoprovider:
+        if "infoprovider_name" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
 
-        if "api" not in infoprovider:
+        if "api" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'api'"})
             return err, 400
 
-        if "transform" not in infoprovider:
+        if "transform" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
             return err, 400
 
-        if "storing" not in infoprovider:
+        if "storing" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
             return err, 400
 
-        if "schedule" not in infoprovider:
+        if "schedule" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
             return err, 400
 
-        if "formulas" not in infoprovider:
+        if "formulas" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
             return err, 400
 
@@ -278,8 +278,13 @@ def delete_infoprovider(infoprovider_id):
     :param infoprovider_id: ID des Infoproviders.
     """
     try:
-        return flask.jsonify({"status": "successful"}) if queries.delete_infoprovider(infoprovider_id) else \
-            flask.jsonify({"err_msg": f"Infoprovider with ID {infoprovider_id} could not be removed"})
+        if not queries.delete_infoprovider(infoprovider_id):
+            err = flask.jsonify({"err_msg": f"Infoprovider with ID {infoprovider_id} could not be removed"})
+            return err, 400
+
+        suc = flask.jsonify({"status": "successful"})
+        return suc, 200
+
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
