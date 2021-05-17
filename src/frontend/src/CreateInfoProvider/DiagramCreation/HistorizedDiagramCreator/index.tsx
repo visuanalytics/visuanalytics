@@ -57,8 +57,12 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     const checkProceed = () => {
         for (let i = 0; i < props.historizedObjects.length; i++) {
             const item = props.historizedObjects[i];
-            for (let j = 0; j < item.labelArray.length; j++) {
-                if(item.labelArray[j]==="") return false;
+            if(item.dateLabels) {
+                if(item.dateFormat==="") return false;
+            } else {
+                for (let j = 0; j < item.labelArray.length; j++) {
+                    if(item.labelArray[j]==="") return false;
+                }
             }
         }
         return true;
@@ -162,6 +166,36 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         }
         props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
     }
+
+
+    /**
+     * Toggles the dateLabel property for the current historized data.
+     */
+    const toggleDateLabels = () => {
+        let objCopy = {
+            ...props.historizedObjects[selectedHistorizedOrdinal],
+            dateLabels: !(props.historizedObjects[selectedHistorizedOrdinal].dateLabels)
+        }
+        //console.log(event.target.value);
+        props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
+    }
+
+    /**
+     * Handler for changing the date format used for displaying date labels.
+     * @param e The change event holding the new format
+     */
+    const dateFormatChangeHandler = (event: React.ChangeEvent<{value: unknown}>) => {
+        if(event.target.value!==undefined) {
+            let objCopy = {
+                ...props.historizedObjects[selectedHistorizedOrdinal],
+                dateFormat: event.target.value as string
+            }
+            //console.log(event.target.value);
+            props.changeObjectInHistorizedObjects(objCopy, selectedHistorizedOrdinal);
+        }
+
+    }
+
 
     /**
      * Uses the schedule object passed as property to check what interval was selected for the corresponding values and returns a displaying string.
@@ -298,12 +332,35 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Box>
                 </Grid>
                 <Grid item container xs={6}>
-                    <CustomLabels
-                        amount={props.amount}
-                        historizedObjects={props.historizedObjects}
-                        selectedHistorizedOrdinal={selectedHistorizedOrdinal}
-                        changeObjectInHistorizedObjects={props.changeObjectInHistorizedObjects}
-                    />
+                    {props.historizedObjects[selectedHistorizedOrdinal].dateLabels?
+                        (<Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Zu jedem Datenwert wird das Datum angezeigt, an dem er gespeichert wurde.<br/>Bitte wählen sie das Anzeigeformat:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth variant="outlined" className={classes.elementLargeMargin}>
+                                    <Select
+                                        value={props.historizedObjects[selectedHistorizedOrdinal].dateFormat}
+                                        onChange={dateFormatChangeHandler}
+                                    >
+                                        <MenuItem value={"dd.mm.yyyy"}>Tag.Monat.Jahr (tt:mm:jjjj)</MenuItem>
+                                        <MenuItem value={"dd.mm"}>Tag.Monat (tt.mm)</MenuItem>
+                                        <MenuItem value={"dd"}>Tag (tt)</MenuItem>
+                                        <MenuItem value={"hh:mm"}>Stunde:Minute (ss:mm) Uhr</MenuItem>
+                                        <MenuItem value={"hh"}>Stunde (ss) Uhr</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Box>):
+                        (<CustomLabels
+                            amount={props.amount}
+                            historizedObjects={props.historizedObjects}
+                            selectedHistorizedOrdinal={selectedHistorizedOrdinal}
+                            changeObjectInHistorizedObjects={props.changeObjectInHistorizedObjects}
+                        />)
+                    }
                 </Grid>
             </Grid>
         )
@@ -348,6 +405,11 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 <Grid item>
                     <Button variant="contained" size="large" color="secondary" onClick={() => previewHandler()}>
                         Vorschau generieren
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button variant="contained" size="large" color="primary" onClick={() => toggleDateLabels()}>
+                        {props.historizedObjects[selectedHistorizedOrdinal].dateLabels?"eigene Beschriftungen":"Datum-Beschriftungen"}
                     </Button>
                 </Grid>
             </Grid>

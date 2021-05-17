@@ -82,6 +82,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                     labelArray: new Array(1).fill(""),
                     color: "#000000",
                     intervalSizes: new Array(1).fill(0),
+                    dateLabels: false,
+                    dateFormat: "dd.mm.yyyy"
                 }
                 historizedObjects.push(historizedObject);
         })

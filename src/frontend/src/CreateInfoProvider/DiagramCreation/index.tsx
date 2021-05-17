@@ -29,6 +29,7 @@ task 5: choose the array (filter all arrays from apiData) - can only contain num
 task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 10: for historized data: choose names for the axis,
 task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
+others: formula support needs to be cleared
 NOT DONE:
 task 12: test button for sending the diagram data to the backend to generate a preview (with random data?)
 task 13: sessionStorage compatibility
@@ -36,7 +37,7 @@ task 14: pass diagrams to wrapper
 task 15: rearrange structure
 task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
 styles: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
-others: formula support needs to be cleared, add functionality for date/timestamp as names on historized
+, add functionality for date/timestamp as names on historized
 more: edit feature? preview in overview?
  */
 
@@ -62,6 +63,8 @@ export type HistorizedDiagramProperties = {
     labelArray: Array<string>;
     color: string;
     intervalSizes: Array<number>;
+    dateLabels: boolean;
+    dateFormat: string;
 }
 
 
