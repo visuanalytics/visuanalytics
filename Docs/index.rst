@@ -16,8 +16,6 @@ VisuAnalytics Dokumentation
    :caption: Dokumentation
 
    usage/verwendung
-   reports/Statusberichte
-   mainreport/Projektbericht
-   documentation/Dokumentation
+   documentation/dokumentation
    documentation/technische_dokumentation
 
