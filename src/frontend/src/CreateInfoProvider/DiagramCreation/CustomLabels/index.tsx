@@ -59,6 +59,7 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
                         <ListItemText
                             primary={"Wert " + (ordinal + 1) + ":"}
                             secondary={null}
+
                         />
                     </Grid>
                     <Grid item xs={8}>

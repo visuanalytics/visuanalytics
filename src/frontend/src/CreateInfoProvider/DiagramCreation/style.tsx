@@ -40,6 +40,9 @@ export const useStyles = makeStyles((theme: Theme) =>
             '&:hover': {
                 backgroundColor: theme.palette.error.dark,
             },
+        },
+        centeredText: {
+            marginTop: "43%",
 
         }
     })

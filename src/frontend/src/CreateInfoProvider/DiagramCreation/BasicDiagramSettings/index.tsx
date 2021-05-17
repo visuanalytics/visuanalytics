@@ -89,7 +89,7 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     Bitte wählen sie aus den zu erstellenden Diagrammtyp:
                 </Typography>
             </Grid>
-            <Grid item container xs={12} justify="space-between">
+            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item xs={7}>
                     <FormControl fullWidth variant="outlined">
                         <Select
@@ -108,9 +108,9 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     {diagramIconSelector()}
                 </Grid>
             </Grid>
-            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"space-between":"flex-start"}>
+            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"space-between":"flex-start"} className={classes.elementLargeMargin}>
                 <Grid item xs={3}>
-                    <Typography>
+                    <Typography variant="body1">
                         Anzahl der Elemente:
                     </Typography>
                 </Grid>

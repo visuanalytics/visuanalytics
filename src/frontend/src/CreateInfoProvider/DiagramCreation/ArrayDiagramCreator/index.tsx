@@ -16,6 +16,7 @@ import {ArrayDiagramProperties} from "../index";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 interface ArrayDiagramCreatorProps {
     continueHandler: () => void;
@@ -40,6 +41,9 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     const [customLabels, setCustomLabels] = React.useState(false);
     //holds the currently selected arrayObject
     const [selectedArrayOrdinal, setSelectedArrayOrdinal] = React.useState<number>(0);
+    //boolean flag used for opening and closing the preview dialog
+    const [previewOpen, setPreviewOpen] = React.useState(false);
+
 
     //when loading for the first time, calculate the attributes for all arrays selected
     //this prevents unecessary calculations since there will be no change within one load
@@ -111,6 +115,14 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             })
         }, handleSuccess, handleError
     );
+
+    /**
+     * Handler for clicking the preview button
+     */
+    const previewHandler = () => {
+        setPreviewOpen(true);
+        getTestImage();
+    }
 
 
     /**
@@ -256,7 +268,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         if(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)) {
             //selections for arrays containing objects
             return (
-                <Grid item container xs={12}>
+                <Grid item container xs={12} className={classes.elementLargeMargin}>
                     <Grid item xs={6}>
                         <Typography variant="body1">
                             Bitte wählen sie das Zahl-Attribut zur Darstellung im Diagramm:
@@ -342,7 +354,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 amount={props.amount}
                 setAmount={props.setAmount}
             />
-            <Grid item xs={8}>
+            <Grid item xs={8} className={classes.elementLargeMargin}>
                 <FormControl fullWidth variant="outlined">
                     <Select
                         //value={props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName===""?props.arrayObjects[selectedArrayOrdinal].listItem.keyName:props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName + "|" + props.arrayObjects[selectedArrayOrdinal].listItem.keyName}
@@ -353,7 +365,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} className={classes.elementLargeMargin}>
                 <input
                     type="color"
                     value={props.arrayObjects[selectedArrayOrdinal].color}
@@ -363,7 +375,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
                 <Grid item>
-                    <Button variant="contained" size="large" color="secondary" onClick={() => getTestImage()}>
+                    <Button variant="contained" size="large" color="secondary" onClick={() => previewHandler()}>
                         Vorschau generieren
                     </Button>
                 </Grid>
@@ -384,7 +396,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                         )
                     }
             </Grid>
-            <Grid item container xs={12} justify="space-between">
+            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                         zurück
@@ -396,6 +408,21 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Button>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Vorschau des generierten Diagramm
+                </DialogTitle>
+                <DialogContent dividers>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                </DialogContent>
+                <DialogActions>
+                    <Grid item>
+                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                            schließen
+                        </Button>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </Grid>
     )
 };

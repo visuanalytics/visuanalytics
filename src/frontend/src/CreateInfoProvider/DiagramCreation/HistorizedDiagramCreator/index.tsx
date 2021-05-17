@@ -20,6 +20,7 @@ import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 
 interface HistorizedDiagramCreatorProps {
@@ -44,6 +45,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
     //holds the currently selected arrayObject
     const [selectedHistorizedOrdinal, setSelectedHistorizedOrdinal] = React.useState<number>(0);
+    //boolean flag used for opening and closing the preview dialog
+    const [previewOpen, setPreviewOpen] = React.useState(false);
 
 
 
@@ -93,10 +96,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     );
 
 
-
-
-
-
+    /**
+     * Handler for clicking the preview button
+     */
+    const previewHandler = () => {
+        setPreviewOpen(true);
+        getTestImage();
+    }
 
     /**
      * Handler method for a change in the color input element.
@@ -273,7 +279,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      */
     const renderSelections = () => {
         return (
-            <Grid item container xs={12}>
+            <Grid item container xs={12} className={classes.elementLargeMargin}>
                 <Grid item xs={6}>
                     <Typography variant="body1">
                         Bitte wählen sie für alle Werte die Zeitpunkte:
@@ -314,7 +320,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 amount={props.amount}
                 setAmount={props.setAmount}
             />
-            <Grid item xs={8}>
+            <Grid item xs={8} className={classes.elementLargeMargin}>
                 <FormControl fullWidth variant="outlined">
                     <Select
                         //value={props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName===""?props.arrayObjects[selectedArrayOrdinal].listItem.keyName:props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName + "|" + props.arrayObjects[selectedArrayOrdinal].listItem.keyName}
@@ -325,14 +331,14 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} className={classes.elementLargeMargin}>
                 <input
                     type="color"
                     value={props.historizedObjects[selectedHistorizedOrdinal].color}
                     onChange={colorChangeHandler}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.elementLargeMargin}>
                 <Typography>
                     Dieser Wert verwendet eine Intervallgröße von: {getIntervalDisplay()}
                 </Typography>
@@ -340,12 +346,12 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
                 <Grid item>
-                    <Button variant="contained" size="large" color="secondary" onClick={() => getTestImage()}>
+                    <Button variant="contained" size="large" color="secondary" onClick={() => previewHandler()}>
                         Vorschau generieren
                     </Button>
                 </Grid>
             </Grid>
-            <Grid item container xs={12} justify="space-between">
+            <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                         zurück
@@ -357,6 +363,21 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Button>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Vorschau des generierten Diagramm
+                </DialogTitle>
+                <DialogContent dividers>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                </DialogContent>
+                <DialogActions>
+                    <Grid item>
+                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                            schließen
+                        </Button>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </Grid>
     )
 };
