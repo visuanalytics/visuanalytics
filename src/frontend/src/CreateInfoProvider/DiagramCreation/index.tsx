@@ -120,13 +120,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         //diagramSource
         setDiagramSource(sessionStorage.getItem("diagramSource-" + uniqueId)||"");
         //arrayObjects
-       // setArrayObjects(JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)||"{}"));
         setArrayObjects(sessionStorage.getItem("arrayObjects-" + uniqueId)===null?new Array<ArrayDiagramProperties>():JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)!));
-
         //historizedObjects
-        //setHistorizedObjects(JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)||"{}"));
         setHistorizedObjects(sessionStorage.getItem("historizedObjects-" + uniqueId)===null?new Array<HistorizedDiagramProperties>():JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)!));
-
         //diagramName
         setDiagramName(sessionStorage.getItem("diagramName-" + uniqueId)||"");
         //diagramType
@@ -174,6 +170,11 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("diagramName-" + uniqueId);
         sessionStorage.removeItem("diagramType-" + uniqueId);
         sessionStorage.removeItem("amount-" + uniqueId);
+        sessionStorage.removeItem("selectedArrays-" + uniqueId);
+        sessionStorage.removeItem("selectedHistorized-" + uniqueId);
+        sessionStorage.removeItem("selectedType-" + uniqueId);
+        sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId);
+        sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
     /**

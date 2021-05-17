@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Collapse from "@material-ui/core/Collapse";
-import {ListItemRepresentation} from "../../index";
+import {ListItemRepresentation, uniqueId} from "../../index";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControl from "@material-ui/core/FormControl";
 import Box from "@material-ui/core/Box";
@@ -38,6 +38,40 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     //holds the historized data selected for the current diagram
     const [selectedHistorized, setSelectedHistorized] = React.useState<Array<string>>([]);
 
+
+    /**
+     * Restore the selected ordinal from sessionStorage to not loose it on reload.
+     */
+    React.useEffect(() => {
+        //selectedType
+        setSelectedType(sessionStorage.getItem("selectedType-" + uniqueId)||"");
+        //selectedArrays
+        setSelectedArrays(sessionStorage.getItem("selectedArrays-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("selectedArrays-" + uniqueId)!));
+        //selectedHistorized
+        setSelectedHistorized(sessionStorage.getItem("selectedHistorized-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("selectedHistorized-" + uniqueId)!));
+    }, [])
+    //store selectedType in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedType-" + uniqueId, selectedType);
+    }, [selectedType])
+    //store selectedArrays in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedArrays-" + uniqueId, JSON.stringify(selectedArrays));
+    }, [selectedArrays])
+    //store selectedHistorized in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedHistorized-" + uniqueId, JSON.stringify(selectedHistorized));
+    }, [selectedHistorized])
+
+    /**
+     * Handler method for back button. Clears the selection out of sessionStorage and goes back to overview.
+     */
+    const handleBack = () => {
+        sessionStorage.removeItem("selectedArrays-" + uniqueId);
+        sessionStorage.removeItem("selectedHistorized-" + uniqueId);
+        sessionStorage.removeItem("selectedType-" + uniqueId);
+        props.backHandler();
+    }
 
     /**
      * Used for arrays that contain objects. Returns all attributes that are numeric to present them as a choice to the user.
@@ -322,7 +356,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
 
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                    <Button variant="contained" size="large" color="primary" onClick={handleBack}>
                         zurück
                     </Button>
                 </Grid>

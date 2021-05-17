@@ -55,7 +55,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      * Restore the selected ordinal from sessionStorage to not loose it on reload.
      */
     React.useEffect(() => {
-        //diagramStep
+        //selectedHistorizedOrdinal
         setSelectedHistorizedOrdinal(Number(sessionStorage.getItem("selectedHistorizedOrdinal-" + uniqueId) || 0));
     }, [])
     //store selectedArrayOrdinal in sessionStorage
