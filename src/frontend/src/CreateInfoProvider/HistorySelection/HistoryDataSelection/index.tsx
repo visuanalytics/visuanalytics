@@ -24,8 +24,8 @@ interface HistoryDataSelectionProps {
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * This component displays the available data for historisation and makes it selectable for the user.
+ * @param props The passed properties from the parent
  */
 export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props) => {
     const classes = useStyles();

@@ -25,9 +25,10 @@ interface HistoryScheduleSelectionProps {
     selectSchedule: (schedule: Schedule) => void;
 };
 
+
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * This component holds the second step of step four in the creation of an Infoprovider (Teim selection for historisation)
+ * @param props The passed properties from the parent
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
 
@@ -37,6 +38,12 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
 
+    /**
+     * Converts a time of type Date to a readable String
+     * This String is needed for the schedule object.
+     * The String has the format hh:mm
+     * @param time The time that should be converted to a String. If the time should be null, an empty String is returned.
+     */
     const setScheduleTime = (time: MaterialUiPickersDate) => {
         if(time!=null) {
             const hours = time.getHours()>9?time.getHours().toString():"0" + time.getHours();
@@ -47,38 +54,67 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     }
 
     /**
-     * Method that toggles the boolean values for selected weekdays, should be called whenever the user selects or unselects.
-     * @param dayNumber Numeric representation of the weekday that should be toggled on/off.
+     * This Method adds a weekday to the weekday-Array of the schedule-object.
+     * The method is called, whenever the user selects a weekday that is not selected yet.
+     * @param dayNumber The numeric representation of a weekday (0 to 6).
      */
     const addDay = (dayNumber: number) => {
         props.selectSchedule({...props.schedule, weekdays: props.schedule.weekdays?.concat([dayNumber])})
     }
 
+    /**
+     * This method removes a weekday from the weekday-Array of the schedule-object.
+     * The method is called, whenever the user deselects a previously selected weekday.
+     * @param dayNumber The numeric representation of a weekday that should be removed from the array. Numbers range from 0 to 6.
+     */
     const removeDay = (dayNumber: number) => {
         props.selectSchedule({...props.schedule, weekdays: props.schedule.weekdays?.filter((value, index, arr) => value !== dayNumber)})
     }
 
+    /**
+     * Method, which handles the click on a weekday and calls the needed method. The called method is either addWeekday or removeWeekday
+     * @param dayNumber The numeric representation of a weekday for which the coresponding method should be called. The range of the value is 0 to 6.
+     */
     const toggleSelectedDay = (dayNumber: number) => {
         if(props.schedule.weekdays?.includes(dayNumber)) removeDay(dayNumber);
         else addDay(dayNumber);
     }
 
+    /**
+     * Method that switches the type-entry of the schedule object to weekly.
+     * The method is called, when the user selects the coresponding radio button.
+     */
     const changeToWeekly = () => {
         props.selectSchedule({...props.schedule, type: "weekly"});
     }
 
+    /**
+     * Method, that switches the type of the schedule object to daily.
+     * It is called, when the user selects the coresponding radio button.
+     */
     const changeToDaily = () => {
         props.selectSchedule({...props.schedule, type: "daily"});
     }
 
+    /**
+     * Method that switches the state of the schedule object to interval.
+     * It is called, when a user selects the coresponding radio button.
+     */
     const changeToInterval = () => {
         props.selectSchedule({...props.schedule, type: "interval"});
     }
 
+    /**
+     * Sets the selected interval from a user for the schedule object.
+     * @param event
+     */
     const setInterval = (event: React.ChangeEvent<{value: unknown}>) => {
         props.selectSchedule({...props.schedule, interval: event.target.value as string})
     }
 
+    /**
+     * Finishes the schedule object by setting the time selection of a user and then proceeds to the next step.
+     */
     const handleProceed = () => {
         props.selectSchedule({...props.schedule, time: setScheduleTime(currentTimeSelection)});
         props.handleProceed();

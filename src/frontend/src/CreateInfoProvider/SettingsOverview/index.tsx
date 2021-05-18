@@ -24,9 +24,17 @@ interface SettingsOverviewProps {
     schedule: Schedule;
 }
 
+/**
+ * Component that renders the settings overview for the creation of the Infoprovider.
+ * @param props The properties passed by the parent.
+ */
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     const classes = useStyles();
 
+    /**
+     * Renders one list item for the list of selected data, custom data or historized data.
+     * @param item The entry that should be rendered.
+     */
     const renderListItem = (item: string) => {
         return(
             <ListItem key={item} divider={true}>

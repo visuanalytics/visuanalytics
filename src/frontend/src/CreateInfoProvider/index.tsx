@@ -21,6 +21,7 @@ export type SelectedDataItem = {
     type: String;
 }
 
+// data type to save information about the selected schedule for historisation
 export type Schedule = {
     type: string;
     weekdays: number[];

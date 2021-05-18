@@ -6,12 +6,25 @@ interface ScheduleTypeTableProps {
     schedule: Schedule;
 }
 
+/**
+ * Renders the table with information about the selected schedule times.
+ * @param props The props passed by the parent.
+ */
 export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
 
+    /**
+     * This method creates an object that is used as one row for the schedule time table
+     * @param attribute The name for a part of the schedule object. Represents the first cell of a row.
+     * @param value The value for the given attribute. Represents the second cell of a row.
+     */
     const createTableRow = (attribute: string, value: string) => {
         return {attribute, value}
     }
 
+    /**
+     * Returns a, for the user readable, String-representation of the selected schedule type.
+     * @param type The type String of the schedule object.
+     */
     const getTypeString = (type: string) => {
         switch (type) {
             case "weekly":
@@ -25,6 +38,10 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
         }
     }
 
+    /**
+     * Returns the string representation of a weekday.
+     * @param weekdayNumber The numeric representation of a weekday. (Should range from 0 to 6)
+     */
     const getWeekdayString = (weekdayNumber: number) => {
         switch (weekdayNumber) {
             case 0:
@@ -44,6 +61,10 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
         }
     }
 
+    /**
+     * Returns a string containing all selected weekdays.
+     * @param weekdayNumbers The array that holds the numeric representation of the weekdays which should be converted to a string.
+     */
     const getWeekdaySelectionString = (weekdayNumbers: number[]) => {
         weekdayNumbers.sort();
         let weekdayStrings = [getWeekdayString(weekdayNumbers[0])];
@@ -53,6 +74,10 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
         return weekdayStrings.join(", ");
     }
 
+    /**
+     * Generates a readable interval from the interval field of the schedule object.
+     * @param selectedInterval The representation of an interval from the schedule object.
+     */
     const getIntervalString = (selectedInterval: string) => {
         switch (selectedInterval) {
             case "minute":
@@ -72,6 +97,10 @@ export const ScheduleTypeTable: React.FC<ScheduleTypeTableProps> = (props) => {
         }
     }
 
+    /**
+     * Generates the needed table rows for the selected schedule type.
+     * Only the needed rows are rendered for a given type.
+     */
     const generateTableRows = () => {
         let rows = [createTableRow("Typ", getTypeString(props.schedule.type))];
         if(props.schedule.type === "daily") rows.push(createTableRow("Uhrzeit", props.schedule.time!));

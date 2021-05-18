@@ -20,7 +20,7 @@ interface HistorySelectionProps {
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
+ * Component displaying the fourth step in the creation of a new Info-Provider (Historisation).
  * The state of this component handles the input made to its children.
  */
 export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {

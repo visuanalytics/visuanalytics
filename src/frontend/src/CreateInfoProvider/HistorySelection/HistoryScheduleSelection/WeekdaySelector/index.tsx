@@ -10,8 +10,8 @@ interface WeekdaySelectorProps {
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * Component that renders the available weekdays for selection.
+ * @param props The properties passed by the parent.
  */
 export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
     const classes = useStyles();
@@ -50,8 +50,12 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
         Weekday.SUNDAY
     ]
 
-    // TODO possibily switch to toggle buttons for better accessibility, but current solution is working too.
+    /**
+     * Renders a button for the weekday.
+     * @param weekday The weekday that should be rendered.
+     */
     const renderWeekday = (weekday: Weekday) => {
+        // TODO possibily switch to toggle buttons for better accessibility, but current solution is working too.
         return (
             <Button color="primary" key={getDayIndex(weekday)} variant="contained" size="small" className={props.days?.includes(weekday) ? classes.weekdaySelected : ""} onClick={() => props.toggleSelectedDay(weekday)} aria-label={props.days?.includes(weekday) ? getWeekdayLabel(weekday) + " ausgewählt" : getWeekdayLabel(weekday) + " nicht ausgewählt"}>
                 {getWeekdayLabel(weekday)}
