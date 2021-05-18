@@ -53,12 +53,12 @@ export const InfoProviderOverview: React.FC = () => {
     const [currentDeleteName, setCurrentDeleteName] = React.useState("");
 
     /**
-     * The boolean ist used to open the confirm-delete-dialog.
+     * The boolean is used to open the confirm-delete-dialog.
      */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
     /**
-     * The list of infoprovider is generated automatically when the component is shown.
+     * The list of infoproviders is generated automatically when the component is shown.
      */
     React.useEffect(() => {
             getAll();
@@ -85,7 +85,7 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     /**
-     * Requests all infoprovider from the backend that are saved in the database.
+     * Requests all infoproviders from the backend that are saved in the database.
      */
     const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
             method: "GET",

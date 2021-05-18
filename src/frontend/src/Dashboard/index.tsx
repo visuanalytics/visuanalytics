@@ -17,7 +17,7 @@ interface TabPanelProps {
 }
 
 /**
- * Component to render the content in one tab. Value and index is used to switch correct between all tabs.
+ * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */
 export const TabContent = (props: TabPanelProps) => {
     const {children, value, index} = props;
@@ -34,7 +34,7 @@ export const TabContent = (props: TabPanelProps) => {
 }
 
 /**
- * Renders the tabs shown in the dashboard. Main elements are the AppBar that ist holding the tabs,
+ * Renders the tabs shown in the dashboard. Main elements are the AppBar that is holding the tabs,
  * the tabs itself and the icons and content shown in one tab
  */
 export const DashboardTabs = () =>  {
