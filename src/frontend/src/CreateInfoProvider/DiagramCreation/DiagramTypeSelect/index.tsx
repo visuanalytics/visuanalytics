@@ -298,10 +298,10 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         <Grid container>
             <Grid item xs={12}>
                 <Typography variant="body1">
-                    Bitte wählen sie aus, ob das Diagramm aus einem Array oder aus historisierten Daten erstellt werden soll:
+                    Bitte wählen sie aus, ob das Diagramm aus einem Array oder historisierten Daten erstellt werden soll:
                 </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.elementLargeMargin}>
                 <FormControl fullWidth>
                     <RadioGroup value={selectedType} onChange={typeChangeHandler}>
                         <Grid item xs={12}>

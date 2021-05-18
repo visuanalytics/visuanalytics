@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import { formelObj } from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {useCallFetch} from "../../Hooks/useCallFetch";
 
 
 
@@ -23,24 +24,23 @@ task 3: show overview of existing diagrams and give option to use a new one -> D
 task 4: choose if array or historized data
 task 5: choose the array (filter all arrays from apiData) - can only contain numbers or objects that contain numbers
      if object: choose which property is meant for y/value (number) and which is meant for x/name (string)
- task 6: choose diagram type
- task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
- task 8: enable usage with multiple arrays and multiple historized data
+task 6: choose diagram type
+task 7: for arrays: set the maximum amount of items to be used, display warning that it could possibly deliver less values
+task 8: enable usage with multiple arrays and multiple historized data
 task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 10: for historized data: choose names for the axis,
 task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
 task 12: formula support (formula will only contain numbers), add functionality for date/timestamp as names on historized
 task 13: sessionStorage compatibility
-NOT DONE:
 task 14: rearrange structure
-task 12: data format for backend and preview functionality
-
-task 14: pass diagrams to wrapper
-
-task 16: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
-task 19: höhe der beschriftungen und inputs, margins/abstände, schriftgrößen, farben-input, hintContents
+task 15: height and alignment of texts and inputs, color-input
+NOT DONE:
+task 16: data format for backend and preview functionality
+task 17: pass diagrams to wrapper
+task 18: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
+task 19: code cleanup
 task 20: edit feature
-preview in overview?
+preview in overview, hintContents
  */
 
 /**
@@ -177,6 +177,39 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
+
+    /**
+     * Handler for the return of a successful call to the backend (posting test diagram)
+     * @param jsonData The JSON-object delivered by the backend
+     */
+    const handleTestSuccess = (jsonData: any) => {
+    }
+
+    /**
+     * Handler for unsuccessful call to the backend (posting test-diagram)
+     * @param err The error returned by the backend
+     */
+    const handleTestError = (err: Error) => {
+        props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
+    }
+
+    /**
+     * Method to get a preview of the created diagram.
+     * The backend creates the diagram with the given settings and return it as an image.
+     */
+    const getTestImage = useCallFetch("/testdiagram",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+
+            })
+        }, handleTestSuccess, handleTestError
+    );
+
+
     /**
      * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
      */
@@ -213,8 +246,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }
         return false;
     }
-
-
 
 
     /**
@@ -383,6 +414,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         createDiagramHandler={() => setDiagramStep(diagramStep+1)}
                         diagrams={props.diagrams}
                         setDiagrams={props.setDiagrams}
+                        getTestImage={getTestImage}
                     />
                 );
             case 1:
@@ -417,6 +449,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
+                        getTestImage={getTestImage}
                     />
                 );
             case 3:
@@ -434,6 +467,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
                         schedule={props.schedule}
+                        getTestImage={getTestImage}
                     />
                 );
             case 4:
@@ -444,12 +478,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                                 Bitte wählen sie einen Namen für das Diagramm, um die Erstellung abzuschließen:
                             </Typography>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={9} className={classes.elementLargeMargin}>
                             <FormControl fullWidth>
                                 <TextField error={isNameDuplicate()} helperText={isNameDuplicate()?"Dieser Name wird bereits durch ein Diagramm anderes verwendet":null} variant="outlined" label="Diagramm-Name" value={diagramName} onChange={(e) => setDiagramName(e.target.value)}/>
                             </FormControl>
                         </Grid>
-                        <Grid item container xs={12} justify="space-between">
+                        <Grid item container xs={12} justify="space-between" className={classes.elementExtraLargeMargin}>
                             <Grid item>
                                 <Button variant="contained" size="large" color="primary" onClick={() => setDiagramStep(diagramSource==="Array"?2:3)}>
                                     zurück

@@ -11,6 +11,7 @@ import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@mater
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
 import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
+import {FormControlLabel} from "@material-ui/core";
 
 interface BasicDiagramSettingsProps {
     arrayObjects?: Array<ArrayDiagramProperties>;
@@ -108,23 +109,29 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     {diagramIconSelector()}
                 </Grid>
             </Grid>
-            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"space-between":"flex-start"} className={classes.elementLargeMargin}>
-                <Grid item xs={3}>
-                    <Typography variant="body1">
-                        Anzahl der Elemente:
-                    </Typography>
+            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"flex-start":"flex-start"}>
+                <Grid item xs={4} className={classes.amountChoiceContainer}>
+                    <FormControlLabel
+                        className={classes.creatorFormControlLabel}
+                        control={
+                            <TextField type="number" variant="outlined" margin="normal" label="Anzahl"
+                                       className={classes.inputFieldWithLabel} inputProps={{ min: 1, max: 50}}
+                                       value={props.amount} onChange={amountHandler}
+                            />
+                        }
+                        label="Anzahl der Elemente:"
+                        labelPlacement="start"
+                    />
                 </Grid>
-                <Grid item xs={3}>
-                    <TextField type="number" variant="outlined"  margin="normal" label="Anzahl"  inputProps={{ min: 1, max: 50}} value={props.amount} onChange={amountHandler}/>
-                </Grid>
+
                 {props.arrayObjects!==undefined&&
-                    <Grid item xs={6}>
-                    {evaluateAmount()&&
-                    <Alert severity="warning">
-                        <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von mindestens einem Array.
-                    </Alert>
-                    }
-                </Grid>
+                    <Grid item xs={7} className={classes.amountWarningContainer}>
+                        {evaluateAmount()&&
+                            <Alert severity="warning">
+                                <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von mindestens einem Array.
+                            </Alert>
+                        }
+                    </Grid>
                 }
             </Grid>
         </React.Fragment>

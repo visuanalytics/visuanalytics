@@ -20,7 +20,7 @@ import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon} from "@material-ui/core";
 
 
 interface HistorizedDiagramCreatorProps {
@@ -36,6 +36,7 @@ interface HistorizedDiagramCreatorProps {
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
     schedule: Schedule;
+    getTestImage: () => void;
 }
 
 export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> = (props) => {
@@ -99,36 +100,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         return true;
     }
 
-    /**
-     * Handler for the return of a successful call to the backend (posting test diagram)
-     * @param jsonData The JSON-object delivered by the backend
-     */
-    const handleSuccess = (jsonData: any) => {
-    }
-
-    /**
-     * Handler for unsuccessful call to the backend (posting test-diagram)
-     * @param err The error returned by the backend
-     */
-    const handleError = (err: Error) => {
-        props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
-
-    /**
-     * Method to get a preview of the created diagram.
-     * The backend creates the diagram with the given settings and return it as an image.
-     */
-    const getTestImage = useCallFetch("/testdiagram",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-
-            })
-        }, handleSuccess, handleError
-    );
 
 
     /**
@@ -136,7 +107,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      */
     const previewHandler = () => {
         setPreviewOpen(true);
-        getTestImage();
+        props.getTestImage();
     }
 
     /**
@@ -272,8 +243,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 weekdayString += ")";
                 return weekdayString
             }
-
-
         }
         //check for daily
         else if(props.schedule.type==="daily") {
@@ -315,29 +284,29 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         return (
             <ListItem key={"Intervallgröße_" + (ordinal + 1)} divider={true}>
                 <Grid item container xs={12} justify="space-between">
-                    <Grid item xs={6}>
-                        <Typography variant="body1">
-                            {ordinal+1}: Aktueller Wert -
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <TextField type="number" inputProps={{ min: 1}} variant="outlined" margin="normal"
-                                   value={props.historizedObjects[selectedHistorizedOrdinal].intervalSizes[ordinal]}
-                                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => intervalSizeChangeHandler(e, ordinal)}
+                    <Grid item xs={9}>
+                        <FormControlLabel
+                            className={classes.creatorFormControlLabel}
+                            control={
+                                <TextField type="number" inputProps={{ min: 1}} variant="outlined" margin="normal"
+                                           value={props.historizedObjects[selectedHistorizedOrdinal].intervalSizes[ordinal]}
+                                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => intervalSizeChangeHandler(e, ordinal)}
+                                           className={classes.intervalInputField}
+                                />
+                            }
+                            label={(ordinal+1) + ":\u00A0 Aktueller Wert -"}
+                            labelPlacement="start"
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2} className={classes.intervalChoiceRightLabel}>
                         <Typography variant="body1">
                             Intervalle
                         </Typography>
                     </Grid>
                 </Grid>
-
-
             </ListItem>
         )
     }
-
 
     /**
      * Renders the currently necessary detailed selection by checking if the selected array contains objects or primitives
@@ -365,7 +334,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 <Grid item container xs={6}>
                     {props.historizedObjects[selectedHistorizedOrdinal].dateLabels?
                         (<Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
                                 <Typography variant="body1">
                                     Zu jedem Datenwert wird das Datum angezeigt, an dem er gespeichert wurde.<br/>Bitte wählen sie das Anzeigeformat:
                                 </Typography>
@@ -419,12 +388,21 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={4} className={classes.elementLargeMargin}>
-                <input
-                    type="color"
-                    value={props.historizedObjects[selectedHistorizedOrdinal].color}
-                    onChange={colorChangeHandler}
-                />
+            <Grid item container xs={3} className={classes.elementLargeMargin} justify="space-around">
+                <Grid item xs={6}>
+                    <Typography variant="body1">
+                        Farbe im Diagramm:
+                    </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                    <input
+                        type="color"
+                        value={props.historizedObjects[selectedHistorizedOrdinal].color}
+                        onChange={colorChangeHandler}
+                        className={classes.colorTool}
+                    />
+
+                </Grid>
             </Grid>
             <Grid item xs={12} className={classes.elementLargeMargin}>
                 <Typography>
@@ -465,7 +443,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                        <Button variant="contained" color="primary"  onClick={() => setPreviewOpen(false)}>
                             schließen
                         </Button>
                     </Grid>

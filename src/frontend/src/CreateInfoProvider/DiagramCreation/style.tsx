@@ -8,6 +8,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         elementLargeMargin: {
             marginTop: "10px"
         },
+        elementExtraLargeMargin: {
+            marginTop: "20px"
+        },
         listFrame: {
             width: "100%",
             height: 400,
@@ -24,6 +27,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px",
             padding: "10px",
+            paddingTop: "0px"
         },
         blockableButtonPrimary: {
             '& .Mui-disabled': {
@@ -43,7 +47,32 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         centeredText: {
             marginTop: "43%",
-
+        },
+        colorTool: {
+            width: "70%",
+            height: "80%"
+        },
+        creatorFormControlLabel: {
+            pointerEvents: "none",
+            marginLeft: "5px"
+        },
+        inputFieldWithLabel: {
+            pointerEvents: "auto",
+            marginLeft: "10px"
+        },
+        amountChoiceContainer: {
+            marginRight: "20px"
+        },
+        amountWarningContainer: {
+            paddingTop: "10px"
+        },
+        intervalInputField: {
+            pointerEvents: "auto",
+            marginLeft: "10px",
+            width: "4.8em"
+        },
+        intervalChoiceRightLabel: {
+            paddingTop: "1.75em", marginRight: "5px"
         }
     })
 );

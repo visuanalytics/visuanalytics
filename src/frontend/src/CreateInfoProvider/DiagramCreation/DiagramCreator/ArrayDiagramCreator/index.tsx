@@ -22,7 +22,7 @@ interface ArrayDiagramCreatorProps {
     continueHandler: () => void;
     backHandler: () => void;
     arrayObjects: Array<ArrayDiagramProperties>;
-    setArrayObjects: (arrayOjects: Array<ArrayDiagramProperties>) => void;
+    setArrayObjects: (arrayObjects: Array<ArrayDiagramProperties>) => void;
     changeObjectInArrayObjects: (object: ArrayDiagramProperties, ordinal: number) => void;
     diagramType: diagramType;
     setDiagramType: (type: diagramType) => void;
@@ -30,6 +30,7 @@ interface ArrayDiagramCreatorProps {
     amount: number;
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
+    getTestImage: () => void;
 }
 
 export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) => {
@@ -95,46 +96,14 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         return true;
     }
 
-    /**
-     * Handler for the return of a successful call to the backend (posting test diagram)
-     * @param jsonData The JSON-object delivered by the backend
-     */
-    const handleSuccess = (jsonData: any) => {
-    }
-
-    /**
-     * Handler for unsuccessful call to the backend (posting test-diagram)
-     * @param err The error returned by the backend
-     */
-    const handleError = (err: Error) => {
-        props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
-
-    /**
-     * Method to get a preview of the created diagram.
-     * The backend creates the diagram with the given settings and return it as an image.
-     */
-    const getTestImage = useCallFetch("/testdiagram",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-
-            })
-        }, handleSuccess, handleError
-    );
 
     /**
      * Handler for clicking the preview button
      */
     const previewHandler = () => {
         setPreviewOpen(true);
-        getTestImage();
+        props.getTestImage();
     }
-
-
 
 
 
@@ -350,12 +319,21 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={4} className={classes.elementLargeMargin}>
-                <input
-                    type="color"
-                    value={props.arrayObjects[selectedArrayOrdinal].color}
-                    onChange={colorChangeHandler}
-                />
+            <Grid item container xs={3} className={classes.elementLargeMargin} justify="space-around">
+                <Grid item xs={6}>
+                    <Typography variant="body1">
+                        Farbe im Diagramm:
+                    </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                        <input
+                            type="color"
+                            value={props.arrayObjects[selectedArrayOrdinal].color}
+                            onChange={colorChangeHandler}
+                            className={classes.colorTool}
+                        />
+
+                </Grid>
             </Grid>
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
@@ -402,7 +380,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                        <Button variant="contained" color="primary" onClick={() => setPreviewOpen(false)}>
                             schließen
                         </Button>
                     </Grid>

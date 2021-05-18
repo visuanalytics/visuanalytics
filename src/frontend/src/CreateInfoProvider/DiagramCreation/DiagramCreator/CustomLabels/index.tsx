@@ -8,6 +8,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
+import {FormControlLabel} from "@material-ui/core";
 
 interface CustomLabelsProps {
     amount: number;
@@ -50,44 +51,44 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
     /**
      * Renders a list of textfields for setting the custom labels.
      * @param ordinal Number of the item/textfield  to be displayed
+     * Differentiates between such with arrayObject as value and such with historizedObject as value.
      */
     const renderLabelInput = (ordinal: number) => {
-        return (
-            <ListItem key={"Wert_" + (ordinal + 1)} divider={true}>
-                <Grid container>
-                    <Grid item xs={3}>
-                        <ListItemText
-                            primary={"Wert " + (ordinal + 1) + ":"}
-                            secondary={null}
-
-                        />
-                    </Grid>
-                    <Grid item xs={8}>
-                        <FormControl fullWidth>
-                            {renderTextField(ordinal)}
-                        </FormControl>
-                    </Grid>
-                </Grid>
-            </ListItem>
-        )
-    }
-
-    /**
-     * Renders a single text field do be displayed in the label choices.
-     * Necessary to differentiate between such with arrayObject as value and such with historizedObject as value.
-     * @param ordinal Number of the item/textfield to be displayed
-     */
-    const renderTextField = (ordinal: number) => {
         if(props.arrayObjects!==undefined&&props.selectedArrayOrdinal!==undefined) {
             return (
-                <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+                <ListItem key={"Wert_" + (ordinal + 1)} divider={true}>
+                    <FormControlLabel
+                        className={classes.creatorFormControlLabel}
+                        control={
+                            <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)}
+                               value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]}
+                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}
+                               className={classes.inputFieldWithLabel}
+                            />
+                        }
+                        label={"Wert " + (ordinal + 1) + ":"}
+                        labelPlacement="start"
+                    />
+                </ListItem>
             )
         } else if (props.historizedObjects!==undefined&&props.selectedHistorizedOrdinal!==undefined) {
             return (
-                <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)} value={props.historizedObjects[props.selectedHistorizedOrdinal].labelArray[ordinal]} onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}/>
+                <ListItem key={"Wert_" + (ordinal + 1)} divider={true}>
+                    <FormControlLabel
+                        className={classes.creatorFormControlLabel}
+                        control={
+                            <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)}
+                               value={props.historizedObjects[props.selectedHistorizedOrdinal].labelArray[ordinal]}
+                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}
+                               className={classes.inputFieldWithLabel}
+                            />
+                        }
+                        label={"Wert " + (ordinal + 1) + ":"}
+                        labelPlacement="start"
+                    />
+                </ListItem>
             )
         }
-
     }
 
 

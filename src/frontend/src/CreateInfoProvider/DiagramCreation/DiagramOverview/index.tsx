@@ -12,7 +12,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
-
+import EditIcon from "@material-ui/icons/Edit";
+import ImageIcon from '@material-ui/icons/Image';
 
 interface DiagramOverviewProps {
     continueHandler: () => void;
@@ -20,12 +21,8 @@ interface DiagramOverviewProps {
     createDiagramHandler: () => void;
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
+    getTestImage: () => void;
 };
-
-
-function CloseIcon() {
-    return null;
-}
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
@@ -38,8 +35,18 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
     //name of the array that is currently to be removed, used for showing name in dialog
     const [itemToRemove, setItemToRemove] = React.useState("");
+    //boolean flag used for opening and closing the preview dialog
+    const [previewOpen, setPreviewOpen] = React.useState(false);
 
-
+    /**
+     * Opens the preview dialog for a selected diagram.
+     * Prepares the necessary variables for being used with getTestImage
+     */
+    const openPreviewDialog = (name: string) => {
+        //TODO: prepare data for sending to backend!
+        props.getTestImage();
+        setPreviewOpen(true);
+    }
 
     /**
      * Deletes a diagram selected by the user.
@@ -94,6 +101,12 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     secondary={null}
                 />
                 <ListItemSecondaryAction>
+                    <IconButton aria-label="preview" color="primary" onClick={() => openPreviewDialog(item.name)}>
+                        <ImageIcon />
+                    </IconButton>
+                    <IconButton aria-label="edit" color="primary" onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
+                        <EditIcon />
+                    </IconButton>
                     <IconButton aria-label="delete" className={classes.redDeleteIcon} onClick={() => openDeleteDialog(item.name)}>
                         <DeleteIcon />
                     </IconButton>
@@ -107,16 +120,21 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     };
 
     return(
-        <Grid container justify="space-between">
-            <Grid item xs={6}>
+        <Grid container justify="space-around">
+            <Grid item xs={12}>
+                <Typography variant="body1">
+                    Folgende Diagramme wurde bereits erstellt:
+                </Typography>
+            </Grid>
+            <Grid item xs={10}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                     <List>
                         {props.diagrams.map((item) => renderDiagramListItem(item))}
                     </List>
                 </Box>
             </Grid>
-            <Grid item xs={4}>
-                <Button variant="outlined" size="large" color="primary" onClick={props.createDiagramHandler}>
+            <Grid item>
+                <Button variant="contained" size="large" color="secondary" onClick={props.createDiagramHandler}>
                     Diagramm hinzufügen
                 </Button>
             </Grid>
@@ -153,6 +171,21 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                                 Löschen bestätigen
                             </Button>
                         </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Vorschau des generierten Diagramm
+                </DialogTitle>
+                <DialogContent dividers>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                </DialogContent>
+                <DialogActions>
+                    <Grid item>
+                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                            schließen
+                        </Button>
                     </Grid>
                 </DialogActions>
             </Dialog>
