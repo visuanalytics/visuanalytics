@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import { useStyles } from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -14,6 +14,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import ImageIcon from '@material-ui/icons/Image';
+import {fetchTimeOut, handleResponse} from "../../../util/fetchUtils";
 
 interface DiagramOverviewProps {
     continueHandler: () => void;
@@ -22,6 +23,8 @@ interface DiagramOverviewProps {
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     getTestImage: () => void;
+    selectedDiagram: Diagram;
+    setSelectedDiagram: (diagram: Diagram) => void;
 };
 
 /**
@@ -44,9 +47,26 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      */
     const openPreviewDialog = (name: string) => {
         //TODO: prepare data for sending to backend!
-        props.getTestImage();
+        //find the diagram with the given name and set is as current diagram
+        for (let index=0; index < props.diagrams.length; index++) {
+            if(props.diagrams[index].name===name) {
+                props.setSelectedDiagram(props.diagrams[index]);
+                break;
+            }
+        }
+        //open the preview
         setPreviewOpen(true);
     }
+
+
+
+    const selectedDiagram = props.selectedDiagram
+    const getTestImage = props.getTestImage;
+    const fetcher = React.useCallback(() => getTestImage(), [getTestImage])
+    //whenever the preview is open, send a request to the backend for the selected diagram
+    React.useEffect(() => {
+        if(previewOpen&&Object.keys(selectedDiagram).length!==0) fetcher();
+    }, [previewOpen, selectedDiagram, fetcher]);
 
     /**
      * Deletes a diagram selected by the user.
@@ -97,7 +117,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         return (
             <ListItem key={item.name} divider={true}>
                 <ListItemText
-                    primary={item.name + " (" + resolveType(item.variant) + ")" + " - nutzt " + (item.sourceType==="Array"?"Arrays":"historisierte Daten")}
+                    primary={item.name + " (" + resolveType(item.variant) + ") - nutzt " + (item.sourceType==="Array"?"Arrays":"historisierte Daten")}
                     secondary={null}
                 />
                 <ListItemSecondaryAction>

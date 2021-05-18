@@ -69,6 +69,28 @@ export type HistorizedDiagramProperties = {
     dateFormat: string;
 }
 
+/**
+ * Plot typed which is used for sending diagrams to the backend in fitting format.
+ */
+type Plots = {
+    customLabels?: boolean;
+    primitive?: boolean;
+    dateLabels?: boolean;
+    plots: {
+        type: string;
+        x: Array<string>;
+        y: Array<number>;
+        style: string;
+        color: string;
+        numericAttribute?: string;
+        stringAttribute?: string;
+        dateFormat?: string;
+        x_ticks: {
+            ticks: Array<string>;
+        };
+    };
+}
+
 
 interface DiagramCreationProps {
     continueHandler: () => void;
@@ -109,7 +131,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [diagramType, setDiagramType] = React.useState<diagramType>("verticalBarChart")
     //the amount of items selected to be taken from the array
     const [amount, setAmount] = React.useState<number>(1);
-
+    //the diagram currently selected for sending to the backend
+    const [selectedDiagram, setSelectedDiagram] = React.useState<Diagram>({} as Diagram)
 
     /**
      * Restores all data of the current session when the page is reloaded. Used to not loose data on reloading the page.
@@ -177,6 +200,82 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
+    /**
+     * Creates the plots array for a selected diagram to be sent to the backend.
+     * @param diagram the diagram to be transformed
+     */
+    const createPlots = (diagram: Diagram) => {
+        const plotArray: Array<Plots> = [];
+        let type: string;
+        //transform the type to the string the backend needs
+        switch (diagram.variant) {
+            case "verticalBarChart": {
+                type = "bar";
+                break;
+            }
+            case "horizontalBarChart": {
+                type = "barh";
+                break;
+            }
+            case "dotDiagram": {
+                type = "scatter";
+                break;
+            }
+            case "lineChart": {
+                type = "line";
+                break;
+            }
+            case "pieChart": {
+                type = "pie";
+                break;
+            }
+        }
+        if (diagram.sourceType === "Array") {
+            if (diagram.arrayObjects !== undefined) {
+                diagram.arrayObjects.forEach((item) => {
+                    const plots = {
+                        customLabels: item.customLabels,
+                        primitive: !Array.isArray(item.listItem.value),
+                        plots: {
+                            type: type,
+                            x: Array(amount).fill(item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName),
+                            y: Array.from(Array(amount).keys()),
+                            style: "",
+                            color: item.color,
+                            numericAttribute: item.numericAttribute,
+                            stringAttribute: item.stringAttribute,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        } else {
+            //"Historized"
+            if (diagram.historizedObjects !== undefined) {
+                diagram.historizedObjects.forEach((item) => {
+                    const plots = {
+                        dateLabels: item.dateLabels,
+                        plots: {
+                            type: type,
+                            x: Array(amount).fill(item.name),
+                            y: Array.from(Array(amount).keys()),
+                            style: "",
+                            color: item.color,
+                            dateFormat: item.dateFormat,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        }
+        return plotArray;
+    }
 
     /**
      * Handler for the return of a successful call to the backend (posting test diagram)
@@ -204,10 +303,14 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-
+                type: "",
+                name: "",
+                plots: createPlots(selectedDiagram)
             })
         }, handleTestSuccess, handleTestError
     );
+
+
 
 
     /**
@@ -415,6 +518,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         diagrams={props.diagrams}
                         setDiagrams={props.setDiagrams}
                         getTestImage={getTestImage}
+                        selectedDiagram={selectedDiagram}
+                        setSelectedDiagram={(diagram: Diagram) => setSelectedDiagram(diagram)}
                     />
                 );
             case 1:
