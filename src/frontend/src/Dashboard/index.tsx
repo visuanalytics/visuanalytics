@@ -19,7 +19,7 @@ interface TabPanelProps {
 /**
  * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */
-export const TabContent = (props: TabPanelProps) => {
+export const TabContent: React.FC<TabPanelProps> = (props) => {
     const {children, value, index} = props;
 
     return (
@@ -50,11 +50,10 @@ export const DashboardTabs = () =>  {
             <Grid item container xs={12} justify={"center"}>
                 <AppBar position="static" className={classes.tab}>
                     <Tabs centered variant={'fullWidth'} value={value} onChange={handleChange}
-                          aria-label="simple tabs example"
                           className={classes.tabs} >
                         <Tab icon={<AirplayRounded/>} label="Info-Provider" className={classes.tabs}/>
                         <Tab icon={<CropOriginalRounded/>} label="Szenen" className={classes.tabs}/>
-                        <Tab icon={<OndemandVideoRounded/>} label="Videos" className={classes.tabs}/>
+                        <Tab icon={<OndemandVideoRounded/>} label="Videojobs" className={classes.tabs}/>
                     </Tabs>
                 </AppBar>
             </Grid>

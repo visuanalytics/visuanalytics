@@ -98,7 +98,7 @@ export const InfoProviderOverview: React.FC = () => {
     /*
     Wird für das bearbeiten eines Infoprovider gebraucht!
     React.useEffect(() => {
-            getAll();
+            ...;
         }, [currentEditId]
     );
 */
@@ -183,7 +183,7 @@ export const InfoProviderOverview: React.FC = () => {
                 <Grid item container xs={12}>
                     <Grid item xs={6}>
                         <Typography variant={"h5"}>
-                            Übersicht definierter Info-Provider
+                            Angelegte Info-Provider:
                         </Typography>
                     </Grid>
                     <Grid item container xs={6} justify={"flex-end"}>
