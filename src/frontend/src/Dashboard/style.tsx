@@ -46,15 +46,28 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         settings: {
             backgroundColor: theme.palette.secondary.main,
-            color: "#000000"
+            color: "#000000",
+            '&:hover': {
+                backgroundColor: theme.palette.secondary.dark,
+            }
         },
         delete: {
             backgroundColor: theme.palette.error.main,
             color: "#FFFFFF",
-            marginLeft: 20
+            marginLeft: 20,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            }
         },
         infoProvName: {
             margin: "auto"
+        },
+        redDeleteButton: {
+            color: '#FFFFFF',
+            backgroundColor: theme.palette.error.main,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            },
         }
     }),
 );

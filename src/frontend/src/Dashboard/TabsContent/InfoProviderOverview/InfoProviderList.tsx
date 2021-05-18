@@ -9,7 +9,7 @@ import {jsonRef} from "./infoProviderOverview";
 
 interface InfoProviderListProps {
     infoprovider: Array<jsonRef>;
-    handleDeleteButton: (id: number) => void;
+    handleDeleteButton: (id: jsonRef) => void;
 }
 
 /**
@@ -41,7 +41,7 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
                     </Button>
                     <Button variant={"contained"} size={"small"} className={classes.delete}
                             startIcon={<DeleteIcon fontSize="small"/>}
-                            onClick={() => props.handleDeleteButton(data.infoprovider_id)}
+                            onClick={() => props.handleDeleteButton(data)}
                     >
                         löschen
                     </Button>

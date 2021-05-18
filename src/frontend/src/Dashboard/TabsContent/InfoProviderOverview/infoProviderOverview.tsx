@@ -1,6 +1,6 @@
 import React from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import {Grid, Typography} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import {ComponentContext} from "../../../ComponentProvider";
 import {hintContents} from "../../../util/hintContents";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
@@ -13,13 +13,13 @@ import {useCallFetch} from "../../../Hooks/useCallFetch";
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
  */
- export type jsonRef = {
+export type jsonRef = {
     infoprovider_id: number;
     infoprovider_name: string;
 }
 
 /**
- * This type is needed because the answer of the backend consists of a list of jsonRef's
+ * This type is needed because the answer of the backend consists of a list of jsonRef's.
  */
 type requestBackendAnswer = Array<jsonRef>
 
@@ -38,17 +38,27 @@ export const InfoProviderOverview: React.FC = () => {
     const components = React.useContext(ComponentContext);
 
     /**
-     * safes the infoprovider
+     * The Infoprovider that will be shown in the Component.
      */
     const [infoprovider, setInfoProvider] = React.useState(new Array<jsonRef>());
 
     /**
-     * safes the current Id to delete the right infoprovider
+     * The id from the infoprovider that should be deleted.
      */
-    const [currentId, setCurrentId] = React.useState(0);
+    const [currentDeleteId, setCurrentDeleteId] = React.useState(0);
 
     /**
-     * the list of infoprovider is generated automatically when the component is shown
+     * The name from the infoprovider that should be deleted.
+     */
+    const [currentDeleteName, setCurrentDeleteName] = React.useState("");
+
+    /**
+     * The boolean ist used to open the confirm-delete-dialog.
+     */
+    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+
+    /**
+     * The list of infoprovider is generated automatically when the component is shown.
      */
     React.useEffect(() => {
             getAll();
@@ -56,41 +66,7 @@ export const InfoProviderOverview: React.FC = () => {
     );
 
     /**
-     * Handles the success of the getAll()-method.
-     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider
-     * @param jsonData the answer from the backend
-     */
-    const handleSuccessGetAll = (jsonData: any) => {
-        const data = jsonData as requestBackendAnswer;
-        setInfoProvider(data);
-    }
-
-    /**
-     * Handles the success of the deleteInfoprovider()-method.
-     * The right infoprovider must also be deleted from the-infoprovider-constant to render the new list correctly.
-     * @param jsonData the answer from the backend
-     */
-    const handleSuccessDelete = (jsonData: any) => {
-
-        const data = jsonData as answer;
-
-        console.log("handlesuccess: " + data.err_msg)
-/*
-        for (let i: number = 0; i <= infoprovider.length - 1; i++) {
-            if (infoprovider[i].infoprovider_id === currentId) {
-                const arCopy = infoprovider.slice();
-                arCopy.splice(i, 1);
-                setInfoProvider(arCopy);
-                alert('true');
-                return
-            }
-        }
-
- */
-    }
-
-    /**
-     * Handles the error-message if an error appears
+     * Handles the error-message if an error appears.
      * @param err the shown error
      */
     const handleError = (err: Error) => {
@@ -99,7 +75,17 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     /**
-     * Requests all infoprovider from the backend that are saved in the database
+     * Handles the success of the getAll()-method.
+     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessGetAll = (jsonData: any) => {
+        const data = jsonData as requestBackendAnswer;
+        setInfoProvider(data);
+    }
+
+    /**
+     * Requests all infoprovider from the backend that are saved in the database.
      */
     const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
             method: "GET",
@@ -109,10 +95,41 @@ export const InfoProviderOverview: React.FC = () => {
         }, handleSuccessGetAll, handleError
     );
 
+    /*
+    Wird für das bearbeiten eines Infoprovider gebraucht!
+    React.useEffect(() => {
+            getAll();
+        }, [currentEditId]
+    );
+*/
     /**
-     * Request for the backend to delete an infoprovider
+     * Handles the success of the deleteInfoprovider()-method.
+     * The right infoprovider must also be deleted from the-infoprovider-constant to render the new list correctly.
+     * @param jsonData the answer from the backend
      */
-    const deleteInfoProvider = useCallFetch("visuanalytics/infoprovider/" + currentId, {
+    const handleSuccessDelete = (jsonData: any) => {
+
+        const data = jsonData as answer;
+
+        if (data.err_msg) {
+            console.log("handlesuccess: " + data.err_msg)
+        }
+
+        for (let i: number = 0; i <= infoprovider.length - 1; i++) {
+            if (infoprovider[i].infoprovider_id === currentDeleteId) {
+                const arCopy = infoprovider.slice();
+                arCopy.splice(i, 1);
+                setInfoProvider(arCopy);
+                return
+            }
+        }
+
+    }
+
+    /**
+     * Request to the backend to delete an infoprovider.
+     */
+    const deleteInfoProvider = useCallFetch("visuanalytics/infoprovider/" + currentDeleteId, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json\n"
@@ -134,14 +151,27 @@ export const InfoProviderOverview: React.FC = () => {
     );
 
     /**
-     * helper-method to set the right id and delete the right infoprovider
-     * @param id from the infoprovider that has to be deleted
+     * helper-method to set the right id and name to delete the right infoprovider.
+     * The method will open an confirm-dialog.
+     * @param infoProv is the infoprovider that has to be deleted
      */
-    const handleDeleteButton = (id: number) => {
-        console.log("deleteButton" + id);
-        setCurrentId(id);
-        console.log("visuanalytics/infoprovider/" + currentId)
+    const handleDeleteButton = (infoProv: jsonRef) => {
+        setCurrentDeleteId(infoProv.infoprovider_id);
+        setCurrentDeleteName(infoProv.infoprovider_name)
+        setRemoveDialogOpen(true);
+    }
+
+    /**
+     * The method is triggered when the delete-button in the confirm-dialog is triggered.
+     * The infoprovider will be deleted and the confirm-dialog will be closed.
+     */
+    const confirmDelete = () => {
         deleteInfoProvider();
+        setRemoveDialogOpen(false);
+        window.setTimeout(() => {
+            setCurrentDeleteId(0)
+            setCurrentDeleteName("");
+        }, 200);
     }
 
     return (
@@ -170,7 +200,7 @@ export const InfoProviderOverview: React.FC = () => {
                              className={classes.listFrame}>
                             <InfoProviderList
                                 infoprovider={infoprovider}
-                                handleDeleteButton={(id: number) => handleDeleteButton(id)}
+                                handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
                             />
                         </Box>
                     </Grid>
@@ -182,12 +212,39 @@ export const InfoProviderOverview: React.FC = () => {
                         </Grid>
                         <Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
-                                onClick={() => testInfo()}>
+                                    onClick={() => testInfo()}>
                                 Test-InfoProvider
                             </Button>
                         </Grid>
                     </Grid>
                 </Grid>
+                <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                        open={removeDialogOpen}>
+                    <DialogTitle id="deleteDialog-title">
+                        Infoprovider {currentDeleteName} wirklich löschen?
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            {currentDeleteName} wird unwiderruflich gelöscht.
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained" color={"secondary"} onClick={() => setRemoveDialogOpen(false)}>
+                                    abbrechen
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => confirmDelete()}
+                                        className={classes.redDeleteButton}>
+                                    Löschen bestätigen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </StepFrame>
     );
