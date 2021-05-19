@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import { useStyles } from "./style";
 import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../index"
 import {StepFrame} from "../StepFrame";
@@ -12,9 +12,6 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import { formelObj } from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {useCallFetch} from "../../Hooks/useCallFetch";
-
-
 
 
 /* TODO: following steps for diagram creation:
@@ -29,18 +26,19 @@ task 7: for arrays: set the maximum amount of items to be used, display warning 
 task 8: enable usage with multiple arrays and multiple historized data
 task 9: for historized data: choosing options for y/values: currentDate - n * interval between historizations
 task 10: for historized data: choose names for the axis,
-task 11: create data format to represent created diagrams, create with finalizing, show in overview, deltete functionality
+task 11: create data format to represent created diagrams, create with finalizing, show in overview, delete functionality
 task 12: formula support (formula will only contain numbers), add functionality for date/timestamp as names on historized
 task 13: sessionStorage compatibility
 task 14: rearrange structure
 task 15: height and alignment of texts and inputs, color-input
+task 16: data format for backend
+task 17: write custom fetcher for using in useEffect in Overview and general Creation
+task 18: use the fetcher based on the current diagram in both creators to get the preview
 NOT DONE:
-task 16: data format for backend and preview functionality
-task 17: pass diagrams to wrapper
-task 18: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
 task 19: code cleanup
-task 20: edit feature
-preview in overview, hintContents
+task 20: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
+task 21: edit feature
+task 22: add hintContents
  */
 
 /**
@@ -72,7 +70,7 @@ export type HistorizedDiagramProperties = {
 /**
  * Plot typed which is used for sending diagrams to the backend in fitting format.
  */
-type Plots = {
+export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
     dateLabels?: boolean;
@@ -133,6 +131,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const [amount, setAmount] = React.useState<number>(1);
     //the diagram currently selected for sending to the backend
     const [selectedDiagram, setSelectedDiagram] = React.useState<Diagram>({} as Diagram)
+    //holds the url of the current image returned by the backend
+    const [imageURL, setImageURL] = React.useState("");
+
 
     /**
      * Restores all data of the current session when the page is reloaded. Used to not loose data on reloading the page.
@@ -205,6 +206,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * @param diagram the diagram to be transformed
      */
     const createPlots = (diagram: Diagram) => {
+        //console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -281,36 +283,100 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Handler for the return of a successful call to the backend (posting test diagram)
      * @param jsonData The JSON-object delivered by the backend
      */
-    const handleTestSuccess = (jsonData: any) => {
+    const handleSuccessDiagramPreview = (jsonData: any) => {
+        //TODO: set the image path to the current one returned by the backend
     }
 
     /**
      * Handler for unsuccessful call to the backend (posting test-diagram)
      * @param err The error returned by the backend
      */
-    const handleTestError = (err: Error) => {
+    const handleErrorDiagramPreview = (err: Error) => {
         props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
+
+    /**
+     * Method to send a diagram to the backend for testing.
+     * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
+     */
+    const fetchPreviewImage = React.useCallback(() => {
+        console.log("fetcher called");
+        let url = "/visuanalytics//testdiagram"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            body: JSON.stringify({
+                type: "custom",
+                name: selectedDiagram.name,
+                plots: createPlots({
+                    name: diagramName,
+                    variant: diagramType,
+                    sourceType: diagramSource,
+                    historizedObjects: historizedObjects,
+                    arrayObjects: arrayObjects
+                })
+            }),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if(isMounted) handleSuccessDiagramPreview(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if(isMounted) handleErrorDiagramPreview(err)
+        }).finally(() => clearTimeout(timer));
+    }, [selectedDiagram, createPlots])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+    //use of useCallFetch was quit since it caused function calls on each render
     /**
      * Method to get a preview of the created diagram.
      * The backend creates the diagram with the given settings and return it as an image.
      */
-    const getTestImage = useCallFetch("/testdiagram",
+    /*const fetchPreviewImage = useCallFetch("/testdiagram",
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                type: "",
-                name: "",
-                plots: createPlots(selectedDiagram)
+                type: "custom",
+                name: diagramName,
+                sourceType: diagramSource,
+                plots: createPlots({
+                    name: diagramName,
+                    variant: diagramType,
+                    sourceType: diagramSource,
+                    historizedObjects: historizedObjects,
+                    arrayObjects: arrayObjects
+                })
             })
-        }, handleTestSuccess, handleTestError
-    );
-
-
+        }, handleSuccessDiagramPreview, handleErrorDiagramPreview
+    );*/
 
 
     /**
@@ -322,7 +388,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             name: diagramName,
             variant: diagramType,
             sourceType: diagramSource,
-            historizedObjects: historizedObjects
+            historizedObjects: historizedObjects,
+            arrayObjects: arrayObjects
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);
@@ -517,9 +584,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         createDiagramHandler={() => setDiagramStep(diagramStep+1)}
                         diagrams={props.diagrams}
                         setDiagrams={props.setDiagrams}
-                        getTestImage={getTestImage}
                         selectedDiagram={selectedDiagram}
                         setSelectedDiagram={(diagram: Diagram) => setSelectedDiagram(diagram)}
+                        createPlots={(diagram: Diagram) => createPlots(diagram)}
+                        reportError={props.reportError}
+                        imageURL={imageURL}
+                        setImageURL={(url: string) => setImageURL(url)}
                     />
                 );
             case 1:
@@ -554,7 +624,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
-                        getTestImage={getTestImage}
+                        fetchPreviewImage={fetchPreviewImage}
+                        imageURL={imageURL}
+                        setImageURL={(url: string) => setImageURL(url)}
                     />
                 );
             case 3:
@@ -572,7 +644,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
                         schedule={props.schedule}
-                        getTestImage={getTestImage}
+                        fetchPreviewImage={fetchPreviewImage}
+                        imageURL={imageURL}
+                        setImageURL={(url: string) => setImageURL(url)}
                     />
                 );
             case 4:

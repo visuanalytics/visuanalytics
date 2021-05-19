@@ -2,7 +2,7 @@ import React from "react";
 import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, uniqueId} from "../../../index";
+import {ListItemRepresentation, diagramType, uniqueId, Diagram} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -30,7 +30,9 @@ interface ArrayDiagramCreatorProps {
     amount: number;
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
-    getTestImage: () => void;
+    fetchPreviewImage: () => void;
+    imageURL: string;
+    setImageURL: (url: string) => void;
 }
 
 export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) => {
@@ -102,9 +104,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      */
     const previewHandler = () => {
         setPreviewOpen(true);
-        props.getTestImage();
+        props.fetchPreviewImage();
     }
-
 
 
     /**
@@ -337,8 +338,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             </Grid>
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
-                <Grid item>
-                    <Button variant="contained" size="large" color="secondary" onClick={() => previewHandler()}>
+                <Grid item className={classes.blockableButtonSecondary}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary" onClick={previewHandler}>
                         Vorschau generieren
                     </Button>
                 </Grid>
@@ -371,16 +372,22 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Button>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+            <Dialog onClose={() => {
+                setPreviewOpen(false);
+                window.setTimeout(() => props.setImageURL(""), 200);
+            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
                 <DialogTitle id="deleteDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" color="primary" onClick={() => setPreviewOpen(false)}>
+                        <Button variant="contained" color="primary" onClick={() => {
+                            setPreviewOpen(false);
+                            window.setTimeout(() => props.setImageURL(""), 200);
+                        }}>
                             schließen
                         </Button>
                     </Grid>

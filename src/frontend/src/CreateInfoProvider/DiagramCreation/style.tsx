@@ -35,6 +35,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 opacity: "75%"
             }
         },
+        blockableButtonSecondary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.secondary.main,
+                opacity: "75%"
+            }
+        },
         redDeleteIcon: {
             color: theme.palette.error.main
         },

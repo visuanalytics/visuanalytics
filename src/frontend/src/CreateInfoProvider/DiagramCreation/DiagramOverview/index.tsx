@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import { useStyles } from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -8,13 +8,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemSecondaryAction} from "@material-ui/core";
-import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import ImageIcon from '@material-ui/icons/Image';
-import {fetchTimeOut, handleResponse} from "../../../util/fetchUtils";
+import {Plots} from "../index";
 
 interface DiagramOverviewProps {
     continueHandler: () => void;
@@ -22,10 +21,13 @@ interface DiagramOverviewProps {
     createDiagramHandler: () => void;
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
-    getTestImage: () => void;
     selectedDiagram: Diagram;
     setSelectedDiagram: (diagram: Diagram) => void;
-};
+    createPlots: (diagram: Diagram) => Array<Plots>;
+    reportError: (message: string) => void;
+    imageURL: string;
+    setImageURL: (url: string) => void;
+}
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
@@ -41,15 +43,18 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
 
+    const selectedDiagram = props.selectedDiagram;
+
     /**
      * Opens the preview dialog for a selected diagram.
-     * Prepares the necessary variables for being used with getTestImage
+     * Prepares the necessary variables for being used with the fetcher
      */
     const openPreviewDialog = (name: string) => {
-        //TODO: prepare data for sending to backend!
         //find the diagram with the given name and set is as current diagram
         for (let index=0; index < props.diagrams.length; index++) {
             if(props.diagrams[index].name===name) {
+                console.log("setting it to: ")
+                console.log(props.diagrams[index]);
                 props.setSelectedDiagram(props.diagrams[index]);
                 break;
             }
@@ -58,16 +63,94 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         setPreviewOpen(true);
     }
 
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
 
+    //creating a none-props reference to be used as dependency
+    //this way, only when this specific prop changes the method is generated again
+    const createPlots = props.createPlots;
 
-    const selectedDiagram = props.selectedDiagram
-    const getTestImage = props.getTestImage;
-    const fetcher = React.useCallback(() => getTestImage(), [getTestImage])
-    //whenever the preview is open, send a request to the backend for the selected diagram
+    /**
+     * Method to send a diagram to the backend for testing.
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memoized
+     * with useCallback in order to be used in useEffect.
+     */
+    const fetchDiagramPreview = React.useCallback(() => {
+        console.log("fetcher called");
+        let url = "/visuanalytics//testdiagram"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            body: JSON.stringify({
+                type: "custom",
+                name: selectedDiagram.name,
+                plots: createPlots(selectedDiagram)
+            }),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if(isMounted) handleSuccessDiagramPreview(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if(isMounted) handleErrorDiagramPreview(err)
+        }).finally(() => clearTimeout(timer));
+    }, [selectedDiagram, createPlots])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+    /**
+     * Whenever the previewOpen state changes, this effect is called. If the preview is opened, a request is send to the backend.
+     * Since selectedDiagram is in the dependencies and the fetcher method is also necessary as a dependency and has selectedDiagram as its own dependency, it is necessary to check if the selectedDiagram is empty.
+     * The rest of the component makes sure selectedDiagram is only set when a request to the backend is needed.
+     */
     React.useEffect(() => {
-        if(previewOpen&&Object.keys(selectedDiagram).length!==0) fetcher();
-    }, [previewOpen, selectedDiagram, fetcher]);
+            if(previewOpen&&Object.keys(selectedDiagram).length!==0) fetchDiagramPreview();
+        }, [fetchDiagramPreview, previewOpen, selectedDiagram]
+    );
 
+    /**
+     * Handles the success of the getAll()-method.
+     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessDiagramPreview = (jsonData: any) => {
+        const data = jsonData;
+        //console.log(data);
+        //TODO: set the state that contains the current preview image path returned by the backend
+        props.setSelectedDiagram({} as Diagram);
+    }
+
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorDiagramPreview = (err: Error) => {
+        props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
+    }
+
+    //TODO: when closing the dialog, clear the preview image path
     /**
      * Deletes a diagram selected by the user.
      * @param name The unique name of the diagram.
@@ -170,7 +253,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     </Button>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title" open={removeDialogOpen}>
+            <Dialog aria-labelledby="deleteDialog-title" open={removeDialogOpen}>
                 <DialogTitle id="deleteDialog-title">
                     Diagramm '{itemToRemove}' wirklich löschen?
                 </DialogTitle>
@@ -182,7 +265,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 <DialogActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" onClick={() => setRemoveDialogOpen(false)}>
+                            <Button variant="contained" onClick={() => {
+                                setRemoveDialogOpen(false);
+                                window.setTimeout(() => setItemToRemove(""), 200);
+                            }}>
                                 abbrechen
                             </Button>
                         </Grid>
@@ -194,16 +280,22 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     </Grid>
                 </DialogActions>
             </Dialog>
-            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+            <Dialog onClose={() => {
+                setPreviewOpen(false);
+                window.setTimeout(() => props.setImageURL(""), 200);
+            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
                 <DialogTitle id="deleteDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" onClick={() => setPreviewOpen(false)}>
+                        <Button variant="contained" onClick={() => {
+                            setPreviewOpen(false);
+                            window.setTimeout(() => props.setImageURL(""), 200);
+                        }}>
                             schließen
                         </Button>
                     </Grid>

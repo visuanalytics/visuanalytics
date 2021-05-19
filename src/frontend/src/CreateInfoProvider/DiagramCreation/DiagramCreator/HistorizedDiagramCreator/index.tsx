@@ -36,7 +36,9 @@ interface HistorizedDiagramCreatorProps {
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
     schedule: Schedule;
-    getTestImage: () => void;
+    fetchPreviewImage: () => void;
+    imageURL: string;
+    setImageURL: (url: string) => void;
 }
 
 export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> = (props) => {
@@ -101,13 +103,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     }
 
 
-
     /**
      * Handler for clicking the preview button
      */
     const previewHandler = () => {
+        console.log("previewHandler")
         setPreviewOpen(true);
-        props.getTestImage();
+        props.fetchPreviewImage();
     }
 
     /**
@@ -411,8 +413,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             </Grid>
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
-                <Grid item>
-                    <Button variant="contained" size="large" color="secondary" onClick={() => previewHandler()}>
+                <Grid item className={classes.blockableButtonSecondary}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary" onClick={previewHandler}>
                         Vorschau generieren
                     </Button>
                 </Grid>
@@ -434,16 +436,22 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Button>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => setPreviewOpen(false)} aria-labelledby="deleteDialog-title" open={previewOpen}>
+            <Dialog onClose={() => {
+                setPreviewOpen(false);
+                window.setTimeout(() => props.setImageURL(""), 200);
+            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
                 <DialogTitle id="deleteDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Saeulendiagramm-Beispiel.svg/1024px-Saeulendiagramm-Beispiel.svg.png"/>
+                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" color="primary"  onClick={() => setPreviewOpen(false)}>
+                        <Button variant="contained" color="primary"  onClick={() => {
+                            setPreviewOpen(false);
+                            window.setTimeout(() => props.setImageURL(""), 200);
+                        }}>
                             schließen
                         </Button>
                     </Grid>
