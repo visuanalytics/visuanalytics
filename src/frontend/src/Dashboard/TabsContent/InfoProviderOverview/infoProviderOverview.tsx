@@ -79,7 +79,7 @@ export const InfoProviderOverview: React.FC = () => {
         let url = "/visuanalytics/infoprovider/all"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
-        //setup a timer to stept the request after 5 seconds
+        //setup a timer to stop the request after 5 seconds
         const abort = new AbortController();
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
@@ -94,18 +94,18 @@ export const InfoProviderOverview: React.FC = () => {
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
             return res.status === 204 ? {} : res.json();
         }).then((data) => {
-            //sucess case - the data is passed to the handler
+            //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if(isMounted) handleSuccessGetAll(data)
+            if(isMounted) handleSuccessFetchAll(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if(isMounted) handleError(err)
+            if(isMounted) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
     }, [])
 
     //defines a cleanup method that sets isMounted to false when unmounting
-    //will signal the fetchMethod to net work with the resulsts anymore
+    //will signal the fetchMethod to not work with the results anymore
     useEffect(() => {
         return () => {
             isMounted.current = false;
@@ -125,17 +125,17 @@ export const InfoProviderOverview: React.FC = () => {
      * Handles the error-message if an error appears.
      * @param err the shown error
      */
-    const handleError = (err: Error) => {
-        console.log('error');
+    const handleErrorFetchAll = (err: Error) => {
+        //console.log('error');
         dispatchMessage({ type: "reportError", message:  'Fehler: ' + err});
     }
 
     /**
-     * Handles the success of the getAll()-method.
+     * Handles the success of the fetchAllInfoprovider()-method.
      * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
      * @param jsonData the answer from the backend
      */
-    const handleSuccessGetAll = (jsonData: any) => {
+    const handleSuccessFetchAll = (jsonData: any) => {
         const data = jsonData as requestBackendAnswer;
         setInfoProvider(data);
     }
@@ -148,7 +148,7 @@ export const InfoProviderOverview: React.FC = () => {
             headers: {
                 "Content-Type": "application/json\n"
             }
-        }, handleSuccessGetAll, handleError
+        }, handleSuccessFetchAll, handleErrorFetchAll
     );*/
 
     /*
@@ -190,7 +190,7 @@ export const InfoProviderOverview: React.FC = () => {
             headers: {
                 "Content-Type": "application/json\n"
             }
-        }, handleSuccessDelete, handleError
+        }, handleSuccessDelete, handleErrorFetchAll
     );
 
     //only for test-purposes
@@ -203,7 +203,7 @@ export const InfoProviderOverview: React.FC = () => {
                 "Content-Type": "application/json\n"
             }
         }, () => {
-        }, handleError
+        }, handleErrorFetchAll
     );
 
     /**
