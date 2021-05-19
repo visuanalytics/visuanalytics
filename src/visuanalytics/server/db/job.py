@@ -3,8 +3,8 @@ from datetime import datetime
 from visuanalytics.server.db import db
 from visuanalytics.server.db import queries
 
-# This variable is initialized with the value from the config file, 
-# so a change here has no effect. 
+# This variable is initialized with the value from the config file,
+# so a change here has no effect.
 LOG_LIMIT = 100
 
 INTERVAL = {"minute": {"minutes": 1}, "quarter": {"minutes": 15}, "half": {"minutes": 30},
@@ -84,13 +84,43 @@ def get_job_run_info(job_id):
         return job_name, steps_name, config
 
 
+def get_infoprovider_schedules():
+    """ Gibt alle angelegten Infoprovider mitsamt ihren Zeitplänen zurück.
+
+    """
+    with db.open_con() as con:
+        res = con.execute(
+            """
+            SELECT DISTINCT infoprovider_id, infoprovider_name, schedule_historisation.type as s_type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
+            time_interval
+            FROM infoprovider 
+            INNER JOIN schedule_historisation USING(schedule_historisation_id)
+            LEFT JOIN schedule_historisation_weekday USING(schedule_historisation_id)
+            GROUP BY(infoprovider_id)
+            """).fetchall()
+
+        return res
+
+
+def get_infoprovider_run_info(infoprovider_id):
+    """Gibt den Namen eines Infoproviders und den Namen der zugehörigen JSON-Datei zurück.
+
+    :param infoprovider_id: id des Jobs
+    """
+    with db.open_con() as con:
+        res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
+                          [infoprovider_id]).fetchall()
+
+        return res[0]["infoprovider_name"], res[0]["infoprovider_name"], {}
+
+
 def insert_log(job_id: int, state: int, start_time: datetime):
     with db.open_con() as con:
         con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
 
-        # Only keep LOG_LIMMIT logs 
+        # Only keep LOG_LIMMIT logs
         con.execute(
             "DELETE FROM job_logs WHERE job_logs_id NOT IN (SELECT job_logs_id FROM job_logs ORDER BY job_logs_id DESC limit ?)",
             [LOG_LIMIT])
