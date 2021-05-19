@@ -278,13 +278,8 @@ def delete_infoprovider(infoprovider_id):
     :param infoprovider_id: ID des Infoproviders.
     """
     try:
-        if not queries.delete_infoprovider(infoprovider_id):
-            err = flask.jsonify({"err_msg": f"Infoprovider with ID {infoprovider_id} could not be removed"})
-            return err, 400
-
-        suc = flask.jsonify({"status": "successful"})
-        return suc, 200
-
+        return flask.jsonify({"status": "successful"}) if queries.delete_infoprovider(infoprovider_id) else \
+            flask.jsonify({"err_msg": f"Infoprovider with ID {infoprovider_id} could not be removed"})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
