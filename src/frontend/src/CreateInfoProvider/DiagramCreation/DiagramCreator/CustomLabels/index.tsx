@@ -2,10 +2,8 @@ import React from "react";
 import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import FormControl from "@material-ui/core/FormControl";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
 import {FormControlLabel} from "@material-ui/core";
@@ -52,6 +50,7 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
      * Renders a list of textfields for setting the custom labels.
      * @param ordinal Number of the item/textfield  to be displayed
      * Differentiates between such with arrayObject as value and such with historizedObject as value.
+     * The code is duplicated for better readability and maintainability for possible changes.
      */
     const renderLabelInput = (ordinal: number) => {
         if(props.arrayObjects!==undefined&&props.selectedArrayOrdinal!==undefined) {

@@ -2,25 +2,20 @@ import React from "react";
 import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, Schedule, uniqueId} from "../../../index";
+import {diagramType, Schedule, uniqueId} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
-import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import {BasicDiagramSettings} from "../BasicDiagramSettings";
-import {useCallFetch} from "../../../../Hooks/useCallFetch";
 import {CustomLabels} from "../CustomLabels";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
-import InputLabel from "@material-ui/core/InputLabel";
+import {HistorizedDiagramProperties} from "../../index";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import List from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
-import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 
 interface HistorizedDiagramCreatorProps {
@@ -107,7 +102,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      * Handler for clicking the preview button
      */
     const previewHandler = () => {
-        console.log("previewHandler")
+        //console.log("previewHandler")
         setPreviewOpen(true);
         props.fetchPreviewImage();
     }
@@ -146,7 +141,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
     /**
      * Renders an item of the selection for all arrays that can be selected.
-     * @param object
+     * @param object The object the item is rendered from.
+     * @param index The index of the item.
      */
     const renderHistorizedSelectItem = (object: HistorizedDiagramProperties, index: number) => {
         return (
@@ -186,7 +182,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
     /**
      * Handler for changing the date format used for displaying date labels.
-     * @param e The change event holding the new format
+     * @param event The change event holding the new format
      */
     const dateFormatChangeHandler = (event: React.ChangeEvent<{value: unknown}>) => {
         if(event.target.value!==undefined) {
@@ -240,7 +236,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 }
                 if(props.schedule.weekdays.includes(6)) {
                     weekdayString += (firstElement?"":"/") + "SO";
-                    firstElement=false;
                 }
                 weekdayString += ")";
                 return weekdayString

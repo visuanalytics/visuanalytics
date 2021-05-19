@@ -2,7 +2,7 @@ import React from "react";
 import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {ListItemRepresentation, diagramType, uniqueId, Diagram} from "../../../index";
+import {ListItemRepresentation, diagramType, uniqueId} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Box from "@material-ui/core/Box";
@@ -10,10 +10,8 @@ import FormControl from "@material-ui/core/FormControl";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Typography from "@material-ui/core/Typography";
 import {BasicDiagramSettings} from "../BasicDiagramSettings";
-import {useCallFetch} from "../../../../Hooks/useCallFetch";
 import {CustomLabels} from "../CustomLabels";
 import {ArrayDiagramProperties} from "../../index";
-import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
@@ -163,7 +161,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
     /**
      * Renders an item of the selection for all arrays that can be selected.
-     * @param object
+     * @param object The object the item is rendered from.
+     * @param index Index of the item.
      */
     const renderArraySelectItem = (object: ArrayDiagramProperties, index: number) => {
         const keyString = object.listItem.parentKeyName===""?object.listItem.keyName:object.listItem.parentKeyName + "|" + object.listItem.keyName;

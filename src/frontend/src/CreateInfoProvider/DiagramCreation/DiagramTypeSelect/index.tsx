@@ -104,7 +104,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Creates objects for all selected arrays and returns an array with them
      */
     const createArrayObjects = () => {
-        console.log("creating the array objects");
+        //("creating the array objects");
         const arrayObjects: Array<ArrayDiagramProperties> = [];
         selectedArrays.forEach((array) => {
             let item: ListItemRepresentation = {} as ListItemRepresentation;
@@ -140,7 +140,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Creates objects for all selected historized data and returns an array with them
      */
     const createHistorizedObjects = () => {
-        console.log("creating the historized objects");
+        //console.log("creating the historized objects");
         const historizedObjects: Array<HistorizedDiagramProperties> = [];
         selectedHistorized.forEach((item) => {
                 const historizedObject = {

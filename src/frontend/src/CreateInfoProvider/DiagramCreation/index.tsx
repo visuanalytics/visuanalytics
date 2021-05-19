@@ -205,8 +205,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Creates the plots array for a selected diagram to be sent to the backend.
      * @param diagram the diagram to be transformed
      */
-    const createPlots = (diagram: Diagram) => {
-        //console.log(diagram.arrayObjects);
+    const createPlots = React.useCallback((diagram: Diagram) => {
+        console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -277,7 +277,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             }
         }
         return plotArray;
-    }
+    }, [amount])
 
     /**
      * Handler for the return of a successful call to the backend (posting test diagram)
@@ -287,13 +287,15 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         //TODO: set the image path to the current one returned by the backend
     }
 
+    //extracts method from props to use it in the dependencies of handleErrorDiagramPreview
+    const reportError = props.reportError;
     /**
      * Handler for unsuccessful call to the backend (posting test-diagram)
      * @param err The error returned by the backend
      */
-    const handleErrorDiagramPreview = (err: Error) => {
-        props.reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
+    const handleErrorDiagramPreview = React.useCallback((err: Error) => {
+        reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
+    }, [reportError]);
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
@@ -304,7 +306,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
     const fetchPreviewImage = React.useCallback(() => {
-        console.log("fetcher called");
+        //("fetcher called");
         let url = "/visuanalytics//testdiagram"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -319,7 +321,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             },
             body: JSON.stringify({
                 type: "custom",
-                name: selectedDiagram.name,
+                name: diagramName,
                 plots: createPlots({
                     name: diagramName,
                     variant: diagramType,
@@ -342,7 +344,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if(isMounted) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [selectedDiagram, createPlots])
+    }, [diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore

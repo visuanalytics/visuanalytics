@@ -1,16 +1,15 @@
 import React from "react";
 import { useStyles } from "../../style";
 import Grid from "@material-ui/core/Grid";
-import {ListItemRepresentation, diagramType} from "../../../index";
+import {diagramType} from "../../../index";
 import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
+import {ArrayDiagramProperties} from "../../index";
 import {FormControlLabel} from "@material-ui/core";
 
 interface BasicDiagramSettingsProps {
