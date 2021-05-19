@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import {ComponentContext} from "../../../ComponentProvider";
@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
@@ -57,12 +58,67 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
+    //TODO: possibly place in higher level component
+    //setup for error notification
+    const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
+        open: false,
+        message: "",
+        severity: "error",
+    });
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
+
+    /**
+     * Method to fetch all infoproviders from the backend.
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memoized
+     * with useCallback in order to be used in useEffect.
+     */
+    const fetchAllInfoprovider = React.useCallback(() => {
+        let url = "/visuanalytics/infoprovider/all"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stept the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+                headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //sucess case - the data is passed to the handler
+            //only called when the component is still mounted
+            if(isMounted) handleSuccessGetAll(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if(isMounted) handleError(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to net work with the resulsts anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     /**
      * The list of infoproviders is generated automatically when the component is shown.
      */
     React.useEffect(() => {
-            getAll();
-        }, []
+        //console.log("Fetcher hook here")
+        fetchAllInfoprovider();
+        }, [fetchAllInfoprovider]
     );
 
     /**
@@ -71,7 +127,7 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const handleError = (err: Error) => {
         console.log('error');
-        alert('Fehler! : ' + err);
+        dispatchMessage({ type: "reportError", message:  'Fehler: ' + err});
     }
 
     /**
@@ -87,13 +143,13 @@ export const InfoProviderOverview: React.FC = () => {
     /**
      * Requests all infoproviders from the backend that are saved in the database.
      */
-    const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
+    /*const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json\n"
             }
         }, handleSuccessGetAll, handleError
-    );
+    );*/
 
     /*
     Wird für das bearbeiten eines Infoprovider gebraucht!
@@ -246,6 +302,12 @@ export const InfoProviderOverview: React.FC = () => {
                     </DialogActions>
                 </Dialog>
             </Grid>
+            <CenterNotification
+                handleClose={() => dispatchMessage({ type: "close" })}
+                open={message.open}
+                message={message.message}
+                severity={message.severity}
+            />
         </StepFrame>
     );
 }
