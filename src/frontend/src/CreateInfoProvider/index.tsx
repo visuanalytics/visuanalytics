@@ -29,6 +29,19 @@ export type Schedule = {
     interval: string;
 }
 
+export type DataSource = {
+    apiName: String;
+    query: String;
+    apiKeyInput1: String;
+    apiKeyInput2: string;
+    noKey: boolean;
+    method: string;
+    selectedData: SelectedDataItem[];
+    customData: formelObj[];
+    historizedData: string;
+    schedule: Schedule;
+}
+
 /**
  * Returns a set that only contains the keys from selectedData.
  */
@@ -85,6 +98,8 @@ export const CreateInfoProvider = () => {
     const [schedule, setSchedule] = useState<Schedule>({type: "weekly", interval: "halfday", time: "", weekdays: []});
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
+    // Holds an array of all data sources for the Infoprovider
+    const [dataSources, setDataSources] = React.useState(new Array<DataSource>())
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -158,6 +173,10 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
     }, [historySelectionStep])
+    // Store data sources in session storage by using JSON-stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("dataSources-" + uniqueId, JSON.stringify(dataSources));
+    }, [dataSources])
 
 
     /**
@@ -173,6 +192,7 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("selectedData-" + uniqueId);
         sessionStorage.removeItem("customData-" + uniqueId);
         sessionStorage.removeItem("historizedData-" + uniqueId);
+        sessionStorage.removeItem("dataSources-" + uniqueId);
     }
 
 
@@ -350,12 +370,15 @@ export const CreateInfoProvider = () => {
                     <SettingsOverview
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        setStep={setStep}
                         name={name}
                         setName={(name: string) => setName(name)}
                         selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
                         historizedData={historizedData}
                         schedule={schedule}
+                        dataSources={dataSources}
+                        setDataSources={setDataSources}
                     />
                 )
 

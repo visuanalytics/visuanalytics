@@ -10,18 +10,21 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import { Schedule } from "..";
+import {DataSource, Schedule} from "..";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
     backHandler: () => void;
+    setStep: (step: number) => void;
     name: string;
     setName: (name: string) => void;
     selectedData: Array<string>;
     customData: Array<formelObj>;
     historizedData: Array<string>;
     schedule: Schedule;
+    dataSources: DataSource[];
+    setDataSources: (dataSources: DataSource[]) => void;
 }
 
 /**
@@ -42,6 +45,19 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
             </ListItem>
         )
     }
+
+    /**
+     * This method is triggered when the user wants to add another data source to the Infoprovider
+     */
+    const newDataSourceHandler = () => {
+        // TODO Update dataSources
+        // TODO possibily clear session storage in order to prevent colisions but do not forget to reload api Sources as they must be saved
+        props.setStep(2);
+    }
+
+    // TODO Under selected Data list the added data Sources with names and possebly some other information such as amount of selected data, custom data or historized data
+    // TODO Delete data source button next to every data source. (Requires name of data Source, which cannot be set yet)
+    // TODO Edit data source button (Could be difficult because the logic of back handler in the first step needs to change. Cancel should not cancel the creation process, but just the edit process.
     return(
         <StepFrame
             heading={"Übersicht"}
@@ -102,6 +118,11 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
+                            Weitere Datenquelle hinzufügen
                         </Button>
                     </Grid>
                     <Grid item>
