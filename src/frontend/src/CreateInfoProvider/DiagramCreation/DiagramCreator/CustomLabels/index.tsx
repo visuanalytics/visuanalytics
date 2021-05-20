@@ -57,12 +57,12 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
             return (
                 <ListItem key={"Wert_" + (ordinal + 1)} divider={true}>
                     <FormControlLabel
-                        className={classes.creatorFormControlLabel}
+                        className={Array.isArray(props.arrayObjects[props.selectedArrayOrdinal].listItem.value)?classes.creatorFormControlLabel:classes.creatorFormControlLabelWide}
                         control={
                             <TextField variant="outlined" margin="normal" label={"Beschriftung Wert " + (ordinal+1)}
                                value={props.arrayObjects[props.selectedArrayOrdinal].labelArray[ordinal]}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => labelChangeHandler(e, ordinal)}
-                               className={classes.inputFieldWithLabel}
+                               className={Array.isArray(props.arrayObjects[props.selectedArrayOrdinal].listItem.value)?classes.inputFieldWithLabel:classes.inputFieldWithLabelWide}
                             />
                         }
                         label={"Wert " + (ordinal + 1) + ":"}
@@ -92,14 +92,12 @@ export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
 
 
     return(
-        <Grid item container xs={12}>
-            <Grid item xs={12}>
-                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
-                    <List disablePadding={true}>
-                        {Array.from(Array(props.amount).keys()).map((ordinal) => renderLabelInput(ordinal))}
-                    </List>
-                </Box>
-            </Grid>
+        <Grid item xs={12}>
+            <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                <List disablePadding={true}>
+                    {Array.from(Array(props.amount).keys()).map((ordinal) => renderLabelInput(ordinal))}
+                </List>
+            </Box>
         </Grid>
     )
 };

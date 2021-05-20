@@ -60,11 +60,24 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         creatorFormControlLabel: {
             pointerEvents: "none",
-            marginLeft: "5px"
+            marginLeft: "5px",
+
+        },
+        creatorFormControlLabelWide: {
+            pointerEvents: "none",
+            marginLeft: "5px",
+            marginRight: "20px",
+            width: "100%",
+            align: "left"
         },
         inputFieldWithLabel: {
             pointerEvents: "auto",
-            marginLeft: "10px"
+            marginLeft: "10px",
+        },
+        inputFieldWithLabelWide: {
+            pointerEvents: "auto",
+            marginLeft: "10px",
+            width: "89%"
         },
         amountChoiceContainer: {
             marginRight: "20px"
@@ -79,6 +92,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         intervalChoiceRightLabel: {
             paddingTop: "1.75em", marginRight: "5px"
-        }
+        },
     })
 );

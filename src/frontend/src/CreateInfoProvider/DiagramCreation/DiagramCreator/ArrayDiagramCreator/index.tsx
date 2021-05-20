@@ -342,20 +342,24 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                         Vorschau generieren
                     </Button>
                 </Grid>
-                    {
-                        (props.arrayObjects[selectedArrayOrdinal].stringAttributes.length===0)?(
+                    {(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)&&props.arrayObjects[selectedArrayOrdinal].stringAttributes.length===0)?(
                             <Grid item xs={4}>
                                 <Typography variant="body1">
                                     Die Objekte des Arrays enthalten keine String-Attribute.
                                 </Typography>
                             </Grid>
 
-                        ):(
-                        <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={() => toggleCustomLable()}>
-                                {props.arrayObjects[selectedArrayOrdinal].customLabels?"Attribut-Beschriftung":"eigene Beschriftungen"}
-                            </Button>
-                        </Grid>
+                        ):
+                            (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)?(
+                                <Grid item>
+                                    <Button variant="contained" size="large" color="primary" onClick={() => toggleCustomLable()}>
+                                        {props.arrayObjects[selectedArrayOrdinal].customLabels?"Attribut-Beschriftung":"eigene Beschriftungen"}
+                                    </Button>
+                                </Grid>
+                            ):(
+                                <React.Fragment>
+                                </React.Fragment>
+                            )
                         )
                     }
             </Grid>

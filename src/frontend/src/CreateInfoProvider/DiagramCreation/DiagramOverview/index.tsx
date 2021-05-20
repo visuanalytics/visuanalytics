@@ -149,7 +149,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      * The rest of the component makes sure selectedDiagram is only set when a request to the backend is needed.
      */
     React.useEffect(() => {
-        console.log("effect");
+        //console.log("effect");
         if(previewOpen&&Object.keys(selectedDiagram).length!==0) {
                 fetchDiagramPreview();
                 //after the first fetch happened, delete the selected diagram state

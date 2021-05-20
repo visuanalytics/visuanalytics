@@ -34,8 +34,8 @@ task 15: height and alignment of texts and inputs, color-input
 task 16: data format for backend
 task 17: write custom fetcher for using in useEffect in Overview and general Creation
 task 18: use the fetcher based on the current diagram in both creators to get the preview
-NOT DONE:
 task 19: code cleanup
+NOT DONE:
 task 20: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
 task 21: edit feature
 task 22: add hintContents
