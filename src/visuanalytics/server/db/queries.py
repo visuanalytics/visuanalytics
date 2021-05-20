@@ -1,11 +1,12 @@
 import json
 import os
+import shutil
 
 import humps
 import copy
 
 from visuanalytics.server.db import db
-from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, open_resource
+from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
 
@@ -13,6 +14,7 @@ INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), 
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
+MEMORY_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", ML))
 
 
 def get_infoprovider_list():
@@ -37,10 +39,22 @@ def insert_infoprovider(infoprovider):
     infoprovider_name = infoprovider["infoprovider_name"]
     # Json für das Speicher vorbereiten
     infoprovider_json = {
-        "api": infoprovider["api"],
+        "name": infoprovider_name,
+        "api": {
+            "type": "request_multiple_custom",
+            "use_loop_as_key": True,
+            "steps_value": [
+                "api"
+            ],
+            "requests": [
+                infoprovider["api"]
+            ]
+        },
         "transform": _generate_transform(infoprovider["formulas"], infoprovider["transform"]),
         "storing": infoprovider["storing"],
-        "formulas": infoprovider["formulas"]
+        "formulas": infoprovider["formulas"],
+        "images": infoprovider["images"],
+        "run_config": {}
     }
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [infoprovider_name]).fetchone()["COUNT(*)"]
@@ -155,10 +169,24 @@ def update_infoprovider(infoprovider_id, updated_data):
         infoprovider_json = json.loads(f.read())
 
     # Inhalt des Json's updaten
-    infoprovider_json.update({"api": updated_data["api"]})
-    infoprovider_json.update({"transform": _generate_transform(updated_data["formulas"], updated_data["transform"])})
+    infoprovider_json.update({"api": {
+            "type": "request_multiple_custom",
+            "use_loop_as_key": True,
+            "steps_value": [
+                "api"
+            ],
+            "requests": [
+                updated_data["api"]
+            ]
+        }})
+    infoprovider_json.update({"name": updated_data["infoprovider_name"]})
+    new_transform = _generate_transform(updated_data["formulas"], updated_data["transform"])
+    if new_transform is None:
+        return {"err_msg": f"could not generate transform-step from formulas"}
+    infoprovider_json.update({"transform": new_transform})
     infoprovider_json.update({"storing": updated_data["storing"]})
     infoprovider_json.update({"formulas": updated_data["formulas"]})
+    infoprovider_json.update({"images": updated_data["images"]})
 
     # Alte Schedule-ID abspeichern
     old_schedule_id = con.execute("SELECT schedule_historisation_id FROM infoprovider WHERE infoprovider_id=?",
@@ -196,6 +224,9 @@ def delete_infoprovider(infoprovider_id):
     if res is not None:
         # Json-Datei, Schedule und Infoprovider-Eintrag löschen
         file_path = get_infoprovider_file(infoprovider_id)
+        shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
+        shutil.rmtree(os.path.join(MEMORY_LOCATION, res["infoprovider_name"]), ignore_errors=True)
+
         os.remove(file_path)
         _remove_historisation_schedule(con, infoprovider_id)
         con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
@@ -359,12 +390,14 @@ def _insert_param_values(con, job_id, topic_values):
 
 
 def _generate_transform(formulas, old_transform):
-    print(old_transform)
     transform = []
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform += generate_step_transform(formula["formula"], formula["name"])
+        transform_part = generate_step_transform(formula["formula"], formula["name"])
+        if transform_part is None:
+            return None
+        transform += transform_part
     return transform
 
 
