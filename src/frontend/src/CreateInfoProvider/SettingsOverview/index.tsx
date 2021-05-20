@@ -10,7 +10,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource, Schedule} from "..";
+import {DataSource, Schedule, SelectedDataItem} from "..";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
 
 interface SettingsOverviewProps {
@@ -25,6 +25,19 @@ interface SettingsOverviewProps {
     schedule: Schedule;
     dataSources: DataSource[];
     setDataSources: (dataSources: DataSource[]) => void;
+    storageID: String
+    setApiName: (apiName: string) => void;
+    setQuery: (query: string) => void;
+    setApiKeyInput1: (apiKeyInput1: string) => void;
+    setApiKeyInput2: (apiKeyInput2: string) => void;
+    setNoKey: (noKey: boolean) => void;
+    setMethod: (method: string) => void;
+    setApiData: (apiData: {}) => void;
+    setSelectedData: (selectedData: SelectedDataItem[]) => void;
+    setCustomData: (customData: formelObj[]) => void;
+    setHistorizedData: (historizedData: string[]) => void;
+    setSchedule: (schedule: Schedule) => void;
+    setHistorySelectionStep: (historySelectionStep: number) => void;
 }
 
 /**
@@ -46,18 +59,42 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         )
     }
 
+    const prepareForNewDataSource = () => {
+        // Clean up the session storage
+        sessionStorage.removeItem("apiName-" + props.storageID);
+sessionStorage.removeItem("query" + props.storageID);
+sessionStorage.removeItem("noKey-" + props.storageID);
+sessionStorage.removeItem("method-" + props.storageID);
+sessionStorage.removeItem("apiData-" + props.storageID);
+sessionStorage.removeItem("selectedData-" + props.storageID);
+sessionStorage.removeItem("customData-" + props.storageID);
+        sessionStorage.removeItem("historizedData-" + props.storageID);
+
+        // Reset the states that need to be cleaned
+        props.setApiName("");
+        props.setQuery("");
+        props.setApiKeyInput1("");
+        props.setApiKeyInput2("");
+        props.setNoKey(false);
+        props.setMethod("");
+        props.setApiData({});
+        props.setSelectedData(new Array<SelectedDataItem>());
+        props.setCustomData(new Array<formelObj>());
+        props.setHistorizedData(new Array<string>());
+        props.setSchedule({type: "weekly", interval: "halfday", time: "", weekdays: []});
+        props.setHistorySelectionStep(1);
+    }
+
     /**
      * This method is triggered when the user wants to add another data source to the Infoprovider
      */
     const newDataSourceHandler = () => {
-        // TODO Update dataSources
-        // TODO possibily clear session storage in order to prevent colisions but do not forget to reload api Sources as they must be saved
-        props.setStep(2);
+        prepareForNewDataSource();
+        props.setStep(0);
     }
 
     // TODO Under selected Data list the added data Sources with names and possebly some other information such as amount of selected data, custom data or historized data
     // TODO Delete data source button next to every data source. (Requires name of data Source, which cannot be set yet)
-    // TODO Edit data source button (Could be difficult because the logic of back handler in the first step needs to change. Cancel should not cancel the creation process, but just the edit process.
     return(
         <StepFrame
             heading={"Übersicht"}

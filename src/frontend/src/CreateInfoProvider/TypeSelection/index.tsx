@@ -12,6 +12,7 @@ import {Grid} from "@material-ui/core";
 interface TypeSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
+    alreadyHasDataSources: boolean;
 };
 
 /**
@@ -136,7 +137,8 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         <Button variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={props.backHandler}>
+                                onClick={props.backHandler}
+                        disabled={props.alreadyHasDataSources}>
                             abbrechen
                         </Button>
                     </Grid>

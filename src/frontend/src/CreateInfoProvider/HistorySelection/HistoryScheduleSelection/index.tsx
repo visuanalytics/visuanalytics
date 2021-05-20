@@ -10,19 +10,21 @@ import { de } from "date-fns/locale"
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Collapse from "@material-ui/core/Collapse";
-import {Schedule} from "../../index";
+import {DataSource, Schedule, SelectedDataItem} from "../../index";
 import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { useStyles } from "../../style";
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel} from "@material-ui/core";
+import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
     handleBack: () => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
+    addToDataSources: () => void;
 };
 
 
@@ -117,6 +119,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      */
     const handleProceed = () => {
         props.selectSchedule({...props.schedule, time: setScheduleTime(currentTimeSelection)});
+        props.addToDataSources();
         props.handleProceed();
     }
 

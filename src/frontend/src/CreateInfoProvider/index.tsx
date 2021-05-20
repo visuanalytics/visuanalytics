@@ -38,7 +38,7 @@ export type DataSource = {
     method: string;
     selectedData: SelectedDataItem[];
     customData: formelObj[];
-    historizedData: string;
+    historizedData: string[];
     schedule: Schedule;
 }
 
@@ -71,7 +71,7 @@ export const CreateInfoProvider = () => {
     ];
     //the current step of the creation process, numbered by 0 to 5
 
-    const [step, setStep] = React.useState(2);
+    const [step, setStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -99,7 +99,7 @@ export const CreateInfoProvider = () => {
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     // Holds an array of all data sources for the Infoprovider
-    const [dataSources, setDataSources] = React.useState(new Array<DataSource>())
+    const [dataSources, setDataSources] = React.useState(new Array<DataSource>());
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -128,6 +128,8 @@ export const CreateInfoProvider = () => {
         setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "weekly", interval: "halfday", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
         setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
+        // Already created data sources
+        setDataSources(sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -256,8 +258,10 @@ export const CreateInfoProvider = () => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        //if(name is contained) return true
-        //else return false
+        console.log(dataSources.length);
+        for(let i = 0; i < dataSources.length; i++) {
+            if(dataSources[i].apiName === name) return true;
+        }
         return false; //TODO: to be removed when the check is implemented
     }
 
@@ -304,6 +308,7 @@ export const CreateInfoProvider = () => {
                     <TypeSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        alreadyHasDataSources={dataSources.length > 0}
                     />
                 );
             case 1:
@@ -363,6 +368,15 @@ export const CreateInfoProvider = () => {
                         selectSchedule={setSchedule}
                         historySelectionStep={historySelectionStep}
                         setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
+                        apiName={apiName}
+                        query={query}
+                        apiKeyInput1={apiKeyInput1}
+                        apiKeyInput2={apiKeyInput2}
+                        noKey={noKey}
+                        method={method}
+                        dataSourceSelectedData={selectedData}
+                        dataSources={dataSources}
+                        setDataSources={setDataSources}
                     />
                 )
             case 5:
@@ -379,6 +393,19 @@ export const CreateInfoProvider = () => {
                         schedule={schedule}
                         dataSources={dataSources}
                         setDataSources={setDataSources}
+                        storageID={uniqueId}
+                        setApiName={setApiName}
+                        setQuery={setQuery}
+                        setApiKeyInput1={setApiKeyInput1}
+                        setApiKeyInput2={setApiKeyInput2}
+                        setNoKey={setNoKey}
+                        setMethod={setMethod}
+                        setApiData={setApiData}
+                        setSelectedData={setSelectedData}
+                        setCustomData={setCustomData}
+                        setHistorizedData={setHistorizedData}
+                        setSchedule={setSchedule}
+                        setHistorySelectionStep={setHistorySelectionStep}
                     />
                 )
 

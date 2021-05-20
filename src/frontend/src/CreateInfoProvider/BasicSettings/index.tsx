@@ -142,6 +142,10 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
         }
     }
 
+    const handleTestContinue = () => {
+        props.continueHandler()
+    }
+
 
 
     /**
@@ -273,6 +277,11 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                 <Grid item>
                                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                         zurück
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained" size="large" color="primary" onClick={handleTestContinue}>
+                                        Weiter ohne Backend (Test)
                                     </Button>
                                 </Grid>
                                 <Grid item className={classes.blockableButtonPrimary}>
