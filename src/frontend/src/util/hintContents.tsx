@@ -113,6 +113,9 @@ export const hintContents = {
             <Typography gutterBottom>
                 Auf dieser Seite können Sie mit den ausgewählten Daten eigene Formeln und Variablen erstellen!
             </Typography>
+            <Typography>
+                Tipp: Es werden nur die Werte zur Auswahl angezeigt, die eine Zahl beinhalten!
+            </Typography>
         </div>
     ),
     typeSelection: (
@@ -122,6 +125,31 @@ export const hintContents = {
             </Typography>
             <Typography gutterBottom>
                 Wählen Sie hier aus, woher Sie Ihre Daten beziehen wollen!
+            </Typography>
+        </div>
+    ),
+    infoProviderOverview: (
+        <div>
+            <Typography variant={'h5'} gutterBottom>
+                Übersicht der InfoProvider
+            </Typography>
+            <Typography gutterBottom>
+                Hier sehen Sie alle erstellten Info-Provider. Sie können diese bearbeiten und exportieren oder Sie erstellen ein komplett Neuen.
+                Ebenfalls haben Sie Zugriff auf die Historisierungs-Datenbank.
+            </Typography>
+        </div>
+    ),
+    sceneOverview: (
+        <div>
+            <Typography variant={'h5'} gutterBottom>
+                Übersicht der erstellten Szenen
+            </Typography>
+        </div>
+    ),
+    videoOverview: (
+        <div>
+            <Typography variant={'h5'} gutterBottom>
+                Übersicht der erstellten Videos
             </Typography>
         </div>
     )

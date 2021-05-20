@@ -328,7 +328,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             fullDelete();
             setName('');
         } else {
-            props.reportError('backend sagt nein!');
+            props.reportError('Fehler: In der Formel liegt ein Fehler vor!');
         }
 
     }
@@ -339,7 +339,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param err error to be displayed
      */
     const handleError = (err: Error) => {
-        props.reportError("Fehler: In der Formel liegt ein Fehler vor! :  (" + err.message + ")");
+        props.reportError("Fehler: Das Backend antwortet nicht! :  (" + err.message + ")");
     }
 
     /**
@@ -397,7 +397,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
-                                disabled={!(rightParenCount >= leftParenCount)}
+                                disabled={!(rightParenCount >= leftParenCount) || opFlag}
                                 onClick={() => handleSave(name)}>
                             Speichern
                         </Button>

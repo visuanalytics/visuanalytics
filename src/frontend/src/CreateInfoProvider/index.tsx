@@ -284,6 +284,8 @@ export const CreateInfoProvider = () => {
                     <TypeSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        name={name}
+                        setName={(name: string) => setName(name)}
                     />
                 );
             case 1:

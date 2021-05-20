@@ -91,7 +91,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     /**
      * Method to post the input data to the backend in order to receive the APIs answer.
      */
-    const sendTestData = useCallFetch("/checkapi", {
+    const sendTestData = useCallFetch("visuanalytics/checkapi", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

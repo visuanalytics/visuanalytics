@@ -3,7 +3,7 @@ import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import {useStyles} from "../style";
 import Button from "@material-ui/core/Button";
-import {Grid} from "@material-ui/core";
+import {Grid, TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
@@ -49,6 +49,12 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
+                               value={props.name}
+                               onChange={event => (props.setName(event.target.value))}>
+                    </TextField>
+                </Grid>
+                <Grid item xs={12}>
                     <Typography variant="body1">
                         Übersicht über ausgewählte Daten
                     </Typography>
@@ -62,8 +68,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
-                                {props.selectedData.map((item: string) => renderListItem(item))}
                                 {props.customData.map((item: formelObj) => renderListItem(item.formelName))}
+                                {props.selectedData.map((item: string) => renderListItem(item))}
                             </List>
                         </Box>
                     </Grid>
