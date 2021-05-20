@@ -59,7 +59,9 @@ export const InfoProviderOverview: React.FC = () => {
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
     //TODO: possibly place in higher level component
-    //setup for error notification
+    /**
+     * setup for error notification
+     */
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
         open: false,
         message: "",
@@ -72,7 +74,7 @@ export const InfoProviderOverview: React.FC = () => {
 
     /**
      * Method to fetch all infoproviders from the backend.
-     * The standard hook "useCallFetch" is not used here since the fetch function has to be memoized
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
      * with useCallback in order to be used in useEffect.
      */
     const fetchAllInfoprovider = React.useCallback(() => {
@@ -85,7 +87,7 @@ export const InfoProviderOverview: React.FC = () => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "GET",
-                headers: {
+            headers: {
                 "Content-Type": "application/json\n"
             },
             signal: abort.signal
@@ -96,11 +98,11 @@ export const InfoProviderOverview: React.FC = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if(isMounted) handleSuccessFetchAll(data)
+            if (isMounted) handleSuccessFetchAll(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if(isMounted) handleErrorFetchAll(err)
+            if (isMounted) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
     }, [])
 
@@ -116,8 +118,8 @@ export const InfoProviderOverview: React.FC = () => {
      * The list of infoproviders is generated automatically when the component is shown.
      */
     React.useEffect(() => {
-        //console.log("Fetcher hook here")
-        fetchAllInfoprovider();
+            //console.log("Fetcher hook here")
+            fetchAllInfoprovider();
         }, [fetchAllInfoprovider]
     );
 
@@ -127,7 +129,7 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const handleErrorFetchAll = (err: Error) => {
         //console.log('error');
-        dispatchMessage({ type: "reportError", message:  'Fehler: ' + err});
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
     }
 
     /**
@@ -140,9 +142,9 @@ export const InfoProviderOverview: React.FC = () => {
         setInfoProvider(data);
     }
 
-    /**
-     * Requests all infoproviders from the backend that are saved in the database.
-     */
+
+    //Requests all infoproviders from the backend that are saved in the database.
+
     /*const getAll = useCallFetch("/visuanalytics/infoprovider/all", {
             method: "GET",
             headers: {
@@ -157,7 +159,8 @@ export const InfoProviderOverview: React.FC = () => {
             ...;
         }, [currentEditId]
     );
-*/
+    */
+
     /**
      * Handles the success of the deleteInfoprovider()-method.
      * The right infoprovider must also be deleted from the-infoprovider-constant to render the new list correctly.
@@ -277,17 +280,18 @@ export const InfoProviderOverview: React.FC = () => {
                 <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
                         open={removeDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
-                        Infoprovider {currentDeleteName} wirklich löschen?
+                        Infoprovider "{currentDeleteName}" wirklich löschen?
                     </DialogTitle>
                     <DialogContent dividers>
                         <Typography gutterBottom>
-                            {currentDeleteName} wird unwiderruflich gelöscht.
+                            "{currentDeleteName}" wird unwiderruflich gelöscht.
                         </Typography>
                     </DialogContent>
                     <DialogActions>
                         <Grid container justify="space-between">
                             <Grid item>
-                                <Button variant="contained" color={"secondary"} onClick={() => setRemoveDialogOpen(false)}>
+                                <Button variant="contained" color={"secondary"}
+                                        onClick={() => setRemoveDialogOpen(false)}>
                                     abbrechen
                                 </Button>
                             </Grid>
@@ -303,7 +307,7 @@ export const InfoProviderOverview: React.FC = () => {
                 </Dialog>
             </Grid>
             <CenterNotification
-                handleClose={() => dispatchMessage({ type: "close" })}
+                handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}
                 message={message.message}
                 severity={message.severity}
