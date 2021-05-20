@@ -38,17 +38,25 @@ def infprovtestdatensatz():
             "api": {},
             "transform": [],
             "storing": [],
-            "schedule": {},
-            "formulas": []
+            "schedule": {
+                "type": "daily",
+                "time": "12:00"
+            },
+            "formulas": [],
+            "images": {}
         }
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test2"
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test3"
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test4"
-        queries.insert_infoprovider(infoprovider)
-        return "", 200
+        try:
+            queries.insert_infoprovider(infoprovider)
+            infoprovider["infoprovider_name"] = "Test2"
+            queries.insert_infoprovider(infoprovider)
+            infoprovider["infoprovider_name"] = "Test3"
+            queries.insert_infoprovider(infoprovider)
+            infoprovider["infoprovider_name"] = "Test4"
+            queries.insert_infoprovider(infoprovider)
+            return "", 200
+        except Exception:
+            err = flask.jsonify({"err_msg": "Error in while adding 4 infoproviders for testing"})
+            return err, 400
 
 
 @api.route("/checkapi", methods=["POST"])
