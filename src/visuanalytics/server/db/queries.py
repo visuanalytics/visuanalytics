@@ -15,6 +15,15 @@ IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
 
 
+def get_last_infoprovider_id():
+    con = db.open_con_f()
+    last_id = 0
+    count = con.execute("SELECT COUNT(*) FROM infoprovider").fetchone()["COUNT(*)"]
+    if count != 0:
+        last_id = con.execute("SELECT seq FROM sqlite_sequence WHERE name='infoprovider'").fetchone()["seq"]
+    return last_id
+
+
 def get_infoprovider_list():
     """
     Methode für das Laden aller Infoprovider.
@@ -359,7 +368,6 @@ def _insert_param_values(con, job_id, topic_values):
 
 
 def _generate_transform(formulas, old_transform):
-    print(old_transform)
     transform = []
     for method in old_transform:
         transform.append(method)
