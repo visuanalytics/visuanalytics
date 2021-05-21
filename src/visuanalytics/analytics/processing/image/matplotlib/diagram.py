@@ -202,6 +202,8 @@ def plot_wrapper(values, file, step_data):
     x_label = values.get("x_label", None)
     y_label = values.get("y_label", None)
     x_ticks = values.get("x_ticks", None)
+    grid = values.get("grid", None)
+    face_color = values.get("face_color", None)
 
     if title:
         plt.title(title["text"], fontdict=title.get("fontdict", default_fontdict))
@@ -212,6 +214,11 @@ def plot_wrapper(values, file, step_data):
     if x_ticks:
         ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
                            color=x_ticks.get("color", default_color))
+    if grid:
+        ax.grid(color=grid.get("color", "gray"), linestyle=grid.get("linestyle", "-"), linewidth=grid.get("linewidth", 1), axis=grid.get("axis", "both"))
+    if face_color:
+        ax.set_facecolor(face_color)
+
     plt.savefig(file)
     plt.close("all")
 
