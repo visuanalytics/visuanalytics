@@ -95,7 +95,7 @@ export const CreateInfoProvider = () => {
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
-    const [schedule, setSchedule] = useState<Schedule>({type: "weekly", interval: "halfday", time: "", weekdays: []});
+    const [schedule, setSchedule] = useState<Schedule>({type: "", interval: "", time: "", weekdays: []});
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     // Holds an array of all data sources for the Infoprovider
@@ -125,7 +125,7 @@ export const CreateInfoProvider = () => {
         //historizedData
         setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
         //schedule
-        setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "weekly", interval: "halfday", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+        setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "", interval: "", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
         setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
         // Already created data sources
@@ -387,10 +387,6 @@ export const CreateInfoProvider = () => {
                         setStep={setStep}
                         name={name}
                         setName={(name: string) => setName(name)}
-                        selectedData={extractKeysFromSelection(selectedData)}
-                        customData={customData}
-                        historizedData={historizedData}
-                        schedule={schedule}
                         dataSources={dataSources}
                         setDataSources={setDataSources}
                         storageID={uniqueId}

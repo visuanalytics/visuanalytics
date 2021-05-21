@@ -64,7 +64,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
         for(let i = 0; i < props.dataSources.length; i++) {
             if (props.dataSources[i].apiName === props.apiName) {
                 let newDataSources = props.dataSources.slice();
-                newDataSources[i] = props.dataSources[i];
+                newDataSources[i] = dataSource;
                 props.setDataSources(newDataSources);
                 return;
             }
@@ -74,7 +74,6 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
 
     const skipContinueHandler = () => {
         addToDataSources();
-        props.selectSchedule({...props.schedule, type: ""});
         props.continueHandler();
     }
 
@@ -95,6 +94,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         customData={props.customData}
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
+                        selectSchedule={props.selectSchedule}
                     />
                 )
             case 2:

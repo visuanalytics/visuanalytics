@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
 import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-
+import { Schedule } from "../..";
 
 interface HistoryDataSelectionProps {
     handleProceed: () => void;
@@ -21,6 +21,7 @@ interface HistoryDataSelectionProps {
     customData: Array<formelObj>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
+    selectSchedule: (schedule: Schedule) => void;
 }
 
 /**
@@ -77,6 +78,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
             console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
+        props.selectSchedule({type: "", interval: "", time: "", weekdays: []});
     };
 
 

@@ -3,14 +3,14 @@ import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import {useStyles} from "../style";
 import Button from "@material-ui/core/Button";
-import {Grid} from "@material-ui/core";
+import {FormControl, Grid, InputLabel, Select, MenuItem} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource, Schedule, SelectedDataItem} from "..";
+import {DataSource, extractKeysFromSelection, Schedule, SelectedDataItem} from "..";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
 
 interface SettingsOverviewProps {
@@ -19,10 +19,6 @@ interface SettingsOverviewProps {
     setStep: (step: number) => void;
     name: string;
     setName: (name: string) => void;
-    selectedData: Array<string>;
-    customData: Array<formelObj>;
-    historizedData: Array<string>;
-    schedule: Schedule;
     dataSources: DataSource[];
     setDataSources: (dataSources: DataSource[]) => void;
     storageID: String
@@ -47,6 +43,8 @@ interface SettingsOverviewProps {
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     const classes = useStyles();
 
+    // The currently selected data source for the settings overview
+    const [selectedDataSource, setSelectedDataSource] = React.useState(props.dataSources.length - 1);
     /**
      * Renders one list item for the list of selected data, custom data or historized data.
      * @param item The entry that should be rendered.
@@ -81,7 +79,7 @@ sessionStorage.removeItem("customData-" + props.storageID);
         props.setSelectedData(new Array<SelectedDataItem>());
         props.setCustomData(new Array<formelObj>());
         props.setHistorizedData(new Array<string>());
-        props.setSchedule({type: "weekly", interval: "halfday", time: "", weekdays: []});
+        props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
     }
 
@@ -93,6 +91,16 @@ sessionStorage.removeItem("customData-" + props.storageID);
         props.setStep(0);
     }
 
+    const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
+        setSelectedDataSource(event.currentTarget.value as number);
+    }
+
+    const renderDataSource = (dataSource: DataSource, dataSourceNumber: number) => {
+        return (
+            <MenuItem value={dataSourceNumber}>{dataSource.apiName}</MenuItem>
+        )
+    }
+
     // TODO Under selected Data list the added data Sources with names and possebly some other information such as amount of selected data, custom data or historized data
     // TODO Delete data source button next to every data source. (Requires name of data Source, which cannot be set yet)
     return(
@@ -101,10 +109,18 @@ sessionStorage.removeItem("customData-" + props.storageID);
             hintContent={hintContents.basicSettings}
         >
             <Grid container justify="space-between">
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6}>
                     <Typography variant="body1">
                         Übersicht über ausgewählte Daten
                     </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <FormControl>
+                        <InputLabel id="select-dataSource-dropDown">Wahl der Datenquelle</InputLabel>
+                        <Select value={selectedDataSource} onChange={handleChangeSelectedDataSource}>
+                            {props.dataSources.map((item: DataSource, index: number) => renderDataSource(item, index))}
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
                     <Grid item xs={12}>
@@ -115,8 +131,8 @@ sessionStorage.removeItem("customData-" + props.storageID);
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
-                                {props.selectedData.map((item: string) => renderListItem(item))}
-                                {props.customData.map((item: formelObj) => renderListItem(item.formelName))}
+                                {extractKeysFromSelection(props.dataSources[selectedDataSource].selectedData).map((item: string) => renderListItem(item))}
+                                {props.dataSources[selectedDataSource].customData.map((item: formelObj) => renderListItem(item.formelName))}
                             </List>
                         </Box>
                     </Grid>
@@ -130,11 +146,11 @@ sessionStorage.removeItem("customData-" + props.storageID);
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
                             <List disablePadding={true}>
-                                {props.historizedData.map((item: string) => renderListItem(item))}
+                                {props.dataSources[selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
                             </List>
                         </Box>
                     </Grid>
-                    {props.schedule.type !== "" &&
+                    {props.dataSources[selectedDataSource].schedule.type !== "" &&
                     <Grid item xs={12}>
                         <Typography variant="h6">
                             Historisierungszeiten
@@ -143,9 +159,9 @@ sessionStorage.removeItem("customData-" + props.storageID);
                     }
                     <Grid item xs={12}>
                         <Box borderColor="primary.main" border={4} borderRadius={5}>
-                            {props.schedule.type !== "" &&
+                            {props.dataSources[selectedDataSource].schedule.type !== "" &&
                             <Grid item xs={12}>
-                                <ScheduleTypeTable schedule={props.schedule}/>
+                                <ScheduleTypeTable schedule={props.dataSources[selectedDataSource].schedule}/>
                             </Grid>
                             }
                         </Box>

@@ -39,6 +39,10 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
+const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
+        setCurrentTimeSelection(time);
+        if(time !== null) props.selectSchedule({...props.schedule, time: setScheduleTime(time)});
+    }
 
     /**
      * Converts a time of type Date to a readable String
@@ -87,7 +91,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      * The method is called, when the user selects the coresponding radio button.
      */
     const changeToWeekly = () => {
-        props.selectSchedule({...props.schedule, type: "weekly"});
+        props.selectSchedule({...props.schedule, type: "weekly", time: setScheduleTime(currentTimeSelection)});
     }
 
     /**
@@ -95,7 +99,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      * It is called, when the user selects the coresponding radio button.
      */
     const changeToDaily = () => {
-        props.selectSchedule({...props.schedule, type: "daily"});
+        props.selectSchedule({...props.schedule, type: "daily", time: setScheduleTime(currentTimeSelection)});
     }
 
     /**
@@ -103,7 +107,8 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      * It is called, when a user selects the coresponding radio button.
      */
     const changeToInterval = () => {
-        props.selectSchedule({...props.schedule, type: "interval"});
+        props.selectSchedule({...props.schedule, type: "interval", interval: props.schedule.interval === "" ? "minute" : props.schedule.interval, time: setScheduleTime(new Date())});
+        setCurrentTimeSelection(new Date());
     }
 
     /**
@@ -115,10 +120,9 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     }
 
     /**
-     * Finishes the schedule object by setting the time selection of a user and then proceeds to the next step.
+     * Adds the data for this source to dataSources and then proceeds to the next step
      */
     const handleProceed = () => {
-        props.selectSchedule({...props.schedule, time: setScheduleTime(currentTimeSelection)});
         props.addToDataSources();
         props.handleProceed();
     }
@@ -184,8 +188,8 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                         ampm={false}
                         placeholder="00:00"
                         mask="__:__"
-                        value={props.schedule.type === "interval" ? new Date() : currentTimeSelection}
-                        onChange={setCurrentTimeSelection}
+                        value={currentTimeSelection}
+                        onChange={refreshCurrentTimeSelection}
                         invalidDateMessage={'Falsches Datumsformat'}
                         cancelLabel={'Abbrechen'}
                         disabled={props.schedule.type === "interval"}
@@ -206,7 +210,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button variant="contained" size="large" color="primary" onClick={handleProceed} disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes()))}>
+                    <Button variant="contained" size="large" color="primary" onClick={handleProceed} disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes())) || props.schedule.type === ""}>
                         weiter
                     </Button>
                 </Grid>
