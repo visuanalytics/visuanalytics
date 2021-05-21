@@ -75,7 +75,7 @@ def infprovtestdatensatz():
         "schedule": {
             "type": "weekly",
             "time": "13:30",
-            "weekday": [0, 5]
+            "weekdays": [0, 5]
         },
         "formulas": [
             {
@@ -83,14 +83,28 @@ def infprovtestdatensatz():
                 "formula": "( _req|api|main|temp * 7 ) / 24"
             }
         ],
-        "images": {}
+        "images": {
+            "test": {
+                "type": "diagram",
+                "diagram_config": {
+                    "type": "line",
+                    "name": "test",
+                    "y": "{test}",
+                    "grid": {
+                        "linestyle": "--"
+                    }
+                }
+            }
+        }
     }
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
     queries.insert_infoprovider(infoprovider)
+    last_id += 1
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
     queries.insert_infoprovider(infoprovider)
+    last_id += 1
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
     queries.insert_infoprovider(infoprovider)
     return "", 200
