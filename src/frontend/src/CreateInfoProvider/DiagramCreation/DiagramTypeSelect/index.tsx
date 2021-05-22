@@ -118,8 +118,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
             }
             //this check should always be true but is added for type reasons
             if(Object.keys(item).length!==0) {
-                const numericAttributes = getNumericAttributes(item.value);
-                const stringAttributes = getStringAttributes(item.value);
+                const numericAttributes = Array.isArray(item.value)?getNumericAttributes(item.value):[];
+                const stringAttributes = Array.isArray(item.value)?getStringAttributes(item.value):[];
                 const arrayObject = {
                     listItem: item,
                     numericAttribute: "",
