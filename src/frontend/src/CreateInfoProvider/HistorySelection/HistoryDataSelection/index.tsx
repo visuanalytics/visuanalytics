@@ -66,6 +66,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
 
     /**
      * Method that handles clicking on a checkbox.
+     * If the user changes any checkbox, the schedule object is reset to default values.
      * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: string) => {

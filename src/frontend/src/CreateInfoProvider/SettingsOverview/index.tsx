@@ -38,6 +38,7 @@ interface SettingsOverviewProps {
 
 /**
  * Component that renders the settings overview for the creation of the Infoprovider.
+ * This component renders the information for the selected data source.
  * @param props The properties passed by the parent.
  */
 export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
@@ -57,6 +58,10 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         )
     }
 
+    /**
+     * This method cleans up the session storage and the states, before letting the user create another data source.
+     * This is needed, so that the text fields and checkboxes have their default behaviour for new data sources and are not influenced by the last source.
+     */
     const prepareForNewDataSource = () => {
         // Clean up the session storage
         sessionStorage.removeItem("apiName-" + props.storageID);
@@ -91,17 +96,26 @@ sessionStorage.removeItem("customData-" + props.storageID);
         props.setStep(0);
     }
 
+    /**
+     * This method refreshes the currently selected data source.
+     * It is called, when the user changes the selected entry in the data source dropdown.
+     * @param event The change event provided by the Select component
+     */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
         setSelectedDataSource(event.currentTarget.value as number);
     }
 
+    /**
+     * Renders one entry of the Select component for all data sources.
+     * @param dataSource The data source that wants to be rendered.
+     * @param dataSourceNumber The index of the data source in the dataSources array.
+     */
     const renderDataSource = (dataSource: DataSource, dataSourceNumber: number) => {
         return (
             <MenuItem value={dataSourceNumber}>{dataSource.apiName}</MenuItem>
         )
     }
 
-    // TODO Under selected Data list the added data Sources with names and possebly some other information such as amount of selected data, custom data or historized data
     // TODO Delete data source button next to every data source. (Requires name of data Source, which cannot be set yet)
     return(
         <StepFrame

@@ -48,6 +48,10 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
         props.setHistorySelectionStep(1);
     }
 
+    /**
+     * Adds a new data source to the state of the Infoprovider.
+     * If a data source already exists, it will be swapped out, when this method is called.
+     */
     const addToDataSources = () => {
         const dataSource: DataSource = {
             apiName: props.apiName,
@@ -72,6 +76,10 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
         props.setDataSources(props.dataSources.concat(dataSource));
     }
 
+    /**
+     * When the user doesn't select any values to be historized, this continue handler will be called and add the current data source to the other data sources.
+     * After that the handler will proceed to the next step of the Infoprovider
+     */
     const skipContinueHandler = () => {
         addToDataSources();
         props.continueHandler();
