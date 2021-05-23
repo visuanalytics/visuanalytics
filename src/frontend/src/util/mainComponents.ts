@@ -1,7 +1,7 @@
 import { Home } from "../Home";
 import HomeIcon from "@material-ui/icons/Home";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { FC } from "react";
+import React, { FC } from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
 import { JobPage } from "../JobPage";
@@ -11,6 +11,8 @@ import CreateIcon from "@material-ui/icons/Create";
 import { AddTopic } from "../AddTopic";
 import { CreateInfoProvider } from "../CreateInfoProvider"
 import {Dashboard} from "../Dashboard";
+import {EditInfoProvider} from "../EditInfoProvider";
+import EditIcon from "@material-ui/icons/Edit";
 
 export type MainComponent = {
   component: FC;
@@ -57,10 +59,15 @@ export const mainComponents: MainComponents = {
     component: Dashboard,
     icon: HomeIcon,
     navName: "dashboard"
+  },
+  editInfoProvider: {
+    component: EditInfoProvider,
+    icon: EditIcon,
+    navName: "editInfoProvider"
   }
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard";
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "editInfoProvider";

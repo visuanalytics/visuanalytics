@@ -53,10 +53,16 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const [currentDeleteName, setCurrentDeleteName] = React.useState("");
 
+    const [currentEditId, setCurrentEditId] = React.useState(0);
+
+    const [currentEditName, setCurrentEditName] = React.useState("");
+
     /**
      * The boolean is used to open the confirm-delete-dialog.
      */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
     //TODO: possibly place in higher level component
     /**
@@ -233,6 +239,16 @@ export const InfoProviderOverview: React.FC = () => {
         }, 200);
     }
 
+    const handleEditButton = (infoProv: jsonRef) => {
+        setCurrentEditId(infoProv.infoprovider_id);
+        setCurrentEditName(infoProv.infoprovider_name);
+        setEditDialogOpen(true);
+    }
+
+    const confirmEdit = () => {
+        components?.setCurrent("editInfoProvider", currentEditId)
+    }
+
     return (
         <StepFrame
             heading="Willkommen bei VisuAnalytics!"
@@ -260,6 +276,7 @@ export const InfoProviderOverview: React.FC = () => {
                             <InfoProviderList
                                 infoprovider={infoprovider}
                                 handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
+                                handleEditButton={(data: jsonRef) => handleEditButton(data)}
                             />
                         </Box>
                     </Grid>
@@ -292,7 +309,7 @@ export const InfoProviderOverview: React.FC = () => {
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
                                         onClick={() => setRemoveDialogOpen(false)}>
-                                    abbrechen
+                                    zurück
                                 </Button>
                             </Grid>
                             <Grid item>
@@ -300,6 +317,35 @@ export const InfoProviderOverview: React.FC = () => {
                                         onClick={() => confirmDelete()}
                                         className={classes.redDeleteButton}>
                                     Löschen bestätigen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
+                <Dialog onClose={() => setEditDialogOpen(false)} aria-labelledby="editDialog-title"
+                        open={editDialogOpen}>
+                    <DialogTitle id="editDialog-title">
+                        "{currentEditName}" bearbeiten!
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            Wollen sie den Infoprovider: "{currentEditName}" bearbeiten?
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => setEditDialogOpen(false)}
+                                        className={classes.redDeleteButton}>
+                                    abbrechen
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" color={"secondary"}
+                                        onClick={() => confirmEdit()}
+                                        >
+                                    Bearbeiten
                                 </Button>
                             </Grid>
                         </Grid>
