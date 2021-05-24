@@ -298,6 +298,35 @@ export const CreateInfoProvider = () => {
     }
 
     /**
+     * Adds a new data source to the state of the Infoprovider.
+     * If a data source already exists, it will be swapped out when this method is called.
+     */
+    //TODO: add this to the documentation
+    const addToDataSources = () => {
+        const dataSource: DataSource = {
+            apiName: apiName,
+            query: query,
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2,
+            noKey: noKey,
+            method: method,
+            selectedData: selectedData,
+            customData: customData,
+            historizedData: historizedData,
+            schedule: schedule
+        };
+        for(let i = 0; i < dataSources.length; i++) {
+            if (dataSources[i].apiName === apiName) {
+                let newDataSources = dataSources.slice();
+                newDataSources[i] = dataSource;
+                setDataSources(newDataSources);
+                return;
+            }
+        }
+        setDataSources(dataSources.concat(dataSource));
+    }
+
+    /**
      * Returns the rendered component based on the current step.
      * @param step The number of the current step
      */
@@ -368,15 +397,7 @@ export const CreateInfoProvider = () => {
                         selectSchedule={setSchedule}
                         historySelectionStep={historySelectionStep}
                         setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
-                        apiName={apiName}
-                        query={query}
-                        apiKeyInput1={apiKeyInput1}
-                        apiKeyInput2={apiKeyInput2}
-                        noKey={noKey}
-                        method={method}
-                        dataSourceSelectedData={selectedData}
-                        dataSources={dataSources}
-                        setDataSources={setDataSources}
+                        addToDataSources={addToDataSources}
                     />
                 )
             case 5:
