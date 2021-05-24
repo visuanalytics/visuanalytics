@@ -126,6 +126,12 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
             hintContent={hintContents.basicSettings}
         >
             <Grid container justify="space-between">
+                <Grid item xs={12}>
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
+                               value={props.name}
+                               onChange={event => (props.setName(event.target.value))}>
+                    </TextField>
+                </Grid>
                 <Grid item xs={12} md={6}>
                     <Typography variant="body1">
                         Übersicht über ausgewählte Daten

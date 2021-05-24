@@ -27,34 +27,87 @@ def close_db_con(exception):
 
 @api.route("/infprovtestdatensatz", methods=["GET"])
 def infprovtestdatensatz():
-    try:
-        queries.get_infoprovider(1)
-        return flask.jsonify(""), 400
-    except Exception:
-        infoprovider = {
-            "infoprovider_name": "Test1",
-            "api": {
-                "url": "testUrl"
+    last_id = queries.get_last_infoprovider_id()
+    infoprovider = {
+        "infoprovider_name": "Test" + str(last_id),
+        "api": {
+            "type": "request",
+            "api_key_name": "wetter",
+            "url_pattern": "http://api.openweathermap.org/data/2.5/weather",
+            "params": {
+                "q": "berlin",
+                "appid": "{_api_key}"
+            }
+        },
+        "transform": [
+            {
+                "type": "select",
+                "relevant_keys": [
+                    "_req|api|main|temp",
+                    "_req|api|main|feels_like",
+                    "_req|api|main|temp_min",
+                    "_req|api|main|temp_max"
+                ]
             },
-            "transform": [
-                0
-            ],
-            "storing": [
-                0
-            ],
-            "schedule": {
-                "type": "daily",
-                "time": "13:30"
+            {
+                "type": "transform_dict",
+                "dict_key": "_req|api|main",
+                "transform": [
+                    {
+                        "type": "append",
+                        "keys": [
+                            "_loop"
+                        ],
+                        "new_keys": [
+                            "test"
+                        ],
+                        "append_type": "list"
+                    }
+                ]
+            }
+        ],
+        "storing": [
+            {
+                "name": "test",
+                "key": "test"
+            }
+        ],
+        "schedule": {
+            "type": "weekly",
+            "time": "13:30",
+            "weekdays": [0, 5]
+        },
+        "formulas": [
+            {
+                "name": "A",
+                "formula": "( _req|api|main|temp * 7 ) / 24"
+            }
+        ],
+        "images": {
+            "test": {
+                "type": "diagram",
+                "diagram_config": {
+                    "type": "line",
+                    "name": "test",
+                    "y": "{test}",
+                    "grid": {
+                        "linestyle": "--"
+                    }
+                }
             }
         }
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test2"
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test3"
-        queries.insert_infoprovider(infoprovider)
-        infoprovider["infoprovider_name"] = "Test4"
-        queries.insert_infoprovider(infoprovider)
-        return "", 200
+    }
+    queries.insert_infoprovider(infoprovider)
+    last_id = queries.get_last_infoprovider_id()
+    infoprovider["infoprovider_name"] = "Test" + str(last_id)
+    queries.insert_infoprovider(infoprovider)
+    last_id += 1
+    infoprovider["infoprovider_name"] = "Test" + str(last_id)
+    queries.insert_infoprovider(infoprovider)
+    last_id += 1
+    infoprovider["infoprovider_name"] = "Test" + str(last_id)
+    queries.insert_infoprovider(infoprovider)
+    return "", 200
 
 
 @api.route("/checkapi", methods=["POST"])

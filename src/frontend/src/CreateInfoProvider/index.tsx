@@ -338,6 +338,8 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         alreadyHasDataSources={dataSources.length > 0}
+                        name={name}
+                        setName={(name: string) => setName(name)}
                     />
                 );
             case 1:
