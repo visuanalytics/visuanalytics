@@ -18,7 +18,7 @@ import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelOb
 //data type for elements contained in selectedData
 export type SelectedDataItem = {
     key: string;
-    type: String;
+    type: string;
 }
 
 // data type to save information about the selected schedule for historisation
@@ -30,9 +30,9 @@ export type Schedule = {
 }
 
 export type DataSource = {
-    apiName: String;
-    query: String;
-    apiKeyInput1: String;
+    apiName: string;
+    query: string;
+    apiKeyInput1: string;
     apiKeyInput2: string;
     noKey: boolean;
     method: string;
@@ -107,7 +107,7 @@ export const CreateInfoProvider = () => {
      */
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
-        //setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
         //apiName
         setApiName(sessionStorage.getItem("apiName-" + uniqueId)||"");
         //query
@@ -262,7 +262,7 @@ export const CreateInfoProvider = () => {
         for(let i = 0; i < dataSources.length; i++) {
             if(dataSources[i].apiName === name) return true;
         }
-        return false; //TODO: to be removed when the check is implemented
+        return false;
     }
 
     /**

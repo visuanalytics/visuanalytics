@@ -21,7 +21,7 @@ interface SettingsOverviewProps {
     setName: (name: string) => void;
     dataSources: DataSource[];
     setDataSources: (dataSources: DataSource[]) => void;
-    storageID: String
+    storageID: string
     setApiName: (apiName: string) => void;
     setQuery: (query: string) => void;
     setApiKeyInput1: (apiKeyInput1: string) => void;
@@ -65,13 +65,15 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     const prepareForNewDataSource = () => {
         // Clean up the session storage
         sessionStorage.removeItem("apiName-" + props.storageID);
-sessionStorage.removeItem("query" + props.storageID);
-sessionStorage.removeItem("noKey-" + props.storageID);
-sessionStorage.removeItem("method-" + props.storageID);
-sessionStorage.removeItem("apiData-" + props.storageID);
-sessionStorage.removeItem("selectedData-" + props.storageID);
-sessionStorage.removeItem("customData-" + props.storageID);
+        sessionStorage.removeItem("query" + props.storageID);
+        sessionStorage.removeItem("noKey-" + props.storageID);
+        sessionStorage.removeItem("method-" + props.storageID);
+        sessionStorage.removeItem("apiData-" + props.storageID);
+        sessionStorage.removeItem("selectedData-" + props.storageID);
+        sessionStorage.removeItem("customData-" + props.storageID);
         sessionStorage.removeItem("historizedData-" + props.storageID);
+        sessionStorage.removeItem("schedule-" + props.storageID);
+        sessionStorage.removeItem("historySelectionStep-" + props.storageID);
 
         // Reset the states that need to be cleaned
         props.setApiName("");
@@ -98,7 +100,7 @@ sessionStorage.removeItem("customData-" + props.storageID);
 
     /**
      * This method refreshes the currently selected data source.
-     * It is called, when the user changes the selected entry in the data source dropdown.
+     * It is called when the user changes the selected entry in the data source dropdown.
      * @param event The change event provided by the Select component
      */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
@@ -112,11 +114,12 @@ sessionStorage.removeItem("customData-" + props.storageID);
      */
     const renderDataSource = (dataSource: DataSource, dataSourceNumber: number) => {
         return (
-            <MenuItem value={dataSourceNumber}>{dataSource.apiName}</MenuItem>
+            <MenuItem key={dataSource.apiName} value={dataSourceNumber}>{dataSource.apiName}</MenuItem>
         )
     }
 
-    // TODO Delete data source button next to every data source. (Requires name of data Source, which cannot be set yet)
+    // TODO: Delete data source button next to every data source.
+    //TODO: Three buttons at the button are not displayed correctly when reducing screen width.
     return(
         <StepFrame
             heading={"Übersicht"}
@@ -129,7 +132,7 @@ sessionStorage.removeItem("customData-" + props.storageID);
                     </Typography>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FormControl>
+                    <FormControl fullWidth>
                         <InputLabel id="select-dataSource-dropDown">Wahl der Datenquelle</InputLabel>
                         <Select value={selectedDataSource} onChange={handleChangeSelectedDataSource}>
                             {props.dataSources.map((item: DataSource, index: number) => renderDataSource(item, index))}

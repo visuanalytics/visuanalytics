@@ -50,7 +50,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
 
     /**
      * Adds a new data source to the state of the Infoprovider.
-     * If a data source already exists, it will be swapped out, when this method is called.
+     * If a data source already exists, it will be swapped out when this method is called.
      */
     const addToDataSources = () => {
         const dataSource: DataSource = {

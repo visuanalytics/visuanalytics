@@ -10,14 +10,13 @@ import { de } from "date-fns/locale"
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Collapse from "@material-ui/core/Collapse";
-import {DataSource, Schedule, SelectedDataItem} from "../../index";
+import {Schedule} from "../../index";
 import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { useStyles } from "../../style";
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel} from "@material-ui/core";
-import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;
@@ -25,11 +24,11 @@ interface HistoryScheduleSelectionProps {
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
     addToDataSources: () => void;
-};
+}
 
 
 /**
- * This component holds the second step of step four in the creation of an Infoprovider (Teim selection for historisation)
+ * This component holds the second step of step four in the creation of an Infoprovider (Time selection for historization)
  * @param props The passed properties from the parent
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
@@ -39,7 +38,12 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
-const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
+    /**
+     * Whenever the user enters a new time in the text field, the current time selection will be updated.
+     * If the time is not null, the schedule object will be refreshed too, with the new time.
+     * @param time The time, the user entered
+     */
+    const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
         setCurrentTimeSelection(time);
         if(time !== null) props.selectSchedule({...props.schedule, time: setScheduleTime(time)});
     }
@@ -79,7 +83,7 @@ const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
 
     /**
      * Method, which handles the click on a weekday and calls the needed method. The called method is either addWeekday or removeWeekday
-     * @param dayNumber The numeric representation of a weekday for which the coresponding method should be called. The range of the value is 0 to 6.
+     * @param dayNumber The numeric representation of a weekday for which the corresponding method should be called. The range of the value is 0 to 6.
      */
     const toggleSelectedDay = (dayNumber: number) => {
         if(props.schedule.weekdays?.includes(dayNumber)) removeDay(dayNumber);
@@ -88,7 +92,7 @@ const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
 
     /**
      * Method that switches the type-entry of the schedule object to weekly.
-     * The method is called, when the user selects the coresponding radio button.
+     * The method is called, when the user selects the corresponding radio button.
      */
     const changeToWeekly = () => {
         props.selectSchedule({...props.schedule, type: "weekly", time: setScheduleTime(currentTimeSelection)});
@@ -96,7 +100,7 @@ const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
 
     /**
      * Method, that switches the type of the schedule object to daily.
-     * It is called, when the user selects the coresponding radio button.
+     * It is called, when the user selects the corresponding radio button.
      */
     const changeToDaily = () => {
         props.selectSchedule({...props.schedule, type: "daily", time: setScheduleTime(currentTimeSelection)});
@@ -104,7 +108,7 @@ const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
 
     /**
      * Method that switches the state of the schedule object to interval.
-     * It is called, when a user selects the coresponding radio button.
+     * It is called, when a user selects the corresponding radio button.
      */
     const changeToInterval = () => {
         props.selectSchedule({...props.schedule, type: "interval", interval: props.schedule.interval === "" ? "minute" : props.schedule.interval, time: setScheduleTime(new Date())});
