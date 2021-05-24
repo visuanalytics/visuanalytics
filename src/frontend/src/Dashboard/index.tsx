@@ -16,6 +16,7 @@ interface TabPanelProps {
     value: any;
 }
 
+
 /**
  * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */

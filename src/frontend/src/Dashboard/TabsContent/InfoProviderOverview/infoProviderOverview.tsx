@@ -14,7 +14,7 @@ import {centerNotifcationReducer, CenterNotification} from "../../../util/Center
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
  */
-export type jsonRef = {
+type jsonRef = {
     infoprovider_id: number;
     infoprovider_name: string;
 }
