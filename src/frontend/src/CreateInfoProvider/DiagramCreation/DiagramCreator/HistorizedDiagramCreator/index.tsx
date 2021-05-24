@@ -285,7 +285,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                         <FormControlLabel
                             className={classes.creatorFormControlLabel}
                             control={
-                                <TextField type="number" inputProps={{ min: 1}} variant="outlined" margin="normal"
+                                <TextField type="number" inputProps={{ min: 0}} variant="outlined" margin="normal"
                                            value={props.historizedObjects[selectedHistorizedOrdinal].intervalSizes[ordinal]}
                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => intervalSizeChangeHandler(e, ordinal)}
                                            className={classes.intervalInputField}
