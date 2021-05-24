@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
+import {DataSource} from "../../../CreateInfoProvider";
 
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
@@ -32,8 +33,7 @@ type answer = {
 export type InfoProviderObj = {
     //format des json
     name: string;
-    //TODO: change to DataSource
-    dataSources: Array<string>;
+    dataSources: Array<DataSource>;
     //TODO: change to Diagram
     diagrams: Array<string>;
 }
