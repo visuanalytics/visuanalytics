@@ -147,8 +147,9 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         <Button variant="contained"
                                 size="large"
                                 color={"primary"}
-                                disabled={props.alreadyHasDataSources}>
-                                onClick={() => components?.setCurrent("dashboard")}>
+                                disabled={props.alreadyHasDataSources}
+                                onClick={() => components?.setCurrent("dashboard")}
+                        >
                             abbrechen
                         </Button>
                     </Grid>
