@@ -13,6 +13,7 @@ import {ComponentContext} from "../../ComponentProvider";
 interface TypeSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
+    alreadyHasDataSources: boolean;
     name: string;
     setName: (name: string) => void;
 }
@@ -146,7 +147,9 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         <Button variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={() => components?.setCurrent("dashboard")}>
+                                disabled={props.alreadyHasDataSources}
+                                onClick={() => components?.setCurrent("dashboard")}
+                        >
                             abbrechen
                         </Button>
                     </Grid>

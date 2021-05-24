@@ -23,11 +23,12 @@ interface HistoryScheduleSelectionProps {
     handleBack: () => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
-};
+    addToDataSources: () => void;
+}
 
 
 /**
- * This component holds the second step of step four in the creation of an Infoprovider (Teim selection for historisation)
+ * This component holds the second step of step four in the creation of an Infoprovider (Time selection for historization)
  * @param props The passed properties from the parent
  */
 export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  = (props) => {
@@ -37,6 +38,15 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     //holds the currently selected time
     const [currentTimeSelection, setCurrentTimeSelection] = React.useState<MaterialUiPickersDate>(new Date())
 
+    /**
+     * Whenever the user enters a new time in the text field, the current time selection will be updated.
+     * If the time is not null, the schedule object will be refreshed too, with the new time.
+     * @param time The time, the user entered
+     */
+    const refreshCurrentTimeSelection = (time: MaterialUiPickersDate) => {
+        setCurrentTimeSelection(time);
+        if(time !== null) props.selectSchedule({...props.schedule, time: setScheduleTime(time)});
+    }
 
     /**
      * Converts a time of type Date to a readable String
@@ -73,7 +83,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
 
     /**
      * Method, which handles the click on a weekday and calls the needed method. The called method is either addWeekday or removeWeekday
-     * @param dayNumber The numeric representation of a weekday for which the coresponding method should be called. The range of the value is 0 to 6.
+     * @param dayNumber The numeric representation of a weekday for which the corresponding method should be called. The range of the value is 0 to 6.
      */
     const toggleSelectedDay = (dayNumber: number) => {
         if(props.schedule.weekdays?.includes(dayNumber)) removeDay(dayNumber);
@@ -82,26 +92,27 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
 
     /**
      * Method that switches the type-entry of the schedule object to weekly.
-     * The method is called, when the user selects the coresponding radio button.
+     * The method is called, when the user selects the corresponding radio button.
      */
     const changeToWeekly = () => {
-        props.selectSchedule({...props.schedule, type: "weekly"});
+        props.selectSchedule({...props.schedule, type: "weekly", time: setScheduleTime(currentTimeSelection)});
     }
 
     /**
      * Method, that switches the type of the schedule object to daily.
-     * It is called, when the user selects the coresponding radio button.
+     * It is called, when the user selects the corresponding radio button.
      */
     const changeToDaily = () => {
-        props.selectSchedule({...props.schedule, type: "daily"});
+        props.selectSchedule({...props.schedule, type: "daily", time: setScheduleTime(currentTimeSelection)});
     }
 
     /**
      * Method that switches the state of the schedule object to interval.
-     * It is called, when a user selects the coresponding radio button.
+     * It is called, when a user selects the corresponding radio button.
      */
     const changeToInterval = () => {
-        props.selectSchedule({...props.schedule, type: "interval"});
+        props.selectSchedule({...props.schedule, type: "interval", interval: props.schedule.interval === "" ? "minute" : props.schedule.interval, time: setScheduleTime(new Date())});
+        setCurrentTimeSelection(new Date());
     }
 
     /**
@@ -113,10 +124,10 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
     }
 
     /**
-     * Finishes the schedule object by setting the time selection of a user and then proceeds to the next step.
+     * Adds the data for this source to dataSources and then proceeds to the next step
      */
     const handleProceed = () => {
-        props.selectSchedule({...props.schedule, time: setScheduleTime(currentTimeSelection)});
+        props.addToDataSources();
         props.handleProceed();
     }
 
@@ -181,8 +192,8 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                         ampm={false}
                         placeholder="00:00"
                         mask="__:__"
-                        value={props.schedule.type === "interval" ? new Date() : currentTimeSelection}
-                        onChange={setCurrentTimeSelection}
+                        value={currentTimeSelection}
+                        onChange={refreshCurrentTimeSelection}
                         invalidDateMessage={'Falsches Datumsformat'}
                         cancelLabel={'Abbrechen'}
                         disabled={props.schedule.type === "interval"}
@@ -203,7 +214,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button variant="contained" size="large" color="primary" onClick={handleProceed} disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes()))}>
+                    <Button variant="contained" size="large" color="primary" onClick={handleProceed} disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes())) || props.schedule.type === ""}>
                         weiter
                     </Button>
                 </Grid>
