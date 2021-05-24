@@ -17,7 +17,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
 
     return(
         <StepFrame heading={"Bearbeiten der Datenauswahl"} hintContent={"Bearbeiten der Datenauswahl!"}>
-            <Grid container xs={12} justify={"space-evenly"}>
+            <Grid container justify={"space-evenly"}>
                 DataSelection-List
                 <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
                     <Grid item container xs={12} justify={"space-between"}>

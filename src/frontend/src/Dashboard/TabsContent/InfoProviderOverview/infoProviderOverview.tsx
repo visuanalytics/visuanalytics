@@ -29,6 +29,15 @@ type answer = {
     err_msg: string;
 }
 
+export type InfoProviderObj = {
+    //format des json
+    name: string;
+    //TODO: change to DataSource
+    dataSources: Array<string>;
+    //TODO: change to Diagram
+    diagrams: Array<string>;
+}
+
 /**
  * Renders the whole infoprovider-overview component except the infoprovider-list
  */
@@ -192,6 +201,15 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorDelete = (err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }
+
+    /**
      * Request to the backend to delete an infoprovider.
      */
     const deleteInfoProvider = useCallFetch("visuanalytics/infoprovider/" + currentDeleteId, {
@@ -199,7 +217,7 @@ export const InfoProviderOverview: React.FC = () => {
             headers: {
                 "Content-Type": "application/json\n"
             }
-        }, handleSuccessDelete, handleErrorFetchAll
+        }, handleSuccessDelete, handleErrorDelete
     );
 
     //only for test-purposes
@@ -239,6 +257,28 @@ export const InfoProviderOverview: React.FC = () => {
         }, 200);
     }
 
+    const handleSuccessEdit = (jsonData: any) => {
+
+        const data = jsonData as InfoProviderObj;
+
+        components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: data})
+
+    }
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorEdit = (err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }
+
+    const editInfoProvider = useCallFetch("/visuanalytics/infoprovider/" + currentEditId, {
+            method: "GET"
+        }, handleSuccessEdit, handleErrorEdit
+    );
+
     const handleEditButton = (infoProv: jsonRef) => {
         setCurrentEditId(infoProv.infoprovider_id);
         setCurrentEditName(infoProv.infoprovider_name);
@@ -246,7 +286,8 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     const confirmEdit = () => {
-        components?.setCurrent("editInfoProvider", currentEditId)
+        console.log(currentEditId);
+        editInfoProvider();
     }
 
     return (

@@ -11,11 +11,14 @@ import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview"
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {useStyles} from "./style";
 import {ComponentContext} from "../ComponentProvider";
+import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
 
+interface EditInfoProviderProps {
+    infoProvId?: number;
+    infoProvider?: InfoProviderObj;
+}
 
-export const EditInfoProvider: React.FC = (props) => {
-
-    const [id, setId] = React.useState(props.children)
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, infoProvider}) => {
 
     const classes = useStyles();
 
@@ -125,6 +128,7 @@ export const EditInfoProvider: React.FC = (props) => {
                 </Stepper>
             </Container>
             {selectContent(step)}
+            {infoProvId}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

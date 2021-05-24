@@ -28,7 +28,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
         <StepFrame
             heading={'Bearbeiten eines Infoproviders:'}
             hintContent={"Überblick"}>
-            <Grid container xs={12} justify={"space-evenly"}>
+            <Grid container justify={"space-evenly"}>
                 Overview
                 <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
                     <Grid item container xs={12} justify={"space-between"}>
