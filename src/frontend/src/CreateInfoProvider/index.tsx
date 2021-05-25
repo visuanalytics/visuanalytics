@@ -19,10 +19,9 @@ import {extractKeysFromSelection} from "./helpermethods";
 DONE:
 task 1: load the object sent from the backend in step 3, test it
 task 1.5: fix circular dependencies by sourcing out all type definitions
+task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
 
 TO DO:
-
-task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
 task 3: deleting a formula also has to delete it from historizedData if it is used there
 task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
 task 5: reloading needs to ask the user to put in all api key inputs again
@@ -255,7 +254,7 @@ export const CreateInfoProvider = () => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        console.log(dataSources.length);
+        //console.log(dataSources.length);
         for(let i = 0; i < dataSources.length; i++) {
             if(dataSources[i].apiName === name) return true;
         }
@@ -270,7 +269,7 @@ export const CreateInfoProvider = () => {
         if(step===5) postInfoProvider();
         else {
             setStep(step + 1);
-            console.log(JSON.stringify({
+            /*console.log(JSON.stringify({
                 infoprovider_name: name,
                 api: {
                     type: "request",
@@ -281,7 +280,7 @@ export const CreateInfoProvider = () => {
                 transform: extractKeysFromSelection(selectedData),
                 storing: historizedData,
                 customData: customData
-            }));
+            }));*/
         }
     }
 
@@ -384,6 +383,7 @@ export const CreateInfoProvider = () => {
                         customData={customData}
                         setCustomData={(array:Array<formelObj>) => setCustomData(array)}
                         reportError={reportError}
+                        listItems={listItems}
                     />
                 )
             case 4:

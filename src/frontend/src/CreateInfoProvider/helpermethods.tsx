@@ -136,3 +136,26 @@ export const transformJSON = (jsonData: any, parent = "") => {
     }
     return resultArray;
 };
+
+
+/* CreateCustomData */
+/**
+ * Returns an array of all elements contained in the listItems. Used for checking duplicate names in formula creation.
+ * Also includes the names of arrays and objects to avoid further problems, even though they cant be selected (yet).
+ * @param listItems The listItems the list should be processed.
+ */
+export const getListItemsNames = (listItems: Array<ListItemRepresentation>) => {
+    let listItemNames: Array<string> = [];
+    //full name getter: data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName
+    //loop through all elements
+    listItems.forEach((data) => {
+        //for all cases (primitive, object, array), the name needs to be added to the list
+        listItemNames.push(data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName);
+        //check for objects or array
+        if(Array.isArray(data.value)) {
+            //recursive call to add all names in the object or array
+            listItemNames = listItemNames.concat(getListItemsNames(data.value));
+        }
+    });
+    return listItemNames;
+}

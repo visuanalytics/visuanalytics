@@ -8,7 +8,8 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import {customDataBackendAnswer, SelectedDataItem} from "../types";
+import {customDataBackendAnswer, ListItemRepresentation, SelectedDataItem} from "../types";
+import {getListItemsNames} from "../helpermethods";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -18,6 +19,7 @@ interface CreateCustomDataProps {
     customData: Array<formelObj>;
     setCustomData: (array: Array<formelObj>) => void;
     reportError: (message: string) => void;
+    listItems: Array<ListItemRepresentation>;
 }
 
 
@@ -274,7 +276,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     }
 
     /**
-     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Also checks if the name is already in use.
+     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty.
+     * Also checks if the name is already in use for another formula or in any of the data provided by the api
      * Saves the formel in CustomData and refreshes the Input-Box.
      * @param formel the name of the formel
      */
@@ -283,9 +286,15 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
         }
+        //TODO: explain in documentation why this is not checked on every input in the TextField - takes up too much computation on larger data sets
+        //check for duplicates in api names
+        if(getListItemsNames(props.listItems).includes(formel)) {
+            props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")
+        }
+        //check for duplicates in formula names
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formel) {
-                props.reportError('Variable ist schon vergeben!');
+                props.reportError('Fehler: Name is schon an eine andere Formel vergeben!');
                 return;
             }
         }
