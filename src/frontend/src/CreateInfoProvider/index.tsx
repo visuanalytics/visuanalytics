@@ -384,6 +384,8 @@ export const CreateInfoProvider = () => {
                         setCustomData={(array:Array<formelObj>) => setCustomData(array)}
                         reportError={reportError}
                         listItems={listItems}
+                        historizedData={historizedData}
+                        setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                     />
                 )
             case 4:

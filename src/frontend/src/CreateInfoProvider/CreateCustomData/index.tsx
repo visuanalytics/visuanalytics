@@ -20,6 +20,8 @@ interface CreateCustomDataProps {
     setCustomData: (array: Array<formelObj>) => void;
     reportError: (message: string) => void;
     listItems: Array<ListItemRepresentation>;
+    historizedData: Array<string>;
+    setHistorizedData: (array: Array<string>) => void;
 }
 
 
@@ -263,15 +265,24 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomData = (formelName: string) => {
+        //delete the data from the customData-Array
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formelName) {
                 const arCopy = props.customData.slice();
                 arCopy.splice(i, 1);
                 props.setCustomData(arCopy);
-                return;
+                break;
             }
         }
-
+        //delete it also from historizedData if it is used there
+        props.historizedData.forEach((item) => {
+            if(item===formelName) {
+                props.setHistorizedData(props.historizedData.filter((item) => {
+                    return item!==formelName;
+                }))
+                return;
+            }
+        })
     }
 
     /**
