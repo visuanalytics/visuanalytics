@@ -56,10 +56,13 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     const [paramValue, setParamValue] = React.useState("");
     //state variable that manages toggling between input and loading spinner
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
-    //checks if anything was changed - only then a new api request is sent
-    const [wasChanged, setWasChanged] = React.useState(false);
+    //the values when the component is initially mounted - used for change detection
+    const [oldQuery] = React.useState(props.query);
+    const [oldMethod] = React.useState(props.method);
+    const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
+    const [oldApiKeyInput2] = React.useState(props.apiKeyInput2);
+    const [oldNoKey] = React.useState(props.noKey);
     //const components = React.useContext(ComponentContext);
-
 
     /**
      * Handler method for clicking the "proceed" button.
@@ -67,6 +70,14 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      */
     const handleProceed = () => {
         //TODO: add new behaviour to documentation
+        //check if the settings differ from the old settings
+        const wasChanged = (
+            props.query!==oldQuery||
+            props.method!==oldMethod||
+            props.noKey!==oldNoKey||
+            props.apiKeyInput1!==oldApiKeyInput1||
+            props.apiKeyInput2!==oldApiKeyInput2
+        );
         //send a new request to the backend when the user made changes to his settings
         if(wasChanged) {
             //reset all following settings when a new api request is mad
@@ -175,7 +186,6 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             }
             props.setMethod(e.target.value as string);
         }
-        if(!wasChanged) setWasChanged(true);
     }
 
     const handleTestContinue = () => {
@@ -226,7 +236,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                 <APIInputField
                                     defaultValue="Ihre API-Query"
                                     value={props.query}
-                                    changeHandler={(s) => {props.setQuery(s); if(!wasChanged) setWasChanged(true);}}
+                                    changeHandler={(s) => props.setQuery(s)}
                                 />
                             </Grid>
                             <Grid item container className={classes.additionalParams}>
@@ -284,7 +294,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     <APIInputField
                                         defaultValue={(props.method==="BasicAuth"||props.method==="DigestAuth")?"Nutzername":props.method==="BearerToken"?"Token":"Name Key-Parameter"}
                                         value={props.apiKeyInput1}
-                                        changeHandler={(s) => {props.setApiKeyInput1(s); if(!wasChanged) setWasChanged(true);}}
+                                        changeHandler={(s) => props.setApiKeyInput1(s)}
                                         noKey={props.noKey}
                                     />
                                 </Grid>
@@ -295,7 +305,6 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                             value={props.apiKeyInput2}
                                             changeHandler={(s) => {
                                                 props.setApiKeyInput2(s);
-                                                if(!wasChanged) setWasChanged(true);
                                             }}
                                             noKey={props.noKey || props.method === "BearerToken"}
                                         />
@@ -305,7 +314,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <FormControlLabel
                                     control={
-                                        <Checkbox checked={props.noKey} onChange={() => {props.setNoKey(!props.noKey); if(!wasChanged) setWasChanged(true);}}/>
+                                        <Checkbox checked={props.noKey} onChange={() => props.setNoKey(!props.noKey)}/>
                                     }
                                     label="Diese API benötigt keinen Key"
                                 />
