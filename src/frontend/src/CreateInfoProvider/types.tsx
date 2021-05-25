@@ -29,6 +29,8 @@ export type DataSource = {
     schedule: Schedule;
 }
 
+export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
+
 /* BasicSettings */
 /**
  * Defines the type that is expected for the backends answer to our request

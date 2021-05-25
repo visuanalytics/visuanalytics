@@ -12,7 +12,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
-import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem} from "./types";
+import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem, uniqueId} from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 
 /* TODO: list of bugfixes to be made by Janek
@@ -20,9 +20,9 @@ DONE:
 task 1: load the object sent from the backend in step 3, test it
 task 1.5: fix circular dependencies by sourcing out all type definitions
 task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
+task 3: deleting a formula also has to delete it from historizedData if it is used there
 
 TO DO:
-task 3: deleting a formula also has to delete it from historizedData if it is used there
 task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
 task 5: reloading needs to ask the user to put in all api key inputs again
 task 6: if possible, display a warning before reloading
@@ -44,7 +44,6 @@ This component manages which step is active and displays the corresponding conte
  */
 export const CreateInfoProvider = () => {
     //unique application id used to avoid collisions in session storage
-    const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
@@ -358,6 +357,11 @@ export const CreateInfoProvider = () => {
                         name={apiName}
                         setName={(name: string) => setApiName(name)}
                         reportError={reportError}
+                        setSelectedData={setSelectedData}
+                        setCustomData={setCustomData}
+                        setHistorizedData={setHistorizedData}
+                        setSchedule={setSchedule}
+                        setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                     />
                 );
@@ -414,7 +418,6 @@ export const CreateInfoProvider = () => {
                         setName={(name: string) => setName(name)}
                         dataSources={dataSources}
                         setDataSources={setDataSources}
-                        storageID={uniqueId}
                         setApiName={setApiName}
                         setQuery={setQuery}
                         setApiKeyInput1={setApiKeyInput1}

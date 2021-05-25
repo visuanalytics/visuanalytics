@@ -14,8 +14,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {ListItemRepresentation, testDataBackendAnswer} from "../types";
+import {ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
 import {transformJSON} from "../helpermethods";
+import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -35,6 +36,11 @@ interface BasicSettingsProps {
     name: string;
     setName: (name: string) => void;
     reportError: (message: string) => void;
+    setSelectedData: (selectedData: SelectedDataItem[]) => void;
+    setCustomData: (customData: formelObj[]) => void;
+    setHistorizedData: (historizedData: string[]) => void;
+    setSchedule: (schedule: Schedule) => void;
+    setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
 }
 
@@ -50,6 +56,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     const [paramValue, setParamValue] = React.useState("");
     //state variable that manages toggling between input and loading spinner
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
+    //checks if anything was changed - only then a new api request is sent
+    const [wasChanged, setWasChanged] = React.useState(false);
     //const components = React.useContext(ComponentContext);
 
 
@@ -58,8 +66,34 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * Sends the API data for testing to the backend and displays a loading animation
      */
     const handleProceed = () => {
-        sendTestData();
-        setDisplaySpinner(true);
+        //TODO: add new behaviour to documentation
+        //send a new request to the backend when the user made changes to his settings
+        if(wasChanged) {
+            //reset all following settings when a new api request is mad
+            // Clean up the session storage for all following steps
+            sessionStorage.removeItem("selectedData-" + uniqueId);
+            sessionStorage.removeItem("customData-" + uniqueId);
+            sessionStorage.removeItem("historizedData-" + uniqueId);
+            sessionStorage.removeItem("schedule-" + uniqueId);
+            sessionStorage.removeItem("historySelectionStep-" + uniqueId);
+            sessionStorage.removeItem("listItems-" + uniqueId);
+
+            // Reset the states of the following steps
+            //props.setApiData({});
+            props.setSelectedData(new Array<SelectedDataItem>());
+            props.setCustomData(new Array<formelObj>());
+            props.setHistorizedData(new Array<string>());
+            props.setSchedule({type: "", interval: "", time: "", weekdays: []});
+            props.setHistorySelectionStep(1);
+            props.setListItems(new Array<ListItemRepresentation>());
+            //send the data to the api
+            sendTestData();
+            setDisplaySpinner(true);
+        } else {
+            //just continue when there were no changes
+            props.continueHandler();
+        }
+
     }
     /**
      * Handler for a successful request to the backend for receiving the API data.
@@ -141,6 +175,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             }
             props.setMethod(e.target.value as string);
         }
+        if(!wasChanged) setWasChanged(true);
     }
 
     const handleTestContinue = () => {
@@ -191,7 +226,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                 <APIInputField
                                     defaultValue="Ihre API-Query"
                                     value={props.query}
-                                    changeHandler={(s) => {props.setQuery(s)}}
+                                    changeHandler={(s) => {props.setQuery(s); if(!wasChanged) setWasChanged(true);}}
                                 />
                             </Grid>
                             <Grid item container className={classes.additionalParams}>
@@ -249,7 +284,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     <APIInputField
                                         defaultValue={(props.method==="BasicAuth"||props.method==="DigestAuth")?"Nutzername":props.method==="BearerToken"?"Token":"Name Key-Parameter"}
                                         value={props.apiKeyInput1}
-                                        changeHandler={(s) => {props.setApiKeyInput1(s)}}
+                                        changeHandler={(s) => {props.setApiKeyInput1(s); if(!wasChanged) setWasChanged(true);}}
                                         noKey={props.noKey}
                                     />
                                 </Grid>
@@ -259,7 +294,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                             defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Passwort" : "API-Key"}
                                             value={props.apiKeyInput2}
                                             changeHandler={(s) => {
-                                                props.setApiKeyInput2(s)
+                                                props.setApiKeyInput2(s);
+                                                if(!wasChanged) setWasChanged(true);
                                             }}
                                             noKey={props.noKey || props.method === "BearerToken"}
                                         />
@@ -269,7 +305,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <FormControlLabel
                                     control={
-                                        <Checkbox checked={props.noKey} onChange={() => props.setNoKey(!props.noKey)}/>
+                                        <Checkbox checked={props.noKey} onChange={() => {props.setNoKey(!props.noKey); if(!wasChanged) setWasChanged(true);}}/>
                                     }
                                     label="Diese API benötigt keinen Key"
                                 />
