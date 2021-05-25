@@ -19,9 +19,11 @@ import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
-    apiData: any;
+    //apiData: any;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
+    listItems: Array<ListItemRepresentation>;
+    setListItems: (array: Array<ListItemRepresentation>) => void; //TODO: only used for "janek test", remove in production
 }
 
 
@@ -29,7 +31,6 @@ interface DataSelectionProps {
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
 
-    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
     let indexCounter = 0
 
@@ -135,21 +136,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         "Vorherige-Season": "Text"
     };
 
-
-
-
-    //extract apiData and setSelectedData from props to use it in useEffect
-    const apiData = props.apiData;
-    const setSelectedData = props.setSelectedData
-
-    //TODO: add to documentation
-    //everytime there is a change in the source data, rebuild the list and clean the selection
-    React.useEffect(() => {
-        if(Object.keys(apiData).length!==0) {
-            setListItems(transformJSON(apiData));
-            setSelectedData([]);
-        }
-    }, []);
 
 
     /**
@@ -272,7 +258,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 <Grid item xs={10}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key={indexCounter + "listBox"}>
                         <List disablePadding={true} key={indexCounter + "listRoot"}>
-                            {listItems.map((item) => renderListItem(item, 0))}
+                            {props.listItems.map((item) => renderListItem(item, 0))}
                         </List>
                     </Box>
                 </Grid>

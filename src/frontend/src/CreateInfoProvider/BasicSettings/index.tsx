@@ -14,12 +14,13 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {testDataBackendAnswer} from "../types";
+import {ListItemRepresentation, testDataBackendAnswer} from "../types";
+import {transformJSON} from "../helpermethods";
 
 interface BasicSettingsProps {
     continueHandler: () => void;
     backHandler: () => void;
-    setApiData: (jsonData: any) => void;
+    //setApiData: (jsonData: any) => void;
     checkNameDuplicate: (name: string) => boolean;
     query: string;
     setQuery: (query: string) => void;
@@ -34,7 +35,8 @@ interface BasicSettingsProps {
     name: string;
     setName: (name: string) => void;
     reportError: (message: string) => void;
-};
+    setListItems: (array: Array<ListItemRepresentation>) => void;
+}
 
 
 
@@ -70,7 +72,9 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
        }
        console.log(data.api_keys);
-       props.setApiData(data.api_keys);
+       //props.setApiData(data.api_keys);
+        // TODO: add to documentation
+       props.setListItems(transformJSON(data.api_keys));
        props.continueHandler();
    }
 
@@ -264,7 +268,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <FormControlLabel
                                     control={
-                                        <Checkbox checked={props.noKey} onChange={(e) => props.setNoKey(!props.noKey)}/>
+                                        <Checkbox checked={props.noKey} onChange={() => props.setNoKey(!props.noKey)}/>
                                     }
                                     label="Diese API benötigt keinen Key"
                                 />

@@ -12,16 +12,16 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
-import {DataSource, Schedule, SelectedDataItem} from "./types";
+import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem} from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
-
 
 /* TODO: list of bugfixes to be made by Janek
 DONE:
-
-TO DO:
 task 1: load the object sent from the backend in step 3, test it
 task 1.5: fix circular dependencies by sourcing out all type definitions
+
+TO DO:
+
 task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
 task 3: deleting a formula also has to delete it from historizedData if it is used there
 task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
@@ -74,8 +74,8 @@ export const CreateInfoProvider = () => {
     const [noKey, setNoKey] = React.useState(false);
     //holds the selected authorization method
     const [method, setMethod] = React.useState("");
-    //holds the data delivered from the currently created API
-    const [apiData, setApiData] = React.useState({});
+    //holds the data delivered from the currently created API -> DOESNT SEEM TO BE NEEDED ANYMORE
+    //const [apiData, setApiData] = React.useState({});
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Array<SelectedDataItem>());
     // contains all data created custom in step 4
@@ -87,7 +87,9 @@ export const CreateInfoProvider = () => {
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     // Holds an array of all data sources for the Infoprovider
-    const [dataSources, setDataSources] = React.useState(new Array<DataSource>());
+    const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
+    //Holds all ListItemRepresentation objects used for the list in step 3 - defined here to be set in step 2
+    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -105,7 +107,7 @@ export const CreateInfoProvider = () => {
         //method
         setMethod(sessionStorage.getItem("method-" + uniqueId)||"");
         //apiData
-        setApiData(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
+        //(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
         //selectedData
         setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
@@ -118,6 +120,8 @@ export const CreateInfoProvider = () => {
         setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
         // Already created data sources
         setDataSources(sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
+        //listItems
+        setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -140,9 +144,9 @@ export const CreateInfoProvider = () => {
         sessionStorage.setItem("method-" + uniqueId, method);
     }, [method])
     //store apiData in sessionStorage
-    React.useEffect(() => {
+   /* React.useEffect(() => {
         sessionStorage.setItem("apiData-" + uniqueId, JSON.stringify(apiData));
-    }, [apiData])
+    }, [apiData])*/
     //store selectedData in sessionStorage by converting into an array and use JSON.stringify on it
     React.useEffect(() => {
         sessionStorage.setItem("selectedData-" + uniqueId, JSON.stringify(selectedData));
@@ -167,6 +171,10 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("dataSources-" + uniqueId, JSON.stringify(dataSources));
     }, [dataSources])
+    // Store listItems in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
+    }, [listItems])
 
 
     /**
@@ -178,11 +186,12 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("query-" + uniqueId);
         sessionStorage.removeItem("noKey-" + uniqueId);
         sessionStorage.removeItem("method-" + uniqueId);
-        sessionStorage.removeItem("apiData-" + uniqueId);
+        //sessionStorage.removeItem("apiData-" + uniqueId);
         sessionStorage.removeItem("selectedData-" + uniqueId);
         sessionStorage.removeItem("customData-" + uniqueId);
         sessionStorage.removeItem("historizedData-" + uniqueId);
         sessionStorage.removeItem("dataSources-" + uniqueId);
+        sessionStorage.removeItem("listItems-" + uniqueId);
     }
 
 
@@ -335,7 +344,7 @@ export const CreateInfoProvider = () => {
                     <BasicSettings
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        setApiData={setApiData}
+                        //setApiData={setApiData}
                         checkNameDuplicate={checkNameDuplicate}
                         query={query}
                         setQuery={(query: string) => setQuery(query)}
@@ -350,6 +359,7 @@ export const CreateInfoProvider = () => {
                         name={apiName}
                         setName={(name: string) => setApiName(name)}
                         reportError={reportError}
+                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                     />
                 );
             case 2:
@@ -357,9 +367,11 @@ export const CreateInfoProvider = () => {
                     <DataSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        apiData={apiData}
+                        //apiData={apiData}
                         selectedData={selectedData}
                         setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
+                        listItems={listItems}
+                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                     />
                 );
             case 3:
@@ -407,12 +419,13 @@ export const CreateInfoProvider = () => {
                         setApiKeyInput2={setApiKeyInput2}
                         setNoKey={setNoKey}
                         setMethod={setMethod}
-                        setApiData={setApiData}
+                        //setApiData={setApiData}
                         setSelectedData={setSelectedData}
                         setCustomData={setCustomData}
                         setHistorizedData={setHistorizedData}
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
+                        setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                     />
                 )
 

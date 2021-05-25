@@ -11,7 +11,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
-import {DataSource, Schedule, SelectedDataItem} from "../types";
+import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem} from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
 
 interface SettingsOverviewProps {
@@ -29,12 +29,13 @@ interface SettingsOverviewProps {
     setApiKeyInput2: (apiKeyInput2: string) => void;
     setNoKey: (noKey: boolean) => void;
     setMethod: (method: string) => void;
-    setApiData: (apiData: {}) => void;
+    //setApiData: (apiData: {}) => void;
     setSelectedData: (selectedData: SelectedDataItem[]) => void;
     setCustomData: (customData: formelObj[]) => void;
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
+    setListItems: (array: Array<ListItemRepresentation>) => void;
 }
 
 /**
@@ -69,12 +70,13 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         sessionStorage.removeItem("query" + props.storageID);
         sessionStorage.removeItem("noKey-" + props.storageID);
         sessionStorage.removeItem("method-" + props.storageID);
-        sessionStorage.removeItem("apiData-" + props.storageID);
+        //sessionStorage.removeItem("apiData-" + props.storageID);
         sessionStorage.removeItem("selectedData-" + props.storageID);
         sessionStorage.removeItem("customData-" + props.storageID);
         sessionStorage.removeItem("historizedData-" + props.storageID);
         sessionStorage.removeItem("schedule-" + props.storageID);
         sessionStorage.removeItem("historySelectionStep-" + props.storageID);
+        sessionStorage.removeItem("listItems-" + props.storageID);
 
         // Reset the states that need to be cleaned
         props.setApiName("");
@@ -83,12 +85,13 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setApiKeyInput2("");
         props.setNoKey(false);
         props.setMethod("");
-        props.setApiData({});
+        //props.setApiData({});
         props.setSelectedData(new Array<SelectedDataItem>());
         props.setCustomData(new Array<formelObj>());
         props.setHistorizedData(new Array<string>());
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
+        props.setListItems(new Array<ListItemRepresentation>());
     }
 
     /**
