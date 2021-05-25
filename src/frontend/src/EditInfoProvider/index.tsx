@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {DataSource, Schedule, SelectedDataItem} from "../CreateInfoProvider";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
@@ -86,6 +86,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
 //the current step of the creation process, numbered by 0 to 5
     const [step, setStep] = React.useState(0);
 
+    const rewriteFields = () => {
+
+    }
+
     const steps = [
         "Überblick",
         "API-Daten",
@@ -159,7 +163,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         editInfoProvider={editInfoProvider}
-                        customDataEdit={customDataEdit}
+                        infoProvDataSources={infoProvDataSource}
+                        selectedDataSource={selectedDataSource}
                     />
                 );
             case 3:

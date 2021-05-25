@@ -1,6 +1,8 @@
 import json
 from ast2json import str2json
 
+splitString = "uzjhnjtdryfguljkm"
+
 
 def get_transformations(tree, k, key_name):
     operations = {
@@ -35,11 +37,11 @@ def get_transformations(tree, k, key_name):
         calculation["action"] = operations[current_calc["operator"]]
         calculation["decimal"] = current_calc["decimal"]
         if type(current_calc["lop"]) == str:
-            calculation.update({"keys": [current_calc["lop"]]})
+            calculation.update({"keys": [current_calc["lop"].replace(splitString, "|")]})
         else:
             calculation.update({"value_left": current_calc["lop"]})
         if type(current_calc["rop"]) == str:
-            calculation.update({"keys_right": [current_calc["rop"]]})
+            calculation.update({"keys_right": [current_calc["rop"].replace(splitString, "|")]})
         else:
             calculation.update({"value_right": current_calc["rop"]})
         calculation.update({"new_keys": [new_key]})
@@ -75,16 +77,13 @@ def parse_string(calculation_string):
 
 
 def generate_step_transform(formula, key_name):
+    formula = formula.replace("|", splitString)
     ast_rep = parse_string(formula)
     if not ast_rep:
-        print("Du idiotensohn wie hast du das eig geschafft...")
-    parsed_result = parse_to_own_format(ast_rep["body"][0]["value"], decimal=2)
-    # print(json.dumps(parsed_result, indent=4))
+        return None
+    else:
+        parsed_result = parse_to_own_format(ast_rep["body"][0]["value"], decimal=2)
 
-    # print(json.dumps(get_transformations({
-    #     "tree": parsed_result
-    # }, "tree", 0), indent=4))
-
-    return get_transformations({
-        "tree": parsed_result
-    }, "tree", key_name)
+        return get_transformations({
+            "tree": parsed_result
+        }, "tree", key_name)

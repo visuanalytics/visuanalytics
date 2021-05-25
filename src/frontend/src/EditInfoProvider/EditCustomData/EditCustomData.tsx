@@ -6,12 +6,14 @@ import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import {FormelList} from "./FormelList";
 import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {DataSource} from "../../CreateInfoProvider";
 
 interface EditCustomDataProps {
     continueHandler: () => void;
     backHandler: () => void;
     editInfoProvider: () => void;
-    customDataEdit: Array<formelObj>;
+    infoProvDataSources: Array<DataSource>;
+    selectedDataSource: number;
 }
 
 export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
@@ -26,7 +28,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         <Box borderColor="primary.main" border={6} borderRadius={5}
                              className={classes.listFrame}>
                             <FormelList
-                                customDataEdit={props.customDataEdit}
+                                customDataEdit={props.infoProvDataSources[props.selectedDataSource].customData}
                             />
                         </Box>
                     </Grid>
