@@ -76,9 +76,8 @@ export type Plots = {
     dateLabels?: boolean;
     plots: {
         type: string;
-        x: Array<string>;
-        y: Array<number>;
-        style: string;
+        x: Array<number>;
+        y: string;
         color: string;
         numericAttribute?: string;
         stringAttribute?: string;
@@ -101,6 +100,7 @@ interface DiagramCreationProps {
     selectedData: Array<SelectedDataItem>;
     reportError: (message: string) => void;
     schedule: Schedule;
+    infoProviderName: string;
 }
 
 
@@ -240,9 +240,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         primitive: !Array.isArray(item.listItem.value),
                         plots: {
                             type: type,
-                            x: Array(amount).fill(item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName),
-                            y: Array.from(Array(amount).keys()),
-                            style: "",
+                            x: Array.from(Array(amount).keys()),
+                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
                             color: item.color,
                             numericAttribute: item.numericAttribute,
                             stringAttribute: item.stringAttribute,
@@ -262,9 +261,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         dateLabels: item.dateLabels,
                         plots: {
                             type: type,
-                            x: Array(amount).fill(item.name),
-                            y: Array.from(Array(amount).keys()),
-                            style: "",
+                            x: Array.from(Array(amount).keys()),
+                            y: item.name,
                             color: item.color,
                             dateFormat: item.dateFormat,
                             x_ticks: {
@@ -297,6 +295,9 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         reportError("Fehler: Senden des Diagramms an das Backend fehlgeschlagen! (" + err.message + ")");
     }, [reportError]);
 
+    //extract infoProviderName from props to use it in dependencies
+    const infoProviderName = props.infoProviderName;
+
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
@@ -307,7 +308,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      */
     const fetchPreviewImage = React.useCallback(() => {
         //("fetcher called");
-        let url = "/visuanalytics//testdiagram"
+        let url = "/visuanalytics/testdiagram"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -320,6 +321,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 "Content-Type": "application/json\n"
             },
             body: JSON.stringify({
+                infoproviderName: infoProviderName,
                 type: "custom",
                 name: diagramName,
                 plots: createPlots({
@@ -344,7 +346,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if(isMounted) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -592,6 +594,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         reportError={props.reportError}
                         imageURL={imageURL}
                         setImageURL={(url: string) => setImageURL(url)}
+                        infoProviderName={props.infoProviderName}
                     />
                 );
             case 1:

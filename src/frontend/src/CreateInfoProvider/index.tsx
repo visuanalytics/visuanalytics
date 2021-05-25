@@ -89,12 +89,12 @@ export const CreateInfoProvider = () => {
         "Datenauswahl",
         "Formeln",
         "Historisierung",
-        "Diagrammerstellung",
-        "Gesamtübersicht"
+        "Gesamtübersicht",
+        "Diagrammerstellung"
     ];
     //the current step of the creation process, numbered by 0 to 6
 
-    const [step, setStep] = React.useState(5);
+    const [step, setStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -387,6 +387,18 @@ export const CreateInfoProvider = () => {
                 )
             case 5:
                 return (
+                    <SettingsOverview
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        name={name}
+                        setName={(name: string) => setName(name)}
+                        selectedData={extractKeysFromSelection(selectedData)}
+                        customData={customData}
+                        historizedData={historizedData}
+                    />
+                )
+            case 6:
+                return (
                     <DiagramCreation
                         continueHandler={handleContinue}
                         backHandler={handleBack}
@@ -398,18 +410,7 @@ export const CreateInfoProvider = () => {
                         selectedData={selectedData}
                         reportError={reportError}
                         schedule={schedule}
-                    />
-                )
-            case 6:
-                return (
-                    <SettingsOverview
-                        continueHandler={handleContinue}
-                        backHandler={handleBack}
-                        name={name}
-                        setName={(name: string) => setName(name)}
-                        selectedData={extractKeysFromSelection(selectedData)}
-                        customData={customData}
-                        historizedData={historizedData}
+                        infoProviderName={name}
                     />
                 )
 

@@ -27,6 +27,7 @@ interface DiagramOverviewProps {
     reportError: (message: string) => void;
     imageURL: string;
     setImageURL: (url: string) => void;
+    infoProviderName: string;
 }
 
 /**
@@ -91,6 +92,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     //this way, only when this specific props change the method is generated again
     const createPlots = props.createPlots;
     const selectedDiagram = props.selectedDiagram;
+    const infoProviderName = props.infoProviderName;
 
     /**
      * Method to send a diagram to the backend for testing.
@@ -99,7 +101,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      */
     const fetchDiagramPreview = React.useCallback(() => {
         //console.log("fetcher called");
-        let url = "/visuanalytics//testdiagram"
+        let url = "/visuanalytics/testdiagram"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -112,6 +114,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 "Content-Type": "application/json\n"
             },
             body: JSON.stringify({
+                infoProviderName: infoProviderName,
                 type: "custom",
                 name: selectedDiagram.name,
                 plots: createPlots(selectedDiagram)
@@ -130,7 +133,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             //only called when the component is still mounted
             if(isMounted) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [selectedDiagram, createPlots, handleSuccessDiagramPreview, handleErrorDiagramPreview])
+    }, [infoProviderName, selectedDiagram, createPlots, handleSuccessDiagramPreview, handleErrorDiagramPreview])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
