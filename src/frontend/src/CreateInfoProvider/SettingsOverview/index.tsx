@@ -104,7 +104,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * @param event The change event provided by the Select component
      */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
-        setSelectedDataSource(event.currentTarget.value as number);
+        setSelectedDataSource(event.target.value as number);
     }
 
     /**

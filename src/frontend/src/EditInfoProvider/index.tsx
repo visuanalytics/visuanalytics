@@ -12,6 +12,7 @@ import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {useStyles} from "./style";
 import {ComponentContext} from "../ComponentProvider";
 import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
+import {EditCustomData} from "./EditCustomData/EditCustomData";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -69,13 +70,17 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                 }
             ),
             customData: new Array<formelObj>(new formelObj("formel1_2", "7 - 1"), new formelObj("formel2_2", "25 * formel1_2")),
-            historizedData: new Array<string>("formel1", "formel2"),
+            historizedData: new Array<string>("formel1_2", "Array2|Data0"),
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]}
         },
     ));
 
     //TODO: change to Diagram
     const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider? infoProvider.diagrams: new Array<string>());
+
+    const [selectedDataSource, setSelectedDataSource] = React.useState(0);
+
+    const [customDataEdit, setCustomDataEdit] = React.useState(infoProvDataSource[selectedDataSource].customData);
 
 
 //the current step of the creation process, numbered by 0 to 5
@@ -136,6 +141,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
                         infoProvDataSources={infoProvDataSource}
+                        selectedDataSource={selectedDataSource}
+                        setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                     />
                 );
             case 1:
@@ -148,9 +155,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                 );
             case 2:
                 return (
-                    <Grid>
-
-                    </Grid>
+                    <EditCustomData
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        editInfoProvider={editInfoProvider}
+                        customDataEdit={customDataEdit}
+                    />
                 );
             case 3:
                 return (

@@ -29,6 +29,8 @@ interface EditSettingsOverviewProps {
     infoProvName: string;
     setInfoProvName: (name: string) => void;
     infoProvDataSources: Array<DataSource>;
+    selectedDataSource: number;
+    setSelectedDataSource: (index: number) => void;
 }
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
@@ -38,8 +40,6 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     const components = React.useContext(ComponentContext);
 
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
-
-    const [selectedDataSource, setSelectedDataSource] = React.useState(0);
 
     const confirmCancel = () => {
         components?.setCurrent("dashboard")
@@ -63,7 +63,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * @param event The change event provided by the Select component
      */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
-        setSelectedDataSource(event.currentTarget.value as number);
+        props.setSelectedDataSource(event.target.value as number);
+
     }
 
     /**
@@ -99,7 +100,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
                             <InputLabel id="select-dataSource-dropDown">Wahl der Datenquelle</InputLabel>
-                            <Select value={props.infoProvDataSources} onChange={handleChangeSelectedDataSource}>
+                            <Select value={props.selectedDataSource} onChange={handleChangeSelectedDataSource}>
                                 {props.infoProvDataSources.map((item: DataSource, index: number) => renderDataSource(item, index))}
                             </Select>
                         </FormControl>
@@ -113,8 +114,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         <Grid item xs={12}>
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                                 <List disablePadding={true}>
-                                    {extractKeysFromSelection(props.infoProvDataSources[selectedDataSource].selectedData).map((item: string) => renderListItem(item))}
-                                    {props.infoProvDataSources[selectedDataSource].customData.map((item: formelObj) => renderListItem(item.formelName))}
+                                    {extractKeysFromSelection(props.infoProvDataSources[props.selectedDataSource].selectedData).map((item: string) => renderListItem(item))}
+                                    {props.infoProvDataSources[props.selectedDataSource].customData.map((item: formelObj) => renderListItem(item.formelName))}
                                 </List>
                             </Box>
                         </Grid>
@@ -128,11 +129,11 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         <Grid item xs={12}>
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
                                 <List disablePadding={true}>
-                                    {props.infoProvDataSources[selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
+                                    {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
                                 </List>
                             </Box>
                         </Grid>
-                        {props.infoProvDataSources[selectedDataSource].schedule.type !== "" &&
+                        {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
                         <Grid item xs={12}>
                             <Typography variant="h6">
                                 Historisierungszeiten
@@ -141,9 +142,9 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         }
                         <Grid item xs={12}>
                             <Box borderColor="primary.main" border={4} borderRadius={5}>
-                                {props.infoProvDataSources[selectedDataSource].schedule.type !== "" &&
+                                {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
                                 <Grid item xs={12}>
-                                    <ScheduleTypeTable schedule={props.infoProvDataSources[selectedDataSource].schedule}/>
+                                    <ScheduleTypeTable schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
                                 </Grid>
                                 }
                             </Box>
