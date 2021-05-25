@@ -69,6 +69,24 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.secondary.main,
                 opacity: "75%"
             }
-        }
+        },
+        redDeleteButton: {
+            color: '#FFFFFF',
+            backgroundColor: theme.palette.error.main,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            }
+        },
+        header: {
+            color: theme.palette.primary.main
+        },
+        listFrameData: {
+            width: "80%",
+            height: 400,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px"
+        },
     }),
 );

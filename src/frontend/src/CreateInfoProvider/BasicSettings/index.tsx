@@ -115,13 +115,15 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
        const data = jsonData as testDataBackendAnswer;
        if(data.status!==0) {
            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
+           setDisplaySpinner(false);
+       } else {
+           //console.log(data.api_keys);
+           //props.setApiData(data.api_keys);
+           // TODO: add to documentation
+           props.setListItems(transformJSON(data.api_keys));
+           //console.log(transformJSON(data.api_keys));
+           props.continueHandler();
        }
-       //console.log(data.api_keys);
-       //props.setApiData(data.api_keys);
-        // TODO: add to documentation
-       props.setListItems(transformJSON(data.api_keys));
-       //console.log(transformJSON(data.api_keys));
-       props.continueHandler();
    }
 
     /**

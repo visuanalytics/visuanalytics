@@ -261,7 +261,13 @@ export const InfoProviderOverview: React.FC = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                <Dialog onClose={() => {
+                    setRemoveDialogOpen(false);
+                    window.setTimeout(() => {
+                        setCurrentDeleteId(0)
+                        setCurrentDeleteName("");
+                    }, 200);
+                }} aria-labelledby="deleteDialog-title"
                         open={removeDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
                         Infoprovider "{currentDeleteName}" wirklich löschen?
@@ -275,7 +281,7 @@ export const InfoProviderOverview: React.FC = () => {
                         <Grid container justify="space-between">
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
-                                        onClick={() => setRemoveDialogOpen(false)}>
+                                        onClick={() => {setRemoveDialogOpen(false); setCurrentDeleteName("");}}>
                                     abbrechen
                                 </Button>
                             </Grid>

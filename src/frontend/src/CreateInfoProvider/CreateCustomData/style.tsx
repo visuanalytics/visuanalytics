@@ -33,6 +33,13 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.primary.light,
                 opacity: "75%"
             }
+        },
+        redDeleteButton: {
+            color: '#FFFFFF',
+            backgroundColor: theme.palette.error.main,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            }
         }
     }),
 );
