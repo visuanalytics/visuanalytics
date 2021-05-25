@@ -254,7 +254,7 @@ export const CreateInfoProvider = () => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        //console.log(dataSources.length);
+        console.log(dataSources.length);
         for(let i = 0; i < dataSources.length; i++) {
             if(dataSources[i].apiName === name) return true;
         }

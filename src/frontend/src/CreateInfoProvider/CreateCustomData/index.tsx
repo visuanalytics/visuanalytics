@@ -263,13 +263,12 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomData = (formelName: string) => {
-
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formelName) {
                 const arCopy = props.customData.slice();
                 arCopy.splice(i, 1);
                 props.setCustomData(arCopy);
-                return
+                return;
             }
         }
 
@@ -290,6 +289,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         //check for duplicates in api names
         if(getListItemsNames(props.listItems).includes(formel)) {
             props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")
+            return;
         }
         //check for duplicates in formula names
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
