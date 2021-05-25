@@ -282,7 +282,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={props.continueHandler}>
                             weiter
                         </Button>
-                        <Button variant="contained" size="large" onClick={(event) => {setListItems(transformJSON(sample2))}}>Janek Test</Button>
+                        <Button variant="contained" size="large" onClick={(event) => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>
                     </Grid>
                 </Grid>
             </Grid>
