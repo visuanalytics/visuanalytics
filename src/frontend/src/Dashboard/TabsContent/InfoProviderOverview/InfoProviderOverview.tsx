@@ -10,24 +10,8 @@ import Button from "@material-ui/core/Button";
 import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
+import {answer, fetchAllBackendAnswer, jsonRef} from "../../types";
 
-/**
- * This type is used to correctly handle each single infoprovider from the response from the backend.
- */
-type jsonRef = {
-    infoprovider_id: number;
-    infoprovider_name: string;
-}
-
-/**
- * This type is needed because the answer of the backend consists of a list of jsonRef's.
- */
-type requestBackendAnswer = Array<jsonRef>
-
-//bisher nur zum testen verwendet.
-type answer = {
-    err_msg: string;
-}
 
 /**
  * Renders the whole infoprovider-overview component except the infoprovider-list
@@ -138,7 +122,7 @@ export const InfoProviderOverview: React.FC = () => {
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchAll = (jsonData: any) => {
-        const data = jsonData as requestBackendAnswer;
+        const data = jsonData as fetchAllBackendAnswer;
         setInfoProvider(data);
     }
 

@@ -4,11 +4,11 @@ import {StrArg} from "./CustomDataGUI/formelObjects/StrArg";
 import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import {SelectedDataItem} from "../index";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
+import {customDataBackendAnswer, SelectedDataItem} from "../types";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -20,13 +20,6 @@ interface CreateCustomDataProps {
     reportError: (message: string) => void;
 }
 
-/**
- * Defines the type that is expected for the backends answer to our request
- */
-type requestBackendAnswer = {
-    accepted: boolean
-    //error: string
-}
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
@@ -317,7 +310,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const handleSuccess = (jsonData: any) => {
 
-        const data = jsonData as requestBackendAnswer;
+        const data = jsonData as customDataBackendAnswer;
 
         console.log(data.accepted)
 

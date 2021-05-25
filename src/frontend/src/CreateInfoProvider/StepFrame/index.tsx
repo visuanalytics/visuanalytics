@@ -6,12 +6,12 @@ import Paper from "@material-ui/core/Paper"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 
-interface Props {
+interface StepFrameProps {
     heading: string;
     hintContent: any;
 }
 
-export const StepFrame: React.FC<Props> = ({
+export const StepFrame: React.FC<StepFrameProps> = ({
   heading,
   hintContent,
   children,

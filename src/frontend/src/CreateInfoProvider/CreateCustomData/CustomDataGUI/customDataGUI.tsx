@@ -1,6 +1,5 @@
 import React from "react";
 import {useStyles} from "../style";
-import {SelectedDataItem} from "../../index";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -12,6 +11,7 @@ import List from "@material-ui/core/List";
 import {formelObj} from "./formelObjects/formelObj";
 import {IconButton, ListItemSecondaryAction} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {SelectedDataItem} from "../../types";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;

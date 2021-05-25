@@ -10,8 +10,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource, extractKeysFromSelection, Schedule, SelectedDataItem} from "..";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
+import {DataSource, Schedule, SelectedDataItem} from "../types";
+import {extractKeysFromSelection} from "../helpermethods";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;

@@ -14,6 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import {testDataBackendAnswer} from "../types";
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -35,13 +36,7 @@ interface BasicSettingsProps {
     reportError: (message: string) => void;
 };
 
-/**
- * Defines the type that is expected for the backends answer to our request
- */
-type requestBackEndAnswer = {
-    status: number
-    api_keys: object
-}
+
 
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
@@ -70,7 +65,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * param @jsonData The JSON-object delivered by the backend
      */
    const handleSuccess = (jsonData: any) => {
-       const data = jsonData as requestBackEndAnswer;
+       const data = jsonData as testDataBackendAnswer;
        if(data.status!==0) {
            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
        }

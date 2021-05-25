@@ -5,19 +5,13 @@ import Button from "@material-ui/core/Button";
 import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {SettingsRounded} from "@material-ui/icons";
+import {jsonRef} from "../../types";
 
 interface InfoProviderListProps {
     infoprovider: Array<jsonRef>;
     handleDeleteButton: (id: jsonRef) => void;
 }
 
-/**
- * This type is used to correctly handle each single infoprovider from the response from the backend.
- */
-type jsonRef = {
-    infoprovider_id: number;
-    infoprovider_name: string;
-}
 
 /**
  * Renders the list that holds all Infoproviders

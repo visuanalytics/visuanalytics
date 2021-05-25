@@ -12,14 +12,16 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
-
+import {DataSource, Schedule, SelectedDataItem} from "./types";
+import {extractKeysFromSelection} from "./helpermethods";
 
 
 /* TODO: list of bugfixes to be made by Janek
 DONE:
-task 1: load the object sent from the backend in step 3, test it
 
 TO DO:
+task 1: load the object sent from the backend in step 3, test it
+task 1.5: fix circular dependencies by sourcing out all type definitions
 task 2: formulas are not allowed to have a name that appears in selectedData (or better listItems?)
 task 3: deleting a formula also has to delete it from historizedData if it is used there
 task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
@@ -33,44 +35,9 @@ task 11: search for other TODOs that remain in the code
 task 12: repair format problems with backend communication in step 3
 task 13: keep the componentContext in sessionStorage?
 task 14: checkNameDuplicate is called to often, for exampling when checking noKey
+task x: find problem with data writing on unmounted component in dashboard
  */
 
-//TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
-//data type for elements contained in selectedData
-export type SelectedDataItem = {
-    key: string;
-    type: string;
-}
-
-// data type to save information about the selected schedule for historisation
-export type Schedule = {
-    type: string;
-    weekdays: number[];
-    time: string;
-    interval: string;
-}
-
-export type DataSource = {
-    apiName: string;
-    query: string;
-    apiKeyInput1: string;
-    apiKeyInput2: string;
-    noKey: boolean;
-    method: string;
-    selectedData: SelectedDataItem[];
-    customData: formelObj[];
-    historizedData: string[];
-    schedule: Schedule;
-}
-
-/**
- * Returns a set that only contains the keys from selectedData.
- */
-export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) => {
-    const keyArray = new Array<string>();
-    selectedData.forEach((item) => keyArray.push(item.key));
-    return keyArray;
-}
 
 /*
 Wrapper component for the creation of a new info-provider.

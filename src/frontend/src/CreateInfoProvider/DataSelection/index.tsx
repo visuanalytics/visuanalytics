@@ -1,6 +1,5 @@
 import React from "react";
 import {useStyles} from "../style";
-import {extractKeysFromSelection, SelectedDataItem} from "../"
 import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import List from "@material-ui/core/List";
@@ -13,6 +12,8 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
+import {ListItemRepresentation, SelectedDataItem} from "../types";
+import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 
 
 interface DataSelectionProps {
@@ -23,20 +24,6 @@ interface DataSelectionProps {
     setSelectedData: (array: Array<SelectedDataItem>) => void;
 }
 
-/** Internal representation of a list item extracted from the JSON object.
- * @param keyName The direct key name of the entry
- * @param value Holds a string with the type of the value or a sub-object
- * @param parentKeyName Holds the keyName of the parent as a full path within the JSON object
- * @param arrayRep True when this entry represents an array, used for specific rendering
- * @param arrayLength Holds the length of the array, if it is such
- */
-interface ListItemRepresentation {
-    keyName: string;
-    value: any;
-    parentKeyName: string;
-    arrayRep: boolean;
-    arrayLength: number;
-}
 
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
