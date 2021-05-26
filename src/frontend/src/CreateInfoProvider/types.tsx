@@ -19,14 +19,22 @@ export type Schedule = {
 export type DataSource = {
     apiName: string;
     query: string;
-    apiKeyInput1: string;
-    apiKeyInput2: string;
     noKey: boolean;
     method: string;
     selectedData: SelectedDataItem[];
     customData: formelObj[];
     historizedData: string[];
     schedule: Schedule;
+}
+
+export type DataSourceKey = {
+    apiKeyInput1: string;
+    apiKeyInput2: string;
+}
+
+export type selectionElement = {
+    name: string;
+    method: string;
 }
 
 export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"

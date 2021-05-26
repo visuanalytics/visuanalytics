@@ -12,8 +12,17 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
 import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
-import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem, uniqueId} from "./types";
+import {
+    DataSource,
+    DataSourceKey,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem,
+    selectionElement,
+    uniqueId
+} from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
+import {AuthDataDialog} from "./AuthDataDialog";
 
 /* TODO: list of bugfixes to be made by Janek
 DONE:
@@ -37,6 +46,7 @@ task 14: checkNameDuplicate is called to often, for exampling when checking noKe
 task x: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
  */
 
+//TODO: method should block api input when nothign is selected
 
 /*
 Wrapper component for the creation of a new info-provider.
@@ -80,15 +90,18 @@ export const CreateInfoProvider = () => {
     const [customData, setCustomData] = React.useState(new Array<formelObj>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
-    // Contains the JSON for historisation schedule selection
+    // Contains the JSON for historization schedule selection
     const [schedule, setSchedule] = useState<Schedule>({type: "", interval: "", time: "", weekdays: []});
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     // Holds an array of all data sources for the Infoprovider
     const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
+    //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
+    const [dataSourcesKeys, setDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
     //Holds all ListItemRepresentation objects used for the list in step 3 - defined here to be set in step 2
-    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
-
+    const [listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    //flag for opening the dialog that restores authentication data on reload
+    const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
     const checkKeyExistence = React.useCallback(() => {
         //check the current data source
@@ -96,7 +109,9 @@ export const CreateInfoProvider = () => {
         //check all other data sources
         for (let index = 0; index < dataSources.length; index++) {
             const dataSource = dataSources[index];
-            if((!dataSource.noKey)&&(dataSource.apiKeyInput1!==""||dataSource.apiKeyInput2!=="")) return true;
+            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
+                if((!dataSource.noKey)&&(dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1!==""||dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2!=="")) return true;
+            }
         }
         return false;
     }, [dataSources, noKey, apiKeyInput1, apiKeyInput2])
@@ -120,6 +135,14 @@ export const CreateInfoProvider = () => {
             window.removeEventListener("beforeunload", leaveAlert);
         }
     }, [checkKeyExistence])
+
+    //TODO: document this
+    /**
+     * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
+     */
+    const authDialogNeeded = () => {
+        return true;
+    }
 
 
     /**
@@ -153,7 +176,27 @@ export const CreateInfoProvider = () => {
         setDataSources(sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
         //listItems
         setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+
+        //TODO: add detection if something needs to be restored
+        //open the dialog for reentering authentication data
+        if(authDialogNeeded()) {
+            //create default values in the key map for all dataSources
+            //necessary to not run into undefined values
+            //mybe comment nicer or reposition
+            const map = new Map();
+            const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+            data.forEach((dataSource) => {
+                //console.log("setting: " + dataSource.apiName)
+                map.set(dataSource.apiName, {
+                    apiKeyInput1: "",
+                    apiKeyInput2: ""
+                })
+            });
+            setDataSourcesKeys(map);
+            setAuthDataDialogOpen(true);
+        }
     }, [])
+
     //store step in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("step-" + uniqueId, step.toString());
@@ -331,11 +374,15 @@ export const CreateInfoProvider = () => {
      */
     //TODO: add this to the documentation
     const addToDataSources = () => {
+        //store keys in dataSourcesKeys
+        const mapCopy = new Map(dataSourcesKeys);
+        setDataSourcesKeys(mapCopy.set(apiName, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        }))
         const dataSource: DataSource = {
             apiName: apiName,
             query: query,
-            apiKeyInput1: apiKeyInput1,
-            apiKeyInput2: apiKeyInput2,
             noKey: noKey,
             method: method,
             selectedData: selectedData,
@@ -469,6 +516,36 @@ export const CreateInfoProvider = () => {
 
         }
     }
+
+    //TODO: documentation
+    /**
+     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
+     */
+    const buildDataSourceSelection = () => {
+        const dataSourceSelection: Array<selectionElement> = [];
+        //check the current data source and add it as an option
+        if(!noKey) {
+            dataSourceSelection.push({
+                name: "current--"+ uniqueId,
+                method: method
+            })
+        }
+        //check all other data sources
+        if(dataSources!==undefined) {
+            dataSources.forEach((dataSource) => {
+                //input is necessary if any method of authentication is being used
+                if(!dataSource.noKey) {
+                    //add to the selection
+                    dataSourceSelection.push({
+                        name: dataSource.apiName,
+                        method: dataSource.method
+                    })
+                }
+            })
+        }
+        return dataSourceSelection
+    }
+
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
@@ -487,6 +564,22 @@ export const CreateInfoProvider = () => {
                 message={message.message}
                 severity={message.severity}
             />
+            {authDataDialogOpen&&
+                <AuthDataDialog
+                    authDataDialogOpen={authDataDialogOpen}
+                    setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
+                    method={method}
+                    noKey={noKey}
+                    apiKeyInput1={apiKeyInput1}
+                    setApiKeyInput1={(input: string) => setApiKeyInput1(input)}
+                    apiKeyInput2={apiKeyInput2}
+                    setApiKeyInput2={(input: string) => setApiKeyInput2(input)}
+                    dataSources={dataSources}
+                    dataSourcesKeys={dataSourcesKeys}
+                    setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                    selectionDataSources={buildDataSourceSelection()}
+                />
+            }
         </React.Fragment>
     );
 }
