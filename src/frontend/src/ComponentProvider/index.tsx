@@ -26,7 +26,7 @@ interface Props {}
  */
 export const ComponentProvider: React.FC<Props> = ({ children }) => {
   const [current, setCurrent] = React.useState<MainComponent>(
-    mainComponents[startComponent]
+    mainComponents[sessionStorage.getItem("currentComponent-" + uniqueId)||startComponent]
   );
 
   const handleSetCurrent = (next: ComponentKey, props?: Object) => {
