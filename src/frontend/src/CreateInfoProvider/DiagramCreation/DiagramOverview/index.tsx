@@ -130,11 +130,11 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if(isMounted) handleSuccessDiagramPreview(data)
+            if(isMounted.current) handleSuccessDiagramPreview(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if(isMounted) handleErrorDiagramPreview(err)
+            if(isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
     }, [infoProviderName, selectedDiagram, createPlots, handleSuccessDiagramPreview, handleErrorDiagramPreview])
 
