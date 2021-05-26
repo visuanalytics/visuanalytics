@@ -1,10 +1,27 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Di Mai 4 11:22:41 2021
+-- File generated with SQLiteStudio v3.3.3 on Mi Mai 26 11:43:13 2021
 --
 -- Text encoding used: System
 --
 PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
+
+-- Table: datasource
+DROP TABLE IF EXISTS datasource;
+
+CREATE TABLE datasource (
+    datasource_id             INTEGER PRIMARY KEY AUTOINCREMENT
+                                      UNIQUE
+                                      NOT NULL,
+    datasource_name           VARCHAR NOT NULL,
+    schedule_historisation_id INTEGER REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
+                                                                                                    ON UPDATE CASCADE
+                                      NOT NULL,
+    infoprovider_id           INTEGER REFERENCES infoprovider (infoprovider_id) ON DELETE CASCADE
+                                                                                ON UPDATE CASCADE
+                                      NOT NULL
+);
+
 
 -- Table: delete_options
 DROP TABLE IF EXISTS delete_options;
@@ -37,13 +54,10 @@ CREATE TABLE image (
 DROP TABLE IF EXISTS infoprovider;
 
 CREATE TABLE infoprovider (
-    infoprovider_id           INTEGER PRIMARY KEY AUTOINCREMENT
-                                      UNIQUE
-                                      NOT NULL,
-    infoprovider_name         VARCHAR NOT NULL,
-    schedule_historisation_id INTEGER REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
-                                                                                                    ON UPDATE CASCADE
-                                      NOT NULL
+    infoprovider_id   INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    infoprovider_name VARCHAR NOT NULL
 );
 
 
