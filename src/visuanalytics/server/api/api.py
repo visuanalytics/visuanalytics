@@ -177,29 +177,18 @@ def add_infoprovider():
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
 
-        if "api" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'api'"})
+        if "datasources" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Datasources"})
             return err, 400
 
-        if "transform" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
+        if "diagrams" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
             return err, 400
 
-        if "storing" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
-            return err, 400
-
-        if "schedule" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
-            return err, 400
-
-        if "formulas" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
-            return err, 400
-
-        if "images" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing field 'images'"})
-            return err, 400
+        for datasource in infoprovider["datasources"]:
+            if "name" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
+                return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
