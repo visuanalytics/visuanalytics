@@ -83,6 +83,9 @@ def insert_infoprovider(infoprovider):
     with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
         json.dump(infoprovider_json, f)
 
+    infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
+                                  [infoprovider_name]).lastrowid
+
     for datasource in datasources:
         datasource_name = datasource["name"]
 
@@ -109,8 +112,6 @@ def insert_infoprovider(infoprovider):
         # Schedule für Datasource abspeichern
         schedule_historisation = datasource["schedule"]
         schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
-        infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
-                                      [infoprovider_name]).lastrowid
         con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
                     " VALUES (?, ?, ?)",
                     [datasource_name, schedule_historisation_id, infoprovider_id])
@@ -160,29 +161,17 @@ def get_infoprovider(infoprovider_id):
     :param infoprovider_id: ID des Infoproviders.
     :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
     """
-    con = db.open_con_f()
     infoprovider_json = {}
-    weekdays = []
+
     # Laden der Json-Datei des Infoproviders
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
-        infoprovider_json.update({"json": json.loads(f.read())})
-    # Laden des Schedules
-    res = con.execute("SELECT * FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?",
-                           [infoprovider_id]).fetchone()
-    infoprovider_json.update({"infoprovider_name": res["infoprovider_name"]})
-    infoprovider_json.update({"schedule": {
-        "type": res["type"],
-        "time": res["time"],
-        "date": res["date"],
-        "time_interval": res["time_interval"]
-    }})
-    # Falls der Schedule-Typ "weekly" ist müssen die Wochentage ebenfalls geladen werden
-    if res["type"] == "weekly":
-        weekly = con.execute("SELECT weekday FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
-        for value in weekly:
-            weekdays.append(value["weekday"])
-        infoprovider_json["schedule"].update({"weekday": weekdays})
-    return infoprovider_json
+        infoprovider_json = json.loads(f.read())
+
+    return {
+        "infoprovider_name": infoprovider_json["name"],
+        "datasources": infoprovider_json["datasources"],
+        "diagrams": infoprovider_json["images"]
+    }
 
 
 def update_infoprovider(infoprovider_id, updated_data):
