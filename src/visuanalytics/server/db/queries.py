@@ -11,6 +11,7 @@ from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION a
 from visuanalytics.util.infoprovider_utils import generate_step_transform
 
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
+DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
@@ -46,40 +47,73 @@ def insert_infoprovider(infoprovider):
     """
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
+    datasources = infoprovider["datasources"]
+    diagrams = infoprovider["diagrams"]
+
+    # Api obj vorbereiten
+    api_step = {
+        "type": "request_multiple_custom",
+        "use_loop_as_key": True,
+        "steps_value": [],
+        "requests": []
+    }
+    for datasource in datasources:
+        api_step["steps_value"].append(datasource["name"])
+        api_step["requests"].append(datasource["api"])
+
+    # Transform obj vorbereiten
+    transform_step = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in datasources]
+
     # Json für das Speicher vorbereiten
     infoprovider_json = {
         "name": infoprovider_name,
-        "api": {
-            "type": "request_multiple_custom",
-            "use_loop_as_key": True,
-            "steps_value": [
-                "api"
-            ],
-            "requests": [
-                infoprovider["api"]
-            ]
-        },
-        "transform": _generate_transform(infoprovider["formulas"], infoprovider["transform"]),
-        "storing": infoprovider["storing"],
-        "formulas": infoprovider["formulas"],
-        "images": infoprovider["images"],
-        "run_config": {}
+        "api": api_step,
+        "transform": transform_step,
+        "images": diagrams,
+        "run_config": {},
+        "datasources": datasources
     }
+
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [infoprovider_name]).fetchone()["COUNT(*)"]
     if count > 0:
         return False
 
-    # Json in den Ordner "/infoproviders" speichern
+    # Infoprovider-Json in den Ordner "/infoproviders" speichern
     with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
         json.dump(infoprovider_json, f)
 
-    # Schedule in die entsprechenden Tabellen einfügen
-    if "schedule" in infoprovider:
-        schedule_historisation = infoprovider["schedule"]
+    for datasource in datasources:
+        datasource_name = datasource["name"]
+
+        datasource_api_step = {
+            "type": "request_multiple_custom",
+            "use_loop_as_key": True,
+            "steps_value": ["api"],
+            "requests": [datasource["api"]]
+        }
+
+        # Datasource obj vorbereiten
+        datasource_json = {
+            "name": datasource_name,
+            "api": datasource_api_step,
+            "transform": _generate_transform(datasource["formulas"], datasource["transform"]),
+            "storing": datasource["storing"],
+            "run_config": {}
+        }
+
+        # Datasource-Json in den Ordner "/datasources" speichern
+        with open_resource(_get_datasource_path(datasource_name), "wt") as f:
+            json.dump(datasource_json, f)
+
+        # Schedule für Datasource abspeichern
+        schedule_historisation = datasource["schedule"]
         schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
-        con.execute("INSERT INTO infoprovider (infoprovider_name, schedule_historisation_id) VALUES (?, ?)",
-                    [infoprovider_name, schedule_historisation_id])
+        infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
+                                      [infoprovider_name]).lastrowid
+        con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
+                    " VALUES (?, ?, ?)",
+                    [datasource_name, schedule_historisation_id, infoprovider_id])
 
     con.commit()
 
@@ -529,6 +563,10 @@ def _row_to_job(row):
 
 def _get_infoprovider_path(infoprovider_name: str):
     return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
+
+
+def _get_datasource_path(datasource_name: str):
+    return os.path.join(DATASOURCE_LOCATION, datasource_name) + ".json"
 
 
 def _get_steps_path(json_file_name: str):
