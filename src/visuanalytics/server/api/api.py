@@ -310,7 +310,6 @@ def get_infoprovider(infoprovider_id):
             err = flask.jsonify({"err_msg": "Unknown infoprovider"})
             return err, 400
 
-        # return send_file(file_path, "application/json", True)
         return flask.jsonify(infoprovider_json)
     except Exception:
         logger.exception("An error occurred: ")
