@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../../style";
+import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {diagramType, Schedule, uniqueId} from "../../../index";
@@ -86,11 +86,11 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     const checkProceed = () => {
         for (let i = 0; i < props.historizedObjects.length; i++) {
             const item = props.historizedObjects[i];
-            if(item.dateLabels) {
-                if(item.dateFormat==="") return false;
+            if (item.dateLabels) {
+                if (item.dateFormat === "") return false;
             } else {
                 for (let j = 0; j < item.labelArray.length; j++) {
-                    if(item.labelArray[j]==="") return false;
+                    if (item.labelArray[j] === "") return false;
                 }
             }
         }
@@ -184,8 +184,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      * Handler for changing the date format used for displaying date labels.
      * @param event The change event holding the new format
      */
-    const dateFormatChangeHandler = (event: React.ChangeEvent<{value: unknown}>) => {
-        if(event.target.value!==undefined) {
+    const dateFormatChangeHandler = (event: React.ChangeEvent<{ value: unknown }>) => {
+        if (event.target.value !== undefined) {
             let objCopy = {
                 ...props.historizedObjects[selectedHistorizedOrdinal],
                 dateFormat: event.target.value as string
@@ -202,52 +202,52 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      */
     const getIntervalDisplay = () => {
         //check for weekly
-        if(props.schedule.type==="weekly") {
-            if(props.schedule.weekdays!==undefined&&props.schedule.weekdays.length!==0) {
+        if (props.schedule.type === "weekly") {
+            if (props.schedule.weekdays !== undefined && props.schedule.weekdays.length !== 0) {
                 //check if every day is selected
-                if(props.schedule.weekdays.reduce((sum, value) => sum+value)===21 &&props.schedule.weekdays.includes(0)) {
+                if (props.schedule.weekdays.reduce((sum, value) => sum + value) === 21 && props.schedule.weekdays.includes(0)) {
                     return "24h";
                 }
                 let weekdayString = "Wochentage (";
                 let firstElement = true;
-                if(props.schedule.weekdays.includes(0)) {
+                if (props.schedule.weekdays.includes(0)) {
                     weekdayString += "MO";
-                    firstElement=false;
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(1)) {
-                    weekdayString += (firstElement?"":"/") + "DI";
-                    firstElement=false;
+                if (props.schedule.weekdays.includes(1)) {
+                    weekdayString += (firstElement ? "" : "/") + "DI";
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(2)) {
-                    weekdayString += (firstElement?"":"/") + "MI";
-                    firstElement=false;
+                if (props.schedule.weekdays.includes(2)) {
+                    weekdayString += (firstElement ? "" : "/") + "MI";
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(3)) {
-                    weekdayString += (firstElement?"":"/") + "DO";
-                    firstElement=false;
+                if (props.schedule.weekdays.includes(3)) {
+                    weekdayString += (firstElement ? "" : "/") + "DO";
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(4)) {
-                    weekdayString += (firstElement?"":"/") + "FR";
-                    firstElement=false;
+                if (props.schedule.weekdays.includes(4)) {
+                    weekdayString += (firstElement ? "" : "/") + "FR";
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(5)) {
-                    weekdayString += (firstElement?"":"/") + "SA";
-                    firstElement=false;
+                if (props.schedule.weekdays.includes(5)) {
+                    weekdayString += (firstElement ? "" : "/") + "SA";
+                    firstElement = false;
                 }
-                if(props.schedule.weekdays.includes(6)) {
-                    weekdayString += (firstElement?"":"/") + "SO";
+                if (props.schedule.weekdays.includes(6)) {
+                    weekdayString += (firstElement ? "" : "/") + "SO";
                 }
                 weekdayString += ")";
                 return weekdayString
             }
         }
         //check for daily
-        else if(props.schedule.type==="daily") {
+        else if (props.schedule.type === "daily") {
             return "24h"
         }
         //check for interval
-        else if(props.schedule.type==="interval") {
-            switch(props.schedule.interval) {
+        else if (props.schedule.type === "interval") {
+            switch (props.schedule.interval) {
                 case "minute": {
                     return "1m";
                 }
@@ -272,7 +272,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             }
         }
     }
-    
+
     /**
      * Renders a single item of the interval choice list.
      * @param ordinal The number of the rendered item.
@@ -285,13 +285,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                         <FormControlLabel
                             className={classes.creatorFormControlLabel}
                             control={
-                                <TextField type="number" inputProps={{ min: 0}} variant="outlined" margin="normal"
+                                <TextField type="number" inputProps={{min: 0}} variant="outlined" margin="normal"
                                            value={props.historizedObjects[selectedHistorizedOrdinal].intervalSizes[ordinal]}
                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => intervalSizeChangeHandler(e, ordinal)}
                                            className={classes.intervalInputField}
                                 />
                             }
-                            label={(ordinal+1) + ":\u00A0 Aktueller Wert -"}
+                            label={(ordinal + 1) + ":\u00A0 Aktueller Wert -"}
                             labelPlacement="start"
                         />
                     </Grid>
@@ -329,11 +329,13 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Box>
                 </Grid>
                 <Grid item container xs={6}>
-                    {props.historizedObjects[selectedHistorizedOrdinal].dateLabels?
-                        (<Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                    {props.historizedObjects[selectedHistorizedOrdinal].dateLabels ?
+                        (<Box borderColor="primary.main" border={4} borderRadius={5}
+                              className={classes.choiceListFrame}>
                             <Grid item xs={12} className={classes.elementLargeMargin}>
                                 <Typography variant="body1">
-                                    Zu jedem Datenwert wird das Datum angezeigt, an dem er gespeichert wurde.<br/>Bitte wählen sie das Anzeigeformat:
+                                    Zu jedem Datenwert wird das Datum angezeigt, an dem er gespeichert wurde.<br/>Bitte
+                                    wählen sie das Anzeigeformat:
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -350,7 +352,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                                     </Select>
                                 </FormControl>
                             </Grid>
-                        </Box>):
+                        </Box>) :
                         (<CustomLabels
                             amount={props.amount}
                             historizedObjects={props.historizedObjects}
@@ -364,9 +366,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     }
 
 
-
-
-    return(
+    return (
         <Grid container justify="space-between">
             <BasicDiagramSettings
                 diagramType={props.diagramType}
@@ -409,13 +409,14 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
                 <Grid item className={classes.blockableButtonSecondary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary" onClick={previewHandler}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary"
+                            onClick={previewHandler}>
                         Vorschau generieren
                     </Button>
                 </Grid>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={() => toggleDateLabels()}>
-                        {props.historizedObjects[selectedHistorizedOrdinal].dateLabels?"eigene Beschriftungen":"Datum-Beschriftungen"}
+                        {props.historizedObjects[selectedHistorizedOrdinal].dateLabels ? "eigene Beschriftungen" : "Datum-Beschriftungen"}
                     </Button>
                 </Grid>
             </Grid>
@@ -426,7 +427,10 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary" onClick={() => {sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId); props.continueHandler();}}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary" onClick={() => {
+                        sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId);
+                        props.continueHandler();
+                    }}>
                         weiter
                     </Button>
                 </Grid>
@@ -443,7 +447,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" color="primary"  onClick={() => {
+                        <Button variant="contained" color="primary" onClick={() => {
                             setPreviewOpen(false);
                             window.setTimeout(() => props.setImageURL(""), 200);
                         }}>

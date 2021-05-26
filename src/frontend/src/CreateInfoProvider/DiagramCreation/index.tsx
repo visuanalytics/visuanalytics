@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef} from "react";
-import { useStyles } from "./style";
+import {useStyles} from "./style";
 import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../index"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
@@ -11,7 +11,7 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import { formelObj } from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 
 /* TODO: following steps for diagram creation:
@@ -140,19 +140,19 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      */
     React.useEffect(() => {
         //diagramStep
-        setDiagramStep(Number(sessionStorage.getItem("diagramStep-" + uniqueId)||0));
+        setDiagramStep(Number(sessionStorage.getItem("diagramStep-" + uniqueId) || 0));
         //diagramSource
-        setDiagramSource(sessionStorage.getItem("diagramSource-" + uniqueId)||"");
+        setDiagramSource(sessionStorage.getItem("diagramSource-" + uniqueId) || "");
         //arrayObjects
-        setArrayObjects(sessionStorage.getItem("arrayObjects-" + uniqueId)===null?new Array<ArrayDiagramProperties>():JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)!));
+        setArrayObjects(sessionStorage.getItem("arrayObjects-" + uniqueId) === null ? new Array<ArrayDiagramProperties>() : JSON.parse(sessionStorage.getItem("arrayObjects-" + uniqueId)!));
         //historizedObjects
-        setHistorizedObjects(sessionStorage.getItem("historizedObjects-" + uniqueId)===null?new Array<HistorizedDiagramProperties>():JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)!));
+        setHistorizedObjects(sessionStorage.getItem("historizedObjects-" + uniqueId) === null ? new Array<HistorizedDiagramProperties>() : JSON.parse(sessionStorage.getItem("historizedObjects-" + uniqueId)!));
         //diagramName
-        setDiagramName(sessionStorage.getItem("diagramName-" + uniqueId)||"");
+        setDiagramName(sessionStorage.getItem("diagramName-" + uniqueId) || "");
         //diagramType
-        setDiagramType(sessionStorage.getItem("diagramType-" + uniqueId) as diagramType||"verticalBarChart");
+        setDiagramType(sessionStorage.getItem("diagramType-" + uniqueId) as diagramType || "verticalBarChart");
         //amount
-        setAmount(Number(sessionStorage.getItem("amount-" + uniqueId)||1));
+        setAmount(Number(sessionStorage.getItem("amount-" + uniqueId) || 1));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -343,11 +343,11 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if(isMounted.current) handleSuccessDiagramPreview(data)
+            if (isMounted.current) handleSuccessDiagramPreview(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if(isMounted.current) handleErrorDiagramPreview(err)
+            if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
     }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
 
@@ -387,7 +387,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
 
     /**
-     * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
+     * Finishes the creation of a single diagram by writing the data into an object that stores all information.
      */
     const finishCreate = () => {
         //create the diagram object and add it to the array holding them
@@ -418,8 +418,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Checks if the currently entered name is already contained in the diagrams array.
      */
     const isNameDuplicate = () => {
-        for (let index=0; index < props.diagrams.length; index++) {
-            if(props.diagrams[index].name===diagramName) return true;
+        for (let index = 0; index < props.diagrams.length; index++) {
+            if (props.diagrams[index].name === diagramName) return true;
         }
         return false;
     }
@@ -435,17 +435,17 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const getCompatibleArrays = useCallback((listItems: Array<ListItemRepresentation>) => {
         let compatibleArrays: Array<ListItemRepresentation> = []
         listItems.forEach((item) => {
-            if(item.arrayRep) {
-                if(Array.isArray(item.value)) {
+            if (item.arrayRep) {
+                if (Array.isArray(item.value)) {
                     //this is an array containing objects
                     //check if the object contains a numeric value
-                    if(checkObjectForNumeric(item.value)) compatibleArrays.push(item);
-                } else if(item.value!=="[Array]"&&!item.value.includes(",")) {
-                    //when the value is not array and has no commata, the array contains primitive values of the same type
+                    if (checkObjectForNumeric(item.value)) compatibleArrays.push(item);
+                } else if (item.value !== "[Array]" && !item.value.includes(",")) {
+                    //when the value is not array and has no commas, the array contains primitive values of the same type
                     //check if the primitive type is numeric
-                    if(item.value==="Zahl")compatibleArrays.push(item)
+                    if (item.value === "Zahl") compatibleArrays.push(item)
                 }
-            } else if(Array.isArray(item.value)) {
+            } else if (Array.isArray(item.value)) {
                 //this is an object, we need to check if one of its values is an array
                 compatibleArrays = compatibleArrays.concat(getCompatibleArrays(item.value));
             }
@@ -459,8 +459,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Returns true if a numeric attribute is contained, false if not.
      */
     const checkObjectForNumeric = (object: Array<ListItemRepresentation>) => {
-        for(let index = 0; index < object.length; ++index) {
-            if(object[index].value==="Zahl") return true;
+        for (let index = 0; index < object.length; ++index) {
+            if (object[index].value === "Zahl") return true;
         }
         return false;
     }
@@ -475,10 +475,10 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         const compatibleHistorized: Array<string> = []
         historizedData.forEach((item) => {
             props.selectedData.forEach((data) => {
-                if(data.key===item&&data.type==="Zahl") compatibleHistorized.push(item)
+                if (data.key === item && data.type === "Zahl") compatibleHistorized.push(item)
             })
             props.customData.forEach((data) => {
-                if(data.formelName===item) compatibleHistorized.push(item)
+                if (data.formelName === item) compatibleHistorized.push(item)
             })
         })
         return compatibleHistorized;
@@ -498,12 +498,12 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
     const amountChangeHandler = (newAmount: number) => {
         setAmount(newAmount);
-        if(diagramStep===2) {
+        if (diagramStep === 2) {
             //changes come from array creation
             const newArrayObjects: Array<ArrayDiagramProperties> = new Array(arrayObjects.length);
             arrayObjects.forEach((item, index) => {
                 const newLabels = new Array(newAmount).fill("");
-                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
                     newLabels[i] = item.labelArray[i];
                 }
                 newArrayObjects[index] = {
@@ -512,18 +512,18 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 };
             })
             setArrayObjects(newArrayObjects);
-        } else if (diagramStep===3) {
+        } else if (diagramStep === 3) {
             //changes come from historized creation
             const newHistorizedObjects: Array<HistorizedDiagramProperties> = new Array(historizedObjects.length);
             historizedObjects.forEach((item, index) => {
                 //change label Array
                 const newLabels = new Array(newAmount).fill("");
-                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
                     newLabels[i] = item.labelArray[i];
                 }
                 //change interval Array
                 const newIntervalSizes = new Array(newAmount).fill(0);
-                for(let i = 0; i < newLabels.length&&i<item.labelArray.length; i++) {
+                for (let i = 0; i < newLabels.length && i < item.labelArray.length; i++) {
                     newIntervalSizes[i] = item.intervalSizes[i];
                 }
                 newHistorizedObjects[index] = {
@@ -553,7 +553,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }*/
         const arCopy = arrayObjects.slice();
         //this check should never fail
-        if(ordinal>=0) {
+        if (ordinal >= 0) {
             arCopy[ordinal] = object;
         }
         setArrayObjects(arCopy);
@@ -567,7 +567,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const changeObjectInHistorizedObjects = (object: HistorizedDiagramProperties, ordinal: number) => {
         const arCopy = historizedObjects.slice();
         //this check should never fail
-        if(ordinal>=0) {
+        if (ordinal >= 0) {
             arCopy[ordinal] = object;
         }
         setHistorizedObjects(arCopy);
@@ -588,7 +588,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                     <DiagramOverview
                         continueHandler={props.continueHandler}
                         backHandler={props.backHandler}
-                        createDiagramHandler={() => setDiagramStep(diagramStep+1)}
+                        createDiagramHandler={() => setDiagramStep(diagramStep + 1)}
                         diagrams={props.diagrams}
                         setDiagrams={props.setDiagrams}
                         selectedDiagram={selectedDiagram}
@@ -607,18 +607,18 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                             setDiagramStep(2);
                             setDiagramSource("Array");
                         }}
-                        continueHistorized={() =>  {
+                        continueHistorized={() => {
                             setDiagramStep(3);
                             setDiagramSource("Historized");
                         }}
-                        backHandler={() => setDiagramStep(diagramStep-1)}
+                        backHandler={() => setDiagramStep(diagramStep - 1)}
                         compatibleArrays={compatibleArrays}
                         compatibleHistorized={compatibleHistorized}
                         setArrayObjects={(arrayObjects: Array<ArrayDiagramProperties>) => setArrayObjects(arrayObjects)}
                         setHistorizedObjects={(historizedObjects: Array<HistorizedDiagramProperties>) => setHistorizedObjects(historizedObjects)}
                     />
                 );
-           case 2:
+            case 2:
                 return (
                     <ArrayDiagramCreator
                         continueHandler={() => setDiagramStep(4)}
@@ -667,17 +667,23 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         </Grid>
                         <Grid item xs={9} className={classes.elementLargeMargin}>
                             <FormControl fullWidth>
-                                <TextField error={isNameDuplicate()} helperText={isNameDuplicate()?"Dieser Name wird bereits durch ein Diagramm anderes verwendet":null} variant="outlined" label="Diagramm-Name" value={diagramName} onChange={(e) => setDiagramName(e.target.value)}/>
+                                <TextField error={isNameDuplicate()}
+                                           helperText={isNameDuplicate() ? "Dieser Name wird bereits durch ein Diagramm anderes verwendet" : null}
+                                           variant="outlined" label="Diagramm-Name" value={diagramName}
+                                           onChange={(e) => setDiagramName(e.target.value)}/>
                             </FormControl>
                         </Grid>
-                        <Grid item container xs={12} justify="space-between" className={classes.elementExtraLargeMargin}>
+                        <Grid item container xs={12} justify="space-between"
+                              className={classes.elementExtraLargeMargin}>
                             <Grid item>
-                                <Button variant="contained" size="large" color="primary" onClick={() => setDiagramStep(diagramSource==="Array"?2:3)}>
+                                <Button variant="contained" size="large" color="primary"
+                                        onClick={() => setDiagramStep(diagramSource === "Array" ? 2 : 3)}>
                                     zurück
                                 </Button>
                             </Grid>
                             <Grid item className={classes.blockableButtonPrimary}>
-                                <Button disabled={diagramName===""} variant="contained" size="large" color="primary" onClick={() => finishCreate()}>
+                                <Button disabled={diagramName === ""} variant="contained" size="large" color="primary"
+                                        onClick={() => finishCreate()}>
                                     weiter
                                 </Button>
                             </Grid>
@@ -688,10 +694,10 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }
     }
 
-    return(
+    return (
         <StepFrame
-            heading = "Diagrammerstellung"
-            hintContent = {null}
+            heading="Diagrammerstellung"
+            hintContent={null}
         >
             {selectContent(diagramStep)}
         </StepFrame>
