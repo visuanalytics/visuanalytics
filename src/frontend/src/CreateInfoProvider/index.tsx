@@ -24,6 +24,7 @@ task 3: deleting a formula also has to delete it from historizedData if it is us
 task 4: when sending a new API-Request in step 2, all following settings need to be cleaned
 task 4.5: also make a check for changes before sending a new request
 task 5: add a dialog when deleting a formula
+task 6: keep the componentContext in sessionStorage, fix unmount problem
 TO DO:
 task 6: reloading needs to ask the user to put in all api key inputs again
 task 7: if possible, display a warning before reloading
@@ -32,7 +33,7 @@ task 9: unchecking in selectedData also needs to delete all formulas using the i
 task 10: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
 task 11: search for other TODOs that remain in the code
 task 12: repair format problems with backend communication in step 3
-task 13: keep the componentContext in sessionStorage?
+
 task 14: checkNameDuplicate is called to often, for exampling when checking noKey
 task x: find problem with data writing on unmounted component in dashboard
  */
