@@ -92,7 +92,7 @@ def insert_infoprovider(infoprovider):
         datasource_api_step = {
             "type": "request_multiple_custom",
             "use_loop_as_key": True,
-            "steps_value": ["api"],
+            "steps_value": [datasource_name],
             "requests": [datasource["api"]]
         }
 
@@ -144,7 +144,7 @@ def get_infoprovider_file(infoprovider_id):
     Generiert den Pfad zu der Datei eines gegebenen Infoproviders.
 
     :param infoprovider_id: ID des Infoproviders.
-    :return: Pfad zur Json datei des Infoproviders.
+    :return: Pfad zur Json Datei des Infoproviders.
     """
     con = db.open_con_f()
     # Namen des gegebenen Infoproviders laden
@@ -152,6 +152,21 @@ def get_infoprovider_file(infoprovider_id):
                       [infoprovider_id]).fetchone()
 
     return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
+
+
+def get_datasource_file(datasource_id):
+    """
+    Läd den Pfad zu der Json-Date einger gegebenen Datenquelle
+
+    :param datasource_id: ID der Datenquelle
+    :return: Pfad zu Json-Datei der Datenquelle
+    """
+    con = db.open_con_f()
+    # Namen der gegebenen Datenquelle laden
+    res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?", [datasource_id]).fetchone()
+    print("id", datasource_id, "res", res)
+
+    return _get_datasource_path(res["datasource_name"]) if res is not None else None
 
 
 def get_infoprovider(infoprovider_id):
@@ -254,13 +269,15 @@ def delete_infoprovider(infoprovider_id):
     res = con.execute("SELECT * FROM infoprovider WHERE infoprovider_id = ?",
                       [infoprovider_id]).fetchone()
     if res is not None:
-        # Json-Datei, Schedule und Infoprovider-Eintrag löschen
+        # Json-Datei von Datenquelle, sowie zugehörige Einträge in Datenbank löschen
+        _remove_datasources(con, infoprovider_id)
+
+        # Json-Datei von Infoprovider und zugehörige Ordner löschen
         file_path = get_infoprovider_file(infoprovider_id)
         shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
-        shutil.rmtree(os.path.join(MEMORY_LOCATION, res["infoprovider_name"]), ignore_errors=True)
-
         os.remove(file_path)
-        _remove_historisation_schedule(con, infoprovider_id)
+
+        # Infoprovider aus Datenbank löschen
         con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
         con.commit()
         return True
@@ -433,6 +450,17 @@ def _generate_transform(formulas, old_transform):
     return transform
 
 
+def _remove_datasources(con, infoprovider_id):
+    res = con.execute("SELECT datasource_id FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+    for row in res:
+        file_path = get_datasource_file(row["datasource_id"])
+        print("file Path", file_path)
+        os.remove(file_path)
+
+        _remove_historisation_schedule(con, row["datasource_id"])
+        con.execute("DELETE FROM datasource WHERE datasource_id=?", [row["datasource_id"]])
+
+
 def _insert_historisation_schedule(con, schedule):
     """
     Trägt gegebenen Schedule in die Tabellen schedule_historisation und schedule_historisation_weekday ein.
@@ -445,22 +473,26 @@ def _insert_historisation_schedule(con, schedule):
                               [type, time, date, time_interval]).lastrowid
     if type == "weekly":
         id_weekdays = [(schedule_id, d) for d in weekdays]
-        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)",
+                        id_weekdays)
     return schedule_id
 
 
-def _remove_historisation_schedule(con, infoprovider_id):
+def _remove_historisation_schedule(con, datasource_id):
     """
     Entfernt den Schedule eines Infoproviders.
 
     :param con: Variable welche auf die Datenbank verweist.
     :param infoprovider_id: ID des Infoproviders.
     """
-    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN datasource USING "
+                      "(schedule_historisation_id) WHERE datasource_id=?", [datasource_id]).fetchone()
     if res["type"] == "weekly":
-        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?",
+                    [res["schedule_historisation_id"]])
 
-    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?",
+                [res["schedule_historisation_id"]])
 
 
 def _insert_schedule(con, schedule):
