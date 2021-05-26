@@ -6,7 +6,7 @@ from PIL import Image
 from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram, generate_diagram_custom
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
@@ -39,11 +39,11 @@ def generate_all_images(values: dict, step_data: StepData):
     for key, item in enumerate(values["images"]):
         image_func = get_type_func(values["images"][item], IMAGE_TYPES)
 
-        values["images"][item] = image_func(values["images"][item], step_data, values["images"], values["name"])
+        values["images"][item] = image_func(values["images"][item], step_data, values["images"])
 
 
 @register_image
-def pillow(values: dict, step_data: StepData, prev_paths: dict, infoprovider_name):
+def pillow(values: dict, step_data: StepData, prev_paths: dict):
     """
     Erstellt ein Bild mit Hilfe der Python-Bibliothek Pillow.
     Dazu wird ein neues Bild geöffnet oder ein bisher erstelltes Bild weiter bearbeitet.
@@ -53,7 +53,6 @@ def pillow(values: dict, step_data: StepData, prev_paths: dict, infoprovider_nam
     :param values: Image-Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API
     :param prev_paths: alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellten Bildern
-    :param infoprovider_name: Name des Infoproviders
     :return: Pfad zum erstellten Bild
     :rtype: str
     """
@@ -76,14 +75,13 @@ def pillow(values: dict, step_data: StepData, prev_paths: dict, infoprovider_nam
 
 
 @register_image
-def wordcloud(values: dict, step_data: StepData, prev_paths, infoprovider_name):
+def wordcloud(values: dict, step_data: StepData, prev_paths):
     """
     Erstellt ein Wordcloud Bild mit Hilfe der Python-Bibliothek Wordcloud.
 
     :param values: Image-Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API
     :param prev_paths: alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellten Bildern
-    :param infoprovider_name: Name des Infoproviders
     :return: Pfad zum erstellten Bild
     :rtype: str
     """
@@ -91,15 +89,28 @@ def wordcloud(values: dict, step_data: StepData, prev_paths, infoprovider_name):
 
 
 @register_image
-def diagram(values: dict, step_data: StepData, prev_paths, infoprovider_name):
+def diagram(values: dict, step_data: StepData, prev_paths):
     """
     Erstellt ein Wordcloud Bild mit Hilfe der Python-Bibliothek Wordcloud.
 
     :param values: Image-Bauplan des zu erstellenden Bildes
     :param step_data: Daten aus der API
     :param prev_paths: alle Image-Baupläne und somit auch alle Pfade zu den bisher erstellten Bildern
-    :param infoprovider_name: Name des Infoproviders
     :return: Pfad zum erstellten Bild
     :rtype: str
     """
-    return generate_diagram(values, step_data, prev_paths, infoprovider_name)
+    return generate_diagram(values, step_data, prev_paths)
+
+
+@register_image
+def diagram_custom(values: dict, step_data: StepData, prev_paths):
+    """
+    Erstellt ein Diagram mit Hilfe der Python-Bibliothek MatPlotLib.
+
+    :param values: Image-Bauplan des zu erstellenden Diagramms
+    :param step_data: Daten aus der API
+    :param prev_paths: alle Image-Bauplane
+    :return: Pfad zum erstellten Bild
+    :rtype: str
+    """
+    return generate_diagram_custom(values, step_data, prev_paths)
