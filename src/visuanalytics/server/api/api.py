@@ -27,6 +27,7 @@ def close_db_con(exception):
 
 @api.route("/infprovtestdatensatz", methods=["GET"])
 def infprovtestdatensatz():
+    # Muss noch angepasst werden
     last_id = queries.get_last_infoprovider_id()
     infoprovider = {
         "infoprovider_name": "Test" + str(last_id),
@@ -190,6 +191,22 @@ def add_infoprovider():
                 err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
                 return err, 400
 
+            if "api" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                return err, 400
+
+            if "transform" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                return err, 400
+
+            if "storing" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                return err, 400
+
+            if "formulas" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                return err, 400
+
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
                                             f"{infoprovider['infoprovider_name']}"})
@@ -251,6 +268,7 @@ def get_all_infoproviders():
 
 @api.route("/infoprovider/<infoprovider_id>", methods=["PUT"])
 def update_infoprovider(infoprovider_id):
+    # Muss noch angepasst werden
     """
     Endpunkt `/infoprovider/<infoprovider_id>`.
 
