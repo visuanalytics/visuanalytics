@@ -62,7 +62,6 @@ export const InfoProviderOverview: React.FC = () => {
      * with useCallback in order to be used in useEffect.
      */
     const fetchAllInfoprovider = React.useCallback(() => {
-        console.log("fetcher started");
         let url = "/visuanalytics/infoprovider/all"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url

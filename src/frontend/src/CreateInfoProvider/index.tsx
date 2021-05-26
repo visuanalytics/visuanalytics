@@ -88,6 +88,26 @@ export const CreateInfoProvider = () => {
     const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
     //Holds all ListItemRepresentation objects used for the list in step 3 - defined here to be set in step 2
     const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    
+
+    //TODO: document this
+    /**
+     * Defines event listener for reloading the page and removes it on unmounting.
+     * The event listener will warn the user that api keys will be list an a reload.
+     * Note: Custom messages seem not to be supported by modern browsers so we cant give an explicit warning here.
+     * Displaying an additional alert or something is also not possibly since an re-render would be necessary.
+     */
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [])
+
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
