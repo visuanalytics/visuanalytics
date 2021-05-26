@@ -3,7 +3,7 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import { Schedule } from "..";
+import {Schedule} from "..";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface HistorySelectionProps {
@@ -17,10 +17,11 @@ interface HistorySelectionProps {
     selectSchedule: (schedule: Schedule) => void;
     historySelectionStep: number;
     setHistorySelectionStep: (step: number) => void;
+    addToDataSources: () => void;
 }
 
 /**
- * Component displaying the fourth step in the creation of a new Info-Provider (Historisation).
+ * Component displaying the fourth step in the creation of a new Info-Provider (Historization).
  * The state of this component handles the input made to its children.
  */
 export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
@@ -39,6 +40,15 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
         props.setHistorySelectionStep(1);
     }
 
+    /**
+     * When the user doesn't select any values to be historized, this continue handler will be called and add the current data source to the other data sources.
+     * After that the handler will proceed to the next step of the Infoprovider
+     */
+    const skipContinueHandler = () => {
+        props.addToDataSources();
+        props.continueHandler();
+    }
+
 
     //const components = React.useContext(ComponentContext);
     /**
@@ -50,12 +60,13 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                 return (
                     <HistoryDataSelection
                         handleProceed={handleDataProceed}
-                        handleSkipProceed={props.continueHandler}
+                        handleSkipProceed={skipContinueHandler}
                         handleBack={props.backHandler}
                         selectedData={props.selectedData}
                         customData={props.customData}
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
+                        selectSchedule={props.selectSchedule}
                     />
                 )
             case 2:
@@ -65,6 +76,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         handleBack={handleScheduleBack}
                         schedule={props.schedule}
                         selectSchedule={props.selectSchedule}
+                        addToDataSources={props.addToDataSources}
                     />
                 )
 
