@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
 from datetime import datetime, timedelta
+from ast import literal_eval
 
 dpi_default = 100
 default_color = "#000000"
@@ -139,7 +141,7 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
 
 def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
     # file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    file = resources.get_image_path(values["infoprovider"] + "/" + values["diagram_config"]["name"] + ".png")
+    file = resources.get_image_path(values["diagram_config"]["infoprovider"] + "/" + values["diagram_config"]["name"] + ".png")
     with resources.open_resource(file, "wt") as f:
         pass
 
@@ -295,39 +297,75 @@ def pie_plot(values, fig=None, ax=None):
     return fig, ax
 
 
-def create_plot(values, fig=None, ax=None):
-    t = values["type"]
-    if t == "custom":
-        for plot in values["plots"]:
-            fig, ax = create_plot(values=plot, fig=fig, ax=ax)
-    elif t == "line":
-        fig, ax = line_plot(values=values, fig=fig, ax=ax)
+def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True, data_labels=False):
+    if array_source:
+        if primitive:
+            y_vals = step_data.format(values["y"])
+            y_vals = list(map(float, y_vals[1: -1].split(", ")))
+            y_vals = list(map(y_vals.__getitem__, values.get("x", np.arange(len(y_vals)))))
+        else:
+            array = step_data.format(values["y"])
+            array = literal_eval(array)
+            array = list(map(array.__getitem__, values.get("x", np.arange(len(array)))))
+            y_vals = list(map(float, list(map(lambda x: x[values["numeric_attribute"]], array))))
+            if not custom_labels:
+                x_ticks = values.get("x_ticks", {})
+                x_ticks.update({"ticks": list(map(lambda x: x[values["string_attribute"]], array))})
+                values.update({"x_ticks": x_ticks})
+    else:
+        y_vals = step_data.format(values["y"])
+        y_vals = list(map(float, y_vals[1: -1].split(", ")))
+        y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
+
+    values["y"] = y_vals
+    values.pop("x", None)
+    print("values", values)
+
+    return values
+
+
+def create_plot(values, step_data, array_source, fig=None, ax=None):
+    t = values["plot"]["type"]
+    values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+    if t == "line":
+        fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar":
-        fig, ax = bar_plot(values=values, fig=fig, ax=ax)
+        fig, ax = bar_plot(values=values_new, fig=fig, ax=ax)
     elif t == "barh":
-        fig, ax = barh_plot(values=values, fig=fig, ax=ax)
+        fig, ax = barh_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar_multiple":
-        fig, ax = bar_multiple_plot(values=values, fig=fig, ax=ax)
+        fig, ax = bar_multiple_plot(values=values_new, fig=fig, ax=ax)
     elif t == "barh_multiple":
-        fig, ax = barh_multiple_plot(values=values, fig=fig, ax=ax)
+        fig, ax = barh_multiple_plot(values=values_new, fig=fig, ax=ax)
     elif t == "scatter":
-        fig, ax = scatter_plot(values=values, fig=fig, ax=ax)
+        fig, ax = scatter_plot(values=values_new, fig=fig, ax=ax)
     elif t == "fill":
-        fig, ax = filled_plot(values=values, fig=fig, ax=ax)
+        fig, ax = filled_plot(values=values_new, fig=fig, ax=ax)
     elif t == "pie":
-        fig, ax = pie_plot(values=values, fig=fig, ax=ax)
+        fig, ax = pie_plot(values=values_new, fig=fig, ax=ax)
+
+    x_ticks = values_new.get("x_ticks", None)
+    if x_ticks:
+        print("x_ticks", x_ticks)
+        ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
+                               color=x_ticks.get("color", default_color))
 
     return fig, ax
 
 
+def create_plot_custom(values, step_data, fig=None, ax=None):
+    array_source = values["source_type"] == "Array"
+    for plot in values["plots"]:
+        fig, ax = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
+    return fig, ax
+
+
 def plot_wrapper(values, file, step_data):
-    values["y"] = step_data.format(values["y"])
-    values["y"] = list(map(float, values["y"][1: -1].split(", ")))
-    fig, ax = create_plot(values=values)
+    fig, ax = create_plot_custom(values, step_data)
     title = values.get("title", None)
     x_label = values.get("x_label", None)
     y_label = values.get("y_label", None)
-    x_ticks = values.get("x_ticks", None)
+    # x_ticks = values.get("x_ticks", None)
     grid = values.get("grid", None)
     face_color = values.get("face_color", None)
 
@@ -337,9 +375,9 @@ def plot_wrapper(values, file, step_data):
         plt.xlabel(x_label["text"], fontdict=x_label.get("fontdict", default_fontdict))
     if y_label:
         plt.ylabel(y_label["text"], fontdict=y_label.get("fontdict", default_fontdict))
-    if x_ticks:
-        ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
-                           color=x_ticks.get("color", default_color))
+    # if x_ticks:
+    #     ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
+    #                        color=x_ticks.get("color", default_color))
     if grid:
         ax.grid(color=grid.get("color", "gray"), linestyle=grid.get("linestyle", "-"), linewidth=grid.get("linewidth", 1), axis=grid.get("axis", "both"))
     if face_color:
