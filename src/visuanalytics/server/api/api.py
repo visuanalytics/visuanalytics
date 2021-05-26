@@ -197,6 +197,10 @@ def add_infoprovider():
             err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
             return err, 400
 
+        if "images" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
                                             f"{infoprovider['infoprovider_name']}"})
@@ -289,6 +293,10 @@ def update_infoprovider(infoprovider_id):
 
         if "formulas" not in updated_data:
             err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
+            return err, 400
+
+        if "images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
             return err, 400
 
         return flask.jsonify(queries.update_infoprovider(infoprovider_id, updated_data))
