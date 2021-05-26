@@ -1,6 +1,6 @@
 import React from "react";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
-import {Grid} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
@@ -20,6 +20,26 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
     const classes = useStyles();
 
+    const[removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+
+    const[currentDeleteFormelName, setCurrentDeleteFormelName] = React.useState("");
+
+    const handleDelete = (name: string) => {
+        setCurrentDeleteFormelName(name);
+        setRemoveDialogOpen(true);
+    }
+
+    const confirmDelete = () => {
+
+        for (let i: number = 0; i <= props.infoProvDataSources[props.selectedDataSource].customData.length - 1; i++) {
+            if (props.infoProvDataSources[props.selectedDataSource].customData[i].formelName === currentDeleteFormelName) {
+                props.infoProvDataSources[props.selectedDataSource].customData.splice(i, 0);
+                return
+            }
+        }
+
+    }
+
     return (
         <StepFrame heading={"Bearbeiten der Formeln"} hintContent={"Bearbeiten der Formeln!"}>
             <Grid container justify={"space-evenly"}>
@@ -29,6 +49,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                              className={classes.listFrame}>
                             <FormelList
                                 customDataEdit={props.infoProvDataSources[props.selectedDataSource].customData}
+                                handleDelete={(name: string) => handleDelete(name)}
                             />
                         </Box>
                     </Grid>
@@ -53,6 +74,34 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
+                <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                        open={removeDialogOpen}>
+                    <DialogTitle id="deleteDialog-title">
+                        Die Formel "{currentDeleteFormelName}" wirklich löschen?
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            "{currentDeleteFormelName}" wird unwiderruflich gelöscht.
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained" color={"secondary"}
+                                        onClick={() => setRemoveDialogOpen(false)}>
+                                    zurück
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => confirmDelete()}
+                                        className={classes.delete}>
+                                    Löschen bestätigen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </StepFrame>
     );

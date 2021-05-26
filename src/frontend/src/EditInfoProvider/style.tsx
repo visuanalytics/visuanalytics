@@ -28,5 +28,44 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "5px",
             marginBottom: "0px"
         },
+        settings: {
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000",
+            '&:hover': {
+                backgroundColor: theme.palette.secondary.dark,
+            }
+        },
+        delete: {
+            backgroundColor: theme.palette.error.main,
+            color: "#FFFFFF",
+            marginLeft: 20,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            }
+        },
+        formelBorder: {
+            width: "50%",
+            height: 100,
+            overflow: 'auto',
+            overflowX: 'hidden',
+            borderColor: theme.palette.primary.dark,
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+        },
+        formelNameBorder: {
+            width: "100%",
+            height: 100,
+            overflow: 'auto',
+            overflowX: "hidden",
+            borderColor: theme.palette.primary.dark,
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+        }
     }),
 );

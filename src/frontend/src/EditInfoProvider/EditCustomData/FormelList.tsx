@@ -1,34 +1,71 @@
 import React from "react";
 import {useStyles} from "../style";
-import {Box, List, ListItem, Typography} from "@material-ui/core";
+import {Box, Grid, List, ListItem, ListItemSecondaryAction, Typography} from "@material-ui/core";
 import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import Button from "@material-ui/core/Button";
+import {SettingsRounded} from "@material-ui/icons";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface FormelListProps {
     customDataEdit: Array<formelObj>
+    handleDelete: (name: string) => void;
 }
 
 export const FormelList: React.FC<FormelListProps> = (props) => {
 
-    const classes = useStyles;
+    const classes = useStyles();
 
-    const renderListItem = (data: formelObj) => {
+    const renderListName = (data: formelObj) => {
         return (
-           <ListItem>
-               <Typography>
-                   {data.formelName}
-               </Typography>
-               <Box border={5} borderRadius={10}>
-                   <Typography variant={"h5"}>
-                       {data.formelString}
-                   </Typography>
-               </Box>
-           </ListItem>
+            <ListItem>
+                <Box border={5} borderRadius={10} className={classes.formelNameBorder}>
+                    <Typography variant={"h5"}>
+                        {data.formelName}
+                    </Typography>
+                </Box>
+            </ListItem>
         );
     }
 
-    return(
-        <List>
-            {props.customDataEdit.map((e) => renderListItem(e))}
-        </List>
+    const renderListItem = (data: formelObj) => {
+        return (
+            <ListItem>
+                <Box border={5} borderRadius={10} className={classes.formelBorder}>
+                    <Typography variant={"h5"}>
+                        {data.formelString}
+                    </Typography>
+                </Box>
+                <ListItemSecondaryAction>
+                    <Button variant={"contained"} size={"small"} className={classes.settings}
+                            startIcon={<SettingsRounded fontSize="small"/>}
+                    >
+                        bearbeiten
+                    </Button>
+                    <Button variant={"contained"} size={"small"}
+                            className={classes.delete}
+                            startIcon={<DeleteIcon fontSize="small"/>}
+                            onClick={() => props.handleDelete(data.formelName)}
+                    >
+                        löschen
+                    </Button>
+                </ListItemSecondaryAction>
+            </ListItem>
+        );
+    }
+
+    return (
+        <Grid item container xs={12} justify={"center"}>
+            <Grid item xs={3}>
+                <List>
+                    {props.customDataEdit.map((e) => renderListName(e))}
+                </List>
+            </Grid>
+            <Grid item xs={9}>
+                <List>
+                    {props.customDataEdit.map((e) => renderListItem(e))}
+                </List>
+            </Grid>
+        </Grid>
+
     );
 }

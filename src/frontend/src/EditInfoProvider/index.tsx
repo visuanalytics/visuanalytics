@@ -69,7 +69,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                     type: "Zahl"
                 }
             ),
-            customData: new Array<formelObj>(new formelObj("formel1_2", "7 - 1"), new formelObj("formel2_2", "25 * formel1_2")),
+            customData: new Array<formelObj>(new formelObj("formel1_2", "7 - 1"), new formelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
             historizedData: new Array<string>("formel1_2", "Array2|Data0"),
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]}
         },
@@ -85,10 +85,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
 
 //the current step of the creation process, numbered by 0 to 5
     const [step, setStep] = React.useState(0);
-
-    const rewriteFields = () => {
-
-    }
 
     const steps = [
         "Überblick",
