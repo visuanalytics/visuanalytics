@@ -321,16 +321,19 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 "Content-Type": "application/json\n"
             },
             body: JSON.stringify({
-                infoproviderName: infoProviderName,
-                type: "custom",
-                name: diagramName,
-                plots: createPlots({
+                type: "diagram_custom",
+                diagram_config: {
+                    infoProviderName: infoProviderName,
+                    type: "custom",
                     name: diagramName,
-                    variant: diagramType,
-                    sourceType: diagramSource,
-                    historizedObjects: historizedObjects,
-                    arrayObjects: arrayObjects
-                })
+                    plots: createPlots({
+                        name: diagramName,
+                        variant: diagramType,
+                        sourceType: diagramSource,
+                        historizedObjects: historizedObjects,
+                        arrayObjects: arrayObjects
+                    })
+                }
             }),
             signal: abort.signal
         }).then((res: Response) => {

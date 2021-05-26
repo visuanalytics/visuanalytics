@@ -114,10 +114,13 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 "Content-Type": "application/json\n"
             },
             body: JSON.stringify({
-                infoProviderName: infoProviderName,
-                type: "custom",
-                name: selectedDiagram.name,
-                plots: createPlots(selectedDiagram)
+                type: "diagram_custom",
+                diagram_config: {
+                    infoProviderName: infoProviderName,
+                    type: "custom",
+                    name: selectedDiagram.name,
+                    plots: createPlots(selectedDiagram)
+                }
             }),
             signal: abort.signal
         }).then((res: Response) => {
