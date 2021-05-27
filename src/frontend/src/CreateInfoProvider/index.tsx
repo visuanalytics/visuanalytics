@@ -104,6 +104,11 @@ export const CreateInfoProvider = () => {
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    //TODO: documentation
+    /**
+     * Method to check if there is api auth data to be lost when the user refreshes the page.
+     * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
+     */
     const checkKeyExistence = React.useCallback(() => {
         //check the current data source
         if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
@@ -116,26 +121,6 @@ export const CreateInfoProvider = () => {
         }
         return false;
     }, [dataSources, dataSourcesKeys, noKey, apiKeyInput1, apiKeyInput2])
-
-    //TODO: document this
-    /**
-     * Defines event listener for reloading the page and removes it on unmounting.
-     * The event listener will warn the user that api keys will be list an a reload.
-     * Note: Custom messages seem not to be supported by modern browsers so we cant give an explicit warning here.
-     * Displaying an additional alert or something is also not possibly since an re-render would be necessary.
-     */
-    React.useEffect(() => {
-        const leaveAlert = (e: BeforeUnloadEvent) => {
-            if(checkKeyExistence()) {
-                e.preventDefault();
-                e.returnValue = "";
-            }
-        }
-        window.addEventListener("beforeunload", leaveAlert);
-        return () => {
-            window.removeEventListener("beforeunload", leaveAlert);
-        }
-    }, [checkKeyExistence])
 
     //TODO: document this
     /**
@@ -156,6 +141,55 @@ export const CreateInfoProvider = () => {
         }
         return false;
     }
+
+    //TODO: documentation
+    /**
+     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
+     */
+    const buildDataSourceSelection = () => {
+        const dataSourceSelection: Array<authDataDialogElement> = [];
+        //check the current data source and add it as an option
+        if(!noKey) {
+            dataSourceSelection.push({
+                name: "current--"+ uniqueId,
+                method: method
+            })
+        }
+        //check all other data sources
+        if(dataSources!==undefined) {
+            dataSources.forEach((dataSource) => {
+                //input is necessary if any method of authentication is being used
+                if(!dataSource.noKey) {
+                    //add to the selection
+                    dataSourceSelection.push({
+                        name: dataSource.apiName,
+                        method: dataSource.method
+                    })
+                }
+            })
+        }
+        return dataSourceSelection
+    }
+
+    //TODO: document this
+    /**
+     * Defines event listener for reloading the page and removes it on unmounting.
+     * The event listener will warn the user that api keys will be list an a reload.
+     * Note: Custom messages seem not to be supported by modern browsers so we cant give an explicit warning here.
+     * Displaying an additional alert or something is also not possibly since an re-render would be necessary.
+     */
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if(checkKeyExistence()) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [checkKeyExistence])
 
 
     /**
@@ -528,35 +562,6 @@ export const CreateInfoProvider = () => {
         }
     }
 
-    //TODO: documentation
-    /**
-     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
-     */
-    const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
-        //check the current data source and add it as an option
-        if(!noKey) {
-            dataSourceSelection.push({
-                name: "current--"+ uniqueId,
-                method: method
-            })
-        }
-        //check all other data sources
-        if(dataSources!==undefined) {
-            dataSources.forEach((dataSource) => {
-                //input is necessary if any method of authentication is being used
-                if(!dataSource.noKey) {
-                    //add to the selection
-                    dataSourceSelection.push({
-                        name: dataSource.apiName,
-                        method: dataSource.method
-                    })
-                }
-            })
-        }
-        return dataSourceSelection
-    }
-
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
@@ -580,12 +585,10 @@ export const CreateInfoProvider = () => {
                     authDataDialogOpen={authDataDialogOpen}
                     setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
                     method={method}
-                    noKey={noKey}
                     apiKeyInput1={apiKeyInput1}
                     setApiKeyInput1={(input: string) => setApiKeyInput1(input)}
                     apiKeyInput2={apiKeyInput2}
                     setApiKeyInput2={(input: string) => setApiKeyInput2(input)}
-                    dataSources={dataSources}
                     dataSourcesKeys={dataSourcesKeys}
                     setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
                     selectionDataSources={buildDataSourceSelection()}
