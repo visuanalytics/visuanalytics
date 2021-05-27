@@ -50,7 +50,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * @param item The entry that should be rendered.
      */
     const renderListItem = (item: string) => {
-        return(
+        return (
             <ListItem key={item} divider={true}>
                 <ListItemText primary={item} secondary={null}/>
             </ListItem>
@@ -62,7 +62,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * It is called when the user changes the selected entry in the data source dropdown.
      * @param event The change event provided by the Select component
      */
-    const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
+    const handleChangeSelectedDataSource = (event: React.ChangeEvent<{ value: unknown }>) => {
         props.setSelectedDataSource(event.target.value as number);
 
     }
@@ -87,7 +87,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                 <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
 
                     <Grid item xs={12}>
-                        <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
+                        <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
+                                   label={"Info-Provider Name"}
                                    value={props.infoProvName}
                                    onChange={event => (props.setInfoProvName(event.target.value))}>
                         </TextField>
@@ -127,7 +128,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
+                            <Box borderColor="primary.main" border={4} borderRadius={5}
+                                 className={classes.smallListFrame}>
                                 <List disablePadding={true}>
                                     {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
                                 </List>
@@ -141,10 +143,12 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         </Grid>
                         }
                         <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}>
+                            <Box borderColor="primary.main" border={4} borderRadius={5}
+                                 className={classes.smallListFrame}>
                                 {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
                                 <Grid item xs={12}>
-                                    <ScheduleTypeTable schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
+                                    <ScheduleTypeTable
+                                        schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
                                 </Grid>
                                 }
                             </Box>

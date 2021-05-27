@@ -9,6 +9,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface FormelListProps {
     customDataEdit: Array<formelObj>
     handleDelete: (name: string) => void;
+    handleEdit: (formel: formelObj) => void;
 }
 
 export const FormelList: React.FC<FormelListProps> = (props) => {
@@ -38,6 +39,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
                 <ListItemSecondaryAction>
                     <Button variant={"contained"} size={"small"} className={classes.settings}
                             startIcon={<SettingsRounded fontSize="small"/>}
+                            onClick={() => props.handleEdit(data)}
                     >
                         bearbeiten
                     </Button>

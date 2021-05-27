@@ -13,6 +13,7 @@ import {useStyles} from "./style";
 import {ComponentContext} from "../ComponentProvider";
 import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
+import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -69,18 +70,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                     type: "Zahl"
                 }
             ),
-            customData: new Array<formelObj>(new formelObj("formel1_2", "7 - 1"), new formelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+            customData: new Array<formelObj>(new formelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new formelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
             historizedData: new Array<string>("formel1_2", "Array2|Data0"),
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]}
         },
     ));
 
     //TODO: change to Diagram
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider? infoProvider.diagrams: new Array<string>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
 
     const [selectedDataSource, setSelectedDataSource] = React.useState(0);
-
-    const [customDataEdit, setCustomDataEdit] = React.useState(infoProvDataSource[selectedDataSource].customData);
 
 
 //the current step of the creation process, numbered by 0 to 5
@@ -93,6 +92,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
         "Diagramme",
         "Historisierung"
     ];
+
+    const checkForHistorizedData = () => {
+
+        if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
+            infoProvDataSource[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
+        }
+
+    }
 
 // setup for error notification
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
@@ -161,6 +168,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                         editInfoProvider={editInfoProvider}
                         infoProvDataSources={infoProvDataSource}
                         selectedDataSource={selectedDataSource}
+                        checkForHistorizedData={checkForHistorizedData}
                     />
                 );
             case 3:
