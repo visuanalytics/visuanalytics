@@ -32,7 +32,8 @@ export type DataSourceKey = {
     apiKeyInput2: string;
 }
 
-export type selectionElement = {
+//TODO: rename
+export type authDataDialogElement = {
     name: string;
     method: string;
 }

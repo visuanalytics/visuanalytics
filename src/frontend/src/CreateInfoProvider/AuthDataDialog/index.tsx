@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {DataSource, DataSourceKey, selectionElement, uniqueId} from "../types";
+import {DataSource, DataSourceKey, authDataDialogElement, uniqueId} from "../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import {APIInputField} from "../BasicSettings/APIInputField/APIInputField";
 
@@ -23,7 +23,7 @@ interface AuthDataDialogProps {
     dataSources: Array<DataSource>;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
-    selectionDataSources: Array<selectionElement>;
+    selectionDataSources: Array<authDataDialogElement>;
 }
 
 
@@ -36,50 +36,38 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
     const classes = useStyles();
 
 
-        //TODO: check were undefined check is needed and where not
+    //TODO: check were undefined check is needed and where not
     //TODO: clean up
 
     //the currently selected index of the buildChoiceArray
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    /**
-     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
-     */
-    const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<selectionElement> = [];
-        //check the current data source and add it as an option
-        if(!props.noKey) {
-            dataSourceSelection.push({
-                name: "current--"+ uniqueId,
-                method: props.method
-            })
-        }
-        //check all other data sources
-        if(props.dataSources!==undefined) {
-            props.dataSources.forEach((dataSource) => {
-                //input is necessary if any method of authentication is being used
-                if(!dataSource.noKey) dataSourceSelection.push({
-                    name: dataSource.apiName,
-                    method: dataSource.method
-                })
-            })
-        }
-        console.log(dataSourceSelection)
-        return dataSourceSelection
-    }
-
-    //const [selectionDataSources, setSelectionDataSources] = React.useState<Array<selectionElement>>([])
-
-/*
-    React.useEffect(() => {
-        setSelectionDataSources(buildDataSourceSelection())
-    }, [])
-*/
 
     /**
      * Method to check if the user has put in everything necessary and is ready to close the dialog.
+     * (props.name!==""&&props.query!==""&&(props.noKey||(props.apiKeyInput1!==""&&props.apiKeyInput2!==""&&props.method!==""))&&!props.checkNameDuplicate(props.name))
      */
     const checkFinish = () => {
+        for (let index = 0; index < props.selectionDataSources.length; index++) {
+            const element = props.selectionDataSources[index];
+            if(element.name==="current--" + uniqueId) {
+                //if the method is token and the first input is empty or if both inputs are empty (all other method cases)
+                if(props.method==="BearerToken") {
+                    if(props.apiKeyInput1==="") return false;
+                } else {
+                    if(props.apiKeyInput1===""||props.apiKeyInput2==="") return false;
+                }
+            } else {
+                const keys = props.dataSourcesKeys.get(element.name);
+                if (keys!==undefined) {
+                    if(element.method==="BearerToken") {
+                        if(keys.apiKeyInput1==="") return false;
+                    } else {
+                        if(keys.apiKeyInput1===""||keys.apiKeyInput2==="") return false;
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -122,7 +110,6 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
 
 
     const renderDataSourceOption = (dataSource: string, dataSourceNumber: number) => {
-        console.log(props.dataSourcesKeys)
         if(dataSource!==undefined) {
             return (
                 <MenuItem key={dataSource} value={dataSourceNumber}>{(dataSource.includes(uniqueId))?"aktuelle Datenquelle":(dataSource)}</MenuItem>
@@ -135,7 +122,32 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
 
     }
 
-    //TODO: resolve method names for correct displaying
+    /**
+     * Takes a method selected for an api data source and transform it into a human-readable string.
+     */
+    const resolveMethodName = (method: string) => {
+        switch(method) {
+            case "KeyInQuery": {
+                return "Key in Query"
+            }
+            case "KeyInHeader": {
+                return "Key in Header"
+            }
+            case "BearerToken": {
+                return "Bearer Token"
+            }
+            case "BasicAuth": {
+                return "Basic Auth"
+            }
+            case "DigestAuth": {
+                return "Digest Auth"
+            }
+            default: {
+                return ""
+            }
+    }
+    }
+
     return (
         <Dialog aria-labelledby="authDataDialog-title"
                 open={props.authDataDialogOpen}>
@@ -145,7 +157,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
             <DialogContent dividers>
                 <Grid container>
                     <Grid item xs={12}>
-                        Erneute Eingabe der Authentifizierungsdaten ist auch Sicherheitsgründen notwendig. Bitte geben sie für alle angezeigten Datenquellen ihre Authentifizierungsdaten erneut ein.<br/>
+                        Erneute Eingabe der Authentifizierungsdaten ist auch Sicherheitsgründen notwendig.<br/>Bitte geben sie für alle angezeigten Datenquellen ihre Authentifizierungsdaten erneut ein.
                     </Grid>
                     <Grid item xs={12} className={classes.elementLargeMargin}>
                         <FormControl fullWidth>
@@ -157,7 +169,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
                     </Grid>
                     <Grid item xs={12} className={classes.elementLargeMargin}>
                         <Typography variant="body1">
-                            Authentifizierungsmethode dieser Datenquelle: <strong>{props.selectionDataSources[selectedIndex].method}</strong>
+                            Authentifizierungsmethode dieser Datenquelle: <strong>{resolveMethodName(props.selectionDataSources[selectedIndex].method)}</strong>
                         </Typography>
                     </Grid>
                     <Grid item container xs={12} justify="space-between">
@@ -188,7 +200,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps>  = (props) => {
             </DialogContent>
             <DialogActions>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button variant="contained" color="primary" disabled={!checkFinish()} onClick={() => console.log("finished")}>
+                    <Button variant="contained" color="primary" disabled={!checkFinish()} onClick={() => props.setAuthDataDialogOpen(false)}>
                         Bestätigen
                     </Button>
                 </Grid>

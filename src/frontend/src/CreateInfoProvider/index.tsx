@@ -18,7 +18,7 @@ import {
     ListItemRepresentation,
     Schedule,
     SelectedDataItem,
-    selectionElement,
+    authDataDialogElement,
     uniqueId
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
@@ -35,14 +35,15 @@ task 4.5: also make a check for changes before sending a new request
 task 5: add a dialog when deleting a formula
 task 6: keep the componentContext in sessionStorage, fix unmount problem
 task 7: if possible, display a warning before reloading
-TO DO:
 task 8: reloading needs to ask the user to put in all api key inputs again
+TO DO:
 task 9: check all usages of useCallFetch for buggy behaviour
 task 10: unchecking in selectedData also needs to delete all formulas using the item and delete it from historizedData
 task 11: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
 task 12: search for other TODOs that remain in the code
 task 13: repair format problems with backend communication in step 3
 task 14: checkNameDuplicate is called to often, for exampling when checking noKey
+task 15: remove the name input from step 1
 task x: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
  */
 
@@ -114,7 +115,7 @@ export const CreateInfoProvider = () => {
             }
         }
         return false;
-    }, [dataSources, noKey, apiKeyInput1, apiKeyInput2])
+    }, [dataSources, dataSourcesKeys, noKey, apiKeyInput1, apiKeyInput2])
 
     //TODO: document this
     /**
@@ -139,9 +140,21 @@ export const CreateInfoProvider = () => {
     //TODO: document this
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
+     * This will be the case if the current data Source has not selected noKey or if any of the previously existing dataSources has noKey.
+     * Needs to run based on sessionStorage since it is called in the first render.
      */
     const authDialogNeeded = () => {
-        return true;
+        const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
+        //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
+        const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
+        if((!noKeyCurrent)&&methodCurrent!=="") return true;
+        else {
+            for (let index = 0; index < data.length; index++) {
+                if(!data[index].noKey) return true;
+            }
+        }
+        return false;
     }
 
 
@@ -177,16 +190,14 @@ export const CreateInfoProvider = () => {
         //listItems
         setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
 
-        //TODO: add detection if something needs to be restored
+        //TODO: document this
         //open the dialog for reentering authentication data
         if(authDialogNeeded()) {
             //create default values in the key map for all dataSources
             //necessary to not run into undefined values
-            //mybe comment nicer or reposition
             const map = new Map();
             const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
             data.forEach((dataSource) => {
-                //console.log("setting: " + dataSource.apiName)
                 map.set(dataSource.apiName, {
                     apiKeyInput1: "",
                     apiKeyInput2: ""
@@ -522,7 +533,7 @@ export const CreateInfoProvider = () => {
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<selectionElement> = [];
+        const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
         if(!noKey) {
             dataSourceSelection.push({
