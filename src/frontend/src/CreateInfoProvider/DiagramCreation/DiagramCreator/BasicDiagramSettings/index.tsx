@@ -22,8 +22,9 @@ interface BasicDiagramSettingsProps {
 
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * Component displaying the header section of the diagram creation.
+ * Used in diagram creation with arrays as well as diagram creation with historized data.
+ * Contains selection of the diagram type und amount of values to be used.
  */
 export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props) => {
     const classes = useStyles();

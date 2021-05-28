@@ -31,8 +31,8 @@ interface DiagramOverviewProps {
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * Component displaying first step of the diagram creation.
+ * Displays an overview of all diagrams with the option for new diagrams, editing, deleting and preview.
  */
 export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     const classes = useStyles();
@@ -237,7 +237,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         <Grid container justify="space-around">
             <Grid item xs={12}>
                 <Typography variant="body1">
-                    Folgende Diagramme wurde bereits erstellt:
+                    Folgende Diagramme wurden bereits erstellt:
                 </Typography>
             </Grid>
             <Grid item xs={10}>
@@ -294,8 +294,8 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             <Dialog onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
-                <DialogTitle id="deleteDialog-title">
+            }} aria-labelledby="previewDialog-title" open={previewOpen}>
+                <DialogTitle id="previewDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>

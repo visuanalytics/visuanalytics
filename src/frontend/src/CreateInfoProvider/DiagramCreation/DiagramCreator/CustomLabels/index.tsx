@@ -18,6 +18,10 @@ interface CustomLabelsProps {
     changeObjectInHistorizedObjects?: (object: HistorizedDiagramProperties, ordinal: number) => void;
 }
 
+/**
+ * Component that generates the input fields for custom labels in diagram creation.
+ * Used by diagram creation with arrays and diagram creation with historized data.
+ */
 export const CustomLabels: React.FC<CustomLabelsProps> = (props) => {
     const classes = useStyles();
 

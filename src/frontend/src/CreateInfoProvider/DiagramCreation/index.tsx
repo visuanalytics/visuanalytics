@@ -105,8 +105,7 @@ interface DiagramCreationProps {
 
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * Wrapper component of last step in the creation of an infoprovider, the diagram creation.
  */
 export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const classes = useStyles();
@@ -359,33 +358,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         };
     }, []);
 
-    //use of useCallFetch was quit since it caused function calls on each render
-    /**
-     * Method to get a preview of the created diagram.
-     * The backend creates the diagram with the given settings and return it as an image.
-     */
-    /*const fetchPreviewImage = useCallFetch("/testdiagram",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                type: "custom",
-                name: diagramName,
-                sourceType: diagramSource,
-                plots: createPlots({
-                    name: diagramName,
-                    variant: diagramType,
-                    sourceType: diagramSource,
-                    historizedObjects: historizedObjects,
-                    arrayObjects: arrayObjects
-                })
-            })
-        }, handleSuccessDiagramPreview, handleErrorDiagramPreview
-    );*/
-
-
     /**
      * Finishes the creation of a single diagram by writing the data into an object that stores all informations.
      */
@@ -487,13 +459,20 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     /*
      * Update the lists whenever the source data changes
      */
-    React.useEffect(() => {
-        setCompatibleArrays(getCompatibleArrays(props.listItems))
-    }, [props.listItems, getCompatibleArrays])
+
+    //extract listItems and historizedData from props
+    const listItems = props.listItems;
 
     React.useEffect(() => {
-        setCompatibleHistorized(getCompatibleHistorized(props.historizedData))
-    }, [props.historizedData, getCompatibleHistorized])
+        setCompatibleArrays(getCompatibleArrays(listItems))
+    }, [listItems, getCompatibleArrays])
+
+    //extract historizedData and historizedData from props
+    const historizedData = props.historizedData;
+
+    React.useEffect(() => {
+        setCompatibleHistorized(getCompatibleHistorized(historizedData))
+    }, [historizedData, getCompatibleHistorized])
 
 
     const amountChangeHandler = (newAmount: number) => {
@@ -542,15 +521,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * @param ordinal Index of the object to be replaced
      */
     const changeObjectInArrayObjects = (object: ArrayDiagramProperties, ordinal: number) => {
-        /*//find the ordinal of the object by comparing keys
-        let ordinal = -1;
-        for(let index = 0; index < arrayObjects.length; ++index) {
-            const element = arrayObjects[index];
-            if((element.listItem.parentKeyName===""?element.listItem.keyName:element.listItem.parentKeyName + "|" + element.listItem.keyName)===(object.listItem.parentKeyName===""?object.listItem.keyName:object.listItem.parentKeyName + "|" + object.listItem.keyName)) {
-                ordinal = index;
-                break;
-            }
-        }*/
         const arCopy = arrayObjects.slice();
         //this check should never fail
         if(ordinal>=0) {
@@ -678,7 +648,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                             </Grid>
                             <Grid item className={classes.blockableButtonPrimary}>
                                 <Button disabled={diagramName===""} variant="contained" size="large" color="primary" onClick={() => finishCreate()}>
-                                    weiter
+                                    Fertigstellen
                                 </Button>
                             </Grid>
                         </Grid>

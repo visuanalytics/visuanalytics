@@ -28,7 +28,11 @@ interface DiagramTypeSelectProps {
     setHistorizedObjects: (historizedObjects: Array<HistorizedDiagramProperties>) => void;
 }
 
-
+/**
+ * Component displaying the second step of the diagram creation.
+ * Lets the user choose between diagrams with arrays or historized data and select
+ * the arrays or historized data to be used.
+ */
 export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     const classes = useStyles();
     //holds the currently selected type
@@ -40,7 +44,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
 
 
     /**
-     * Restore the selected ordinal from sessionStorage to not loose it on reload.
+     * Restore the selection from sessionStorage to not loose it on reload.
      */
     React.useEffect(() => {
         //selectedType

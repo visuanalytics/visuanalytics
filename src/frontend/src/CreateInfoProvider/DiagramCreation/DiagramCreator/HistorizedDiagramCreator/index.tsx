@@ -36,13 +36,18 @@ interface HistorizedDiagramCreatorProps {
     setImageURL: (url: string) => void;
 }
 
+/**
+ * Component used for the creation of diagrams that use historized data as data.
+ * Displays the basic diagram selection component and a selection for the interval sizes
+ * of each data element and labels of all historized data elements in the diagram.
+ */
 export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> = (props) => {
     const classes = useStyles();
 
     //timeout counter used for delayed color change
     let timeOut = 0;
 
-    //holds the currently selected arrayObject
+    //holds the index of the currently selected historizedObject
     const [selectedHistorizedOrdinal, setSelectedHistorizedOrdinal] = React.useState<number>(0);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
@@ -56,7 +61,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         //selectedHistorizedOrdinal
         setSelectedHistorizedOrdinal(Number(sessionStorage.getItem("selectedHistorizedOrdinal-" + uniqueId) || 0));
     }, [])
-    //store selectedArrayOrdinal in sessionStorage
+    //store selectedHistorizedOrdinal in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("selectedHistorizedOrdinal-" + uniqueId, selectedHistorizedOrdinal.toString());
     }, [selectedHistorizedOrdinal])
@@ -116,6 +121,12 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
     }
 
+    /**
+     * Changes the color with a delay of 200ms.
+     * This is used to only change the color state when there was no input for 200ms.
+     * Without the delay, there are too many refreshes.
+     * @param color The new color value.
+     */
     const delayedColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
@@ -131,16 +142,15 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
 
     /**
-     * Handler method for changing the selected array.
+     * Handler method for changing the selected historized data.
      * @param event The event caused by the change.
-     * Searches the correct arrayObject and sets the selectedArray-state to it.
      */
     const selectedHistorizedChangeHandler = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedHistorizedOrdinal(Number(event.target.value));
     }
 
     /**
-     * Renders an item of the selection for all arrays that can be selected.
+     * Renders an item of the selection for all historized data elements that can be selected.
      * @param object The object the item is rendered from.
      * @param index The index of the item.
      */
@@ -198,6 +208,29 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
 
 
     /**
+     * Returns the string representation of a weekday.
+     * @param weekdayNumber The numeric representation of a weekday. (Should range from 0 to 6)
+     */
+    const getWeekdayString = (weekdayNumber: number) => {
+        switch (weekdayNumber) {
+            case 0:
+                return "Mo";
+            case 1:
+                return "Di";
+            case 2:
+                return "Mi";
+            case 3:
+                return "Do"
+            case 4:
+                return "Fr";
+            case 5:
+                return "Sa";
+            case 6:
+                return "So";
+        }
+    }
+
+    /**
      * Uses the schedule object passed as property to check what interval was selected for the corresponding values and returns a displaying string.
      */
     const getIntervalDisplay = () => {
@@ -205,40 +238,16 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
         if(props.schedule.type==="weekly") {
             if(props.schedule.weekdays!==undefined&&props.schedule.weekdays.length!==0) {
                 //check if every day is selected
-                if(props.schedule.weekdays.reduce((sum, value) => sum+value)===21 &&props.schedule.weekdays.includes(0)) {
+                if(props.schedule.weekdays.length===7) {
                     return "24h";
                 }
-                let weekdayString = "Wochentage (";
-                let firstElement = true;
-                if(props.schedule.weekdays.includes(0)) {
-                    weekdayString += "MO";
-                    firstElement=false;
+                const weekdayNumbers = props.schedule.weekdays.slice();
+                weekdayNumbers.sort();
+                let weekdayStrings = [getWeekdayString(weekdayNumbers[0])];
+                for(let i = 1; i < weekdayNumbers.length; i++) {
+                    weekdayStrings.push(getWeekdayString(weekdayNumbers[i]));
                 }
-                if(props.schedule.weekdays.includes(1)) {
-                    weekdayString += (firstElement?"":"/") + "DI";
-                    firstElement=false;
-                }
-                if(props.schedule.weekdays.includes(2)) {
-                    weekdayString += (firstElement?"":"/") + "MI";
-                    firstElement=false;
-                }
-                if(props.schedule.weekdays.includes(3)) {
-                    weekdayString += (firstElement?"":"/") + "DO";
-                    firstElement=false;
-                }
-                if(props.schedule.weekdays.includes(4)) {
-                    weekdayString += (firstElement?"":"/") + "FR";
-                    firstElement=false;
-                }
-                if(props.schedule.weekdays.includes(5)) {
-                    weekdayString += (firstElement?"":"/") + "SA";
-                    firstElement=false;
-                }
-                if(props.schedule.weekdays.includes(6)) {
-                    weekdayString += (firstElement?"":"/") + "SO";
-                }
-                weekdayString += ")";
-                return weekdayString
+                return "Wochentage ("  + weekdayStrings.join(", ") + ")";
             }
         }
         //check for daily
@@ -306,7 +315,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     }
 
     /**
-     * Renders the currently necessary detailed selection by checking if the selected array contains objects or primitives
+     * Renders the currently necessary detailed selection by checking
+     * the attributes of the currently selected historizedObject.
      */
     const renderSelections = () => {
         return (
@@ -377,7 +387,6 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             <Grid item xs={8} className={classes.elementLargeMargin}>
                 <FormControl fullWidth variant="outlined">
                     <Select
-                        //value={props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName===""?props.arrayObjects[selectedArrayOrdinal].listItem.keyName:props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName + "|" + props.arrayObjects[selectedArrayOrdinal].listItem.keyName}
                         value={selectedHistorizedOrdinal}
                         onChange={selectedHistorizedChangeHandler}
                     >

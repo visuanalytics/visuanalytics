@@ -33,13 +33,18 @@ interface ArrayDiagramCreatorProps {
     setImageURL: (url: string) => void;
 }
 
+/**
+ * Component used for the creation of diagrams that use arrays as data.
+ * Displays the basic diagram selection component and a selection for the numeric
+ * attributes and labels of all arrays in the diagram.
+ */
 export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) => {
     const classes = useStyles();
 
     //timeout counter used for delayed color change
     let timeOut = 0;
 
-    //holds the currently selected arrayObject
+    //holds the index of the currently selected arrayObject
     const [selectedArrayOrdinal, setSelectedArrayOrdinal] = React.useState<number>(0);
     //boolean flag used for opening and closing the preview dialog
     const [previewOpen, setPreviewOpen] = React.useState(false);
@@ -50,7 +55,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * Restore the selected ordinal from sessionStorage to not loose it on reload.
      */
     React.useEffect(() => {
-        //diagramStep
+        //selectedArrayOrdinal
         setSelectedArrayOrdinal(Number(sessionStorage.getItem("selectedArrayOrdinal-" + uniqueId) || 0));
     }, [])
     //store selectedArrayOrdinal in sessionStorage
@@ -109,7 +114,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     /**
      * Toggles the customLabel property for the current array.
      */
-    const toggleCustomLable = () => {
+    const toggleCustomLabel = () => {
         let objCopy = {
             ...props.arrayObjects[selectedArrayOrdinal],
             customLabels: !(props.arrayObjects[selectedArrayOrdinal].customLabels)
@@ -128,6 +133,12 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
 
     }
 
+    /**
+     * Changes the color with a delay of 200ms.
+     * This is used to only change the color state when there was no input for 200ms.
+     * Without the delay, there are too many refreshes.
+     * @param color The new color value.
+     */
     const delayedColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
@@ -145,18 +156,9 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     /**
      * Handler method for changing the selected array.
      * @param event The event caused by the change.
-     * Searches the correct arrayObject and sets the selectedArray-state to it.
      */
     const selectedArrayChangeHandler = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedArrayOrdinal(Number(event.target.value));
-        //get the object of the selected array
-        /*for(let index = 0; index < props.arrayObjects.length; ++index) {
-            const object = props.arrayObjects[index];
-            if((object.listItem.parentKeyName===""?object.listItem.keyName:object.listItem.parentKeyName + "|" + object.listItem.keyName)==event.target.value) {
-                setSelectedArrayOrdinal(index);
-                break;
-            }
-        }*/
     }
 
     /**
@@ -311,7 +313,6 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             <Grid item xs={8} className={classes.elementLargeMargin}>
                 <FormControl fullWidth variant="outlined">
                     <Select
-                        //value={props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName===""?props.arrayObjects[selectedArrayOrdinal].listItem.keyName:props.arrayObjects[selectedArrayOrdinal].listItem.parentKeyName + "|" + props.arrayObjects[selectedArrayOrdinal].listItem.keyName}
                         value={selectedArrayOrdinal}
                         onChange={selectedArrayChangeHandler}
                     >
@@ -352,7 +353,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                         ):
                             (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)?(
                                 <Grid item>
-                                    <Button variant="contained" size="large" color="primary" onClick={() => toggleCustomLable()}>
+                                    <Button variant="contained" size="large" color="primary" onClick={() => toggleCustomLabel()}>
                                         {props.arrayObjects[selectedArrayOrdinal].customLabels?"Attribut-Beschriftung":"eigene Beschriftungen"}
                                     </Button>
                                 </Grid>
@@ -378,8 +379,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
             <Dialog onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
-                <DialogTitle id="deleteDialog-title">
+            }} aria-labelledby="previewDialog-title" open={previewOpen}>
+                <DialogTitle id="previewDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
@@ -396,8 +397,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Grid>
                 </DialogActions>
             </Dialog>
-            <Dialog onClose={() => setCancelOpen(false)} aria-labelledby="deleteDialog-title" open={cancelOpen}>
-                <DialogTitle id="deleteDialog-title">
+            <Dialog onClose={() => setCancelOpen(false)} aria-labelledby="leaveDialog-title" open={cancelOpen}>
+                <DialogTitle id="leaveDialog-title">
                     Zurück zur Datenauswahl?
                 </DialogTitle>
                 <DialogContent dividers>
