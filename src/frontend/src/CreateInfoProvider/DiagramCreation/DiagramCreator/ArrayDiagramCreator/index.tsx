@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../../style";
+import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {ListItemRepresentation, diagramType, uniqueId} from "../../../index";
@@ -88,14 +88,14 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         for (let i = 0; i < props.arrayObjects.length; i++) {
             const item = props.arrayObjects[i];
             //if it is an object, check if a numeric attribute is selected
-            if(Array.isArray(item.listItem.value)&&item.numericAttribute==="") return false;
+            if (Array.isArray(item.listItem.value) && item.numericAttribute === "") return false;
             //check if it is primitive or customLabels are selected
-            if(!(Array.isArray(item.listItem.value))||item.customLabels) {
+            if (!(Array.isArray(item.listItem.value)) || item.customLabels) {
                 for (let j = 0; j < item.labelArray.length; j++) {
-                    if(item.labelArray[j]==="") return false;
+                    if (item.labelArray[j] === "") return false;
                 }
             } else {
-                if(item.stringAttribute==="") return false;
+                if (item.stringAttribute === "") return false;
             }
         }
         return true;
@@ -167,7 +167,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * @param index Index of the item.
      */
     const renderArraySelectItem = (object: ArrayDiagramProperties, index: number) => {
-        const keyString = object.listItem.parentKeyName===""?object.listItem.keyName:object.listItem.parentKeyName + "|" + object.listItem.keyName;
+        const keyString = object.listItem.parentKeyName === "" ? object.listItem.keyName : object.listItem.parentKeyName + "|" + object.listItem.keyName;
         return (
             <MenuItem key={keyString} value={index}>
                 {keyString}
@@ -185,7 +185,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         let objCopy = {
             ...props.arrayObjects[selectedArrayOrdinal],
         }
-        objCopy.numericAttribute= event.target.value;
+        objCopy.numericAttribute = event.target.value;
         //console.log(objCopy);
         props.changeObjectInArrayObjects(objCopy, selectedArrayOrdinal);
     };
@@ -221,7 +221,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      * Renders the currently necessary detailed selection by checking if the selected array contains objects or primitives
      */
     const renderSelections = () => {
-        if(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)) {
+        if (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)) {
             //selections for arrays containing objects
             return (
                 <Grid item container xs={12} className={classes.elementLargeMargin}>
@@ -232,17 +232,18 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="body1">
-                            {props.arrayObjects[selectedArrayOrdinal].customLabels?"Bitte wählen sie zu jedem Wert eine Beschriftung:":"Bitte wählen sie das String-Attribut zur Beschriftung der Werte:"}
+                            {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Bitte wählen sie zu jedem Wert eine Beschriftung:" : "Bitte wählen sie das String-Attribut zur Beschriftung der Werte:"}
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
-                                <FormControl>
-                                    <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].numericAttribute} onChange={numericAttributeChangeHandler}>
-                                        {props.arrayObjects[selectedArrayOrdinal].numericAttributes.map((item) => renderAttributeListItem(item))}
-                                    </RadioGroup>
-                                </FormControl>
-                            </Box>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                            <FormControl>
+                                <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].numericAttribute}
+                                            onChange={numericAttributeChangeHandler}>
+                                    {props.arrayObjects[selectedArrayOrdinal].numericAttributes.map((item) => renderAttributeListItem(item))}
+                                </RadioGroup>
+                            </FormControl>
+                        </Box>
                     </Grid>
                     {getLabelSelection()}
                 </Grid>
@@ -253,7 +254,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 <Grid item container xs={12}>
                     <Grid item xs={12}>
                         <Typography variant="body1">
-                            Das gewählte Array enthält Zahlen - bitte wählen sie die Beschriftungen, die zu den einzelnen Werten angezeigt werden sollen:
+                            Das gewählte Array enthält Zahlen - bitte wählen sie die Beschriftungen, die zu den
+                            einzelnen Werten angezeigt werden sollen:
                         </Typography>
                     </Grid>
                     <CustomLabels
@@ -268,14 +270,12 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     }
 
 
-
-
     /**
      * Used for arrays with objects. Returns the currently selected label selection based on the state.
-     * If the user has selected customLabels, then the input is offered, if not, the list of string attributes is displayed.
+     * If the user has selected customLabels, then the input is offered. If not, the list of string attributes is displayed.
      */
     const getLabelSelection = () => {
-        if(props.arrayObjects[selectedArrayOrdinal].customLabels) {
+        if (props.arrayObjects[selectedArrayOrdinal].customLabels) {
             return (
                 <Grid item container xs={6}>
                     <CustomLabels
@@ -291,7 +291,8 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 <Grid item xs={6}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
                         <FormControl>
-                            <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].stringAttribute} onChange={stringAttributeChangeHandler}>
+                            <RadioGroup value={props.arrayObjects[selectedArrayOrdinal].stringAttribute}
+                                        onChange={stringAttributeChangeHandler}>
                                 {props.arrayObjects[selectedArrayOrdinal].stringAttributes.map((item) => renderAttributeListItem(item))}
                             </RadioGroup>
                         </FormControl>
@@ -301,7 +302,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
         }
     }
 
-    return(
+    return (
         <Grid container justify="space-between">
             <BasicDiagramSettings
                 arrayObjects={props.arrayObjects}
@@ -327,42 +328,44 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                        <input
-                            type="color"
-                            value={props.arrayObjects[selectedArrayOrdinal].color}
-                            onChange={colorChangeHandler}
-                            className={classes.colorTool}
-                        />
+                    <input
+                        type="color"
+                        value={props.arrayObjects[selectedArrayOrdinal].color}
+                        onChange={colorChangeHandler}
+                        className={classes.colorTool}
+                    />
 
                 </Grid>
             </Grid>
             {renderSelections()}
             <Grid item container xs={12} justify="space-around">
                 <Grid item className={classes.blockableButtonSecondary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary" onClick={previewHandler}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="secondary"
+                            onClick={previewHandler}>
                         Vorschau generieren
                     </Button>
                 </Grid>
-                    {(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)&&props.arrayObjects[selectedArrayOrdinal].stringAttributes.length===0)?(
-                            <Grid item xs={4}>
-                                <Typography variant="body1">
-                                    Die Objekte des Arrays enthalten keine String-Attribute.
-                                </Typography>
-                            </Grid>
+                {(Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) && props.arrayObjects[selectedArrayOrdinal].stringAttributes.length === 0) ? (
+                        <Grid item xs={4}>
+                            <Typography variant="body1">
+                                Die Objekte des Arrays enthalten keine String-Attribute.
+                            </Typography>
+                        </Grid>
 
                         ):
-                            (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value)?(
+                            (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) ? (
                                 <Grid item>
-                                    <Button variant="contained" size="large" color="primary" onClick={() => toggleCustomLabel()}>
-                                        {props.arrayObjects[selectedArrayOrdinal].customLabels?"Attribut-Beschriftung":"eigene Beschriftungen"}
+                                    <Button variant="contained" size="large" color="primary"
+                                            onClick={() => toggleCustomLabel()}>
+                                        {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Attribut-Beschriftung" : "eigene Beschriftungen"}
                                     </Button>
                                 </Grid>
-                            ):(
+                            ) : (
                                 <React.Fragment>
                                 </React.Fragment>
                             )
-                        )
-                    }
+                    )
+                }
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
@@ -371,7 +374,10 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary"  onClick={() => {sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId); props.continueHandler();}}>
+                    <Button disabled={!checkProceed()} variant="contained" size="large" color="primary" onClick={() => {
+                        sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
+                        props.continueHandler();
+                    }}>
                         weiter
                     </Button>
                 </Grid>

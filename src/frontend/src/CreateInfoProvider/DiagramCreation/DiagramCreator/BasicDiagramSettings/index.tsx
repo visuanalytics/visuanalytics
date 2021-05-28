@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../../style";
+import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import {diagramType} from "../../../index";
 import FormControl from "@material-ui/core/FormControl";
@@ -34,9 +34,9 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
      * Returns true if at least one does, false if none.
      */
     const evaluateAmount = () => {
-        if(props.arrayObjects!==undefined) {
-            for (let index = 0; index<props.arrayObjects!.length; index++) {
-                if(props.amount>props.arrayObjects![index].listItem.arrayLength) return true;
+        if (props.arrayObjects !== undefined) {
+            for (let index = 0; index < props.arrayObjects!.length; index++) {
+                if (props.amount > props.arrayObjects![index].listItem.arrayLength) return true;
             }
             return false;
         }
@@ -46,21 +46,21 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
      * Returns the diagram for the currently selected type be be displayed
      */
     const diagramIconSelector = () => {
-        switch(props.diagramType) {
+        switch (props.diagramType) {
             case "verticalBarChart": {
-                return ( <InsertEmoticon style={{ fontSize: 60 }}/>)
+                return (<InsertEmoticon style={{fontSize: 60}}/>)
             }
             case "horizontalBarChart": {
-                return ( <BugReport style={{ fontSize: 60 }}/>)
+                return (<BugReport style={{fontSize: 60}}/>)
             }
             case "pieChart": {
-                return ( <Face style={{ fontSize: 60 }}/>)
+                return (<Face style={{fontSize: 60}}/>)
             }
             case "dotDiagram": {
-                return ( <LinkedCamera style={{ fontSize: 60 }}/>)
+                return (<LinkedCamera style={{fontSize: 60}}/>)
             }
             case "lineChart": {
-                return ( <MailOutline style={{ fontSize: 60 }}/>)
+                return (<MailOutline style={{fontSize: 60}}/>)
             }
         }
     }
@@ -69,7 +69,7 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
      * Handler method for changing the selected diagram type.
      * @param e The event that was caused by the change.
      */
-    const diagramTypeChangeHandler = (e: React.ChangeEvent<{value: unknown}>) => {
+    const diagramTypeChangeHandler = (e: React.ChangeEvent<{ value: unknown }>) => {
         props.setDiagramType(e.target.value as diagramType);
     }
 
@@ -80,10 +80,10 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
      * Checks if the input is higher than 1 since the attributes alone cant prevent illegal keyboard inputs.
      */
     const amountHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(Number(e.target.value)>=1) props.setAmount(Number(e.target.value))
+        if (Number(e.target.value) >= 1) props.setAmount(Number(e.target.value))
     }
 
-    return(
+    return (
         <React.Fragment>
             <Grid item xs={12}>
                 <Typography variant="body1">
@@ -109,13 +109,13 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     {diagramIconSelector()}
                 </Grid>
             </Grid>
-            <Grid item container xs={12} justify={props.arrayObjects!==undefined?"flex-start":"flex-start"}>
+            <Grid item container xs={12} justify={props.arrayObjects !== undefined ? "flex-start" : "flex-start"}>
                 <Grid item xs={4} className={classes.amountChoiceContainer}>
                     <FormControlLabel
                         className={classes.creatorFormControlLabel}
                         control={
                             <TextField type="number" variant="outlined" margin="normal" label="Anzahl"
-                                       className={classes.inputFieldWithLabel} inputProps={{ min: 1, max: 50}}
+                                       className={classes.inputFieldWithLabel} inputProps={{min: 1, max: 50}}
                                        value={props.amount} onChange={amountHandler}
                             />
                         }
@@ -124,14 +124,15 @@ export const BasicDiagramSettings: React.FC<BasicDiagramSettingsProps> = (props)
                     />
                 </Grid>
 
-                {props.arrayObjects!==undefined&&
-                    <Grid item xs={7} className={classes.amountWarningContainer}>
-                        {evaluateAmount()&&
-                            <Alert severity="warning">
-                                <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von mindestens einem Array.
-                            </Alert>
-                        }
-                    </Grid>
+                {props.arrayObjects !== undefined &&
+                <Grid item xs={7} className={classes.amountWarningContainer}>
+                    {evaluateAmount() &&
+                    <Alert severity="warning">
+                        <strong>Warnung:</strong> Die gewählte Anzahl überschreitet die Größe der Testdaten von
+                        mindestens einem Array.
+                    </Alert>
+                    }
+                </Grid>
                 }
             </Grid>
         </React.Fragment>

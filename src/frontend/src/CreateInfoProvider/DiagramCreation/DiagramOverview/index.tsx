@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import { useStyles } from "../style";
+import {useStyles} from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {Diagram, diagramType} from "../../index";
@@ -51,8 +51,8 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      */
     const openPreviewDialog = (name: string) => {
         //find the diagram with the given name and set is as current diagram
-        for (let index=0; index < props.diagrams.length; index++) {
-            if(props.diagrams[index].name===name) {
+        for (let index = 0; index < props.diagrams.length; index++) {
+            if (props.diagrams[index].name === name) {
                 props.setSelectedDiagram(props.diagrams[index]);
                 break;
             }
@@ -67,7 +67,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      * @param jsonData the answer from the backend
      */
     const handleSuccessDiagramPreview = React.useCallback((jsonData: any) => {
-        const data = jsonData;
+        //const data = jsonData;
         //console.log(data);
         //TODO: set the state that contains the current preview image path returned by the backend
     }, [])
@@ -83,7 +83,6 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
     }, [reportError])
 
 
-
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
@@ -96,7 +95,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
 
     /**
      * Method to send a diagram to the backend for testing.
-     * The standard hook "useCallFetch" is not used here since the fetch function has to be memoized
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
      * with useCallback in order to be used in useEffect.
      */
     const fetchDiagramPreview = React.useCallback(() => {
@@ -130,11 +129,11 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if(isMounted.current) handleSuccessDiagramPreview(data)
+            if (isMounted.current) handleSuccessDiagramPreview(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if(isMounted.current) handleErrorDiagramPreview(err)
+            if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
     }, [infoProviderName, selectedDiagram, createPlots, handleSuccessDiagramPreview, handleErrorDiagramPreview])
 
@@ -151,15 +150,16 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
 
     /**
      * Whenever the previewOpen state changes, this effect is called. If the preview is opened, a request is send to the backend.
-     * Since selectedDiagram is in the dependencies and the fetcher method is also necessary as a dependency and has selectedDiagram as its own dependency, it is necessary to check if the selectedDiagram is empty.
+     * Since selectedDiagram is in the dependencies and the fetcher method is also necessary as a dependency and has selectedDiagram as its own dependency,
+     * it is necessary to check if the selectedDiagram is empty.
      * The rest of the component makes sure selectedDiagram is only set when a request to the backend is needed.
      */
     React.useEffect(() => {
-        //console.log("effect");
-        if(previewOpen&&Object.keys(selectedDiagram).length!==0) {
+            //console.log("effect");
+            if (previewOpen && Object.keys(selectedDiagram).length !== 0) {
                 fetchDiagramPreview();
                 //after the first fetch happened, delete the selected diagram state
-                //this will prevent an endless cycle of rerenders since fetchDiagramPreview
+                //this will prevent an endless cycle of multiple rerender since fetchDiagramPreview
                 setSelectedDiagram({} as Diagram)
             }
         }, [fetchDiagramPreview, previewOpen, selectedDiagram, setSelectedDiagram]
@@ -183,7 +183,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             return item.name !== itemToRemove;
         }));
         setRemoveDialogOpen(false);
-        //reset the value with a small delay so the user doesnt see the string get empty
+        //reset the value with a small delay so the user doesn't see the string get empty
         window.setTimeout(() => setItemToRemove(""), 200);
     }
 
@@ -192,7 +192,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      * @param type The diagram variant to be resolved.
      */
     const resolveType = (type: diagramType) => {
-        switch(type) {
+        switch (type) {
             case "verticalBarChart": {
                 return "Säulendiagramm";
             }
@@ -215,25 +215,27 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         return (
             <ListItem key={item.name} divider={true}>
                 <ListItemText
-                    primary={item.name + " (" + resolveType(item.variant) + ") - nutzt " + (item.sourceType==="Array"?"Arrays":"historisierte Daten")}
+                    primary={item.name + " (" + resolveType(item.variant) + ") - nutzt " + (item.sourceType === "Array" ? "Arrays" : "historisierte Daten")}
                     secondary={null}
                 />
                 <ListItemSecondaryAction>
                     <IconButton aria-label="preview" color="primary" onClick={() => openPreviewDialog(item.name)}>
-                        <ImageIcon />
+                        <ImageIcon/>
                     </IconButton>
-                    <IconButton aria-label="edit" color="primary" onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
-                        <EditIcon />
+                    <IconButton aria-label="edit" color="primary"
+                                onClick={() => console.log("EDIT NOT IMPLEMENTED YET")}>
+                        <EditIcon/>
                     </IconButton>
-                    <IconButton aria-label="delete" className={classes.redDeleteIcon} onClick={() => openDeleteDialog(item.name)}>
-                        <DeleteIcon />
+                    <IconButton aria-label="delete" className={classes.redDeleteIcon}
+                                onClick={() => openDeleteDialog(item.name)}>
+                        <DeleteIcon/>
                     </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
         )
     }
 
-    return(
+    return (
         <Grid container justify="space-around">
             <Grid item xs={12}>
                 <Typography variant="body1">

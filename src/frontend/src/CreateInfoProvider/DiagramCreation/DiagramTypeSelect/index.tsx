@@ -1,5 +1,5 @@
 import React from "react";
-import { useStyles } from "../style";
+import {useStyles} from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
@@ -48,11 +48,11 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      */
     React.useEffect(() => {
         //selectedType
-        setSelectedType(sessionStorage.getItem("selectedType-" + uniqueId)||"");
+        setSelectedType(sessionStorage.getItem("selectedType-" + uniqueId) || "");
         //selectedArrays
-        setSelectedArrays(sessionStorage.getItem("selectedArrays-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("selectedArrays-" + uniqueId)!));
+        setSelectedArrays(sessionStorage.getItem("selectedArrays-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedArrays-" + uniqueId)!));
         //selectedHistorized
-        setSelectedHistorized(sessionStorage.getItem("selectedHistorized-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("selectedHistorized-" + uniqueId)!));
+        setSelectedHistorized(sessionStorage.getItem("selectedHistorized-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedHistorized-" + uniqueId)!));
     }, [])
     //store selectedType in sessionStorage
     React.useEffect(() => {
@@ -83,9 +83,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      */
     const getNumericAttributes = (object: Array<ListItemRepresentation>) => {
         const numericAttributes: Array<ListItemRepresentation> = []
-        for(let index = 0; index < object.length; ++index) {
+        for (let index = 0; index < object.length; ++index) {
             //console.log("checking: " + object[index].keyName);
-            if(object[index].value==="Zahl") numericAttributes.push(object[index]);
+            if (object[index].value === "Zahl") numericAttributes.push(object[index]);
         }
         return numericAttributes;
     }
@@ -96,9 +96,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      */
     const getStringAttributes = (object: Array<ListItemRepresentation>) => {
         const stringAttributes: Array<ListItemRepresentation> = []
-        for(let index = 0; index < object.length; ++index) {
+        for (let index = 0; index < object.length; ++index) {
             //console.log("checking: " + object[index].keyName);
-            if(object[index].value==="Text") stringAttributes.push(object[index]);
+            if (object[index].value === "Text") stringAttributes.push(object[index]);
         }
         return stringAttributes;
     }
@@ -113,17 +113,17 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         selectedArrays.forEach((array) => {
             let item: ListItemRepresentation = {} as ListItemRepresentation;
             //find the ListItemRepresentation in the compatible Arrays
-            for(let index = 0; index < props.compatibleArrays.length; ++index) {
+            for (let index = 0; index < props.compatibleArrays.length; ++index) {
                 const element: ListItemRepresentation = props.compatibleArrays[index];
-                if((element.parentKeyName===""?element.keyName:element.parentKeyName + "|" + element.keyName)===array) {
+                if ((element.parentKeyName === "" ? element.keyName : element.parentKeyName + "|" + element.keyName) === array) {
                     item = element;
                     break;
                 }
             }
             //this check should always be true but is added for type reasons
-            if(Object.keys(item).length!==0) {
-                const numericAttributes = Array.isArray(item.value)?getNumericAttributes(item.value):[];
-                const stringAttributes = Array.isArray(item.value)?getStringAttributes(item.value):[];
+            if (Object.keys(item).length !== 0) {
+                const numericAttributes = Array.isArray(item.value) ? getNumericAttributes(item.value) : [];
+                const stringAttributes = Array.isArray(item.value) ? getStringAttributes(item.value) : [];
                 const arrayObject = {
                     listItem: item,
                     numericAttribute: "",
@@ -132,7 +132,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                     color: "#000000",
                     numericAttributes: numericAttributes,
                     stringAttributes: stringAttributes,
-                    customLabels: stringAttributes.length===0
+                    customLabels: stringAttributes.length === 0
                 }
                 arrayObjects.push(arrayObject);
             }
@@ -147,15 +147,15 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         //console.log("creating the historized objects");
         const historizedObjects: Array<HistorizedDiagramProperties> = [];
         selectedHistorized.forEach((item) => {
-                const historizedObject = {
-                    name: item,
-                    labelArray: new Array(1).fill(""),
-                    color: "#000000",
-                    intervalSizes: new Array(1).fill(0),
-                    dateLabels: false,
-                    dateFormat: "dd.mm.yyyy"
-                }
-                historizedObjects.push(historizedObject);
+            const historizedObject = {
+                name: item,
+                labelArray: new Array(1).fill(""),
+                color: "#000000",
+                intervalSizes: new Array(1).fill(0),
+                dateLabels: false,
+                dateFormat: "dd.mm.yyyy"
+            }
+            historizedObjects.push(historizedObject);
         })
         return historizedObjects;
     }
@@ -166,11 +166,10 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Also gets the ListItems that belong to the selected elements and creates their objects
      */
     const continueHandler = () => {
-        if(selectedType==="Array") {
+        if (selectedType === "Array") {
             props.setArrayObjects(createArrayObjects());
             props.continueArray();
-        }
-        else {
+        } else {
             props.setHistorizedObjects(createHistorizedObjects());
             props.continueHistorized();
         }
@@ -198,7 +197,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Removes an item from the set of selected arrays
      * @param data The item to be removed
      */
-    const  removeFromArraysSelection = (data: string) => {
+    const removeFromArraysSelection = (data: string) => {
         setSelectedArrays(selectedArrays.filter((item) => {
             return item !== data;
         }));
@@ -218,7 +217,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * Removes an item from the set of selected historized data
      * @param data The item to be removed
      */
-    const  removeFromHistorizedSelection = (data: string) => {
+    const removeFromHistorizedSelection = (data: string) => {
         setSelectedHistorized(selectedHistorized.filter((item) => {
             return item !== data;
         }));
@@ -256,13 +255,14 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param item The array to be displayed
      */
     const renderArrayListItem = (item: ListItemRepresentation) => {
-        const keyString = item.parentKeyName===""?item.keyName:item.parentKeyName + "|" + item.keyName
+        const keyString = item.parentKeyName === "" ? item.keyName : item.parentKeyName + "|" + item.keyName
         return (
             <ListItem key={keyString}>
                 <ListItemIcon>
                     <FormControlLabel
                         control={
-                            <Checkbox onClick={() => arrayCheckboxHandler(keyString)} checked={selectedArrays.includes(keyString)}/>
+                            <Checkbox onClick={() => arrayCheckboxHandler(keyString)}
+                                      checked={selectedArrays.includes(keyString)}/>
                         }
                         label={''}
                     />
@@ -285,7 +285,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemIcon>
                     <FormControlLabel
                         control={
-                            <Checkbox onClick={() => historizedCheckboxHandler(item)} checked={selectedHistorized.includes(item)}/>
+                            <Checkbox onClick={() => historizedCheckboxHandler(item)}
+                                      checked={selectedHistorized.includes(item)}/>
                         }
                         label={''}
                     />
@@ -299,12 +300,13 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
     }
 
 
-    return(
+    return (
 
         <Grid container>
             <Grid item xs={12}>
                 <Typography variant="body1">
-                    Bitte wählen sie aus, ob das Diagramm aus einem Array oder historisierten Daten erstellt werden soll:
+                    Bitte wählen sie aus, ob das Diagramm aus einem Array oder historisierten Daten erstellt werden
+                    soll:
                 </Typography>
             </Grid>
             <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -316,7 +318,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                 />
                             } label={"Diagramm basierend auf einem Array"}
                             />
-                            <Collapse in={selectedType==="Array"}>
+                            <Collapse in={selectedType === "Array"}>
                                 <Grid item container xs={12}>
                                     <Grid item xs={12}>
                                         <Typography variant="body1">
@@ -324,7 +326,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                                        <Box borderColor="primary.main" border={4} borderRadius={5}
+                                             className={classes.choiceListFrame}>
                                             <List disablePadding={true}>
                                                 {props.compatibleArrays.map((item) => renderArrayListItem(item))}
                                             </List>
@@ -339,7 +342,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                 />
                             } label={"Diagramm aus historisierten Daten"}
                             />
-                            <Collapse in={selectedType==="HistorizedData"}>
+                            <Collapse in={selectedType === "HistorizedData"}>
                                 <Grid item container xs={12}>
                                     <Grid item xs={12}>
                                         <Typography variant="body1">
@@ -347,7 +350,8 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                                        <Box borderColor="primary.main" border={4} borderRadius={5}
+                                             className={classes.choiceListFrame}>
                                             <List disablePadding={true}>
                                                 {props.compatibleHistorized.map((item) => renderHistorizedListItem(item))}
                                             </List>
@@ -367,7 +371,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={!((selectedType==="Array"&&selectedArrays.length!==0)||(selectedType==="HistorizedData"&&selectedHistorized.length!==0))} variant="contained" size="large" color="primary" onClick={continueHandler}>
+                    <Button
+                        disabled={!((selectedType === "Array" && selectedArrays.length !== 0) || (selectedType === "HistorizedData" && selectedHistorized.length !== 0))}
+                        variant="contained" size="large" color="primary" onClick={continueHandler}>
                         weiter
                     </Button>
                 </Grid>
