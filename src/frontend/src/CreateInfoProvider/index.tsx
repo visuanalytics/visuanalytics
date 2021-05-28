@@ -390,6 +390,9 @@ export const CreateInfoProvider = () => {
                     <TypeSelection
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        alreadyHasDataSources={dataSources.length > 0}
+                        name={name}
+                        setName={(name: string) => setName(name)}
                     />
                 );
             case 1:
@@ -498,6 +501,7 @@ export const CreateInfoProvider = () => {
 
         }
     }
+    
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
