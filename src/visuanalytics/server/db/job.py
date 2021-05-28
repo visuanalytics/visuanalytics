@@ -84,34 +84,34 @@ def get_job_run_info(job_id):
         return job_name, steps_name, config
 
 
-def get_infoprovider_schedules():
-    """ Gibt alle angelegten Infoprovider mitsamt ihren Zeitplänen zurück.
+def get_datasource_schedules():
+    """ Gibt alle angelegten Datenquellen mitsamt ihren Zeitplänen zurück.
 
     """
     with db.open_con() as con:
         res = con.execute(
             """
-            SELECT DISTINCT infoprovider_id, infoprovider_name, schedule_historisation.type as s_type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
+            SELECT DISTINCT datasource_id, datasource_name, schedule_historisation.type as s_type, date, time, group_concat(DISTINCT weekday) AS weekdays, 
             time_interval
-            FROM infoprovider 
+            FROM datasource
             INNER JOIN schedule_historisation USING(schedule_historisation_id)
             LEFT JOIN schedule_historisation_weekday USING(schedule_historisation_id)
-            GROUP BY(infoprovider_id)
+            GROUP BY(datasource_id)
             """).fetchall()
 
         return res
 
 
-def get_infoprovider_run_info(infoprovider_id):
-    """Gibt den Namen eines Infoproviders und den Namen der zugehörigen JSON-Datei zurück.
+def get_datasource_run_info(datasource_id):
+    """Gibt den Namen einer Datenquelle und den Namen der zugehörigen JSON-Datei zurück.
 
-    :param infoprovider_id: id des Jobs
+    :param datasource_id: id des Jobs
     """
     with db.open_con() as con:
-        res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
-                          [infoprovider_id]).fetchall()
+        res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
+                          [datasource_id]).fetchall()
 
-        return res[0]["infoprovider_name"], res[0]["infoprovider_name"], {}
+        return res[0]["datasource_name"], res[0]["datasource_name"], {}
 
 
 def insert_log(job_id: int, state: int, start_time: datetime):
