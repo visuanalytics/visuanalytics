@@ -10,18 +10,25 @@ import {DataSource} from "../../CreateInfoProvider";
 import {StrArg} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 interface EditCustomDataProps {
-    continueHandler: () => void;
-    backHandler: () => void;
+    continueHandler: (index: number) => void;
+    backHandler: (index: number) => void;
     editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
     selectedDataSource: number;
     checkForHistorizedData: () => void;
+    setFormelInformation: (formel: formelContext) => void;
 }
 
 export type formelContext = {
+    formelName: string
     formelString: string;
     parenCount: number;
     formelAsObjects: Array<StrArg>;
+    dataFlag: boolean;
+    numberFlag: boolean;
+    opFlag: boolean;
+    leftParenFlag: boolean;
+    rightParenFlag: boolean;
 }
 
 export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
@@ -36,17 +43,28 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
     const [currentEditFormel, setCurrentEditFormel] = React.useState(new formelObj("", ""));
 
-    const makeFormelStringToStrArgArray = (formel: string) => {
+    const makeFormelContext = (formelName: string, formelString: string): formelContext => {
 
-        let finalFormel: formelContext = {formelString: "", parenCount: 0, formelAsObjects: new Array<StrArg>()};
-        finalFormel.formelString = formel;
+        let finalFormel: formelContext = {
+            formelName: "",
+            formelString: "",
+            parenCount: 0,
+            formelAsObjects: new Array<StrArg>(),
+            dataFlag: false,
+            numberFlag: false,
+            opFlag: true,
+            leftParenFlag: false,
+            rightParenFlag: false
+        };
+
+        finalFormel.formelName = formelName;
 
         let formelAsObj = new Array<StrArg>();
 
         //Bsp: "25 * formel1_2 / (3 * (Array2|Data0 - 5))"
 
         //split the string at each blank and create an array with every single word
-        let formelWithoutBlank = formel.split(" ");
+        let formelWithoutBlank = formelString.split(" ");
         //-> "25" | "formel1_2" | "/" | "(3" | "*" | "(Array2|Data0" | "-" | "5))"
 
         formelWithoutBlank.forEach((item) => {
@@ -91,11 +109,15 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
         finalFormel.formelAsObjects = formelAsObj;
 
+        setRightFlags(finalFormel);
+
         console.log(finalFormel.formelString + " -> formel!!")
         console.log(finalFormel.parenCount + " parens!!")
         finalFormel.formelAsObjects.forEach((item) => {
             console.log(item.stringRep);
         })
+
+        return finalFormel;
     }
 
     const checkFindOnlyNumbers = (arg: string): boolean => {
@@ -159,6 +181,24 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         return false;
     }
 
+    const setRightFlags = (formel: formelContext) => {
+
+        if (formel.formelAsObjects[formel.formelAsObjects.length - 1].isNumber) {
+            formel.opFlag = false;
+            formel.dataFlag = true;
+            formel.numberFlag = false;
+            formel.rightParenFlag = false;
+            formel.leftParenFlag = true;
+        } else {
+            formel.opFlag = false;
+            formel.dataFlag = true;
+            formel.numberFlag = true;
+            formel.rightParenFlag = false;
+            formel.leftParenFlag = true;
+        }
+
+    }
+
     const handleDelete = (name: string) => {
         setCurrentDeleteFormelName(name);
         setRemoveDialogOpen(true);
@@ -191,8 +231,9 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     }
 
     const confirmEdit = () => {
-        makeFormelStringToStrArgArray(currentEditFormel.formelString);
+        props.setFormelInformation(makeFormelContext(currentEditFormel.formelName, currentEditFormel.formelString));
         setEditDialogOpen(false);
+        props.continueHandler(1);
     }
 
     return (
@@ -212,7 +253,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                     <Grid item container xs={12} justify={"space-between"}>
                         <Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
-                                    onClick={props.backHandler}>
+                                    onClick={() => props.backHandler(1)}>
                                 zurück
                             </Button>
                         </Grid>
@@ -224,7 +265,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button variant="contained" size="large" color="primary"
-                                    onClick={props.continueHandler}>
+                                    onClick={() => props.continueHandler(2)}>
                                 weiter
                             </Button>
                         </Grid>

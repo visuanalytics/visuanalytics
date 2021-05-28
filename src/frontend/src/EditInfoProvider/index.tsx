@@ -12,8 +12,9 @@ import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {useStyles} from "./style";
 import {ComponentContext} from "../ComponentProvider";
 import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
-import {EditCustomData} from "./EditCustomData/EditCustomData";
+import {EditCustomData, formelContext} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -81,6 +82,19 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
 
     const [selectedDataSource, setSelectedDataSource] = React.useState(0);
 
+    const [formelInformation, setFormelInformation] = React.useState<formelContext>({
+        formelName: "",
+        formelString: "",
+        parenCount: 0,
+        formelAsObjects: new Array<StrArg>(),
+        dataFlag: false,
+        numberFlag: false,
+        opFlag: true,
+        leftParenFlag: false,
+        rightParenFlag: false
+    });
+
+
 
 //the current step of the creation process, numbered by 0 to 5
     const [step, setStep] = React.useState(0);
@@ -117,16 +131,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
      * Handler for continue button that is passed to all sub-component as props.
      * Increments the step.
      */
-    const handleContinue = () => {
-        setStep(step + 1);
+    const handleContinue = (index: number) => {
+        setStep(step + index);
     }
 
     /**
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.
      */
-    const handleBack = () => {
-        setStep(step - 1)
+    const handleBack = (index: number) => {
+        setStep(step - index)
     }
 
 
@@ -143,7 +157,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
             case 0:
                 return (
                     <EditSettingsOverview
-                        continueHandler={handleContinue}
+                        continueHandler={(index: number) => handleContinue(index)}
                         editInfoProvider={editInfoProvider}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
@@ -155,27 +169,34 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
             case 1:
                 return (
                     <EditDataSelection
-                        continueHandler={handleContinue}
-                        backHandler={handleBack}
+                        continueHandler={(index: number) => handleContinue(index)}
+                        backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
                     />
                 );
             case 2:
                 return (
                     <EditCustomData
-                        continueHandler={handleContinue}
-                        backHandler={handleBack}
+                        continueHandler={(index: number) => handleContinue(index)}
+                        backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
                         infoProvDataSources={infoProvDataSource}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
+                        setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
                     />
                 );
             case 3:
                 return (
-                    <Grid>
-
-                    </Grid>
+                    <EditSingleFormel
+                        continueHandler={(index: number) => handleContinue(index)}
+                        backHandler={(index: number) => handleBack(index)}
+                        editInfoProvider={editInfoProvider}
+                        infoProvDataSources={infoProvDataSource}
+                        selectedDataSource={selectedDataSource}
+                        reportError={reportError}
+                        formel={formelInformation}
+                    />
                 )
             case 4:
                 return (

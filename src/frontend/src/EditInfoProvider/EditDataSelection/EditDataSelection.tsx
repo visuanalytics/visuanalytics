@@ -6,8 +6,8 @@ import {useStyles} from "../style";
 
 
 interface EditDataSelectionProps {
-    continueHandler: () => void;
-    backHandler: () => void;
+    continueHandler: (index: number) => void;
+    backHandler: (index: number) => void;
     editInfoProvider: () => void;
 }
 
@@ -23,7 +23,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     <Grid item container xs={12} justify={"space-between"}>
                         <Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
-                                    onClick={props.backHandler}>
+                                    onClick={() => props.backHandler(1)}>
                                 zurück
                             </Button>
                         </Grid>
@@ -35,7 +35,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button variant="contained" size="large" color="primary"
-                                    onClick={props.continueHandler}>
+                                    onClick={() => props.continueHandler(1)}>
                                 weiter
                             </Button>
                         </Grid>

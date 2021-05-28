@@ -24,7 +24,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 
 interface EditSettingsOverviewProps {
-    continueHandler: () => void;
+    continueHandler: (index: number) => void;
     editInfoProvider: () => void;
     infoProvName: string;
     setInfoProvName: (name: string) => void;
@@ -171,7 +171,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
+                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
                                 weiter
                             </Button>
                         </Grid>

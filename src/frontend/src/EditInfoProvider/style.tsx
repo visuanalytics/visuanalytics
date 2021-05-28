@@ -66,6 +66,27 @@ export const useStyles = makeStyles((theme: Theme) =>
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
-        }
+        },
+        blockableButtonPrimary: {
+            backgroundColor: theme.palette.error.main,
+            color: "white",
+        },
+        blockableButtonSecondary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.primary.light,
+                opacity: "75%"
+            }
+        },
+        listFrameData: {
+            width: "80%",
+            height: 400,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px"
+        },
+        header: {
+            color: theme.palette.primary.main
+        },
     }),
 );
