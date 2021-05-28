@@ -192,19 +192,23 @@ def add_infoprovider():
                 return err, 400
 
             if "api" not in datasource:
-                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
             if "transform" not in datasource:
-                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
             if "storing" not in datasource:
-                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
-                err = flask.jsonify({"err_msg": "Missing field 'api' in a datasource"})
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "schedule" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
@@ -282,31 +286,46 @@ def update_infoprovider(infoprovider_id):
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
 
-        if "api" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'api'"})
+        if "datasources" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Datasources"})
             return err, 400
 
-        if "transform" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
+        if "diagrams" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
             return err, 400
 
-        if "storing" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
+        for datasource in updated_data["datasources"]:
+            if "name" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
+                return err, 400
+
+            if "api" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "transform" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "storing" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "formulas" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "schedule" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                return err, 400
+
+        update_info = queries.update_infoprovider(infoprovider_id, updated_data)
+
+        if update_info is not None:
+            err = flask.jsonify(update_info)
             return err, 400
 
-        if "schedule" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
-            return err, 400
-
-        if "formulas" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
-            return err, 400
-
-        if "images" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing field 'images'"})
-            return err, 400
-
-        return flask.jsonify(queries.update_infoprovider(infoprovider_id, updated_data))
+        return flask.jsonify({"status": "successful"})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while updating an infoprovider"})

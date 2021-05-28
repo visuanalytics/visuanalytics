@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Mi Mai 26 11:43:13 2021
+-- File generated with SQLiteStudio v3.3.3 on Fr Mai 28 15:07:46 2021
 --
 -- Text encoding used: System
 --
@@ -15,8 +15,7 @@ CREATE TABLE datasource (
                                       NOT NULL,
     datasource_name           VARCHAR NOT NULL,
     schedule_historisation_id INTEGER REFERENCES schedule_historisation (schedule_historisation_id) ON DELETE CASCADE
-                                                                                                    ON UPDATE CASCADE
-                                      NOT NULL,
+                                                                                                    ON UPDATE CASCADE,
     infoprovider_id           INTEGER REFERENCES infoprovider (infoprovider_id) ON DELETE CASCADE
                                                                                 ON UPDATE CASCADE
                                       NOT NULL
