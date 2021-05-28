@@ -3,7 +3,7 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import { Schedule } from "..";
+import {Schedule} from "..";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface HistorySelectionProps {
@@ -15,47 +15,58 @@ interface HistorySelectionProps {
     setHistorizedData: (array: Array<string>) => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
+    historySelectionStep: number;
+    setHistorySelectionStep: (step: number) => void;
+    addToDataSources: () => void;
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
+ * Component displaying the fourth step in the creation of a new Info-Provider (Historization).
  * The state of this component handles the input made to its children.
  */
 export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
-    //represents the current step: 1 is data selection, 2 is time selection
-    const [step, setStep] = React.useState(1);
 
     /**
      * Handles clicks on the proceed button in the data selection
      */
     const handleDataProceed = () => {
-        setStep(2);
+        props.setHistorySelectionStep(2);
     }
 
     /**
      * Handles clicks on the back button in time selection
      */
     const handleScheduleBack = () => {
-        setStep(1);
+        props.setHistorySelectionStep(1);
+    }
+
+    /**
+     * When the user doesn't select any values to be historized, this continue handler will be called and add the current data source to the other data sources.
+     * After that the handler will proceed to the next step of the Infoprovider
+     */
+    const skipContinueHandler = () => {
+        props.addToDataSources();
+        props.continueHandler();
     }
 
 
     //const components = React.useContext(ComponentContext);
     /**
-     * Renders content based on the current step
+     * Renders content based on the current historySelectionStep
      */
     const getContent = () => {
-        switch (step) {
+        switch (props.historySelectionStep) {
             case 1:
                 return (
                     <HistoryDataSelection
                         handleProceed={handleDataProceed}
-                        handleSkipProceed={props.continueHandler}
+                        handleSkipProceed={skipContinueHandler}
                         handleBack={props.backHandler}
                         selectedData={props.selectedData}
                         customData={props.customData}
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
+                        selectSchedule={props.selectSchedule}
                     />
                 )
             case 2:
@@ -65,6 +76,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         handleBack={handleScheduleBack}
                         schedule={props.schedule}
                         selectSchedule={props.selectSchedule}
+                        addToDataSources={props.addToDataSources}
                     />
                 )
 

@@ -19,14 +19,14 @@ import {ArrayDiagramProperties, DiagramCreation, HistorizedDiagramProperties} fr
 //data type for elements contained in selectedData
 export type SelectedDataItem = {
     key: string;
-    type: String;
+    type: string;
 }
 
 export type Schedule = {
     type: string;
-    weekdays?: number[];
-    time?: string;
-    interval?: string;
+    weekdays: number[];
+    time: string;
+    interval: string;
 }
 
 /** Internal representation of a list item extracted from the JSON object.
@@ -61,6 +61,18 @@ export type Diagram = {
 }
 
 
+export type DataSource = {
+    apiName: string;
+    query: string;
+    apiKeyInput1: string;
+    apiKeyInput2: string;
+    noKey: boolean;
+    method: string;
+    selectedData: SelectedDataItem[];
+    customData: formelObj[];
+    historizedData: string[];
+    schedule: Schedule;
+}
 
 
 /**
@@ -94,7 +106,7 @@ export const CreateInfoProvider = () => {
     ];
     //the current step of the creation process, numbered by 0 to 6
 
-    const [step, setStep] = React.useState(6);
+    const [step, setStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -118,12 +130,15 @@ export const CreateInfoProvider = () => {
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historisation schedule selection
-    const [schedule, selectSchedule] = useState<Schedule>({type: "weekly", interval: undefined, time: undefined, weekdays: []});
+    const [schedule, setSchedule] = useState<Schedule>({type: "", interval: "", time: "", weekdays: []});
     //holds all list item representations generated in step 2, stored he to be passed to diagrams
     const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //holds all diagrams created by the user
     const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
-
+    //represents the current historySelectionStep: 1 is data selection, 2 is time selection
+    const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
+    // Holds an array of all data sources for the Infoprovider
+    const [dataSources, setDataSources] = React.useState(new Array<DataSource>());
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -131,7 +146,7 @@ export const CreateInfoProvider = () => {
      */
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
-        //setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
         //apiName
         setApiName(sessionStorage.getItem("apiName-" + uniqueId)||"");
         //query
@@ -152,6 +167,12 @@ export const CreateInfoProvider = () => {
         setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
         //diagrams (less calculations will be necessary this way)
         setDiagrams(sessionStorage.getItem("diagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("diagrams-" + uniqueId)!));
+        //schedule
+        setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "", interval: "", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+        //historySelectionStep
+        setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
+        // Already created data sources
+        setDataSources(sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -196,7 +217,18 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("diagrams-" + uniqueId, JSON.stringify(diagrams));
     }, [diagrams])
-
+    //store schedule in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
+    }, [schedule])
+    //store historySelectionStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
+    }, [historySelectionStep])
+    // Store data sources in session storage by using JSON-stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("dataSources-" + uniqueId, JSON.stringify(dataSources));
+    }, [dataSources])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -213,6 +245,7 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("historizedData-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("diagrams-" + uniqueId);
+        sessionStorage.removeItem("dataSources-" + uniqueId);
     }
 
 
@@ -247,7 +280,7 @@ export const CreateInfoProvider = () => {
      * Method to post all settings for the Info-Provider made by the user to the backend.
      * The backend will use this data to create the desired Info-Provider.
      */
-    const postInfoProvider = useCallFetch("/infoprovider",
+    const postInfoProvider = useCallFetch("visuanalytics/infoprovider",
         {
             method: "POST",
             headers: {
@@ -276,9 +309,11 @@ export const CreateInfoProvider = () => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        //if(name is contained) return true
-        //else return false
-        return false; //TODO: to be removed when the check is implemented
+        console.log(dataSources.length);
+        for(let i = 0; i < dataSources.length; i++) {
+            if(dataSources[i].apiName === name) return true;
+        }
+        return false;
     }
 
     /**
@@ -312,6 +347,37 @@ export const CreateInfoProvider = () => {
         //TODO: if step==0, return to dashboard context
         setStep(step-1)
     }
+
+
+    /**
+     * Adds a new data source to the state of the Infoprovider.
+     * If a data source already exists, it will be swapped out when this method is called.
+     */
+    //TODO: add this to the documentation
+    const addToDataSources = () => {
+        const dataSource: DataSource = {
+            apiName: apiName,
+            query: query,
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2,
+            noKey: noKey,
+            method: method,
+            selectedData: selectedData,
+            customData: customData,
+            historizedData: historizedData,
+            schedule: schedule
+        };
+        for(let i = 0; i < dataSources.length; i++) {
+            if (dataSources[i].apiName === apiName) {
+                let newDataSources = dataSources.slice();
+                newDataSources[i] = dataSource;
+                setDataSources(newDataSources);
+                return;
+            }
+        }
+        setDataSources(dataSources.concat(dataSource));
+    }
+
 
     /**
      * Returns the rendered component based on the current step.
@@ -382,7 +448,10 @@ export const CreateInfoProvider = () => {
                         historizedData={historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={schedule}
-                        selectSchedule={selectSchedule}
+                        selectSchedule={setSchedule}
+                        historySelectionStep={historySelectionStep}
+                        setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
+                        addToDataSources={addToDataSources}
                     />
                 )
             case 5:
@@ -390,11 +459,24 @@ export const CreateInfoProvider = () => {
                     <SettingsOverview
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        setStep={setStep}
                         name={name}
                         setName={(name: string) => setName(name)}
-                        selectedData={extractKeysFromSelection(selectedData)}
-                        customData={customData}
-                        historizedData={historizedData}
+                        dataSources={dataSources}
+                        setDataSources={setDataSources}
+                        storageID={uniqueId}
+                        setApiName={setApiName}
+                        setQuery={setQuery}
+                        setApiKeyInput1={setApiKeyInput1}
+                        setApiKeyInput2={setApiKeyInput2}
+                        setNoKey={setNoKey}
+                        setMethod={setMethod}
+                        setApiData={setApiData}
+                        setSelectedData={setSelectedData}
+                        setCustomData={setCustomData}
+                        setHistorizedData={setHistorizedData}
+                        setSchedule={setSchedule}
+                        setHistorySelectionStep={setHistorySelectionStep}
                     />
                 )
             case 6:

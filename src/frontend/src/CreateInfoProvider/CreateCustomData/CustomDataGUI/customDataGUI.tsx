@@ -42,23 +42,27 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     const classes = useStyles();
 
     /**
-     * Renders the Buttons for selected-data. All content from selectedData is shown.
+     * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
      * @param data the name of the data-value
      */
-    const renderListItemSelectedData = (data: string) => {
-        return (
-            <ListItem key={data}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(data)}>
-                            {data}
-                        </Button>
-                    }
-                    label={''}
-                />
-            </ListItem>
-        );
+    const renderListItemSelectedData = (data: SelectedDataItem) => {
+        if (data.type === 'Zahl') {
+
+            return (
+                <ListItem key={data.key}>
+                    <FormControlLabel
+                        control={
+                            <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                                    onClick={() => props.handleDataButtons(data.key)}>
+                                {data.key}
+                            </Button>
+                        }
+                        label={''}
+                    />
+                </ListItem>
+            );
+        }
+
     };
 
     /**
@@ -78,9 +82,8 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} aria-label={"delete"}
-                                onClick={() => props.deleteCustomData(data)}>
-                        <DeleteIcon/>
+                    <IconButton edge={"end"} onClick={() => props.deleteCustomData(data)}>
+                        <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
@@ -251,7 +254,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item xs={6}>
                     <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Name"}
                                value={props.name}
-                               onChange={event => (props.setName(event.target.value))}>
+                               onChange={event => (props.setName(event.target.value.replace(' ', '_')))}>
                     </TextField>
                 </Grid>
                 <Grid item xs={6}>
@@ -276,7 +279,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                          className={classes.listFrameData}>
                         <List>
                             {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
-                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item.key))}
+                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
                         </List>
                     </Box>
                 </Grid>

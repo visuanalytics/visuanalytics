@@ -1,0 +1,14 @@
+{
+  "infoproviders": [
+    {
+      "name": "Test1",
+      "id": 1,
+      "schedule": {
+        "times": [
+          "14:05"
+        ],
+        "daily": true
+      }
+    }
+  ]
+}

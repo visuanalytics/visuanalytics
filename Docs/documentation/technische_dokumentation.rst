@@ -1,4 +1,4 @@
-Technische Dokumentation
+Dokumentation der Python-Module
 ========================
 
 .. currentmodule:: visuanalytics

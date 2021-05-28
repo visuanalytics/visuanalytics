@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
 import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-
+import { Schedule } from "../..";
 
 interface HistoryDataSelectionProps {
     handleProceed: () => void;
@@ -21,11 +21,12 @@ interface HistoryDataSelectionProps {
     customData: Array<formelObj>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
+    selectSchedule: (schedule: Schedule) => void;
 }
 
 /**
- * Component displaying the second step in the creation of a new Info-Provider.
- * The state of this component handles the input made to its children.
+ * This component displays the available data for historisation and makes it selectable for the user.
+ * @param props The passed properties from the parent
  */
 export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props) => {
     const classes = useStyles();
@@ -65,6 +66,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
 
     /**
      * Method that handles clicking on a checkbox.
+     * If the user changes any checkbox, the schedule object is reset to default values.
      * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: string) => {
@@ -77,6 +79,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
             console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
+        props.selectSchedule({type: "", interval: "", time: "", weekdays: []});
     };
 
 

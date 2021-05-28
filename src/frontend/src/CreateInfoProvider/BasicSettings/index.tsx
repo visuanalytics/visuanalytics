@@ -91,7 +91,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     /**
      * Method to post the input data to the backend in order to receive the APIs answer.
      */
-    const sendTestData = useCallFetch("/checkapi", {
+    const sendTestData = useCallFetch("visuanalytics/checkapi", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -140,6 +140,10 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             }
             props.setMethod(e.target.value as string);
         }
+    }
+
+    const handleTestContinue = () => {
+        props.continueHandler()
     }
 
 
@@ -273,6 +277,11 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                 <Grid item>
                                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                                         zurück
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained" size="large" color="primary" onClick={handleTestContinue}>
+                                        Weiter ohne Backend (Test)
                                     </Button>
                                 </Grid>
                                 <Grid item className={classes.blockableButtonPrimary}>
