@@ -5,11 +5,14 @@ Enthält die API-Endpunkte.
 import flask
 import logging
 
-from flask import (Blueprint, request, send_file)
+from flask import (Blueprint, request, send_file, send_from_directory)
 from werkzeug.utils import secure_filename
 from os import path
 
 from visuanalytics.server.db import db, queries
+
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
+from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path
 
 from ast2json import str2json
 from base64 import b64encode
@@ -109,6 +112,24 @@ def infprovtestdatensatz():
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
     queries.insert_infoprovider(infoprovider)
     return "", 200
+
+
+@api.route("/testdiagram", methods=["POST"])
+def test_diagram():
+    """
+
+    """
+    diagram_info = request.json
+    try:
+        file_path = generate_test_diagram(diagram_info)
+
+        # return send_file(file_path, "application/json", True)
+        return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
+        # return file_path, 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while generating a test-diagram"})
+        return err, 400
 
 
 @api.route("/checkapi", methods=["POST"])

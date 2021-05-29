@@ -6,6 +6,7 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.util import resources
 from datetime import datetime, timedelta
 from ast import literal_eval
+from visuanalytics.util.resources import get_test_diagram_resource_path
 
 dpi_default = 100
 default_color = "#000000"
@@ -146,6 +147,35 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
         pass
 
     plot_wrapper(values["diagram_config"], file, step_data)
+
+    return file
+
+
+def generate_test_diagram(values):
+    values["plot"]["y"] = np.random.randint(1, 20, 15)
+    values.pop("x", None)
+    fig, ax = create_plot(values, None, None, get_xy=False)
+    file = get_test_diagram_resource_path()
+    title = values.get("title", None)
+    x_label = values.get("x_label", None)
+    y_label = values.get("y_label", None)
+    grid = values.get("grid", None)
+    face_color = values.get("face_color", None)
+
+    if title:
+        plt.title(title["text"], fontdict=title.get("fontdict", default_fontdict))
+    if x_label:
+        plt.xlabel(x_label["text"], fontdict=x_label.get("fontdict", default_fontdict))
+    if y_label:
+        plt.ylabel(y_label["text"], fontdict=y_label.get("fontdict", default_fontdict))
+    if grid:
+        ax.grid(color=grid.get("color", "gray"), linestyle=grid.get("linestyle", "-"),
+                linewidth=grid.get("linewidth", 1), axis=grid.get("axis", "both"))
+    if face_color:
+        ax.set_facecolor(face_color)
+
+    plt.savefig(file)
+    plt.close("all")
 
     return file
 
@@ -324,9 +354,12 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
     return values
 
 
-def create_plot(values, step_data, array_source, fig=None, ax=None):
+def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None):
     t = values["plot"]["type"]
-    values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+    if get_xy:
+        values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+    else:
+        values_new = values["plot"]
     if t == "line":
         fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar":

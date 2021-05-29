@@ -122,6 +122,16 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
+def get_test_diagram_resource_path():
+    """Erstellt einen absoluten Pfad zu der übergebene Ressource im Temp-Ordner.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/temp`-Ordner.
+    :param pipeline_id: id der Pipeline von der die Funktion aufgerufen wurde.
+    :type pipeline_id: str
+    """
+    return get_resource_path(os.path.join(TEMP_LOCATION, "test_diagram.png"))
+
+
 def get_relative_temp_resource_path(path: str, pipeline_id: str):
     """Erstellt einen Relativen Pfad zu der übergebene Ressource im Temp Ordner.
 
