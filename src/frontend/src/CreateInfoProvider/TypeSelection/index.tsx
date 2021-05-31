@@ -14,8 +14,6 @@ interface TypeSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     alreadyHasDataSources: boolean;
-    name: string;
-    setName: (name: string) => void;
 }
 
 /**
@@ -105,12 +103,6 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
         >
             <Grid container justify="center" className={classes.elementLargeMargin}>
                 <Grid item xs={12}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
-                               value={props.name}
-                               onChange={event => (props.setName(event.target.value))}>
-                    </TextField>
-                </Grid>
-                <Grid item xs={12}>
                     <FormControlLabel
                         control={
                             <Checkbox checked={newSource} onChange={(e) => {
@@ -154,7 +146,7 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button disabled={!(newSource || (importSource && fileSelected)) || (props.name==='')} variant="contained"
+                        <Button disabled={!(newSource || (importSource && fileSelected))} variant="contained"
                                 size="large"
                                 color={"primary"}
                                 onClick={handleProceed}>

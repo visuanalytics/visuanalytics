@@ -36,15 +36,15 @@ task 5: add a dialog when deleting a formula
 task 6: keep the componentContext in sessionStorage, fix unmount problem
 task 7: if possible, display a warning before reloading
 task 8: reloading needs to ask the user to put in all api key inputs again
+task 15: remove the name input from step 1
 TO DO:
-task 9: check all usages of useCallFetch for buggy behaviour
 task 10: unchecking in selectedData also needs to delete all formulas using the item and delete it from historizedData
 task 11: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
 task 12: search for other TODOs that remain in the code
-task 14: checkNameDuplicate is called to often, for exampling when checking noKey
-task 15: remove the name input from step 1
 
-SHOULD BE DONE
+
+SHOULD BE DONE:
+task 9: check all usages of useCallFetch for buggy behaviour
 task 13: repair format problems with backend communication in step 3
 task 16: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
  */
@@ -376,7 +376,6 @@ export const CreateInfoProvider = () => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        console.log(dataSources.length);
         for(let i = 0; i < dataSources.length; i++) {
             if(dataSources[i].apiName === name) return true;
         }
@@ -460,8 +459,6 @@ export const CreateInfoProvider = () => {
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         alreadyHasDataSources={dataSources.length > 0}
-                        name={name}
-                        setName={(name: string) => setName(name)}
                     />
                 );
             case 1:
