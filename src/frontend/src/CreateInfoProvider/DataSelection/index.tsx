@@ -14,6 +14,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
 import {ListItemRepresentation, SelectedDataItem} from "../types";
 import {transformJSON, extractKeysFromSelection} from "../helpermethods";
+import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 
 interface DataSelectionProps {
@@ -24,6 +26,10 @@ interface DataSelectionProps {
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     listItems: Array<ListItemRepresentation>;
     setListItems: (array: Array<ListItemRepresentation>) => void; //TODO: only used for "janek test", remove in production
+    historizedData: Array<string>;
+    setHistorizedData: (array: Array<string>) => void;
+    customData: Array<formelObj>;
+    setCustomData: (array: Array<formelObj>) => void;
 }
 
 
@@ -33,7 +39,16 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
     //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
     let indexCounter = 0
-
+    //save the value selectedData on loading to compare if any deletions were made
+    const [oldSelectedData] = React.useState(props.selectedData);
+    //save the formulas that need to be removed
+    const [formulasToRemove, setFormulasToRemove] = React.useState<Array<string>>([]);
+    //save the diagrams that need to be removed
+    const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+    //save the historized data that need to be removed
+    const [historizedToRemove, setHistorizedToRemove] = React.useState<Array<string>>([]);
+    //true when the dialog for deleting formulas and diagrams is open
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
     //sample JSON-data to test the different depth levels and parsing
     const sample2 = {
@@ -136,6 +151,113 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         "Vorherige-Season": "Text"
     };
 
+
+    /**
+     * Method to find the names of all formulas that use a specific data element.
+     * Used to detect formulas to delete when the data they use is deleted/unchecked.
+     * @param data Name of the data usages are searched for.
+     */
+    const getFormulasUsingData = (data: string) => {
+        const formulas: Array<string> = [];
+        props.customData.forEach((formula) => {
+            //if the name is included, it is used by the formula
+            if(formula.formelString.includes(data)) formulas.push(formula.formelName)
+        })
+        return formulas;
+    }
+
+    /**
+     * Type used for returning the elements to be removed from the method calculateItemsToRemove.
+     * Necessary since setting the state instead would require a new render.
+     */
+    type elementsToRemove = {
+        historizedToRemove: Array<string>;
+        formulasToRemove: Array<string>;
+        diagramsToRemove: Array<string>;
+    }
+
+    /**
+     * Checks if any items were removed from selectedData by comparing to the old value.
+     * If this is the case, related entries in formula, diagrams and historizedData will be added to an object
+     * which is returned.
+     */
+    const calculateItemsToRemove = () => {
+        //TODO: also check if one of the removed formulas is contained in the diagrams
+        //check if anything was removed - list all removed items
+        const removalObj: elementsToRemove = {
+            historizedToRemove: [],
+            formulasToRemove: [],
+            diagramsToRemove: []
+        }
+        const oldSelection = extractKeysFromSelection(oldSelectedData);
+        const newSelection = extractKeysFromSelection(props.selectedData);
+        const missingSelections: Array<string> = [];
+        oldSelection.forEach((oldItem) => {
+            if(!newSelection.includes(oldItem)) missingSelections.push(oldItem)
+        })
+        if(missingSelections.length > 0) {
+            //check if removal of formula is necessary
+            let formulasToRemove: Array<string> = [];
+            missingSelections.forEach((item) => {
+                formulasToRemove = formulasToRemove.concat(getFormulasUsingData(item));
+            })
+            removalObj.formulasToRemove = formulasToRemove;
+            //check if diagrams need to be deleted
+            const diagramsToRemove: Array<string> = [];
+            //TODO: implement searching all diagrams depending on the deleted items and deleted formula
+            removalObj.diagramsToRemove = diagramsToRemove;
+            //check if any historized data needs to be removed
+            removalObj.historizedToRemove = props.historizedData.filter((item) => {
+                return missingSelections.includes(item)||removalObj.formulasToRemove.includes(item);
+            })
+        }
+        return removalObj;
+    }
+
+    /**
+     * Method that removes everything form historizedData that needs to because of unchecking values.
+     */
+    const removeFromHistorized = (toRemove: Array<string>) => {
+        const newHistorizedData = props.historizedData.filter((item) => {
+            return !toRemove.includes(item);
+        })
+        props.setHistorizedData(newHistorizedData);
+    }
+
+    /**
+     * Method that deletes all historizedData, formulas and diagrams from their
+     * state in the wrapper component that need to be because of unchecking.
+     * Uses formulasToRemove, diagramsToRemove and historizedToRemove to check which values these are.
+     */
+    const deleteDependentElements = () => {
+        removeFromHistorized(historizedToRemove);
+        props.setCustomData(props.customData.filter((formula) => {
+            return !formulasToRemove.includes(formula.formelName);
+        }));
+        //TODO: delete diagrams
+
+    }
+
+    //TODO: document this and the other methods that belong to the removal mechanism
+    /**
+     * Handler method for continuing to the next step.
+     * If there are any for diagrams or formula, the user will be asked for confirmation and nothing will be deleted.
+     * Returns true when everything is done, false when the user is asked for confirmation.
+     * This method is called on proceed and not when clicking a checkbox to avoid too much computation.
+     */
+    const handleContinue = () => {
+        const removalObj = calculateItemsToRemove();
+        //if checkRemoval returns false, no removal dialog is necessary and proceeding is possible
+        if(removalObj.formulasToRemove.length > 0 || removalObj.diagramsToRemove.length > 0) {
+            setHistorizedToRemove(removalObj.historizedToRemove);
+            setFormulasToRemove(removalObj.formulasToRemove);
+            setDiagramsToRemove(removalObj.diagramsToRemove);
+            setDeleteDialogOpen(true);
+        } else {
+            removeFromHistorized(removalObj.historizedToRemove);
+            props.continueHandler();
+        }
+    }
 
 
     /**
@@ -279,13 +401,62 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonPrimary}>
-                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={handleContinue}>
                             weiter
                         </Button>
-                        <Button variant="contained" size="large" onClick={(event) => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>
+                        <Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>
                     </Grid>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setDeleteDialogOpen(false);
+                window.setTimeout(() => {
+                    setDiagramsToRemove([]);
+                    setFormulasToRemove([]);
+                }, 200);
+            }} aria-labelledby="deleteDialog-title"
+                    open={deleteDialogOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Löschen von Formeln und Diagrammen bestätigen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Durch das Abwählen einiger Daten müssen Formeln und Diagramme gelöscht werden, die diese Daten nutzen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        {formulasToRemove.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.join(", ") : ""}
+                    </Typography>
+                    <Typography gutterBottom>
+                        {diagramsToRemove.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.join(", ") : ""}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setDeleteDialogOpen(false);
+                                        window.setTimeout(() => {
+                                            setDiagramsToRemove([]);
+                                            setFormulasToRemove([]);
+                                        }, 200);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        deleteDependentElements();
+                                        props.continueHandler();
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                Löschen bestätigen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </StepFrame>
     )
 

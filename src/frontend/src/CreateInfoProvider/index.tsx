@@ -41,10 +41,12 @@ task 9: check all usages of useCallFetch for buggy behaviour
 task 10: unchecking in selectedData also needs to delete all formulas using the item and delete it from historizedData
 task 11: when deleting data, formula or unchecking historized, delete warning which diagrams will be removed and remove them
 task 12: search for other TODOs that remain in the code
-task 13: repair format problems with backend communication in step 3
 task 14: checkNameDuplicate is called to often, for exampling when checking noKey
 task 15: remove the name input from step 1
-task x: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
+
+SHOULD BE DONE
+task 13: repair format problems with backend communication in step 3
+task 16: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
  */
 
 //TODO: method should block api input when nothign is selected
@@ -500,6 +502,10 @@ export const CreateInfoProvider = () => {
                         setSelectedData={(set: Array<SelectedDataItem>) => setSelectedData(set)}
                         listItems={listItems}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        historizedData={historizedData}
+                        setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
+                        customData={customData}
+                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
                     />
                 );
             case 3:
