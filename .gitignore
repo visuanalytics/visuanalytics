@@ -67,7 +67,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# Editor-based Rest Client
+# SceneEditor-based Rest Client
 .idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
@@ -129,7 +129,7 @@ fabric.properties
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 
-# Editor-based Rest Client
+# SceneEditor-based Rest Client
 
 # Android studio 3.1+ serialized cache file
 
