@@ -11,6 +11,8 @@ import CreateIcon from "@material-ui/icons/Create";
 import { AddTopic } from "../AddTopic";
 import { CreateInfoProvider } from "../CreateInfoProvider"
 import {Dashboard} from "../Dashboard";
+import {SceneCreation} from "../SceneCreation";
+
 
 export type MainComponent = {
   component: FC;
@@ -57,10 +59,15 @@ export const mainComponents: MainComponents = {
     component: Dashboard,
     icon: HomeIcon,
     navName: "dashboard"
+  },
+  sceneCreation: {
+    component: SceneCreation,
+    icon: HomeIcon,
+    navName: "sceneCreation"
   }
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard";
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "sceneCreation";
