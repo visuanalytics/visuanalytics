@@ -38,6 +38,7 @@ export type authDataDialogElement = {
     method: string;
 }
 
+//unique application id used to avoid collisions in session storage
 export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
 /* BasicSettings */

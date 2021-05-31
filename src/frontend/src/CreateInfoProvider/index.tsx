@@ -23,6 +23,7 @@ import {
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
+import {ComponentContext} from "../ComponentProvider";
 
 /* TODO: list of bugfixes to be made by Janek
 DONE:
@@ -55,7 +56,7 @@ Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
 export const CreateInfoProvider = () => {
-    //unique application id used to avoid collisions in session storage
+    const components = React.useContext(ComponentContext);
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
@@ -312,6 +313,8 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("historizedData-" + uniqueId);
         sessionStorage.removeItem("dataSources-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
+        sessionStorage.removeItem("historySelectionStep-" + uniqueId);
+        sessionStorage.removeItem("schedule-" + uniqueId);
     }
 
 
@@ -409,7 +412,10 @@ export const CreateInfoProvider = () => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        //TODO: if step==0, return to dashboard context
+        if(step===0) {
+            clearSessionStorage();
+            components?.setCurrent("dashboard")
+        }
         setStep(step-1)
     }
 
