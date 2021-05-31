@@ -11,11 +11,15 @@ import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import {useCallFetch} from "../../Hooks/useCallFetch";
+import {DataSource} from "../../CreateInfoProvider";
 
 interface InfoProviderSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     infoProviderList: Array<InfoProviderData>;
+    reportError: (message: string) => void;
+    setInfoProvider: (infoProvider: Array<DataSource>) => void;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
@@ -23,6 +27,35 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     const classes = useStyles();
     //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
     const [selectedId, setSelectedId] = React.useState(0);
+
+    /**
+     * Handler for a successful request to the backend for receiving the API data.
+     * Passes the received data to the parent component and proceeds to the next step.
+     * param @jsonData The JSON-object delivered by the backend
+     */
+    const handleFetchInfoProviderSuccess = (jsonData: any) => {
+        const data = jsonData;
+        console.log(jsonData);
+        //TODO: check for errors and set the data of the props infoProvider
+        props.continueHandler();
+    }
+
+    /**
+     * Handler for errors happening when requesting the backend.
+     * Will display an error message and not proceed.
+     * @param err Error delivered by the backend
+     */
+    const handleFetchInfoProviderError = (err: Error) => {
+        props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");;
+    }
+
+    const fetchInfoProviderById = useCallFetch("visuanalytics/infoprovider/" + selectedId, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json\n"
+        }
+    }, handleFetchInfoProviderSuccess, handleFetchInfoProviderError);
+
 
     /**
      * Renders an radio button item in the list of all available Infoproviders.
@@ -72,7 +105,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                         <Button disabled={ selectedId === 0 } variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={props.continueHandler}>
+                                onClick={() => fetchInfoProviderById()}>
                             weiter
                         </Button>
                     </Grid>

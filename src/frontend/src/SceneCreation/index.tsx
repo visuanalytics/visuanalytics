@@ -99,6 +99,29 @@ export const SceneCreation = () => {
         setStep(step-1)
     }
 
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorFetchAll = (err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }
+
+    /**
+     * This type is needed because the answer of the backend consists of a list of infProviders.
+     */
+    type fetchAllBackendAnswer = Array<InfoProviderData>
+
+    /**
+     * Handles the success of the fetchAllInfoprovider()-method.
+     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessFetchAll = (jsonData: any) => {
+        const data = jsonData as fetchAllBackendAnswer;
+        setInfoProviderList(data);
+    }
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
@@ -155,32 +178,6 @@ export const SceneCreation = () => {
         }, [fetchAllInfoprovider]
     );
 
-    /**
-     * Handles the error-message if an error appears.
-     * @param err the shown error
-     */
-    const handleErrorFetchAll = (err: Error) => {
-        //console.log('error');
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
-    }
-
-
-
-    /**
-     * This type is needed because the answer of the backend consists of a list of infProviders.
-     */
-    type fetchAllBackendAnswer = Array<InfoProviderData>
-
-    /**
-     * Handles the success of the fetchAllInfoprovider()-method.
-     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
-     * @param jsonData the answer from the backend
-     */
-    const handleSuccessFetchAll = (jsonData: any) => {
-        const data = jsonData as fetchAllBackendAnswer;
-        setInfoProviderList(data);
-    }
-
 
     /**
      * Returns the rendered component based on the current step.
@@ -194,12 +191,16 @@ export const SceneCreation = () => {
                         continueHandler={() => setStep(step+1)}
                         backHandler={() => setStep(step-1)}
                         infoProviderList={infoProviderList}
+                        reportError={reportError}
+                        setInfoProvider={(infoProvider: Array<DataSource>) => setInfoProvider(infoProvider)}
                     />
                 )
             case 1:
                 return (
                     <SceneEditor
-
+                        continueHandler={() => setStep(step+1)}
+                        backHandler={() => setStep(step-1)}
+                        infoProvider={infoProvider}
                     />
                 )
         }
