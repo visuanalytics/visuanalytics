@@ -182,7 +182,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * which is returned.
      */
     const calculateItemsToRemove = () => {
-        //TODO: also check if one of the removed formulas is contained in the diagrams
         //check if anything was removed - list all removed items
         const removalObj: elementsToRemove = {
             historizedToRemove: [],

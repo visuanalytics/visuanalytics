@@ -1,5 +1,4 @@
 import {ListItemRepresentation, SelectedDataItem} from "./types";
-import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 /* CreateInfoProvider */
 

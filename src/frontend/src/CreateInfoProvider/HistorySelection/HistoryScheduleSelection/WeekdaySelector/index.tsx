@@ -63,7 +63,6 @@ export const WeekdaySelector: React.FC<WeekdaySelectorProps>  = (props) => {
         )
     }
 
-    //TODO: Create a container that holds all the buttons
     //const components = React.useContext(ComponentContext);
     return (
         <React.Fragment>

@@ -298,6 +298,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                         value={props.apiKeyInput1}
                                         changeHandler={(s) => props.setApiKeyInput1(s)}
                                         noKey={props.noKey}
+                                        disabled={props.method===""}
                                     />
                                 </Grid>
                                 {props.method!=="BearerToken"&&
@@ -309,6 +310,7 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                                 props.setApiKeyInput2(s);
                                             }}
                                             noKey={props.noKey || props.method === "BearerToken"}
+                                            disabled={props.method===""}
                                         />
                                     </Grid>
                                 }

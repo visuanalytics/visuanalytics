@@ -14,7 +14,8 @@ interface APIInputFieldProps {
     noKey?: boolean;
     errorText?: string;
     checkNameDuplicate?: (name: string) => boolean;
-};
+    disabled?: boolean;
+}
 
 
 /*
@@ -24,14 +25,20 @@ The state of the input is handled in the parent classes.
 export const APIInputField: React.FC<APIInputFieldProps> = (props) => {
     //const classes = useStyles();
     //const components = React.useContext(ComponentContext);
+    let disabled = false;
+    if(props.disabled!=null) disabled = props.disabled;
     if(props.errorText!=null) {
         const error = props.checkNameDuplicate!==undefined?props.checkNameDuplicate(props.value):false;
         return (
-            <TextField error={error} helperText={error?props.errorText:null}fullWidth margin="normal" disabled={props.noKey} variant="filled" color="primary" label={props.defaultValue} value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
+            <TextField error={error} helperText={error ? props.errorText : null} fullWidth margin="normal"
+                       disabled={props.noKey||disabled} variant="filled" color="primary" label={props.defaultValue}
+                       value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
         );
     } else {
         return (
-            <TextField fullWidth margin="normal" disabled={props.noKey} variant="filled" color="primary" label={props.defaultValue} value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
+            <TextField fullWidth margin="normal"
+                       disabled={props.noKey||disabled} variant="filled" color="primary" label={props.defaultValue}
+                       value={props.value} onChange={(e) => {props.changeHandler(e.target.value)}}/>
         );
     }
 }
