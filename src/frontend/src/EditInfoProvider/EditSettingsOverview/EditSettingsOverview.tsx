@@ -179,11 +179,10 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     <Dialog onClose={() => setCancelDialogOpen(false)} aria-labelledby="deleteDialog-title"
                             open={cancelDialogOpen}>
                         <DialogTitle id="deleteDialog-title">
-                            Abbrechen!
+                            Wollen Sie wirklich Abbrechen?
                         </DialogTitle>
                         <DialogContent dividers>
                             <Typography gutterBottom>
-                                Wollen sie wirklich abbrechen?
                                 Ihre Änderungen gehen verloren!
                             </Typography>
                         </DialogContent>

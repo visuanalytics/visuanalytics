@@ -10,8 +10,7 @@ import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {IconButton, ListItemSecondaryAction} from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import {formelContext} from "../EditCustomData";
 
 interface EditSingleFormelGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -34,6 +33,7 @@ interface EditSingleFormelGUIProps {
     leftParenFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
+    oldFormelName: string;
 }
 
 export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) => {
@@ -69,19 +69,23 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
      * @param data the name of the data-value
      */
     const renderListItemCustomData = (data: string) => {
-        return (
-            <ListItem key={data}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(data)}>
-                            {data}
-                        </Button>
-                    }
-                    label={''}
-                />
-            </ListItem>
-        );
+        if (data !== props.oldFormelName){
+
+            return (
+                <ListItem key={data}>
+                    <FormControlLabel
+                        control={
+                            <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                                    onClick={() => props.handleDataButtons(data)}>
+                                {data}
+                            </Button>
+                        }
+                        label={''}
+                    />
+                </ListItem>
+            );
+        }
+
     };
 
     /**

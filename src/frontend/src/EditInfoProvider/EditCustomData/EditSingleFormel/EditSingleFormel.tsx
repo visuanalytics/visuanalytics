@@ -11,6 +11,7 @@ import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {DataSource} from "../../../CreateInfoProvider";
 import {formelContext} from "../EditCustomData";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -59,6 +60,8 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
      */
     const [name, setName] = React.useState<string>(props.formel.formelName);
 
+    const [oldFormelName, setOldFormelName] = React.useState<string>(props.formel.formelName)
+
     /**
      * An Array filled with StrArg-Objects.
      */
@@ -95,6 +98,8 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
      * Is used to check if the number of right and left parens is even.
      */
     const [rightParenCount, setRightParenCount] = React.useState<number>(props.formel.parenCount);
+
+    const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
     /**
      * Handler for operatorButtons.
@@ -300,11 +305,16 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
         console.log(data.accepted)
 
+        if ((name !== oldFormelName) && searchForNameDuplicate(name)) {
+            props.reportError('Name bereits vergeben!');
+            return
+        }
+
         if (data.accepted) {
             const arCopy = props.infoProvDataSources[props.selectedDataSource].customData.slice();
 
             for (let i: number = 0; i <= arCopy.length - 1; i++) {
-                if (arCopy[i].formelName === name) {
+                if (arCopy[i].formelName === name || arCopy[i].formelName === oldFormelName) {
                     arCopy.splice(i, 1);
                 }
             }
@@ -345,8 +355,19 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
         }, handleSuccess, handleError
     );
 
-    const handleCancel = () => {
+    const searchForNameDuplicate = (newName: string): boolean => {
+        let foundDuplicate: boolean = false;
 
+        for (let i = 0; i <= props.infoProvDataSources[props.selectedDataSource].customData.length - 1; i++) {
+            if (props.infoProvDataSources[props.selectedDataSource].customData[i].formelName === newName) {
+                foundDuplicate = true;
+            }
+            if (props.infoProvDataSources[props.selectedDataSource].selectedData[i].key === newName) {
+                foundDuplicate = true;
+            }
+        }
+
+        return foundDuplicate;
     }
 
     return (
@@ -377,11 +398,12 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                         leftParenFlag={leftParenFlag}
                         leftParenCount={leftParenCount}
                         rightParenCount={rightParenCount}
+                        oldFormelName={oldFormelName}
                     />
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={handleCancel}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => setCancelDialogOpen(true)}>
                             abbrechen
                         </Button>
                     </Grid>
@@ -393,6 +415,36 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                         </Button>
                     </Grid>
                 </Grid>
+                <Dialog onClose={() => setCancelDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                        open={cancelDialogOpen}>
+                    <DialogTitle id="deleteDialog-title">
+                        Wollen Sie wirklich abbrechen?
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            Ihre Änderungen gehen verloren!
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained" color={"primary"}
+                                        onClick={() => {
+                                            setCancelDialogOpen(false);
+                                        }}>
+                                    zurück
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => props.backHandler(1)}
+                                        className={classes.delete}>
+                                    abbrechen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </StepFrame>
     );

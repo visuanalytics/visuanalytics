@@ -103,6 +103,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
         "Überblick",
         "API-Daten",
         "Formeln",
+        "Einzelne Formel bearbeiten",
         "Diagramme",
         "Historisierung"
     ];
