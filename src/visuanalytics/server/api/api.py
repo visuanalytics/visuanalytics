@@ -33,70 +33,111 @@ def infprovtestdatensatz():
     # Muss noch angepasst werden
     last_id = queries.get_last_infoprovider_id()
     infoprovider = {
-        "infoprovider_name": "Test" + str(last_id),
-        "api": {
-            "type": "request",
-            "api_key_name": "wetter",
-            "url_pattern": "http://api.openweathermap.org/data/2.5/weather",
-            "params": {
-                "q": "berlin",
-                "appid": "{_api_key}"
-            }
-        },
-        "transform": [
+        "infoprovider_name": "Test_" + str(last_id),
+        "datasources": [
             {
-                "type": "select",
-                "relevant_keys": [
-                    "_req|api|main|temp",
-                    "_req|api|main|feels_like",
-                    "_req|api|main|temp_min",
-                    "_req|api|main|temp_max"
-                ]
-            },
-            {
-                "type": "transform_dict",
-                "dict_key": "_req|api|main",
+                "name": "wetter_api",
+                "api": {
+                    "type": "request",
+                    "api_key_name": "wetter",
+                    "url_pattern": "http://api.openweathermap.org/data/2.5/weather",
+                    "params": {
+                        "q": "berlin",
+                        "appid": "{_api_key}"
+                    }
+                },
                 "transform": [
                     {
-                        "type": "append",
-                        "keys": [
-                            "_loop"
-                        ],
-                        "new_keys": [
-                            "test"
-                        ],
-                        "append_type": "list"
+                        "type": "select",
+                        "relevant_keys": [
+                            "_req|api|main|temp",
+                            "_req|api|main|feels_like",
+                            "_req|api|main|temp_min",
+                            "_req|api|main|temp_max"
+                        ]
+                    },
+                    {
+                        "type": "transform_dict",
+                        "dict_key": "_req|api|main",
+                        "transform": [
+                            {
+                                "type": "append",
+                                "keys": [
+                                    "_loop"
+                                ],
+                                "new_keys": [
+                                    "test"
+                                ],
+                                "append_type": "list"
+                            }
+                        ]
                     }
-                ]
-            }
-        ],
-        "storing": [
+                ],
+                "storing": [
+                    {
+                        "name": "test",
+                        "key": "test"
+                    }
+                ],
+                "formulas": [
+                    {
+                        "name": "A",
+                        "formula": "( _req|api|main|temp * 24 ) / 7"
+                    }
+                ],
+                "schedule": {
+                    "type": "daily",
+                    "time": "09:01"
+                }
+            },
             {
-                "name": "test",
-                "key": "test"
+                "name": "joke api",
+                "api": {
+                    "type": "request",
+                    "url_pattern": "https://official-joke-api.appspot.com/jokes/ten",
+                    "params": {}
+                },
+                "transform": [
+                    {
+                        "type": "select",
+                        "relevant_keys": [
+                            "_req|joke api"
+                        ]
+                    }
+                ],
+                "storing": [
+                    {
+                        "name": "jokes",
+                        "key": "_req|joke api"
+                    }
+                ],
+                "schedule": {
+                    "type": "daily",
+                    "time": "14:39"
+                },
+                "formulas": []
             }
         ],
-        "schedule": {
-            "type": "weekly",
-            "time": "13:30",
-            "weekdays": [0, 5]
-        },
-        "formulas": [
-            {
-                "name": "A",
-                "formula": "( _req|api|main|temp * 7 ) / 24"
-            }
-        ],
-        "images": {
+        "diagrams": {
             "test": {
-                "type": "diagram",
+                "type": "diagram_custom",
                 "diagram_config": {
-                    "type": "line",
-                    "name": "test",
-                    "y": "{test}",
-                    "grid": {
-                        "linestyle": "--"
-                    }
+                    "type": "custom",
+                    "name": "Jokes",
+                    "infoprovider": "jokes_test",
+                    "source_type": "Array",
+                    "plots": [
+                        {
+                            "custom_labels": False,
+                            "primitive": False,
+                            "plot": {
+                                "type": "line",
+                                "y": "{_req|api}",
+                                "numeric_attribute": "id",
+                                "string_attribute": "punchline"
+                            }
+                        }
+                    ]
                 }
             }
         }

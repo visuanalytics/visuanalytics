@@ -110,8 +110,13 @@ def get_datasource_run_info(datasource_id):
     with db.open_con() as con:
         res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
                           [datasource_id]).fetchall()
+        infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider INNER JOIN datasource "
+                                        "USING (infoprovider_id) WHERE datasource_id=?",
+                                        [datasource_id]).fetchone()["infoprovider_name"]
 
-        return res[0]["datasource_name"], res[0]["datasource_name"], {}
+        datasource_name = infoprovider_name.replace(" ", "-") + "_" + res[0]["datasource_name"].replace(" ", "-")
+
+        return datasource_name, datasource_name, {}
 
 
 def insert_log(job_id: int, state: int, start_time: datetime):

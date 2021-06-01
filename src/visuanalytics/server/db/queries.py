@@ -80,7 +80,7 @@ def insert_infoprovider(infoprovider):
         return False
 
     # Infoprovider-Json in den Ordner "/infoproviders" speichern
-    with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
+    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "wt") as f:
         json.dump(infoprovider_json, f)
 
     infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
@@ -106,7 +106,7 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource-Json in den Ordner "/datasources" speichern
-        with open_resource(_get_datasource_path(datasource_name), "wt") as f:
+        with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
         if datasource["api"]["type"] != "request_memory":
@@ -157,7 +157,7 @@ def get_infoprovider_file(infoprovider_id):
     res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
                       [infoprovider_id]).fetchone()
 
-    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
+    return _get_infoprovider_path(res["infoprovider_name"].replace(" ", "-")) if res is not None else None
 
 
 def get_datasource_file(datasource_id):
@@ -169,9 +169,12 @@ def get_datasource_file(datasource_id):
     """
     con = db.open_con_f()
     # Namen der gegebenen Datenquelle laden
-    res = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?", [datasource_id]).fetchone()
+    datasource_name = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
+                                  [datasource_id]).fetchone()["datasource_name"]
+    infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider INNER JOIN datasource USING (infoprovider_id) WHERE datasource_id=?",
+                                    [datasource_id]).fetchone()["infoprovider_name"]
 
-    return _get_datasource_path(res["datasource_name"]) if res is not None else None
+    return _get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")) if datasource_name is not None else None
 
 
 def get_infoprovider(infoprovider_id):
@@ -273,7 +276,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource-Json in den Ordner "/datasources" speichern
-        with open_resource(_get_datasource_path(datasource_name), "wt") as f:
+        with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
         if datasource["api"]["type"] != "request_memory":
@@ -306,7 +309,7 @@ def delete_infoprovider(infoprovider_id):
                       [infoprovider_id]).fetchone()
     if res is not None:
         # Json-Datei von Datenquelle, sowie zugehörige Einträge in Datenbank löschen
-        _remove_datasources(con, infoprovider_id)
+        _remove_datasources(con, infoprovider_id, remove_historised=True)
 
         # Json-Datei von Infoprovider und zugehörige Ordner löschen
         file_path = get_infoprovider_file(infoprovider_id)
@@ -486,11 +489,14 @@ def _generate_transform(formulas, old_transform):
     return transform
 
 
-def _remove_datasources(con, infoprovider_id):
-    res = con.execute("SELECT datasource_id FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+def _remove_datasources(con, infoprovider_id, remove_historised=False):
+    res = con.execute("SELECT * FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+    infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?", [infoprovider_id]).fetchone()["infoprovider_name"]
     for row in res:
         file_path = get_datasource_file(row["datasource_id"])
         os.remove(file_path)
+        if remove_historised:
+            shutil.rmtree(os.path.join(MEMORY_LOCATION, infoprovider_name.replace(" ", "-") + "_" + row["datasource_name"].replace(" ", "-")), ignore_errors=True)
 
         _remove_historisation_schedule(con, row["datasource_id"])
         con.execute("DELETE FROM datasource WHERE datasource_id=?", [row["datasource_id"]])
