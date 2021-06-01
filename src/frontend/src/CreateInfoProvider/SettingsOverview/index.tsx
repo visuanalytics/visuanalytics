@@ -206,6 +206,11 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                             abschließen
                         </Button>
                     </Grid>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.setStep(6)}>
+                            Diagramme Test
+                        </Button>
+                    </Grid>
                 </Grid>
             </Grid>
         </StepFrame>
