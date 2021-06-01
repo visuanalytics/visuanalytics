@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId, DataSource} from "../index"
+import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource} from "../index"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -11,7 +11,6 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 
 /* TODO: following steps for diagram creation:

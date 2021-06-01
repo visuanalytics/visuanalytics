@@ -302,6 +302,7 @@ export const CreateInfoProvider = () => {
         }, handleSuccess, handleError
     );
 
+    //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.

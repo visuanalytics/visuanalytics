@@ -2,7 +2,7 @@ import React from "react";
 import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {DataSource, diagramType, Schedule, uniqueId} from "../../../index";
+import {DataSource, diagramType, uniqueId} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
