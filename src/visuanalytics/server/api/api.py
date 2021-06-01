@@ -13,6 +13,7 @@ from visuanalytics.server.db import db, queries
 
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
 from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path
+from visuanalytics.util.config_manager import get_private, set_private
 
 from ast2json import str2json
 from base64 import b64encode
@@ -747,29 +748,6 @@ def logs():
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while getting the logs"})
         return err, 400
-
-
-def _generate_request_dicts(api_info, method):
-    header = {}
-    parameter = {}
-    if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
-    elif method == "noAuth":
-        return header, parameter
-    else:
-        api_key_name = api_info["api_key_name"].split("||")
-        key1 = api_key_name[0]
-        key2 = api_key_name[1]
-
-        if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
-                          .decode("utf-8")})
-        elif method == "KeyInHeader":
-            header.update({key1: key2})
-        elif method == "KeyInQuery":
-            parameter.update({key1: key2})
-
-    return header, parameter
 
 
 def _generate_request_dicts(api_info, method):
