@@ -1,9 +1,9 @@
 import React from "react";
-import { APIInputField } from "./APIInputField/APIInputField";
+import {APIInputField} from "./APIInputField/APIInputField";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
-import { useStyles } from "../style";
+import {useStyles} from "../style";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select"
@@ -45,12 +45,11 @@ interface BasicSettingsProps {
 }
 
 
-
 /**
  * Component displaying the second step in the creation of a new Info-Provider.
  * The state of this component handles the input made to its children.
  */
-export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
+export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     const classes = useStyles();
     const [param, setParam] = React.useState("");
     const [paramValue, setParamValue] = React.useState("");
@@ -72,14 +71,14 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
         //TODO: add new behaviour to documentation
         //check if the settings differ from the old settings
         const wasChanged = (
-            props.query!==oldQuery||
-            props.method!==oldMethod||
-            props.noKey!==oldNoKey||
-            props.apiKeyInput1!==oldApiKeyInput1||
-            props.apiKeyInput2!==oldApiKeyInput2
+            props.query !== oldQuery ||
+            props.method !== oldMethod ||
+            props.noKey !== oldNoKey ||
+            props.apiKeyInput1 !== oldApiKeyInput1 ||
+            props.apiKeyInput2 !== oldApiKeyInput2
         );
         //send a new request to the backend when the user made changes to his settings
-        if(wasChanged) {
+        if (wasChanged) {
             //reset all following settings when a new api request is mad
             // Clean up the session storage for all following steps
             sessionStorage.removeItem("selectedData-" + uniqueId);
@@ -111,27 +110,27 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      * Passes the received data to the parent component and proceeds to the next step.
      * param @jsonData The JSON-object delivered by the backend
      */
-   const handleSuccess = (jsonData: any) => {
-       const data = jsonData as testDataBackendAnswer;
-       if(data.status!==0) {
-           props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
-           setDisplaySpinner(false);
-       } else {
-           //console.log(data.api_keys);
-           //props.setApiData(data.api_keys);
-           // TODO: add to documentation
-           props.setListItems(transformJSON(data.api_keys));
-           //console.log(transformJSON(data.api_keys));
-           props.continueHandler();
-       }
-   }
+    const handleSuccess = (jsonData: any) => {
+        const data = jsonData as testDataBackendAnswer;
+        if (data.status !== 0) {
+            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage. Bitte überprüfen sie die Eingabe.")
+            setDisplaySpinner(false);
+        } else {
+            //console.log(data.api_keys);
+            //props.setApiData(data.api_keys);
+            // TODO: add to documentation
+            props.setListItems(transformJSON(data.api_keys));
+            //console.log(transformJSON(data.api_keys));
+            props.continueHandler();
+        }
+    }
 
     /**
      * Handler for errors happening when requesting the backend.
      * Will display an error message and not proceed.
      * @param err Error delivered by the backend
      */
-   const handleError = (err: Error) => {
+    const handleError = (err: Error) => {
         props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");
         setDisplaySpinner(false);
     }
@@ -147,10 +146,10 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
             body: JSON.stringify({
                 api: {
                     type: "request",
-                    api_key_name: props.method==="BearerToken"?props.apiKeyInput1:props.apiKeyInput1 + "||" + props.apiKeyInput2,
+                    api_key_name: props.method === "BearerToken" ? props.apiKeyInput1 : props.apiKeyInput1 + "||" + props.apiKeyInput2,
                     url_pattern: props.query
                 },
-                method: props.noKey?"noAuth":props.method,
+                method: props.noKey ? "noAuth" : props.method,
                 response_type: "json"
             })
         }, handleSuccess, handleError
@@ -158,9 +157,9 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     /**
      * Adds a new pair of parameter and value at the end of the api-query.
      * Values will be taken from the corresponding input fields.
-    */
+     */
     const addParamToQuery = () => {
-        if (!(param===""||paramValue==="")) {
+        if (!(param === "" || paramValue === "")) {
             if (props.query.includes("?")) {
                 props.setQuery(props.query + "&" + param + "=" + paramValue);
             } else {
@@ -177,12 +176,12 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
      *
      */
     const handleMethodChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-        if(e.target!==null) {
+        if (e.target !== null) {
             //check if the categories of the elements change, in this case empty the input
             const methodIndexList = ["KeyInHeader", "KeyInHeader", "BearerToken", "BasicAuth", "DigestAuth"];
             const methodIndex = methodIndexList.indexOf(props.method);
             const targetIndex = methodIndexList.indexOf(e.target.value as string)
-            if((methodIndex<=1&&targetIndex>1)||(methodIndex===2&&targetIndex!==2)||(methodIndex>2&&targetIndex<=2)) {
+            if ((methodIndex <= 1 && targetIndex > 1) || (methodIndex === 2 && targetIndex !== 2) || (methodIndex > 2 && targetIndex <= 2)) {
                 props.setApiKeyInput1("");
                 props.setApiKeyInput2("")
             }
@@ -195,19 +194,18 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
     }
 
 
-
     /**
      * Generates the components content based on the current state.
      * @param: displaySpinner Determines if the spinner should be displayed. If not, normal input is shown.
      */
     const selectContent = (displaySpinner: boolean) => {
-        if(displaySpinner) {
+        if (displaySpinner) {
             return (
                 <div>
                     <Typography>
                         Bitte warten, während die API-Daten ermittelt werden...
                     </Typography>
-                    <CircularProgress />
+                    <CircularProgress/>
                 </div>
             )
         } else {
@@ -224,13 +222,15 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                 <APIInputField
                                     defaultValue="Name der API-Datenquelle"
                                     value={props.name}
-                                    changeHandler={(s) => {props.setName(s)}}
+                                    changeHandler={(s) => {
+                                        props.setName(s)
+                                    }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
                                     checkNameDuplicate={props.checkNameDuplicate}
                                 />
                             </Grid>
                             <Grid item xs={12} className={classes.elementSmallMargin}>
-                                <Typography variant="body1" >
+                                <Typography variant="body1">
                                     Bitte geben sie die Query an, die der Info-Provider nutzen soll:
                                 </Typography>
                             </Grid>
@@ -264,7 +264,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item className={`${classes.addParamButton}  ${classes.blockableButtonSecondary}`}>
-                                    <Button disabled={param===""||paramValue===""} variant="contained" size="large" color="secondary" onClick={addParamToQuery}>
+                                    <Button disabled={param === "" || paramValue === ""} variant="contained"
+                                            size="large" color="secondary" onClick={addParamToQuery}>
                                         Hinzufügen
                                     </Button>
                                 </Grid>
@@ -276,7 +277,8 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             </Grid>
                             <Grid item container xs={12} justify="space-between">
                                 <Grid item xs={3}>
-                                    <FormControl disabled={props.noKey} variant="filled" style={{width: "100%"}} margin="normal">
+                                    <FormControl disabled={props.noKey} variant="filled" style={{width: "100%"}}
+                                                 margin="normal">
                                         <InputLabel id="methodSelectLabel">Methode</InputLabel>
                                         <Select
                                             labelId="methodSelectlabel"
@@ -292,27 +294,27 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={props.method==="BearerToken"?8:4}>
+                                <Grid item xs={props.method === "BearerToken" ? 8 : 4}>
                                     <APIInputField
-                                        defaultValue={(props.method==="BasicAuth"||props.method==="DigestAuth")?"Nutzername":props.method==="BearerToken"?"Token":"Name Key-Parameter"}
+                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Nutzername" : props.method === "BearerToken" ? "Token" : "Name Key-Parameter"}
                                         value={props.apiKeyInput1}
                                         changeHandler={(s) => props.setApiKeyInput1(s)}
                                         noKey={props.noKey}
-                                        disabled={props.method===""}
+                                        disabled={props.method === ""}
                                     />
                                 </Grid>
-                                {props.method!=="BearerToken"&&
-                                    <Grid item xs={4}>
-                                        <APIInputField
-                                            defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Passwort" : "API-Key"}
-                                            value={props.apiKeyInput2}
-                                            changeHandler={(s) => {
-                                                props.setApiKeyInput2(s);
-                                            }}
-                                            noKey={props.noKey || props.method === "BearerToken"}
-                                            disabled={props.method===""}
-                                        />
-                                    </Grid>
+                                {props.method !== "BearerToken" &&
+                                <Grid item xs={4}>
+                                    <APIInputField
+                                        defaultValue={(props.method === "BasicAuth" || props.method === "DigestAuth") ? "Passwort" : "API-Key"}
+                                        value={props.apiKeyInput2}
+                                        changeHandler={(s) => {
+                                            props.setApiKeyInput2(s);
+                                        }}
+                                        noKey={props.noKey || props.method === "BearerToken"}
+                                        disabled={props.method === ""}
+                                    />
+                                </Grid>
                                 }
                             </Grid>
                             <Grid item xs={12} className={classes.elementSmallMargin}>
@@ -325,17 +327,21 @@ export const BasicSettings: React.FC<BasicSettingsProps>  = (props) => {
                             </Grid>
                             <Grid item container xs={12} justify="space-between" className={classes.elementSmallMargin}>
                                 <Grid item>
-                                    <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                                    <Button variant="contained" size="large" color="primary"
+                                            onClick={props.backHandler}>
                                         zurück
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" size="large" color="primary" onClick={handleTestContinue}>
+                                    <Button variant="contained" size="large" color="primary"
+                                            onClick={handleTestContinue}>
                                         Weiter ohne Backend (Test)
                                     </Button>
                                 </Grid>
                                 <Grid item className={classes.blockableButtonPrimary}>
-                                    <Button disabled={!(props.name!==""&&props.query!==""&&(props.noKey||(props.apiKeyInput1!==""&&props.apiKeyInput2!==""&&props.method!==""))&&!props.checkNameDuplicate(props.name))} variant="contained" size="large" color="primary" onClick={handleProceed}>
+                                    <Button
+                                        disabled={!(props.name !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.name))}
+                                        variant="contained" size="large" color="primary" onClick={handleProceed}>
                                         weiter
                                     </Button>
                                 </Grid>

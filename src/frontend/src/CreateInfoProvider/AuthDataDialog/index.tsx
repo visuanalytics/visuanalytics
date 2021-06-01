@@ -73,7 +73,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
 
     /**
      * Handler method for an input change in any of the data sources
-     * @param field Specifies which input field was changed - 1 is apiKeyInput1, 2 ist apiKeyInput 2
+     * @param field Specifies which input field was changed - 1 is apiKeyInput1, 2 is apiKeyInput 2
      * @param value The new value of the input field.
      */
     const handleInputChange = (field: number, value: string) => {
@@ -143,7 +143,9 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
             )
         } else {
             return (
-                <React.Fragment></React.Fragment>
+                <React.Fragment>
+
+                </React.Fragment>
             )
         }
 

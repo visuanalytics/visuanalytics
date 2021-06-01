@@ -128,7 +128,7 @@ export const CreateInfoProvider = () => {
     //TODO: document this
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
-     * This will be the case if the current data Source has not selected noKey or if any of the previously existing dataSources has noKey.
+     * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
      * Needs to run based on sessionStorage since it is called in the first render.
      */
     const authDialogNeeded = () => {
