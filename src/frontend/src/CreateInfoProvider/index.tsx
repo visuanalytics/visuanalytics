@@ -72,6 +72,7 @@ export type DataSource = {
     customData: formelObj[];
     historizedData: string[];
     schedule: Schedule;
+    listItems: Array<ListItemRepresentation>;
 }
 
 
@@ -365,7 +366,8 @@ export const CreateInfoProvider = () => {
             selectedData: selectedData,
             customData: customData,
             historizedData: historizedData,
-            schedule: schedule
+            schedule: schedule,
+            listItems: listItems
         };
         for(let i = 0; i < dataSources.length; i++) {
             if (dataSources[i].apiName === apiName) {
@@ -487,14 +489,10 @@ export const CreateInfoProvider = () => {
                     <DiagramCreation
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        listItems={listItems}
-                        historizedData={historizedData}
-                        customData={customData}
+                        dataSources={dataSources}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
-                        selectedData={selectedData}
                         reportError={reportError}
-                        schedule={schedule}
                         infoProviderName={name}
                     />
                 )

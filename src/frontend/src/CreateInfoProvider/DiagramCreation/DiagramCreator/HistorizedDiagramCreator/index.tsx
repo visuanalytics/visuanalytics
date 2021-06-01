@@ -2,7 +2,7 @@ import React from "react";
 import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {diagramType, Schedule, uniqueId} from "../../../index";
+import {DataSource, diagramType, Schedule, uniqueId} from "../../../index";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
@@ -30,7 +30,7 @@ interface HistorizedDiagramCreatorProps {
     amount: number;
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
-    schedule: Schedule;
+    dataSources: Array<DataSource>
     fetchPreviewImage: () => void;
     imageURL: string;
     setImageURL: (url: string) => void;
@@ -235,7 +235,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      */
     const getIntervalDisplay = () => {
         //check for weekly
-        if (props.schedule.type === "weekly") {
+        /*if (props.schedule.type === "weekly") {
             if (props.schedule.weekdays !== undefined && props.schedule.weekdays.length !== 0) {
                 //check if every day is selected
                 if(props.schedule.weekdays.length === 7) {
@@ -279,7 +279,8 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     return "12h"
                 }
             }
-        }
+        }*/
+        return "TO BE DONE"
     }
 
     /**
