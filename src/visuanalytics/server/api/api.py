@@ -334,7 +334,6 @@ def get_all_infoproviders():
 
 @api.route("/infoprovider/<infoprovider_id>", methods=["PUT"])
 def update_infoprovider(infoprovider_id):
-    # Muss noch angepasst werden
     """
     Endpunkt `/infoprovider/<infoprovider_id>`.
 
