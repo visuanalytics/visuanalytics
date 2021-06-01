@@ -258,7 +258,6 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         let keyString = item.parentKeyName === "" ? item.keyName : item.parentKeyName + "|" + item.keyName;
         //if it ends with |0, cut the rest
         //in the current state of the application, all arrays end with |0, this check is used for future compatibility
-        if (keyString.slice(-2)==="|0") keyString = keyString.substring(0, keyString.length-2);
         return (
             <ListItem key={keyString}>
                 <ListItemIcon>

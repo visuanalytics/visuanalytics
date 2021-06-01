@@ -302,7 +302,22 @@ export const CreateInfoProvider = () => {
         }, handleSuccess, handleError
     );
 
-
+    /**
+     * Method that creates a list of all arrays that are used in diagrams.
+     * Necessary for forming the object of the infoprovider sent to the backend.
+     */
+    const getArraysUsedByDiagrams = () => {
+        const arraysInDiagrams: Array<string> = [];
+        diagrams.forEach((diagram) => {
+            if(diagram.sourceType!=="Array") return;
+            else if(diagram.arrayObjects!==undefined) {
+                diagram.arrayObjects.forEach((array) => {
+                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
+                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
+                })
+            }
+        })
+    }
 
     /**
      * Method that checks if the given name is already in use for a data source in this info-provider

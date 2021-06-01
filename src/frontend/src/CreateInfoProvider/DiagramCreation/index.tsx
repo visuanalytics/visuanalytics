@@ -42,6 +42,8 @@ task 22: add hintContents
 task 23: change labeling according to new suggestions
  */
 
+//TODO: document the changes made to have multiple dataSources
+
 /**
  * Represents an array selected for diagram creation and holds attributes for all settings
  */
@@ -405,8 +407,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         let compatibleArrays: Array<ListItemRepresentation> = []
         //the undefined case should only happen in certain situations that are only possible via debugging
         if(dataSources!==undefined) {
-            console.log(dataSources);
-            console.log("in")
             dataSources.forEach((dataSource) => {
                 //outside of debugging, this should also not fail
                 if(dataSource.listItems!==undefined) {
@@ -419,6 +419,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                                     //create a copy of the item with changed parentKeyName that has the dataSource in front
                                     const editedItem = {
                                         ...item,
+                                        keyName: item.keyName.slice(-2)==="|0" ? item.keyName.substring(0, item.keyName.length-2) : item.keyName,
                                         parentKeyName: item.parentKeyName === "" ? dataSource.apiName : dataSource.apiName + "|" + item.parentKeyName
                                     }
                                     compatibleArrays.push(editedItem);
