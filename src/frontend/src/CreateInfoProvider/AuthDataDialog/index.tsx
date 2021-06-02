@@ -22,6 +22,7 @@ interface AuthDataDialogProps {
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
     selectionDataSources: Array<authDataDialogElement>;
+    apiName: string;
 }
 
 
@@ -139,7 +140,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
         if (dataSource !== undefined) {
             return (
                 <MenuItem key={dataSource}
-                          value={dataSourceNumber}>{(dataSource.includes(uniqueId)) ? "aktuelle Datenquelle" : (dataSource)}</MenuItem>
+                          value={dataSourceNumber}>{(dataSource.includes(uniqueId)) ? "aktuelle Datenquelle" + (props.apiName!=="" ? " (" + props.apiName + ")" : "") : (dataSource)}</MenuItem>
             )
         } else {
             return (

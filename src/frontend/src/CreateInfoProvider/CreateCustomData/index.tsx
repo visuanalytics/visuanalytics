@@ -45,23 +45,23 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
 
     /**
-     * dataFlag represents the status of dataButtons. If it ist true the dataButtons will be disabled.
+     * dataFlag represents the status of dataButtons. If it is true, the dataButtons will be disabled.
      */
     const [dataFlag, setDataFlag] = React.useState<boolean>(false);
     /**
-     * opFlag represents the status of OperatorButtons. If it ist true the OperatorButtons will be disabled.
+     * opFlag represents the status of OperatorButtons. If it is, true the OperatorButtons will be disabled.
      */
     const [opFlag, setOpFlag] = React.useState<boolean>(true);
     /**
-     * numberFlag represents the status of NumberButtons. If it ist true the NumberButtons will be disabled.
+     * numberFlag represents the status of NumberButtons. If it is, true the NumberButtons will be disabled.
      */
     const [numberFlag, setNumberFlag] = React.useState<boolean>(false);
     /**
-     * rightParenFlag represents the status of rightParenButton. If it ist true the rightParenButton will be disabled.
+     * rightParenFlag represents the status of rightParenButton. If it is, true the rightParenButton will be disabled.
      */
     const [rightParenFlag, setRightParenFlag] = React.useState<boolean>(false);
     /**
-     * leftParenFlag represents the status of leftParenButton. If it ist true the leftParenButton will be disabled.
+     * leftParenFlag represents the status of leftParenButton. If it is, true the leftParenButton will be disabled.
      */
     const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(false);
 
@@ -178,7 +178,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     /**
      * Handler for the Delete-Button. There is a different procedure depending on the StrArg-Object that has to be deleted.
      * To achieve that the flags in StrArg will be tested.
-     * If dataAsObj holds only on StrArg or ist empty fullDelete() will be called.
+     * If dataAsObj holds only on StrArg or is empty fullDelete() will be called.
      */
     const handleDelete = () => {
 
@@ -408,7 +408,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                             zurück
                         </Button>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.blockableButtonSecondary}>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 disabled={!(rightParenCount >= leftParenCount) || opFlag}
                                 onClick={() => handleSave(name)}>

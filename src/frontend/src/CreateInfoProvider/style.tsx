@@ -88,5 +88,13 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        tinyListFrame: {
+            width: "100%",
+            height: 100,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px"
+        },
     }),
 );

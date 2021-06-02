@@ -35,7 +35,7 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
 
   //TODO: check if this possibly breaks the old frontend
 
-  /* keep current context in sessionStorge */
+  /* keep current context in sessionStorage */
   React.useEffect(() => {
     //get the componentKey from sessionStorage and choose the correct context object
     //dashboard is the default when nothing is selected
