@@ -6,16 +6,12 @@ import {useStyles} from "../style";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {Grid, TextField} from "@material-ui/core";
-import {ComponentContext} from "../../ComponentProvider";
-
+import Grid from "@material-ui/core/Grid";
 
 interface TypeSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     alreadyHasDataSources: boolean;
-    name: string;
-    setName: (name: string) => void;
 }
 
 /**
@@ -94,22 +90,15 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
         props.continueHandler();
     }
 
-    const components = React.useContext(ComponentContext);
 
+    //TODO: possibly confirm going back to the dashboard to not lose data
     //TODO: find a prettier solution for a file upload button, possibly use external component since material-ui doesnt offer one
-    //const components = React.useContext(ComponentContext);
     return (
         <StepFrame
             heading={"Datenquelle"}
             hintContent={hintContents.typeSelection}
         >
             <Grid container justify="center" className={classes.elementLargeMargin}>
-                <Grid item xs={12}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
-                               value={props.name}
-                               onChange={event => (props.setName(event.target.value))}>
-                    </TextField>
-                </Grid>
                 <Grid item xs={12}>
                     <FormControlLabel
                         control={
@@ -148,13 +137,13 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
                                 size="large"
                                 color={"primary"}
                                 disabled={props.alreadyHasDataSources}
-                                onClick={() => components?.setCurrent("dashboard")}
+                                onClick={props.backHandler}
                         >
                             abbrechen
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button disabled={!(newSource || (importSource && fileSelected)) || (props.name==='')} variant="contained"
+                        <Button disabled={!(newSource || (importSource && fileSelected))} variant="contained"
                                 size="large"
                                 color={"primary"}
                                 onClick={handleProceed}>
