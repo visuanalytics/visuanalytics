@@ -38,6 +38,22 @@ export type authDataDialogElement = {
     method: string;
 }
 
+//Type providing constants for all supported diagram types
+export type diagramType = "dotDiagram" | "lineChart" | "horizontalBarChart" | "verticalBarChart" | "pieChart"
+
+/**
+ * Represents a diagram created by the user.
+ * @param name Name of the diagram, has to be unique
+ * @param variant displays the type of diagram defined.
+ */
+export type Diagram = {
+    name: string;
+    variant: diagramType;
+    sourceType: string;
+    arrayObjects?: Array<ArrayDiagramProperties>;
+    historizedObjects?: Array<HistorizedDiagramProperties>;
+}
+
 //unique application id used to avoid collisions in session storage
 export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
@@ -74,4 +90,53 @@ export type ListItemRepresentation = {
 export type customDataBackendAnswer = {
     accepted: boolean
     //error: string
+}
+
+
+/* DiagramCreation */
+/**
+ * Represents an array selected for diagram creation and holds attributes for all settings
+ */
+export type ArrayDiagramProperties = {
+    listItem: ListItemRepresentation;
+    numericAttribute: string;
+    stringAttribute: string;
+    labelArray: Array<string>;
+    color: string;
+    numericAttributes: Array<ListItemRepresentation>;
+    stringAttributes: Array<ListItemRepresentation>
+    customLabels: boolean;
+}
+
+/**
+ * Represents historized data selected for diagram creation and holds attributes for all settings
+ */
+export type HistorizedDiagramProperties = {
+    name: string;
+    labelArray: Array<string>;
+    color: string;
+    intervalSizes: Array<number>;
+    dateLabels: boolean;
+    dateFormat: string;
+}
+
+/**
+ * Plot typed which is used for sending diagrams to the backend in fitting format.
+ */
+export type Plots = {
+    customLabels?: boolean;
+    primitive?: boolean;
+    dateLabels?: boolean;
+    plots: {
+        type: string;
+        x: Array<number>;
+        y: string;
+        color: string;
+        numericAttribute?: string;
+        stringAttribute?: string;
+        dateFormat?: string;
+        x_ticks: {
+            ticks: Array<string>;
+        };
+    };
 }

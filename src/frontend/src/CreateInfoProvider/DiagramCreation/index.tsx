@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../index"
+import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -12,6 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
 /* TODO: following steps for diagram creation:
@@ -41,52 +42,7 @@ task 21: edit feature
 task 22: add hintContents
  */
 
-/**
- * Represents an array selected for diagram creation and holds attributes for all settings
- */
-export type ArrayDiagramProperties = {
-    listItem: ListItemRepresentation;
-    numericAttribute: string;
-    stringAttribute: string;
-    labelArray: Array<string>;
-    color: string;
-    numericAttributes: Array<ListItemRepresentation>;
-    stringAttributes: Array<ListItemRepresentation>
-    customLabels: boolean;
-}
 
-/**
- * Represents historized data selected for diagram creation and holds attributes for all settings
- */
-export type HistorizedDiagramProperties = {
-    name: string;
-    labelArray: Array<string>;
-    color: string;
-    intervalSizes: Array<number>;
-    dateLabels: boolean;
-    dateFormat: string;
-}
-
-/**
- * Plot typed which is used for sending diagrams to the backend in fitting format.
- */
-export type Plots = {
-    customLabels?: boolean;
-    primitive?: boolean;
-    dateLabels?: boolean;
-    plots: {
-        type: string;
-        x: Array<number>;
-        y: string;
-        color: string;
-        numericAttribute?: string;
-        stringAttribute?: string;
-        dateFormat?: string;
-        x_ticks: {
-            ticks: Array<string>;
-        };
-    };
-}
 
 
 interface DiagramCreationProps {

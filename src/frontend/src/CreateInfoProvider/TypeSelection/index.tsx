@@ -92,11 +92,9 @@ export const TypeSelection: React.FC<TypeSelectionProps> = (props) => {
         props.continueHandler();
     }
 
-    const components = React.useContext(ComponentContext);
 
     //TODO: possibly confirm going back to the dashboard to not lose data
     //TODO: find a prettier solution for a file upload button, possibly use external component since material-ui doesnt offer one
-    //const components = React.useContext(ComponentContext);
     return (
         <StepFrame
             heading={"Datenquelle"}

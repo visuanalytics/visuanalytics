@@ -19,11 +19,12 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId
+    uniqueId, Diagram
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
+import {DiagramCreation} from "./DiagramCreation";
 
 
 /* TODO: list of bugfixes to be made by Janek
@@ -52,9 +53,6 @@ task 13: repair format problems with backend communication in step 3
 task 16: find problem with data writing on unmounted component in dashboard -> possibly solved by wrong isMounted usage
  */
 
-
-//unique application id used to avoid collisions in session storage
-export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
 
 /*
 Wrapper component for the creation of a new info-provider.
@@ -111,8 +109,6 @@ export const CreateInfoProvider = () => {
     const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
     const [dataSourcesKeys, setDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
-    //Holds all ListItemRepresentation objects used for the list in step 3 - defined here to be set in step 2
-    const [listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
