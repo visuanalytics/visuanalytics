@@ -1,6 +1,6 @@
 # Infoprovider-Erstellung
 Die Komponentenstruktur der Anwendung ist in diesem Abschnitt wie folgt aufgebaut:
-![Übersicht_Info_Provider_Erstellung.png](Übersicht_Info_Provider_Erstellung.png)
+![Übersicht_Info_Provider_Erstellung.png](images/infoprovider/Übersicht_Info_Provider_Erstellung.png)
 <div style="page-break-after: always;"></div>
 
 ## **CreateInfoProvider**
