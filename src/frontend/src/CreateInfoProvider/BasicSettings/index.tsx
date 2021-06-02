@@ -68,7 +68,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
      * Sends the API data for testing to the backend and displays a loading animation
      */
     const handleProceed = () => {
-        //TODO: add new behaviour to documentation
         //check if the settings differ from the old settings
         const wasChanged = (
             props.query !== oldQuery ||
@@ -79,7 +78,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         );
         //send a new request to the backend when the user made changes to his settings
         if (wasChanged) {
-            //reset all following settings when a new api request is mad
+            //reset all following settings when a new api request is made
             // Clean up the session storage for all following steps
             sessionStorage.removeItem("selectedData-" + uniqueId);
             sessionStorage.removeItem("customData-" + uniqueId);
@@ -118,7 +117,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         } else {
             //console.log(data.api_keys);
             //props.setApiData(data.api_keys);
-            // TODO: add to documentation
             props.setListItems(transformJSON(data.api_keys));
             //console.log(transformJSON(data.api_keys));
             props.continueHandler();

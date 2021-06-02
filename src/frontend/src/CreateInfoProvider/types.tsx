@@ -1,8 +1,8 @@
+import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+
 /* CreateInfoProvider */
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
 //data type for elements contained in selectedData
-import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-
 export type SelectedDataItem = {
     key: string;
     type: string;
@@ -32,7 +32,6 @@ export type DataSourceKey = {
     apiKeyInput2: string;
 }
 
-//TODO: rename
 export type authDataDialogElement = {
     name: string;
     method: string;
