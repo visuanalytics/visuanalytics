@@ -25,6 +25,7 @@ import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
 
+
 /* TODO: list of bugfixes to be made by Janek
 DONE:
 task 1: load the object sent from the backend in step 3, test it
@@ -52,6 +53,9 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
  */
 
 
+//unique application id used to avoid collisions in session storage
+export const uniqueId = "ddfdd278-abf9-11eb-8529-0242ac130003"
+
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
@@ -67,9 +71,10 @@ export const CreateInfoProvider = () => {
         "Datenauswahl",
         "Formeln",
         "Historisierung",
-        "Gesamtübersicht"
+        "Gesamtübersicht",
+        "Diagrammerstellung"
     ];
-    //the current step of the creation process, numbered by 0 to 5
+    //the current step of the creation process, numbered by 0 to 6
 
     const [step, setStep] = React.useState(0);
     //name of the info-provider
@@ -96,6 +101,10 @@ export const CreateInfoProvider = () => {
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historization schedule selection
     const [schedule, setSchedule] = useState<Schedule>({type: "", interval: "", time: "", weekdays: []});
+    //holds all list item representations generated in step 2, stored he to be passed to diagrams
+    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    //holds all diagrams created by the user
+    const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     // Holds an array of all data sources for the Infoprovider
@@ -218,6 +227,10 @@ export const CreateInfoProvider = () => {
         setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
         setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
+        //listItems (less calculations will be necessary this way)
+        setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        //diagrams (less calculations will be necessary this way)
+        setDiagrams(sessionStorage.getItem("diagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("diagrams-" + uniqueId)!));
         //schedule
         setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "", interval: "", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
@@ -281,6 +294,13 @@ export const CreateInfoProvider = () => {
     React.useEffect(() => {
         sessionStorage.setItem("historizedData-" + uniqueId, JSON.stringify(historizedData));
     }, [historizedData])
+    //store listItems in sessionStorage by converting into an array and use JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
+    }, [listItems])
+    React.useEffect(() => {
+        sessionStorage.setItem("diagrams-" + uniqueId, JSON.stringify(diagrams));
+    }, [diagrams])
     //store schedule in sessionStorage by using JSON.stringify on it
     React.useEffect(() => {
         sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
@@ -298,7 +318,6 @@ export const CreateInfoProvider = () => {
         sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
     }, [listItems])
 
-
     /**
      * Removes all items of this component from the sessionStorage.
      */
@@ -312,6 +331,8 @@ export const CreateInfoProvider = () => {
         sessionStorage.removeItem("selectedData-" + uniqueId);
         sessionStorage.removeItem("customData-" + uniqueId);
         sessionStorage.removeItem("historizedData-" + uniqueId);
+        sessionStorage.removeItem("listItems-" + uniqueId);
+        sessionStorage.removeItem("diagrams-" + uniqueId);
         sessionStorage.removeItem("dataSources-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
@@ -335,7 +356,7 @@ export const CreateInfoProvider = () => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-        clearSessionStorage();
+      clearSessionStorage();
     }
 
     /**
@@ -420,6 +441,7 @@ export const CreateInfoProvider = () => {
         setStep(step-1)
     }
 
+
     /**
      * Adds a new data source to the state of the Infoprovider.
      * If a data source already exists, it will be swapped out when this method is called.
@@ -452,6 +474,7 @@ export const CreateInfoProvider = () => {
         }
         setDataSources(dataSources.concat(dataSource));
     }
+
 
     /**
      * Returns the rendered component based on the current step.
@@ -565,6 +588,22 @@ export const CreateInfoProvider = () => {
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                    />
+                )
+            case 6:
+                return (
+                    <DiagramCreation
+                        continueHandler={handleContinue}
+                        backHandler={handleBack}
+                        listItems={listItems}
+                        historizedData={historizedData}
+                        customData={customData}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        selectedData={selectedData}
+                        reportError={reportError}
+                        schedule={schedule}
+                        infoProviderName={name}
                     />
                 )
 

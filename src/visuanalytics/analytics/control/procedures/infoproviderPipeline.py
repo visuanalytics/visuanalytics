@@ -37,8 +37,9 @@ class InfoproviderPipeline(Pipeline):
                0: {"name": "Precondition", "call": precondition},
                1: {"name": "Apis", "call": api},
                2: {"name": "Transform", "call": transform},
-               3: {"name": "Storing", "call": storing}}
-    __steps_max = 4
+               3: {"name": "Storing", "call": storing},
+               4: {"name": "Images", "call": generate_all_images}}
+    __steps_max = 5
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
@@ -246,11 +247,8 @@ class InfoproviderPipeline(Pipeline):
             for self.__current_step in range(0, self.__steps_max):
                 logger.info(f"Next step: {self.current_step_name()}")
 
-                if self.__current_step == 2: print("Before Transform: ", data.data)
                 # Execute Step
                 self.__steps[self.__current_step].get("call", lambda: None)(self.__config, data)
-
-                if self.__current_step == 2: print("\nAfter Transform: ", data.data)
 
                 logger.info(f"Step finished: {self.current_step_name()}!")
 

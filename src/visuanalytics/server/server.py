@@ -34,6 +34,8 @@ def create_app():
     # load the instance config, if it exists
     app.config.from_pyfile('config.py', silent=True)
 
+    app.config['JSON_SORT_KEYS'] = False
+
     start_backend()
 
     # add js as mmetype to ensure that the content-type is correct for js files

@@ -6,7 +6,7 @@ from PIL import Image
 from PIL import ImageDraw
 
 from visuanalytics.analytics.control.procedures.step_data import StepData
-from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram, generate_diagram_custom
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
 from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
@@ -100,3 +100,17 @@ def diagram(values: dict, step_data: StepData, prev_paths):
     :rtype: str
     """
     return generate_diagram(values, step_data, prev_paths)
+
+
+@register_image
+def diagram_custom(values: dict, step_data: StepData, prev_paths):
+    """
+    Erstellt ein Diagram mit Hilfe der Python-Bibliothek MatPlotLib.
+
+    :param values: Image-Bauplan des zu erstellenden Diagramms
+    :param step_data: Daten aus der API
+    :param prev_paths: alle Image-Bauplane
+    :return: Pfad zum erstellten Bild
+    :rtype: str
+    """
+    return generate_diagram_custom(values, step_data, prev_paths)

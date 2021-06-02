@@ -17,7 +17,6 @@ import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
-
 interface DataSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
@@ -31,7 +30,6 @@ interface DataSelectionProps {
     customData: Array<formelObj>;
     setCustomData: (array: Array<formelObj>) => void;
 }
-
 
 
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
@@ -60,6 +58,36 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                             "leagueSaison": "Text"
                         }
                     }
+                }
+            },
+            "InnerObject": {
+                "NoStringAttributeArray": {
+                    "same_type": true,
+                    "length": 3,
+                    "object": {
+                        "Zahl1": "Zahl",
+                        "Zahl2": "Zahl"
+                    }
+                },
+                "ArrayInObject": {
+                    "same_type": true,
+                    "length": 3,
+                    "object": {
+                        "Menge": "Zahl",
+                        "Gewicht": "Zahl",
+                        "Bezeichnung": "Text",
+                        "Kürzel": "Text"
+                    }
+                },
+                "NumericArray": {
+                    "same_type": true,
+                    "length": 6,
+                    "type": "Zahl"
+                },
+                "TextArray": {
+                    "same_type": true,
+                    "length": 3,
+                    "type": "Text"
                 }
             }
         },
@@ -148,7 +176,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 }
             }
         },
-        "Vorherige-Season": "Text"
+        "Vorherige-Season": "Text",
+        "Test-Zahl": "Zahl"
     };
 
 
