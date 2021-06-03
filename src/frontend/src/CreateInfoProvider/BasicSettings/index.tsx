@@ -16,7 +16,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
 import {transformJSON} from "../helpermethods";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -37,7 +37,7 @@ interface BasicSettingsProps {
     setName: (name: string) => void;
     reportError: (message: string) => void;
     setSelectedData: (selectedData: SelectedDataItem[]) => void;
-    setCustomData: (customData: formelObj[]) => void;
+    setCustomData: (customData: FormelObj[]) => void;
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
@@ -91,7 +91,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             // Reset the states of the following steps
             //props.setApiData({});
             props.setSelectedData(new Array<SelectedDataItem>());
-            props.setCustomData(new Array<formelObj>());
+            props.setCustomData(new Array<FormelObj>());
             props.setHistorizedData(new Array<string>());
             props.setSchedule({type: "", interval: "", time: "", weekdays: []});
             props.setHistorySelectionStep(1);
