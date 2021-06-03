@@ -548,7 +548,23 @@ export const CreateInfoProvider = () => {
         }, handleSuccess, handleError
     );
 
-
+    //TODO: test this method when it is used
+    /**
+     * Method that creates a list of all arrays that are used in diagrams.
+     * Necessary for forming the object of the infoprovider sent to the backend.
+     */
+    /*const getArraysUsedByDiagrams = () => {
+        const arraysInDiagrams: Array<string> = [];
+        diagrams.forEach((diagram) => {
+            if(diagram.sourceType!=="Array") return;
+            else if(diagram.arrayObjects!==undefined) {
+                diagram.arrayObjects.forEach((array) => {
+                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
+                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
+                })
+            }
+        })
+    }*/
 
     /**
      * Method that checks if the given name is already in use for a data source in this info-provider
@@ -618,7 +634,8 @@ export const CreateInfoProvider = () => {
             selectedData: selectedData,
             customData: customData,
             historizedData: historizedData,
-            schedule: schedule
+            schedule: schedule,
+            listItems: listItems
         };
         for(let i = 0; i < dataSources.length; i++) {
             if (dataSources[i].apiName === apiName) {
@@ -751,14 +768,10 @@ export const CreateInfoProvider = () => {
                     <DiagramCreation
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        listItems={listItems}
-                        historizedData={historizedData}
-                        customData={customData}
+                        dataSources={dataSources}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
-                        selectedData={selectedData}
                         reportError={reportError}
-                        schedule={schedule}
                         infoProviderName={name}
                         createPlots={(diagram: Diagram) => createPlots(diagram)}
                     />

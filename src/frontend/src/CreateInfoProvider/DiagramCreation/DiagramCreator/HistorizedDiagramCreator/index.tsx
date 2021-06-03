@@ -2,7 +2,7 @@ import React from "react";
 import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {diagramType, Schedule, uniqueId, HistorizedDiagramProperties} from "../../../types";
+import {DataSource, diagramType, uniqueId, HistorizedDiagramProperties} from "../../../types";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Box from "@material-ui/core/Box";
 import FormControl from "@material-ui/core/FormControl";
@@ -29,7 +29,7 @@ interface HistorizedDiagramCreatorProps {
     amount: number;
     setAmount: (amount: number) => void;
     reportError: (message: string) => void;
-    schedule: Schedule;
+    dataSources: Array<DataSource>
     fetchPreviewImage: () => void;
     imageURL: string;
     setImageURL: (url: string) => void;
@@ -233,14 +233,26 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
      * Uses the schedule object passed as property to check what interval was selected for the corresponding values and returns a displaying string.
      */
     const getIntervalDisplay = () => {
+        //search the dataSource that belongs to the current element
+        let dataSource: DataSource = {} as DataSource;
+        const currentDataSourceName = props.historizedObjects[selectedHistorizedOrdinal].name.split("|")[0];
+        for (let index = 0; index < props.dataSources.length; index++) {
+            const source = props.dataSources[index];
+            if(source.apiName === currentDataSourceName) {
+                dataSource = source;
+                break;
+            }
+        }
+        //extract the schedule from the dataSource
+        const schedule = dataSource.schedule;
         //check for weekly
-        if (props.schedule.type === "weekly") {
-            if (props.schedule.weekdays !== undefined && props.schedule.weekdays.length !== 0) {
+        if (schedule.type === "weekly") {
+            if (schedule.weekdays !== undefined && schedule.weekdays.length !== 0) {
                 //check if every day is selected
-                if(props.schedule.weekdays.length === 7) {
+                if(schedule.weekdays.length === 7) {
                     return "24h";
                 }
-                const weekdayNumbers = props.schedule.weekdays.slice();
+                const weekdayNumbers = schedule.weekdays.slice();
                 weekdayNumbers.sort();
                 let weekdayStrings = [getWeekdayString(weekdayNumbers[0])];
                 for(let i = 1; i < weekdayNumbers.length; i++) {
@@ -250,12 +262,12 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
             }
         }
         //check for daily
-        else if (props.schedule.type === "daily") {
+        else if (schedule.type === "daily") {
             return "24h"
         }
         //check for interval
-        else if (props.schedule.type === "interval") {
-            switch (props.schedule.interval) {
+        else if (schedule.type === "interval") {
+            switch (schedule.interval) {
                 case "minute": {
                     return "1m";
                 }
@@ -279,6 +291,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 }
             }
         }
+        return "TO BE DONE"
     }
 
     /**
