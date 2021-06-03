@@ -215,7 +215,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         variant: diagramType,
                         sourceType: diagramSource,
                         historizedObjects: historizedObjects,
-                        arrayObjects: arrayObjects
+                        arrayObjects: arrayObjects,
+                        amount: amount
                     })
                 }
             }),
@@ -253,7 +254,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             variant: diagramType,
             sourceType: diagramSource,
             historizedObjects: historizedObjects,
-            arrayObjects: arrayObjects
+            arrayObjects: arrayObjects,
+            amount: amount
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);

@@ -433,19 +433,21 @@ export const CreateInfoProvider = () => {
     }
 
     const createBackendDiagrams = () => {
-        const diagramMap: Map<string, BackendDiagram> = new Map<string, BackendDiagram>();
+        //TODO: possibly find smarter solution without any type
+        const diagramsObject: any = {};
         diagrams.forEach((diagram) => {
-            diagramMap.set(diagram.name, {
+            diagramsObject[diagram.name] = {
                 type: "diagram_custom",
                 diagram_config: {
                     type: "custom",
                     name: diagram.name,
                     infoprovider: name,
                     sourceType: diagram.sourceType,
-                    plots: crea
+                    plots: createPlots(diagram)
                 }
-            })
+            }
         })
+        return diagramsObject;
     }
 
     /**
@@ -487,7 +489,7 @@ export const CreateInfoProvider = () => {
                         primitive: !Array.isArray(item.listItem.value),
                         plots: {
                             type: type,
-                            x: Array.from(Array(amount).keys()),
+                            x: Array.from(Array(diagram.amount).keys()),
                             y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
                             color: item.color,
                             numericAttribute: item.numericAttribute,
@@ -508,7 +510,7 @@ export const CreateInfoProvider = () => {
                         dateLabels: item.dateLabels,
                         plots: {
                             type: type,
-                            x: Array.from(Array(amount).keys()),
+                            x: Array.from(Array(diagram.amount).keys()),
                             y: item.name,
                             color: item.color,
                             dateFormat: item.dateFormat,
@@ -522,7 +524,7 @@ export const CreateInfoProvider = () => {
             }
         }
         return plotArray;
-    }, [amount])
+    }, [])
 
     /**
      * Method to post all settings for the Info-Provider made by the user to the backend.
@@ -537,7 +539,10 @@ export const CreateInfoProvider = () => {
             body: JSON.stringify({
                 infoprovider_name: name,
                 datasources: createDataSources(),
-
+                diagrams: createBackendDiagrams(),
+                diagrams_original: diagrams,
+                //TODO: activate when merge for the branch creating this method is done
+                //arrays_used_in_diagrams: getArraysUsedByDiagrams()
             })
         }, handleSuccess, handleError
     );
@@ -754,6 +759,7 @@ export const CreateInfoProvider = () => {
                         reportError={reportError}
                         schedule={schedule}
                         infoProviderName={name}
+                        createPlots={(diagram: Diagram) => createPlots(diagram)}
                     />
                 )
 

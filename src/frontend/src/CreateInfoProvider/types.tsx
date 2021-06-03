@@ -52,6 +52,7 @@ export type Diagram = {
     sourceType: string;
     arrayObjects?: Array<ArrayDiagramProperties>;
     historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
 }
 
 //unique application id used to avoid collisions in session storage
