@@ -42,7 +42,35 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
     const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
 
     //true when the dialog for deleting diagrams is opened
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(true);
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
+    //true when the dialog for going back and reverting changes is open
+    const [backDialogOpen, setBackDialogOpen] = React.useState(false);
+
+    //TODO: document this and why it is needed
+    /**
+     * Handler method for clicking the back button.
+     * Checks if any selections were removed - if so, it warns the user that all changes will be reverted.
+     * This is necessary since without the user could unselect elements without deleting dependent diagrams.
+     */
+    const backHandler = () => {
+        const missingSelections: Array<string> = [];
+        oldHistorizedData.forEach((item) => {
+            if(!props.historizedData.includes(item)) missingSelections.push(item);
+        })
+        //return false when nothing was removed
+        if(missingSelections.length===0) props.handleBack();
+        else setBackDialogOpen(true);
+    }
+
+    /**
+     * Method called by the dialog for going back to the step before.
+     * Resets the selection to its old value and goes back to the last step.
+     */
+    const revertAndBack= () => {
+        props.setHistorizedData(oldHistorizedData);
+        props.handleBack();
+    }
 
     /**
      * Handler for clicking the proceed button.s
@@ -50,7 +78,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * If nothing has to be removed, it calls the method checkAndProceed() which evaluates if the user
      * skips the schedule selection because nothing was selected or not.
      */
-    const ProceedHandler = () => {
+    const proceedHandler = () => {
         //when deletion is necessary, dont proceed
         if(checkDeletes()) return;
         checkAndProceed();
@@ -196,17 +224,54 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={props.handleBack}>
+                        <Button variant="contained" size="large" color="primary" onClick={backHandler}>
                             zurück
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={ProceedHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={proceedHandler}>
                             weiter
                         </Button>
                     </Grid>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setBackDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={backDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Verwerfen der Änderungen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle gemachten Änderungen an der Auswahl verworfen werden sollen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Wirklich zurückgehen?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setBackDialogOpen(false);;
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        revertAndBack()
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                zurück
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
             <Dialog onClose={() => {
                 setDeleteDialogOpen(false);
                 window.setTimeout(() => {
