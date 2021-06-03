@@ -742,6 +742,9 @@ export const CreateInfoProvider = () => {
                         historySelectionStep={historySelectionStep}
                         setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
                         addToDataSources={addToDataSources}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 )
             case 5:
