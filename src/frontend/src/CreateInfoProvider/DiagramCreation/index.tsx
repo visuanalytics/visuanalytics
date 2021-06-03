@@ -11,7 +11,7 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
@@ -50,13 +50,14 @@ interface DiagramCreationProps {
     backHandler: () => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
-    customData: Array<formelObj>
+    customData: Array<FormelObj>
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     selectedData: Array<SelectedDataItem>;
     reportError: (message: string) => void;
     schedule: Schedule;
     infoProviderName: string;
+    createPlots: (diagram: Diagram) => Array<Plots>;
 }
 
 
@@ -66,6 +67,8 @@ interface DiagramCreationProps {
 export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const classes = useStyles();
 
+    // Extract createPlots from props
+    const createPlots = props.createPlots;
     //holds the current step in the diagram creation process
     const [diagramStep, setDiagramStep] = React.useState(0);
     //holds the source type currently used
@@ -156,81 +159,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
-    /**
-     * Creates the plots array for a selected diagram to be sent to the backend.
-     * @param diagram the diagram to be transformed
-     */
-    const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
-        const plotArray: Array<Plots> = [];
-        let type: string;
-        //transform the type to the string the backend needs
-        switch (diagram.variant) {
-            case "verticalBarChart": {
-                type = "bar";
-                break;
-            }
-            case "horizontalBarChart": {
-                type = "barh";
-                break;
-            }
-            case "dotDiagram": {
-                type = "scatter";
-                break;
-            }
-            case "lineChart": {
-                type = "line";
-                break;
-            }
-            case "pieChart": {
-                type = "pie";
-                break;
-            }
-        }
-        if (diagram.sourceType === "Array") {
-            if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        } else {
-            //"Historized"
-            if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
-                    const plots = {
-                        dateLabels: item.dateLabels,
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.name,
-                            color: item.color,
-                            dateFormat: item.dateFormat,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        }
-        return plotArray;
-    }, [amount])
+
 
     /**
      * Handler for the return of a successful call to the backend (posting test diagram)
@@ -286,7 +215,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         variant: diagramType,
                         sourceType: diagramSource,
                         historizedObjects: historizedObjects,
-                        arrayObjects: arrayObjects
+                        arrayObjects: arrayObjects,
+                        amount: amount
                     })
                 }
             }),
@@ -304,7 +234,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -324,7 +254,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             variant: diagramType,
             sourceType: diagramSource,
             historizedObjects: historizedObjects,
-            arrayObjects: arrayObjects
+            arrayObjects: arrayObjects,
+            amount: amount
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);
