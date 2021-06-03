@@ -303,6 +303,34 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         }))
     }
 
+    //true when the dialog for going back and reverting changes is open
+    const [backDialogOpen, setBackDialogOpen] = React.useState(false);
+
+    //TODO: document this and why it is needed
+    /**
+     * Handler method for clicking the back button.
+     * Checks if any selections were removed - if so, it warns the user that all changes will be reverted.
+     * This is necessary since without the user could unselect elements without deleting dependent diagrams.
+     */
+    const backHandler = () => {
+        const missingSelections: Array<string> = [];
+        oldSelectedData.forEach((item) => {
+            if(!props.selectedData.includes(item)) missingSelections.push(item.key);
+        })
+        //return false when nothing was removed
+        if(missingSelections.length===0) props.backHandler();
+        else setBackDialogOpen(true);
+    }
+
+    /**
+     * Method called by the dialog for going back to the step before.
+     * Resets the selection to its old value and goes back to the last step.
+     */
+    const revertAndBack= () => {
+        props.setSelectedData(oldSelectedData);
+        props.backHandler();
+    }
+
     //TODO: document this and the other methods that belong to the removal mechanism
     /**
      * Handler method for continuing to the next step.
@@ -461,7 +489,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={backHandler}>
                             zurück
                         </Button>
                     </Grid>
@@ -473,6 +501,43 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setBackDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={backDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Verwerfen der Änderungen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle gemachten Änderungen an der Auswahl verworfen werden sollen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Wirklich zurückgehen?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setBackDialogOpen(false);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        revertAndBack()
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                zurück
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
             <Dialog onClose={() => {
                 setDeleteDialogOpen(false);
                 window.setTimeout(() => {

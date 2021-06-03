@@ -255,7 +255,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                         <Grid item>
                             <Button variant="contained"
                                     onClick={() => {
-                                        setBackDialogOpen(false);;
+                                        setBackDialogOpen(false);
                                     }}>
                                 abbrechen
                             </Button>
