@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {DataSource, Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../types"
+import {DataSource, Diagram, ListItemRepresentation, diagramType, uniqueId} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -11,7 +11,6 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
@@ -36,8 +35,8 @@ task 16: data format for backend
 task 17: write custom fetcher for using in useEffect in Overview and general Creation
 task 18: use the fetcher based on the current diagram in both creators to get the preview
 task 19: code cleanup
-NOT DONE:
 task 20: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
+NOT DONE:
 task 21: edit feature
 task 22: add hintContents
 task 23: change labeling according to new suggestions
