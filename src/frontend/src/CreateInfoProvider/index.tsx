@@ -723,6 +723,9 @@ export const CreateInfoProvider = () => {
                         listItems={listItems}
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 )
             case 4:

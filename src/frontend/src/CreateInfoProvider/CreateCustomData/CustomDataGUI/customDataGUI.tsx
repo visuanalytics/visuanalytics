@@ -33,7 +33,7 @@ interface CustomDataGUIProps {
     handleLeftParen: (paren: string) => void;
     handleDelete: () => void;
     fullDelete: () => void;
-    deleteCustomData: (formelName: string) => void;
+    deleteCustomDataCheck: (formelName: string) => void;
     handleSave: (formel: string) => void;
     dataFlag: boolean;
     opFlag: boolean;
@@ -95,7 +95,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} onClick={() => {setDeleteDialogOpen(true); setCurrentDeleteName(data)}}>
+                    <IconButton edge={"end"} onClick={() => {props.deleteCustomDataCheck(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
@@ -295,48 +295,6 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     </Box>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => {
-                setDeleteDialogOpen(false);
-                window.setTimeout(() => {
-                    setCurrentDeleteName("");
-                }, 200);
-            }} aria-labelledby="deleteDialog-title"
-                    open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
-                    Formel "{currentDeleteName}" wirklich löschen?
-                </DialogTitle>
-                <DialogContent dividers>
-                    <Typography gutterBottom>
-                        "{currentDeleteName}" wird unwiderruflich gelöscht.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Grid container justify="space-between">
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        setDeleteDialogOpen(false);
-                                        setCurrentDeleteName("");
-                                    }}>
-                                abbrechen
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        props.deleteCustomData(currentDeleteName);
-                                        setDeleteDialogOpen(false);
-                                        window.setTimeout(() => {
-                                            setCurrentDeleteName("");
-                                        }, 200);
-                                    }}
-                                    className={classes.redDeleteButton}>
-                                Löschen bestätigen
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </DialogActions>
-            </Dialog>
         </React.Fragment>
     );
 };
