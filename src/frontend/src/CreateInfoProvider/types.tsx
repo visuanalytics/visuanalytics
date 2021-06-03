@@ -128,7 +128,7 @@ export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
     dateLabels?: boolean;
-    plots: {
+    plot: {
         type: string;
         x: Array<number>;
         y: string;

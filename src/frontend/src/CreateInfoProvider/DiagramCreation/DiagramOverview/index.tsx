@@ -114,9 +114,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             body: JSON.stringify({
                 type: "diagram_custom",
                 diagram_config: {
-                    infoProviderName: infoProviderName,
+                    infoprovider: infoProviderName,
                     type: "custom",
                     name: selectedDiagram.name,
+                    sourceType: selectedDiagram.sourceType,
                     plots: createPlots(selectedDiagram)
                 }
             }),

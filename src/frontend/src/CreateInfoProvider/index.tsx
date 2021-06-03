@@ -353,6 +353,7 @@ export const CreateInfoProvider = () => {
      */
     const handleSuccess = (jsonData: any) => {
       clearSessionStorage();
+      components?.setCurrent("dashboard")
     }
 
     /**
@@ -487,7 +488,7 @@ export const CreateInfoProvider = () => {
                     const plots = {
                         customLabels: item.customLabels,
                         primitive: !Array.isArray(item.listItem.value),
-                        plots: {
+                        plot: {
                             type: type,
                             x: Array.from(Array(diagram.amount).keys()),
                             y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
@@ -508,7 +509,7 @@ export const CreateInfoProvider = () => {
                 diagram.historizedObjects.forEach((item) => {
                     const plots = {
                         dateLabels: item.dateLabels,
-                        plots: {
+                        plot: {
                             type: type,
                             x: Array.from(Array(diagram.amount).keys()),
                             y: item.name,
