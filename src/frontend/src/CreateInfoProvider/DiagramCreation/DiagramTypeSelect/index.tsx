@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Collapse from "@material-ui/core/Collapse";
-import {ListItemRepresentation, uniqueId} from "../../index";
+import {ListItemRepresentation, uniqueId} from "../../types";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControl from "@material-ui/core/FormControl";
 import Box from "@material-ui/core/Box";
@@ -15,7 +15,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../types";
 
 
 interface DiagramTypeSelectProps {

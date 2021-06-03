@@ -4,29 +4,26 @@ import {StrArg} from "./CustomDataGUI/formelObjects/StrArg";
 import {useStyles} from "../style";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import {SelectedDataItem} from "../index";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
+import {customDataBackendAnswer, ListItemRepresentation, SelectedDataItem} from "../types";
+import {getListItemsNames} from "../helpermethods";
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
     backHandler: () => void;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
-    customData: Array<formelObj>;
-    setCustomData: (array: Array<formelObj>) => void;
+    customData: Array<FormelObj>;
+    setCustomData: (array: Array<FormelObj>) => void;
     reportError: (message: string) => void;
+    listItems: Array<ListItemRepresentation>;
+    historizedData: Array<string>;
+    setHistorizedData: (array: Array<string>) => void;
 }
 
-/**
- * Defines the type that is expected for the backends answer to our request
- */
-type requestBackendAnswer = {
-    accepted: boolean
-    //error: string
-}
 
 export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
@@ -48,23 +45,23 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(new Array<StrArg>(0));
 
     /**
-     * dataFlag represents the status of dataButtons. If it ist true the dataButtons will be disabled.
+     * dataFlag represents the status of dataButtons. If it is true, the dataButtons will be disabled.
      */
     const [dataFlag, setDataFlag] = React.useState<boolean>(false);
     /**
-     * opFlag represents the status of OperatorButtons. If it ist true the OperatorButtons will be disabled.
+     * opFlag represents the status of OperatorButtons. If it is, true the OperatorButtons will be disabled.
      */
     const [opFlag, setOpFlag] = React.useState<boolean>(true);
     /**
-     * numberFlag represents the status of NumberButtons. If it ist true the NumberButtons will be disabled.
+     * numberFlag represents the status of NumberButtons. If it is, true the NumberButtons will be disabled.
      */
     const [numberFlag, setNumberFlag] = React.useState<boolean>(false);
     /**
-     * rightParenFlag represents the status of rightParenButton. If it ist true the rightParenButton will be disabled.
+     * rightParenFlag represents the status of rightParenButton. If it is, true the rightParenButton will be disabled.
      */
     const [rightParenFlag, setRightParenFlag] = React.useState<boolean>(false);
     /**
-     * leftParenFlag represents the status of leftParenButton. If it ist true the leftParenButton will be disabled.
+     * leftParenFlag represents the status of leftParenButton. If it is, true the leftParenButton will be disabled.
      */
     const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(false);
 
@@ -181,7 +178,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     /**
      * Handler for the Delete-Button. There is a different procedure depending on the StrArg-Object that has to be deleted.
      * To achieve that the flags in StrArg will be tested.
-     * If dataAsObj holds only on StrArg or ist empty fullDelete() will be called.
+     * If dataAsObj holds only on StrArg or is empty fullDelete() will be called.
      */
     const handleDelete = () => {
 
@@ -268,20 +265,29 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomData = (formelName: string) => {
-
+        //delete the data from the customData-Array
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formelName) {
                 const arCopy = props.customData.slice();
                 arCopy.splice(i, 1);
                 props.setCustomData(arCopy);
-                return
+                break;
             }
         }
-
+        //delete it also from historizedData if it is used there
+        props.historizedData.forEach((item) => {
+            if(item===formelName) {
+                props.setHistorizedData(props.historizedData.filter((item) => {
+                    return item!==formelName;
+                }))
+                return;
+            }
+        })
     }
 
     /**
-     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty. Also checks if the name is already in use.
+     * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty.
+     * Also checks if the name is already in use for another formula or in any of the data provided by the api
      * Saves the formel in CustomData and refreshes the Input-Box.
      * @param formel the name of the formel
      */
@@ -290,9 +296,16 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
         }
+        //TODO: explain in documentation why this is not checked on every input in the TextField - takes up too much computation on larger data sets
+        //check for duplicates in api names
+        if(getListItemsNames(props.listItems).includes(formel)) {
+            props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")
+            return;
+        }
+        //check for duplicates in formula names
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formel) {
-                props.reportError('Variable ist schon vergeben!');
+                props.reportError('Fehler: Name is schon an eine andere Formel vergeben!');
                 return;
             }
         }
@@ -317,13 +330,13 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      */
     const handleSuccess = (jsonData: any) => {
 
-        const data = jsonData as requestBackendAnswer;
+        const data = jsonData as customDataBackendAnswer;
 
         console.log(data.accepted)
 
         if (data.accepted) {
             const arCopy = props.customData.slice();
-            arCopy.push(new formelObj(name, input));
+            arCopy.push(new FormelObj(name, input));
             props.setCustomData(arCopy);
             fullDelete();
             setName('');
@@ -395,7 +408,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                             zurück
                         </Button>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.blockableButtonSecondary}>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 disabled={!(rightParenCount >= leftParenCount) || opFlag}
                                 onClick={() => handleSave(name)}>

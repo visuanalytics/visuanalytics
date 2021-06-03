@@ -1,7 +1,6 @@
 import React from "react";
 import {useStyles} from "../../style";
 import Grid from "@material-ui/core/Grid";
-import {diagramType} from "../../../index";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -9,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import {InsertEmoticon, BugReport, Face, LinkedCamera, MailOutline} from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import {Alert} from "@material-ui/lab";
-import {ArrayDiagramProperties} from "../../index";
+import {ArrayDiagramProperties, diagramType} from "../../../types";
 import {FormControlLabel} from "@material-ui/core";
 
 interface BasicDiagramSettingsProps {

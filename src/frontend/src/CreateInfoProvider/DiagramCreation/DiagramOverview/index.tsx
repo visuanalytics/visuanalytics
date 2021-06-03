@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from "react";
 import {useStyles} from "../style";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {Diagram, diagramType} from "../../index";
+import {Diagram, diagramType, Plots} from "../../types";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -13,7 +13,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import ImageIcon from '@material-ui/icons/Image';
-import {Plots} from "../index";
 
 interface DiagramOverviewProps {
     continueHandler: () => void;
@@ -115,9 +114,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             body: JSON.stringify({
                 type: "diagram_custom",
                 diagram_config: {
-                    infoProviderName: infoProviderName,
+                    infoprovider: infoProviderName,
                     type: "custom",
                     name: selectedDiagram.name,
+                    sourceType: selectedDiagram.sourceType,
                     plots: createPlots(selectedDiagram)
                 }
             }),

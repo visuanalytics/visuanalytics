@@ -10,24 +10,8 @@ import Button from "@material-ui/core/Button";
 import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
+import {answer, fetchAllBackendAnswer, jsonRef} from "../../types";
 
-/**
- * This type is used to correctly handle each single infoprovider from the response from the backend.
- */
-export type jsonRef = {
-    infoprovider_id: number;
-    infoprovider_name: string;
-}
-
-/**
- * This type is needed because the answer of the backend consists of a list of jsonRef's.
- */
-type requestBackendAnswer = Array<jsonRef>
-
-//bisher nur zum testen verwendet.
-type answer = {
-    err_msg: string;
-}
 
 /**
  * Renders the whole infoprovider-overview component except the infoprovider-list
@@ -98,11 +82,13 @@ export const InfoProviderOverview: React.FC = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted) handleSuccessFetchAll(data)
+            if (isMounted.current) {
+                handleSuccessFetchAll(data)
+            }
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if (isMounted) handleErrorFetchAll(err)
+            if (isMounted.current) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
     }, [])
 
@@ -138,7 +124,7 @@ export const InfoProviderOverview: React.FC = () => {
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchAll = (jsonData: any) => {
-        const data = jsonData as requestBackendAnswer;
+        const data = jsonData as fetchAllBackendAnswer;
         setInfoProvider(data);
     }
 
@@ -277,7 +263,13 @@ export const InfoProviderOverview: React.FC = () => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                <Dialog onClose={() => {
+                    setRemoveDialogOpen(false);
+                    window.setTimeout(() => {
+                        setCurrentDeleteId(0)
+                        setCurrentDeleteName("");
+                    }, 200);
+                }} aria-labelledby="deleteDialog-title"
                         open={removeDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
                         Infoprovider "{currentDeleteName}" wirklich löschen?
@@ -291,7 +283,7 @@ export const InfoProviderOverview: React.FC = () => {
                         <Grid container justify="space-between">
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
-                                        onClick={() => setRemoveDialogOpen(false)}>
+                                        onClick={() => {setRemoveDialogOpen(false); setCurrentDeleteName("");}}>
                                     abbrechen
                                 </Button>
                             </Grid>

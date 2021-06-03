@@ -1,7 +1,7 @@
 /**
  * Represents a formula in an Object.
  */
-export class formelObj {
+export class FormelObj {
 
     /**
      * The variable name of the formula

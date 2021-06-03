@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource} from "../index"
+import {DataSource, Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -11,6 +11,8 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
 /* TODO: following steps for diagram creation:
@@ -41,54 +43,7 @@ task 22: add hintContents
 task 23: change labeling according to new suggestions
  */
 
-//TODO: document the changes made to have multiple dataSources
 
-/**
- * Represents an array selected for diagram creation and holds attributes for all settings
- */
-export type ArrayDiagramProperties = {
-    listItem: ListItemRepresentation;
-    numericAttribute: string;
-    stringAttribute: string;
-    labelArray: Array<string>;
-    color: string;
-    numericAttributes: Array<ListItemRepresentation>;
-    stringAttributes: Array<ListItemRepresentation>
-    customLabels: boolean;
-}
-
-/**
- * Represents historized data selected for diagram creation and holds attributes for all settings
- */
-export type HistorizedDiagramProperties = {
-    name: string;
-    labelArray: Array<string>;
-    color: string;
-    intervalSizes: Array<number>;
-    dateLabels: boolean;
-    dateFormat: string;
-}
-
-/**
- * Plot typed which is used for sending diagrams to the backend in fitting format.
- */
-export type Plots = {
-    customLabels?: boolean;
-    primitive?: boolean;
-    dateLabels?: boolean;
-    plots: {
-        type: string;
-        x: Array<number>;
-        y: string;
-        color: string;
-        numericAttribute?: string;
-        stringAttribute?: string;
-        dateFormat?: string;
-        x_ticks: {
-            ticks: Array<string>;
-        };
-    };
-}
 
 
 interface DiagramCreationProps {
@@ -99,6 +54,7 @@ interface DiagramCreationProps {
     setDiagrams: (array: Array<Diagram>) => void;
     reportError: (message: string) => void;
     infoProviderName: string;
+    createPlots: (diagram: Diagram) => Array<Plots>;
 }
 
 
@@ -108,6 +64,8 @@ interface DiagramCreationProps {
 export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const classes = useStyles();
 
+    // Extract createPlots from props
+    const createPlots = props.createPlots;
     //holds the current step in the diagram creation process
     const [diagramStep, setDiagramStep] = React.useState(0);
     //holds the source type currently used
@@ -198,81 +156,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
-    /**
-     * Creates the plots array for a selected diagram to be sent to the backend.
-     * @param diagram the diagram to be transformed
-     */
-    const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
-        const plotArray: Array<Plots> = [];
-        let type: string;
-        //transform the type to the string the backend needs
-        switch (diagram.variant) {
-            case "verticalBarChart": {
-                type = "bar";
-                break;
-            }
-            case "horizontalBarChart": {
-                type = "barh";
-                break;
-            }
-            case "dotDiagram": {
-                type = "scatter";
-                break;
-            }
-            case "lineChart": {
-                type = "line";
-                break;
-            }
-            case "pieChart": {
-                type = "pie";
-                break;
-            }
-        }
-        if (diagram.sourceType === "Array") {
-            if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        } else {
-            //"Historized"
-            if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
-                    const plots = {
-                        dateLabels: item.dateLabels,
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.name,
-                            color: item.color,
-                            dateFormat: item.dateFormat,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        }
-        return plotArray;
-    }, [amount])
+
 
     /**
      * Handler for the return of a successful call to the backend (posting test diagram)
@@ -328,7 +212,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         variant: diagramType,
                         sourceType: diagramSource,
                         historizedObjects: historizedObjects,
-                        arrayObjects: arrayObjects
+                        arrayObjects: arrayObjects,
+                        amount: amount
                     })
                 }
             }),
@@ -346,7 +231,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -366,7 +251,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             variant: diagramType,
             sourceType: diagramSource,
             historizedObjects: historizedObjects,
-            arrayObjects: arrayObjects
+            arrayObjects: arrayObjects,
+            amount: amount
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);

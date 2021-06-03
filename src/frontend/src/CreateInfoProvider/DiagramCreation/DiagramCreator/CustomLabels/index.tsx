@@ -5,7 +5,7 @@ import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
-import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../index";
+import {ArrayDiagramProperties, HistorizedDiagramProperties} from "../../../types";
 import {FormControlLabel} from "@material-ui/core";
 
 interface CustomLabelsProps {
