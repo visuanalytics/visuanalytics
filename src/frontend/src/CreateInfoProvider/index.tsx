@@ -705,6 +705,9 @@ export const CreateInfoProvider = () => {
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
                         setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 );
             case 3:

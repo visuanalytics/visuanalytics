@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
-import {ListItemRepresentation, SelectedDataItem} from "../types";
+import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
 import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
@@ -29,6 +29,9 @@ interface DataSelectionProps {
     setHistorizedData: (array: Array<string>) => void;
     customData: Array<FormelObj>;
     setCustomData: (array: Array<FormelObj>) => void;
+    diagrams: Array<Diagram>
+    setDiagrams: (array: Array<Diagram>) => void;
+    apiName: string;
 }
 
 
@@ -231,13 +234,46 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             })
             removalObj.formulasToRemove = formulasToRemove;
             //check if diagrams need to be deleted
-            const diagramsToRemove: Array<string> = [];
-            //TODO: implement searching all diagrams depending on the deleted items and deleted formula
-            removalObj.diagramsToRemove = diagramsToRemove;
             //check if any historized data needs to be removed
             removalObj.historizedToRemove = props.historizedData.filter((item) => {
                 return missingSelections.includes(item)||removalObj.formulasToRemove.includes(item);
             })
+            const diagramsToRemove: Array<string> = [];
+            //since arrays cannot be selected or be formula, we only need to check diagrams based on historized data
+            removalObj.formulasToRemove.forEach((formula) => {
+                //check for each formula if it is used in historized diagrams
+                props.diagrams.forEach((diagram) => {
+                    //only diagrams with historized data are relevant
+                    if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                        for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                            const historized = diagram.historizedObjects[index];
+                            //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
+                            //it is also checked if the same diagram has already been marked by another formula
+                            if(props.apiName + "|" + formula===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                                diagramsToRemove.push(diagram.name);
+                                break;
+                            }
+                        }
+                    }
+                })
+            })
+            //check the same for all historized data that has to be removed
+            removalObj.historizedToRemove.forEach((historizedData) => {
+                props.diagrams.forEach((diagram) => {
+                    if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                        for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                            const historized = diagram.historizedObjects[index];
+                            //the dataSource name needs to be added in front of the historized element name since historizedObjects has dataSource name in it paths too
+                            //it is also checked if the same diagram has already been marked by another formula or historized data
+                            if(props.apiName + "|" + historizedData===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                                diagramsToRemove.push(diagram.name);
+                                break;
+                            }
+                        }
+                    }
+                })
+            })
+            removalObj.diagramsToRemove = diagramsToRemove;
         }
         return removalObj;
     }
@@ -262,8 +298,9 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         props.setCustomData(props.customData.filter((formula) => {
             return !formulasToRemove.includes(formula.formelName);
         }));
-        //TODO: delete diagrams
-
+        props.setDiagrams(props.diagrams.filter((diagram) => {
+            return !diagramsToRemove.includes(diagram.name);
+        }))
     }
 
     //TODO: document this and the other methods that belong to the removal mechanism
