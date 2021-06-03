@@ -25,6 +25,7 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
+    listItems: Array<ListItemRepresentation>
 }
 
 export type DataSourceKey = {
