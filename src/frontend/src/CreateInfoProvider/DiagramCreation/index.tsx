@@ -234,7 +234,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore

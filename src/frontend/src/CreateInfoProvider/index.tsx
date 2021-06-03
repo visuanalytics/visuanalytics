@@ -422,7 +422,7 @@ export const CreateInfoProvider = () => {
         return backendDataSources;
     }
 
-    type BackendDiagram = {
+    /*type BackendDiagram = {
         type: string;
         diagram_config: {
             type: string;
@@ -431,7 +431,7 @@ export const CreateInfoProvider = () => {
             sourceType: string;
             plots: Array<Plots>;
         }
-    }
+    }*/
 
     const createBackendDiagrams = () => {
         //TODO: possibly find smarter solution without any type
