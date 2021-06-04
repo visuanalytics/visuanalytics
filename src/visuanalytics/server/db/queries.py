@@ -482,7 +482,7 @@ def _generate_transform(formulas, old_transform):
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part = generate_step_transform(formula["formula"], formula["name"])
+        transform_part = generate_step_transform(formula["formelString"], formula["formelName"])
         if transform_part is None:
             return None
         transform += transform_part

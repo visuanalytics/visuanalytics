@@ -152,9 +152,12 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_test_diagram(values):
-    values["plot"]["y"] = np.random.randint(1, 20, 15)
-    values.pop("x", None)
-    fig, ax = create_plot(values, None, None, get_xy=False)
+    print("values", values)
+    for plot in values["diagram_config"]["plots"]:
+        print("plot", plot)
+        plot["plots"]["y"] = np.random.randint(1, 20, 15)
+        plot["plots"].pop("x", None)
+        fig, ax = create_plot(plot, None, None, get_xy=False)
     file = get_test_diagram_resource_path()
     title = values.get("title", None)
     x_label = values.get("x_label", None)
@@ -215,7 +218,7 @@ def bar_plot(values, fig=None, ax=None):
 
 
 def barh_plot(values, fig=None, ax=None):
-    y = values.get("y", np.arange(len(values["x"])))
+    y = values.get("x", np.arange(len(values["y"])))
     height = values.get("height", 0.5)
     align = values.get("align", "center")
     color = values.get("color", default_color)
@@ -224,8 +227,8 @@ def barh_plot(values, fig=None, ax=None):
 
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-        ax.set_xticks(np.concatenate((np.array([0]), x)))
-    ax.barh(y=y, width=values["x"], height=height, align=align, color=color, edgecolor=edgecolor, linewidth=linewidth)
+        ax.set_yticks(np.concatenate((np.array([0]), y)))
+    ax.barh(y=y, width=values["y"], height=height, align=align, color=color, edgecolor=edgecolor, linewidth=linewidth)
     return fig, ax
 
 
@@ -266,7 +269,7 @@ def scatter_plot(values, fig=None, ax=None):
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
         ax.set_xticks(np.concatenate((np.array([0]), x)))
-    if area.any():
+    if area and area.any():
         ax.scatter(x, values["y"], marker=marker, s=area, c=color)
     else:
         ax.scatter(x, values["y"], marker=marker, c=color)
@@ -293,33 +296,33 @@ def filled_plot(values, fig=None, ax=None):
 
 
 def pie_plot(values, fig=None, ax=None):
-    x = values["x"]
-    explode = np.zeros(len(values["x"]))
+    y = values["y"]
+    explode = np.zeros(len(values["y"]))
     type_ = values.get("explode", None)
     if type_:
         type_ = type_["type"]
         explode_value = 0.1 if not values["shadow"] else 0.2
         if type_ == "min":
-            explode[x.index(min(x))] = explode_value
+            explode[y.index(min(y))] = explode_value
         elif type_ == "max":
-            explode[x.index(max(x))] = explode_value
+            explode[y.index(max(y))] = explode_value
         elif type_ == "list":
             for index in type_["indices"]:
                 explode[index] = explode_value
     shadow = values.get("shadow", False)
     colors = values.get("colors", None)
-    labels = values.get("labels", np.arange(len(x)))
+    labels = values.get("labels", np.arange(len(y)))
     # textprobs = values.get("textprobs", default_textprobs)
     donut_style = values.get("donut_style", None)
 
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-        ax.set_xticks(np.concatenate((np.array([0]), x)))
+        ax.set_xticks(np.concatenate((np.array([0]), y)))
     if colors:
-        ax.pie(x, explode=explode, autopct="%1.1f%%", shadow=shadow, colors=colors,
+        ax.pie(y, explode=explode, autopct="%1.1f%%", shadow=shadow, colors=colors,
                labels=labels)  # , textprobs=textprobs)
     else:
-        ax.pie(x, explode=explode, autopct="%1.1f%%", shadow=shadow, labels=labels)  # , textprobs=textprobs)
+        ax.pie(y, explode=explode, autopct="%1.1f%%", shadow=shadow, labels=labels)  # , textprobs=textprobs)
     if donut_style:
         circle = plt.Circle((0, 0), donut_style.get("area", 0.25), color=donut_style.get("color", "#ffffff"))
         p = plt.gcf()
@@ -355,11 +358,12 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
 
 
 def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None):
-    t = values["plot"]["type"]
+    t = values["plots"]["type"]
     if get_xy:
-        values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+        values_new = get_x_y(values["plots"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
     else:
-        values_new = values["plot"]
+        values_new = values["plots"]
+    print("values_new", values_new)
     if t == "line":
         fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar":
@@ -378,7 +382,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         fig, ax = pie_plot(values=values_new, fig=fig, ax=ax)
 
     x_ticks = values_new.get("x_ticks", None)
-    if x_ticks:
+    if x_ticks and len(x_ticks) > 1:
         print("x_ticks", x_ticks)
         ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
                                color=x_ticks.get("color", default_color))
