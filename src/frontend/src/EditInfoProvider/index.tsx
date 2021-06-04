@@ -1,6 +1,6 @@
 import React from "react";
 import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource, Schedule, SelectedDataItem} from "../CreateInfoProvider";
+import {DataSource, SelectedDataItem} from "../CreateInfoProvider";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
@@ -9,7 +9,6 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {Grid} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
-import {useStyles} from "./style";
 import {ComponentContext} from "../ComponentProvider";
 import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
 import {EditCustomData, formelContext} from "./EditCustomData/EditCustomData";
@@ -21,18 +20,23 @@ interface EditInfoProviderProps {
     infoProvider?: InfoProviderObj;
 }
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, infoProvider}) => {
-
-    const classes = useStyles();
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
+    /**
+     * The name of the infoprovider that is being edited
+     */
     //infoProvider? infoProvider.name : "TristanTest"
     const [infoProvName, setInfoProvName] = React.useState("TristanTest");
 
-    //infoProvider? infoProvider.dataSources : new Array<DataSource>()
+    /**
+     * The array with DataSources from the infoprovider that is being edited.
+     * One DataSource-object holds all information from one api.
+     */
+    //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
+    const [infoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -77,14 +81,22 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
         },
     ));
 
+    /**
+     * The array with diagrams from the Infoprovider that is being edited.
+     */
     //TODO: change to Diagram
     const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
 
+    /**
+     * The index to select the right DataSource that is wanted to edit
+     */
     const [selectedDataSource, setSelectedDataSource] = React.useState(0);
 
+    /**
+     * formel-information to initialize the EditSingleFormelGUI
+     */
     const [formelInformation, setFormelInformation] = React.useState<formelContext>({
         formelName: "",
-        formelString: "",
         parenCount: 0,
         formelAsObjects: new Array<StrArg>(),
         dataFlag: false,
@@ -108,6 +120,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
         "Historisierung"
     ];
 
+    /**
+     * Checks if historizedData in the selected DataSource holds any content.
+     * If it is empty, the schedule-object will also be set to empty.
+     * Through delete options historizedData can become empty.
+     */
     const checkForHistorizedData = () => {
 
         if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
@@ -130,7 +147,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
 
     /**
      * Handler for continue button that is passed to all sub-component as props.
-     * Increments the step.
+     * Increments the step by the given index.
      */
     const handleContinue = (index: number) => {
         setStep(step + index);
@@ -138,13 +155,20 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
 
     /**
      * Handler for back button that is passed to all sub-components as props.
-     * Decrements the step or returns to the dashboard if the step was 0.
+     * Decrements the step by the given index or returns to the dashboard if the step was 0.
      */
     const handleBack = (index: number) => {
+        if (step === 0) {
+            components?.setCurrent("dashboard")
+            return;
+        }
         setStep(step - index)
     }
 
-
+    /**
+     * Method to send the edited infoprovider to the backend.
+     * The backend will now update the infoprovider with the new data.
+     */
     const editInfoProvider = () => {
         //TODO: Post the edited Infoprovider!
     }
@@ -159,6 +183,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                 return (
                     <EditSettingsOverview
                         continueHandler={(index: number) => handleContinue(index)}
+                        handleBack={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
@@ -226,7 +251,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, i
                 </Stepper>
             </Container>
             {selectContent(step)}
-            {infoProvId}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

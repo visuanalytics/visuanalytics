@@ -10,7 +10,6 @@ import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {formelContext} from "../EditCustomData";
 
 interface EditSingleFormelGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -229,14 +228,14 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                 <Grid item container xs={9} justify={"space-around"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.blockableButtonPrimary}
+                                className={classes.delete}
                                 onClick={() => props.handleDelete()}>
                             Zurück
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.blockableButtonPrimary}
+                                className={classes.delete}
                                 onClick={() => props.fullDelete()}>
                             Löschen
                         </Button>

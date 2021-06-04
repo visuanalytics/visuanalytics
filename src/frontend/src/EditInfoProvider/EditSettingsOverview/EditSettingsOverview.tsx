@@ -1,6 +1,5 @@
 import React from "react";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
-import {hintContents} from "../../util/hintContents";
 import {
     Dialog,
     DialogActions,
@@ -25,6 +24,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 interface EditSettingsOverviewProps {
     continueHandler: (index: number) => void;
+    handleBack: (index: number) => void;
     editInfoProvider: () => void;
     infoProvName: string;
     setInfoProvName: (name: string) => void;
@@ -37,12 +37,13 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
 
     const classes = useStyles();
 
-    const components = React.useContext(ComponentContext);
-
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
+    /**
+     * Method that is called when the use confirms the cancel in the confirm-cancel-dialog
+     */
     const confirmCancel = () => {
-        components?.setCurrent("dashboard")
+        props.handleBack(1);
     }
 
     /**

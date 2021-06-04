@@ -19,9 +19,12 @@ interface EditCustomDataProps {
     setFormelInformation: (formel: formelContext) => void;
 }
 
+//TODO: find better place for type declaration.
+/**
+ * A type to hold all important information to initialize the EditSingleDataGUI correctly
+ */
 export type formelContext = {
     formelName: string
-    formelString: string;
     parenCount: number;
     formelAsObjects: Array<StrArg>;
     dataFlag: boolean;
@@ -35,19 +38,37 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
     const classes = useStyles();
 
+    /**
+     * boolean that is used to open and close the remove-dialog
+     */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
+    /**
+     * the formel-name from the formel that should be deleted
+     */
     const [currentDeleteFormelName, setCurrentDeleteFormelName] = React.useState("");
 
+    /**
+     * boolean that ist used to open and close the edit-dialog
+     */
     const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
+    /**
+     * the formel.name from the formel that should be edited
+     */
     const [currentEditFormel, setCurrentEditFormel] = React.useState(new formelObj("", ""));
 
+    /**
+     * This method receives the backend-representation from a formula and will convert this information into an formelContext-object.
+     * @param formelName The name from the formula.
+     * @param formelString The actual formula as string.
+     */
     const makeFormelContext = (formelName: string, formelString: string): formelContext => {
 
+        //"empty" formelContext-object
+        //all parameters will be set in this method
         let finalFormel: formelContext = {
             formelName: "",
-            formelString: "",
             parenCount: 0,
             formelAsObjects: new Array<StrArg>(),
             dataFlag: false,
@@ -65,13 +86,15 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
         //split the string at each blank and create an array with every single word
         let formelWithoutBlank = formelString.split(" ");
-        //-> "25" | "formel1_2" | "/" | "(3" | "*" | "(Array2|Data0" | "-" | "5))"
 
+        //-> "25" | "formel1_2" | "/" | "(3" | "*" | "(Array2|Data0" | "-" | "5))"
+        //-> for each word in here ->
         formelWithoutBlank.forEach((item) => {
 
             let notPushed: boolean = true;
 
-            while (checkLeftParen(item)) {
+            //while there are "(" in the item-string
+            while (item.includes('(')) {
                 formelAsObj.push(new StrArg('(', false, false, true, false))
                 item = item.replace('(', '');
                 finalFormel.parenCount += 1;
@@ -79,47 +102,53 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
             let countClosingParens = 0;
 
-            while (checkRightParen(item)) {
+            //while there are ")" in the item-string
+            while (item.includes(')')) {
                 countClosingParens += 1;
                 item = item.replace(')', '');
             }
 
+            //if the item-string is an operator
             if (checkOperator(item)) {
+                //if this fails the an operator-character has to be ignored because it is part of the formel-name
                 if (item.length <= 1) {
                     formelAsObj.push(new StrArg(item, true, false, false, false))
                     notPushed = false;
                 }
             }
 
+            //if the item string consists only of numbers
             if (checkFindOnlyNumbers(item)) {
-                //item is a Number
                 formelAsObj.push(new StrArg(item, false, false, false, true))
                 notPushed = false;
             }
 
+            //if there wasn't pushed an StrArg-object into formelAsObj until now
             if (notPushed) {
                 formelAsObj.push(new StrArg(item, false, false, false, false));
             }
 
+            //for each counted closing-parens push one StrArg with ")" into formelAsObj
             for (let i = 1; i <= countClosingParens; i++) {
                 formelAsObj.push(new StrArg(')', false, true, false, false));
             }
 
         });
 
+        //assign the created formelAsObj-array
         finalFormel.formelAsObjects = formelAsObj;
 
+        //assign the correct flags
         setRightFlags(finalFormel);
 
-        console.log(finalFormel.formelString + " -> formel!!")
-        console.log(finalFormel.parenCount + " parens!!")
-        finalFormel.formelAsObjects.forEach((item) => {
-            console.log(item.stringRep);
-        })
-
+        //return finalFormel
         return finalFormel;
     }
 
+    /**
+     * Receives a string and checks if it consist only of numbers (0-9).
+     * @param arg The String to be checked.
+     */
     const checkFindOnlyNumbers = (arg: string): boolean => {
 
         let onlyNumbers: boolean = true;
@@ -145,6 +174,11 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         return onlyNumbers;
     }
 
+    /**
+     * Receives a string and checks if it consist only of operators (+,-,*,/,%).
+     * Only the first character hast to be checked because an operator is only one character.
+     * @param arg The String to be checked.
+     */
     const checkOperator = (arg: string) => {
         return (
             arg.charAt(0) === '+' ||
@@ -155,32 +189,10 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         );
     }
 
-    const checkLeftParen = (arg: string) => {
-
-        for (let i: number = 0; i <= arg.length - 1; i++) {
-
-            if (arg.charAt(i) === '(') {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
-    const checkRightParen = (arg: string) => {
-
-        for (let i: number = 0; i <= arg.length - 1; i++) {
-
-            if (arg.charAt(i) === ')') {
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
+    /**
+     * Receives a formelContext-object an sets the deciding flags for the EditSingleDataGUI
+     * @param formel The formelContext where the flags has to be set
+     */
     const setRightFlags = (formel: formelContext) => {
 
         if (formel.formelAsObjects[formel.formelAsObjects.length - 1].isNumber) {
@@ -199,11 +211,19 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
     }
 
+    /**
+     * The method sets the currentDeleteName and opens the remove-dialog
+     * @param name The name of the formula that should be deleted.
+     */
     const handleDelete = (name: string) => {
         setCurrentDeleteFormelName(name);
         setRemoveDialogOpen(true);
     }
 
+    /**
+     * This method is called when the user confirms the delete of an formula.
+     * The formula will be deleted from customData and historizedData
+     */
     const confirmDelete = () => {
 
         //TODO: maybe implement a better solution for better runtime
@@ -221,19 +241,47 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         }
 
         props.checkForHistorizedData();
+
         setRemoveDialogOpen(false);
         setCurrentDeleteFormelName("");
     }
 
+    /**
+     * The method sets the currentEditName and opens the edit-dialog
+     * @param formel The name of the formula that should be edited.
+     */
     const handleEdit = (formel: formelObj) => {
         setCurrentEditFormel(formel);
         setEditDialogOpen(true);
     }
 
+    /**
+     * This method is called when the user confirms the edit-dialog.
+     * formelInformation will be set correctly through makeFormelContext
+     */
     const confirmEdit = () => {
         props.setFormelInformation(makeFormelContext(currentEditFormel.formelName, currentEditFormel.formelString));
         setEditDialogOpen(false);
+        setCurrentEditFormel(new formelObj("", ""));
         props.continueHandler(1);
+    }
+
+    /**
+     * This method is called when the user wants to create a new formula.
+     * The formelContext is here set to starting-conditions because there is no need for a correct initialization.
+     */
+    const handleNewFormel = () => {
+        props.setFormelInformation({
+            formelName: "",
+            parenCount: 0,
+            formelAsObjects: new Array<StrArg>(),
+            dataFlag: false,
+            numberFlag: false,
+            opFlag: true,
+            leftParenFlag: false,
+            rightParenFlag: false
+        });
+        props.continueHandler(1)
     }
 
     return (
@@ -248,6 +296,12 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                 handleDelete={(name: string) => handleDelete(name)}
                                 handleEdit={(formel: formelObj) => handleEdit(formel)}
                             />
+                            <Grid item container xs={12} justify={"center"}>
+                                <Button variant={"contained"} color={"primary"} size={"large"}
+                                        onClick={() => handleNewFormel()}>
+                                    Neue Formel
+                                </Button>
+                            </Grid>
                         </Box>
                     </Grid>
                     <Grid item container xs={12} justify={"space-between"}>

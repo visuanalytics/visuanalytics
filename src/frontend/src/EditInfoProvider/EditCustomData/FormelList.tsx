@@ -12,6 +12,9 @@ interface FormelListProps {
     handleEdit: (formel: formelObj) => void;
 }
 
+/**
+ * Renders the shown list of formula to give an overview over the created formulas.
+ */
 export const FormelList: React.FC<FormelListProps> = (props) => {
 
     const classes = useStyles();
@@ -58,12 +61,12 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
     return (
         <Grid item container xs={12} justify={"center"}>
             <Grid item xs={3}>
-                <List>
+                <List aria-label={"formel-names"}>
                     {props.customDataEdit.map((e) => renderListName(e))}
                 </List>
             </Grid>
             <Grid item xs={9}>
-                <List>
+                <List aria-label={"formel-strings"}>
                     {props.customDataEdit.map((e) => renderListItem(e))}
                 </List>
             </Grid>

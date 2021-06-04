@@ -1,5 +1,4 @@
 import React from "react";
-import {CustomDataGUI} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/customDataGUI";
 import {StrArg} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {useStyles} from "../../style";
 import {hintContents} from "../../../util/hintContents";
@@ -60,10 +59,13 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
      */
     const [name, setName] = React.useState<string>(props.formel.formelName);
 
-    const [oldFormelName, setOldFormelName] = React.useState<string>(props.formel.formelName)
+    /**
+     * holds the old formelName if the actual name is edited.
+     */
+    const [oldFormelName] = React.useState<string>(props.formel.formelName)
 
     /**
-     * An Array filled with StrArg-Objects.
+     * An Array filled with StrArg-Objects that represents the formula.
      */
     const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(props.formel.formelAsObjects);
 
@@ -99,6 +101,9 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
      */
     const [rightParenCount, setRightParenCount] = React.useState<number>(props.formel.parenCount);
 
+    /**
+     * boolean that is used to open and close the cancel-dialog
+     */
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
     /**
@@ -281,17 +286,10 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             return
         }
 
-        //funktioniert nur, wenn das backend läuft:
-       // sendTestData();
+
+        //sendTestData();
         handleSuccess({accepted: true});
-        //nur übergangsweise, zum testen
-        /*
-        const arCopy = props.customData.slice();
-        arCopy.push(new formelObj(name, input));
-        props.setCustomData(arCopy);
-        fullDelete();
-        setName('');
-        */
+
     }
 
     /**
@@ -305,7 +303,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
         console.log(data.accepted)
 
-        if ((name !== oldFormelName) && searchForNameDuplicate(name)) {
+        if ((oldFormelName.length >= 1) && (name !== oldFormelName) && searchForNameDuplicate(name)) {
             props.reportError('Name bereits vergeben!');
             return
         }
@@ -355,6 +353,10 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
         }, handleSuccess, handleError
     );
 
+    /**
+     * The method receives the new name for an formula and checks if the name is already in use in customData or selectedData
+     * @param newName The new name that has to be checked.
+     */
     const searchForNameDuplicate = (newName: string): boolean => {
         let foundDuplicate: boolean = false;
 
@@ -362,6 +364,9 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             if (props.infoProvDataSources[props.selectedDataSource].customData[i].formelName === newName) {
                 foundDuplicate = true;
             }
+        }
+
+        for (let i = 0; i <= props.infoProvDataSources[props.selectedDataSource].selectedData.length - 1; i++) {
             if (props.infoProvDataSources[props.selectedDataSource].selectedData[i].key === newName) {
                 foundDuplicate = true;
             }
@@ -403,7 +408,8 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={() => setCancelDialogOpen(true)}>
+                        <Button variant="contained" size="large" color="primary"
+                                onClick={() => setCancelDialogOpen(true)}>
                             abbrechen
                         </Button>
                     </Grid>
