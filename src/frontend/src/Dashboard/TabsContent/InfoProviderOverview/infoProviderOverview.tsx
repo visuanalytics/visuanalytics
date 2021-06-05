@@ -62,15 +62,24 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const [currentDeleteName, setCurrentDeleteName] = React.useState("");
 
+    /**
+     * The id from the infoprovider that should be edited
+     */
     const [currentEditId, setCurrentEditId] = React.useState(0);
 
+    /**
+     * The name from the infoprovider that should be edited
+     */
     const [currentEditName, setCurrentEditName] = React.useState("");
 
     /**
-     * The boolean is used to open the confirm-delete-dialog.
+     * The boolean is used to open and close the confirm-delete-dialog.
      */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
+    /**
+     * The boolean is used to open and close the confirm-edit-dialog.
+     */
     const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
     //TODO: possibly place in higher level component
