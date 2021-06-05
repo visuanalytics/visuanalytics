@@ -8,6 +8,8 @@ import {FormelList} from "./FormelList";
 import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {DataSource} from "../../CreateInfoProvider";
 import {StrArg} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {formelContext} from "../types";
+import {checkFindOnlyNumbers, checkOperator} from "../helpermethods";
 
 interface EditCustomDataProps {
     continueHandler: (index: number) => void;
@@ -17,21 +19,6 @@ interface EditCustomDataProps {
     selectedDataSource: number;
     checkForHistorizedData: () => void;
     setFormelInformation: (formel: formelContext) => void;
-}
-
-//TODO: find better place for type declaration.
-/**
- * A type to hold all important information to initialize the EditSingleDataGUI correctly
- */
-export type formelContext = {
-    formelName: string
-    parenCount: number;
-    formelAsObjects: Array<StrArg>;
-    dataFlag: boolean;
-    numberFlag: boolean;
-    opFlag: boolean;
-    leftParenFlag: boolean;
-    rightParenFlag: boolean;
 }
 
 export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
@@ -86,8 +73,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
         //split the string at each blank and create an array with every single word
         let formelWithoutBlank = formelString.split(" ");
-
         //-> "25" | "formel1_2" | "/" | "(3" | "*" | "(Array2|Data0" | "-" | "5))"
+
         //-> for each word in here ->
         formelWithoutBlank.forEach((item) => {
 
@@ -143,50 +130,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
         //return finalFormel
         return finalFormel;
-    }
-
-    /**
-     * Receives a string and checks if it consist only of numbers (0-9).
-     * @param arg The String to be checked.
-     */
-    const checkFindOnlyNumbers = (arg: string): boolean => {
-
-        let onlyNumbers: boolean = true;
-
-        for (let i: number = 0; i <= arg.length - 1; i++) {
-
-            if (arg.charAt(i) !== '0' &&
-                arg.charAt(i) !== '1' &&
-                arg.charAt(i) !== '2' &&
-                arg.charAt(i) !== '3' &&
-                arg.charAt(i) !== '4' &&
-                arg.charAt(i) !== '5' &&
-                arg.charAt(i) !== '6' &&
-                arg.charAt(i) !== '7' &&
-                arg.charAt(i) !== '8' &&
-                arg.charAt(i) !== '9'
-            ) {
-                onlyNumbers = false;
-            }
-
-        }
-
-        return onlyNumbers;
-    }
-
-    /**
-     * Receives a string and checks if it consist only of operators (+,-,*,/,%).
-     * Only the first character hast to be checked because an operator is only one character.
-     * @param arg The String to be checked.
-     */
-    const checkOperator = (arg: string) => {
-        return (
-            arg.charAt(0) === '+' ||
-            arg.charAt(0) === '-' ||
-            arg.charAt(0) === '*' ||
-            arg.charAt(0) === '/' ||
-            arg.charAt(0) === '%'
-        );
     }
 
     /**

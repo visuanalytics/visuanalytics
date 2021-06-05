@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import {ComponentContext} from "../../ComponentProvider";
 import {DataSource, extractKeysFromSelection} from "../../CreateInfoProvider";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
@@ -37,6 +36,9 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
 
     const classes = useStyles();
 
+    /**
+     * Boolean that is used to open and close the cancel-dialog
+     */
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
 
     /**

@@ -8,9 +8,10 @@ import Grid from "@material-ui/core/Grid";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {DataSource} from "../../../CreateInfoProvider";
-import {formelContext} from "../EditCustomData";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
+import {calculationToString} from "../../helpermethods";
+import {formelContext} from "../../types";
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -33,21 +34,6 @@ type requestBackendAnswer = {
 export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
     const classes = useStyles();
-
-    /**
-     * This method receives an array with string-arguments and creates the output string with makeStringRep()
-     * @param calculation the Array that should be transformed
-     *
-     */
-    const calculationToString = (calculation: Array<StrArg>) => {
-        let stringToShow: string = '';
-
-        for (let i: number = 0; i < calculation.length; i++) {
-            stringToShow = stringToShow + calculation[i].makeStringRep();
-        }
-
-        return stringToShow;
-    }
 
     /**
      * Input is the created formula as a string. It is build with the Buttons.

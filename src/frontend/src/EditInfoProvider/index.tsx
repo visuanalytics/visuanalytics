@@ -11,9 +11,10 @@ import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview"
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
 import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
-import {EditCustomData, formelContext} from "./EditCustomData/EditCustomData";
+import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
+import {formelContext} from "./types";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -106,9 +107,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         rightParenFlag: false
     });
 
-
-
-//the current step of the creation process, numbered by 0 to 5
+    /**
+     * the current step of the creation process, numbered by 0 to 5
+     */
     const [step, setStep] = React.useState(0);
 
     const steps = [
@@ -133,7 +134,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     }
 
-// setup for error notification
+    /**
+     * setup for error notification
+     */
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
         open: false,
         message: "",
