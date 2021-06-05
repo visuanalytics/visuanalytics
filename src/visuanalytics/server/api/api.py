@@ -373,6 +373,107 @@ def testformula():
         return err, 400
 
 
+@api.route("/scene", methods=["POST"])
+def add_scene():
+    scene = request.json
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding a scene"})
+        return err, 400
+
+
+@api.route("/scene/all", methods=["GET"])
+def get_all_scenes():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occuured while loading information about all scenes"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["GET"])
+def get_scene(scene_id):
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading a scene"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["PUT"])
+def update_scene(scene_id):
+    updated_data = request.json
+    try:
+
+        return "Not Inplemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while updating the scene with the ID {scene_id}"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["DELETE"])
+def delete_scene(scene_id):
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {scene_id}"})
+        return err, 400
+
+
+@api.route("/image", methods=["POST"])
+def add_image():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding an image"})
+        return err, 400
+
+
+@api.route("/image/all", methods=["GET"])
+def get_all_images():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
+        return err, 400
+
+
+@api.route("/image/<id>", methods=["DELETE"])
+def delete_image(image_id):
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while deleting an image"})
+        return err, 400
+
+
+@api.route("/thumbnailpreview", methods=["POST"])
+def set_preview():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
+        return err, 400
+
+
 @api.route("/topics", methods=["GET"])
 def topics():
     """
