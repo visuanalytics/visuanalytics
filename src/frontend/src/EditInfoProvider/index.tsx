@@ -12,7 +12,7 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
+import {DataSource, DataSourceKey, Diagram, SelectedDataItem, uniqueId} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditInfoProviderProps {
@@ -37,7 +37,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      */
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -84,11 +84,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         },
     ));
 
+    //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
+
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    //TODO: change to Diagram
-    //const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState<Array<Diagram>>([]);
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -108,6 +110,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         leftParenFlag: false,
         rightParenFlag: false
     });
+
+
+    React.useEffect(() => {
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setInfoProvDataSourcesKeys(map);
+    })
 
     /**
      * the current step of the creation process, numbered by 0 to 5
@@ -130,8 +147,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      */
     const checkForHistorizedData = () => {
 
-        if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
-            infoProvDataSource[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
+        if (infoProvDataSources[selectedDataSource].historizedData.length <= 0) {
+            infoProvDataSources[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
         }
 
     }
@@ -148,6 +165,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     const reportError = (message: string) => {
         dispatchMessage({type: "reportError", message: message});
     };
+
+    /**
+     * Handler method for changing a single data source in infoProvDataSources.
+     * @param dataSource The new dataSource that replaces an old one
+     */
+    const changeDataSource = (dataSource: DataSource, index: number) => {
+
+    }
 
 
     /**
@@ -192,7 +217,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         editInfoProvider={editInfoProvider}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                     />
@@ -203,6 +228,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
+                        reportError={reportError}
+                        dataSource={infoProvDataSources[selectedDataSource]}
+                        setDataSource={(dataSource: DataSource) => changeDataSource(dataSource, selectedDataSource)}
+                        apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                        apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                        diagrams={infoProvDiagrams}
                     />
                 );
             case 2:
@@ -211,7 +242,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
@@ -223,7 +254,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
