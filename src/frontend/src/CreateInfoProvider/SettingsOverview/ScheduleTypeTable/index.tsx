@@ -1,6 +1,6 @@
 import React from "react";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@material-ui/core";
-import { Schedule } from "../..";
+import {Schedule} from "../../types";
 
 interface ScheduleTypeTableProps {
     schedule: Schedule;

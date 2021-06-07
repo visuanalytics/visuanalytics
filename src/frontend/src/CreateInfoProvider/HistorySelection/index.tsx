@@ -3,8 +3,8 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import {Schedule} from "..";
 import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {Schedule} from "../types";
 
 interface HistorySelectionProps {
     continueHandler: () => void;

@@ -10,13 +10,13 @@ import { de } from "date-fns/locale"
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Collapse from "@material-ui/core/Collapse";
-import {Schedule} from "../../index";
 import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { useStyles } from "../../style";
 import FormControl from "@material-ui/core/FormControl";
 import {InputLabel} from "@material-ui/core";
+import {Schedule} from "../../types";
 
 interface HistoryScheduleSelectionProps {
     handleProceed: () => void;

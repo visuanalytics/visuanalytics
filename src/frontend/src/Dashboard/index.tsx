@@ -6,7 +6,7 @@ import {useStyles} from "./style";
 import {
     AirplayRounded, CropOriginalRounded, OndemandVideoRounded
 } from "@material-ui/icons";
-import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/infoProviderOverview";
+import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/InfoProviderOverview";
 import {SceneOverview} from "./TabsContent/SceneOverview/SceneOverview"
 import {VideoOverview} from "./TabsContent/VideoOverview/VideoOverview"
 
@@ -16,6 +16,7 @@ interface TabPanelProps {
     value: any;
 }
 
+//TODO: possibly split the three definitions in separate files
 /**
  * Component to render the content in one tab. Value and index are used to switch correct between all tabs.
  */

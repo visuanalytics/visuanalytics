@@ -21,6 +21,7 @@ export interface NotificationState {
 export type NotificationAction =
   | { type: "reportSuccess"; message: string }
   | { type: "reportError"; message: string }
+  | { type: "reportWarning"; message: string }
   | { type: "close" };
 
 export const centerNotifcationReducer = (
@@ -39,6 +40,12 @@ export const centerNotifcationReducer = (
         open: true,
         message: action.message,
         severity: "error",
+      };
+    case "reportWarning":
+      return {
+        open: true,
+        message: action.message,
+        severity: "warning",
       };
     case "close":
       return {

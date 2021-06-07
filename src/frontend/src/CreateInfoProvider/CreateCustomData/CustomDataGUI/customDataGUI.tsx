@@ -1,6 +1,5 @@
 import React from "react";
-import {useStyles} from "../style";
-import {SelectedDataItem} from "../../index";
+import {useStyles} from "../../style";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -10,8 +9,16 @@ import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {formelObj} from "./formelObjects/formelObj";
-import {IconButton, ListItemSecondaryAction} from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    ListItemSecondaryAction
+} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {SelectedDataItem} from "../../types";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -40,6 +47,12 @@ interface CustomDataGUIProps {
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
+
+    //boolean value that show if the delete dialog is currently opened
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
+    //holds the name of the formula currently selected for deletion
+    const [currentDeleteName, setCurrentDeleteName] = React.useState("");
 
     /**
      * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
@@ -82,7 +95,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} onClick={() => props.deleteCustomData(data)}>
+                    <IconButton edge={"end"} onClick={() => {setDeleteDialogOpen(true); setCurrentDeleteName(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
@@ -97,25 +110,25 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
         return (
             <Grid container>
                 <Grid item container xs={12} justify={"space-around"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('+')}>
                             +
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('-')}>
                             -
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('*')}>
                             *
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('/')}>
                             /
@@ -126,26 +139,25 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <br/>
                 </Grid>
                 <Grid item container xs={12} justify={"space-around"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('7')}>
                             7
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('8')}>
                             8
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('9')}
-                                className={classes.blockableButtonSecondary}>
+                                onClick={() => props.handleNumberButton('9')}>
                             9
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.opFlag}
                                 onClick={() => props.handleOperatorButtons('%')}>
                             %
@@ -156,26 +168,25 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <br/>
                 </Grid>
                 <Grid item container xs={12} justify={"space-around"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('4')}>
                             4
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('5')}>
                             5
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
-                                onClick={() => props.handleNumberButton('6')}
-                                className={classes.blockableButtonSecondary}>
+                                onClick={() => props.handleNumberButton('6')}>
                             6
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button disabled={props.leftParenFlag}
                                 onClick={() => props.handleLeftParen('(')}
                                 variant={"contained"}
@@ -189,26 +200,26 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <br/>
                 </Grid>
                 <Grid item container xs={12} justify={"space-around"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('1')}>
                             1
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('2')}>
                             2
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('3')}
                                 className={classes.blockableButtonSecondary}>
                             3
                         </Button>
                     </Grid>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button disabled={(props.rightParenCount >= props.leftParenCount) || props.rightParenFlag}
                                 variant={"contained"} size={"large"}
                                 color={"primary"}
@@ -221,7 +232,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <br/>
                 </Grid>
                 <Grid item container xs={3} justify={"center"}>
-                    <Grid item className={classes.blockableButtonSecondary}>
+                    <Grid item className={classes.blockableButtonPrimary}>
                         <Button variant={"contained"} size={"large"} color={"primary"} disabled={props.numberFlag}
                                 onClick={() => props.handleNumberButton('0')}>
                             0
@@ -231,14 +242,14 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 <Grid item container xs={9} justify={"space-around"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.blockableButtonPrimary}
+                                className={classes.redDeleteButton}
                                 onClick={() => props.handleDelete()}>
                             Zurück
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"primary"}
-                                className={classes.blockableButtonPrimary}
+                                className={classes.redDeleteButton}
                                 onClick={() => props.fullDelete()}>
                             Löschen
                         </Button>
@@ -265,7 +276,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                 </Grid>
                 <Grid container item xs={6} justify={"flex-start"}>
                     <Box borderColor="primary.main" border={4} borderRadius={5}
-                         className={classes.listFrame}>
+                         className={classes.tinyListFrame}>
                         {props.input}
                     </Box>
                     <Grid item xs={12}>
@@ -284,6 +295,48 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     </Box>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setDeleteDialogOpen(false);
+                window.setTimeout(() => {
+                    setCurrentDeleteName("");
+                }, 200);
+            }} aria-labelledby="deleteDialog-title"
+                    open={deleteDialogOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Formel "{currentDeleteName}" wirklich löschen?
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        "{currentDeleteName}" wird unwiderruflich gelöscht.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setDeleteDialogOpen(false);
+                                        setCurrentDeleteName("");
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        props.deleteCustomData(currentDeleteName);
+                                        setDeleteDialogOpen(false);
+                                        window.setTimeout(() => {
+                                            setCurrentDeleteName("");
+                                        }, 200);
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                Löschen bestätigen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 };
