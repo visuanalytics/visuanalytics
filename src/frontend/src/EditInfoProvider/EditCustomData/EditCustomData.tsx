@@ -6,10 +6,10 @@ import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import {FormelList} from "./FormelList";
 import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource} from "../../CreateInfoProvider";
 import {StrArg} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {formelContext} from "../types";
 import {checkFindOnlyNumbers, checkOperator} from "../helpermethods";
+import {DataSource} from "../../CreateInfoProvider/types";
 
 interface EditCustomDataProps {
     continueHandler: (index: number) => void;

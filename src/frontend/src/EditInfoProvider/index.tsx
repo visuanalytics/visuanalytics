@@ -1,6 +1,5 @@
 import React from "react";
 import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {DataSource, SelectedDataItem} from "../CreateInfoProvider";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
@@ -14,6 +13,7 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
+import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -30,6 +30,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     //infoProvider? infoProvider.name : "TristanTest"
     const [infoProvName, setInfoProvName] = React.useState("TristanTest");
 
+    //TODO: mind that keyInput is now in map
     /**
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
@@ -40,8 +41,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         {
             apiName: "apiName",
             query: "query",
-            apiKeyInput1: "apiKeyInput1",
-            apiKeyInput2: "apiKeyInput2",
+            //apiKeyInput1: "apiKeyInput1",
+            //apiKeyInput2: "apiKeyInput2",
             noKey: true,
             method: "method",
             selectedData: new Array<SelectedDataItem>(
@@ -61,8 +62,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         {
             apiName: "apiName2",
             query: "query2",
-            apiKeyInput1: "apiKeyInput1_2",
-            apiKeyInput2: "apiKeyInput2_2",
+            //apiKeyInput1: "apiKeyInput1_2",
+            //apiKeyInput2: "apiKeyInput2_2",
             noKey: true,
             method: "method_2",
             selectedData: new Array<SelectedDataItem>(
@@ -85,7 +86,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The array with diagrams from the Infoprovider that is being edited.
      */
     //TODO: change to Diagram
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
+    //const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
 
     /**
      * The index to select the right DataSource that is wanted to edit

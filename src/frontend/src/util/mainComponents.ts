@@ -1,7 +1,7 @@
 import { Home } from "../Home";
 import HomeIcon from "@material-ui/icons/Home";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import React, { FC } from "react";
+import /*React,*/ { FC } from "react";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon/SvgIcon";
 import { JobPage } from "../JobPage";

@@ -6,12 +6,12 @@ import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
-import {DataSource} from "../../../CreateInfoProvider";
+//import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
 import {calculationToString} from "../../helpermethods";
 import {formelContext} from "../../types";
+import {DataSource} from "../../../CreateInfoProvider/types";
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -319,14 +319,14 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
      * Will display an error message and not proceed.
      * @param err error to be displayed
      */
-    const handleError = (err: Error) => {
+    /*const handleError = (err: Error) => {
         props.reportError("Fehler: Das Backend antwortet nicht! :  (" + err.message + ")");
-    }
+    }*/
 
     /**
      * Method to post the formula-string as json to the backend in order to receive the answer of the syntax-check.
      */
-    const sendTestData = useCallFetch("/visuanalytics/testformula", {
+    /*const sendTestData = useCallFetch("/visuanalytics/testformula", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json\n"
@@ -337,7 +337,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                 }
             )
         }, handleSuccess, handleError
-    );
+    );*/
 
     /**
      * The method receives the new name for an formula and checks if the name is already in use in customData or selectedData

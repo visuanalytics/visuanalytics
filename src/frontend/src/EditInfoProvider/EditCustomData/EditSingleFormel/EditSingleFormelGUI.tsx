@@ -1,6 +1,5 @@
 import React from "react";
 import {useStyles} from "../../style";
-import {SelectedDataItem} from "../../../CreateInfoProvider";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -10,6 +9,7 @@ import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {SelectedDataItem} from "../../../CreateInfoProvider/types";
 
 interface EditSingleFormelGUIProps {
     selectedData: Array<SelectedDataItem>;

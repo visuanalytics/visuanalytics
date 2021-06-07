@@ -12,13 +12,14 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import {DataSource, extractKeysFromSelection} from "../../CreateInfoProvider";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import {DataSource} from "../../CreateInfoProvider/types";
+import {extractKeysFromSelection} from "../../CreateInfoProvider/helpermethods";
 
 
 interface EditSettingsOverviewProps {
