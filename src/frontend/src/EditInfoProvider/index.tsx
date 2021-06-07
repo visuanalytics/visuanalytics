@@ -1,5 +1,4 @@
 import React from "react";
-import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
@@ -14,13 +13,14 @@ import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/forme
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
 import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
+import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
     infoProvider?: InfoProviderObj;
 }
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId, infoProvider}*/) => {
 
     const components = React.useContext(ComponentContext);
 
