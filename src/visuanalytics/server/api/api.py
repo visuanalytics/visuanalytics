@@ -375,6 +375,11 @@ def testformula():
 
 @api.route("/scene", methods=["POST"])
 def add_scene():
+    """
+    Endpunkt '/scene'.
+
+    Route zum Hinzufügen einer neuen Szene.
+    """
     scene = request.json
     try:
 
@@ -387,6 +392,11 @@ def add_scene():
 
 @api.route("/scene/all", methods=["GET"])
 def get_all_scenes():
+    """
+    Endpunkt '/scene/all'.
+
+    Route über welche Informationen über alle vorhandenen Szenen ausgelesen werden kann.
+    """
     try:
 
         return "Not Implemented", 400
@@ -398,6 +408,12 @@ def get_all_scenes():
 
 @api.route("/scene/<id>", methods=["GET"])
 def get_scene(scene_id):
+    """
+    Endpunkt '/scene/<id>' (GET).
+
+    Route über die das Json-Objekt der Szene geladen werden kann.
+    :param scene_id: Die ID zu der Szene welche geladen werden soll.
+    """
     try:
 
         return "Not Implemented", 400
@@ -409,6 +425,13 @@ def get_scene(scene_id):
 
 @api.route("/scene/<id>", methods=["PUT"])
 def update_scene(scene_id):
+    """
+    Endpunkt '/scene/<id>' (PUT).
+
+    Route über die die Daten einer Szene verändert werden können.
+    Request muss das Json-Objekt enthälten welches das alte Objekt überschreiben soll.
+    :param scene_id: ID der Szene die überschrieben werden soll.
+    """
     updated_data = request.json
     try:
 
@@ -421,6 +444,12 @@ def update_scene(scene_id):
 
 @api.route("/scene/<id>", methods=["DELETE"])
 def delete_scene(scene_id):
+    """
+    Endpunkt '/scene/<id>' (DELETE).
+
+    Route über die eine Szene anhand ihrer ID gelöscht werden kann.
+    :param scene_id: ID der Szene die gelöscht werden soll.
+    """
     try:
 
         return "Not Implemented", 400
@@ -430,11 +459,47 @@ def delete_scene(scene_id):
         return err, 400
 
 
-@api.route("/image", methods=["POST"])
-def add_image():
-    try:
+@api.route("/image/add", methods=["PUT"])
+def add_scene_image():
+    """
+    Endpunkt '/image/add'.
 
-        return "Not Implemented", 400
+    Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
+    Request-Form muss den key name und das Bild selbst enthalten.
+    """
+    try:
+        if "image" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing Image"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Image Name"})
+            return err, 400
+
+        image = request.files["image"]
+        name = request.form["name"]
+
+        if image.filename == '':
+            err = flask.jsonify({"err_msg": "Missing Image Filename"})
+            return err, 400
+
+        if not _check_image_extention(image.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extension"})
+            return err, 400
+
+        file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
+        file_path = queries.get_scene_image_path(name, file_extension)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
+            return err, 400
+
+        if not queries.insert_image(name):
+            err = flask.jsonify({"err_msg": "Image could not be added to the database"})
+            return err, 400
+
+        image.save(file_path)
+        return "", 204
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while adding an image"})
@@ -442,10 +507,17 @@ def add_image():
 
 
 @api.route("/image/all", methods=["GET"])
-def get_all_images():
-    try:
+def get_all_scene_images():
+    """
+    Endpunkt '/image/all'.
 
-        return "Not Implemented", 400
+    Route über die Informationen über alle Szene-Bilder erhalten werden können.
+    Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
+    """
+    try:
+        images = queries.get_image_list()
+
+        return flask.jsonify(images)
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
@@ -453,8 +525,15 @@ def get_all_images():
 
 
 @api.route("/image/<id>", methods=["DELETE"])
-def delete_image(image_id):
+def delete_scene_image(image_id):
+    """
+    Endpunkt '/image/<id>' (DELETE).
+
+    Route über die ein Szenen-Bild gelöscht werden kann.
+    :param image_id: ID des Bildes welches gelöscht werden soll.
+    """
     try:
+        success = queries.delete_scene_image(image_id)
 
         return "Not Implemented", 400
     except Exception:

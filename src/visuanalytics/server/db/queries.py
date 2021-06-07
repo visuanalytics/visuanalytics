@@ -106,7 +106,7 @@ def show_weekly():
 
 def get_infoprovider_file(infoprovider_id):
     """
-    Generiert den Pfad zu der Datei eines gegebenen Infoproviders.
+    Generiert den Pfad zu der Datei eines gegebenen Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
     :return: Pfad zur Json datei des Infoproviders.
@@ -243,6 +243,62 @@ def delete_infoprovider(infoprovider_id):
         return True
     con.commit()
     return False
+
+
+def insert_image(image_name, image_type=None):
+    """
+    Adds an image to the Database.
+
+    :param image_name: Name of the image.
+    :param image_type: Type of the image. Supported options ars .png .jpeg and .jpg
+    """
+    con = db.open_con_f()
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=?", [image_name]).fetchone()["COUNT(*)"]
+
+    if count > 0:
+        return False
+
+    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    con.commit()
+    return True
+
+
+def get_scene_image_file(image_id):
+    """
+    Generated the file-path of an image by its given ID.
+
+    :param image_id: ID of the image.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT image_name, image_type FROM image WHERE image_id=?", [image_id]).fetchone()
+    return get_scene_image_path(res["image_name"], res["image_type"]) if res is not None else None
+
+
+def get_image_list():
+    """
+    Loads information about all images stored in the database.
+
+    :return: Contains ID, name and image-file for each image contained in the database.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM image")
+    con.commit()
+    return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": None} for row in res]
+
+
+def delete_scene_image(image_id):
+    """
+    Removes an image from the database by a given ID.
+
+    :param image_id: ID of an image.
+    """
+    con = db.open_con_f()
+
+    file_path = get_scene_image_file(image_id)
+    res = con.execute("DELETE FROM image WHERE image_id=?", ["image_id"])
+    con.commit()
+    if res.rowcount > 0:
+        os.remove()
 
 
 def get_topic_names():
@@ -533,6 +589,10 @@ def _get_infoprovider_path(infoprovider_name: str):
 
 def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+
+
+def get_scene_image_path(json_file_name: str, image_type: str):
+    return _get_image_path(json_file_name, "scene", image_type)
 
 
 def _get_image_path(json_file_name: str, folder: str, image_type: str):
