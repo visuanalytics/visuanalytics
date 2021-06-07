@@ -3,6 +3,7 @@ from ast2json import str2json
 
 splitString = "uzjhnjtdryfguljkm"
 
+
 def get_transformations(tree, k, key_name):
     operations = {
         "ADD": "add",

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {DataSource, Diagram, ListItemRepresentation, diagramType, uniqueId} from "../types"
+import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -39,13 +39,12 @@ task 20: as soon as available: fetch the arrays and historized data from all dat
 NOT DONE:
 task 21: edit feature
 task 22: add hintContents
-task 23: change labeling according to new suggestions
  */
 
 
 
 
-interface DiagramCreationProps {
+	interface DiagramCreationProps {
     continueHandler: () => void;
     backHandler: () => void;
     dataSources: Array<DataSource>
@@ -154,7 +153,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedHistorizedOrdinal-" + uniqueId);
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
-
 
 
     /**
@@ -330,6 +328,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         return compatibleArrays;
     }, [])
 
+
     /**
      * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
      * @param object The object to be checked
@@ -341,6 +340,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }
         return false;
     }
+
 
     /**
      * Filters the selected historized data by which is compatible with diagrams.
@@ -366,7 +366,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         })
                     })
                 }
-
             })
         }
         return compatibleHistorized;
@@ -382,7 +381,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     React.useEffect(() => {
         setCompatibleArrays(getCompatibleArrays(dataSources))
     }, [dataSources, getCompatibleArrays])
-
 
     React.useEffect(() => {
         setCompatibleHistorized(getCompatibleHistorized(dataSources))
