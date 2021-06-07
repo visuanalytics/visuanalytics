@@ -274,6 +274,22 @@ def add_infoprovider():
                 err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
+            header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+            url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+            parameter.update(params)
+
+            req_data = {
+                "type": datasource["api"]["api_info"]["type"],
+                "method": datasource["api"]["api_info"].get("method", "GET"),
+                "url_pattern": url,
+                "headers": header,
+                "params": parameter,
+                "response_type": datasource["api"]["response_type"]
+            }
+            datasource["api"] = req_data
+
+
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
                                             f"{infoprovider['infoprovider_name']}"})
@@ -380,6 +396,21 @@ def update_infoprovider(infoprovider_id):
             if "schedule" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
+
+            header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+            url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+            parameter.update(params)
+
+            req_data = {
+                "type": datasource["api"]["api_info"]["type"],
+                "method": datasource["api"]["api_info"].get("method", "GET"),
+                "url_pattern": url,
+                "headers": header,
+                "params": parameter,
+                "response_type": datasource["api"]["response_type"]
+            }
+            datasource["api"] = req_data
 
         update_info = queries.update_infoprovider(infoprovider_id, updated_data)
 

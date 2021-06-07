@@ -38,6 +38,21 @@ def get_infoprovider_list():
     return [{"infoprovider_id": row["infoprovider_id"], "infoprovider_name": row["infoprovider_name"]} for row in res]
 
 
+def update_url_pattern(pattern):
+    params = {}
+    pattern = pattern.split("?")
+    url = pattern[0]
+    if len(pattern) > 1:
+        param_list = pattern[1].split("&")
+        for param in param_list:
+            values = param.split("=")
+            params.update({
+                values[0]: values[1]
+            })
+
+    return url, params
+
+
 def insert_infoprovider(infoprovider):
     """
     Methode für das einfügen eines neuen Infoproviders.
@@ -482,7 +497,7 @@ def _generate_transform(formulas, old_transform):
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part = generate_step_transform(formula["formelString"], formula["formelName"])
+        transform_part = generate_step_transform(formula["formelString"], formula["formelName"], copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
         if transform_part is None:
             return None
         transform += transform_part
