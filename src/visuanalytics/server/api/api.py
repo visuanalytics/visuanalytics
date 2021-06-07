@@ -149,7 +149,7 @@ def infprovtestdatensatz():
         }
     }
     for datasource in infoprovider["datasources"]:
-        header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+        header, parameter = queries.generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
 
         url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
         parameter.update(params)
@@ -163,6 +163,7 @@ def infprovtestdatensatz():
             "response_type": datasource["api"]["response_type"]
         }
         datasource["api"] = req_data
+
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
@@ -209,15 +210,15 @@ def checkapi():
     """
     api_info = request.json
     try:
-        if "api" not in api_info:
+        if "api_info" not in api_info:
             err = flask.jsonify({"err_msg": "Missing field 'api'"})
             return err, 400
 
-        if "api_key_name" not in api_info["api"]:
+        if "api_key_name" not in api_info["api_info"]:
             err = flask.jsonify({"err_msg": "Missing API-Key"})
             return err, 400
 
-        if "url_pattern" not in api_info["api"]:
+        if "url_pattern" not in api_info["api_info"]:
             err = flask.jsonify({"err_msg": "Missing URL"})
             return err, 400
 
@@ -229,10 +230,13 @@ def checkapi():
             err = flask.jsonify({"err_msg": "Missing field 'response_type'"})
             return err, 400
 
-        header, parameter = _generate_request_dicts(api_info["api"], api_info["method"])
+        header, parameter = queries.generate_request_dicts(api_info["api_info"], api_info["method"])
+
+        url, params = queries.update_url_pattern(api_info["api_info"]["url_pattern"])
+        parameter.update(params)
         req_data = {
-            "method": api_info["api"].get("method", "get"),
-            "url": api_info["api"]["url_pattern"],
+            "method": api_info["api_info"].get("method", "get"),
+            "url": url,
             "headers": header,
             "params": parameter,
             "response_type": api_info["response_type"]
@@ -293,22 +297,6 @@ def add_infoprovider():
             if "schedule" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
-
-            header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
-
-            url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
-            parameter.update(params)
-
-            req_data = {
-                "type": datasource["api"]["api_info"]["type"],
-                "method": datasource["api"]["api_info"].get("method", "GET"),
-                "url_pattern": url,
-                "headers": header,
-                "params": parameter,
-                "response_type": datasource["api"]["response_type"]
-            }
-            datasource["api"] = req_data
-
 
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
@@ -416,21 +404,6 @@ def update_infoprovider(infoprovider_id):
             if "schedule" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
-
-            header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
-
-            url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
-            parameter.update(params)
-
-            req_data = {
-                "type": datasource["api"]["api_info"]["type"],
-                "method": datasource["api"]["api_info"].get("method", "GET"),
-                "url_pattern": url,
-                "headers": header,
-                "params": parameter,
-                "response_type": datasource["api"]["response_type"]
-            }
-            datasource["api"] = req_data
 
         update_info = queries.update_infoprovider(infoprovider_id, updated_data)
 

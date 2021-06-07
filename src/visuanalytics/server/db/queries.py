@@ -73,8 +73,22 @@ def insert_infoprovider(infoprovider):
         "requests": []
     }
     for datasource in datasources:
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
         api_step["steps_value"].append(datasource["name"])
-        api_step["requests"].append(datasource["api"])
+        api_step["requests"].append(req_data)
 
     # Transform obj vorbereiten
     transform_step = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in datasources]
@@ -86,7 +100,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": datasources
+        "datasources": infoprovider["datasources"]
     }
 
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
@@ -104,11 +118,25 @@ def insert_infoprovider(infoprovider):
     for datasource in datasources:
         datasource_name = datasource["name"]
 
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
         datasource_api_step = {
             "type": "request_multiple_custom",
             "use_loop_as_key": True,
             "steps_value": [datasource_name],
-            "requests": [datasource["api"]]
+            "requests": [req_data]
         }
 
         # Datasource obj vorbereiten
@@ -116,7 +144,7 @@ def insert_infoprovider(infoprovider):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": _generate_transform(datasource["formulas"], datasource["transform"]),
-            "storing": datasource["storing"] if datasource["api"]["type"] != "request_memory" else [],
+            "storing": datasource["storing"] if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -124,7 +152,7 @@ def insert_infoprovider(infoprovider):
         with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if datasource["api"]["type"] != "request_memory":
+        if datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -248,9 +276,25 @@ def update_infoprovider(infoprovider_id, updated_data):
         "requests": []
     }
 
-    for datasource in updated_data["datasources"]:
+    datasources = updated_data["datasources"]
+
+    for datasource in datasources:
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
         api_step_new["steps_value"].append(datasource["name"])
-        api_step_new["requests"].append(datasource["api"])
+        api_step_new["requests"].append(req_data)
 
     # Update Transform-Step vorbereiten
     new_transform = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in updated_data["datasources"]]
@@ -274,11 +318,25 @@ def update_infoprovider(infoprovider_id, updated_data):
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["name"]
 
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
         datasource_api_step = {
             "type": "request_multiple_custom",
             "use_loop_as_key": True,
             "steps_value": [datasource_name],
-            "requests": [datasource["api"]]
+            "requests": [req_data]
         }
 
         # Datasource obj vorbereiten
@@ -286,7 +344,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": _generate_transform(datasource["formulas"], datasource["transform"]),
-            "storing": datasource["storing"] if datasource["api"]["type"] != "request_memory" else [],
+            "storing": datasource["storing"] if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -294,7 +352,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if datasource["api"]["type"] != "request_memory":
+        if datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -478,6 +536,30 @@ def get_logs():
         "startTime": log["start_time"]
     }
         for log in logs]
+
+
+def generate_request_dicts(api_info, method):
+    header = {}
+    parameter = {}
+    # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
+    if method == "BearerToken":
+        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
+    elif method == "noAuth":
+        return header, parameter
+    else:
+        api_key_name = api_info["api_key_name"].split("||")
+        key1 = api_key_name[0]
+        key2 = api_key_name[1]
+
+        if method == "BasicAuth":
+            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
+                          .decode("utf-8")})
+        elif method == "KeyInHeader":
+            header.update({key1: key2})
+        elif method == "KeyInQuery":
+            parameter.update({key1: key2})
+
+    return header, parameter
 
 
 def _insert_param_values(con, job_id, topic_values):
