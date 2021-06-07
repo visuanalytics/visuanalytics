@@ -116,7 +116,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         //create default values in the key map for all dataSources
         //necessary to not run into undefined values
         const map = new Map();
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         data.forEach((dataSource) => {
             map.set(dataSource.apiName, {
                 apiKeyInput1: "",
@@ -167,11 +167,36 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     };
 
     /**
-     * Handler method for changing a single data source in infoProvDataSources.
-     * @param dataSource The new dataSource that replaces an old one
+     * Handler method for changing the selectedData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param dataSource The new selectedData
      */
-    const changeDataSource = (dataSource: DataSource, index: number) => {
+    const setSelectedData = (selectedData: Array<SelectedDataItem>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].selectedData = selectedData;
+        setInfoProvDataSources(arCopy);
+    }
 
+    /**
+     * Handler method for changing the historizedData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param dataSource The new selectedData
+     */
+    const setHistorizedData = (historizedData: Array<string>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].historizedData = historizedData;
+        setInfoProvDataSources(arCopy);
+    }
+
+    /**
+     * Handler method for changing the customData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param dataSource The new selectedData
+     */
+    const setCustomData = (customData: Array<FormelObj>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].customData = customData;
+        setInfoProvDataSources(arCopy);
     }
 
 
@@ -223,6 +248,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     />
                 );
             case 1:
+                //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
                     <EditDataSelection
                         continueHandler={(index: number) => handleContinue(index)}
@@ -230,10 +256,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         editInfoProvider={editInfoProvider}
                         reportError={reportError}
                         dataSource={infoProvDataSources[selectedDataSource]}
-                        setDataSource={(dataSource: DataSource) => changeDataSource(dataSource, selectedDataSource)}
-                        apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
-                        apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                        apiKeyInput1={/*infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1*/"Test"}
+                        apiKeyInput2={/*infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2*/"Test"}
                         diagrams={infoProvDiagrams}
+                        setSelectedData={(selectedData: Array<SelectedDataItem>) => setSelectedData(selectedData)}
+                        setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}
+                        setCustomData={(customData: Array<FormelObj>) => setCustomData(customData)}
                     />
                 );
             case 2:

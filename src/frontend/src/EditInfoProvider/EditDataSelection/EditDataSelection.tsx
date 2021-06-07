@@ -5,11 +5,13 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {
     ArrayDiagramProperties,
     DataSource, Diagram,
-    ListItemRepresentation,
+    ListItemRepresentation, SelectedDataItem,
     testDataBackendAnswer
 } from "../../CreateInfoProvider/types";
 import {getListItemsNames, transformJSON} from "../../CreateInfoProvider/helpermethods";
-import {ListItem} from "@material-ui/core";
+import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {hintContents} from "../../util/hintContents";
+import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 
 
 
@@ -19,10 +21,12 @@ interface EditDataSelectionProps {
     editInfoProvider: () => void;
     reportError: (message: string) => void;
     dataSource: DataSource;
-    setDataSource: (dataSource: DataSource) => void;
     apiKeyInput1: string;
     apiKeyInput2: string;
     diagrams: Array<Diagram>
+    setSelectedData: (selectedData: Array<SelectedDataItem>) => void;
+    setHistorizedData: (historizedData: Array<string>) => void;
+    setCustomData: (customData: Array<FormelObj>) => void;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -163,18 +167,30 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     const selectContent = () => {
         if (displaySpinner) {
             return (
-                <React.Fragment>
+                <StepFrame
+                    heading = "Datenauswahl"
+                    hintContent = {hintContents.dataSelection}
+                >
                     <Typography>
                         Bitte warten, während die API-Daten ermittelt werden...
                     </Typography>
                     <CircularProgress/>
-                </React.Fragment>
+                </StepFrame>
             )
         } else {
             return (
-                <React.Fragment>
-                    
-                </React.Fragment>
+                <DataSelection
+                    continueHandler={() => props.continueHandler(1)}
+                    backHandler={() => props.backHandler(1)}
+                    selectedData={props.dataSource.selectedData}
+                    setSelectedData={props.setSelectedData}
+                    listItems={props.dataSource.listItems}
+                    setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
+                    historizedData={props.dataSource.historizedData}
+                    setHistorizedData={props.setHistorizedData}
+                    customData={props.dataSource.customData}
+                    setCustomData={props.setCustomData}
+                />
             )
         }
     }
