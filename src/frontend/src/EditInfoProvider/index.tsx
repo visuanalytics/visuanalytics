@@ -169,9 +169,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         severity: "error",
     });
 
-    const reportError = (message: string) => {
+    const reportError = React.useCallback((message: string) => {
         dispatchMessage({type: "reportError", message: message});
-    };
+    }, []);
 
     /**
      * Handler method for changing the selectedData of the current data source in infoProvDataSources.

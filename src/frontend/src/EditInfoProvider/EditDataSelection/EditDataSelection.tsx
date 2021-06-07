@@ -114,6 +114,11 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
+    const query = props.dataSource.query;
+    const method = props.dataSource.method;
+    const apiKeyInput1 = props.apiKeyInput1;
+    const apiKeyInput2 = props.apiKeyInput2;
+
     /**
      * Method to send a diagram to the backend for testing.
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
@@ -135,10 +140,10 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             body: JSON.stringify({
                 api: {
                     type: "request",
-                    api_key_name: props.dataSource.method === "BearerToken" ? props.apiKeyInput1 : props.apiKeyInput1 + "||" + props.apiKeyInput2,
-                    url_pattern: props.dataSource.query
+                    api_key_name: method === "BearerToken" ? apiKeyInput1 : apiKeyInput1 + "||" + apiKeyInput2,
+                    url_pattern: query
                 },
-                method: props.dataSource.method ? "noAuth" : props.dataSource.method,
+                method: method ? "noAuth" : method,
                 response_type: "json"
             }),
             signal: abort.signal
@@ -155,7 +160,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleTestDataError(err)
         }).finally(() => clearTimeout(timer));
-    }, [handleTestDataSuccess, handleTestDataError, props.dataSource.query, props.dataSource.method, props.apiKeyInput1, props.apiKeyInput2])
+    }, [handleTestDataSuccess, handleTestDataError, query, method, apiKeyInput1, apiKeyInput2])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
