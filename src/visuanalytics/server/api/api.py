@@ -34,32 +34,32 @@ def infprovtestdatensatz():
     # Muss noch angepasst werden
     last_id = queries.get_last_infoprovider_id()
     infoprovider = {
-        "infoprovider_name": "Test_" + str(last_id),
+        "infoprovider_name": "Test" + str(last_id),
         "datasources": [
             {
                 "name": "wetter_api",
                 "api": {
-                    "type": "request",
-                    "api_key_name": "wetter",
-                    "url_pattern": "http://api.openweathermap.org/data/2.5/weather",
-                    "params": {
-                        "q": "berlin",
-                        "appid": "{_api_key}"
-                    }
+                    "api_info": {
+                        "type": "request",
+                        "api_key_name": "appid||e2fda2d8f176a37636832ca955377714",
+                        "url_pattern": "http://api.openweathermap.org/data/2.5/weather?q=berlin"
+                    },
+                    "method": "KeyInQuery",
+                    "response_type": "json"
                 },
                 "transform": [
                     {
                         "type": "select",
                         "relevant_keys": [
-                            "_req|api|main|temp",
-                            "_req|api|main|feels_like",
-                            "_req|api|main|temp_min",
-                            "_req|api|main|temp_max"
+                            "_req|wetter_api|main|temp",
+                            "_req|wetter_api|main|feels_like",
+                            "_req|wetter_api|main|temp_min",
+                            "_req|wetter_api|main|temp_max"
                         ]
                     },
                     {
                         "type": "transform_dict",
-                        "dict_key": "_req|api|main",
+                        "dict_key": "_req|wetter_api|main",
                         "transform": [
                             {
                                 "type": "append",
@@ -82,39 +82,44 @@ def infprovtestdatensatz():
                 ],
                 "formulas": [
                     {
-                        "name": "A",
-                        "formula": "( _req|api|main|temp * 24 ) / 7"
+                        "formelName": "A",
+                        "formelString": "( _req|wetter_api|main|temp * 24 ) / 7"
                     }
                 ],
                 "schedule": {
                     "type": "daily",
-                    "time": "09:01"
+                    "time": "15:24"
                 }
             },
             {
-                "name": "joke api",
+                "name": "joke_api",
                 "api": {
-                    "type": "request",
-                    "url_pattern": "https://official-joke-api.appspot.com/jokes/ten",
-                    "params": {}
+                    "api_info": {
+                        "type": "request",
+                        "api_key_name": "",
+                        "url_pattern": "https://official-joke-api.appspot.com/jokes/ten"
+                    },
+                    "method": "noAuth",
+                    "response_type": "json"
                 },
                 "transform": [
                     {
                         "type": "select",
                         "relevant_keys": [
-                            "_req|joke api"
+                            "_req|joke_api"
                         ]
                     }
                 ],
                 "storing": [
                     {
                         "name": "jokes",
-                        "key": "_req|joke api"
+                        "key": "_req|joke_api"
                     }
                 ],
                 "schedule": {
-                    "type": "daily",
-                    "time": "14:39"
+                    "type": "weekly",
+                    "time": "10:09",
+                    "weekdays": [0, 5]
                 },
                 "formulas": []
             }
@@ -143,6 +148,21 @@ def infprovtestdatensatz():
             }
         }
     }
+    for datasource in infoprovider["datasources"]:
+        header, parameter = _generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+        datasource["api"] = req_data
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
