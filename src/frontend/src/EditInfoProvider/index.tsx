@@ -12,7 +12,14 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, Diagram, Plots, SelectedDataItem} from "../CreateInfoProvider/types";
+import {
+    DataSource,
+    Diagram,
+    ListItemRepresentation,
+    Plots,
+    SelectedDataItem,
+    uniqueId
+} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 
@@ -21,9 +28,34 @@ interface EditInfoProviderProps {
     infoProvider?: InfoProviderObj;
 }
 
+//TODO: task list for the team
+/*
+DONE:
+task 0: overview component (Tristan)
+task 1: restore formulas (Tristan)
+task 2: editing for formulas (Tristan)
+task 3: new formulas (Tristan)
+task 4: integrate diagram components (Janek)
+NOT DONE:
+task 5: sessionStorage compatibility with AuthDataDialog (Janek)
+task 6: keep the component context on reload (Janek)
+task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
+task 8: component for DataSelection (Janek)
+task 9: historized data (Tristan)
+task 10: add additional data sources (Daniel)
+task 11: delete dependencies (???)
+task 12: load data from backend (Janek)
+task 13: send data to backend (Janek)
+ */
+
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId, infoProvider}*/) => {
 
     const components = React.useContext(ComponentContext);
+
+    /**
+     * the current step of the creation process, numbered by 0 to 5
+     */
+    const [step, setStep] = React.useState(0);
 
     /**
      * The name of the infoprovider that is being edited
@@ -38,7 +70,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      */
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -109,10 +141,117 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         rightParenFlag: false
     });
 
+
     /**
-     * the current step of the creation process, numbered by 0 to 5
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
-    const [step, setStep] = React.useState(0);
+    React.useEffect(() => {
+        //step - disabled since it makes debugging more annoying
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        //infoProvName
+        setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId)||"");
+        //infoProvDataSource
+        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
+        setInfoProvDataSources(sessionStorage.getItem("infoProvDataSource-" + uniqueId)===null?new Array<DataSource>(
+            {
+                apiName: "apiName",
+                query: "query",
+                //apiKeyInput1: "apiKeyInput1",
+                //apiKeyInput2: "apiKeyInput2",
+                noKey: true,
+                method: "method",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array1|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array1|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
+                historizedData: new Array<string>("formel1", "formel2"),
+                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
+                listItems: [],
+            },
+            {
+                apiName: "apiName2",
+                query: "query2",
+                //apiKeyInput1: "apiKeyInput1_2",
+                //apiKeyInput2: "apiKeyInput2_2",
+                noKey: true,
+                method: "method_2",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array2|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array2|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
+                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
+                listItems: [],
+            },
+        ):JSON.parse(sessionStorage.getItem("infoProvDataSource-" + uniqueId)!));
+        //infoProvDiagrams
+        setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
+        //selectedDataSource
+        setSelectedDataSource(Number(sessionStorage.getItem("selectedDataSource-" + uniqueId)||0));
+        //formelInformation
+        setFormelInformation(sessionStorage.getItem("formelInformation-" + uniqueId)===null?{
+            formelName: "",
+            parenCount: 0,
+            formelAsObjects: new Array<StrArg>(),
+            dataFlag: false,
+            numberFlag: false,
+            opFlag: true,
+            leftParenFlag: false,
+            rightParenFlag: false
+        }:JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
+    }, [])
+
+    //store step in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("step-" + uniqueId, step.toString());
+    }, [step])
+    //store infoProvName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvName-" + uniqueId, infoProvName);
+    }, [infoProvName])
+    // Store infoProvDataSource in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvDataSource-" + uniqueId, JSON.stringify(infoProvDataSources));
+    }, [infoProvDataSources])
+    // Store infoProvDiagrams in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvDiagrams-" + uniqueId, JSON.stringify(infoProvDiagrams));
+    }, [infoProvDiagrams])
+    //store selectedDataSource in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedDataSource-" + uniqueId, selectedDataSource.toString());
+    }, [selectedDataSource])
+    // Store infoProvDiagrams in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("formelInformation-" + uniqueId, JSON.stringify(formelInformation));
+    }, [formelInformation])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("infoProvName-" + uniqueId);
+        sessionStorage.removeItem("infoProvDataSource-" + uniqueId);
+        sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
+        sessionStorage.removeItem("selectedDataSource-" + uniqueId);
+        sessionStorage.removeItem("formelInformation-" + uniqueId);
+    }
 
     const steps = [
         "Überblick",
@@ -130,8 +269,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      */
     const checkForHistorizedData = () => {
 
-        if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
-            infoProvDataSource[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
+        if (infoProvDataSources[selectedDataSource].historizedData.length <= 0) {
+            infoProvDataSources[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
         }
 
     }
@@ -269,7 +408,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         editInfoProvider={editInfoProvider}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                     />
@@ -288,7 +427,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
@@ -300,7 +439,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={editInfoProvider}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
@@ -318,7 +457,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         <DiagramCreation
                             continueHandler={() => setStep(0)}
                             backHandler={() => setStep(0)}
-                            dataSources={infoProvDataSource}
+                            dataSources={infoProvDataSources}
                             diagrams={infoProvDiagrams}
                             setDiagrams={setInfoProvDiagrams}
                             reportError={reportError}
