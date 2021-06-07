@@ -13,15 +13,16 @@ import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/forme
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
 import {
+    authDataDialogElement,
     DataSource, DataSourceKey,
     Diagram,
-    ListItemRepresentation,
     Plots,
     SelectedDataItem,
     uniqueId
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
+import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -77,7 +78,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             //apiKeyInput1: "apiKeyInput1",
             //apiKeyInput2: "apiKeyInput2",
             noKey: true,
-            method: "method",
+            method: "KeyInHeader",
             selectedData: new Array<SelectedDataItem>(
                 {
                     key: "Array1|Data0",
@@ -98,8 +99,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             query: "query2",
             //apiKeyInput1: "apiKeyInput1_2",
             //apiKeyInput2: "apiKeyInput2_2",
-            noKey: true,
-            method: "method_2",
+            noKey: false,
+            method: "BearerToken",
             selectedData: new Array<SelectedDataItem>(
                 {
                     key: "Array2|Data0",
@@ -147,6 +148,44 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    //TODO: add current state variables if neede
+    /**
+     * Method to check if there is api auth data to be lost when the user refreshes the page.
+     * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
+     */
+    const checkKeyExistence = React.useCallback(() => {
+        //check the current data source
+        //if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
+        //check all other data sources
+        for (let index = 0; index < infoProvDataSources.length; index++) {
+            const dataSource = infoProvDataSources[index];
+            if(infoProvDataSourcesKeys.get(dataSource.apiName)!==undefined) {
+                if((!dataSource.noKey)&&(infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1!==""||infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2!=="")) return true;
+            }
+        }
+        return false;
+    }, [infoProvDataSources, infoProvDataSourcesKeys])
+
+    //TODO: is it necessary to fully copy here?
+    /**
+     * Defines event listener for reloading the page and removes it on unmounting.
+     * The event listener will warn the user that api keys will be list an a reload.
+     * Note: Custom messages seem not to be supported by modern browsers so we cant give an explicit warning here.
+     * Displaying an additional alert or something is also not possibly since an re-render would be necessary.
+     */
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if(checkKeyExistence()) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [checkKeyExistence])
+
     //TODO: check if current states are really not needed - possibly necessary when creation of additional dataSources is added
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
@@ -162,7 +201,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 //apiKeyInput1: "apiKeyInput1",
                 //apiKeyInput2: "apiKeyInput2",
                 noKey: true,
-                method: "method",
+                method: "KeyInHeader",
                 selectedData: new Array<SelectedDataItem>(
                     {
                         key: "Array1|Data0",
@@ -183,8 +222,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 query: "query2",
                 //apiKeyInput1: "apiKeyInput1_2",
                 //apiKeyInput2: "apiKeyInput2_2",
-                noKey: true,
-                method: "method_2",
+                noKey: false,
+                method: "BearerToken",
                 selectedData: new Array<SelectedDataItem>(
                     {
                         key: "Array2|Data0",
@@ -232,7 +271,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 //apiKeyInput1: "apiKeyInput1",
                 //apiKeyInput2: "apiKeyInput2",
                 noKey: true,
-                method: "method",
+                method: "KeyInHeader",
                 selectedData: new Array<SelectedDataItem>(
                     {
                         key: "Array1|Data0",
@@ -253,8 +292,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 query: "query2",
                 //apiKeyInput1: "apiKeyInput1_2",
                 //apiKeyInput2: "apiKeyInput2_2",
-                noKey: true,
-                method: "method_2",
+                noKey: false,
+                method: "BearerToken",
                 selectedData: new Array<SelectedDataItem>(
                     {
                         key: "Array2|Data0",
@@ -391,6 +430,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      */
     const handleBack = (index: number) => {
         if (step === 0) {
+            clearSessionStorage();
             components?.setCurrent("dashboard")
             return;
         }
@@ -473,6 +513,36 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         }
         return plotArray;
     }, [])
+
+    //TODO: find better option than just copy it
+    //TODO: update as soon as the possibility of having new dataSources exists
+    /**
+     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
+     */
+    const buildDataSourceSelection = () => {
+        const dataSourceSelection: Array<authDataDialogElement> = [];
+        //check the current data source and add it as an option
+        /*if(!noKey) {
+            dataSourceSelection.push({
+                name: "current--"+ uniqueId,
+                method: method
+            })
+        }*/
+        //check all other data sources
+        if(infoProvDataSources!==undefined) {
+            infoProvDataSources.forEach((dataSource) => {
+                //input is necessary if any method of authentication is being used
+                if(!dataSource.noKey) {
+                    //add to the selection
+                    dataSourceSelection.push({
+                        name: dataSource.apiName,
+                        method: dataSource.method
+                    })
+                }
+            })
+        }
+        return dataSourceSelection
+    }
 
     /**
      * Method to send the edited infoprovider to the backend.
@@ -575,6 +645,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 message={message.message}
                 severity={message.severity}
             />
+            {authDataDialogOpen&&
+            <AuthDataDialog
+                authDataDialogOpen={authDataDialogOpen}
+                setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
+                method={""}
+                apiKeyInput1={""}
+                setApiKeyInput1={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                apiKeyInput2={""}
+                setApiKeyInput2={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                dataSourcesKeys={infoProvDataSourcesKeys}
+                setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(map)}
+                selectionDataSources={buildDataSourceSelection()}
+                apiName={""}
+            />
+            }
         </React.Fragment>
     );
 }
