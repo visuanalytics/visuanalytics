@@ -13,7 +13,7 @@ import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/forme
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
 import {
-    DataSource,
+    DataSource, DataSourceKey,
     Diagram,
     ListItemRepresentation,
     Plots,
@@ -36,9 +36,9 @@ task 1: restore formulas (Tristan)
 task 2: editing for formulas (Tristan)
 task 3: new formulas (Tristan)
 task 4: integrate diagram components (Janek)
+task 6: keep the component context on reload (Janek)
 NOT DONE:
 task 5: sessionStorage compatibility with AuthDataDialog (Janek)
-task 6: keep the component context on reload (Janek)
 task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
 task 8: component for DataSelection (Janek)
 task 9: historized data (Tristan)
@@ -117,6 +117,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         },
     ));
 
+    //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
+
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
@@ -141,19 +144,18 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         rightParenFlag: false
     });
 
+    //flag for opening the dialog that restores authentication data on reload
+    const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    //TODO: check if current states are really not needed - possibly necessary when creation of additional dataSources is added
     /**
-     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
-     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
+     * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
+     * Needs to run based on sessionStorage since it is called in the first render.
      */
-    React.useEffect(() => {
-        //step - disabled since it makes debugging more annoying
-        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
-        //infoProvName
-        setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId)||"");
-        //infoProvDataSource
+    const authDialogNeeded = () => {
         //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
-        setInfoProvDataSources(sessionStorage.getItem("infoProvDataSource-" + uniqueId)===null?new Array<DataSource>(
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>(
             {
                 apiName: "apiName",
                 query: "query",
@@ -198,7 +200,77 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                 schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
                 listItems: [],
             },
-        ):JSON.parse(sessionStorage.getItem("infoProvDataSource-" + uniqueId)!));
+        ):JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        //const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
+        //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
+        //const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
+        //if((!noKeyCurrent)&&methodCurrent!=="") return true;
+        //else {
+            for (let index = 0; index < data.length; index++) {
+                if(!data[index].noKey) return true;
+            }
+        //}
+        return false;
+    }
+
+
+    /**
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     */
+    React.useEffect(() => {
+        //step - disabled since it makes debugging more annoying
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        //infoProvName
+        setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId)||"");
+        //infoProvDataSource
+        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
+        setInfoProvDataSources(sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>(
+            {
+                apiName: "apiName",
+                query: "query",
+                //apiKeyInput1: "apiKeyInput1",
+                //apiKeyInput2: "apiKeyInput2",
+                noKey: true,
+                method: "method",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array1|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array1|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
+                historizedData: new Array<string>("formel1", "formel2"),
+                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
+                listItems: [],
+            },
+            {
+                apiName: "apiName2",
+                query: "query2",
+                //apiKeyInput1: "apiKeyInput1_2",
+                //apiKeyInput2: "apiKeyInput2_2",
+                noKey: true,
+                method: "method_2",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array2|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array2|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
+                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
+                listItems: [],
+            },
+        ):JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
         //infoProvDiagrams
         setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
         //selectedDataSource
@@ -214,6 +286,22 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             leftParenFlag: false,
             rightParenFlag: false
         }:JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
+
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setInfoProvDataSourcesKeys(map);
+
+        if(authDialogNeeded()) {
+            setAuthDataDialogOpen(true);
+        }
     }, [])
 
     //store step in sessionStorage
@@ -226,7 +314,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     }, [infoProvName])
     // Store infoProvDataSource in session storage
     React.useEffect(() => {
-        sessionStorage.setItem("infoProvDataSource-" + uniqueId, JSON.stringify(infoProvDataSources));
+        sessionStorage.setItem("infoProvDataSources-" + uniqueId, JSON.stringify(infoProvDataSources));
     }, [infoProvDataSources])
     // Store infoProvDiagrams in session storage
     React.useEffect(() => {
@@ -247,7 +335,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     const clearSessionStorage = () => {
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("infoProvName-" + uniqueId);
-        sessionStorage.removeItem("infoProvDataSource-" + uniqueId);
+        sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
         sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
         sessionStorage.removeItem("selectedDataSource-" + uniqueId);
         sessionStorage.removeItem("formelInformation-" + uniqueId);
