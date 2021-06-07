@@ -25,6 +25,7 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
+    listItems: Array<ListItemRepresentation>
 }
 
 export type DataSourceKey = {
@@ -52,6 +53,7 @@ export type Diagram = {
     sourceType: string;
     arrayObjects?: Array<ArrayDiagramProperties>;
     historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
 }
 
 //unique application id used to avoid collisions in session storage
@@ -127,7 +129,7 @@ export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
     dateLabels?: boolean;
-    plots: {
+    plot: {
         type: string;
         x: Array<number>;
         y: string;

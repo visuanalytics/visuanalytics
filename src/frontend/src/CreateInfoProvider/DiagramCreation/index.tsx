@@ -36,8 +36,8 @@ task 16: data format for backend
 task 17: write custom fetcher for using in useEffect in Overview and general Creation
 task 18: use the fetcher based on the current diagram in both creators to get the preview
 task 19: code cleanup
-NOT DONE:
 task 20: as soon as available: fetch the arrays and historized data from all data sources and not only the current one
+NOT DONE:
 task 21: edit feature
 task 22: add hintContents
  */
@@ -45,18 +45,15 @@ task 22: add hintContents
 
 
 
-interface DiagramCreationProps {
+	interface DiagramCreationProps {
     continueHandler: () => void;
     backHandler: () => void;
-    listItems: Array<ListItemRepresentation>;
-    historizedData: Array<string>;
-    customData: Array<FormelObj>
+    dataSources: Array<DataSource>
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
-    selectedData: Array<SelectedDataItem>;
     reportError: (message: string) => void;
-    schedule: Schedule;
     infoProviderName: string;
+    createPlots: (diagram: Diagram) => Array<Plots>;
 }
 
 
@@ -66,6 +63,8 @@ interface DiagramCreationProps {
 export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
     const classes = useStyles();
 
+    // Extract createPlots from props
+    const createPlots = props.createPlots;
     //holds the current step in the diagram creation process
     const [diagramStep, setDiagramStep] = React.useState(0);
     //holds the source type currently used
@@ -156,81 +155,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         sessionStorage.removeItem("selectedArrayOrdinal-" + uniqueId);
     }
 
-    /**
-     * Creates the plots array for a selected diagram to be sent to the backend.
-     * @param diagram the diagram to be transformed
-     */
-    const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
-        const plotArray: Array<Plots> = [];
-        let type: string;
-        //transform the type to the string the backend needs
-        switch (diagram.variant) {
-            case "verticalBarChart": {
-                type = "bar";
-                break;
-            }
-            case "horizontalBarChart": {
-                type = "barh";
-                break;
-            }
-            case "dotDiagram": {
-                type = "scatter";
-                break;
-            }
-            case "lineChart": {
-                type = "line";
-                break;
-            }
-            case "pieChart": {
-                type = "pie";
-                break;
-            }
-        }
-        if (diagram.sourceType === "Array") {
-            if (diagram.arrayObjects !== undefined) {
-                diagram.arrayObjects.forEach((item) => {
-                    const plots = {
-                        customLabels: item.customLabels,
-                        primitive: !Array.isArray(item.listItem.value),
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
-                            color: item.color,
-                            numericAttribute: item.numericAttribute,
-                            stringAttribute: item.stringAttribute,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        } else {
-            //"Historized"
-            if (diagram.historizedObjects !== undefined) {
-                diagram.historizedObjects.forEach((item) => {
-                    const plots = {
-                        dateLabels: item.dateLabels,
-                        plots: {
-                            type: type,
-                            x: Array.from(Array(amount).keys()),
-                            y: item.name,
-                            color: item.color,
-                            dateFormat: item.dateFormat,
-                            x_ticks: {
-                                ticks: item.labelArray
-                            }
-                        }
-                    }
-                    plotArray.push(plots);
-                })
-            }
-        }
-        return plotArray;
-    }, [amount])
 
     /**
      * Handler for the return of a successful call to the backend (posting test diagram)
@@ -286,7 +210,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         variant: diagramType,
                         sourceType: diagramSource,
                         historizedObjects: historizedObjects,
-                        arrayObjects: arrayObjects
+                        arrayObjects: arrayObjects,
+                        amount: amount
                     })
                 }
             }),
@@ -304,7 +229,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorDiagramPreview(err)
         }).finally(() => clearTimeout(timer));
-    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview])
+    }, [infoProviderName, diagramName, diagramType, diagramSource, historizedObjects, arrayObjects, createPlots, handleErrorDiagramPreview, amount])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -324,7 +249,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             variant: diagramType,
             sourceType: diagramSource,
             historizedObjects: historizedObjects,
-            arrayObjects: arrayObjects
+            arrayObjects: arrayObjects,
+            amount: amount
         }
         const arCopy = props.diagrams.slice();
         arCopy.push(diagramObject);
@@ -360,57 +286,88 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Arrays containing arrays or arrays containing different primitive types are not compatible.
      * Arrays contained in objects contained in arrays are also not compatible.
      */
-    const getCompatibleArrays = useCallback((listItems: Array<ListItemRepresentation>) => {
+    const getCompatibleArrays = useCallback((dataSources: Array<DataSource>) => {
         let compatibleArrays: Array<ListItemRepresentation> = []
-        listItems.forEach((item) => {
-            if (item.arrayRep) {
-                if (Array.isArray(item.value)) {
-                    //this is an array containing objects
-                    //check if the object contains a numeric value
-                    if (checkObjectForNumeric(item.value)) compatibleArrays.push(item);
-                } else if (item.value !== "[Array]" && !item.value.includes(",")) {
-                    //when the value is not array and has no commas, the array contains primitive values of the same type
-                    //check if the primitive type is numeric
-                    if (item.value === "Zahl") compatibleArrays.push(item)
+        //the undefined case should only happen in certain situations that are only possible via debugging
+        if(dataSources!==undefined) {
+            dataSources.forEach((dataSource) => {
+                //outside of debugging, this should also not fail
+                if(dataSource.listItems!==undefined) {
+                    dataSource.listItems.forEach((item) => {
+                        if (item.arrayRep) {
+                            if (Array.isArray(item.value)) {
+                                //this is an array containing objects
+                                //check if the object contains a numeric value
+                                if (checkObjectForNumeric(item.value)) {
+                                    //create a copy of the item with changed parentKeyName that has the dataSource in front
+                                    const editedItem = {
+                                        ...item,
+                                        keyName: item.keyName.slice(-2)==="|0" ? item.keyName.substring(0, item.keyName.length-2) : item.keyName,
+                                        parentKeyName: item.parentKeyName === "" ? dataSource.apiName : dataSource.apiName + "|" + item.parentKeyName
+                                    }
+                                    compatibleArrays.push(editedItem);
+                                }
+                            } else if (item.value !== "[Array]" && !item.value.includes(",")) {
+                                //when the value is not array and has no commas, the array contains primitive values of the same type
+                                //check if the primitive type is numeric
+                                if (item.value === "Zahl") {
+                                    const editedItem = {
+                                        ...item,
+                                        parentKeyName: item.parentKeyName === "" ? dataSource.apiName : dataSource.apiName + "|" + item.parentKeyName
+                                    }
+                                    compatibleArrays.push(editedItem);
+                                }
+                            }
+                        } else if (Array.isArray(item.value)) {
+                            //this is an object, we need to check if one of its values is an array
+                            compatibleArrays = compatibleArrays.concat(getCompatibleArrays(item.value));
+                        }
+                    })
                 }
-            } else if (Array.isArray(item.value)) {
-                //this is an object, we need to check if one of its values is an array
-                compatibleArrays = compatibleArrays.concat(getCompatibleArrays(item.value));
-            }
-        })
+            })
+        }
         return compatibleArrays;
     }, [])
-
-    /**
-     * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
-     * @param object The object to be checked
-     * Returns true if a numeric attribute is contained, false if not.
-     */
-    const checkObjectForNumeric = (object: Array<ListItemRepresentation>) => {
-        for (let index = 0; index < object.length; ++index) {
-            if (object[index].value === "Zahl") return true;
-        }
-        return false;
-    }
 
     /**
      * Filters the selected historized data by which is compatible with diagrams.
      * Only numeric values are allowed.
      * Uses props.selectedData to check the types in order to prevent having to pass types with historizedData.
      */
-    const getCompatibleHistorized = useCallback((historizedData: Array<string>) => {
+    const getCompatibleHistorized = useCallback((dataSources: Array<DataSource>) => {
         //console.log("getting compatible historized");
+        //TODO: for each datasource
+        //TODO: concat dataSource name
         const compatibleHistorized: Array<string> = []
-        historizedData.forEach((item) => {
-            props.selectedData.forEach((data) => {
-                if (data.key === item && data.type === "Zahl") compatibleHistorized.push(item)
+        //the undefined case should only happen in certain situations that are only possible via debugging
+        if(dataSources!==undefined) {
+            dataSources.forEach((dataSource) => {
+                //should only be able to fail in debugging
+                if(dataSource.historizedData!==undefined&&dataSource.selectedData!==undefined) {
+                    dataSource.historizedData.forEach((item) => {
+                        dataSource.selectedData.forEach((data) => {
+                            if (data.key === item && data.type === "Zahl") compatibleHistorized.push(dataSource.apiName + "|" + item)
+                        })
+                        dataSource.customData.forEach((data) => {
+                            if (data.formelName === item) compatibleHistorized.push(dataSource.apiName + "|" + item)
+                        })
+                    })
+                }
             })
-            props.customData.forEach((data) => {
-                if (data.formelName === item) compatibleHistorized.push(item)
-            })
-        })
+        }
         return compatibleHistorized;
-    }, [props.selectedData, props.customData])
+    }, [])
+    /*
+     * Update the lists whenever the source data changes
+     */
+    //extract dataSources from props
+    const dataSources = props.dataSources
+    React.useEffect(() => {
+        setCompatibleArrays(getCompatibleArrays(dataSources))
+    }, [dataSources, getCompatibleArrays])
+    React.useEffect(() => {
+        setCompatibleHistorized(getCompatibleHistorized(dataSources))
+    }, [dataSources, getCompatibleHistorized])
 
     /*
      * Update the lists whenever the source data changes
@@ -577,7 +534,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                         amount={amount}
                         setAmount={(amount: number) => amountChangeHandler(amount)}
                         reportError={props.reportError}
-                        schedule={props.schedule}
+                        dataSources={props.dataSources}
                         fetchPreviewImage={fetchPreviewImage}
                         imageURL={imageURL}
                         setImageURL={(url: string) => setImageURL(url)}
