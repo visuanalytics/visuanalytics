@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, SelectedDataItem, diagramType, Schedule, uniqueId} from "../types"
+import {Diagram, ListItemRepresentation, diagramType, uniqueId} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -11,7 +11,6 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
