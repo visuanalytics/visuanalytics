@@ -10,7 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
-import {formelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Schedule} from "../../types";
 
 interface HistoryDataSelectionProps {
@@ -18,7 +18,7 @@ interface HistoryDataSelectionProps {
     handleSkipProceed: () => void;
     handleBack: () => void;
     selectedData: Array<string>;
-    customData: Array<formelObj>;
+    customData: Array<FormelObj>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     selectSchedule: (schedule: Schedule) => void;

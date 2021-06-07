@@ -14,7 +14,7 @@ import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
-import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -118,7 +118,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                                 <List disablePadding={true}>
                                     {extractKeysFromSelection(props.infoProvDataSources[props.selectedDataSource].selectedData).map((item: string) => renderListItem(item))}
-                                    {props.infoProvDataSources[props.selectedDataSource].customData.map((item: formelObj) => renderListItem(item.formelName))}
+                                    {props.infoProvDataSources[props.selectedDataSource].customData.map((item: FormelObj) => renderListItem(item.formelName))}
                                 </List>
                             </Box>
                         </Grid>

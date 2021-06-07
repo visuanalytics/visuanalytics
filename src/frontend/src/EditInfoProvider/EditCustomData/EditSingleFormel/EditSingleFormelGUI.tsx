@@ -8,12 +8,12 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
-import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {SelectedDataItem} from "../../../CreateInfoProvider/types";
 
 interface EditSingleFormelGUIProps {
     selectedData: Array<SelectedDataItem>;
-    customData: Array<formelObj>;
+    customData: Array<FormelObj>;
     input: string;
     name: string;
     setName: (name: string) => void;

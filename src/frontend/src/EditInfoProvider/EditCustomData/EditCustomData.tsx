@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import {FormelList} from "./FormelList";
-import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {StrArg} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {formelContext} from "../types";
 import {checkFindOnlyNumbers, checkOperator} from "../helpermethods";
@@ -43,7 +43,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     /**
      * the formel.name from the formel that should be edited
      */
-    const [currentEditFormel, setCurrentEditFormel] = React.useState(new formelObj("", ""));
+    const [currentEditFormel, setCurrentEditFormel] = React.useState(new FormelObj("", ""));
 
     /**
      * This method receives the backend-representation from a formula and will convert this information into an formelContext-object.
@@ -193,7 +193,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
      * The method sets the currentEditName and opens the edit-dialog
      * @param formel The name of the formula that should be edited.
      */
-    const handleEdit = (formel: formelObj) => {
+    const handleEdit = (formel: FormelObj) => {
         setCurrentEditFormel(formel);
         setEditDialogOpen(true);
     }
@@ -205,7 +205,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     const confirmEdit = () => {
         props.setFormelInformation(makeFormelContext(currentEditFormel.formelName, currentEditFormel.formelString));
         setEditDialogOpen(false);
-        setCurrentEditFormel(new formelObj("", ""));
+        setCurrentEditFormel(new FormelObj("", ""));
         props.continueHandler(1);
     }
 
@@ -237,7 +237,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                             <FormelList
                                 customDataEdit={props.infoProvDataSources[props.selectedDataSource].customData}
                                 handleDelete={(name: string) => handleDelete(name)}
-                                handleEdit={(formel: formelObj) => handleEdit(formel)}
+                                handleEdit={(formel: FormelObj) => handleEdit(formel)}
                             />
                             <Grid item container xs={12} justify={"center"}>
                                 <Button variant={"contained"} color={"primary"} size={"large"}
@@ -309,7 +309,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                 <Dialog onClose={() => {
                     setEditDialogOpen(false);
                     window.setTimeout(() => {
-                        setCurrentEditFormel(new formelObj("", ""));
+                        setCurrentEditFormel(new FormelObj("", ""));
                     }, 200);
                 }} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
@@ -323,7 +323,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                         onClick={() => {
                                             setEditDialogOpen(false);
                                             window.setTimeout(() => {
-                                                setCurrentEditFormel(new formelObj("", ""));
+                                                setCurrentEditFormel(new FormelObj("", ""));
                                             }, 200);
                                         }}
                                         className={classes.delete}

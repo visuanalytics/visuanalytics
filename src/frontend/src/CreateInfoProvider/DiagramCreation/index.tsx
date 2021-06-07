@@ -11,7 +11,7 @@ import {TextField} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ArrayDiagramProperties, HistorizedDiagramProperties, Plots} from "../types";
 
 
@@ -50,7 +50,7 @@ interface DiagramCreationProps {
     backHandler: () => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
-    customData: Array<formelObj>
+    customData: Array<FormelObj>
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     selectedData: Array<SelectedDataItem>;

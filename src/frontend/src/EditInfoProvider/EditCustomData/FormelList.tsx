@@ -1,15 +1,15 @@
 import React from "react";
 import {useStyles} from "../style";
 import {Box, Grid, List, ListItem, ListItemSecondaryAction, Typography} from "@material-ui/core";
-import {formelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import Button from "@material-ui/core/Button";
 import {SettingsRounded} from "@material-ui/icons";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 interface FormelListProps {
-    customDataEdit: Array<formelObj>
+    customDataEdit: Array<FormelObj>
     handleDelete: (name: string) => void;
-    handleEdit: (formel: formelObj) => void;
+    handleEdit: (formel: FormelObj) => void;
 }
 
 /**
@@ -19,7 +19,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
 
     const classes = useStyles();
 
-    const renderListName = (data: formelObj) => {
+    const renderListName = (data: FormelObj) => {
         return (
             <ListItem key={data.formelName + "-name"}>
                 <Box border={5} borderRadius={10} className={classes.formelNameBorder}>
@@ -31,7 +31,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
         );
     }
 
-    const renderListItem = (data: formelObj) => {
+    const renderListItem = (data: FormelObj) => {
         return (
             <ListItem key={data.formelName + "-formula"}>
                 <Box border={5} borderRadius={10} className={classes.formelBorder}>

@@ -11,7 +11,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
-import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
+import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
 import {
     DataSource,
     DataSourceKey,
@@ -94,7 +94,7 @@ export const CreateInfoProvider = () => {
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Array<SelectedDataItem>());
     // contains all data created custom in step 4
-    const [customData, setCustomData] = React.useState(new Array<formelObj>());
+    const [customData, setCustomData] = React.useState(new Array<FormelObj>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historization schedule selection
@@ -220,7 +220,7 @@ export const CreateInfoProvider = () => {
         //selectedData
         setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
-        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
+        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<FormelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
         setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
         //listItems (less calculations will be necessary this way)
@@ -527,7 +527,7 @@ export const CreateInfoProvider = () => {
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
+                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
                     />
                 );
             case 3:
@@ -538,7 +538,7 @@ export const CreateInfoProvider = () => {
                         selectedData={selectedData}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
+                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
                         reportError={reportError}
                         listItems={listItems}
                         historizedData={historizedData}

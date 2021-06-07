@@ -1,7 +1,7 @@
 /* CreateInfoProvider */
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
 //data type for elements contained in selectedData
-import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 export type SelectedDataItem = {
     key: string;
@@ -22,7 +22,7 @@ export type DataSource = {
     noKey: boolean;
     method: string;
     selectedData: SelectedDataItem[];
-    customData: formelObj[];
+    customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
 }

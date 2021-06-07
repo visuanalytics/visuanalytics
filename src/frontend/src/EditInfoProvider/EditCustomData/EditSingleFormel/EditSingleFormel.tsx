@@ -5,7 +5,7 @@ import {hintContents} from "../../../util/hintContents";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {formelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 //import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
@@ -303,7 +303,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                 }
             }
 
-            arCopy.push(new formelObj(name, input));
+            arCopy.push(new FormelObj(name, input));
             props.infoProvDataSources[props.selectedDataSource].customData = arCopy;
             fullDelete();
             setName('');

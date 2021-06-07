@@ -13,7 +13,7 @@ import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/forme
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
 import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
-import {formelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -55,7 +55,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     type: "Zahl"
                 }
             ),
-            customData: new Array<formelObj>(new formelObj("formel1", "26 * 2"), new formelObj("formel2", "formel1 * formel1")),
+            customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
             historizedData: new Array<string>("formel1", "formel2"),
             schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]}
         },
@@ -76,7 +76,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     type: "Zahl"
                 }
             ),
-            customData: new Array<formelObj>(new formelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new formelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+            customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
             historizedData: new Array<string>("formel1_2", "Array2|Data0"),
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]}
         },
