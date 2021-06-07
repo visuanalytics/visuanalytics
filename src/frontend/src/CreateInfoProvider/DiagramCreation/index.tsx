@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef} from "react";
 import {useStyles} from "./style";
-import {Diagram, ListItemRepresentation, diagramType, uniqueId} from "../types"
+import {Diagram, ListItemRepresentation, diagramType, uniqueId, DataSource} from "../types"
 import {StepFrame} from "../StepFrame";
 import {DiagramOverview} from "./DiagramOverview";
 import {DiagramTypeSelect} from "./DiagramTypeSelect";
@@ -328,6 +328,20 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         return compatibleArrays;
     }, [])
 
+
+    /**
+     * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
+     * @param object The object to be checked
+     * Returns true if a numeric attribute is contained, false if not.
+     */
+    const checkObjectForNumeric = (object: Array<ListItemRepresentation>) => {
+        for (let index = 0; index < object.length; ++index) {
+            if (object[index].value === "Zahl") return true;
+        }
+        return false;
+    }
+
+
     /**
      * Filters the selected historized data by which is compatible with diagrams.
      * Only numeric values are allowed.
@@ -356,35 +370,21 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }
         return compatibleHistorized;
     }, [])
+
     /*
      * Update the lists whenever the source data changes
      */
+
     //extract dataSources from props
     const dataSources = props.dataSources
+
     React.useEffect(() => {
         setCompatibleArrays(getCompatibleArrays(dataSources))
     }, [dataSources, getCompatibleArrays])
+
     React.useEffect(() => {
         setCompatibleHistorized(getCompatibleHistorized(dataSources))
     }, [dataSources, getCompatibleHistorized])
-
-    /*
-     * Update the lists whenever the source data changes
-     */
-
-    //extract listItems and historizedData from props
-    const listItems = props.listItems;
-
-    React.useEffect(() => {
-        setCompatibleArrays(getCompatibleArrays(listItems))
-    }, [listItems, getCompatibleArrays])
-
-    //extract historizedData and historizedData from props
-    const historizedData = props.historizedData;
-
-    React.useEffect(() => {
-        setCompatibleHistorized(getCompatibleHistorized(historizedData))
-    }, [historizedData, getCompatibleHistorized])
 
 
     const amountChangeHandler = (newAmount: number) => {
