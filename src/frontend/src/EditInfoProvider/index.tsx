@@ -57,7 +57,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             ),
             customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
             historizedData: new Array<string>("formel1", "formel2"),
-            schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]}
+            schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
+            listItems: [],
         },
         {
             apiName: "apiName2",
@@ -78,7 +79,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             ),
             customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
             historizedData: new Array<string>("formel1_2", "Array2|Data0"),
-            schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]}
+            schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
+            listItems: [],
         },
     ));
 
