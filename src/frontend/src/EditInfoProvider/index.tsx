@@ -10,11 +10,10 @@ import {Grid} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
-import {InfoProviderObj} from "../Dashboard/TabsContent/InfoProviderOverview/infoProviderOverview";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
-import {formelContext} from "./types";
+import {formelContext, InfoProviderObj} from "./types";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -117,8 +116,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         "API-Daten",
         "Formeln",
         "Einzelne Formel bearbeiten",
-        "Diagramme",
-        "Historisierung"
+        "Historisierung",
+        "Diagramme"
     ];
 
     /**

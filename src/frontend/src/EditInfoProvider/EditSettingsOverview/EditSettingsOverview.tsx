@@ -66,7 +66,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * @param event The change event provided by the Select component
      */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{ value: unknown }>) => {
-        props.setSelectedDataSource(event.target.value as number);
+        props.setSelectedDataSource(Number(event.target.value));
 
     }
 
@@ -86,9 +86,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
             heading={'Bearbeiten eines Infoproviders:'}
             hintContent={"Überblick"}>
             <Grid container justify={"space-evenly"}>
-                Overview
                 <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
-
                     <Grid item xs={12}>
                         <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                    label={"Info-Provider Name"}

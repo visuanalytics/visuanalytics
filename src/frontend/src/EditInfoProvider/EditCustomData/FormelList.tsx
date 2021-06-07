@@ -21,7 +21,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
 
     const renderListName = (data: formelObj) => {
         return (
-            <ListItem>
+            <ListItem key={data.formelName + "-name"}>
                 <Box border={5} borderRadius={10} className={classes.formelNameBorder}>
                     <Typography variant={"h5"}>
                         {data.formelName}
@@ -33,7 +33,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
 
     const renderListItem = (data: formelObj) => {
         return (
-            <ListItem>
+            <ListItem key={data.formelName + "-formula"}>
                 <Box border={5} borderRadius={10} className={classes.formelBorder}>
                     <Typography variant={"h5"}>
                         {data.formelString}

@@ -36,7 +36,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     const [currentDeleteFormelName, setCurrentDeleteFormelName] = React.useState("");
 
     /**
-     * boolean that ist used to open and close the edit-dialog
+     * boolean that is used to open and close the edit-dialog
      */
     const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
@@ -268,7 +268,12 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Dialog onClose={() => setRemoveDialogOpen(false)} aria-labelledby="deleteDialog-title"
+                <Dialog onClose={() => {
+                    setRemoveDialogOpen(false);
+                    window.setTimeout(() => {
+                        setCurrentDeleteFormelName("");
+                    }, 200);
+                }} aria-labelledby="deleteDialog-title"
                         open={removeDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
                         Wollen Sie die Formel "{currentDeleteFormelName}" wirklich löschen?
@@ -284,7 +289,9 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                 <Button variant="contained" color={"secondary"}
                                         onClick={() => {
                                             setRemoveDialogOpen(false);
-                                            setCurrentDeleteFormelName("");
+                                            window.setTimeout(() => {
+                                                setCurrentDeleteFormelName("");
+                                            }, 200);
                                         }}>
                                     zurück
                                 </Button>
@@ -299,7 +306,12 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         </Grid>
                     </DialogActions>
                 </Dialog>
-                <Dialog onClose={() => setEditDialogOpen(false)} aria-labelledby="editDialog-title"
+                <Dialog onClose={() => {
+                    setEditDialogOpen(false);
+                    window.setTimeout(() => {
+                        setCurrentEditFormel(new formelObj("", ""));
+                    }, 200);
+                }} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
                         Wollen Sie die Formel "{currentEditFormel.formelName}" bearbeiten?
@@ -310,7 +322,9 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                 <Button variant="contained"
                                         onClick={() => {
                                             setEditDialogOpen(false);
-                                            setCurrentEditFormel(new formelObj("", ""));
+                                            window.setTimeout(() => {
+                                                setCurrentEditFormel(new formelObj("", ""));
+                                            }, 200);
                                         }}
                                         className={classes.delete}
                                 >
