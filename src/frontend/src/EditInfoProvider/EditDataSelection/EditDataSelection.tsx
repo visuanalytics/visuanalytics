@@ -31,6 +31,7 @@ interface EditDataSelectionProps {
     setSelectedData: (selectedData: Array<SelectedDataItem>) => void;
     setHistorizedData: (historizedData: Array<string>) => void;
     setCustomData: (customData: Array<FormelObj>) => void;
+    cleanDataSource: (newListItems: Array<ListItemRepresentation>) => void;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -41,6 +42,8 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     const [displaySpinner, setDisplaySpinner] = React.useState(true);
     //true when the dialog for data missmatch errors is open
     const [errorDialogOpen, setErrorDialogOpen] = React.useState(true);
+    //holds the set of listItems as returned by the new api request
+    const [newListItems, setNewListItems] = React.useState<Array<ListItemRepresentation>>([]);
 
     /**
      * Method that checks if all items of selectedData are contained in the API result returned from the backend.
@@ -87,6 +90,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         } else {
             //call the transform method
             const listItems: Array<ListItemRepresentation> = transformJSON(data.api_keys);
+            setNewListItems(listItems);
             if(dataContained(listItems)) {
                 setDisplaySpinner(false);
             } else {
@@ -116,7 +120,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
      */
     const fetchTestData = React.useCallback(() => {
         //("fetcher called");
-        let url = "/visuanalytics/testdiagram"
+        let url = "/visuanalytics/checkapi"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -167,6 +171,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         fetchTestData();
     }, [fetchTestData])
 
+
     /**
      * Generates the components content based on the current state. If the spinner has to be shown, it is displayed.
      * If there is no spinner, DataSelection component is rendered.
@@ -205,16 +210,15 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                             <Grid container justify="space-between">
                                 <Grid item>
                                     <Button variant="contained"
-                                            onClick={() => {
-
-                                            }}>
+                                            onClick={() => {props.backHandler(1)}}>
                                         Datensatz behalten
                                     </Button>
                                 </Grid>
                                 <Grid item>
                                     <Button variant="contained"
                                             onClick={() => {
-
+                                                props.cleanDataSource(newListItems);
+                                                setDisplaySpinner(false);
                                             }}
                                             className={classes.redDeleteButton}>
                                         Einstellungen/Diagramme löschen

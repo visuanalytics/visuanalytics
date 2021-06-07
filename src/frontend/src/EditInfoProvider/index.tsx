@@ -12,7 +12,14 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, DataSourceKey, Diagram, SelectedDataItem, uniqueId} from "../CreateInfoProvider/types";
+import {
+    DataSource,
+    DataSourceKey,
+    Diagram,
+    ListItemRepresentation,
+    SelectedDataItem,
+    uniqueId
+} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditInfoProviderProps {
@@ -169,7 +176,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     /**
      * Handler method for changing the selectedData of the current data source in infoProvDataSources.
      * Used for the EditDataSelection step.
-     * @param dataSource The new selectedData
+     * @param selectedData The new selectedData
      */
     const setSelectedData = (selectedData: Array<SelectedDataItem>) => {
         const arCopy = infoProvDataSources.slice();
@@ -180,7 +187,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     /**
      * Handler method for changing the historizedData of the current data source in infoProvDataSources.
      * Used for the EditDataSelection step.
-     * @param dataSource The new selectedData
+     * @param historizedData The new historizedData
      */
     const setHistorizedData = (historizedData: Array<string>) => {
         const arCopy = infoProvDataSources.slice();
@@ -191,11 +198,73 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     /**
      * Handler method for changing the customData of the current data source in infoProvDataSources.
      * Used for the EditDataSelection step.
-     * @param dataSource The new selectedData
+     * @param customData The new customData
      */
     const setCustomData = (customData: Array<FormelObj>) => {
         const arCopy = infoProvDataSources.slice();
         arCopy[selectedDataSource].customData = customData;
+        setInfoProvDataSources(arCopy);
+    }
+
+    /**
+     * Method that deletes all settings of the current dataSource and all diagrams using it.
+     * Necessary for the case that the API data differs from how it was structured when the dataSource was
+     * created so that selected data or used arrays arent contained anymore.
+     * @param newListItems the new listItems returned by the API call
+     */
+    const cleanDataSource = (newListItems: Array<ListItemRepresentation>) => {
+        const dataSourceCopy = {
+            ...infoProvDataSources[selectedDataSource]
+        }
+        //clean diagrams depending on historized customData and historizedData
+        const diagramsToRemove: Array<string> = [];
+        dataSourceCopy.historizedData.forEach((historizedItem) => {
+            infoProvDiagrams.forEach((diagram) => {
+                //only diagrams with historizedData are relevant
+                if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                    for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                        const historized = diagram.historizedObjects[index];
+                        //the dataSource name needs to be added in front of the historized element name since historizedObjects has dataSource name in it paths too
+                        //it is also checked if the same diagram has already been marked by another formula or historized data
+                        if(infoProvName + "|" + historizedItem===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                            diagramsToRemove.push(diagram.name);
+                            break;
+                        }
+                    }
+                }
+            })
+        })
+        //clean diagrams depending on arrays - just find all arrayObjects containing the apiName as head of their key path
+        infoProvDiagrams.forEach((diagram) => {
+            //only diagrams with historizedData are relevant
+            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
+                for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                    const array = diagram.arrayObjects[index];
+                    //check if the dataSource name at the front is the same as the current apiName
+                    if(infoProvName===array.listItem.parentKeyName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        //delete all diagrams found
+        if(diagramsToRemove.length > 0) {
+            setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            }))
+        }
+        //clean selectedData
+        dataSourceCopy.selectedData = [];
+        //clean historizedData
+        dataSourceCopy.historizedData = [];
+        //clean customData
+        dataSourceCopy.customData = [];
+        //set listItems to the new value
+        dataSourceCopy.listItems = newListItems;
+        //set the new dataSource object
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource] = dataSourceCopy;
         setInfoProvDataSources(arCopy);
     }
 
@@ -262,6 +331,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         setSelectedData={(selectedData: Array<SelectedDataItem>) => setSelectedData(selectedData)}
                         setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}
                         setCustomData={(customData: Array<FormelObj>) => setCustomData(customData)}
+                        cleanDataSource={(newListItems: Array<ListItemRepresentation>) => cleanDataSource(newListItems)}
                     />
                 );
             case 2:
