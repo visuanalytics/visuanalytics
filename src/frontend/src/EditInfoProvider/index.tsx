@@ -12,8 +12,9 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
+import {DataSource, Diagram, Plots, SelectedDataItem} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -87,8 +88,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    //TODO: change to Diagram
-    //const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState<Array<Diagram>>([]);
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -170,6 +170,83 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         setStep(step - index)
     }
 
+    //TODO: find a better solution than copying - useCallback doesnt allow it to be on top level of helpermethods.tsx
+    /**
+     * Creates the plots array for a selected diagram to be sent to the backend.
+     * @param diagram the diagram to be transformed
+     */
+    const createPlots = React.useCallback((diagram: Diagram) => {
+        console.log(diagram.arrayObjects);
+        const plotArray: Array<Plots> = [];
+        let type: string;
+        //transform the type to the string the backend needs
+        switch (diagram.variant) {
+            case "verticalBarChart": {
+                type = "bar";
+                break;
+            }
+            case "horizontalBarChart": {
+                type = "barh";
+                break;
+            }
+            case "dotDiagram": {
+                type = "scatter";
+                break;
+            }
+            case "lineChart": {
+                type = "line";
+                break;
+            }
+            case "pieChart": {
+                type = "pie";
+                break;
+            }
+        }
+        if (diagram.sourceType === "Array") {
+            if (diagram.arrayObjects !== undefined) {
+                diagram.arrayObjects.forEach((item) => {
+                    const plots = {
+                        customLabels: item.customLabels,
+                        primitive: !Array.isArray(item.listItem.value),
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
+                            color: item.color,
+                            numericAttribute: item.numericAttribute,
+                            stringAttribute: item.stringAttribute,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        } else {
+            //"Historized"
+            if (diagram.historizedObjects !== undefined) {
+                diagram.historizedObjects.forEach((item) => {
+                    const plots = {
+                        dateLabels: item.dateLabels,
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.name,
+                            color: item.color,
+                            dateFormat: item.dateFormat,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        }
+        return plotArray;
+    }, [])
+
     /**
      * Method to send the edited infoprovider to the backend.
      * The backend will now update the infoprovider with the new data.
@@ -238,7 +315,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             case 5:
                 return (
                     <Grid>
-
+                        <DiagramCreation
+                            continueHandler={() => setStep(0)}
+                            backHandler={() => setStep(0)}
+                            dataSources={infoProvDataSource}
+                            diagrams={infoProvDiagrams}
+                            setDiagrams={setInfoProvDiagrams}
+                            reportError={reportError}
+                            infoProviderName={infoProvName}
+                            createPlots={createPlots}
+                        />
                     </Grid>
                 )
 
