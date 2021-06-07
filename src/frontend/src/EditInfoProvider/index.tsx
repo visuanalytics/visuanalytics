@@ -124,7 +124,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
             })
         });
         setInfoProvDataSourcesKeys(map);
-    })
+    }, [])
 
     /**
      * the current step of the creation process, numbered by 0 to 5

@@ -12,6 +12,10 @@ import {getListItemsNames, transformJSON} from "../../CreateInfoProvider/helperm
 import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
+import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import {useStyles} from "../style";
 
 
 
@@ -31,11 +35,43 @@ interface EditDataSelectionProps {
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
 
-    //const classes = useStyles();
+    const classes = useStyles();
 
     //holds the value true if the loading spinner should be displayed
     const [displaySpinner, setDisplaySpinner] = React.useState(true);
+    //true when the dialog for data missmatch errors is open
+    const [errorDialogOpen, setErrorDialogOpen] = React.useState(true);
 
+    /**
+     * Method that checks if all items of selectedData are contained in the API result returned from the backend.
+     * Also checks if all arrays of this dataSource used in diagrams are contained.
+     * Returns true if that is the case, false otherwise.
+     */
+    const dataContained = React.useCallback((listItems: Array<ListItemRepresentation>) => {
+        const listItemsNames = getListItemsNames(listItems);
+        //every key of selectedData also has to be in the listItems
+        for (let index = 0; index < props.dataSource.selectedData.length; index++) {
+            if(!listItemsNames.includes(props.dataSource.selectedData[index].key)) return false;
+        }
+        //every array of this dataSource used in diagrams has to be contained
+        for(let index = 0; index < props.diagrams.length; index++) {
+            const diagram = props.diagrams[index];
+            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
+                for(let innerIndex = 0; innerIndex < diagram.arrayObjects.length; innerIndex++) {
+                    const arrayObject: ArrayDiagramProperties = diagram.arrayObjects[innerIndex];
+                    //checking is only necessary if the arrayObject is from this api
+                    if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
+                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the listems
+                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName)) return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }, [props.dataSource.apiName, props.dataSource.selectedData, props.diagrams])
+
+    //extract reportError from props to use in useEffect/dependencies
+    const reportError = props.reportError;
 
     /**
      * Handler for the return of a successful call to the backend (getting test data)
@@ -43,10 +79,10 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
      * Transforms the data to listItems-Format, calls the check if selectedData is contained.
      * Depending on the check, an error or DataSelection is shown
      */
-    const handleTestDataSuccess = (jsonData: any) => {
+    const handleTestDataSuccess = React.useCallback((jsonData: any) => {
         const data = jsonData as testDataBackendAnswer;
         if (data.status !== 0) {
-            props.reportError("Fehler: Backend meldet Fehler bei der API-Abfrage.")
+            reportError("Fehler: Backend meldet Fehler bei der API-Abfrage.")
             //TODO: possibly show dialog here
         } else {
             //call the transform method
@@ -58,10 +94,9 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                 //option to keep old data (on your own risk) or restart the settings for this dataSource
             }
         }
-    }
+    }, [dataContained, reportError]);
 
-    //extracts method from props to use it in the dependencies of handleErrorDiagramPreview
-    const reportError = props.reportError;
+
     /**
      * Handler for unsuccessful call to the backend (getting test data)
      * @param err The error returned by the backend
@@ -116,7 +151,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleTestDataError(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }, [handleTestDataSuccess, handleTestDataError, props.dataSource.query, props.dataSource.method, props.apiKeyInput1, props.apiKeyInput2])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -126,34 +161,6 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         };
     }, []);
 
-
-    /**
-     * Method that checks if all items of selectedData are contained in the API result returned from the backend.
-     * Also checks if all arrays of this dataSource used in diagrams are contained.
-     * Returns true if that is the case, false otherwise.
-     */
-    const dataContained = (listItems: Array<ListItemRepresentation>) => {
-        const listItemsNames = getListItemsNames(listItems);
-        //every key of selectedData also has to be in the listItems
-        for (let index = 0; index < props.dataSource.selectedData.length; index++) {
-            if(!listItemsNames.includes(props.dataSource.selectedData[index].key)) return false;
-        }
-        //every array of this dataSource used in diagrams has to be contained
-        for(let index = 0; index < props.diagrams.length; index++) {
-            const diagram = props.diagrams[index];
-            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
-                for(let innerIndex = 0; innerIndex < diagram.arrayObjects.length; innerIndex++) {
-                    const arrayObject: ArrayDiagramProperties = diagram.arrayObjects[innerIndex];
-                    //checking is only necessary if the arrayObject is from this api
-                    if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
-                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the listems
-                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName)) return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
     //on the first load, fetch the data from the backend again
     React.useEffect(() => {
@@ -175,6 +182,47 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                         Bitte warten, während die API-Daten ermittelt werden...
                     </Typography>
                     <CircularProgress/>
+                    <Dialog onClose={() => {setErrorDialogOpen(false);}} aria-labelledby="deleteDialog-title"
+                            open={errorDialogOpen}>
+                        <DialogTitle id="deleteDialog-title">
+                            Änderung der Datenquelle
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <Typography gutterBottom>
+                                Einige der ausgewählten oder in Diagrammen verwendeten Daten dieser Datenquelle sind nicht in der Antwort der API-Abfrage vorhanden.
+                            </Typography>
+                            <Typography gutterBottom>
+                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen verpackt.
+                            </Typography>
+                            <Typography gutterBottom>
+                                Sie können die Datenquelle nicht weiter bearbeiten und die alten Einstellungen behalten (sofern sich die Datenquelle tatsächlich geändert hat werden API-Abfragen vermutlich Fehler erzeugen).
+                            </Typography>
+                            <Typography gutterBottom>
+                                Alternativ können sie alle Einstellungen und zugehörigen Diagramme verwerfen und mit der neuen Antwort weiterarbeiten.
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Grid container justify="space-between">
+                                <Grid item>
+                                    <Button variant="contained"
+                                            onClick={() => {
+
+                                            }}>
+                                        Datensatz behalten
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained"
+                                            onClick={() => {
+
+                                            }}
+                                            className={classes.redDeleteButton}>
+                                        Einstellungen/Diagramme löschen
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </DialogActions>
+                    </Dialog>
                 </StepFrame>
             )
         } else {
