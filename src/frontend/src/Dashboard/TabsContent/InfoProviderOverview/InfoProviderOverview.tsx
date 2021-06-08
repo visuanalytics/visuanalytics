@@ -11,14 +11,7 @@ import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 import {answer, fetchAllBackendAnswer, jsonRef} from "../../types";
-import {
-    DataSource,
-    Diagram,
-    InfoProviderFromBackend, ListItemRepresentation,
-    Schedule,
-    SelectedDataItem
-} from "../../../CreateInfoProvider/types";
-import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
 import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 

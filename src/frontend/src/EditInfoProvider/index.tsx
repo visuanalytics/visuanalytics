@@ -33,10 +33,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const components = React.useContext(ComponentContext);
 
     //TODO: remove after testing
-    React.useEffect(() => {
+    /*React.useEffect(() => {
         console.log(infoProvId);
         console.log(infoProvider);
-    }, [])
+    }, [])*/
     /**
      * The name of the infoprovider that is being edited
      */
