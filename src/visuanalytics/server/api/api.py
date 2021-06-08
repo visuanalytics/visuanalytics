@@ -148,22 +148,6 @@ def infprovtestdatensatz():
             }
         }
     }
-    for datasource in infoprovider["datasources"]:
-        header, parameter = queries.generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
-
-        url, params = queries.update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
-        parameter.update(params)
-
-        req_data = {
-            "type": datasource["api"]["api_info"]["type"],
-            "method": datasource["api"]["api_info"].get("method", "GET"),
-            "url_pattern": url,
-            "headers": header,
-            "params": parameter,
-            "response_type": datasource["api"]["response_type"]
-        }
-        datasource["api"] = req_data
-
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
     infoprovider["infoprovider_name"] = "Test" + str(last_id)
