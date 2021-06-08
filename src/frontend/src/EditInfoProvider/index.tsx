@@ -32,16 +32,17 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The name of the infoprovider that is being edited
      */
     //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState("TristanTest");
+    const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
 
     //TODO: mind that keyInput is now in map
+    //TODO: remove testinput for production
     /**
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
+    const [infoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -92,7 +93,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The array with diagrams from the Infoprovider that is being edited.
      */
     //TODO: change to Diagram
-    //const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<string>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
