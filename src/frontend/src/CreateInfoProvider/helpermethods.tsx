@@ -172,7 +172,7 @@ export const getListItemsNames = (listItems: Array<ListItemRepresentation>) => {
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation
  * @param data
  */
-export const transFormBackendInfoProvider = (data: InfoProviderFromBackend) => {
+export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
     const infoProviderName: string = data.infoprovider_name;
     console.log(infoProviderName);
     const diagrams: Array<Diagram> = data.diagrams_original;

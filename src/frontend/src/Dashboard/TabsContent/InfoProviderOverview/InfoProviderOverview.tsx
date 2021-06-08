@@ -19,7 +19,7 @@ import {
     SelectedDataItem
 } from "../../../CreateInfoProvider/types";
 import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {transFormBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
+import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 
 
@@ -263,7 +263,7 @@ export const InfoProviderOverview: React.FC = () => {
         console.log(jsonData);
         const data = jsonData as InfoProviderFromBackend;
         //transform the infoProvider to frontend format
-        const infoProvider = transFormBackendInfoProvider(data);
+        const infoProvider = transformBackendInfoProvider(data);
         components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
     }
 
