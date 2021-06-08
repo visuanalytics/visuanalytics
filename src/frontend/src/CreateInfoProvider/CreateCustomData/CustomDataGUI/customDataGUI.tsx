@@ -10,10 +10,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {FormelObj} from "./formelObjects/FormelObj";
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     IconButton,
     ListItemSecondaryAction
 } from "@material-ui/core";
@@ -47,13 +43,7 @@ interface CustomDataGUIProps {
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
-
-    //boolean value that show if the delete dialog is currently opened
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-
-    //holds the name of the formula currently selected for deletion
-    const [currentDeleteName, setCurrentDeleteName] = React.useState("");
-
+    
     /**
      * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
      * @param data the name of the data-value
