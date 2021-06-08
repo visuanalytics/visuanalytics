@@ -11,19 +11,23 @@ import {ComponentContext} from "../ComponentProvider";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
-import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
+import {formelContext} from "./types";
+import {DataSource, FrontendInfoProvider, SelectedDataItem} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
-    infoProvider?: InfoProviderObj;
+    infoProvider?: FrontendInfoProvider;
 }
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId, infoProvider}*/) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
+    React.useEffect(() => {
+        console.log(infoProvId);
+        console.log(infoProvider);
+    }, [])
     /**
      * The name of the infoprovider that is being edited
      */

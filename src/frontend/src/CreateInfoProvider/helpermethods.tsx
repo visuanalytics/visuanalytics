@@ -1,4 +1,4 @@
-import {ListItemRepresentation, SelectedDataItem} from "./types";
+import {DataSource, Diagram, InfoProviderFromBackend, ListItemRepresentation, SelectedDataItem} from "./types";
 
 /* CreateInfoProvider */
 
@@ -158,4 +158,40 @@ export const getListItemsNames = (listItems: Array<ListItemRepresentation>) => {
         }
     });
     return listItemNames;
+}
+
+
+/**
+ * Method that transforms an infoProvider from the backend data format to a frontend data format representation
+ * @param data
+ */
+export const transFormBackendInfoProvider = (data: InfoProviderFromBackend) => {
+    const infoProviderName: string = data.infoprovider_name;
+    console.log(infoProviderName);
+    const diagrams: Array<Diagram> = data.diagrams_original;
+    console.log(diagrams);
+    const dataSources: Array<DataSource> = [];
+    data.datasources.forEach((backendDataSource) => {
+        dataSources.push({
+            apiName: backendDataSource.datasource_name,
+            query: backendDataSource.api.api_info.url_pattern,
+            noKey: backendDataSource.api.method==="noAuth",
+            method: backendDataSource.api.method==="noAuth"?"":backendDataSource.api.method,
+            selectedData: backendDataSource.selected_data,
+            customData: backendDataSource.formulas,
+            historizedData: backendDataSource.historized_data,
+            schedule: {
+                type: backendDataSource.schedule.type,
+                weekdays: backendDataSource.schedule.weekdays,
+                time: backendDataSource.schedule.time,
+                interval: backendDataSource.schedule.time_interval,
+            },
+            listItems: new Array<ListItemRepresentation>(),
+        });
+    })
+    return {
+        infoproviderName: infoProviderName,
+        dataSources: dataSources,
+        diagrams: diagrams
+    }
 }
