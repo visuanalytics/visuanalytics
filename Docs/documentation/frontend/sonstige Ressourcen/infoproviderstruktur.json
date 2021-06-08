@@ -1,0 +1,78 @@
+{
+    "infoprovider_name": <infoproviderName>,
+    "datasources": [
+        {
+            "datasource_name": <datasourceName>,
+            "api": {
+                "api_info": {
+                    "type": "request",                                          (immer gleich)
+                    "api_key_name": "key||########",                            (abhängig von "method")
+                    "url_pattern": <url>
+                },
+                "method": <method>,                                             (Möglichkeiten: "BearerToken", "noAuth", "BasicAuth", "KeyInHeader", "KeyInQuery")
+                "response_type": <responseType>                                 (erwarteter Rückgabetyp der API "json" oder "xml")
+            },
+            "transform": [],
+            "storing": [],
+            "formulas": [                                                       (sind uns nicht mehr sicher ob ihr das als "customData" haben wolltet. Wäre auch möglich aber müsstet ihr an uns weitergeben)
+                {
+                    "formelName": <formelName>,
+                    "formelString": <formelString>
+                },
+                ...
+            ],
+            "schedule": {
+                "type": <type>,                                                 (Möglichkeiten: "daily", "interval", "weekly" usw.) (andere keys von schedule mussen je nach typ gesetzt werden.)
+                "time": <time>,
+                "date": <date>,
+                "time_interval": <timeInterval>,
+                "weekdays": [<int>]
+            }
+            <weitere Keys>
+            "selected_data": [selectedData]
+            "arrays_used_in_diagrams": [String]
+            "historized_data": [String]                                                      (für historised-data usw. ihr könnt an uns weitergeben was ihr da braucht/ noch abspeichern wollt)
+        },
+        ...
+    ],
+    "diagrams": {                                                               (enthält für jedes Diagram ein Objekt)
+        <diagramName>: {
+            "type": "diagram_custom",                                           (immer gleich)
+            "diagram_config": {
+                "type": "custom",                                               (immer gleich)
+                "name": <diagramName>,
+                "infoprovider": <infoproviderName>,
+                "sourceType": <sourceType>,                                     (Möglichkeiten: "Array", "Historised")
+                "plots": [
+                    {
+                        "customLabels": <boolean>,
+                        "primitive": <boolean>,
+                        dateLabels: <boolean>,
+                        "plot": {
+                            "type": <type>,                                     (Möglichkeiten: "line", "bar", "barh", "scatter", "pie")
+                            "x": [<indices>],                                   (index-Array)                                                                           (optional)
+                            "y": "{<keyName>}",                                 (geschweifte klammern sorgen dafür das Key im backend später geladen wird)
+                            "numeric_attribute": <numericAttributeKey>,         (muss in "<keyName>" aus "y" enthalten sein)                                            (wenn <keyName>-datentype nicht primitiv)
+                            "string_attribute": <stringAttributeKey>,           (muss in "<keyName>" aus "y" enthalten sein)                                            (wenn <keyName>-datentype nicht primitiv)
+                            "color": <#hexcode>,
+                            x_ticks: {
+                                ticks: <Array<string>>
+                            }                                                                                                                        (optional)
+                            "face_color": <#hexcode>,                                                                                                                   (optional)
+                            "grid": {                                                                                                                                   (optional)
+                                "color": <#hexcode>,                                                                                                                    (optional)
+                                "linestyle": <lineStyle>,                       (Möglichkeiten: "-", "--", "-.", ":")                                                   (optional)
+                                "linewidth": <lineWidth>,                                                                                                               (optional)
+                                "axis": <axis>                                  (Möglichkeiten: "x", "y", "both")                                                       (optional)
+                            }
+                        }
+                    },
+                    ...
+                ]
+            }
+        },
+        ...
+    }
+    diagrams_original: <Array<Diagram>>                                           (speichert alle Diagramme im vom Frontend genutzten Format)
+    arrays_used_in_diagrams: <Array<string>>                                      (speichert die Namen aller Arrays, die in Diagrammen genutzt wurden (vom Backend angefordert))
+}

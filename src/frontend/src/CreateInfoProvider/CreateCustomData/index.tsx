@@ -6,7 +6,7 @@ import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {formelObj} from "./CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {customDataBackendAnswer, ListItemRepresentation, SelectedDataItem} from "../types";
 import {getListItemsNames} from "../helpermethods";
@@ -16,8 +16,8 @@ interface CreateCustomDataProps {
     backHandler: () => void;
     selectedData: Array<SelectedDataItem>;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
-    customData: Array<formelObj>;
-    setCustomData: (array: Array<formelObj>) => void;
+    customData: Array<FormelObj>;
+    setCustomData: (array: Array<FormelObj>) => void;
     reportError: (message: string) => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
@@ -335,7 +335,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         if (data.accepted) {
             const arCopy = props.customData.slice();
-            arCopy.push(new formelObj(name, input));
+            arCopy.push(new FormelObj(name, input));
             props.setCustomData(arCopy);
             fullDelete();
             setName('');

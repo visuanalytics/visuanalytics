@@ -11,7 +11,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
-import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelObj"
+import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
 import {
     DataSource,
     DataSourceKey,
@@ -19,7 +19,7 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram
+    uniqueId, Diagram, Plots
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
@@ -94,7 +94,7 @@ export const CreateInfoProvider = () => {
     // contains selected data from DataSelection
     const [selectedData, setSelectedData] = React.useState(new Array<SelectedDataItem>());
     // contains all data created custom in step 4
-    const [customData, setCustomData] = React.useState(new Array<formelObj>());
+    const [customData, setCustomData] = React.useState(new Array<FormelObj>());
     // contains all data that was selected for historization
     const [historizedData, setHistorizedData] = React.useState(new Array<string>());
     // Contains the JSON for historization schedule selection
@@ -216,7 +216,7 @@ export const CreateInfoProvider = () => {
         //selectedData
         setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
-        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<formelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
+        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<FormelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
         setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
         //listItems (less calculations will be necessary this way)
@@ -348,6 +348,7 @@ export const CreateInfoProvider = () => {
      */
     const handleSuccess = (jsonData: any) => {
       clearSessionStorage();
+      components?.setCurrent("dashboard")
     }
 
     /**
@@ -357,6 +358,169 @@ export const CreateInfoProvider = () => {
     const handleError = (err: Error) => {
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
+
+
+    type backendDataSource = {
+        datasource_name: string;
+        api: {
+            api_info: {
+                type: string;
+                api_key_name: string;
+                url_pattern: string;
+            };
+            method: string;
+            response_type: string;
+        };
+        // TODO use real data type for arrays (Backend needs to provide information)
+        transform: Array<any>;
+        storing: Array<any>;
+        formulas: Array<FormelObj>
+        schedule: {
+            type: string;
+            time: string;
+            date: string;
+            time_interval: string;
+            weekdays: Array<number>;
+        };
+        selected_data: Array<SelectedDataItem>;
+        historized_data: Array<string>;
+    }
+
+    const createDataSources = () => {
+        const backendDataSources: Array<backendDataSource> = [];
+        dataSources.forEach((dataSource) => {
+            backendDataSources.push({
+                datasource_name: dataSource.apiName,
+                api: {
+                    api_info: {
+                        type: "request",
+                        api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                        url_pattern: dataSource.query,
+                    },
+                    method: dataSource.noKey ? "noAuth" : dataSource.method,
+                    response_type: "json", // TODO Add xml support
+                },
+                transform: [],
+                storing: [],
+                formulas: dataSource.customData,
+                schedule: {
+                    type: dataSource.schedule.type,
+                    time: dataSource.schedule.time,
+                    date: "",
+                    time_interval: dataSource.schedule.interval,
+                    weekdays: dataSource.schedule.weekdays
+                },
+                selected_data: dataSource.selectedData,
+                historized_data: dataSource.historizedData,
+            })
+        });
+        return backendDataSources;
+    }
+
+    /*type BackendDiagram = {
+        type: string;
+        diagram_config: {
+            type: string;
+            name: string;
+            infoprovider: string;
+            sourceType: string;
+            plots: Array<Plots>;
+        }
+    }*/
+
+    const createBackendDiagrams = () => {
+        //TODO: possibly find smarter solution without any type
+        const diagramsObject: any = {};
+        diagrams.forEach((diagram) => {
+            diagramsObject[diagram.name] = {
+                type: "diagram_custom",
+                diagram_config: {
+                    type: "custom",
+                    name: diagram.name,
+                    infoprovider: name,
+                    sourceType: diagram.sourceType,
+                    plots: createPlots(diagram)
+                }
+            }
+        })
+        return diagramsObject;
+    }
+
+    /**
+     * Creates the plots array for a selected diagram to be sent to the backend.
+     * @param diagram the diagram to be transformed
+     */
+    const createPlots = React.useCallback((diagram: Diagram) => {
+        console.log(diagram.arrayObjects);
+        const plotArray: Array<Plots> = [];
+        let type: string;
+        //transform the type to the string the backend needs
+        switch (diagram.variant) {
+            case "verticalBarChart": {
+                type = "bar";
+                break;
+            }
+            case "horizontalBarChart": {
+                type = "barh";
+                break;
+            }
+            case "dotDiagram": {
+                type = "scatter";
+                break;
+            }
+            case "lineChart": {
+                type = "line";
+                break;
+            }
+            case "pieChart": {
+                type = "pie";
+                break;
+            }
+        }
+        if (diagram.sourceType === "Array") {
+            if (diagram.arrayObjects !== undefined) {
+                diagram.arrayObjects.forEach((item) => {
+                    const plots = {
+                        customLabels: item.customLabels,
+                        primitive: !Array.isArray(item.listItem.value),
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
+                            color: item.color,
+                            numericAttribute: item.numericAttribute,
+                            stringAttribute: item.stringAttribute,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        } else {
+            //"Historized"
+            if (diagram.historizedObjects !== undefined) {
+                diagram.historizedObjects.forEach((item) => {
+                    const plots = {
+                        dateLabels: item.dateLabels,
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.name,
+                            color: item.color,
+                            dateFormat: item.dateFormat,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        }
+        return plotArray;
+    }, [])
 
     /**
      * Method to post all settings for the Info-Provider made by the user to the backend.
@@ -370,20 +534,32 @@ export const CreateInfoProvider = () => {
             },
             body: JSON.stringify({
                 infoprovider_name: name,
-                api: {
-                    type: "request",
-                    api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2,
-                    url_pattern: query
-                },
-                method: noKey?"noAuth":method,
-                transform: extractKeysFromSelection(selectedData),
-                storing: historizedData,
-                customData: customData
+                datasources: createDataSources(),
+                diagrams: createBackendDiagrams(),
+                diagrams_original: diagrams,
+                //TODO: activate when merge for the branch creating this method is done
+                //arrays_used_in_diagrams: getArraysUsedByDiagrams()
             })
         }, handleSuccess, handleError
     );
 
-
+    //TODO: test this method when it is used
+    /**
+     * Method that creates a list of all arrays that are used in diagrams.
+     * Necessary for forming the object of the infoprovider sent to the backend.
+     */
+    /*const getArraysUsedByDiagrams = () => {
+        const arraysInDiagrams: Array<string> = [];
+        diagrams.forEach((diagram) => {
+            if(diagram.sourceType!=="Array") return;
+            else if(diagram.arrayObjects!==undefined) {
+                diagram.arrayObjects.forEach((array) => {
+                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
+                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
+                })
+            }
+        })
+    }*/
 
     /**
      * Method that checks if the given name is already in use for a data source in this info-provider
@@ -453,7 +629,8 @@ export const CreateInfoProvider = () => {
             selectedData: selectedData,
             customData: customData,
             historizedData: historizedData,
-            schedule: schedule
+            schedule: schedule,
+            listItems: listItems
         };
         for(let i = 0; i < dataSources.length; i++) {
             if (dataSources[i].apiName === apiName) {
@@ -522,7 +699,7 @@ export const CreateInfoProvider = () => {
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
+                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
                     />
                 );
             case 3:
@@ -533,7 +710,7 @@ export const CreateInfoProvider = () => {
                         selectedData={selectedData}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<formelObj>) => setCustomData(array)}
+                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
                         reportError={reportError}
                         listItems={listItems}
                         historizedData={historizedData}
@@ -586,15 +763,12 @@ export const CreateInfoProvider = () => {
                     <DiagramCreation
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        listItems={listItems}
-                        historizedData={historizedData}
-                        customData={customData}
+                        dataSources={dataSources}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
-                        selectedData={selectedData}
                         reportError={reportError}
-                        schedule={schedule}
                         infoProviderName={name}
+                        createPlots={(diagram: Diagram) => createPlots(diagram)}
                     />
                 )
 

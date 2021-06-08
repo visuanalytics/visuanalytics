@@ -14,7 +14,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
 import {ListItemRepresentation, SelectedDataItem} from "../types";
 import {transformJSON, extractKeysFromSelection} from "../helpermethods";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 interface DataSelectionProps {
@@ -27,8 +27,8 @@ interface DataSelectionProps {
     setListItems: (array: Array<ListItemRepresentation>) => void; //TODO: only used for "janek test", remove in production
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
-    customData: Array<formelObj>;
-    setCustomData: (array: Array<formelObj>) => void;
+    customData: Array<FormelObj>;
+    setCustomData: (array: Array<FormelObj>) => void;
 }
 
 

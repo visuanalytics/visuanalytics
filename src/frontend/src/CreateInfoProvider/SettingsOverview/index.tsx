@@ -9,7 +9,7 @@ import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {formelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/formelObj";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
 import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem, uniqueId} from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
@@ -30,7 +30,7 @@ interface SettingsOverviewProps {
     setMethod: (method: string) => void;
     //setApiData: (apiData: {}) => void;
     setSelectedData: (selectedData: SelectedDataItem[]) => void;
-    setCustomData: (customData: formelObj[]) => void;
+    setCustomData: (customData: FormelObj[]) => void;
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
@@ -86,7 +86,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setMethod("");
         //props.setApiData({});
         props.setSelectedData(new Array<SelectedDataItem>());
-        props.setCustomData(new Array<formelObj>());
+        props.setCustomData(new Array<FormelObj>());
         props.setHistorizedData(new Array<string>());
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
@@ -107,7 +107,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * @param event The change event provided by the Select component
      */
     const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
-        setSelectedDataSource(event.currentTarget.value as number);
+        setSelectedDataSource(event.target.value as number);
     }
 
     /**
@@ -158,7 +158,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                             <List disablePadding={true}>
                                 {extractKeysFromSelection(props.dataSources[selectedDataSource].selectedData).map((item: string) => renderListItem(item))}
-                                {props.dataSources[selectedDataSource].customData.map((item: formelObj) => renderListItem(item.formelName))}
+                                {props.dataSources[selectedDataSource].customData.map((item: FormelObj) => renderListItem(item.formelName))}
                             </List>
                         </Box>
                     </Grid>
@@ -203,10 +203,18 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
                             Weitere Datenquelle hinzufügen
                         </Button>
+                        <Button onClick={() => props.setStep(6)}>
+                            Zu den Diagrammen
+                        </Button>
                     </Grid>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
                             abschließen
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.setStep(6)}>
+                            Diagramme Test
                         </Button>
                     </Grid>
                 </Grid>

@@ -24,7 +24,7 @@ class JsonScheduler(Scheduler):
         with resources.open_resource("jobs.json") as file:
             jobs = json.loads(file.read())
 
-        with resources.open_resource("infoprovider.json") as file:
+        with resources.open_resource("datasources.json") as file:
             return jobs, json.loads(file.read())
 
     @ignore_errors
@@ -56,13 +56,13 @@ class JsonScheduler(Scheduler):
             logger.info(f"Job {job['id']}:'{job['name']}' started")
             self._start_job(job['id'], job['name'], job["steps"], job.get("config", {}))
         else:
-            logger.info(f"Infoprovider {job['id']}:'{job['name']}' started")
-            self._start_infoprovider(job['id'], job['name'], {})
+            logger.info(f"Datasource {job['id']}:'{job['name']}' started")
+            self._start_datasource(job['id'], job['name'], {})
 
     @ignore_errors
     def _check_all(self, now: datetime):
         logger.info(f"Check if something needs to be done at: {now}")
-        jobs, infoproviders = self.__get_jobs()
+        jobs, datasources = self.__get_jobs()
 
         if int(now.strftime("%M")) == 00:
             delete_on_time(jobs["jobs"], config_manager.STEPS_BASE_CONFIG["output_path"], "name",
@@ -72,5 +72,5 @@ class JsonScheduler(Scheduler):
         for job in jobs.get("jobs", []):
             self.__check(job, now, True)
 
-        for infoprovider in infoproviders.get("infoproviders", []):
-            self.__check(infoprovider, now, False)
+        for datasource in datasources.get("datasources", []):
+            self.__check(datasource, now, False)

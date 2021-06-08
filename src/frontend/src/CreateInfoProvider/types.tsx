@@ -3,6 +3,10 @@ import {formelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/formelOb
 /* CreateInfoProvider */
 //TODO: possibly find a better solution - objects are a nice structure, but comparison takes up compute time since conversions are necessary
 //data type for elements contained in selectedData
+
+import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+
+
 export type SelectedDataItem = {
     key: string;
     type: string;
@@ -22,9 +26,10 @@ export type DataSource = {
     noKey: boolean;
     method: string;
     selectedData: SelectedDataItem[];
-    customData: formelObj[];
+    customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
+    listItems: Array<ListItemRepresentation>
 }
 
 export type DataSourceKey = {
@@ -51,6 +56,7 @@ export type Diagram = {
     sourceType: string;
     arrayObjects?: Array<ArrayDiagramProperties>;
     historizedObjects?: Array<HistorizedDiagramProperties>;
+    amount: number;
 }
 
 //unique application id used to avoid collisions in session storage
@@ -126,7 +132,7 @@ export type Plots = {
     customLabels?: boolean;
     primitive?: boolean;
     dateLabels?: boolean;
-    plots: {
+    plot: {
         type: string;
         x: Array<number>;
         y: string;

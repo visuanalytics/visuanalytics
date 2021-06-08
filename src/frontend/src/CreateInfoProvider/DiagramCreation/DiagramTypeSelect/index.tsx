@@ -255,7 +255,9 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
      * @param item The array to be displayed
      */
     const renderArrayListItem = (item: ListItemRepresentation) => {
-        const keyString = item.parentKeyName === "" ? item.keyName : item.parentKeyName + "|" + item.keyName
+        let keyString = item.parentKeyName === "" ? item.keyName : item.parentKeyName + "|" + item.keyName;
+        //if it ends with |0, cut the rest
+        //in the current state of the application, all arrays end with |0, this check is used for future compatibility
         return (
             <ListItem key={keyString}>
                 <ListItemIcon>

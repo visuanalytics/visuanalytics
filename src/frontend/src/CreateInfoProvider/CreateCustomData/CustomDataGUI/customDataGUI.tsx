@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
-import {formelObj} from "./formelObjects/formelObj";
+import {FormelObj} from "./formelObjects/FormelObj";
 import {
     Dialog,
     DialogActions,
@@ -22,7 +22,7 @@ import {SelectedDataItem} from "../../types";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
-    customData: Array<formelObj>;
+    customData: Array<FormelObj>;
     input: string;
     name: string;
     setName: (name: string) => void;
