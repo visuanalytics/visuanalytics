@@ -15,11 +15,3 @@ export type formelContext = {
     leftParenFlag: boolean;
     rightParenFlag: boolean;
 }
-
-export type InfoProviderObj = {
-    //format des json
-    name: string;
-    dataSources: Array<DataSource>;
-    //TODO: change to Diagram
-    diagrams: Array<string>;
-}

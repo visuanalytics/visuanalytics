@@ -28,6 +28,50 @@ export type DataSource = {
     listItems: Array<ListItemRepresentation>
 }
 
+//data Source as sent to and returned from the backend
+export type BackendDataSource = {
+    datasource_name: string;
+    api: {
+        api_info: {
+            type: string;
+            api_key_name: string;
+            url_pattern: string;
+        };
+        method: string;
+        response_type: string;
+    };
+    // TODO use real data type for arrays (Backend needs to provide information)
+    transform: Array<any>;
+    storing: Array<any>;
+    formulas: Array<FormelObj>
+    schedule: {
+        type: string;
+        time: string;
+        date: string;
+        time_interval: string;
+        weekdays: Array<number>;
+    };
+    selected_data: Array<SelectedDataItem>;
+    historized_data: Array<string>;
+}
+
+//type/format of infoproviders returned by the backend
+export type InfoProviderFromBackend = {
+    infoprovider_name: string;
+    datasources: Array<BackendDataSource>;
+    //there is a structure in this type, but since we dont know the diagram names
+    //we also dont know how many keys with which names exist
+    diagrams: any;
+    diagrams_original: Array<Diagram>;
+    arrays_used_in_diagrams: Array<string>;
+}
+
+export type FrontendInfoProvider = {
+    infoproviderName: string;
+    dataSources: Array<DataSource>;
+    diagrams: Array<Diagram>
+}
+
 export type DataSourceKey = {
     apiKeyInput1: string;
     apiKeyInput2: string;
