@@ -262,9 +262,9 @@ export const InfoProviderOverview: React.FC = () => {
     const handleSuccessEdit = (jsonData: any) => {
         console.log(jsonData);
         const data = jsonData as InfoProviderFromBackend;
+        //transform the infoProvider to frontend format
         const infoProvider = transFormBackendInfoProvider(data);
         components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
-
     }
 
     /**

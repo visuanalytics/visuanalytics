@@ -1,4 +1,11 @@
-import {DataSource, Diagram, InfoProviderFromBackend, ListItemRepresentation, SelectedDataItem} from "./types";
+import {
+    DataSource,
+    DataSourceKey,
+    Diagram,
+    InfoProviderFromBackend,
+    ListItemRepresentation,
+    SelectedDataItem
+} from "./types";
 
 /* CreateInfoProvider */
 
@@ -171,7 +178,9 @@ export const transFormBackendInfoProvider = (data: InfoProviderFromBackend) => {
     const diagrams: Array<Diagram> = data.diagrams_original;
     console.log(diagrams);
     const dataSources: Array<DataSource> = [];
+    const dataSourcesKeys: Map<string, DataSourceKey> = new Map();
     data.datasources.forEach((backendDataSource) => {
+        //add the dataSource to the array
         dataSources.push({
             apiName: backendDataSource.datasource_name,
             query: backendDataSource.api.api_info.url_pattern,
@@ -188,10 +197,26 @@ export const transFormBackendInfoProvider = (data: InfoProviderFromBackend) => {
             },
             listItems: new Array<ListItemRepresentation>(),
         });
+        //set the api keys in the map
+        let apiKeyInput1 = "";
+        let apiKeyInput2 = "";
+        //if the method is Bearer Token, then only key one is set
+        if(backendDataSource.api.method==="BearerToken") {
+            apiKeyInput1 = backendDataSource.api.api_info.api_key_name;
+        } else {
+            apiKeyInput1 = backendDataSource.api.api_info.api_key_name.split("||")[0];
+            apiKeyInput2 = backendDataSource.api.api_info.api_key_name.substring(apiKeyInput1.length + 2);
+        }
+        dataSourcesKeys.set(backendDataSource.datasource_name, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        })
     })
+
     return {
         infoproviderName: infoProviderName,
         dataSources: dataSources,
+        dataSourcesKeys: dataSourcesKeys,
         diagrams: diagrams
     }
 }

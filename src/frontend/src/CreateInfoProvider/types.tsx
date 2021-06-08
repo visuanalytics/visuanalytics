@@ -69,7 +69,8 @@ export type InfoProviderFromBackend = {
 export type FrontendInfoProvider = {
     infoproviderName: string;
     dataSources: Array<DataSource>;
-    diagrams: Array<Diagram>
+    dataSourcesKeys: Map<string, DataSourceKey>;
+    diagrams: Array<Diagram>;
 }
 
 export type DataSourceKey = {
