@@ -535,7 +535,6 @@ export const CreateInfoProvider = () => {
                 datasources: createDataSources(),
                 diagrams: createBackendDiagrams(),
                 diagrams_original: diagrams,
-                //TODO: activate when merge for the branch creating this method is done
                 arrays_used_in_diagrams: getArraysUsedByDiagrams()
             })
         }, handleSuccess, handleError

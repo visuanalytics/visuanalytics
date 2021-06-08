@@ -3,6 +3,7 @@
     "datasources": [
         {
             "datasource_name": <datasourceName>,
+            "top_level_array": <boolean>
             "api": {
                 "api_info": {
                     "type": "request",                                          (immer gleich)

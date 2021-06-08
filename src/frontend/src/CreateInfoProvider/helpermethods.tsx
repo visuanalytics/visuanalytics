@@ -198,7 +198,7 @@ export const transFormBackendInfoProvider = (data: InfoProviderFromBackend) => {
             listItems: new Array<ListItemRepresentation>(),
         });
         //set the api keys in the map
-        let apiKeyInput1 = "";
+        let apiKeyInput1: string;
         let apiKeyInput2 = "";
         //if the method is Bearer Token, then only key one is set
         if(backendDataSource.api.method==="BearerToken") {
