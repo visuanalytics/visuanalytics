@@ -1,12 +1,16 @@
 import React from 'react'
-import {Card, CardActions, CardContent} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import {Card, CardActions, CardContent, Input, Slider} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import IconButton from "@material-ui/core/IconButton";
+import {useStyles} from "../style";
 
 
 
 export interface SceneCardProps {
+    entryId: string;
     sceneName: string;
     moveLeft: () => void;
     moveRight: () => void;
@@ -23,6 +27,16 @@ export interface SceneCardProps {
  */
 export const SceneCard: React.FC<SceneCardProps> = (props) => {
 
+    const classes = useStyles();
+
+    const handleDurationSliderChange = (event: object, newDuration: number | number[]) => {
+        props.setDisplayDuration(Number(newDuration));
+    }
+
+    const handleDurationInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        props.setDisplayDuration(Number(event.target.value))
+    }
+
     return (
         <Card variant="outlined" color="primary" style={{width: "300px"}}>
             <CardContent>
@@ -32,12 +46,49 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                             {props.sceneName}
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Typography>
-                            Dauer: {props.displayDuration}
-                        </Typography>
+                    <Grid item container xs={12} className={classes.elementLargeMargin}>
+                        <Grid item xs={3}>
+                            <Typography variant="body1" id={props.sceneName + "-duration-input"}>
+                                Dauer:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={9}>
+                                <Slider
+                                    value={props.displayDuration}
+                                    getAriaValueText={() => props.displayDuration + " Sekunden"}
+                                    onChange={handleDurationSliderChange}
+                                    aria-labelledby={props.sceneName + "-duration-input"}
+                                    step={1}
+
+                                    min={0}
+                                    max={300}
+                                    valueLabelDisplay="auto"
+
+                                />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item container xs={12}>
+                        <Grid item xs={3}>
+                            <Input
+                                value={props.displayDuration}
+                                margin="dense"
+                                onChange={handleDurationInputChange}
+                                inputProps={{
+                                    step: 1,
+                                    min: 0,
+                                    max: 300,
+                                    type: 'number',
+                                    "aria-labelledby": props.sceneName + "-duration-input",
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={9}>
+                            <Typography variant="body1">
+                                Sekunden
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} className={classes.elementLargeMargin}>
                         <Typography>
                             Gesprochener Text: {props.spokenText}
                         </Typography>
@@ -47,14 +98,18 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
             <CardActions>
                 <Grid container justify="space-between">
                     <Grid item>
-                        <Button disabled={props.leftDisabled} variant="contained" onClick={props.moveLeft}>
-                            links
-                        </Button>
+                        <IconButton disabled={props.leftDisabled} onClick={props.moveLeft}>
+                            <ArrowBackIcon
+                                fontSize="large"
+                            />
+                        </IconButton>
                     </Grid>
                     <Grid item>
-                        <Button disabled={props.rightDisabled} variant="contained" onClick={props.moveRight}>
-                            rechts
-                        </Button>
+                        <IconButton disabled={props.rightDisabled} onClick={props.moveRight}>
+                            <ArrowForwardIcon
+                                fontSize="large"
+                            />
+                        </IconButton>
                     </Grid>
                 </Grid>
             </CardActions>

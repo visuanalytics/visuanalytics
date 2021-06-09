@@ -23,12 +23,12 @@ export const SceneContainer = () => {
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
 
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 1, spokenText: ""},
-        {entryId: "Szene_1||0", sceneName: "Szene_2", displayDuration: 1, spokenText: ""},
-        {entryId: "Szene_1||0", sceneName: "Szene_3", displayDuration: 1, spokenText: ""},
-        {entryId: "Szene_1||0", sceneName: "Szene_4", displayDuration: 1, spokenText: ""},
-        {entryId: "Szene_1||0", sceneName: "Szene_5", displayDuration: 1, spokenText: ""},
-        {entryId: "Szene_1||0", sceneName: "Szene_6", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 5, spokenText: ""},
+        {entryId: "Szene_2||0", sceneName: "Szene_2", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_3||0", sceneName: "Szene_3", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_4||0", sceneName: "Szene_4", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_5||0", sceneName: "Szene_5", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_6||0", sceneName: "Szene_6", displayDuration: 1, spokenText: ""},
     ]);
 
     /**
@@ -46,7 +46,12 @@ export const SceneContainer = () => {
      * @param newDuration The new duration value.
      */
     const setDisplayDuration = (index: number, newDisplayDuration: number) => {
-
+        const arCopy = sceneList.slice();
+        arCopy[index] = {
+            ...arCopy[index],
+            displayDuration: newDisplayDuration
+        }
+        setSceneList(arCopy);
     }
 
     /**
@@ -55,7 +60,12 @@ export const SceneContainer = () => {
      * @param newSpokenText The new spoken text
      */
     const setSpokenText = (index: number, newSpokenText: string) => {
-
+        const arCopy = sceneList.slice();
+        arCopy[index] = {
+            ...arCopy[index],
+            spokenText: newSpokenText
+        }
+        setSceneList(arCopy);
     }
 
     /**
@@ -85,6 +95,7 @@ export const SceneContainer = () => {
         return (
             <ListItem key={sceneEntry.entryId}>
                 <SceneCard
+                    entryId={sceneEntry.entryId}
                     sceneName={sceneEntry.sceneName}
                     moveLeft={() => moveScene(index, Direction.Left)}
                     moveRight={() => moveScene(index, Direction.Right)}
