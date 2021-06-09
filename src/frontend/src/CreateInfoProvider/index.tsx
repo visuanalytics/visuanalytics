@@ -54,11 +54,15 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
  */
 
 
+
+interface CreateInfoproviderProps {
+    continueHandler?: () => void;
+}
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
-export const CreateInfoProvider = () => {
+export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= () => {
     const components = React.useContext(ComponentContext);
 
     //const classes = useStyles();

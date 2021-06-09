@@ -15,6 +15,7 @@ import {formelContext} from "./types";
 import {
     BackendDataSource,
     DataSource,
+    DataSourceKey,
     Diagram,
     FrontendInfoProvider,
     Plots,
@@ -51,7 +52,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      */
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
+    const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -97,6 +98,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             listItems: [],
         },
     ));
+
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
@@ -446,6 +449,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
         }
     }
+
+    const saveNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
+        setInfoProvDataSource(infoProvDataSource.concat(dataSource));
+        const mapCopy = new Map(infoProvDataSourcesKeys)
+        setInfoProvDataSourcesKeys(mapCopy.set(dataSource.apiName, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        }));
+    }
+
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
