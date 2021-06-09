@@ -11,33 +11,47 @@ import {ComponentContext} from "../ComponentProvider";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
-import {formelContext, InfoProviderObj} from "./types";
-import {DataSource, SelectedDataItem} from "../CreateInfoProvider/types";
+import {formelContext} from "./types";
+import {
+    BackendDataSource,
+    DataSource,
+    Diagram,
+    FrontendInfoProvider,
+    Plots,
+    SelectedDataItem,
+} from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {useCallFetch} from "../Hooks/useCallFetch";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
-    infoProvider?: InfoProviderObj;
+    infoProvider?: FrontendInfoProvider;
 }
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId, infoProvider}*/) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
+    //TODO: remove after testing
+    /*React.useEffect(() => {
+        console.log(infoProvId);
+        console.log(infoProvider);
+    }, [])*/
     /**
      * The name of the infoprovider that is being edited
      */
     //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState("TristanTest");
+    const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
 
     //TODO: mind that keyInput is now in map
+    //TODO: remove testinput for production
     /**
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(new Array<DataSource>(
+    const [infoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -88,7 +102,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      * The array with diagrams from the Infoprovider that is being edited.
      */
     //TODO: change to Diagram
-    //const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider ? infoProvider.diagrams : new Array<string>());
+    const [infoProvDiagrams/*, setInfoProvDiagrams*/] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -129,11 +143,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      * Through delete options historizedData can become empty.
      */
     const checkForHistorizedData = () => {
-
         if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
             infoProvDataSource[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
         }
-
     }
 
     /**
@@ -174,9 +186,199 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
      * Method to send the edited infoprovider to the backend.
      * The backend will now update the infoprovider with the new data.
      */
-    const editInfoProvider = () => {
-        //TODO: Post the edited Infoprovider!
+    const finishEditing = () => {
+        postInfoProvider();
     }
+
+
+    /**
+     * Handler for the return of a successful call to the backend (posting info-provider)
+     * @param jsonData The JSON-object delivered by the backend
+     */
+    const handleSuccess = (jsonData: any) => {
+        //TODO: cleanup sessionStorage
+        components?.setCurrent("dashboard")
+    }
+
+    /**
+     * Handler for unsuccessful call to the backend (posting info-provider)
+     * @param err The error returned by the backend
+     */
+    const handleError = (err: Error) => {
+        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
+    }
+
+
+    const createDataSources = () => {
+        const backendDataSources: Array<BackendDataSource> = [];
+        infoProvDataSource.forEach((dataSource) => {
+            backendDataSources.push({
+                datasource_name: dataSource.apiName,
+                api: {
+                    api_info: {
+                        type: "request",
+                        //api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                        //TODO: change when the merge has happened
+                        api_key_name: "",
+                        url_pattern: dataSource.query,
+                    },
+                    method: dataSource.noKey ? "noAuth" : dataSource.method,
+                    response_type: "json", // TODO Add xml support
+                },
+                transform: [],
+                storing: [],
+                formulas: dataSource.customData,
+                schedule: {
+                    type: dataSource.schedule.type,
+                    time: dataSource.schedule.time,
+                    date: "",
+                    time_interval: dataSource.schedule.interval,
+                    weekdays: dataSource.schedule.weekdays
+                },
+                selected_data: dataSource.selectedData,
+                historized_data: dataSource.historizedData,
+            })
+        });
+        return backendDataSources;
+    }
+
+    const createBackendDiagrams = () => {
+        //TODO: possibly find smarter solution without any type
+        const diagramsObject: any = {};
+        infoProvDiagrams.forEach((diagram) => {
+            diagramsObject[diagram.name] = {
+                type: "diagram_custom",
+                diagram_config: {
+                    type: "custom",
+                    name: diagram.name,
+                    infoprovider: infoProvName,
+                    sourceType: diagram.sourceType,
+                    plots: createPlots(diagram)
+                }
+            }
+        })
+        return diagramsObject;
+    }
+
+    /**
+     * Creates the plots array for a selected diagram to be sent to the backend.
+     * @param diagram the diagram to be transformed
+     */
+    const createPlots = React.useCallback((diagram: Diagram) => {
+        const plotArray: Array<Plots> = [];
+        let type: string;
+        //transform the type to the string the backend needs
+        switch (diagram.variant) {
+            case "verticalBarChart": {
+                type = "bar";
+                break;
+            }
+            case "horizontalBarChart": {
+                type = "barh";
+                break;
+            }
+            case "dotDiagram": {
+                type = "scatter";
+                break;
+            }
+            case "lineChart": {
+                type = "line";
+                break;
+            }
+            case "pieChart": {
+                type = "pie";
+                break;
+            }
+        }
+        if (diagram.sourceType === "Array") {
+            if (diagram.arrayObjects !== undefined) {
+                diagram.arrayObjects.forEach((item) => {
+                    const plots = {
+                        customLabels: item.customLabels,
+                        primitive: !Array.isArray(item.listItem.value),
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
+                            color: item.color,
+                            numericAttribute: item.numericAttribute,
+                            stringAttribute: item.stringAttribute,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        } else {
+            //"Historized"
+            if (diagram.historizedObjects !== undefined) {
+                diagram.historizedObjects.forEach((item) => {
+                    const plots = {
+                        dateLabels: item.dateLabels,
+                        plot: {
+                            type: type,
+                            x: Array.from(Array(diagram.amount).keys()),
+                            y: item.name,
+                            color: item.color,
+                            dateFormat: item.dateFormat,
+                            x_ticks: {
+                                ticks: item.labelArray
+                            }
+                        }
+                    }
+                    plotArray.push(plots);
+                })
+            }
+        }
+        return plotArray;
+    }, [])
+
+    //TODO: test this method when it is used
+    /**
+     * Method that creates a list of all arrays that are used in diagrams.
+     * Necessary for forming the object of the infoprovider sent to the backend.
+     */
+    const getArraysUsedByDiagrams = () => {
+        const arraysInDiagrams: Array<string> = [];
+        infoProvDiagrams.forEach((diagram) => {
+            if(diagram.sourceType!=="Array") return;
+            else if(diagram.arrayObjects!==undefined) {
+                diagram.arrayObjects.forEach((array) => {
+                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
+                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
+                })
+            }
+        })
+        return arraysInDiagrams;
+    }
+
+
+
+    /**
+     * Method to post all settings for the Info-Provider made by the user to the backend.
+     * The backend will use this data to create the desired Info-Provider.
+     */
+    const postInfoProvider = useCallFetch("visuanalytics/infoprovider/" + infoProvId,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                infoprovider_name: infoProvName,
+                datasources: createDataSources(),
+                diagrams: createBackendDiagrams(),
+                diagrams_original: infoProvDiagrams,
+                arrays_used_in_diagrams: getArraysUsedByDiagrams()
+            })
+        }, handleSuccess, handleError
+    );
+
+
+
+
 
     /**
      * Returns the rendered component based on the current step.
@@ -189,7 +391,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     <EditSettingsOverview
                         continueHandler={(index: number) => handleContinue(index)}
                         handleBack={(index: number) => handleBack(index)}
-                        editInfoProvider={editInfoProvider}
+                        editInfoProvider={finishEditing}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
                         infoProvDataSources={infoProvDataSource}
@@ -202,7 +404,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     <EditDataSelection
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
-                        editInfoProvider={editInfoProvider}
+                        editInfoProvider={finishEditing}
                     />
                 );
             case 2:
@@ -210,7 +412,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     <EditCustomData
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
-                        editInfoProvider={editInfoProvider}
+                        editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSource}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
@@ -222,7 +424,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                     <EditSingleFormel
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
-                        editInfoProvider={editInfoProvider}
+                        editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSource}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}

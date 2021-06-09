@@ -87,7 +87,7 @@ def insert_infoprovider(infoprovider):
             "response_type": datasource["api"]["response_type"]
         }
 
-        api_step["steps_value"].append(datasource["name"])
+        api_step["steps_value"].append(datasource["datasource_name"])
         api_step["requests"].append(req_data)
 
     # Transform obj vorbereiten
@@ -100,7 +100,9 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": infoprovider["datasources"]
+        "datasources": infoprovider["datasources"],
+        "diagrams_original": infoprovider["diagrams_original"],
+        "arrays_used_in_diagrams": infoprovider["arrays_used_in_diagrams"]
     }
 
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
@@ -116,7 +118,7 @@ def insert_infoprovider(infoprovider):
                                   [infoprovider_name]).lastrowid
 
     for datasource in datasources:
-        datasource_name = datasource["name"]
+        datasource_name = datasource["datasource_name"]
 
         header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
 
@@ -236,7 +238,9 @@ def get_infoprovider(infoprovider_id):
     return {
         "infoprovider_name": infoprovider_json["name"],
         "datasources": infoprovider_json["datasources"],
-        "diagrams": infoprovider_json["images"]
+        "diagrams": infoprovider_json["images"],
+        "diagrams_original": infoprovider_json["diagrams_original"],
+        "arrays_used_in_diagrams": infoprovider_json["arrays_used_in_diagrams"]
     }
 
 
@@ -293,7 +297,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "response_type": datasource["api"]["response_type"]
         }
 
-        api_step_new["steps_value"].append(datasource["name"])
+        api_step_new["steps_value"].append(datasource["datasource_name"])
         api_step_new["requests"].append(req_data)
 
     # Update Transform-Step vorbereiten
@@ -316,7 +320,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     _remove_datasources(con, infoprovider_id)
 
     for datasource in updated_data["datasources"]:
-        datasource_name = datasource["name"]
+        datasource_name = datasource["datasource_name"]
 
         header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
 

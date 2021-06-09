@@ -1,4 +1,11 @@
-import {ListItemRepresentation, SelectedDataItem} from "./types";
+import {
+    DataSource,
+    DataSourceKey,
+    Diagram,
+    InfoProviderFromBackend,
+    ListItemRepresentation,
+    SelectedDataItem
+} from "./types";
 
 /* CreateInfoProvider */
 
@@ -158,4 +165,58 @@ export const getListItemsNames = (listItems: Array<ListItemRepresentation>) => {
         }
     });
     return listItemNames;
+}
+
+
+/**
+ * Method that transforms an infoProvider from the backend data format to a frontend data format representation
+ * @param data
+ */
+export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
+    const infoProviderName: string = data.infoprovider_name;
+    console.log(infoProviderName);
+    const diagrams: Array<Diagram> = data.diagrams_original;
+    console.log(diagrams);
+    const dataSources: Array<DataSource> = [];
+    const dataSourcesKeys: Map<string, DataSourceKey> = new Map();
+    data.datasources.forEach((backendDataSource) => {
+        //add the dataSource to the array
+        dataSources.push({
+            apiName: backendDataSource.datasource_name,
+            query: backendDataSource.api.api_info.url_pattern,
+            noKey: backendDataSource.api.method==="noAuth",
+            method: backendDataSource.api.method==="noAuth"?"":backendDataSource.api.method,
+            selectedData: backendDataSource.selected_data,
+            customData: backendDataSource.formulas,
+            historizedData: backendDataSource.historized_data,
+            schedule: {
+                type: backendDataSource.schedule.type,
+                weekdays: backendDataSource.schedule.weekdays,
+                time: backendDataSource.schedule.time,
+                interval: backendDataSource.schedule.time_interval,
+            },
+            listItems: new Array<ListItemRepresentation>(),
+        });
+        //set the api keys in the map
+        let apiKeyInput1: string;
+        let apiKeyInput2 = "";
+        //if the method is Bearer Token, then only key one is set
+        if(backendDataSource.api.method==="BearerToken") {
+            apiKeyInput1 = backendDataSource.api.api_info.api_key_name;
+        } else {
+            apiKeyInput1 = backendDataSource.api.api_info.api_key_name.split("||")[0];
+            apiKeyInput2 = backendDataSource.api.api_info.api_key_name.substring(apiKeyInput1.length + 2);
+        }
+        dataSourcesKeys.set(backendDataSource.datasource_name, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        })
+    })
+
+    return {
+        infoproviderName: infoProviderName,
+        dataSources: dataSources,
+        dataSourcesKeys: dataSourcesKeys,
+        diagrams: diagrams
+    }
 }
