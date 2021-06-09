@@ -11,6 +11,7 @@ import { hintContents } from "../../util/hintContents";
 import Konva from 'konva';
 import { Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star } from 'react-konva';
 import { TransformerComponent } from './TransformerComponent/index'
+import './editor.css'
 
 interface SceneEditorProps {
   continueHandler: () => void;
@@ -40,8 +41,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [pickerY, setPickerY] = React.useState(0);
   const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<myCircle | myRectangle | myLine | myStar | myText | myImage>>([]);
   const [lastItemName, setLastItemName] = React.useState("");
-  const [windowWidth, setWindowWidth] = React.useState(0);
-  const [windowHeight, setWindowHeight] = React.useState(0);
+  const [windowWidth, setWindowWidth] = React.useState(1280);
+  const [windowHeight, setWindowHeight] = React.useState(720);
   const [selectedItemName, setSelectedItemName] = React.useState("");
   const [selectedType, setSelectedType] = React.useState("");
   const [selectedObject, setSelectedObject] = React.useState<myCircle | myRectangle | myLine | myStar | myText | myImage>({} as myCircle);
@@ -152,6 +153,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       const id = item
       const foundItem = items.find((i: any) => i.id === id);
       if (foundItem !== undefined) {
+        setSelectedObject(foundItem);
+        console.log(selectedObject);
         const index = items.indexOf(foundItem);
         // TODO: remove change of HTML Elements
         if (!items[index].id.startsWith('image')) {
@@ -238,6 +241,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const name = e.target.name();
     console.log(name);
     if (e.target === e.target.getStage() || name === "background") {
+      console.log("Clicked Stage / Background")
       setSelectedItemName("");
       setTextEditVisibility(false);
       setItemSelected(false);
@@ -251,10 +255,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const clickedOnTransformer =
       e.target.getParent().className === "Transformer";
     if (clickedOnTransformer) {
+      console.log("You clicked the stransformer...");
       return;
     }
 
     if (name !== undefined && name !== '') {
+      console.log(name)
       setSelectedItemName(name);
       setItemSelected(true);
       setColorType("COLOR");
@@ -284,7 +290,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       return;
     } else if (selectedType === "Circle") {
       const nextColor = Konva.Util.getRandomColor();
-      items.push({
+      const item : myCircle = {
         x: parseInt(localX.toFixed(0)),
         y: parseInt(localY.toFixed(0)),
         radius: 50,
@@ -293,8 +299,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         scaleX: 1,
         scaleY: 1,
         rotation: 0,
-      } as myCircle);
-
+      }
+      items.push(item);
+      setSelectedObject(item);
       (document.getElementById("itemColor")! as HTMLInputElement).value = nextColor;
       setItemPositionX(Number(localY.toFixed(0)));
       setItemPositionY(Number(localX.toFixed(0)));
@@ -453,10 +460,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @param e onDoubleClick Event
    */
   const handleTextDblClick = (e: any) => {
+    console.log(selectedObject)
     const id = e.target.name();
+    console.log(id)
     const localItems = items.slice();
     const index = items.indexOf(selectedObject);
     let backup: any = items[index];
+    console.log(backup)
     let objectCopy: any = selectedObject;
     //TODO Type Assuring
     if (typeGuard(items[index])) {
@@ -471,8 +481,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       setTextContentBackup(backupText)
       setSelectedItemName("")
       setItems(localItems)
-      setSelectedObject(e.target)
-      setTextEditContent(backup)
+      setTextEditContent(backup.textContent)
       setTextEditVisibility(true)
       setTextEditX(objectCopy.x)
       setTextEditY(objectCopy.y)
@@ -491,6 +500,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     console.log(e.key);
     if (e.key === 'Enter') {
+      console.log(textEditContent);
       const textContent = textEditContent;
       const regEx = /_.*_/g;
       const fullTextContent: string[] = textContent.split('_');
@@ -502,6 +512,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
 
       }
+      console.log(fullTextContent)
       const id = selectedObject;
       const localItems = items.slice();
       const index = items.indexOf(selectedObject);
@@ -513,6 +524,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       setItems(localItems);
       setLastItemName("undefined");
       setTextEditVisibility(false);
+      console.log(items)
     }
   };
 
@@ -563,6 +575,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const selectType = () => {
     document.getElementById("main")!.style.cursor = "crosshair";
     const type = (document.getElementById("itemType")! as HTMLSelectElement).value;
+    console.log(type)
     setSelectedType(type);
   }
 
@@ -899,14 +912,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                           onMouseOver={mouseOver}
                           onMouseLeave={mouseLeave}
                           dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > window.innerWidth / 2 - item.width / 2) {
-                              pos.x = window.innerWidth / 2 - item.width / 2
+                            if (pos.x > windowWidth - item.width) {
+                              pos.x = windowWidth - item.width
                             }
                             if (pos.x < 0) {
                               pos.x = 0
                             }
-                            if (pos.y > window.innerHeight / 2 - item.height / 2) {
-                              pos.y = window.innerHeight / 2 - item.height / 2
+                            if (pos.y > windowHeight - item.height) {
+                              pos.y = windowHeight - item.height
                             }
                             if (pos.y < 0) {
                               pos.y = 0
