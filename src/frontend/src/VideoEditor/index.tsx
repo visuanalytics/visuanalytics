@@ -8,9 +8,7 @@ import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import Grid from "@material-ui/core/Grid";
 import {ListItem, ListItemText} from "@material-ui/core";
 
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import {DraggableScene} from "./DraggableScene";
+
 import {RemoveField} from "./RemoveField";
 import {SceneContainer} from "./SceneContainer";
 
@@ -47,16 +45,11 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
             hintContent={null}
             large={true}
         >
-            <DndProvider backend={HTML5Backend}>
-                <Grid container style={{width: "100%", margin: "auto"}}>
-                    <Grid item xs={12}>
-                        <SceneContainer></SceneContainer>
-                    </Grid>
-                    <Grid item xs={12} style={{height: "100px"}}>
-                        <RemoveField></RemoveField>
-                    </Grid>
+            <Grid container style={{width: "100%", margin: "auto"}}>
+                <Grid item xs={12}>
+                    <SceneContainer></SceneContainer>
                 </Grid>
-            </DndProvider>
+            </Grid>
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

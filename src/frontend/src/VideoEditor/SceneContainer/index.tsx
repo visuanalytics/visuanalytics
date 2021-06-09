@@ -1,5 +1,5 @@
 import React from "react"
-import {DraggableScene} from "../DraggableScene";
+import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
@@ -7,74 +7,106 @@ import List from "@material-ui/core/List";
 
 export const SceneContainer = () => {
 
-    type Item = {
-        id: number;
-        text: string;
+    type SceneCardData = {
+        entryId: string;
+        sceneName: string;
+        displayDuration: number;
+        spokenText: string;
     }
 
-    const [cards, setCards] = React.useState<Array<Item>>([
-        {
-            id: 1,
-            text: 'Write a cool JS library',
-        },
-        {
-            id: 2,
-            text: 'Make it generic enough',
-        },
-        {
-            id: 3,
-            text: 'Write README',
-        },
-        {
-            id: 4,
-            text: 'Create some examples',
-        },
-        {
-            id: 5,
-            text:
-                'Spam in Twitter and IRC to promote it (note that this element is taller than the others)',
-        },
-        {
-            id: 6,
-            text: '???',
-        },
-        {
-            id: 7,
-            text: 'PROFIT',
-        },
+    enum Direction {
+        Left = "LEFT",
+        Right = "RIGHT"
+    }
+
+    //list of the names of all scenes available - holds the data fetched from the backend
+    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
+
+    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
+        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_2", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_3", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_4", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_5", displayDuration: 1, spokenText: ""},
+        {entryId: "Szene_1||0", sceneName: "Szene_6", displayDuration: 1, spokenText: ""},
     ]);
 
-    const moveCard = React.useCallback((dragIndex: number, hoverIndex: number) => {
-        const dragCard = cards[dragIndex]
-        const arCopy = cards.slice();
-        arCopy.splice(dragIndex, 1);
-        arCopy.splice(hoverIndex, 0, dragCard);
-        setCards(arCopy);
-    }, [cards])
+    /**
+     * Method that appends a new scene to the list of scenes selected for the video.
+     * @param sceneName The unique name of the scene to be appended
+     */
+    const addScene = (sceneName: string) => {
+        //search all occurences of this scene and find the highest id number to define the id of this scene
+        //necessary since the names alone wont be unique
+    }
 
-    const renderCard = (card: { id: number; text: string }, index: number) => {
+    /**
+     * Handler method that changes the selected duration of a scene in the video.
+     * @param index The index (in the list) of the scene whose duration is changed.
+     * @param newDuration The new duration value.
+     */
+    const setDisplayDuration = (index: number, newDisplayDuration: number) => {
+
+    }
+
+    /**
+     * Handler method that changes the duration of the spoken text of a selected text in the scene.
+     * @param index The index (in the list) of the scene whose text is changed.
+     * @param newSpokenText The new spoken text
+     */
+    const setSpokenText = (index: number, newSpokenText: string) => {
+
+    }
+
+    /**
+     * Method that moves a single scene in the sceneList left or right.
+     * @param sourceIndex The current index of the scene that is moved
+     * @param direction Direction of the movement.
+     */
+    const moveScene = (sourceIndex: number, direction: Direction) => {
+        //TODO: some kind of animation when swapping, like short glowing of the swapped cards? Would be good for visuality
+        //if the we try to go out of bounds, nothing will happen
+        if ((sourceIndex < 1 && direction === Direction.Left) || (sourceIndex >= sceneList.length - 1 && direction === Direction.Right)) return;
+        const movedScene = sceneList[sourceIndex];
+        const arCopy = sceneList.slice();
+        //shift the scene left/right to the moved element right/left
+        arCopy[sourceIndex] = arCopy[sourceIndex + (direction === Direction.Left ? -1 : 1)]
+        //shift the moved scene to the left/right
+        arCopy[sourceIndex + (direction === Direction.Left ? -1 : 1)] = movedScene;
+        setSceneList(arCopy);
+    }
+
+    /**
+     * Method that renders a single entry in the list of scenes used in the video.
+     * @param sceneEntry The object of the displayed entry.
+     * @param index The index of the list the entry is rendered at.
+     */
+    const renderSceneEntry = (sceneEntry: SceneCardData, index: number) => {
         return (
-            <ListItem>
-                <DraggableScene
-                    key={card.id}
-                    index={index}
-                    id={card.id}
-                    text={card.text}
-                    moveCard={moveCard}
+            <ListItem key={sceneEntry.entryId}>
+                <SceneCard
+                    sceneName={sceneEntry.sceneName}
+                    moveLeft={() => moveScene(index, Direction.Left)}
+                    moveRight={() => moveScene(index, Direction.Right)}
+                    displayDuration={sceneList[index].displayDuration}
+                    setDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration)}
+                    spokenText={sceneList[index].spokenText}
+                    setSpokenText={(newSpokenText: string) => setSpokenText(index, newSpokenText)}
+                    leftDisabled={index === 0}
+                    rightDisabled={index === sceneList.length - 1}
                 />
             </ListItem>
-
         )
     }
 
     return (
         <>
-            <Box borderColor="primary.main" border={4} style={{height: "200px", width: "100%", overflowY: "hidden",}}>
+            <Box borderColor="primary.main" border={4} style={{width: "100%", overflowY: "hidden",}}>
                 <List style={{display: 'flex',
                     flexDirection: 'row',
                     padding: 0,}}
                 >
-                    {cards.map((card, i) => renderCard(card, i))}
+                    {sceneList.map((sceneEntry, index) => renderSceneEntry(sceneEntry, index))}
                 </List>
             </Box>
         </>
