@@ -19,7 +19,7 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram, Plots
+    uniqueId, Diagram, Plots, BackendDataSource
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
@@ -370,34 +370,8 @@ export const CreateInfoProvider = () => {
     }
 
 
-    type backendDataSource = {
-        datasource_name: string;
-        api: {
-            api_info: {
-                type: string;
-                api_key_name: string;
-                url_pattern: string;
-            };
-            method: string;
-            response_type: string;
-        };
-        // TODO use real data type for arrays (Backend needs to provide information)
-        transform: Array<any>;
-        storing: Array<any>;
-        formulas: Array<FormelObj>
-        schedule: {
-            type: string;
-            time: string;
-            date: string;
-            time_interval: string;
-            weekdays: Array<number>;
-        };
-        selected_data: Array<SelectedDataItem>;
-        historized_data: Array<string>;
-    }
-
     const createDataSources = () => {
-        const backendDataSources: Array<backendDataSource> = [];
+        const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
             backendDataSources.push({
                 datasource_name: dataSource.apiName,
@@ -532,6 +506,25 @@ export const CreateInfoProvider = () => {
         return plotArray;
     }, [])
 
+    //TODO: test this method when it is used
+    /**
+     * Method that creates a list of all arrays that are used in diagrams.
+     * Necessary for forming the object of the infoprovider sent to the backend.
+     */
+    const getArraysUsedByDiagrams = () => {
+        const arraysInDiagrams: Array<string> = [];
+        diagrams.forEach((diagram) => {
+            if(diagram.sourceType!=="Array") return;
+            else if(diagram.arrayObjects!==undefined) {
+                diagram.arrayObjects.forEach((array) => {
+                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
+                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
+                })
+            }
+        })
+        return arraysInDiagrams;
+    }
+
     /**
      * Method to post all settings for the Info-Provider made by the user to the backend.
      * The backend will use this data to create the desired Info-Provider.
@@ -547,29 +540,11 @@ export const CreateInfoProvider = () => {
                 datasources: createDataSources(),
                 diagrams: createBackendDiagrams(),
                 diagrams_original: diagrams,
-                //TODO: activate when merge for the branch creating this method is done
-                //arrays_used_in_diagrams: getArraysUsedByDiagrams()
+                arrays_used_in_diagrams: getArraysUsedByDiagrams()
             })
         }, handleSuccess, handleError
     );
 
-    //TODO: test this method when it is used
-    /**
-     * Method that creates a list of all arrays that are used in diagrams.
-     * Necessary for forming the object of the infoprovider sent to the backend.
-     */
-    /*const getArraysUsedByDiagrams = () => {
-        const arraysInDiagrams: Array<string> = [];
-        diagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
-                diagram.arrayObjects.forEach((array) => {
-                    //checking for empty parentKeyName is not necessary since the dataSource name is always included
-                    arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
-                })
-            }
-        })
-    }*/
 
     /**
      * Method that checks if the given name is already in use for a data source in this info-provider

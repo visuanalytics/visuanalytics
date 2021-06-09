@@ -203,6 +203,9 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
                             Weitere Datenquelle hinzufügen
                         </Button>
+                        <Button onClick={() => props.setStep(6)}>
+                            Zu den Diagrammen
+                        </Button>
                     </Grid>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
