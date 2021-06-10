@@ -468,15 +468,17 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     return (
         <React.Fragment>
-            <Container maxWidth={"md"}>
-                <Stepper activeStep={step}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-            </Container>
+            {!newDataSourceMode && (
+                <Container maxWidth={"md"}>
+                    <Stepper activeStep={step}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Container>
+            )}
             {selectContent(step)}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}

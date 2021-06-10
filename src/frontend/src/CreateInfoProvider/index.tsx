@@ -58,16 +58,19 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
 }
+
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
-export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= () => {
+export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     const components = React.useContext(ComponentContext);
+
+    console.log(props.finishDataSourceInEdit);
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
-    const steps = [
+    const steps = props.finishDataSourceInEdit === undefined ? [
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
@@ -75,7 +78,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= () => {
         "Historisierung",
         "Gesamtübersicht",
         "Diagrammerstellung"
+    ] : [
+        "Datenquellen-Typ",
+        "API-Einstellungen",
+        "Datenauswahl",
+        "Formeln",
+        "Historisierung",
     ];
+
     //the current step of the creation process, numbered by 0 to 6
 
     const [step, setStep] = React.useState(0);
