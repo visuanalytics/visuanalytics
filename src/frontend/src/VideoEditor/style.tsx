@@ -10,6 +10,12 @@ export const useStyles = makeStyles((theme: Theme) =>
             '&:hover': {
                 color: theme.palette.error.dark,
             }
-        }
+        },
+        blockableButtonSecondary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.secondary.main,
+                opacity: "75%"
+            }
+        },
     }),
 );

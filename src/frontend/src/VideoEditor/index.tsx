@@ -5,6 +5,14 @@ import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotifi
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {ComponentContext} from "../ComponentProvider";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import {ListItem, ListItemSecondaryAction, ListItemText, TextField} from "@material-ui/core";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import List from "@material-ui/core/List";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+import {useStyles} from "./style";
 
 
 interface VideoEditorProps {
@@ -14,14 +22,16 @@ interface VideoEditorProps {
 
 export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProvider}*/) => {
 
+    const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
+    // name of the videoJob
+    const [videoJobName, setVideoJobName] = React.useState("");
     //list of the names of all scenes available - holds the data fetched from the backend
-    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
-
+    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 5, spokenText: "", visible: true},
+        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 1, spokenText: "", visible: true},
         {entryId: "Szene_2||0", sceneName: "Szene_2", displayDuration: 1, spokenText: "", visible: true},
         {entryId: "Szene_3||0", sceneName: "Szene_3", displayDuration: 1, spokenText: "", visible: true},
         {entryId: "Szene_4||0", sceneName: "Szene_4", displayDuration: 1, spokenText: "", visible: true},
@@ -41,19 +51,93 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
     const reportError = (message: string) => {
         dispatchMessage({type: "reportError", message: message});
     };
-    
+
+    /**
+     * Method that appends a new scene to the list of scenes selected for the video.
+     * @param sceneName The unique name of the scene to be appended
+     */
+    const addScene = (sceneName: string) => {
+        //search all occurrences of this scene and find the highest id number to define the id of this scene
+        let counter = 0;
+        sceneList.forEach((sceneCard) => {
+            if(sceneCard.sceneName === sceneName) counter++;
+        })
+        const arCopy = sceneList.slice();
+        arCopy.push({
+            entryId: sceneName + "||" + counter,
+            sceneName: sceneName,
+            displayDuration: 1,
+            spokenText: "",
+            visible: true
+        })
+        setSceneList(arCopy);
+    }
+
+    /**
+     * Method that handles clicking the save button.
+     */
+    const saveHandler = () => {
+
+    }
+
+    /**
+     * Method that renders an available scene with the option to add it to the sceneList
+     * @param name The name of the scene to be displayed.
+     */
+    const renderAvailableScene = (name: string) => {
+        return (
+            <ListItem key={name}>
+                <ListItemText>
+                    <Typography variant="body1">
+                        {name}
+                    </Typography>
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    <IconButton color="primary" onClick={() => addScene(name)}>
+                        <AddCircleOutlineIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
+        )
+    }
+
     return (
         <StepFrame
             heading={"Video-Editor"}
             hintContent={null}
             large={true}
         >
-            <Grid container style={{width: "100%", margin: "auto"}}>
-                <Grid item xs={12}>
-                    <SceneContainer
-                        sceneList={sceneList}
-                        setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
-                    />
+            <Grid item container>
+                <Grid item container xs={9}>
+                    <Grid item xs={12}>
+                        <TextField fullWidth margin="normal" variant="filled" color="primary"
+                                   label={"Video-Job-Name"} value={videoJobName}
+                                   onChange={(e) => setVideoJobName(e.target.value.replace(" ", "_"))}
+                       />
+                    </Grid>
+                    <Grid container style={{width: "100%", margin: "auto"}}>
+                        <Grid item xs={12}>
+                            <SceneContainer
+                                sceneList={sceneList}
+                                setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
+                            />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid item container xs={3}>
+                    <Grid item xs={12}>
+                        <Button disabled={sceneList.length === 0} variant="contained" color="secondary"
+                                onClick={saveHandler} className={classes.blockableButtonSecondary}>
+                            Speichern
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box borderColor="primary.main" border={4} style={{overflowX: "hidden",}}>
+                            <List>
+                                {availableScenes.map((scene) => renderAvailableScene(scene))}
+                            </List>
+                        </Box>
+                    </Grid>
                 </Grid>
             </Grid>
             <CenterNotification
