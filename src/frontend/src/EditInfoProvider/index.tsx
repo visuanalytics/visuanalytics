@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {Grid} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
@@ -403,10 +403,19 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const selectContent = (step: number) => {
         if(newDataSourceMode) {
             return (
-                <CreateInfoProvider
-                    finishDataSourceInEdit={finishNewDataSource}
-                    cancelNewDataSourceInEdit={cancelDataSourceCreation}
-                />
+                <React.Fragment>
+                    <Grid container>
+                        <Grid item xs={12} md={6}>
+                            <Typography variant="body1">
+                                Infoproviderbearbeitung
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <CreateInfoProvider
+                        finishDataSourceInEdit={finishNewDataSource}
+                        cancelNewDataSourceInEdit={cancelDataSourceCreation}
+                    />
+                </React.Fragment>
             );
         }
         switch (step) {

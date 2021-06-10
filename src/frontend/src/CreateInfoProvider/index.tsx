@@ -574,17 +574,20 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      */
     const handleContinue = () => {
         if(step===5) postInfoProvider();
-        else if(step === 4 && props.finishDataSourceInEdit !== undefined) props.finishDataSourceInEdit({
-            apiName: apiName,
-            query: query,
-            noKey: noKey,
-            method: method,
-            selectedData: selectedData,
-            customData: customData,
-            historizedData: historizedData,
-            schedule: schedule,
-            listItems: listItems
-        }, apiKeyInput1, apiKeyInput2);
+        else if(step === 4 && props.finishDataSourceInEdit !== undefined) {
+            props.finishDataSourceInEdit({
+                apiName: apiName,
+                query: query,
+                noKey: noKey,
+                method: method,
+                selectedData: selectedData,
+                customData: customData,
+                historizedData: historizedData,
+                schedule: schedule,
+                listItems: listItems
+            }, apiKeyInput1, apiKeyInput2);
+            clearSessionStorage();
+        }
         else {
             setStep(step + 1);
             /*console.log(JSON.stringify({
