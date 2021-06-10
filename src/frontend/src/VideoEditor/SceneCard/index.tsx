@@ -37,6 +37,12 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
         props.setDisplayDuration(Number(event.target.value))
     }
 
+    /* INFORMATION:
+     * There is the known issue that the Material UI slider causes a violation in the Dev Console since.
+     * According to the GitHub issue regarding this, it is okay to leave it: https://github.com/mui-org/material-ui/issues/26456
+     */
+
+
     return (
         <Card variant="outlined" color="primary" style={{width: "300px"}}>
             <CardContent>
