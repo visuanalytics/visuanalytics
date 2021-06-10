@@ -6,6 +6,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from "@material-ui/core/IconButton";
 import {useStyles} from "../style";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 
@@ -20,6 +21,7 @@ export interface SceneCardProps {
     setSpokenText: (newSpokenText: string) => void;
     leftDisabled: boolean;
     rightDisabled: boolean;
+    removeScene: () => void;
 }
 
 /**
@@ -29,12 +31,32 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
 
     const classes = useStyles();
 
+    //local copy of the displayDuration: sliding edits this while letting of the slider will edit the props value
+    //avoids too many rerenders
+    const [localDisplayDuration, setLocalDisplayDuration] = React.useState(props.displayDuration);
+    //timeout for setting the props value of displayDuration shortly after the user has stopped input
+    const [timeoutDisplayDuration, setTimeoutDisplayDuration] = React.useState(0);
+
     const handleDurationSliderChange = (event: object, newDuration: number | number[]) => {
-        props.setDisplayDuration(Number(newDuration));
+        setLocalDisplayDuration(Number(newDuration));
+        changePropsDisplayDuration();
     }
 
     const handleDurationInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        props.setDisplayDuration(Number(event.target.value))
+        setLocalDisplayDuration(Number(event.target.value))
+        changePropsDisplayDuration();
+    }
+
+    /**
+     * Method that changes the displayDuration state value of the higher component 200ms after the user has made a change.
+     * Copies the local value into the higher components state. This avoids too many rerenders of the whole view.
+     * When triggered again, it resets the timeout so there is a need for 200ms without an input.
+     */
+    const changePropsDisplayDuration = () => {
+        window.clearTimeout(timeoutDisplayDuration);
+        setTimeoutDisplayDuration(window.setTimeout(() => {
+            props.setDisplayDuration(localDisplayDuration);
+        }, 200));
     }
 
     /* INFORMATION:
@@ -42,15 +64,19 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
      * According to the GitHub issue regarding this, it is okay to leave it: https://github.com/mui-org/material-ui/issues/26456
      */
 
-
     return (
         <Card variant="outlined" color="primary" style={{width: "300px"}}>
             <CardContent>
                 <Grid item container>
-                    <Grid item xs={12}>
+                    <Grid item xs={10}>
                         <Typography>
                             {props.sceneName}
                         </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <IconButton onClick={() => props.removeScene()} className={classes.redDeleteIcon}>
+                            <DeleteIcon />
+                        </IconButton>
                     </Grid>
                     <Grid item container xs={12} className={classes.elementLargeMargin}>
                         <Grid item xs={3}>
@@ -60,12 +86,11 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                         </Grid>
                         <Grid item xs={9}>
                                 <Slider
-                                    value={props.displayDuration}
+                                    value={localDisplayDuration}
                                     getAriaValueText={() => props.displayDuration + " Sekunden"}
                                     onChange={handleDurationSliderChange}
                                     aria-labelledby={props.sceneName + "-duration-input"}
                                     step={1}
-
                                     min={0}
                                     max={300}
                                     valueLabelDisplay="auto"
@@ -76,7 +101,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                     <Grid item container xs={12}>
                         <Grid item xs={3}>
                             <Input
-                                value={props.displayDuration}
+                                value={localDisplayDuration}
                                 margin="dense"
                                 onChange={handleDurationInputChange}
                                 inputProps={{

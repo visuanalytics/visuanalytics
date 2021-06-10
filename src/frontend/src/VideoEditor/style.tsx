@@ -5,5 +5,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         elementLargeMargin: {
             marginTop: "10px"
         },
+        redDeleteIcon: {
+            color: theme.palette.error.main,
+            '&:hover': {
+                color: theme.palette.error.dark,
+            }
+        }
     }),
 );

@@ -3,37 +3,18 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
+import {Direction, SceneCardData} from "../types";
 
+interface SceneContainerProps {
+    sceneList: Array<SceneCardData>
+    setSceneList: (sceneList: Array<SceneCardData>) => void;
+}
 
-export const SceneContainer = () => {
-
-    type SceneCardData = {
-        entryId: string;
-        sceneName: string;
-        displayDuration: number;
-        spokenText: string;
-        visible: boolean;
-    }
-
-    enum Direction {
-        Left = "LEFT",
-        Right = "RIGHT"
-    }
+export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
 
     //true if the timeout for letting scenes reappear is set
     //this is necessary to change the visibility of all invisible scenes with one timeout method so there is no delay
     const timeoutSet = React.useRef(false);
-    //list of the names of all scenes available - holds the data fetched from the backend
-    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
-
-    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 5, spokenText: "", visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", displayDuration: 1, spokenText: "", visible: true},
-    ]);
 
     //this static value will be true as long as the component is still mounted
     //used to check if changing the visibility for animations should still be done
@@ -57,17 +38,26 @@ export const SceneContainer = () => {
     }
 
     /**
+     * Method that removes a scene from the list of selected Scenes
+     * @param index
+     */
+    const removeScene = (index: number) => {
+        //concat the sceneList before and behind the element to be removed
+        props.setSceneList(props.sceneList.slice(0, index).concat(props.sceneList.slice(index+1)));
+    }
+
+    /**
      * Handler method that changes the selected duration of a scene in the video.
      * @param index The index (in the list) of the scene whose duration is changed.
      * @param newDuration The new duration value.
      */
     const setDisplayDuration = (index: number, newDisplayDuration: number) => {
-        const arCopy = sceneList.slice();
+        const arCopy = props.sceneList.slice();
         arCopy[index] = {
             ...arCopy[index],
             displayDuration: newDisplayDuration
         }
-        setSceneList(arCopy);
+        props.setSceneList(arCopy);
     }
 
     /**
@@ -76,12 +66,12 @@ export const SceneContainer = () => {
      * @param newSpokenText The new spoken text
      */
     const setSpokenText = (index: number, newSpokenText: string) => {
-        const arCopy = sceneList.slice();
+        const arCopy = props.sceneList.slice();
         arCopy[index] = {
             ...arCopy[index],
             spokenText: newSpokenText
         }
-        setSceneList(arCopy);
+        props.setSceneList(arCopy);
     }
 
     /**
@@ -90,15 +80,15 @@ export const SceneContainer = () => {
      * @param direction Direction of the movement.
      */
     const moveScene = (sourceIndex: number, direction: Direction) => {
-        //console.log("moveScene")
+        console.log("moveScene")
         //if the we try to go out of bounds, nothing will happen
-        if ((sourceIndex < 1 && direction === Direction.Left) || (sourceIndex >= sceneList.length - 1 && direction === Direction.Right)) return;
+        if ((sourceIndex < 1 && direction === Direction.Left) || (sourceIndex >= props.sceneList.length - 1 && direction === Direction.Right)) return;
         //create a copy of the moved scene with visibility set to false
         const movedScene = {
-            ...sceneList[sourceIndex],
+            ...props.sceneList[sourceIndex],
             visible: false
         }
-        const arCopy = sceneList.slice();
+        const arCopy = props.sceneList.slice();
         //shift the scene left/right to the moved scene in the necessary direction and set its visibility to false
         arCopy[sourceIndex] = {
             ...arCopy[sourceIndex + (direction === Direction.Left ? -1 : 1)],
@@ -106,7 +96,7 @@ export const SceneContainer = () => {
         }
         //shift the moved scene to the left/right
         arCopy[sourceIndex + (direction === Direction.Left ? -1 : 1)] = movedScene;
-        setSceneList(arCopy);
+        props.setSceneList(arCopy);
     }
 
 
@@ -128,7 +118,7 @@ export const SceneContainer = () => {
                     //only perform this animation when the component is still mounted
                     if(isMounted.current) {
                         //search all scenes that are not visible and create copies that are visible
-                        const arCopy = sceneList.slice();
+                        const arCopy = props.sceneList.slice();
                         arCopy.forEach((sceneCard, index) => {
                             if(!sceneCard.visible) {
                                 arCopy[index] = {
@@ -137,28 +127,31 @@ export const SceneContainer = () => {
                                 }
                             }
                         })
-                        setSceneList(arCopy);
+                        props.setSceneList(arCopy);
                         //reset the timeout variable
                         timeoutSet.current = false;
                     }
-                }, 750)
+                }, 500)
             }
         }
+
+        //it is necessary to let the cards disappear instantly so the user doesnt see the contents get swapped before
         return (
             <ListItem key={sceneEntry.entryId}>
-                <Collapse in={sceneEntry.visible} timeout={500}>
+                <Collapse in={sceneEntry.visible} timeout={{ appear: 500, enter: 800, exit: 0 }}>
                     <React.Fragment>
                         <SceneCard
                             entryId={sceneEntry.entryId}
                             sceneName={sceneEntry.sceneName}
                             moveLeft={() => moveScene(index, Direction.Left)}
                             moveRight={() => moveScene(index, Direction.Right)}
-                            displayDuration={sceneList[index].displayDuration}
+                            displayDuration={props.sceneList[index].displayDuration}
                             setDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration)}
-                            spokenText={sceneList[index].spokenText}
+                            spokenText={props.sceneList[index].spokenText}
                             setSpokenText={(newSpokenText: string) => setSpokenText(index, newSpokenText)}
                             leftDisabled={index === 0}
-                            rightDisabled={index === sceneList.length - 1}
+                            rightDisabled={index === props.sceneList.length - 1}
+                            removeScene={() => removeScene(index)}
                         />
                     </React.Fragment>
                 </Collapse>
@@ -173,7 +166,7 @@ export const SceneContainer = () => {
                     flexDirection: 'row',
                     padding: 0,}}
                 >
-                    {sceneList.map((sceneEntry, index) => renderSceneEntry(sceneEntry, index))}
+                    {props.sceneList.map((sceneEntry, index) => renderSceneEntry(sceneEntry, index))}
                 </List>
             </Box>
         </>
