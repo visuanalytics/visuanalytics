@@ -7,7 +7,7 @@ import mimetypes
 
 import gtts.tokenizer.symbols
 from gtts import gTTS
-from pydup import AudioSegment
+from pydub import AudioSegment
 
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
