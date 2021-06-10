@@ -392,6 +392,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         setNewDataSourceMode(false);
     }
 
+    const cancelDataSourceCreation = () => {
+        setNewDataSourceMode(false);
+    }
+
     /**
      * Returns the rendered component based on the current step.
      * @param step The number of the current step
@@ -399,7 +403,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const selectContent = (step: number) => {
         if(newDataSourceMode) {
             return (
-                <CreateInfoProvider finishDataSourceInEdit={finishNewDataSource}/>
+                <CreateInfoProvider
+                    finishDataSourceInEdit={finishNewDataSource}
+                    cancelNewDataSourceInEdit={cancelDataSourceCreation}
+                />
             );
         }
         switch (step) {

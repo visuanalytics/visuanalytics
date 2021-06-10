@@ -1,0 +1,1 @@
+{"name": "Test2", "api": {"type": "request_multiple_custom", "use_loop_as_key": true, "steps_value": ["Test2"], "requests": [{"type": "request", "method": "GET", "url_pattern": "https://hallo2.com", "headers": {}, "params": {}, "response_type": "json"}]}, "transform": [], "storing": [], "run_config": {}}

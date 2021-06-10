@@ -57,6 +57,7 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
 
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
+    cancelNewDataSourceInEdit?: () => void;
 }
 
 /*
@@ -573,6 +574,17 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      */
     const handleContinue = () => {
         if(step===5) postInfoProvider();
+        else if(step === 4 && props.finishDataSourceInEdit !== undefined) props.finishDataSourceInEdit({
+            apiName: apiName,
+            query: query,
+            noKey: noKey,
+            method: method,
+            selectedData: selectedData,
+            customData: customData,
+            historizedData: historizedData,
+            schedule: schedule,
+            listItems: listItems
+        }, apiKeyInput1, apiKeyInput2);
         else {
             setStep(step + 1);
             /*console.log(JSON.stringify({
@@ -595,7 +607,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if(step===0) {
+    if(step === 0 && props.cancelNewDataSourceInEdit !== undefined) {
+            clearSessionStorage();
+            props.cancelNewDataSourceInEdit();
+        }
+        else if(step===0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
         }
