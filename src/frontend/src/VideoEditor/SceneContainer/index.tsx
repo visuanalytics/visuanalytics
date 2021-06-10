@@ -28,14 +28,6 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
         };
     }, [])
 
-    /**
-     * Method that appends a new scene to the list of scenes selected for the video.
-     * @param sceneName The unique name of the scene to be appended
-     */
-    const addScene = (sceneName: string) => {
-        //search all occurrences of this scene and find the highest id number to define the id of this scene
-        //necessary since the names alone wont be unique
-    }
 
     /**
      * Method that removes a scene from the list of selected Scenes
@@ -131,7 +123,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
                         //reset the timeout variable
                         timeoutSet.current = false;
                     }
-                }, 500)
+                }, 300)
             }
         }
 
