@@ -23,6 +23,7 @@ import {
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {CreateInfoProvider} from "../CreateInfoProvider";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -44,6 +45,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     //infoProvider? infoProvider.name : "TristanTest"
     const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
 
+
+    const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
     //TODO: mind that keyInput is now in map
     //TODO: remove testinput for production
     /**
@@ -379,15 +382,26 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         }, handleSuccess, handleError
     );
 
-
-
-
+    const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
+        setInfoProvDataSource(infoProvDataSource.concat(dataSource));
+        const mapCopy = new Map(infoProvDataSourcesKeys)
+        setInfoProvDataSourcesKeys(mapCopy.set(dataSource.apiName, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        }));
+        setNewDataSourceMode(false);
+    }
 
     /**
      * Returns the rendered component based on the current step.
      * @param step The number of the current step
      */
     const selectContent = (step: number) => {
+        if(newDataSourceMode) {
+            return (
+                <CreateInfoProvider finishDataSourceInEdit={finishNewDataSource}/>
+            );
+        }
         switch (step) {
             case 0:
                 return (
@@ -400,6 +414,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         infoProvDataSources={infoProvDataSource}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
+                        finishNewDataSource={finishNewDataSource}
+                        setNewDataSourceMode={setNewDataSourceMode}
                     />
                 );
             case 1:
@@ -448,15 +464,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 )
 
         }
-    }
-
-    const saveNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
-        setInfoProvDataSource(infoProvDataSource.concat(dataSource));
-        const mapCopy = new Map(infoProvDataSourcesKeys)
-        setInfoProvDataSourcesKeys(mapCopy.set(dataSource.apiName, {
-            apiKeyInput1: apiKeyInput1,
-            apiKeyInput2: apiKeyInput2
-        }));
     }
 
     return (

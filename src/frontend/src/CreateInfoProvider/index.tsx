@@ -56,7 +56,7 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
 
 
 interface CreateInfoproviderProps {
-    continueHandler?: () => void;
+    finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
 }
 /*
 Wrapper component for the creation of a new info-provider.

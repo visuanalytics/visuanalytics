@@ -31,6 +31,8 @@ interface EditSettingsOverviewProps {
     infoProvDataSources: Array<DataSource>;
     selectedDataSource: number;
     setSelectedDataSource: (index: number) => void;
+    finishNewDataSource: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
+    setNewDataSourceMode: (addNewDataSource: boolean) => void;
 }
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
@@ -170,6 +172,11 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             <Button variant="contained" color={"secondary"}
                                     onClick={() => props.editInfoProvider()}>
                                 Speichern
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" size="large" color="primary" onClick={() => props.setNewDataSourceMode(true)}>
+                                Neue Datenquelle hinzufügen
                             </Button>
                         </Grid>
                         <Grid item>
