@@ -83,7 +83,8 @@ def insert_infoprovider(infoprovider):
         "requests": []
     }
     for datasource in datasources:
-        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+        api_key_name = f"{infoprovider['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
 
         url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
         parameter.update(params)
@@ -110,7 +111,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": infoprovider["datasources"],
+        "datasources": datasources,
         "diagrams_original": infoprovider["diagrams_original"],
         "arrays_used_in_diagrams": infoprovider["arrays_used_in_diagrams"]
     }
@@ -160,7 +161,7 @@ def insert_infoprovider(infoprovider):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
-            "storing": remove_toplevel_key(datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -168,7 +169,7 @@ def insert_infoprovider(infoprovider):
         with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -366,7 +367,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
-            "storing": remove_toplevel_key(datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["storing"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -374,7 +375,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -672,6 +673,18 @@ def remove_toplevel_key(obj):
     return obj
 
 
+def _extend_keys(obj, datasource_name):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = _extend_keys(obj[x], datasource_name)
+    elif type(obj) == dict:
+        for key in list(obj.keys()):
+            obj[key] = _extend_keys(obj[key], datasource_name)
+    elif type(obj) == str:
+        obj = "_req|" + datasource_name + "|" + obj
+    return obj
+
+
 def _insert_param_values(con, job_id, topic_values):
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
@@ -694,6 +707,17 @@ def _generate_transform(formulas, old_transform):
             return None
         transform += transform_part
     return transform
+
+
+def _generate_storing(historized_data, datasource_name):
+    storing = []
+    historized_data = remove_toplevel_key(_extend_keys(historized_data, datasource_name))
+    for key in historized_data:
+        storing.append({
+            "name": key,
+            "key": key
+        })
+    return storing
 
 
 def _remove_datasources(con, infoprovider_id, remove_historised=False):

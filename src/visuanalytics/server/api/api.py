@@ -37,7 +37,7 @@ def infprovtestdatensatz():
         "infoprovider_name": "Test" + str(last_id),
         "datasources": [
             {
-                "name": "wetter_api",
+                "datasource_name": "wetter_api",
                 "api": {
                     "api_info": {
                         "type": "request",
@@ -92,7 +92,7 @@ def infprovtestdatensatz():
                 }
             },
             {
-                "name": "joke_api",
+                "datasource_name": "joke_api",
                 "api": {
                     "api_info": {
                         "type": "request",
@@ -146,7 +146,9 @@ def infprovtestdatensatz():
                     ]
                 }
             }
-        }
+        },
+        "diagrams_original": {},
+        "arrays_used_in_diagrams": []
     }
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
@@ -589,7 +591,7 @@ def add_scene_image():
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
-        if not queries.insert_image(name):
+        if not queries.insert_image(name, file_extension):
             err = flask.jsonify({"err_msg": "Image could not be added to the database"})
             return err, 400
 
