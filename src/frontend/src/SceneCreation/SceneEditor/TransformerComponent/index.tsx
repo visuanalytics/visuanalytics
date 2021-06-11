@@ -11,19 +11,21 @@ import {Transformer} from 'react-konva'
   
 
 export const TransformerComponent: React.FC<TransformerProps> = (props) => {
-    let transformer = new Konva.Transformer();
+    const [transformer, setTransformer] = React.useState(new Konva.Transformer())
+    const [stage, setStage] = React.useState(transformer.getStage())
+    //let transformer = new Konva.Transformer();
     const selectedShapeName = props.selectedShapeName;
 
     console.log(transformer);
     console.log(props.selectedShapeName);
 
     const checkNode = React.useCallback( () => {
-
+      //transformer = new Konva.Transformer();
       console.log("reached");
       if (transformer !== null){  
-
-        transformer.detach();
-        const stage = transformer.getStage();
+      console.log("reached transformer")
+        setStage( transformer.getStage() );
+        console.log(stage);
         if (stage !== undefined){
           console.log(stage);
           var selectedNode = stage!.findOne("." + selectedShapeName);
@@ -34,7 +36,7 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
           if (selectedNode ===  transformer.nodes([selectedNode])) {
             return;
           }
-          transformer = transformer.nodes([selectedNode]);
+          setTransformer(transformer.nodes([selectedNode]));
         } else {
           transformer.detach();
         }
@@ -47,11 +49,11 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
 
     useEffect(() => {
       checkNode();
-    }, [props.selectedShapeName]);
+    }, [props]);
 
     return (
         <Transformer 
-            ref={node=> {transformer = node!}}
+            ref={node=> {setTransformer(node!)}}
         />
     );    
 }
