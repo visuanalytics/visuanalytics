@@ -723,6 +723,7 @@ export const CreateInfoProvider = () => {
                         setName={(name: string) => setName(name)}
                         dataSources={dataSources}
                         setDataSources={setDataSources}
+                        apiName={apiName}
                         setApiName={setApiName}
                         setQuery={setQuery}
                         setApiKeyInput1={setApiKeyInput1}
@@ -736,6 +737,10 @@ export const CreateInfoProvider = () => {
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        dataSourcesKeys={dataSourcesKeys}
+                        setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
                     />
                 )
             case 6:
