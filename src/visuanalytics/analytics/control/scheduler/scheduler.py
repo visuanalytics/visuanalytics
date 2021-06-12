@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime, time as dt_time, timedelta
 
 from visuanalytics.analytics.control.procedures.pipeline import Pipeline
-from visuanalytics.analytics.control.procedures.infoproviderPipeline import InfoproviderPipeline
+from visuanalytics.analytics.control.procedures.DatasourcePipeline import DatasourcePipeline
 from visuanalytics.server.db import job
 from visuanalytics.util import config_manager
 
@@ -110,15 +110,15 @@ class Scheduler(object):
                             ).start)
         t.start()
 
-    def _start_infoprovider(self, infoprovider_id: int, infoprovider_name: str, steps_name: str, config: dict, log_to_db=False):
+    def _start_datasource(self, datasource_id: int, datasource_name: str, steps_name: str, config: dict, log_to_db=False):
         # Add base_config if exists
         config = {**config_manager.STEPS_BASE_CONFIG, **config}
-        config["job_name"] = re.sub(r'\s+', '-', infoprovider_name.strip())
+        config["job_name"] = re.sub(r'\s+', '-', datasource_name.strip())
 
         t = threading.Thread(
-            target=InfoproviderPipeline(infoprovider_id,
+            target=DatasourcePipeline(datasource_id,
                                         uuid.uuid4().hex,
-                                        infoprovider_name,
+                                        datasource_name,
                                         config,
                                         log_to_db
                                         ).start)
