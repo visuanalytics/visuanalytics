@@ -11,14 +11,17 @@ import {ComponentContext} from "../ComponentProvider";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
-import {formelContext} from "./types";
+
+import {formelContext/*, InfoProviderObj*/} from "./types";
 import {
     authDataDialogElement,
     BackendDataSource,
     FrontendInfoProvider,
-    DataSource, DataSourceKey,
+    DataSource,
+    DataSourceKey,
     Diagram,
     Plots,
+    ListItemRepresentation,
     SelectedDataItem,
     uniqueId
 } from "../CreateInfoProvider/types";
@@ -78,6 +81,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
+
     const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources :new Array<DataSource>(
         {
             apiName: "apiName",
@@ -131,8 +135,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-
-    //TODO: change to Diagram
     const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
@@ -154,8 +156,24 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         rightParenFlag: false
     });
 
+
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+
+
+    React.useEffect(() => {
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setInfoProvDataSourcesKeys(map);
+    }, [])
 
     //TODO: add current state variables if needed
     /**
@@ -418,9 +436,104 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         severity: "error",
     });
 
-    const reportError = (message: string) => {
+    const reportError = React.useCallback((message: string) => {
         dispatchMessage({type: "reportError", message: message});
-    };
+    }, []);
+
+    /**
+     * Handler method for changing the selectedData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param selectedData The new selectedData
+     */
+    const setSelectedData = (selectedData: Array<SelectedDataItem>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].selectedData = selectedData;
+        setInfoProvDataSources(arCopy);
+    }
+
+    /**
+     * Handler method for changing the historizedData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param historizedData The new historizedData
+     */
+    const setHistorizedData = (historizedData: Array<string>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].historizedData = historizedData;
+        setInfoProvDataSources(arCopy);
+    }
+
+    /**
+     * Handler method for changing the customData of the current data source in infoProvDataSources.
+     * Used for the EditDataSelection step.
+     * @param customData The new customData
+     */
+    const setCustomData = (customData: Array<FormelObj>) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].customData = customData;
+        setInfoProvDataSources(arCopy);
+    }
+
+    /**
+     * Method that deletes all settings of the current dataSource and all diagrams using it.
+     * Necessary for the case that the API data differs from how it was structured when the dataSource was
+     * created so that selected data or used arrays arent contained anymore.
+     * @param newListItems the new listItems returned by the API call
+     */
+    const cleanDataSource = (newListItems: Array<ListItemRepresentation>) => {
+        const dataSourceCopy = {
+            ...infoProvDataSources[selectedDataSource]
+        }
+        //clean diagrams depending on historized customData and historizedData
+        const diagramsToRemove: Array<string> = [];
+        dataSourceCopy.historizedData.forEach((historizedItem) => {
+            infoProvDiagrams.forEach((diagram) => {
+                //only diagrams with historizedData are relevant
+                if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                    for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                        const historized = diagram.historizedObjects[index];
+                        //the dataSource name needs to be added in front of the historized element name since historizedObjects has dataSource name in it paths too
+                        //it is also checked if the same diagram has already been marked by another formula or historized data
+                        if(infoProvName + "|" + historizedItem===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                            diagramsToRemove.push(diagram.name);
+                            break;
+                        }
+                    }
+                }
+            })
+        })
+        //clean diagrams depending on arrays - just find all arrayObjects containing the apiName as head of their key path
+        infoProvDiagrams.forEach((diagram) => {
+            //only diagrams with array as data are relevant
+            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
+                for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                    const array = diagram.arrayObjects[index];
+                    //check if the dataSource name at the front is the same as the current apiName
+                    if(infoProvName===array.listItem.parentKeyName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        //delete all diagrams found
+        if(diagramsToRemove.length > 0) {
+            setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            }))
+        }
+        //clean selectedData
+        dataSourceCopy.selectedData = [];
+        //clean historizedData
+        dataSourceCopy.historizedData = [];
+        //clean customData
+        dataSourceCopy.customData = [];
+        //set listItems to the new value
+        dataSourceCopy.listItems = newListItems;
+        //set the new dataSource object
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource] = dataSourceCopy;
+        setInfoProvDataSources(arCopy);
+    }
 
 
     /**
@@ -694,11 +807,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                     />
                 );
             case 1:
+                //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
                     <EditDataSelection
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
+                        reportError={reportError}
+                        dataSource={infoProvDataSources[selectedDataSource]}
+                        apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                        apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                        diagrams={infoProvDiagrams}
+                        setSelectedData={(selectedData: Array<SelectedDataItem>) => setSelectedData(selectedData)}
+                        setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}
+                        setCustomData={(customData: Array<FormelObj>) => setCustomData(customData)}
+                        cleanDataSource={(newListItems: Array<ListItemRepresentation>) => cleanDataSource(newListItems)}
                     />
                 );
             case 2:

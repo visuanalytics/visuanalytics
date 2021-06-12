@@ -88,5 +88,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         header: {
             color: theme.palette.primary.main
         },
+        redDeleteButton: {
+            color: '#FFFFFF',
+            backgroundColor: theme.palette.error.main,
+            '&:hover': {
+                backgroundColor: theme.palette.error.dark,
+            }
+        },
     }),
 );
