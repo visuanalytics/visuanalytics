@@ -13,14 +13,18 @@ import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/forme
 import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 import {formelContext} from "./types";
 import {
+    authDataDialogElement,
     BackendDataSource,
-    DataSource,
-    Diagram,
     FrontendInfoProvider,
+    DataSource, DataSourceKey,
+    Diagram,
     Plots,
     SelectedDataItem,
+    uniqueId
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
+import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 import {useCallFetch} from "../Hooks/useCallFetch";
 
 interface EditInfoProviderProps {
@@ -28,18 +32,40 @@ interface EditInfoProviderProps {
     infoProvider?: FrontendInfoProvider;
 }
 
+//TODO: task list for the team
+/*
+DONE:
+task 0: overview component (Tristan)
+task 1: restore formulas (Tristan)
+task 2: editing for formulas (Tristan)
+task 3: new formulas (Tristan)
+task 4: integrate diagram components (Janek)
+task 6: keep the component context on reload (Janek)
+NOT DONE:
+task 5: sessionStorage compatibility with AuthDataDialog (Janek)
+task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
+task 8: component for DataSelection (Janek)
+task 9: historized data (Tristan)
+task 10: add additional data sources (Daniel)
+task 11: delete dependencies (???)
+task 12: load data from backend (Janek)
+task 13: send data to backend (Janek)
+ */
+
+
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
-    //TODO: remove after testing
-    /*React.useEffect(() => {
-        console.log(infoProvId);
-        console.log(infoProvider);
-    }, [])*/
+    /**
+     * the current step of the creation process, numbered by 0 to 5
+     */
+    const [step, setStep] = React.useState(0);
+
     /**
      * The name of the infoprovider that is being edited
      */
+
     //infoProvider? infoProvider.name : "TristanTest"
     const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
 
@@ -49,16 +75,17 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
+
     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
     //fill with test data
-    const [infoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources :new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
             //apiKeyInput1: "apiKeyInput1",
             //apiKeyInput2: "apiKeyInput2",
             noKey: true,
-            method: "method",
+            method: "KeyInHeader",
             selectedData: new Array<SelectedDataItem>(
                 {
                     key: "Array1|Data0",
@@ -79,8 +106,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             query: "query2",
             //apiKeyInput1: "apiKeyInput1_2",
             //apiKeyInput2: "apiKeyInput2_2",
-            noKey: true,
-            method: "method_2",
+            noKey: false,
+            method: "BearerToken",
             selectedData: new Array<SelectedDataItem>(
                 {
                     key: "Array2|Data0",
@@ -96,13 +123,17 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
             listItems: [],
         },
-    ));
+        ));
+
+    //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
+
     //TODO: change to Diagram
-    const [infoProvDiagrams/*, setInfoProvDiagrams*/] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -123,10 +154,240 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         rightParenFlag: false
     });
 
+    //flag for opening the dialog that restores authentication data on reload
+    const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+
+    //TODO: add current state variables if needed
     /**
-     * the current step of the creation process, numbered by 0 to 5
+     * Method to check if there is api auth data to be lost when the user refreshes the page.
+     * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
      */
-    const [step, setStep] = React.useState(0);
+    const checkKeyExistence = React.useCallback(() => {
+        //check the current data source
+        //if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
+        //check all other data sources
+        for (let index = 0; index < infoProvDataSources.length; index++) {
+            const dataSource = infoProvDataSources[index];
+            if (infoProvDataSourcesKeys.get(dataSource.apiName) !== undefined) {
+                if ((!dataSource.noKey) && (infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 !== "" || infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2 !== "")) return true;
+            }
+        }
+        return false;
+    }, [infoProvDataSources, infoProvDataSourcesKeys])
+
+    //TODO: is it necessary to fully copy here?
+    /**
+     * Defines event listener for reloading the page and removes it on unmounting.
+     * The event listener will warn the user that api keys will be list an a reload.
+     * Note: Custom messages seem not to be supported by modern browsers so we cant give an explicit warning here.
+     * Displaying an additional alert or something is also not possibly since an re-render would be necessary.
+     */
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            if (checkKeyExistence()) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [checkKeyExistence])
+
+    //TODO: check if current states are really not needed - possibly necessary when creation of additional dataSources is added
+    /**
+     * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
+     * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
+     * Needs to run based on sessionStorage since it is called in the first render.
+     */
+    const authDialogNeeded = () => {
+        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(
+            {
+                apiName: "apiName",
+                query: "query",
+                //apiKeyInput1: "apiKeyInput1",
+                //apiKeyInput2: "apiKeyInput2",
+                noKey: true,
+                method: "KeyInHeader",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array1|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array1|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
+                historizedData: new Array<string>("formel1", "formel2"),
+                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
+                listItems: [],
+            },
+            {
+                apiName: "apiName2",
+                query: "query2",
+                //apiKeyInput1: "apiKeyInput1_2",
+                //apiKeyInput2: "apiKeyInput2_2",
+                noKey: false,
+                method: "BearerToken",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array2|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array2|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
+                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
+                listItems: [],
+            },
+        ) : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        //const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
+        //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
+        //const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
+        //if((!noKeyCurrent)&&methodCurrent!=="") return true;
+        //else {
+        for (let index = 0; index < data.length; index++) {
+            if (!data[index].noKey) return true;
+        }
+        //}
+        return false;
+    }
+
+
+    /**
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     */
+    React.useEffect(() => {
+        //step - disabled since it makes debugging more annoying
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
+        //infoProvName
+        setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId) || "");
+        //infoProvDataSource
+        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
+        setInfoProvDataSources(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(
+            {
+                apiName: "apiName",
+                query: "query",
+                //apiKeyInput1: "apiKeyInput1",
+                //apiKeyInput2: "apiKeyInput2",
+                noKey: true,
+                method: "KeyInHeader",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array1|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array1|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
+                historizedData: new Array<string>("formel1", "formel2"),
+                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
+                listItems: [],
+            },
+            {
+                apiName: "apiName2",
+                query: "query2",
+                //apiKeyInput1: "apiKeyInput1_2",
+                //apiKeyInput2: "apiKeyInput2_2",
+                noKey: false,
+                method: "BearerToken",
+                selectedData: new Array<SelectedDataItem>(
+                    {
+                        key: "Array2|Data0",
+                        type: "Zahl"
+                    },
+                    {
+                        key: "Array2|Data1",
+                        type: "Zahl"
+                    }
+                ),
+                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
+                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
+                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
+                listItems: [],
+            },
+        ) : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
+        //infoProvDiagrams
+        setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId) === null ? new Array<Diagram>() : JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
+        //selectedDataSource
+        setSelectedDataSource(Number(sessionStorage.getItem("selectedDataSource-" + uniqueId) || 0));
+        //formelInformation
+        setFormelInformation(sessionStorage.getItem("formelInformation-" + uniqueId) === null ? {
+            formelName: "",
+            parenCount: 0,
+            formelAsObjects: new Array<StrArg>(),
+            dataFlag: false,
+            numberFlag: false,
+            opFlag: true,
+            leftParenFlag: false,
+            rightParenFlag: false
+        } : JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
+
+        //create default values in the key map for all dataSources
+        //necessary to not run into undefined values
+        const map = new Map();
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        data.forEach((dataSource) => {
+            map.set(dataSource.apiName, {
+                apiKeyInput1: "",
+                apiKeyInput2: ""
+            })
+        });
+        setInfoProvDataSourcesKeys(map);
+
+        if (authDialogNeeded()) {
+            setAuthDataDialogOpen(true);
+        }
+    }, [])
+
+    //store step in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("step-" + uniqueId, step.toString());
+    }, [step])
+    //store infoProvName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvName-" + uniqueId, infoProvName);
+    }, [infoProvName])
+    // Store infoProvDataSource in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvDataSources-" + uniqueId, JSON.stringify(infoProvDataSources));
+    }, [infoProvDataSources])
+    // Store infoProvDiagrams in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvDiagrams-" + uniqueId, JSON.stringify(infoProvDiagrams));
+    }, [infoProvDiagrams])
+    //store selectedDataSource in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedDataSource-" + uniqueId, selectedDataSource.toString());
+    }, [selectedDataSource])
+    // Store infoProvDiagrams in session storage
+    React.useEffect(() => {
+        sessionStorage.setItem("formelInformation-" + uniqueId, JSON.stringify(formelInformation));
+    }, [formelInformation])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("infoProvName-" + uniqueId);
+        sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
+        sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
+        sessionStorage.removeItem("selectedDataSource-" + uniqueId);
+        sessionStorage.removeItem("formelInformation-" + uniqueId);
+    }
 
     const steps = [
         "Überblick",
@@ -143,8 +404,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Through delete options historizedData can become empty.
      */
     const checkForHistorizedData = () => {
-        if (infoProvDataSource[selectedDataSource].historizedData.length <= 0) {
-            infoProvDataSource[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
+        if (infoProvDataSources[selectedDataSource].historizedData.length <= 0) {
+            infoProvDataSources[selectedDataSource].schedule = {type: "", interval: "", time: "", weekdays: []}
         }
     }
 
@@ -176,95 +437,20 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      */
     const handleBack = (index: number) => {
         if (step === 0) {
+            clearSessionStorage();
             components?.setCurrent("dashboard")
             return;
         }
         setStep(step - index)
     }
 
-    /**
-     * Method to send the edited infoprovider to the backend.
-     * The backend will now update the infoprovider with the new data.
-     */
-    const finishEditing = () => {
-        postInfoProvider();
-    }
-
-
-    /**
-     * Handler for the return of a successful call to the backend (posting info-provider)
-     * @param jsonData The JSON-object delivered by the backend
-     */
-    const handleSuccess = (jsonData: any) => {
-        //TODO: cleanup sessionStorage
-        components?.setCurrent("dashboard")
-    }
-
-    /**
-     * Handler for unsuccessful call to the backend (posting info-provider)
-     * @param err The error returned by the backend
-     */
-    const handleError = (err: Error) => {
-        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
-
-
-    const createDataSources = () => {
-        const backendDataSources: Array<BackendDataSource> = [];
-        infoProvDataSource.forEach((dataSource) => {
-            backendDataSources.push({
-                datasource_name: dataSource.apiName,
-                api: {
-                    api_info: {
-                        type: "request",
-                        //api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
-                        //TODO: change when the merge has happened
-                        api_key_name: "",
-                        url_pattern: dataSource.query,
-                    },
-                    method: dataSource.noKey ? "noAuth" : dataSource.method,
-                    response_type: "json", // TODO Add xml support
-                },
-                transform: [],
-                storing: [],
-                formulas: dataSource.customData,
-                schedule: {
-                    type: dataSource.schedule.type,
-                    time: dataSource.schedule.time,
-                    date: "",
-                    time_interval: dataSource.schedule.interval,
-                    weekdays: dataSource.schedule.weekdays
-                },
-                selected_data: dataSource.selectedData,
-                historized_data: dataSource.historizedData,
-            })
-        });
-        return backendDataSources;
-    }
-
-    const createBackendDiagrams = () => {
-        //TODO: possibly find smarter solution without any type
-        const diagramsObject: any = {};
-        infoProvDiagrams.forEach((diagram) => {
-            diagramsObject[diagram.name] = {
-                type: "diagram_custom",
-                diagram_config: {
-                    type: "custom",
-                    name: diagram.name,
-                    infoprovider: infoProvName,
-                    sourceType: diagram.sourceType,
-                    plots: createPlots(diagram)
-                }
-            }
-        })
-        return diagramsObject;
-    }
-
+    //TODO: find a better solution than copying - useCallback doesnt allow it to be on top level of helpermethods.tsx
     /**
      * Creates the plots array for a selected diagram to be sent to the backend.
      * @param diagram the diagram to be transformed
      */
     const createPlots = React.useCallback((diagram: Diagram) => {
+        console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -335,6 +521,114 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         return plotArray;
     }, [])
 
+    //TODO: find better option than just copy it
+    //TODO: update as soon as the possibility of having new dataSources exists
+    /**
+     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
+     */
+    const buildDataSourceSelection = () => {
+        const dataSourceSelection: Array<authDataDialogElement> = [];
+        //check the current data source and add it as an option
+        /*if(!noKey) {
+            dataSourceSelection.push({
+                name: "current--"+ uniqueId,
+                method: method
+            })
+        }*/
+        //check all other data sources
+        if (infoProvDataSources !== undefined) {
+            infoProvDataSources.forEach((dataSource) => {
+                //input is necessary if any method of authentication is being used
+                if (!dataSource.noKey) {
+                    //add to the selection
+                    dataSourceSelection.push({
+                        name: dataSource.apiName,
+                        method: dataSource.method
+                    })
+                }
+            })
+        }
+        return dataSourceSelection
+    }
+
+    /**
+     * Method to send the edited infoprovider to the backend.
+     * The backend will now update the infoprovider with the new data.
+     */
+    const finishEditing = () => {
+        postInfoProvider();
+    }
+
+
+    /**
+     * Handler for the return of a successful call to the backend (posting info-provider)
+     * @param jsonData The JSON-object delivered by the backend
+     */
+    const handleSuccess = (jsonData: any) => {
+        //TODO: cleanup sessionStorage
+        components?.setCurrent("dashboard")
+    }
+
+    /**
+     * Handler for unsuccessful call to the backend (posting info-provider)
+     * @param err The error returned by the backend
+     */
+    const handleError = (err: Error) => {
+        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
+    }
+
+
+    const createDataSources = () => {
+        const backendDataSources: Array<BackendDataSource> = [];
+        infoProvDataSources.forEach((dataSource) => {
+            backendDataSources.push({
+                datasource_name: dataSource.apiName,
+                api: {
+                    api_info: {
+                        type: "request",
+                        //api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                        //TODO: change when the merge has happened
+                        api_key_name: "",
+                        url_pattern: dataSource.query,
+                    },
+                    method: dataSource.noKey ? "noAuth" : dataSource.method,
+                    response_type: "json", // TODO Add xml support
+                },
+                transform: [],
+                storing: [],
+                formulas: dataSource.customData,
+                schedule: {
+                    type: dataSource.schedule.type,
+                    time: dataSource.schedule.time,
+                    date: "",
+                    time_interval: dataSource.schedule.interval,
+                    weekdays: dataSource.schedule.weekdays
+                },
+                selected_data: dataSource.selectedData,
+                historized_data: dataSource.historizedData,
+            })
+        });
+        return backendDataSources;
+    }
+
+    const createBackendDiagrams = () => {
+        //TODO: possibly find smarter solution without any type
+        const diagramsObject: any = {};
+        infoProvDiagrams.forEach((diagram) => {
+            diagramsObject[diagram.name] = {
+                type: "diagram_custom",
+                diagram_config: {
+                    type: "custom",
+                    name: diagram.name,
+                    infoprovider: infoProvName,
+                    sourceType: diagram.sourceType,
+                    plots: createPlots(diagram)
+                }
+            }
+        })
+        return diagramsObject;
+    }
+
     //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
@@ -394,7 +688,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         editInfoProvider={finishEditing}
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                     />
@@ -413,7 +707,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
@@ -425,7 +719,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
@@ -440,7 +734,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             case 5:
                 return (
                     <Grid>
-
+                        <DiagramCreation
+                            continueHandler={() => setStep(0)}
+                            backHandler={() => setStep(0)}
+                            dataSources={infoProvDataSources}
+                            diagrams={infoProvDiagrams}
+                            setDiagrams={setInfoProvDiagrams}
+                            reportError={reportError}
+                            infoProviderName={infoProvName}
+                            createPlots={createPlots}
+                        />
                     </Grid>
                 )
 
@@ -464,6 +767,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 message={message.message}
                 severity={message.severity}
             />
+            {authDataDialogOpen &&
+            <AuthDataDialog
+                authDataDialogOpen={authDataDialogOpen}
+                setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
+                method={""}
+                apiKeyInput1={""}
+                setApiKeyInput1={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                apiKeyInput2={""}
+                setApiKeyInput2={(input: string) => console.log("NOT IMPLEMENTED: setApiKeyInput1")}
+                dataSourcesKeys={infoProvDataSourcesKeys}
+                setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(map)}
+                selectionDataSources={buildDataSourceSelection()}
+                apiName={""}
+            />
+            }
         </React.Fragment>
     );
 }
