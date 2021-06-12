@@ -585,13 +585,14 @@ def add_scene_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        file_path = queries.get_scene_image_path(name, file_extension)
+        print("image_name", name + "." + file_extension)
+        file_path = queries.get_scene_image_path(name + "." + file_extension)
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
-        if not queries.insert_image(name, file_extension):
+        if not queries.insert_image(name + "." + file_extension):
             err = flask.jsonify({"err_msg": "Image could not be added to the database"})
             return err, 400
 
@@ -622,7 +623,7 @@ def get_all_scene_images():
 
 
 @api.route("/image/<id>", methods=["DELETE"])
-def delete_scene_image(image_id):
+def delete_scene_image(id):
     """
     Endpunkt '/image/<id>' (DELETE).
 
@@ -630,9 +631,9 @@ def delete_scene_image(image_id):
     :param image_id: ID des Bildes welches gelöscht werden soll.
     """
     try:
-        success = queries.delete_scene_image(image_id)
+        success = queries.delete_scene_image(id)
 
-        return "Not Implemented", 400
+        return flask.jsonify({"success": success})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while deleting an image"})

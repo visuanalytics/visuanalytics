@@ -1,10 +1,13 @@
 import json
 import os
 import shutil
+import io
 
 import humps
 import copy
-from base64 import b64encode
+from base64 import b64encode, encodebytes
+from copy import deepcopy
+from PIL import Image
 
 from visuanalytics.server.db import db
 from visuanalytics.util.config_manager import get_private, set_private
@@ -420,7 +423,7 @@ def delete_infoprovider(infoprovider_id):
     return False
 
 
-def insert_image(image_name, image_type=None):
+def insert_image(image_name):
     """
     Adds an image to the Database.
 
@@ -445,8 +448,8 @@ def get_scene_image_file(image_id):
     :param image_id: ID of the image.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT image_name, image_type FROM image WHERE image_id=?", [image_id]).fetchone()
-    return get_scene_image_path(res["image_name"], res["image_type"]) if res is not None else None
+    res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
+    return get_scene_image_path(res["image_name"]) if res is not None else None
 
 
 def get_image_list():
@@ -458,7 +461,25 @@ def get_image_list():
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image")
     con.commit()
-    return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": None} for row in res]
+    images = []
+    for row in res:
+        """with open(get_scene_image_path(row["image_name"]), "rb") as f:
+            image_file = f.read()
+        images.append({
+            "image_id": row["image_id"],
+            "image_name": row["image_name"],
+            "image_file": image_file
+        })"""
+        with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
+            byte_arr = f.tobytes()
+            encoded_img = encodebytes(byte_arr).decode('ascii')
+            images.append({
+                "image_id": row["image_id"],
+                "image_name": row["image_name"],
+                "image_file": encoded_img
+            })
+    return images
+    # return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": open(get_scene_image_path(row["image_name"]), "rb")} for row in res]
 
 
 def delete_scene_image(image_id):
@@ -470,10 +491,13 @@ def delete_scene_image(image_id):
     con = db.open_con_f()
 
     file_path = get_scene_image_file(image_id)
-    res = con.execute("DELETE FROM image WHERE image_id=?", ["image_id"])
-    con.commit()
+    res = con.execute("DELETE FROM image WHERE image_id=?", [image_id])
+    print("file_path", file_path, "rowcount", res.rowcount)
     if res.rowcount > 0:
-        os.remove()
+        os.remove(file_path)
+    con.commit()
+
+    return "Successful"
 
 
 def get_topic_names():
@@ -868,8 +892,9 @@ def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def get_scene_image_path(json_file_name: str, image_type: str):
-    return _get_image_path(json_file_name, "scene", image_type)
+def get_scene_image_path(json_file_name: str):
+    image_info = json_file_name.rsplit(".", 1)
+    return _get_image_path(image_info[0], "scene", image_info[1])
 
 
 def _get_image_path(json_file_name: str, folder: str, image_type: str):
