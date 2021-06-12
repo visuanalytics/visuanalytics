@@ -1,4 +1,4 @@
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,7 +45,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         redDeleteButton: {
             color: '#FFFFFF',
-            backgroundColor:  theme.palette.error.main,
+            backgroundColor: theme.palette.error.main,
             '&:hover': {
                 backgroundColor: theme.palette.error.dark,
             },
@@ -102,14 +102,14 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
 
         editorCanvas: {
-            
+
             backgroundColor: "rgb(255, 255, 255)",
             border: "solid 5px",
             borderColor: theme.palette.primary.main,
             width: "960px",
             height: "540px"
         },
-        
+
         editorText: {
             position: "absolute",
             padding: "15px",
@@ -121,65 +121,100 @@ export const useStyles = makeStyles((theme: Theme) =>
             resize: "none",
             transformOrigin: "top left",
         },
-    
-        colorPicker:{
+
+        colorPicker: {
             display: "none",
         },
 
-        buttonArea: {
+        rightButtons: {
             margin: "auto",
             marginTop: "10px",
             padding: "10px",
             width: "500px",
-            height: "520px",
-            backgroundColor: "rgb(223, 223, 223)",
+            height: "870px",
+            backgroundColor: "white",
             border: "5px solid",
             borderColor: theme.palette.primary.main,
+            align: "center",
         },
 
         button: {
-            backgroundColor: "#ccc",
-            border: "2px solid #666666",
-            color: "rgb(0, 0, 0)",
+            backgroundColor: theme.palette.primary.main,
+            color: "white",
             padding: "5px 15px",
             align: "center",
-            textDecoration: "none",
             display: "inline-block",
             fontSize: "16px",
             margin: "4px 2px",
             transitionDuration: "0.4s",
             cursor: "pointer",
             borderRadius: "5px",
-            width: "250px",
+            width: "220px",
             '&:hover': {
-                backgroundColor: "rgb(206, 195, 255)",
+                backgroundColor: theme.palette.primary.light,
             }
         },
-    
+
         input: {
-        backgroundColor: "#eee",
-        border: "2px solid #666666",
-        color: "rgb(0, 0, 0)",
-        padding: "5px",
-        textAlign: "left",
-        textDecoration: "none",
-        display: "inline-block",
-        fontSize: "16px",
-        margin: "4px 2px",
-        transitionDuration: "0.4s",
-        borderRadius: "5px",
+            backgroundColor: theme.palette.primary.main,
+            border: "2px solid white",
+            color: "rgb(0, 0, 0)",
+            padding: "5px",
+            textAlign: "left",
+            textDecoration: "none",
+            display: "inline-block",
+            fontSize: "16px",
+            margin: "4px 2px",
+            transitionDuration: "0.4s",
+            borderRadius: "5px",
         },
-    
+
         buttonColor: {
             width: "90px",
+            backgroundColor: theme.palette.primary.main,
+            border: "1px solid white",
+            borderRadius: "5px",
+            padding: "5px",
         },
-    
+
         buttonNumber: {
             width: "60px",
         },
-    
+
         buttonText: {
-        width: "235px",
+            width: "235px",
+        },
+
+        title: {
+            width: "500px",
+        },
+
+        topButtons: {
+            marginTop: "21px",
+            backgroundColor: theme.palette.primary.main,
+            color: "#FFFFFF",
+            transitionDuration: "0.4s",
+            '&:hover': {
+                backgroundColor: theme.palette.primary.light,
+                color: "#000000",
+            }
+        },
+
+        selection: {
+            backgroundColor: "#FFFFFF",
+        },
+
+        option: {
+            backgroundColor: theme.palette.primary.light,
+            '&:hover': {
+                backgroundColor: theme.palette.primary.light
+            }
+        },
+
+        lowerButtons: {
+            marginLeft: "10px",
+            marginTop: "10px",
+            height: "250px",
         },
     })
 );
