@@ -29,6 +29,9 @@ import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/fo
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {HistorySelection} from "../CreateInfoProvider/HistorySelection";
+import {extractKeysFromSelection} from "../CreateInfoProvider/helpermethods";
+import {Schedule} from "./types";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -159,6 +162,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+
+    const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
 
 
     React.useEffect(() => {
@@ -460,6 +465,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         const arCopy = infoProvDataSources.slice();
         arCopy[selectedDataSource].historizedData = historizedData;
         setInfoProvDataSources(arCopy);
+    }
+
+    const setSchedule = (schedule: Schedule) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].schedule = schedule;
+        setInfoProvDataSources(arCopy)
     }
 
     /**
@@ -850,16 +861,25 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 )
             case 4:
                 return (
-                    <Grid>
-
-                    </Grid>
+                    <HistorySelection
+                        continueHandler={() => setStep(5)}
+                        backHandler={() => setStep(2)}
+                        selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
+                        customData={infoProvDataSources[selectedDataSource].customData}
+                        historizedData={infoProvDataSources[selectedDataSource].historizedData}
+                        setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
+                        schedule={infoProvDataSources[selectedDataSource].schedule}
+                        selectSchedule={(schedule: Schedule) => setSchedule(schedule)}
+                        historySelectionStep={historySelectionStep}
+                        setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
+                    />
                 )
             case 5:
                 return (
                     <Grid>
                         <DiagramCreation
                             continueHandler={() => setStep(0)}
-                            backHandler={() => setStep(0)}
+                            backHandler={() => setStep(4)}
                             dataSources={infoProvDataSources}
                             diagrams={infoProvDiagrams}
                             setDiagrams={setInfoProvDiagrams}

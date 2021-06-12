@@ -23,7 +23,7 @@ interface HistoryScheduleSelectionProps {
     handleBack: () => void;
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
-    addToDataSources: () => void;
+    addToDataSources?: () => void;
 }
 
 
@@ -127,7 +127,9 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps>  
      * Adds the data for this source to dataSources and then proceeds to the next step
      */
     const handleProceed = () => {
-        props.addToDataSources();
+        if (props.addToDataSources) {
+            props.addToDataSources();
+        }
         props.handleProceed();
     }
 

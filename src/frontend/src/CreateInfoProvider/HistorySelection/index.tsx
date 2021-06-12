@@ -17,7 +17,7 @@ interface HistorySelectionProps {
     selectSchedule: (schedule: Schedule) => void;
     historySelectionStep: number;
     setHistorySelectionStep: (step: number) => void;
-    addToDataSources: () => void;
+    addToDataSources?: () => void;
 }
 
 /**
@@ -45,7 +45,9 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
      * After that the handler will proceed to the next step of the Infoprovider
      */
     const skipContinueHandler = () => {
-        props.addToDataSources();
+        if (props.addToDataSources) {
+            props.addToDataSources();
+        }
         props.continueHandler();
     }
 
