@@ -105,7 +105,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             
             backgroundColor: "rgb(255, 255, 255)",
             border: "solid 5px",
-            borderColor: "rgb(255, 0, 0)",
+            borderColor: theme.palette.primary.main,
             width: "960px",
             height: "540px"
         },
@@ -133,7 +133,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             width: "500px",
             height: "520px",
             backgroundColor: "rgb(223, 223, 223)",
-            border: "5px solid red",
+            border: "5px solid",
+            borderColor: theme.palette.primary.main,
         },
 
         button: {

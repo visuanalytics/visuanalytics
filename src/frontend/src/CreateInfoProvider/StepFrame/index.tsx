@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography"
 interface StepFrameProps {
     heading: string;
     hintContent: any;
-    large?: boolean;
+    large?: undefined|"lg"|"xl";
 }
 
 export const StepFrame: React.FC<StepFrameProps> = ({
@@ -20,7 +20,7 @@ export const StepFrame: React.FC<StepFrameProps> = ({
 }) => {
     const classes = useStyles();
     return (
-        <Container maxWidth={ large===undefined ? "md" : "lg"} className={classes.margin}>
+        <Container maxWidth={ large===undefined ? "md" : large } className={classes.margin}>
             <Paper variant="outlined" className={classes.paper}>
                 <Grid container spacing={1}>
                     <Grid item container sm={5} xs={10}>
