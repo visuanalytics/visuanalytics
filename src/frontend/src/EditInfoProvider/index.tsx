@@ -236,7 +236,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
         })
         //clean diagrams depending on arrays - just find all arrayObjects containing the apiName as head of their key path
         infoProvDiagrams.forEach((diagram) => {
-            //only diagrams with historizedData are relevant
+            //only diagrams with array as data are relevant
             if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
                 for (let index = 0; index < diagram.arrayObjects.length; index++) {
                     const array = diagram.arrayObjects[index];
@@ -325,8 +325,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (/*{ infoProvId
                         editInfoProvider={editInfoProvider}
                         reportError={reportError}
                         dataSource={infoProvDataSources[selectedDataSource]}
-                        apiKeyInput1={/*infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1*/"Test"}
-                        apiKeyInput2={/*infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2*/"Test"}
+                        apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                        apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
                         diagrams={infoProvDiagrams}
                         setSelectedData={(selectedData: Array<SelectedDataItem>) => setSelectedData(selectedData)}
                         setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}

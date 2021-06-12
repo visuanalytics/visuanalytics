@@ -94,8 +94,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             if(dataContained(listItems)) {
                 setDisplaySpinner(false);
             } else {
-                //TODO: show dialog saying that there was a change in data
-                //option to keep old data (on your own risk) or restart the settings for this dataSource
+                setErrorDialogOpen(true);
             }
         }
     }, [dataContained, reportError]);
@@ -120,7 +119,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     const apiKeyInput2 = props.apiKeyInput2;
 
     /**
-     * Method to send a diagram to the backend for testing.
+     * Method to send the configuration of the dataSource to the backend and receive the api data of the query.
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
     const fetchTestData = React.useCallback(() => {
@@ -202,7 +201,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                                 Einige der ausgewählten oder in Diagrammen verwendeten Daten dieser Datenquelle sind nicht in der Antwort der API-Abfrage vorhanden.
                             </Typography>
                             <Typography gutterBottom>
-                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen verpackt.
+                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen enthäöt.
                             </Typography>
                             <Typography gutterBottom>
                                 Sie können die Datenquelle nicht weiter bearbeiten und die alten Einstellungen behalten (sofern sich die Datenquelle tatsächlich geändert hat werden API-Abfragen vermutlich Fehler erzeugen).
@@ -216,7 +215,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                                 <Grid item>
                                     <Button variant="contained"
                                             onClick={() => {props.backHandler(1)}}>
-                                        Datensatz behalten
+                                        Neue Antwort verwerfen
                                     </Button>
                                 </Grid>
                                 <Grid item>
