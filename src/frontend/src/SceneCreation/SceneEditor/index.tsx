@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import List from "@material-ui/core/List";
-import { ListItem } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import { ListItem, Button, Grid, Box, TextField, Input, Select, MenuItem, NativeSelect, InputLabel } from "@material-ui/core";
+
 import { DataSource } from "../../CreateInfoProvider";
 import { useStyles } from "./style";
 import { StepFrame } from "../../CreateInfoProvider/StepFrame";
@@ -24,6 +22,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
   const classes = useStyles();
   // contains the names of the steps to be displayed in the stepper
+  const [sceneName, setSceneName] = React.useState("emptyScene")
   const [dataList, setDataList] = React.useState<Array<string>>([]);
   const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
   const [backGroundType, setBackGroundType] = React.useState("COLOR");
@@ -772,371 +771,407 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     >
       <Grid container>
         <Grid item container justify={"center"} xs={12}>
-          <Grid item xs={7}>
-            <div className={classes.editorMain} id="main">
-              <Stage
-                width={960}
-                height={540}
-                className={classes.editorCanvas}
-                onMouseDown={handleStageMouseDown}
-              >
-                <Layer>
-                  {backGroundType === "COLOR" &&
-                    <Rect
-                      name="background"
-                      fill={backGroundColor}
-                      width={960}
-                      height={540}
-                      onClick={(e: any) => handleCanvasClick(e)}
-                      onMouseDown={handleStageMouseDown}
-                    />
-                  }
-                  {backGroundType === "IMAGE" &&
-                    <Image
-                      name="background"
-                      width={960}
-                      height={540}
-                      onClick={(e: any) => handleCanvasClick(e)}
-                      image={backgroundImage}
-                      onMouseDown={handleStageMouseDown}
-                    />
-                  }
-                  <Group>
-                    {items.map((item: any) => (
-                      (item.id.startsWith('circle') &&
-                        <Circle
-                          key={item.id}
-                          name={item.id}
-                          draggable
-                          x={item.x}
-                          y={item.y}
-                          fill={item.color}
-                          radius={item.radius}
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 960 - item.radius) {
-                              pos.x = 960 - item.radius
+          <Grid container xs={7}>
+            <Grid item container xs={12} justify={"space-evenly"}>
+              <Grid item>
+                <TextField className={classes.title} margin={"normal"} variant={"outlined"} color={"primary"} label={"Szenen-Titel"}
+                  value={sceneName}
+                  onChange={event => (setSceneName(event.target.value.replace(' ', '_')))}>
+                </TextField>
+              </Grid>
+              <Grid item>
+                <Button size={"large"} variant={"contained"} className={classes.topButtons}>
+                  Zurück
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button size={"large"} variant={"contained"} className={classes.topButtons}>
+                  Speichern
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <div className={classes.editorMain} id="main">
+                <Stage
+                  width={960}
+                  height={540}
+                  className={classes.editorCanvas}
+                  onMouseDown={handleStageMouseDown}
+                >
+                  <Layer>
+                    {backGroundType === "COLOR" &&
+                      <Rect
+                        name="background"
+                        fill={backGroundColor}
+                        width={960}
+                        height={540}
+                        onClick={(e: any) => handleCanvasClick(e)}
+                        onMouseDown={handleStageMouseDown}
+                      />
+                    }
+                    {backGroundType === "IMAGE" &&
+                      <Image
+                        name="background"
+                        width={960}
+                        height={540}
+                        onClick={(e: any) => handleCanvasClick(e)}
+                        image={backgroundImage}
+                        onMouseDown={handleStageMouseDown}
+                      />
+                    }
+                    <Group>
+                      {items.map((item: any) => (
+                        (item.id.startsWith('circle') &&
+                          <Circle
+                            key={item.id}
+                            name={item.id}
+                            draggable
+                            x={item.x}
+                            y={item.y}
+                            fill={item.color}
+                            radius={item.radius}
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 960 - item.radius) {
+                                pos.x = 960 - item.radius
+                              }
+                              if (pos.x < 0 + item.radius) {
+                                pos.x = 0 + item.radius
+                              }
+                              if (pos.y > 540 - item.radius) {
+                                pos.y = 540 - item.radius
+                              }
+                              if (pos.y < item.radius) {
+                                pos.y = item.radius
+                              }
+                              return pos;
+                            }}
+                          />) || (
+                          item.id.startsWith('rect') &&
+                          <Rect
+                            key={item.id}
+                            name={item.id}
+                            draggable
+                            x={item.x}
+                            y={item.y}
+                            fill={item.color}
+                            width={item.width}
+                            height={item.height}
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 960 - item.width) {
+                                pos.x = 960 - item.width
+                              }
+                              if (pos.x < 0) {
+                                pos.x = 0
+                              }
+                              if (pos.y > 540 - item.height) {
+                                pos.y = 540 - item.height
+                              }
+                              if (pos.y < 0) {
+                                pos.y = 0
+                              }
+                              return pos;
+                            }}
+                          />) || (
+                          item.id.startsWith('line') &&
+                          <Line
+                            key={item.id}
+                            name={item.id}
+                            draggable
+                            x={item.x}
+                            y={item.y}
+                            points={
+                              [0, 0, 100, 0, 100, 100]
                             }
-                            if (pos.x < 0 + item.radius) {
-                              pos.x = 0 + item.radius
-                            }
-                            if (pos.y > 540 - item.radius) {
-                              pos.y = 540 - item.radius
-                            }
-                            if (pos.y < item.radius) {
-                              pos.y = item.radius
-                            }
-                            return pos;
-                          }}
-                        />) || (
-                        item.id.startsWith('rect') &&
-                        <Rect
-                          key={item.id}
-                          name={item.id}
-                          draggable
-                          x={item.x}
-                          y={item.y}
-                          fill={item.color}
-                          width={item.width}
-                          height={item.height}
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 960 - item.width) {
-                              pos.x = 960 - item.width
-                            }
-                            if (pos.x < 0) {
-                              pos.x = 0
-                            }
-                            if (pos.y > 540 - item.height) {
-                              pos.y = 540 - item.height
-                            }
-                            if (pos.y < 0) {
-                              pos.y = 0
-                            }
-                            return pos;
-                          }}
-                        />) || (
-                        item.id.startsWith('line') &&
-                        <Line
-                          key={item.id}
-                          name={item.id}
-                          draggable
-                          x={item.x}
-                          y={item.y}
-                          points={
-                            [0, 0, 100, 0, 100, 100]
-                          }
-                          stroke={"black"}
-                          closed
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 860) {
-                              pos.x = 860
-                            }
-                            if (pos.x < 0) {
-                              pos.x = 0
-                            }
-                            if (pos.y > 440) {
-                              pos.y = 440
-                            }
-                            if (pos.y < 0) {
-                              pos.y = 0
-                            }
-                            return pos;
-                          }}
-                        />) || (
-                        item.id.startsWith('star') &&
-                        <Star
-                          numPoints={5}
-                          innerRadius={50}
-                          outerRadius={100}
-                          key={item.id}
-                          name={item.id}
-                          draggable
-                          x={item.x}
-                          y={item.y}
-                          fill={item.color}
-                          radius={item.radius}
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 860) {
-                              pos.x = 860
-                            }
-                            if (pos.x < 100) {
-                              pos.x = 100
-                            }
-                            if (pos.y > 440) {
-                              pos.y = 440
-                            }
-                            if (pos.y < 100) {
-                              pos.y = 100
-                            }
-                            return pos;
-                          }}
-                        />) || (
-                        item.id.startsWith('text') &&
-                        <Text
-                          id={item.id}
-                          name={item.id}
-                          text={item.textContent}
-                          x={item.x}
-                          y={item.y}
-                          width={item.width}
-                          draggable
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          onDblClick={(e: any) => handleTextDblClick(e)}
-                          fontSize={item.fontSize}
-                          fontFamily={item.fontFamily}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          fill={item.color}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          padding={item.padding}
-                          style={{
-                            display: "block"
-                          }}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 960 - item.width) {
-                              pos.x = 960 - item.width
-                            }
-                            if (pos.x < 0) {
-                              pos.x = 0
-                            }
-                            if (pos.y > 540) {
-                              pos.y = 540
-                            }
-                            if (pos.y < 0) {
-                              pos.y = 0
-                            }
-                            return pos;
-                          }}
-                        />) || (
-                        item.id.startsWith('image') &&
-                        <Image
-                          key={item.id}
-                          id={item.id}
-                          name={item.id}
-                          x={item.x}
-                          y={item.y}
-                          width={item.width}
-                          height={item.height}
-                          image={item.image}
-                          draggable
-                          onDragStart={handleDragStart}
-                          onDragMove={handleDragMove}
-                          onDragEnd={handleDragEnd}
-                          onTransformEnd={onTransformEnd}
-                          scaleX={item.scaleX}
-                          scaleY={item.scaleY}
-                          rotation={item.rotation}
-                          onMouseOver={mouseOver}
-                          onMouseLeave={mouseLeave}
-                          dragBoundFunc={function (pos: Konva.Vector2d) {
-                            if (pos.x > 960 - item.width) {
-                              pos.x = 960 - item.width
-                            }
-                            if (pos.x < 0) {
-                              pos.x = 0
-                            }
-                            if (pos.y > 540 - item.height) {
-                              pos.y = 540 - item.height
-                            }
-                            if (pos.y < 0) {
-                              pos.y = 0
-                            }
-                            return pos;
-                          }}
-                        />)
+                            stroke={"black"}
+                            closed
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 860) {
+                                pos.x = 860
+                              }
+                              if (pos.x < 0) {
+                                pos.x = 0
+                              }
+                              if (pos.y > 440) {
+                                pos.y = 440
+                              }
+                              if (pos.y < 0) {
+                                pos.y = 0
+                              }
+                              return pos;
+                            }}
+                          />) || (
+                          item.id.startsWith('star') &&
+                          <Star
+                            numPoints={5}
+                            innerRadius={50}
+                            outerRadius={100}
+                            key={item.id}
+                            name={item.id}
+                            draggable
+                            x={item.x}
+                            y={item.y}
+                            fill={item.color}
+                            radius={item.radius}
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 860) {
+                                pos.x = 860
+                              }
+                              if (pos.x < 100) {
+                                pos.x = 100
+                              }
+                              if (pos.y > 440) {
+                                pos.y = 440
+                              }
+                              if (pos.y < 100) {
+                                pos.y = 100
+                              }
+                              return pos;
+                            }}
+                          />) || (
+                          item.id.startsWith('text') &&
+                          <Text
+                            id={item.id}
+                            name={item.id}
+                            text={item.textContent}
+                            x={item.x}
+                            y={item.y}
+                            width={item.width}
+                            draggable
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            onDblClick={(e: any) => handleTextDblClick(e)}
+                            fontSize={item.fontSize}
+                            fontFamily={item.fontFamily}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            fill={item.color}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            padding={item.padding}
+                            style={{
+                              display: "block"
+                            }}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 960 - item.width) {
+                                pos.x = 960 - item.width
+                              }
+                              if (pos.x < 0) {
+                                pos.x = 0
+                              }
+                              if (pos.y > 540 - this.height()) {
+                                pos.y = 540 - this.height()
+                              }
+                              if (pos.y < 0) {
+                                pos.y = 0
+                              }
+                              return pos;
+                            }}
+                          />) || (
+                          item.id.startsWith('image') &&
+                          <Image
+                            key={item.id}
+                            id={item.id}
+                            name={item.id}
+                            x={item.x}
+                            y={item.y}
+                            width={item.width}
+                            height={item.height}
+                            image={item.image}
+                            draggable
+                            onDragStart={handleDragStart}
+                            onDragMove={handleDragMove}
+                            onDragEnd={handleDragEnd}
+                            onTransformEnd={onTransformEnd}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
+                            rotation={item.rotation}
+                            onMouseOver={mouseOver}
+                            onMouseLeave={mouseLeave}
+                            dragBoundFunc={function (pos: Konva.Vector2d) {
+                              if (pos.x > 960 - item.width) {
+                                pos.x = 960 - item.width
+                              }
+                              if (pos.x < 0) {
+                                pos.x = 0
+                              }
+                              if (pos.y > 540 - item.height) {
+                                pos.y = 540 - item.height
+                              }
+                              if (pos.y < 0) {
+                                pos.y = 0
+                              }
+                              return pos;
+                            }}
+                          />)
 
-                    ))}
-                    <TransformerComponent
-                      selectedShapeName={selectedItemName}
-                    />
-                  </Group>
-                </Layer>
-              </Stage>
-            </div>
-            <textarea
-              value={textEditContent}
-              className={classes.editorText}
-              style={{
-                display: textEditVisibility ? "block" : "none",
-                top: textEditY + 300 + "px",
-                left: textEditX + 110 + "px",
-                width: textEditWidth + "px",
-                fontSize: textEditFontSize + "px",
-                fontFamily: textEditFontFamily,
-                color: textEditFontColor,
-                /*height: textEditHeight - (textEditPadding * 2) + 20 + 'px'*/
-              }}
+                      ))}
+                      <TransformerComponent
+                        selectedShapeName={selectedItemName}
+                      />
+                    </Group>
+                  </Layer>
+                </Stage>
+              </div>
+              <textarea value={textEditContent} className={classes.editorText}
+                style={{
+                  display: textEditVisibility ? "block" : "none",
+                  top: textEditY + 300 + "px",
+                  left: textEditX + 110 + "px",
+                  width: textEditWidth + "px",
+                  fontSize: textEditFontSize + "px",
+                  fontFamily: textEditFontFamily,
+                  color: textEditFontColor,
+                }} onChange={e => handleTextEdit(e)} onKeyDown={e => handleTextareaKeyDown(e)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.lowerButtons}>
+                <Grid container xs={12}>
+                  <Grid item xs={3}>
+                    <Button className={classes.button} onClick={clearCanvas}> CLEAR </Button><br/><br/>
+                    <label> SHAPE: </label>
+                    <NativeSelect id="itemType" onChange={selectType} className={classes.selection}>
+                      <option>Circle</option>
+                      <option>Rectangle</option>
+                      <option>Line</option>
+                      <option>Star</option>
+                    </NativeSelect><br/><br/>
+                    <label > FONT SIZE: </label>
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="fontSize"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 1, max: 144, step: 1, defaultValue: 20,
+                        }
+                      }}
+                      onChange={changeFontAttr}
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button className={classes.button} id="del" onClick={deleteItem}> DELETE LAST ELEMENT </Button><br/><br/>
+                    <label> CHOOSE COLOR </label>
+                    <input className={classes.buttonColor} id="itemColor" type={"color"} onChange={switchItemColor} disabled={disableColor()} defaultValue="#FFFFFF" /><br/><br/>
+                    <label > FONT: </label>
+                    <NativeSelect id="fontType" onChange={changeFontAttr} className={classes.selection}>
+                      <option style={{ "fontFamily": "arial" }}>Arial</option >
+                      <option style={{ "fontFamily": "verdana" }}>veranda</option >
+                      <option style={{ "fontFamily": "Tahoma" }}>Tahoma</option >
+                      <option style={{ "fontFamily": "Georgia" }}>Georgia</option >
+                      <option style={{ "fontFamily": "Times New Roman" }}>Times New Roman</option >
+                    </NativeSelect><br />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button className={classes.button} id="undo" onClick={undo}> UNDO </Button><br/><br/>
+                    <label id="positionX"> X: </label>
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="coordinatesX"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 0, max: 960, step: stepSize.toString(), defaultValue: 0,
+                        }
+                      }}
+                      onChange={handleCoordinatesXChange}
+                      disabled={!itemSelected}
+                    ></TextField>
+                    <label id="positionY"> Y: </label>
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="coordinatesY"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 0, max: 540, step: stepSize.toString(), defaultValue: 0,
+                        }
+                      }}
+                      onChange={handleCoordinatesYChange}
+                      disabled={!itemSelected}
+                    ></TextField><br/><br/>
+                    <label > FONT COLOR: </label>
+                    <input className={classes.buttonColor} id="fontColor" type="color" onChange={changeFontAttr} disabled={!disableColor()} defaultValue="#000000" /><br />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button className={classes.button} onClick={dupe}> DUPLICATE </Button><br/><br/>
+                    <label > STEP SIZE: </label>
+                    <NativeSelect id="stepSizeOptions" onChange={handleStepSizeChange} defaultValue="5" className={classes.selection}>
+                      <option > 1 </option>
+                      <option > 5 </option>
+                      <option > 10 </option>
+                      <option > 20 </option>
+                      <option > 25 </option>
+                      <option > 50 </option>
+                      <option > 75 </option>
+                      <option > 100 </option>
+                      <option > 250 </option>
+                    </NativeSelect><br/><br/>
+                    <label> TEXTFIELD WIDTH: </label>
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="textWidth"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 200, max: 540, step: 1, defaultValue: 200,
+                        }
+                      }}
+                      onChange={changeFontAttr}
 
-              onChange={e => handleTextEdit(e)}
-              onKeyDown={e => handleTextareaKeyDown(e)}
-            />
+                    ></TextField><br />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
           </Grid>
-
           <Grid item xs={5}>
 
-            <div className={classes.buttonArea} >
-              <button className={classes.button} onClick={selectFile}> UPLOAD IMAGE </button>
-              <button className={classes.button} onClick={clearCanvas}> CLEAR </button><br />
-              <label> SHAPE: </label>
-              <select id="itemType" onChange={selectType}>
-                <option>Circle</option>
-                <option>Rectangle</option>
-                <option>Line</option>
-                <option>Star</option>
-              </select><br />
-
-              <button className={classes.button} onClick={() => selectText((document.getElementById("text")! as HTMLInputElement).value)}> TEXT </button>
-
-              <input className={classes.buttonText} id="text" type="text" defaultValue="TEST"></input> <br />
-
-              <button className={classes.button} id="del" onClick={deleteItem}> DELETE LAST ELEMENT </button>
-              <button className={classes.button} id="undo" onClick={undo}> UNDO </button><br />
-
-
-              <input className={classes.input} type="file" id="input" style={{ display: "none" }} accept={".png,.jpeg,.jpg"} />
-
-              <button className={classes.button} onClick={dupe}> DUPLICATE </button>
-              <button className={classes.button} onClick={switchBackground}> SWITCH TO {backGroundNext} </button><br />
-              <label> CHOOSE COLOR / BACKGROUND COLOR </label>
-
-              <input className={classes.buttonColor} id="itemColor" type="color" onChange={switchItemColor} disabled={disableColor()} defaultValue="#FFFFFF" />
+            <div className={classes.rightButtons}>
+              <Button className={classes.button} onClick={() => selectText((document.getElementById("text")! as HTMLInputElement).value)}> TEXT </Button>
+              <TextField className={classes.buttonText} id="text" defaultValue="TEST" variant={"outlined"}></TextField> <br/>
+              <Button className={classes.button} onClick={switchBackground}> SWITCH TO {backGroundNext} </Button><br/>
+              <label> CHOOSE BACKGROUND COLOR </label>
               <input className={classes.buttonColor} id="backgroundColor" type="color" onChange={switchBGColor} disabled={backGroundType !== "COLOR"} defaultValue="#FFFFFF" /><br />
-
-              <label > FONT SIZE: </label>
-              <input className={classes.buttonNumber} type="number" step="1" id="fontSize" min="1" max="144" defaultValue="20" onChange={changeFontAttr}></input>
-
-              <label > FONT TYPE: </label>
-              <select id="fontType" onChange={changeFontAttr}>
-                <option style={{ "fontFamily": "arial" }}>Arial</option>
-                <option style={{ "fontFamily": "verdana" }}>veranda</option>
-                <option style={{ "fontFamily": "Tahoma" }}>Tahoma</option>
-                <option style={{ "fontFamily": "Georgia" }}>Georgia</option>
-                <option style={{ "fontFamily": "Times New Roman" }}>Times New Roman</option>
-              </select><br />
-
-              <label > FONT COLOR: </label>
-              <input className={classes.buttonColor} id="fontColor" type="color" onChange={changeFontAttr} disabled={!disableColor()} defaultValue="#000000" /><br />
-
-              <label> TEXT FIELD WIDTH: </label>
-              <input className={classes.buttonNumber} id="textWidth" type="number" step="1" min="200" onChange={changeFontAttr} defaultValue="200"></input><br />
-              <label id="positionX"> X: </label>
-              <input
-                className={classes.buttonNumber}
-                id="coordinatesX"
-                type="number"
-                step={stepSize}
-                min="0"
-                max={window.innerWidth / 2}
-                defaultValue="0"
-                onChange={handleCoordinatesXChange}
-                disabled={!itemSelected}
-              ></input><br />
-              <label id="positionY"> Y: </label>
-              <input
-                className={classes.buttonNumber}
-                id="coordinatesY"
-                type="number"
-                step={stepSize}
-                min="0"
-                max={window.innerHeight / 2}
-                defaultValue="0"
-                onChange={handleCoordinatesYChange}
-                disabled={!itemSelected}
-              ></input><br />
-
-              <label > STEP SIZE: </label>
-              <select id="stepSizeOptions" onChange={handleStepSizeChange} defaultValue="5">
-                <option > 1 </option>
-                <option > 5 </option>
-                <option > 10 </option>
-                <option > 20 </option>
-                <option > 25 </option>
-                <option > 50 </option>
-                <option > 75 </option>
-                <option > 100 </option>
-                <option > 250 </option>
-              </select>
-
             </div>
           </Grid>
           <Grid item xs={12}>
@@ -1156,3 +1191,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     </StepFrame>
   );
 }
+
+
+/*<input
+                className={classes.buttonNumber}
+                id="coordinatesY"
+                type="number"
+                step={stepSize}
+                min="0"
+                max={window.innerHeight / 2}
+                defaultValue="0"
+                onChange={handleCoordinatesYChange}
+                disabled={!itemSelected}
+              ></input><br />*/
