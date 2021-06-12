@@ -57,11 +57,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     const components = React.useContext(ComponentContext);
 
-    //TODO: remove after testing
-    /*React.useEffect(() => {
-        console.log(infoProvId);
-        console.log(infoProvider);
-    }, [])*/
     /**
      * the current step of the creation process, numbered by 0 to 5
      */
@@ -138,7 +133,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      */
 
     //TODO: change to Diagram
-    const [infoProvDiagrams/*, setInfoProvDiagrams*/] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -162,7 +157,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
-    //TODO: add current state variables if neede
+    //TODO: add current state variables if needed
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -585,7 +580,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
-        infoProvDataSource.forEach((dataSource) => {
+        infoProvDataSources.forEach((dataSource) => {
             backendDataSources.push({
                 datasource_name: dataSource.apiName,
                 api: {
@@ -712,7 +707,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
@@ -724,7 +719,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSource}
+                        infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
