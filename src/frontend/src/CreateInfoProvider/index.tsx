@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
-import { BasicSettings } from "./BasicSettings";
-import { useCallFetch } from "../Hooks/useCallFetch";
-import { TypeSelection } from "./TypeSelection";
-import { HistorySelection } from "./HistorySelection";
+import {CenterNotification, centerNotifcationReducer} from "../util/CenterNotification";
+import {BasicSettings} from "./BasicSettings";
+import {useCallFetch} from "../Hooks/useCallFetch";
+import {TypeSelection} from "./TypeSelection";
+import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
 import {CreateCustomData} from "./CreateCustomData";
 import Container from "@material-ui/core/Container";
@@ -54,7 +54,6 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
  */
 
 
-
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     cancelNewDataSourceInEdit?: () => void;
@@ -64,7 +63,7 @@ interface CreateInfoproviderProps {
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
-export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
+export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => {
     const components = React.useContext(ComponentContext);
 
     console.log(props.finishDataSourceInEdit);
@@ -115,7 +114,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     // Contains the JSON for historization schedule selection
     const [schedule, setSchedule] = useState<Schedule>({type: "", interval: "", time: "", weekdays: []});
     //holds all list item representations generated in step 2, stored he to be passed to diagrams
-    const[listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
+    const [listItems, setListItems] = React.useState<Array<ListItemRepresentation>>([]);
     //holds all diagrams created by the user
     const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
@@ -134,12 +133,12 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      */
     const checkKeyExistence = React.useCallback(() => {
         //check the current data source
-        if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
+        if ((!noKey) && (apiKeyInput1 !== "" || apiKeyInput2 !== "")) return true;
         //check all other data sources
         for (let index = 0; index < dataSources.length; index++) {
             const dataSource = dataSources[index];
-            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
-                if((!dataSource.noKey)&&(dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1!==""||dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2!=="")) return true;
+            if (dataSourcesKeys.get(dataSource.apiName) !== undefined) {
+                if ((!dataSource.noKey) && (dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 !== "" || dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2 !== "")) return true;
             }
         }
         return false;
@@ -152,14 +151,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Needs to run based on sessionStorage since it is called in the first render.
      */
     const authDialogNeeded = () => {
-        const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
-        const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
+        const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+        const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId) === "true";
         //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
-        const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
-        if((!noKeyCurrent)&&methodCurrent!=="") return true;
+        const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId) || "";
+        if ((!noKeyCurrent) && methodCurrent !== "") return true;
         else {
             for (let index = 0; index < data.length; index++) {
-                if(!data[index].noKey) return true;
+                if (!data[index].noKey) return true;
             }
         }
         return false;
@@ -172,17 +171,17 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
-        if(!noKey) {
+        if (!noKey) {
             dataSourceSelection.push({
-                name: "current--"+ uniqueId,
+                name: "current--" + uniqueId,
                 method: method
             })
         }
         //check all other data sources
-        if(dataSources!==undefined) {
+        if (dataSources !== undefined) {
             dataSources.forEach((dataSource) => {
                 //input is necessary if any method of authentication is being used
-                if(!dataSource.noKey) {
+                if (!dataSource.noKey) {
                     //add to the selection
                     dataSourceSelection.push({
                         name: dataSource.apiName,
@@ -203,7 +202,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      */
     React.useEffect(() => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
-            if(checkKeyExistence()) {
+            if (checkKeyExistence()) {
                 e.preventDefault();
                 e.returnValue = "";
             }
@@ -221,43 +220,48 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      */
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
-        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
         //apiName
-        setApiName(sessionStorage.getItem("apiName-" + uniqueId)||"");
+        setApiName(sessionStorage.getItem("apiName-" + uniqueId) || "");
         //query
-        setQuery(sessionStorage.getItem("query-" + uniqueId)||"");
+        setQuery(sessionStorage.getItem("query-" + uniqueId) || "");
         //noKey
-        setNoKey(sessionStorage.getItem("noKey-" + uniqueId)==="true");
+        setNoKey(sessionStorage.getItem("noKey-" + uniqueId) === "true");
         //method
-        setMethod(sessionStorage.getItem("method-" + uniqueId)||"");
+        setMethod(sessionStorage.getItem("method-" + uniqueId) || "");
         //apiData
         //(JSON.parse(sessionStorage.getItem("apiData-" + uniqueId)||"{}"));
         //selectedData
-        setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId)===null?new Array<SelectedDataItem>():JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
+        setSelectedData(sessionStorage.getItem("selectedData-" + uniqueId) === null ? new Array<SelectedDataItem>() : JSON.parse(sessionStorage.getItem("selectedData-" + uniqueId)!));
         //customData
-        setCustomData(sessionStorage.getItem("customData-" + uniqueId)===null?new Array<FormelObj>():JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
+        setCustomData(sessionStorage.getItem("customData-" + uniqueId) === null ? new Array<FormelObj>() : JSON.parse(sessionStorage.getItem("customData-" + uniqueId)!));
         //historizedData
-        setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId)===null?new Array<string>():JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
+        setHistorizedData(sessionStorage.getItem("historizedData-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("historizedData-" + uniqueId)!));
         //listItems (less calculations will be necessary this way)
-        setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
         //diagrams (less calculations will be necessary this way)
-        setDiagrams(sessionStorage.getItem("diagrams-" + uniqueId)===null?new Array<Diagram>():JSON.parse(sessionStorage.getItem("diagrams-" + uniqueId)!));
+        setDiagrams(sessionStorage.getItem("diagrams-" + uniqueId) === null ? new Array<Diagram>() : JSON.parse(sessionStorage.getItem("diagrams-" + uniqueId)!));
         //schedule
-        setSchedule(sessionStorage.getItem("schedule-" + uniqueId)===null?{type: "", interval: "", time: "", weekdays: []}:JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+        setSchedule(sessionStorage.getItem("schedule-" + uniqueId) === null ? {
+            type: "",
+            interval: "",
+            time: "",
+            weekdays: []
+        } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
-        setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId)||1));
+        setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 1));
         // Already created data sources
-        setDataSources(sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
+        setDataSources(sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
         //listItems
-        setListItems(sessionStorage.getItem("listItems-" + uniqueId)===null?new Array<ListItemRepresentation>():JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
 
         //TODO: document this
         //open the dialog for reentering authentication data
-        if(authDialogNeeded()) {
+        if (authDialogNeeded()) {
             //create default values in the key map for all dataSources
             //necessary to not run into undefined values
             const map = new Map();
-            const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
+            const data: Array<DataSource> = sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!)
             data.forEach((dataSource) => {
                 map.set(dataSource.apiName, {
                     apiKeyInput1: "",
@@ -283,16 +287,16 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     }, [query])
     //store noKey in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("noKey-" + uniqueId, noKey?"true":"false");
+        sessionStorage.setItem("noKey-" + uniqueId, noKey ? "true" : "false");
     }, [noKey])
     //store method in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("method-" + uniqueId, method);
     }, [method])
     //store apiData in sessionStorage
-   /* React.useEffect(() => {
-        sessionStorage.setItem("apiData-" + uniqueId, JSON.stringify(apiData));
-    }, [apiData])*/
+    /* React.useEffect(() => {
+         sessionStorage.setItem("apiData-" + uniqueId, JSON.stringify(apiData));
+     }, [apiData])*/
     //store selectedData in sessionStorage by converting into an array and use JSON.stringify on it
     React.useEffect(() => {
         sessionStorage.setItem("selectedData-" + uniqueId, JSON.stringify(selectedData));
@@ -359,7 +363,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     });
 
     const reportError = (message: string) => {
-        dispatchMessage({ type: "reportError", message: message });
+        dispatchMessage({type: "reportError", message: message});
     };
 
     /**
@@ -367,8 +371,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-      clearSessionStorage();
-      components?.setCurrent("dashboard")
+        clearSessionStorage();
+        components?.setCurrent("dashboard")
     }
 
     /**
@@ -388,7 +392,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
                 api: {
                     api_info: {
                         type: "request",
-                        api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                        api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                         url_pattern: dataSource.query,
                     },
                     method: dataSource.noKey ? "noAuth" : dataSource.method,
@@ -524,8 +528,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
     const getArraysUsedByDiagrams = () => {
         const arraysInDiagrams: Array<string> = [];
         diagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType !== "Array") return;
+            else if (diagram.arrayObjects !== undefined) {
                 diagram.arrayObjects.forEach((array) => {
                     //checking for empty parentKeyName is not necessary since the dataSource name is always included
                     arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
@@ -562,8 +566,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Return true if the name is already in use for this Info-Provider
      */
     const checkNameDuplicate = (name: string) => {
-        for(let i = 0; i < dataSources.length; i++) {
-            if(dataSources[i].apiName === name) return true;
+        for (let i = 0; i < dataSources.length; i++) {
+            if (dataSources[i].apiName === name) return true;
         }
         return false;
     }
@@ -573,8 +577,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Increments the step.
      */
     const handleContinue = () => {
-        if(step===5) postInfoProvider();
-        else if(step === 4 && props.finishDataSourceInEdit !== undefined) {
+        if (step === 5) postInfoProvider();
+        else if (step === 4 && props.finishDataSourceInEdit !== undefined) {
             props.finishDataSourceInEdit({
                 apiName: apiName,
                 query: query,
@@ -587,8 +591,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
                 listItems: listItems
             }, apiKeyInput1, apiKeyInput2);
             clearSessionStorage();
-        }
-        else {
+        } else {
             setStep(step + 1);
             /*console.log(JSON.stringify({
                 infoprovider_name: name,
@@ -610,15 +613,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-    if(step === 0 && props.cancelNewDataSourceInEdit !== undefined) {
+        if (step === 0 && props.cancelNewDataSourceInEdit !== undefined) {
             clearSessionStorage();
             props.cancelNewDataSourceInEdit();
-        }
-        else if(step===0) {
+        } else if (step === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
         }
-        setStep(step-1)
+        setStep(step - 1)
     }
 
 
@@ -626,35 +628,35 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
      * Adds a new data source to the state of the Infoprovider.
      * If a data source already exists, it will be swapped out when this method is called.
      */
-    //TODO: add this to the documentation
+        //TODO: add this to the documentation
     const addToDataSources = () => {
-        //store keys in dataSourcesKeys
-        const mapCopy = new Map(dataSourcesKeys);
-        setDataSourcesKeys(mapCopy.set(apiName, {
-            apiKeyInput1: apiKeyInput1,
-            apiKeyInput2: apiKeyInput2
-        }))
-        const dataSource: DataSource = {
-            apiName: apiName,
-            query: query,
-            noKey: noKey,
-            method: method,
-            selectedData: selectedData,
-            customData: customData,
-            historizedData: historizedData,
-            schedule: schedule,
-            listItems: listItems
-        };
-        for(let i = 0; i < dataSources.length; i++) {
-            if (dataSources[i].apiName === apiName) {
-                let newDataSources = dataSources.slice();
-                newDataSources[i] = dataSource;
-                setDataSources(newDataSources);
-                return;
+            //store keys in dataSourcesKeys
+            const mapCopy = new Map(dataSourcesKeys);
+            setDataSourcesKeys(mapCopy.set(apiName, {
+                apiKeyInput1: apiKeyInput1,
+                apiKeyInput2: apiKeyInput2
+            }))
+            const dataSource: DataSource = {
+                apiName: apiName,
+                query: query,
+                noKey: noKey,
+                method: method,
+                selectedData: selectedData,
+                customData: customData,
+                historizedData: historizedData,
+                schedule: schedule,
+                listItems: listItems
+            };
+            for (let i = 0; i < dataSources.length; i++) {
+                if (dataSources[i].apiName === apiName) {
+                    let newDataSources = dataSources.slice();
+                    newDataSources[i] = dataSource;
+                    setDataSources(newDataSources);
+                    return;
+                }
             }
+            setDataSources(dataSources.concat(dataSource));
         }
-        setDataSources(dataSources.concat(dataSource));
-    }
 
 
     /**
@@ -712,7 +714,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
                     />
                 );
             case 3:
@@ -723,7 +725,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
                         selectedData={selectedData}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
                         reportError={reportError}
                         listItems={listItems}
                         historizedData={historizedData}
@@ -801,25 +803,25 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps>= (props) => {
             </Container>
             {selectContent(step)}
             <CenterNotification
-                handleClose={() => dispatchMessage({ type: "close" })}
+                handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}
                 message={message.message}
                 severity={message.severity}
             />
-            {authDataDialogOpen&&
-                <AuthDataDialog
-                    authDataDialogOpen={authDataDialogOpen}
-                    setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
-                    method={method}
-                    apiKeyInput1={apiKeyInput1}
-                    setApiKeyInput1={(input: string) => setApiKeyInput1(input)}
-                    apiKeyInput2={apiKeyInput2}
-                    setApiKeyInput2={(input: string) => setApiKeyInput2(input)}
-                    dataSourcesKeys={dataSourcesKeys}
-                    setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
-                    selectionDataSources={buildDataSourceSelection()}
-                    apiName={apiName}
-                />
+            {authDataDialogOpen &&
+            <AuthDataDialog
+                authDataDialogOpen={authDataDialogOpen}
+                setAuthDataDialogOpen={(open: boolean) => setAuthDataDialogOpen(open)}
+                method={method}
+                apiKeyInput1={apiKeyInput1}
+                setApiKeyInput1={(input: string) => setApiKeyInput1(input)}
+                apiKeyInput2={apiKeyInput2}
+                setApiKeyInput2={(input: string) => setApiKeyInput2(input)}
+                dataSourcesKeys={dataSourcesKeys}
+                setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                selectionDataSources={buildDataSourceSelection()}
+                apiName={apiName}
+            />
             }
         </React.Fragment>
     );

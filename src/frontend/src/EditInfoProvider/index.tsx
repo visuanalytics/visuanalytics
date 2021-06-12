@@ -30,7 +30,7 @@ interface EditInfoProviderProps {
     infoProvider?: FrontendInfoProvider;
 }
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
@@ -42,8 +42,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The name of the infoprovider that is being edited
      */
-    //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
+        //infoProvider? infoProvider.name : "TristanTest"
+    const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
 
 
     const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
@@ -53,9 +53,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
-    //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-    //fill with test data
-    const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources : new Array<DataSource>(
+        //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
+        //fill with test data
+    const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -100,15 +100,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
             listItems: [],
         },
-    ));
+        ));
 
     const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    //TODO: change to Diagram
-    const [infoProvDiagrams/*, setInfoProvDiagrams*/] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+        //TODO: change to Diagram
+    const [infoProvDiagrams/*, setInfoProvDiagrams*/] = React.useState(infoProvider !== undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -349,8 +349,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const getArraysUsedByDiagrams = () => {
         const arraysInDiagrams: Array<string> = [];
         infoProvDiagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType !== "Array") return;
+            else if (diagram.arrayObjects !== undefined) {
                 diagram.arrayObjects.forEach((array) => {
                     //checking for empty parentKeyName is not necessary since the dataSource name is always included
                     arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
@@ -359,7 +359,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         })
         return arraysInDiagrams;
     }
-
 
 
     /**
@@ -401,7 +400,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * @param step The number of the current step
      */
     const selectContent = (step: number) => {
-        if(newDataSourceMode) {
+        if (newDataSourceMode) {
             return (
                 <React.Fragment>
                     <Grid container>

@@ -15,7 +15,6 @@ import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
 import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 
-
 /**
  * Renders the whole infoprovider-overview component except the infoprovider-list
  */
@@ -391,7 +390,7 @@ export const InfoProviderOverview: React.FC = () => {
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
                                         onClick={() => confirmEdit()}
-                                        >
+                                >
                                     Bearbeiten
                                 </Button>
                             </Grid>

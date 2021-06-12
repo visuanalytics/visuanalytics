@@ -175,12 +175,14 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={() => props.setNewDataSourceMode(true)}>
+                            <Button variant="contained" size="large" color="primary"
+                                    onClick={() => props.setNewDataSourceMode(true)}>
                                 Neue Datenquelle hinzufügen
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
+                            <Button variant="contained" size="large" color="primary"
+                                    onClick={() => props.continueHandler(1)}>
                                 weiter
                             </Button>
                         </Grid>
