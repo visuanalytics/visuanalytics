@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import List from "@material-ui/core/List";
-import { ListItem, Button, Grid, Box, TextField, Input, Select, MenuItem, NativeSelect, InputLabel } from "@material-ui/core";
+import { ListItem, Button, Grid, Box, TextField, MenuItem, Checkbox, FormControlLabel, Typography } from "@material-ui/core";
 
 import { DataSource } from "../../CreateInfoProvider";
 import { useStyles } from "./style";
@@ -45,6 +45,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [textEditFontSize, setTextEditFontSize] = React.useState(20);
   const [textEditFontFamily, setTextEditFontFamily] = React.useState("");
   const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
+  const [currentFontFamily, setCurrentFontFamily] = React.useState("Arial");
+  const [currentFontSize, setCurrentFontSize] = React.useState(20);
+  const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
+  const [currentTextWidth, setCurrentTextWidth] = React.useState(200);
+  const [currentTextContent, setCurrentTextContent] = React.useState("Test");
+  const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
+  const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
+  const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
+  const [deleteText, setDeleteText] = React.useState("Letzes Item löschen");
+  const [currentCursor, setCurrentCursor] = React.useState("crosshair");
+  const [currentItemColor, setCurrentItemColor] = React.useState("#000000")
+  const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
 
   type myCircle = {
     x: number;
@@ -126,9 +138,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @param e drag event
    */
   const handleDragStart = (e: any) => {
-    console.log('Started Dragging!');
-    // TODO: remove change of HTML Elements
-    document.getElementById("main")!.style.cursor = "grabbing";
+    setCurrentCursor("grabbing");
   };
 
   /**
@@ -136,13 +146,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @param e drag event
    */
   const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
-    if (e.target.getStage() !== null) {
-      const selectedNode = e.target.getStage()!.findOne("." + selectedItemName);
-      const absPos = selectedNode.getAbsolutePosition();
-      // TODO: remove change of HTML Elements
-      (document.getElementById("coordinatesX") as HTMLInputElement)!.valueAsNumber = (absPos.x);
-      (document.getElementById("coordinatesY") as HTMLInputElement)!.valueAsNumber = (absPos.y);
-    }
   }
 
   /**
@@ -151,19 +154,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @returns nothing, return is used as a break condition in case the user drags an item outside of the canvas.
    */
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    console.log('Stopped Dragging!')
-    document.getElementById("main")!.style.cursor = "grab";
+    setCurrentCursor("grab");
     const localItems = items.slice();
     const index = localItems.indexOf(selectedObject);
     if (e.target.getStage() !== null) {
       const selectedNode = e.target.getStage()!.findOne("." + selectedItemName);
 
       const absPos = selectedNode.getAbsolutePosition();
-      console.log("I REACHED A VALID SPOT")
-
-      //TODO Else if to identify type
-
 
       const objectCopy = {
         ...selectedObject,
@@ -177,12 +174,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(objectCopy);
       }, 200);
 
-
-
-
-      //TODO remove
-      (document.getElementById("coordinatesX") as HTMLInputElement)!.valueAsNumber = absPos.x;
-      (document.getElementById("coordinatesY") as HTMLInputElement)!.valueAsNumber = absPos.y;
+      setCurrentXCoordinate(absPos.x);
+      setCurrentYCoordinate(absPos.y);
       return;
     }
   };
@@ -202,9 +195,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       setSelectedItemName("");
       setTextEditVisibility(false);
       setItemSelected(false);
-
-      //TODO remove
-      document.getElementById("del")!.innerText = "DELETE LAST ELEMENT";
+      setDeleteText("Letzes Item löschen");
       return;
     }
 
@@ -220,18 +211,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       setSelectedItemName(name);
       setItemSelected(true);
 
-      document.getElementById("del")!.innerText = "DELETE";
+      setDeleteText("LÖSCHEN");
       const id = name;
       const foundItem = items.find((i: any) => i.id === id);
       setSelectedObject(foundItem!);
       console.log(selectedObject);
       const index = items.indexOf(foundItem!);
-      // TODO: remove change of HTML Elements
-      if (!items[index].id.startsWith('image')) {
-        (document.getElementById("itemColor")! as HTMLInputElement).value = items[index].color!;
+      if (items[index].id.startsWith("text")){
+        setCurrentFontColor(items[index].color)
       }
-      (document.getElementById("coordinatesX") as HTMLInputElement)!.valueAsNumber = items[index].x;
-      (document.getElementById("coordinatesY") as HTMLInputElement)!.valueAsNumber = items[index].y;
+      if (!items[index].id.startsWith("image")) {
+        setCurrentItemColor(items[index].color!);
+      }
+      setCurrentXCoordinate(items[index].x);
+      setCurrentYCoordinate(items[index].y);
     }
   };
 
@@ -269,7 +262,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         rotation: 0,
       }
       items.push(item);
-      (document.getElementById("itemColor")! as HTMLInputElement).value = nextColor;
+      setCurrentItemColor( nextColor );
 
       setSelectedType("");
       setItemCounter(itemCounter + 1);
@@ -288,7 +281,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         scaleY: 1,
         rotation: 0,
       } as myRectangle);
-      (document.getElementById("itemColor")! as HTMLInputElement).value = nextColor;
+      setCurrentItemColor( nextColor );
       setSelectedType("");
       setItemCounter(itemCounter + 1);
 
@@ -322,24 +315,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         rotation: 0,
       } as myStar);
 
-      (document.getElementById("itemColor")! as HTMLInputElement).value = nextColor;
+      setCurrentItemColor( nextColor );
       setSelectedType("");
       setItemCounter(itemCounter + 1);
 
       return;
-    } else if (selectedType === "text") {
+    } else if (selectedType === "Text") {
       items.push({
         x: parseInt(localX.toFixed(0)),
         y: parseInt(localY.toFixed(0)),
         id: 'text-' + itemCounter.toString(),
-        textContent: (document.getElementById("text")! as HTMLInputElement).value,
-        width: (document.getElementById("textWidth")! as HTMLInputElement).valueAsNumber,
+        textContent: currentTextContent,
+        width: currentTextWidth,
         scaleX: 1,
         scaleY: 1,
         rotation: 0,
-        fontFamily: (document.getElementById("fontType")! as HTMLInputElement).value,
-        fontSize: (document.getElementById("fontSize")! as HTMLInputElement).valueAsNumber,
-        color: (document.getElementById("fontColor")! as HTMLInputElement).value,
+        fontFamily: currentFontFamily,
+        fontSize: currentFontSize,
+        color: currentFontColor,
         height: 20,
         padding: 2,
         currentlyRendered: true,
@@ -373,15 +366,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   /**
    * This function is called whenever the user changes the x coordinate of an item. The coordinate will be updated in the item.
    */
-  const handleCoordinatesXChange = () => {
+  const handleCoordinatesXChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    const x = (document.getElementById("coordinatesX") as HTMLInputElement)!.valueAsNumber;
+
+    setCurrentXCoordinate(parseInt(event.target.value))
 
     const localItems = items.slice();
     const index = items.indexOf(selectedObject);
     const objectCopy = {
       ...selectedObject,
-      x: x,
+      x: parseInt(event.target.value),
     };
     localItems[index] = objectCopy;
     setSelectedObject(objectCopy);
@@ -391,19 +385,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   /**
    * This function is called whenever the user changes the y coordinate of an item. The coordinate will be updated in the item.
    */
-  const handleCoordinatesYChange = () => {
-    console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    const y = (document.getElementById("coordinatesY") as HTMLInputElement)!.valueAsNumber;
+  const handleCoordinatesYChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setCurrentYCoordinate(parseInt(event.target.value));
     const localItems = items.slice();
     const index = items.indexOf(selectedObject);
     const objectCopy = {
       ...selectedObject,
-      y: y,
+      y: parseInt(event.target.value),
     };
     localItems[index] = objectCopy;
     setSelectedObject(objectCopy);
     setItems(localItems);
-    console.log(selectedObject);
   }
 
   /**
@@ -479,18 +471,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    */
   const clearCanvas = () => {
     console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    (document.getElementById("main") as HTMLDivElement).style.cursor = "crosshair";
-    (document.getElementById("coordinatesX") as HTMLInputElement)!.valueAsNumber = 0;
-    (document.getElementById("coordinatesY") as HTMLInputElement)!.valueAsNumber = 0;
-    (document.getElementById("itemColor")! as HTMLInputElement).value = "#FFFFFF";
-    (document.getElementById("backgroundColor")! as HTMLInputElement).value = "#FFFFFF";
-    (document.getElementById("fontColor")! as HTMLInputElement).value = "#000000";
+    setCurrentCursor("crosshair");
+    setCurrentXCoordinate(0);
+    setCurrentYCoordinate(0);
+    setCurrentItemColor("#FFFFFF");
+    setBackGroundColor("#FFFFFF");
+    setCurrentFontColor("#000000");
     setItems([]);
     setSelectedItemName("");
     setSelectedType("");
     setTextEditContent("");
     setItemCounter(0);
-    setBackGroundColor("#FFFFFF");
+    setCurrentBGColor("#FFFFFF");
     setRecentlyRemovedItems(items);
     console.clear();
   }
@@ -498,9 +490,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   /**
    * This function is called, when the user changes the size of amount he wants to move an item on the x or y axis per step.
    */
-  const handleStepSizeChange = () => {
+  const handleStepSizeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    setStepSize(parseInt((document.getElementById("stepSizeOptions")! as HTMLSelectElement).value));
+    setStepSize(parseInt(event.target.value));
   }
 
   /**
@@ -520,23 +512,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * Function to select the type of element, that will get added next
    * @param type the type of element you want to add
    */
-  const selectType = () => {
-    console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    document.getElementById("main")!.style.cursor = "crosshair";
-    const type = (document.getElementById("itemType")! as HTMLSelectElement).value;
-    console.log(type)
-    setSelectedType(type);
-  }
-
-  /**
-   * This function is called when the user wants to add new text on the canvas
-   * @param text text that will be added to the canvas next
-   */
-  const selectText = (text: string) => {
-    console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
-    document.getElementById("main")!.style.cursor = "crosshair";
-    setSelectedType("text");
-    setTextEditContent(text);
+  const selectType = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCurrentCursor("crosshair");
+    setSelectedType(event.target.value);
   }
 
   /**
@@ -553,7 +531,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
       }
       setRecentlyRemovedItems(lastElem);
-      document.getElementById("del")!.innerText = "DELETE LAST ELEMENT";
+      setDeleteText("Letzes Item löschen");
     } else {
       const index = items.indexOf(selectedObject);
       console.log("itemsPre: ", items)
@@ -563,7 +541,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       }
       setRecentlyRemovedItems(lastElem);
       setItemSelected(false);
-      document.getElementById("del")!.innerText = "DELETE LAST ELEMENT";
+      setDeleteText("Letzes Item löschen");
     }
   }
 
@@ -632,32 +610,92 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   }
 
   /**
-   * This function is called whenever the user makes changes to the attributes of a text element
+   * This function is called whenever the user makes changes to the font family of a text element
    */
-  const changeFontAttr = () => {
-    console.log("ItemName: ", selectedItemName, "\nObject: ", selectedObject);
+  const changeFontFamily = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (itemSelected && selectedItemName.startsWith('text')) {
-      const fontFamily = (document.getElementById("fontType")! as HTMLInputElement).value;
-      const fontSize = (document.getElementById("fontSize")! as HTMLInputElement).valueAsNumber;
-      const fontColor = (document.getElementById("fontColor")! as HTMLInputElement).value;
-      const textWidth = (document.getElementById("textWidth")! as HTMLInputElement).valueAsNumber;
+      const fontFamily = (event.target.value);
       const localItems = items.slice();
       const index = items.indexOf(selectedObject);
       const objectCopy = {
         ...selectedObject,
-        color: fontColor,
         fontFamily: fontFamily,
-        fontSize: fontSize,
-        width: textWidth,
       };
       localItems[index] = objectCopy;
 
       setTimeout(() => {
         setItems(localItems);
         setSelectedObject(objectCopy);
+        setCurrentFontFamily(fontFamily);
       }, 200);
     }
   }
+
+  /**
+   * This function is called whenever the user makes changes to the font size of a text element
+   */
+  const changeFontSize = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (itemSelected && selectedItemName.startsWith('text')) {
+      const fontSize = (event.target.value);
+      const localItems = items.slice();
+      const index = items.indexOf(selectedObject);
+      const objectCopy = {
+        ...selectedObject,
+        fontSize: parseInt(fontSize),
+      };
+      localItems[index] = objectCopy;
+
+      setTimeout(() => {
+        setItems(localItems);
+        setSelectedObject(objectCopy);
+        setCurrentFontSize(parseInt(fontSize));
+      }, 200);
+    }
+  }
+
+  /**
+   * This function is called whenever the user makes changes to the font color of a text element
+   */
+  const changeFontColor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (itemSelected && selectedItemName.startsWith('text')) {
+      const fontColor = (event.target.value);
+      const localItems = items.slice();
+      const index = items.indexOf(selectedObject);
+      const objectCopy = {
+        ...selectedObject,
+        color: fontColor,
+      };
+      localItems[index] = objectCopy;
+
+      setTimeout(() => {
+        setItems(localItems);
+        setSelectedObject(objectCopy);
+        setCurrentFontColor(fontColor);
+      }, 200);
+    }
+  }
+
+  /**
+   * This function is called whenever the user makes changes to the text width of a text element
+   */
+  const changeTextWidth = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (itemSelected && selectedItemName.startsWith('text')) {
+      const textWidth = parseInt(event.target.value)
+      const localItems = items.slice();
+      const index = items.indexOf(selectedObject);
+      const objectCopy = {
+        ...selectedObject,
+        width: textWidth,
+      };
+      localItems[index] = objectCopy;
+      setTimeout(() => {
+        setItems(localItems);
+        setSelectedObject(objectCopy);
+        setCurrentTextWidth(textWidth);
+      }, 200);
+    }
+  }
+
 
   const selectFile = () => {
     setSelectedType("Image");
@@ -666,20 +704,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   /**
    * Function to change the color of an element selected by a user
    */
-  const switchItemColor = () => {
-    const itemColor = (document.getElementById("itemColor") as HTMLInputElement).value;
-    console.log(selectedObject)
-    console.log("started color change")
+  const switchItemColor = (event : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (itemSelected === true) {
       const localItems = items.slice();
       const index = localItems.indexOf(selectedObject)
+      
       const objectCopy = {
         ...selectedObject,
-        color: itemColor,
+        color: event.target.value,
       };
+      
       localItems[index] = objectCopy;
-      setSelectedObject(objectCopy);
-      setItems(localItems);
+      setCurrentItemColor(event.target.value);
+      setTimeout(() => {
+        setSelectedObject(objectCopy);
+        setItems(localItems);
+        
+      }, 50)
+      
 
     }
   }
@@ -687,9 +729,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   /**
    * Function to change the background color incase it is not an image
    */
-  const switchBGColor = () => {
-    let backgroundColor = (document.getElementById("backgroundColor") as HTMLInputElement).value;
-    setBackGroundColor(backgroundColor);
+  const switchBGColor = (event : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+
+     setCurrentBGColor(event.target.value);
   }
 
   /**
@@ -699,11 +741,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     if (backGroundType === "COLOR") {
       setBackGroundNext("COLOR");
       setBackGroundType("IMAGE");
-      (document.getElementById("backgroundColor")! as HTMLInputElement).value = "#FFFFFF";
+      setCurrentBGColor("#FFFFFF");
     } else if (backGroundType === "IMAGE") {
       setBackGroundNext("IMAGE");
       setBackGroundType("COLOR");
-      (document.getElementById("backgroundColor")! as HTMLInputElement).value = backGroundColor;
+      setCurrentBGColor(backGroundColor);
     }
   }
 
@@ -712,7 +754,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    */
   const mouseOver = () => {
     if (itemSelected) {
-      document.getElementById("main")!.style.cursor = "grab";
+      setCurrentCursor("grab");
     }
   }
 
@@ -720,7 +762,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * Function to change cursor back to default when the user doesn't hover an element anymore
    */
   const mouseLeave = () => {
-    document.getElementById("main")!.style.cursor = "crosshair";
+    setCurrentCursor("crosshair");
   }
 
   /**
@@ -745,8 +787,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @param item The item selected by the user
    */
   const handleItemSelect = (item: string) => {
-    //TODO: add the selected item to the canvas
-    console.log("user selected item " + item)
+    console.log("user selected item " + item);
+    items.push({
+      x: 20,
+      y: 20,
+      id: 'text-' + itemCounter.toString(),
+      textContent: item,
+      width: currentTextWidth,
+      scaleX: 1,
+      scaleY: 1,
+      rotation: 0,
+      fontFamily: currentFontFamily,
+      fontSize: currentFontSize,
+      color: currentFontColor,
+      height: 20,
+      padding: 2,
+      currentlyRendered: true,
+    } as myText);
+    setItemCounter(itemCounter + 1);
   }
 
   /**
@@ -763,6 +821,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     )
   }
 
+  const handleBackground = (event : React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    console.log(backGroundColorEnabled);
+    backGroundColorEnabled ? setBackGroundColorEnabled(false): setBackGroundColorEnabled(true);
+    if (backGroundColorEnabled) {
+      setCurrentBGColor("#FFFFFF");
+      setBackGroundColor(currentBGColor);
+    } else {
+      setCurrentBGColor(backGroundColor);
+    }
+  }
+
   return (
     <StepFrame
       heading={"Szenen-Editor"}
@@ -771,7 +840,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     >
       <Grid container>
         <Grid item container justify={"center"} xs={12}>
-          <Grid container xs={7}>
+          <Grid item container xs={7}>
             <Grid item container xs={12} justify={"space-evenly"}>
               <Grid item>
                 <TextField className={classes.title} margin={"normal"} variant={"outlined"} color={"primary"} label={"Szenen-Titel"}
@@ -791,7 +860,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <div className={classes.editorMain} id="main">
+              <div className={classes.editorMain} id="main" style={{cursor: currentCursor}}>
                 <Stage
                   width={960}
                   height={540}
@@ -802,7 +871,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     {backGroundType === "COLOR" &&
                       <Rect
                         name="background"
-                        fill={backGroundColor}
+                        fill={currentBGColor}
                         width={960}
                         height={540}
                         onClick={(e: any) => handleCanvasClick(e)}
@@ -966,7 +1035,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                           />) || (
                           item.id.startsWith('text') &&
                           <Text
-                            id={item.id}
+                            key={item.id}
                             name={item.id}
                             text={item.textContent}
                             x={item.x}
@@ -1054,7 +1123,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
               <textarea value={textEditContent} className={classes.editorText}
                 style={{
                   display: textEditVisibility ? "block" : "none",
-                  top: textEditY + 300 + "px",
+                  top: textEditY + 380 + "px",
                   left: textEditX + 110 + "px",
                   width: textEditWidth + "px",
                   fontSize: textEditFontSize + "px",
@@ -1065,88 +1134,92 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.lowerButtons}>
-                <Grid container xs={12}>
+                <Grid item container xs={12} justify={"center"} spacing={10}>
                   <Grid item xs={3}>
-                    <Button className={classes.button} onClick={clearCanvas}> CLEAR </Button><br/><br/>
-                    <label> SHAPE: </label>
-                    <NativeSelect id="itemType" onChange={selectType} className={classes.selection}>
-                      <option>Circle</option>
-                      <option>Rectangle</option>
-                      <option>Line</option>
-                      <option>Star</option>
-                    </NativeSelect><br/><br/>
-                    <label > FONT SIZE: </label>
-                    <TextField
-                      className={classes.buttonNumber}
-                      id="fontSize"
-                      type="number"
-                      InputProps={{
-                        inputProps: {
-                          min: 1, max: 144, step: 1, defaultValue: 20,
-                        }
-                      }}
-                      onChange={changeFontAttr}
-                    ></TextField>
+                    <Button className={classes.button} onClick={clearCanvas}> ZURÜCKSETZEN </Button><br /><br />
+                    <TextField id="itemType" onChange={(e) => selectType(e)} className={classes.selection} label={"Typ"} select value={selectedType}>
+                      <MenuItem value="Circle">Kreis</MenuItem>
+                      <MenuItem value="Rectangle">Rechteck</MenuItem>
+                      <MenuItem value="Line">Dreieck</MenuItem>
+                      <MenuItem value="Star">Stern</MenuItem>
+                      <MenuItem value="Text">Text</MenuItem>
+                    </TextField><br /><br />
+                    <TextField className={classes.buttonText} id="text" value={currentTextContent} label={"Textinhalt"} onChange={(e) => setCurrentTextContent(e.target.value)}></TextField> <br /><br/>
+                    
+                    <Typography className={classes.labels} variant={"button"}> Farbe: </Typography>
+                    <input className={classes.buttonColor} id="itemColor" type={"color"} onChange={switchItemColor} disabled={disableColor()} value={currentItemColor} /><br /><br />
                   </Grid>
                   <Grid item xs={3}>
-                    <Button className={classes.button} id="del" onClick={deleteItem}> DELETE LAST ELEMENT </Button><br/><br/>
-                    <label> CHOOSE COLOR </label>
-                    <input className={classes.buttonColor} id="itemColor" type={"color"} onChange={switchItemColor} disabled={disableColor()} defaultValue="#FFFFFF" /><br/><br/>
-                    <label > FONT: </label>
-                    <NativeSelect id="fontType" onChange={changeFontAttr} className={classes.selection}>
-                      <option style={{ "fontFamily": "arial" }}>Arial</option >
-                      <option style={{ "fontFamily": "verdana" }}>veranda</option >
-                      <option style={{ "fontFamily": "Tahoma" }}>Tahoma</option >
-                      <option style={{ "fontFamily": "Georgia" }}>Georgia</option >
-                      <option style={{ "fontFamily": "Times New Roman" }}>Times New Roman</option >
-                    </NativeSelect><br />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Button className={classes.button} id="undo" onClick={undo}> UNDO </Button><br/><br/>
-                    <label id="positionX"> X: </label>
+                    <Button className={classes.button} id="del" onClick={deleteItem} >{deleteText}</Button><br /><br />
                     <TextField
                       className={classes.buttonNumber}
                       id="coordinatesX"
                       type="number"
                       InputProps={{
                         inputProps: {
-                          min: 0, max: 960, step: stepSize.toString(), defaultValue: 0,
+                          min: 0, max: 960, step: stepSize.toString(),
                         }
                       }}
                       onChange={handleCoordinatesXChange}
                       disabled={!itemSelected}
-                    ></TextField>
-                    <label id="positionY"> Y: </label>
+                      label={"X Koordinate"}
+                      value={currentXCoordinate}
+                    ></TextField><br /><br />
+                    <TextField id="fontType" onChange={(e) => changeFontFamily(e)} className={classes.selection} label={"Schriftart"} value={currentFontFamily} select>
+                      <MenuItem value={"Arial"} style={{ "fontFamily": "arial" }}>Arial</MenuItem >
+                      <MenuItem value={"veranda"} style={{ "fontFamily": "verdana" }}>veranda</MenuItem >
+                      <MenuItem value={"Tahoma"} style={{ "fontFamily": "Tahoma" }}>Tahoma</MenuItem >
+                      <MenuItem value={"Georgia"} style={{ "fontFamily": "Georgia" }}>Georgia</MenuItem >
+                      <MenuItem value={"Times New Roman"} style={{ "fontFamily": "Times New Roman" }}>Times New Roman</MenuItem >
+                    </TextField><br /><br />
+                    
+                    <Typography className={classes.labels} variant={"button"}> Schriftfarbe: </Typography>
+                    <input className={classes.buttonColor} id="fontColor" type="color" onChange={(e) => changeFontColor(e)} disabled={!disableColor()} value={currentFontColor} /><br />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button className={classes.button} id="undo" onClick={undo}> RÜCKGÄNGIG MACHEN </Button><br /><br />
                     <TextField
                       className={classes.buttonNumber}
                       id="coordinatesY"
                       type="number"
                       InputProps={{
                         inputProps: {
-                          min: 0, max: 540, step: stepSize.toString(), defaultValue: 0,
+                          min: 0, max: 540, step: stepSize.toString(),
                         }
                       }}
                       onChange={handleCoordinatesYChange}
                       disabled={!itemSelected}
-                    ></TextField><br/><br/>
-                    <label > FONT COLOR: </label>
-                    <input className={classes.buttonColor} id="fontColor" type="color" onChange={changeFontAttr} disabled={!disableColor()} defaultValue="#000000" /><br />
+                      label={"Y Koordinate"}
+                      value={currentYCoordinate}
+                    ></TextField><br /><br />
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="fontSize"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 1, max: 144, step: 1,
+                        }
+                      }}
+                      onChange={(e) => changeFontSize(e)}
+                      label={"Schriftgröße (PX)"}
+                      value={currentFontSize}
+                    ></TextField><br /><br />
+                    
                   </Grid>
                   <Grid item xs={3}>
-                    <Button className={classes.button} onClick={dupe}> DUPLICATE </Button><br/><br/>
-                    <label > STEP SIZE: </label>
-                    <NativeSelect id="stepSizeOptions" onChange={handleStepSizeChange} defaultValue="5" className={classes.selection}>
-                      <option > 1 </option>
-                      <option > 5 </option>
-                      <option > 10 </option>
-                      <option > 20 </option>
-                      <option > 25 </option>
-                      <option > 50 </option>
-                      <option > 75 </option>
-                      <option > 100 </option>
-                      <option > 250 </option>
-                    </NativeSelect><br/><br/>
-                    <label> TEXTFIELD WIDTH: </label>
+                    <Button className={classes.button} onClick={dupe}> Klonen </Button><br /><br />
+                    <TextField id="stepSizeOptions" onChange={(e) => handleStepSizeChange(e)} value={stepSize} className={classes.selection} select label={"Sprunggröße"}>
+                      <MenuItem value={1} > 1 </MenuItem>
+                      <MenuItem value={5} > 5 </MenuItem>
+                      <MenuItem value={10} > 10 </MenuItem>
+                      <MenuItem value={20} > 20 </MenuItem>
+                      <MenuItem value={25} > 25 </MenuItem>
+                      <MenuItem value={50} > 50 </MenuItem>
+                      <MenuItem value={75} > 75 </MenuItem>
+                      <MenuItem value={100} > 100 </MenuItem>
+                      <MenuItem value={250} > 250 </MenuItem>
+                    </TextField><br /><br />
                     <TextField
                       className={classes.buttonNumber}
                       id="textWidth"
@@ -1156,51 +1229,64 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                           min: 200, max: 540, step: 1, defaultValue: 200,
                         }
                       }}
-                      onChange={changeFontAttr}
+                      onChange={(e) => changeTextWidth(e)}
+                      label={"Textbreite (PX)"}
+                    ></TextField><br /><br />
+                    
 
-                    ></TextField><br />
                   </Grid>
                 </Grid>
               </Box>
             </Grid>
           </Grid>
           <Grid item xs={5}>
-
-            <div className={classes.rightButtons}>
-              <Button className={classes.button} onClick={() => selectText((document.getElementById("text")! as HTMLInputElement).value)}> TEXT </Button>
-              <TextField className={classes.buttonText} id="text" defaultValue="TEST" variant={"outlined"}></TextField> <br/>
-              <Button className={classes.button} onClick={switchBackground}> SWITCH TO {backGroundNext} </Button><br/>
-              <label> CHOOSE BACKGROUND COLOR </label>
-              <input className={classes.buttonColor} id="backgroundColor" type="color" onChange={switchBGColor} disabled={backGroundType !== "COLOR"} defaultValue="#FFFFFF" /><br />
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-            <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
-              <List disablePadding={true}>
-                {dataList.map((item) => renderListItem(item))}
-              </List>
-            </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={() => setDataList(testDataList)}>
-              Testdaten
-            </Button>
+            <Grid item xs={12} className={classes.rightButtons}>
+              <Typography variant={"h4"} align={"center"}> TEXTE </Typography>
+              <Grid item xs={12}>
+                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
+                  <List disablePadding={true}>
+                    {dataList.map((item) => renderListItem(item))}
+                  </List>
+                </Box>
+                <Button className={classes.showData} variant="contained" onClick={() => setDataList(testDataList)}>
+                  Testdaten
+                </Button><br/><br/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography>
+                <FormControlLabel className={classes.checkBox}
+                  control={
+                    <Checkbox
+                      name="checkedB"
+                      color="primary"
+                      checked={backGroundColorEnabled}
+                      onChange={handleBackground}
+                    />
+                  }
+                  label="Hintergrundfarbe verwenden"
+                /><br/>
+                
+                <label className={classes.labels}> Hintergrundfarbe: </label>
+                <input
+                  className={classes.buttonColor}
+                  id="backgroundColor"
+                  type="color"
+                  onChange={switchBGColor}
+                  disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
+                  value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
+                /><br />
+                <Button className={classes.button} onClick={switchBackground} style={{width: "80%"}}> HINTERGRUNDBILD WÄHLEN </Button><br /><br/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant={"h4"} align={"center"}> BILDER </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
     </StepFrame>
   );
 }
-
-
-/*<input
-                className={classes.buttonNumber}
-                id="coordinatesY"
-                type="number"
-                step={stepSize}
-                min="0"
-                max={window.innerHeight / 2}
-                defaultValue="0"
-                onChange={handleCoordinatesYChange}
-                disabled={!itemSelected}
-              ></input><br />*/

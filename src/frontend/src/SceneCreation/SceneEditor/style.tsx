@@ -20,8 +20,9 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginBottom: "10px"
         },
         choiceListFrame: {
-            width: "60%",
-            height: "220px",
+            width: "90%",
+            margin: "auto",
+            height: "140px",
             overflow: 'auto',
             overflowX: "hidden",
             marginTop: "10px",
@@ -131,7 +132,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "10px",
             padding: "10px",
             width: "500px",
-            height: "870px",
+            height: "900px",
             backgroundColor: "white",
             border: "5px solid",
             borderColor: theme.palette.primary.main,
@@ -145,7 +146,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             align: "center",
             display: "inline-block",
             fontSize: "16px",
-            margin: "4px 2px",
+            marginLeft: "10px",
+            marginTop: "10px",
             transitionDuration: "0.4s",
             cursor: "pointer",
             borderRadius: "5px",
@@ -164,25 +166,27 @@ export const useStyles = makeStyles((theme: Theme) =>
             textDecoration: "none",
             display: "inline-block",
             fontSize: "16px",
-            margin: "4px 2px",
             transitionDuration: "0.4s",
             borderRadius: "5px",
         },
 
         buttonColor: {
-            width: "90px",
-            backgroundColor: theme.palette.primary.main,
+            width: "150px",
+            backgroundColor: "white",
             border: "1px solid white",
             borderRadius: "5px",
             padding: "5px",
+            marginLeft: "10px",
         },
 
         buttonNumber: {
-            width: "60px",
+            width: "150px",
+            marginLeft: "10px",
         },
 
         buttonText: {
-            width: "235px",
+            width: "150px",
+            marginLeft: "10px",
         },
 
         title: {
@@ -194,6 +198,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: theme.palette.primary.main,
             color: "#FFFFFF",
             transitionDuration: "0.4s",
+            height: "50px",
             '&:hover': {
                 backgroundColor: theme.palette.primary.light,
                 color: "#000000",
@@ -202,6 +207,8 @@ export const useStyles = makeStyles((theme: Theme) =>
 
         selection: {
             backgroundColor: "#FFFFFF",
+            width: "150px",
+            marginLeft: "10px",
         },
 
         option: {
@@ -216,5 +223,20 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "10px",
             height: "250px",
         },
+
+        labels: {
+            marginLeft: "10px",
+            width: "100%"
+        },
+
+        showData: {
+            margin: "10px",    
+        },
+
+        checkBox: {
+            margin: "auto",
+            marginTop: "10px",
+            marginLeft: "10px"
+        }
     })
 );
