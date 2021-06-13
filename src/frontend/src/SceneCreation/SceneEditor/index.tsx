@@ -57,7 +57,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [currentCursor, setCurrentCursor] = React.useState("crosshair");
   const [currentItemColor, setCurrentItemColor] = React.useState("#000000")
   const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
-
+  const [currentRotation, setCurrentRotation] = React.useState(0);
+  const [stage, setStage] = React.useState<Konva.Stage | null>();
+  
   type myCircle = {
     x: number;
     y: number;
@@ -196,6 +198,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       setTextEditVisibility(false);
       setItemSelected(false);
       setDeleteText("Letzes Item löschen");
+      setStage(e.target.getStage());
+      console.log(stage)
       return;
     }
 
@@ -484,6 +488,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     setItemCounter(0);
     setCurrentBGColor("#FFFFFF");
     setRecentlyRemovedItems(items);
+    setCurrentRotation(0);
     console.clear();
   }
 
@@ -696,6 +701,28 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
   }
 
+  /**
+   * 
+   */
+  const changeCurrentRotation = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (itemSelected) {
+      const localItems = items.slice();
+      const index = items.indexOf(selectedObject);
+      const objectCopy = {
+        ...selectedObject,
+        rotation: parseInt(event.target.value),
+      };
+      localItems[index] = objectCopy;
+      setCurrentRotation(parseInt(event.target.value));
+      setTimeout(() => {
+        setItems(localItems);
+        setSelectedObject(objectCopy);
+        
+      }, 200);
+
+      console.log(currentRotation)
+    }
+  }
 
   const selectFile = () => {
     setSelectedType("Image");
@@ -1205,7 +1232,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                       label={"Schriftgröße (PX)"}
                       value={currentFontSize}
                     ></TextField><br /><br />
-                    
+                    <TextField
+                      className={classes.buttonNumber}
+                      id="rotation"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 0, max: 359, step: 1,
+                        }
+                      }}
+                      onChange={(e) => changeCurrentRotation(e)}
+                      label={"Rotation (Grad)"}
+                      value={currentRotation}
+                    ></TextField><br /><br />
                   </Grid>
                   <Grid item xs={3}>
                     <Button className={classes.button} onClick={dupe}> Klonen </Button><br /><br />
@@ -1265,7 +1304,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   }
                   label="Hintergrundfarbe verwenden"
                 /><br/>
-                
                 <label className={classes.labels}> Hintergrundfarbe: </label>
                 <input
                   className={classes.buttonColor}
