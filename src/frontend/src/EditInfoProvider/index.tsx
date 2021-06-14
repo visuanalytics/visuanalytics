@@ -57,9 +57,12 @@ task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
  */
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
     const components = React.useContext(ComponentContext);
+
+    //stores a copy of the passed infoProviderID - necessary since it is passed via context switch and wont be kept on reload
+    const [infoProvId, setInfoProvId] = React.useState(props.infoProvId !== undefined ? props.infoProvId : 0);
 
     /**
      * the current step of the creation process, numbered by 0 to 5
@@ -69,21 +72,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The name of the infoprovider that is being edited
      */
-    const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
+    const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
 
     const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
 
     //holds the dataSources of the edited infoProvider
     //always gets the value from the sessionStorage, but if it is not defined (first entering), the data is fetched from the props
-    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ?  infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ?  props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
 
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
-    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(infoProvider !== undefined ? infoProvider.dataSourcesKeys : new Map<string, DataSourceKey>());
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(props.infoProvider !== undefined ? props.infoProvider.dataSourcesKeys : new Map<string, DataSourceKey>());
 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider!==undefined ? props.infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -175,6 +178,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      */
     React.useEffect(() => {
         if(sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
+            //infoProvId
+            setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || props.infoProvId));
             //step - disabled since it makes debugging more annoying
             setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
             //infoProvName
@@ -220,6 +225,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     //store step in sessionStorage
     React.useEffect(() => {
+        sessionStorage.setItem("infoProvId-" + uniqueId, infoProvId!.toString());
+    }, [infoProvId])
+    React.useEffect(() => {
         sessionStorage.setItem("step-" + uniqueId, step.toString());
     }, [step])
     //store infoProvName in sessionStorage
@@ -247,6 +255,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Removes all items of this component from the sessionStorage.
      */
     const clearSessionStorage = () => {
+        sessionStorage.removeItem("infoProvId-" + uniqueId);
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("infoProvName-" + uniqueId);
         sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
