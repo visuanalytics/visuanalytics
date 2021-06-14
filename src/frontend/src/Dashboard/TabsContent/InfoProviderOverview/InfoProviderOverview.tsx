@@ -10,8 +10,9 @@ import Button from "@material-ui/core/Button";
 import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
-import {InfoProviderObj} from "../../../EditInfoProvider/types";
 import {answer, fetchAllBackendAnswer, jsonRef} from "../../types";
+import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
+import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 
 
@@ -245,12 +246,18 @@ export const InfoProviderOverview: React.FC = () => {
         }, 200);
     }
 
+    /**
+     * Handler method for successful calls to the backend for getting an infoprovider by id.
+     * Takes the object of type InfoProviderFromBackend provided and transforms it to name/string, Array<DataSource>
+     * and Array<Diagram> to use it in editing.
+     * @param jsonData
+     */
     const handleSuccessEdit = (jsonData: any) => {
-
-        const data = jsonData as InfoProviderObj;
-
-        components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: data})
-
+        console.log(jsonData);
+        const data = jsonData as InfoProviderFromBackend;
+        //transform the infoProvider to frontend format
+        const infoProvider = transformBackendInfoProvider(data);
+        components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
     }
 
     /**

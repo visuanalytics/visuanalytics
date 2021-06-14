@@ -20,6 +20,15 @@ datatype_converter = {
 
 
 def check_api(req_data):
+    """
+    Führt eine Request an eine API aus, und abstrahiert im Anschluss die Response für die Datenselektierung im
+    Frontend.
+
+    :param req_data: Enthält Informationen über das Request-Objekt
+    :type req_data: dict
+    :return: Abstrahierte Version der Response oder Fehlermeldung und einen Boolean mit einer Aussage über
+    den Erfolg der Funktion
+    """
     req = requests.Request(req_data["method"], req_data["url"], headers=req_data["headers"],
                            json=req_data.get("json", None), data=req_data.get("other", None), params=req_data["params"])
     # Make the http request
@@ -33,6 +42,10 @@ def check_api(req_data):
                 return {
                     "err_msg": "An error occurred while loading the api-data"
                 }, False
+            if type(content) == list:
+                content = {
+                    "$toplevel_array$": content
+                }
             return content, True
         elif req_data["response_type"] == "json":
             content = get_content(response.json())
@@ -40,6 +53,10 @@ def check_api(req_data):
                 return {
                     "err_msg": "An error occurred while loading the api-data"
                 }, False
+            if type(content) == list:
+                content = {
+                    "$toplevel_array$": content
+                }
             return content, True
         else:
             return {
@@ -52,6 +69,12 @@ def check_api(req_data):
 
 
 def get_content(obj):
+    """
+    Abstrahiert das übergebene Objekt je nach Typ (dict, list, str, int etc.)
+
+    :param obj: zu abstrahierendes Objekt
+    :return: Beschreibung des Datentyps eines Objektes
+    """
     if type(obj) == list:
         if len(obj) == 0:
             return {
@@ -81,22 +104,29 @@ def get_content(obj):
 
 
 def same_datatypes(lst):
+    """
+    Überprüft für eine Liste, ob sie nur Daten vom selben Typ enthält. Dabei spielen Keys, Länge der Objekte etc. eine Rolle
+
+    :param lst: Liste, die überprüft werden soll
+    :type lst: list
+    :return: Boolean, je nach Ausgang der Überprüfung
+    """
     datatype = type(lst[0]).__name__
     for item in lst:
-        if type(item).__name__ != datatype:  # return false, if the list contains different datatypes
+        if type(item).__name__ != datatype:  # return False, wenn die Liste verschiedene Datentypen enthält
             return False
-    # datatypes are the same, but are the structures of the complex datatypes the same?
+    # Datentypen sind gleich, aber sind deren Strukturen auch gleich? (für komplexe Datentypen)
     if datatype == "dict":
         keys = lst[0].keys()
         for item in lst:
-            if item.keys() != keys:  # return false, if the keys of the dicts are different
+            if item.keys() != keys:  # return False, wenn die Keys der Dictionaries verschieden sind
                 return False
     elif datatype == "list":
-        if sum([len(x) for x in lst]) / len(lst) != len(lst[0]):  # return false, if lists in list have different length
+        if sum([len(x) for x in lst]) / len(lst) != len(lst[0]):  # return False, falls die Listen in der Liste verschiedene Längen haben
             return False
         datatypes = list(map(lambda x: type(x).__name__, lst[0]))
         for item in lst:
-            if list(map(lambda x: type(x).__name__, item)) != datatypes:  # return false, if datatypes of the elements in the lists are different
+            if list(map(lambda x: type(x).__name__, item)) != datatypes:  # return False, falls die Elemente der inneren Listen verschiedene Datenytpen haben
                 return False
 
     return True

@@ -190,7 +190,7 @@ def checkapi():
         'has_key': <true falls ein api-key gegeben ist>
     }
 
-    Die Response enthält alle Keys die bei der gegenen API abgefragt werden können
+    Die Response enthält alle Keys die bei der gegebenen API abgefragt werden können
     """
     api_info = request.json
     try:
@@ -258,8 +258,8 @@ def add_infoprovider():
             return err, 400
 
         for datasource in infoprovider["datasources"]:
-            if "name" not in datasource:
-                err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
+            if "datasource_name" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'datasource_name' in a datasource"})
                 return err, 400
 
             if "api" not in datasource:
@@ -365,7 +365,7 @@ def update_infoprovider(infoprovider_id):
             return err, 400
 
         for datasource in updated_data["datasources"]:
-            if "name" not in datasource:
+            if "datasource_name" not in datasource:
                 err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
                 return err, 400
 
@@ -756,30 +756,6 @@ def logs():
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while getting the logs"})
         return err, 400
-
-
-def _generate_request_dicts(api_info, method):
-    header = {}
-    parameter = {}
-    # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
-    if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
-    elif method == "noAuth":
-        return header, parameter
-    else:
-        api_key_name = api_info["api_key_name"].split("||")
-        key1 = api_key_name[0]
-        key2 = api_key_name[1]
-
-        if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
-                          .decode("utf-8")})
-        elif method == "KeyInHeader":
-            header.update({key1: key2})
-        elif method == "KeyInQuery":
-            parameter.update({key1: key2})
-
-    return header, parameter
 
 
 def _check_json_extention(filename):

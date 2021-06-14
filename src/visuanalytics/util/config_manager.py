@@ -80,7 +80,7 @@ def set_private(new_config):
     :raises: FileNotFoundError: Wenn die private Konfigurationsdatei nicht existiert.
     """
     try:
-        with open(os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION))) as fh:
+        with open(os.path.normpath(os.path.join(os.path.dirname(__file__), CONFIG_PRIVATE_LOCATION)), "w") as fh:
             json.dump(new_config, fh)
     except FileNotFoundError as e:
         e.strerror = "Private configuration file does not exist"

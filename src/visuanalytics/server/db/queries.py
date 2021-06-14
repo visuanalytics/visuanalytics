@@ -4,8 +4,10 @@ import shutil
 
 import humps
 import copy
+from base64 import b64encode
 
 from visuanalytics.server.db import db
+from visuanalytics.util.config_manager import get_private, set_private
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
@@ -39,6 +41,14 @@ def get_infoprovider_list():
 
 
 def update_url_pattern(pattern):
+    """
+    Falls die URL, die für eine Request übergeben wird, schon eine Query enthält, wird diese aufgelöst,
+    damit die Paramter dem Request-Objekt als Dictionary übergeben werden können
+
+    :param pattern: URL mit Query (http...?...)
+    :type pattern: str
+    :return: Die Basis-URL ohne Query-Teil und Paramter als Dictionary
+    """
     params = {}
     pattern = pattern.split("?")
     url = pattern[0]
@@ -87,7 +97,7 @@ def insert_infoprovider(infoprovider):
             "response_type": datasource["api"]["response_type"]
         }
 
-        api_step["steps_value"].append(datasource["name"])
+        api_step["steps_value"].append(datasource["datasource_name"])
         api_step["requests"].append(req_data)
 
     # Transform obj vorbereiten
@@ -100,7 +110,9 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": infoprovider["datasources"]
+        "datasources": infoprovider["datasources"],
+        "diagrams_original": infoprovider["diagrams_original"],
+        "arrays_used_in_diagrams": infoprovider["arrays_used_in_diagrams"]
     }
 
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
@@ -116,9 +128,11 @@ def insert_infoprovider(infoprovider):
                                   [infoprovider_name]).lastrowid
 
     for datasource in datasources:
-        datasource_name = datasource["name"]
+        datasource_name = datasource["datasource_name"]
 
-        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+        api_key_name = f"{infoprovider['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
 
         url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
         parameter.update(params)
@@ -131,6 +145,8 @@ def insert_infoprovider(infoprovider):
             "params": parameter,
             "response_type": datasource["api"]["response_type"]
         }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
 
         datasource_api_step = {
             "type": "request_multiple_custom",
@@ -143,8 +159,8 @@ def insert_infoprovider(infoprovider):
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(datasource["formulas"], datasource["transform"]),
-            "storing": datasource["storing"] if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "storing": remove_toplevel_key(datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -236,7 +252,9 @@ def get_infoprovider(infoprovider_id):
     return {
         "infoprovider_name": infoprovider_json["name"],
         "datasources": infoprovider_json["datasources"],
-        "diagrams": infoprovider_json["images"]
+        "diagrams": infoprovider_json["images"],
+        "diagrams_original": infoprovider_json["diagrams_original"],
+        "arrays_used_in_diagrams": infoprovider_json["arrays_used_in_diagrams"]
     }
 
 
@@ -293,7 +311,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "response_type": datasource["api"]["response_type"]
         }
 
-        api_step_new["steps_value"].append(datasource["name"])
+        api_step_new["steps_value"].append(datasource["datasource_name"])
         api_step_new["requests"].append(req_data)
 
     # Update Transform-Step vorbereiten
@@ -316,9 +334,11 @@ def update_infoprovider(infoprovider_id, updated_data):
     _remove_datasources(con, infoprovider_id)
 
     for datasource in updated_data["datasources"]:
-        datasource_name = datasource["name"]
+        datasource_name = datasource["datasource_name"]
 
-        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+        api_key_name = f"{updated_data['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
 
         url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
         parameter.update(params)
@@ -331,6 +351,8 @@ def update_infoprovider(infoprovider_id, updated_data):
             "params": parameter,
             "response_type": datasource["api"]["response_type"]
         }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
 
         datasource_api_step = {
             "type": "request_multiple_custom",
@@ -343,8 +365,8 @@ def update_infoprovider(infoprovider_id, updated_data):
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(datasource["formulas"], datasource["transform"]),
-            "storing": datasource["storing"] if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "storing": remove_toplevel_key(datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -538,28 +560,60 @@ def get_logs():
         for log in logs]
 
 
-def generate_request_dicts(api_info, method):
+def generate_request_dicts(api_info, method, api_key_name=None):
+    """
+    Falls die API einen Key benötigt, gibt es verschiedene Varianten, wie der Key in der Request übergeben wird (Query,
+    Header, verschlüsselt etc.). Dazu wird der Key in dem entsprechenden Dict verpackt bzw. der eigentliche Key wird in
+    der privaten Konfig-Datei abgelegt.
+
+    :param api_info: Infos über die Request (Typ, URL etc.)
+    :type api_info: dict
+    :param method: Methode, wie der Key in der Request übergeben werden soll
+    :type method: str
+    :param api_key_name: Name des Keys, falls er in der privaten Konfig-Datei abgespeichert werden soll
+    :type api_key_name: str
+    :return: Aufbereitete Header- und Parameter-Dictionaries
+    """
     header = {}
     parameter = {}
+    if method != "noAuth":
+        api_key_for_query = api_info["api_key_name"].split("||")[0]
+        api_key = api_info["api_key_name"].split("||")[1]
+    else:
+        return header, parameter
+
+    if api_key_name:
+        private_config = get_private()
+        private_config["api_keys"].update({api_key_name: api_key})
+        set_private(private_config)
+
     # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
     if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
-    elif method == "noAuth":
-        return header, parameter
+        header.update({"Authorization": "Bearer " + ("{_api_key}" if api_key_name else api_key)})
     else:
-        api_key_name = api_info["api_key_name"].split("||")
-        key1 = api_key_name[0]
-        key2 = api_key_name[1]
-
         if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
+            header.update({"Authorization": "Basic " + b64encode(api_key_for_query.encode("utf-8") + b":" + api_key.encode("utf-8"))
                           .decode("utf-8")})
         elif method == "KeyInHeader":
-            header.update({key1: key2})
+            header.update({api_key_for_query: "{_api_key}" if api_key_name else api_key})
         elif method == "KeyInQuery":
-            parameter.update({key1: key2})
+            parameter.update({api_key_for_query: "{_api_key}" if api_key_name else api_key})
 
     return header, parameter
+
+
+def remove_toplevel_key(obj):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = remove_toplevel_key(obj[x])
+    elif type(obj) == dict:
+        for key in list(obj.keys()):
+            obj[key] = remove_toplevel_key(obj[key])
+    elif type(obj) == str:
+        obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
+        if obj[-1] == "|":
+            obj = obj[:-1]
+    return obj
 
 
 def _insert_param_values(con, job_id, topic_values):

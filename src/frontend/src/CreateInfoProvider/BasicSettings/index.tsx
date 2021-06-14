@@ -142,7 +142,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                api: {
+                api_info: {
                     type: "request",
                     api_key_name: props.method === "BearerToken" ? props.apiKeyInput1 : props.apiKeyInput1 + "||" + props.apiKeyInput2,
                     url_pattern: props.query
