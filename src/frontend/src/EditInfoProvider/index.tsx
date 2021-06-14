@@ -32,6 +32,7 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 import {HistorySelection} from "../CreateInfoProvider/HistorySelection";
 import {extractKeysFromSelection} from "../CreateInfoProvider/helpermethods";
 import {Schedule} from "./types";
+import {CreateInfoProvider} from "../CreateInfoProvider";
 
 
 interface EditInfoProviderProps {
