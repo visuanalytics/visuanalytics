@@ -66,9 +66,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     radius: number;
     id: string;
     color: string;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
+    width: number;
+    height: number;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   type myRectangle = {
@@ -78,9 +80,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     height: number;
     id: string;
     color: string;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   type myLine = {
@@ -89,9 +91,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     id: string;
     color: string;
     strokeWidth: number;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
+    width: number;
+    height: number;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   type myStar = {
@@ -100,9 +104,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     numPoints: number;
     id: string;
     color: string;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
+    width: number;
+    height: number;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   type myText = {
@@ -111,8 +117,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     id: string;
     textContent: string;
     width: number;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
     fontFamily: string;
     fontSize: number;
@@ -120,19 +124,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     height: number;
     padding: number;
     currentlyRendered: boolean;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   type myImage = {
     x: number;
     y: number;
     id: string;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
     image: HTMLImageElement;
     width: number;
     height: number;
     color: string;
+    baseWidth: number;
+    baseHeight: number;
   };
 
   /**
@@ -176,8 +182,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(objectCopy);
       }, 200);
 
-      setCurrentXCoordinate(absPos.x);
-      setCurrentYCoordinate(absPos.y);
+      setCurrentXCoordinate(parseInt(absPos.x.toFixed(0)));
+      setCurrentYCoordinate(parseInt(absPos.y.toFixed(0)));
       return;
     }
   };
@@ -261,9 +267,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         radius: 50,
         id: 'circle-' + itemCounter.toString(),
         color: nextColor,
-        scaleX: 1,
-        scaleY: 1,
+        width: 100,
+        height: 100,
         rotation: 0,
+        baseWidth: 100,
+        baseHeight: 100,
       }
       items.push(item);
       setCurrentItemColor( nextColor );
@@ -281,9 +289,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         height: 100,
         id: 'rect-' + itemCounter.toString(),
         color: nextColor,
-        scaleX: 1,
-        scaleY: 1,
         rotation: 0,
+        baseWidth: 100,
+        baseHeight: 100,
       } as myRectangle);
       setCurrentItemColor( nextColor );
       setSelectedType("");
@@ -297,9 +305,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         id: 'line-' + itemCounter.toString(),
         color: "black",
         strokeWidth: 10,
-        scaleX: 1,
-        scaleY: 1,
         rotation: 0,
+        width: 100,
+        height: 100,
+        baseWidth: 100,
+        baseHeight: 100,
       } as myLine);
 
       setSelectedType("");
@@ -314,9 +324,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         numPoints: 5,
         id: 'star-' + itemCounter.toString(),
         color: nextColor,
-        scaleX: 1,
-        scaleY: 1,
         rotation: 0,
+        width: 100,
+        height: 100,
+        baseWidth: 100,
+        baseHeight: 100,
       } as myStar);
 
       setCurrentItemColor( nextColor );
@@ -331,8 +343,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         id: 'text-' + itemCounter.toString(),
         textContent: currentTextContent,
         width: currentTextWidth,
-        scaleX: 1,
-        scaleY: 1,
         rotation: 0,
         fontFamily: currentFontFamily,
         fontSize: currentFontSize,
@@ -340,6 +350,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         height: 20,
         padding: 2,
         currentlyRendered: true,
+        baseWidth: 100,
+        baseHeight: 100,
       } as myText);
 
       setSelectedType("");
@@ -352,12 +364,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         id: 'image-' + itemCounter.toString(),
         x: parseInt(localX.toFixed(0)),
         y: parseInt(localY.toFixed(0)),
-        scaleX: 1,
-        scaleY: 1,
         rotation: 0,
         image: imageSource,
         width: imageSource.width,
         height: imageSource.height,
+        baseWidth: imageSource.width,
+        baseHeight: imageSource.height,
       } as myImage)
 
       setSelectedType("");
@@ -591,10 +603,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @param e Transform Event
    */
   const onTransformEnd = (e: any) => {
-    var selectedNode = e.target.getStage().findOne("." + selectedItemName);
-    var absPos = selectedNode.getAbsolutePosition();
-    var absTrans = selectedNode.getAbsoluteScale();
-    var absRot = selectedNode.getAbsoluteRotation();
+    const selectedNode = e.target.getStage().findOne("." + selectedItemName);
+    const absPos = selectedNode.getAbsolutePosition();
+    const absTrans = selectedNode.getAbsoluteScale();
+    const absRot = selectedNode.getAbsoluteRotation();
 
     const id = e.target.name();
     console.log(id)
@@ -602,14 +614,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const index = items.indexOf(selectedObject);
     localItems[index] = {
       ...selectedObject,
-      x: absPos.x,
-      y: absPos.y,
-      scaleX: absTrans.x,
-      scaleY: absTrans.y,
+      x: parseInt((absPos.x).toFixed(0)),
+      y: parseInt((absPos.y).toFixed(0)),
+      width: parseInt((selectedObject.baseWidth * absTrans.x).toFixed(0)),
+      height: parseInt((selectedObject.baseHeight * absTrans.y).toFixed(0)),
       rotation: absRot,
     };
-    setItems(localItems)
-
+    setItems(localItems);
+    setCurrentRotation(absRot.toFixed(0));
+    setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
+    setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
     console.log('Rotation:', absRot, 'ScaleX:', absTrans.x, 'ScaleY:', absTrans.y)
     console.log('Transformation completed!');
   }
@@ -830,6 +844,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       height: 20,
       padding: 2,
       currentlyRendered: true,
+      baseWidth: currentTextWidth,
+      baseHeight: 20,
     } as myText);
     setItemCounter(itemCounter + 1);
   }
