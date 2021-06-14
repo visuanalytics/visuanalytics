@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {Grid} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
@@ -29,11 +29,13 @@ import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/fo
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {CreateInfoProvider} from "../CreateInfoProvider";
 
 interface EditInfoProviderProps {
     infoProvId?: number;
     infoProvider?: FrontendInfoProvider;
 }
+
 
 //TODO: task list for the team
 /*
@@ -55,7 +57,6 @@ task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
  */
 
-
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
@@ -68,21 +69,20 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The name of the infoprovider that is being edited
      */
-
     //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
+    const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
 
+
+    const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
     //TODO: mind that keyInput is now in map
     //TODO: remove testinput for production
     /**
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
-
-    //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-    //fill with test data
-
-    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources :new Array<DataSource>(
+        //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
+        //fill with test data
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -128,6 +128,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             listItems: [],
         },
         ));
+
 
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
     const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
@@ -750,8 +751,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const getArraysUsedByDiagrams = () => {
         const arraysInDiagrams: Array<string> = [];
         infoProvDiagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType !== "Array") return;
+            else if (diagram.arrayObjects !== undefined) {
                 diagram.arrayObjects.forEach((array) => {
                     //checking for empty parentKeyName is not necessary since the dataSource name is always included
                     arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
@@ -760,7 +761,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         })
         return arraysInDiagrams;
     }
-
 
 
     /**
@@ -783,15 +783,42 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         }, handleSuccess, handleError
     );
 
+    const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
+        setInfoProvDataSources(infoProvDataSources.concat(dataSource));
+        const mapCopy = new Map(infoProvDataSourcesKeys)
+        setInfoProvDataSourcesKeys(mapCopy.set(dataSource.apiName, {
+            apiKeyInput1: apiKeyInput1,
+            apiKeyInput2: apiKeyInput2
+        }));
+        setNewDataSourceMode(false);
+    }
 
-
-
+    const cancelDataSourceCreation = () => {
+        setNewDataSourceMode(false);
+    }
 
     /**
      * Returns the rendered component based on the current step.
      * @param step The number of the current step
      */
     const selectContent = (step: number) => {
+        if (newDataSourceMode) {
+            return (
+                <React.Fragment>
+                    <Grid container>
+                        <Grid item xs={12} md={6}>
+                            <Typography variant="body1">
+                                Infoproviderbearbeitung
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <CreateInfoProvider
+                        finishDataSourceInEdit={finishNewDataSource}
+                        cancelNewDataSourceInEdit={cancelDataSourceCreation}
+                    />
+                </React.Fragment>
+            );
+        }
         switch (step) {
             case 0:
                 return (
@@ -804,6 +831,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
+                        finishNewDataSource={finishNewDataSource}
+                        setNewDataSourceMode={setNewDataSourceMode}
                     />
                 );
             case 1:
@@ -872,17 +901,20 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
         }
     }
+
     return (
         <React.Fragment>
-            <Container maxWidth={"md"}>
-                <Stepper activeStep={step}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
-            </Container>
+            {!newDataSourceMode && (
+                <Container maxWidth={"md"}>
+                    <Stepper activeStep={step}>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Container>
+            )}
             {selectContent(step)}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}

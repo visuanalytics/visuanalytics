@@ -54,16 +54,23 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
  */
 
 
+interface CreateInfoproviderProps {
+    finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
+    cancelNewDataSourceInEdit?: () => void;
+}
+
 /*
 Wrapper component for the creation of a new info-provider.
 This component manages which step is active and displays the corresponding content.
  */
-export const CreateInfoProvider = () => {
+export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => {
     const components = React.useContext(ComponentContext);
+
+    console.log(props.finishDataSourceInEdit);
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
-    const steps = [
+    const steps = props.finishDataSourceInEdit === undefined ? [
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
@@ -71,7 +78,14 @@ export const CreateInfoProvider = () => {
         "Historisierung",
         "Gesamtübersicht",
         "Diagrammerstellung"
+    ] : [
+        "Datenquellen-Typ",
+        "API-Einstellungen",
+        "Datenauswahl",
+        "Formeln",
+        "Historisierung",
     ];
+
     //the current step of the creation process, numbered by 0 to 6
 
     const [step, setStep] = React.useState(0);
@@ -515,8 +529,8 @@ export const CreateInfoProvider = () => {
     const getArraysUsedByDiagrams = () => {
         const arraysInDiagrams: Array<string> = [];
         diagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType !== "Array") return;
+            else if (diagram.arrayObjects !== undefined) {
                 diagram.arrayObjects.forEach((array) => {
                     //checking for empty parentKeyName is not necessary since the dataSource name is always included
                     arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
@@ -565,7 +579,20 @@ export const CreateInfoProvider = () => {
      */
     const handleContinue = () => {
         if (step === 5) postInfoProvider();
-        else {
+        else if (step === 4 && props.finishDataSourceInEdit !== undefined) {
+            props.finishDataSourceInEdit({
+                apiName: apiName,
+                query: query,
+                noKey: noKey,
+                method: method,
+                selectedData: selectedData,
+                customData: customData,
+                historizedData: historizedData,
+                schedule: schedule,
+                listItems: listItems
+            }, apiKeyInput1, apiKeyInput2);
+            clearSessionStorage();
+        } else {
             setStep(step + 1);
             /*console.log(JSON.stringify({
                 infoprovider_name: name,
@@ -587,7 +614,10 @@ export const CreateInfoProvider = () => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if (step === 0) {
+        if (step === 0 && props.cancelNewDataSourceInEdit !== undefined) {
+            clearSessionStorage();
+            props.cancelNewDataSourceInEdit();
+        } else if (step === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
         }
