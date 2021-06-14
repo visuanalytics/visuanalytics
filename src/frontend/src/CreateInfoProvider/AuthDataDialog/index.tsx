@@ -29,7 +29,6 @@ interface AuthDataDialogProps {
 /**
  * Component containing the dialog for restoring authentication data on reload
  */
-//TODO: add this to the documentation
 export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
     const classes = useStyles();
 
@@ -111,6 +110,7 @@ export const AuthDataDialog: React.FC<AuthDataDialogProps> = (props) => {
 
     /**
      * Takes a method selected for an api data source and transform it into a human-readable string.
+     * @param method The method to be translated.
      */
     const resolveMethodName = (method: string) => {
         switch (method) {
