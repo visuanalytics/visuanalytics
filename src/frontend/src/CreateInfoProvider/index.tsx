@@ -112,7 +112,6 @@ export const CreateInfoProvider = () => {
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
-    //TODO: documentation
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -130,7 +129,6 @@ export const CreateInfoProvider = () => {
         return false;
     }, [dataSources, dataSourcesKeys, noKey, apiKeyInput1, apiKeyInput2])
 
-    //TODO: document this
     /**
      * Checks if displaying a dialog for reentering authentication data on loading the component is necessary.
      * This will be the case if the current dataSource has not selected noKey or if any of the previously existing dataSources has noKey.
@@ -150,14 +148,13 @@ export const CreateInfoProvider = () => {
         return false;
     }
 
-    //TODO: documentation
     /**
      * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
      */
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
-        if (!noKey) {
+        if(!noKey&&method!=="") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method
@@ -179,7 +176,6 @@ export const CreateInfoProvider = () => {
         return dataSourceSelection
     }
 
-    //TODO: document this
     /**
      * Defines event listener for reloading the page and removes it on unmounting.
      * The event listener will warn the user that api keys will be list an a reload.
@@ -241,7 +237,6 @@ export const CreateInfoProvider = () => {
         //listItems
         setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
 
-        //TODO: document this
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
             //create default values in the key map for all dataSources

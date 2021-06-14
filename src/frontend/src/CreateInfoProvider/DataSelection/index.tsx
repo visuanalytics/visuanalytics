@@ -266,7 +266,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
 
     }
 
-    //TODO: document this and the other methods that belong to the removal mechanism
     /**
      * Handler method for continuing to the next step.
      * If there are any for diagrams or formula, the user will be asked for confirmation and nothing will be deleted.
