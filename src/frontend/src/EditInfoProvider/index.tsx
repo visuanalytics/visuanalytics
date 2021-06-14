@@ -263,6 +263,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("selectedDataSource-" + uniqueId);
         sessionStorage.removeItem("formelInformation-" + uniqueId);
         sessionStorage.removeItem("firstEntering-" + uniqueId);
+        sessionStorage.removeItem("historizedObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramSource-" + uniqueId);
+        sessionStorage.removeItem("arrayObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramName-" + uniqueId);
+        sessionStorage.removeItem("diagramStep-" + uniqueId);
     }
 
     const steps = [
@@ -686,10 +691,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                         finishNewDataSource={finishNewDataSource}
                         setNewDataSourceMode={setNewDataSourceMode}
+                        infoProvDiagrams={infoProvDiagrams}
+                        setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                        infoProvDataSourcesKeys={infoProvDataSourcesKeys}
+                        setInfoProvDataSourcesKeys={(keys: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(keys)}
                     />
                 );
             case 1:
@@ -717,9 +727,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
+                        infoProvName={infoProvName}
+                        infoProvDiagrams={infoProvDiagrams}
+                        setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                     />
                 );
             case 3:
@@ -729,6 +743,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
