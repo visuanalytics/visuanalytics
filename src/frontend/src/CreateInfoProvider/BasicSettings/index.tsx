@@ -330,12 +330,12 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                         zurück
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                {/*<Grid item>
                                     <Button variant="contained" size="large" color="primary"
                                             onClick={handleTestContinue}>
                                         Weiter ohne Backend (Test)
                                     </Button>
-                                </Grid>
+                                </Grid>*/}
                                 <Grid item className={classes.blockableButtonPrimary}>
                                     <Button
                                         disabled={!(props.name !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.name))}

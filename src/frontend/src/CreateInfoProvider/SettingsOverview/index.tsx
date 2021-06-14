@@ -298,18 +298,15 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
                             Weitere Datenquelle hinzufügen
                         </Button>
-                        <Button onClick={() => props.setStep(6)}>
-                            Zu den Diagrammen
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.setStep(6)}>
+                            Diagramme
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
                         <Button disabled={props.name === ""} variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
                             abschließen
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={() => props.setStep(6)}>
-                            Diagramme Test
                         </Button>
                     </Grid>
                 </Grid>

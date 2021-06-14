@@ -238,7 +238,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     </Grid>
 
 
-                    <Grid item container xs={12} justify={"space-between"}>
+                    <Grid item container xs={12} justify="space-between">
                         <Grid item>
                             <Button variant={"contained"} size={"large"}
                                     className={classes.redButton}
@@ -253,6 +253,13 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
+                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
+                                weiter
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={12} justify="space-around" className={classes.elementLargeMargin}>
+                        <Grid item>
                             <Button variant="contained" size="large" color="primary"
                                     onClick={() => props.setNewDataSourceMode(true)}>
                                 Neue Datenquelle hinzufügen
@@ -262,11 +269,6 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             <Button variant="contained" color={"secondary"}
                                     onClick={() => props.continueHandler(5)}>
                                 Diagramme
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
-                                weiter
                             </Button>
                         </Grid>
                     </Grid>

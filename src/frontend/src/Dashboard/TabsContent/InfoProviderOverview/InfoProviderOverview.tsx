@@ -321,12 +321,12 @@ export const InfoProviderOverview: React.FC = () => {
                                 Historisierungs-Datenbank
                             </Button>
                         </Grid>
-                        <Grid item>
+                        {/*<Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
                                     onClick={() => testInfo()}>
                                 Test-InfoProvider
                             </Button>
-                        </Grid>
+                        </Grid>*/}
                     </Grid>
                 </Grid>
                 <Dialog onClose={() => {
