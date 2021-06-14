@@ -177,7 +177,7 @@ def insert_infoprovider(infoprovider):
         with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -397,7 +397,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -948,6 +948,11 @@ def _extend_keys(obj, datasource_name):
             obj[key] = _extend_keys(obj[key], datasource_name)
     elif type(obj) == str:
         obj = "_req|" + datasource_name + "|" + obj
+    return obj
+
+
+def _extend_forumla_keys(obj, datasource_name):
+
     return obj
 
 
