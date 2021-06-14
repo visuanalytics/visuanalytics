@@ -216,6 +216,14 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
         })
     })
 
+    console.log("created infoProvider for editing:");
+    console.log({
+        infoproviderName: infoProviderName,
+        dataSources: dataSources,
+        dataSourcesKeys: dataSourcesKeys,
+        diagrams: diagrams
+    });
+
     return {
         infoproviderName: infoProviderName,
         dataSources: dataSources,

@@ -1,1 +1,0 @@
-{"name": "Test1", "api": {"type": "request_multiple_custom", "use_loop_as_key": true, "steps_value": ["Test1"], "requests": [{"type": "request", "method": "GET", "url_pattern": "Query", "headers": {}, "params": {}, "response_type": "json"}]}, "transform": [], "storing": [], "run_config": {}}

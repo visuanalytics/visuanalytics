@@ -37,6 +37,8 @@ interface EditSettingsOverviewProps {
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
 
+    console.log(props.infoProvDataSources);
+
     const classes = useStyles();
 
     /**
@@ -83,6 +85,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
             <MenuItem key={dataSource.apiName} value={dataSourceNumber}>{dataSource.apiName}</MenuItem>
         )
     }
+
 
     return (
         <StepFrame
