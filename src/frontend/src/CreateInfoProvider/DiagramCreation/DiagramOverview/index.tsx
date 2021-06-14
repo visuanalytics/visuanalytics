@@ -66,8 +66,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      * @param jsonData the answer from the backend
      */
     const handleSuccessDiagramPreview = React.useCallback((jsonData: any) => {
-        //const data = jsonData;
-        //console.log(data);
+        props.setImageURL(URL.createObjectURL(jsonData));
         //TODO: set the state that contains the current preview image path returned by the backend
     }, [])
 
@@ -125,7 +124,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         }).then((res: Response) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.json();
+            return res.status === 204 ? {} : res.blob();
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
@@ -301,7 +300,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                    <img width="700" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
