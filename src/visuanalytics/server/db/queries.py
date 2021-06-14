@@ -17,6 +17,7 @@ from visuanalytics.util.infoprovider_utils import generate_step_transform
 
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
 DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
+SCENE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/scenes"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
@@ -77,6 +78,8 @@ def insert_infoprovider(infoprovider):
     infoprovider_name = infoprovider["infoprovider_name"]
     datasources = infoprovider["datasources"]
     diagrams = infoprovider["diagrams"]
+    diagrams_original = infoprovider["diagrams_original"]
+    arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
 
     # Api obj vorbereiten
     api_step = {
@@ -115,8 +118,8 @@ def insert_infoprovider(infoprovider):
         "images": diagrams,
         "run_config": {},
         "datasources": datasources,
-        "diagrams_original": infoprovider["diagrams_original"],
-        "arrays_used_in_diagrams": infoprovider["arrays_used_in_diagrams"]
+        "diagrams_original": diagrams_original,
+        "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
 
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
@@ -219,7 +222,7 @@ def get_infoprovider_file(infoprovider_id):
     # Namen des gegebenen Infoproviders laden
     res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
                       [infoprovider_id]).fetchone()
-
+    con.commit()
     return _get_infoprovider_path(res["infoprovider_name"].replace(" ", "-")) if res is not None else None
 
 
@@ -236,7 +239,7 @@ def get_datasource_file(datasource_id):
                                   [datasource_id]).fetchone()["datasource_name"]
     infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider INNER JOIN datasource USING (infoprovider_id) WHERE datasource_id=?",
                                     [datasource_id]).fetchone()["infoprovider_name"]
-
+    con.commit()
     return _get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")) if datasource_name is not None else None
 
 
@@ -275,20 +278,25 @@ def update_infoprovider(infoprovider_id, updated_data):
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?",
                         [updated_data["infoprovider_name"]]).fetchone()["COUNT(*)"]
     old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
-                                        [infoprovider_id]).fetchone()
+                                        [infoprovider_id]).fetchone()["infoprovider_name"]
+    con.commit()
+    _remove_datasources(con, infoprovider_id)
 
-    if count > 0 and old_infoprovider_name["infoprovider_name"] != updated_data["infoprovider_name"]:
+    if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
+
+    # Infoprovider-Json laden
+    old_file_path = _get_infoprovider_path(old_infoprovider_name)
+
+    with open_resource(old_file_path, "r") as f:
+        infoprovider_json = json.loads(f.read())
+
+    if old_infoprovider_name != updated_data["infoprovider_name"]:
+        os.remove(old_file_path)
 
     # Neuen Infoprovider-Namen setzen
     con.execute("UPDATE infoprovider SET infoprovider_name =? WHERE infoprovider_id=?",
                 [updated_data["infoprovider_name"], infoprovider_id])
-
-    # Infoprovider-Json laden
-    file_path = get_infoprovider_file(infoprovider_id)
-
-    with open_resource(file_path, "r") as f:
-        infoprovider_json = json.loads(f.read())
 
     # Update API-Step vorbereiten
     api_step_new = {
@@ -332,10 +340,9 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"datasources": updated_data["datasources"]})
 
     # Neues Json abspeichern
-    with open_resource(file_path, "w") as f:
+    new_file_path = get_infoprovider_file(infoprovider_id)
+    with open_resource(new_file_path, "w") as f:
         json.dump(infoprovider_json, f)
-
-    _remove_datasources(con, infoprovider_id)
 
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["datasource_name"]
@@ -423,6 +430,185 @@ def delete_infoprovider(infoprovider_id):
     return False
 
 
+def insert_scene(scene):
+    """
+    Adds a scene to the database.
+
+    :param scene: Scene-object of the new scene.
+    :type scene: Json with the keys 'scene_name', 'used_images', 'used_infoproviders' and 'images'.
+                    'used_images' and 'used_infoproviders contain a list of image_id's and infoprovider_id's. 'images'
+                    is the configuration of the image-step
+    :return: Success of insert-progress
+    """
+    con = db.open_con_f()
+
+    scene_name = scene["scene_name"]
+    used_images = scene["used_images"]
+    used_infoproviders = scene["used_infoproviders"]
+    images = scene["images"]
+
+    scene_json = {
+        "scene_name": scene_name,
+        "used_images": used_images,
+        "used_infoproviders": used_infoproviders,
+        "images": images
+    }
+
+    # Prüfen ob scene bereits vorhanden ist
+    count = con.execute("SELECT COUNT(*) FROM scene WHERE scene_name=?", [scene_name]).fetchone()["COUNT(*)"]
+
+    if count > 0:
+        return "given name already in use"
+
+    # insert into scene
+    scene_id = con.execute("INSERT INTO scene (scene_name) VALUES (?)", [scene_name]).lastrowid
+
+    # insert into scene_uses_image
+    for used_image in used_images:
+        # check if image exists
+        count = con.execute("SELECT COUNT(*) FROM image WHERE image_id=?", [used_image]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return f"image with id {used_image} does not exist"
+
+        con.execute("INSERT INTO scene_uses_image (scene_id, image_id) VALUES (?, ?)", [scene_id, used_image])
+
+    # insert into scene_uses_infoprovider
+    for used_infoprovider in used_infoproviders:
+        # check if infoprovider exists
+        count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_id=?", [used_infoprovider]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return f"infoprovider with id {used_infoprovider} does not exist"
+
+        con.execute("INSERT INTO scene_uses_infoprovider (scene_id, infoprovider_id) VALUES (?, ?)", [scene_id, used_infoprovider])
+
+    # save <scene-name>.json
+    file_path = _get_scene_path(scene_name.replace(" ", "-"))
+    print("file_path", file_path)
+    with open_resource(file_path, "wt") as f:
+        print("writing")
+        json.dump(scene, f)
+
+    con.commit()
+    return None
+
+
+def get_scene_file(scene_id):
+    con = db.open_con_f()
+    scene_name = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()["scene_name"]
+    con.commit()
+    return _get_scene_path(scene_name) if not None else None
+
+
+def get_scene(scene_id):
+    """
+
+    """
+    file_path = get_scene_file(scene_id)
+    if file_path is None:
+        return None
+    with open_resource(file_path, "r") as f:
+        scene_json = json.loads(f.read())
+    return scene_json
+
+
+def get_scene_list():
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM scene")
+    con.commit()
+    return [{"scene_id": row["scene_id"], "scene_name": row["scene_name"]} for row in res]
+
+
+def update_scene(scene_id, updated_data):
+
+    con = db.open_con_f()
+
+    scene_name = updated_data["scene_name"]
+    used_images = updated_data["used_images"]
+    used_infoproviders = updated_data["used_infoproviders"]
+    images = updated_data["images"]
+
+    # Altes Json laden
+    old_file_path = get_scene_file(scene_id)
+
+    with open_resource(old_file_path, "r") as f:
+        scene_json = json.loads(f.read())
+
+    # Testen of Name bereits von anderer Szene verwendet wird
+    res = con.execute("SELECT * FROM scene WHERE scene_name=?", [scene_name])
+    for row in res:
+        if row["scene_id"] != scene_id:
+            return {"err_msg": f"There already exists a scene with the name {scene_name}"}
+
+    # Neuen Namen setzen
+    con.execute("UPDATE scene SET scene_name=? WHERE scene_id=?", [scene_name, scene_id])
+
+    # Neue Daten in Json-Datei eintragen
+    scene_json.update({"scene_name": scene_name})
+    scene_json.update({"used_images": used_images})
+    scene_json.update({"used_infoproviders": used_infoproviders})
+    scene_json.update({"images": images})
+
+    # Alte Einträge aus scene_uses_image entfernen
+    con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
+
+    # Alte Einträge aus scene_uses_infoprovider entfernen
+    con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
+
+    # Neue Einträge in scene_uses_image einfügen
+    for used_image in used_images:
+        # Testen ob Image in Tabelle vorhanden ist
+        count = con.execute("SELECT COUNT(*) FROM image WHERE image_id=?", [used_image]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return {"err_msg": f"Image with ID {used_image} does not exist"}
+
+        # In scene_uses_image eintragen
+        con.execute("INSERT INTO scene_uses_image (scene_id, image_id) VALUES (?, ?)", [scene_id, used_image])
+
+    # Neue Einträge in scene_uses_infoprovider einfügen
+    for used_infoprovider in used_infoproviders:
+        # Testen ob Infoproivder in Tabelle vorhanden ist
+        count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_id=?", [used_infoprovider]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return {"err_msg": f"Infoprovider with ID {used_infoprovider} does not exist"}
+
+        # In scene_uses_infoprovider eintragen
+        con.execute("INSERT INTO scene_uses_infoprovider (scene_id, infoprovider_id) VALUES (?, ?)", [scene_id, used_infoprovider])
+
+    # Neues Json abspeichern
+    new_file_path = _get_scene_path(scene_name)
+    if new_file_path != old_file_path:
+        os.remove(old_file_path)
+    with open_resource(new_file_path, "w") as f:
+        json.dump(scene_json, f)
+
+    con.commit()
+    return None
+
+
+def delete_scene(scene_id):
+    con = db.open_con_f()
+    # testen ob scene vorhanden ist
+    res = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+
+    if res is not None:
+        file_path = get_scene_file(scene_id)
+
+        # Eintrag aus scene_uses_image entfernen
+        con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
+
+        # Eintrag aus scene_uses_infoprovider entfernen
+        con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
+
+        # Json-Datei löschen
+        rowcount = con.execute("DELETE FROM scene WHERE scene_id=?", [scene_id]).rowcount
+        if rowcount > 0:
+            os.remove(file_path)
+        con.commit()
+        return True
+    con.commit()
+    return False
+
+
 def insert_image(image_name):
     """
     Adds an image to the Database.
@@ -491,8 +677,14 @@ def delete_scene_image(image_id):
     con = db.open_con_f()
 
     file_path = get_scene_image_file(image_id)
+
+    # check if image is being used
+    count = con.execute("SELECT COUNT(*) FROM scene_uses_image WHERE image_id=?", [image_id]).fetchone()["COUNT(*)"]
+    if count > 0:
+        return "Error"
+
+    # remove image-file and entry in image-table
     res = con.execute("DELETE FROM image WHERE image_id=?", [image_id])
-    print("file_path", file_path, "rowcount", res.rowcount)
     if res.rowcount > 0:
         os.remove(file_path)
     con.commit()
@@ -888,13 +1080,17 @@ def _get_datasource_path(datasource_name: str):
     return os.path.join(DATASOURCE_LOCATION, datasource_name) + ".json"
 
 
-def _get_steps_path(json_file_name: str):
-    return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
+def _get_scene_path(scene_name: str):
+    return os.path.join(SCENE_LOCATION, scene_name) + ".json"
 
 
 def get_scene_image_path(json_file_name: str):
     image_info = json_file_name.rsplit(".", 1)
     return _get_image_path(image_info[0], "scene", image_info[1])
+
+
+def _get_steps_path(json_file_name: str):
+    return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
 def _get_image_path(json_file_name: str, folder: str, image_type: str):
