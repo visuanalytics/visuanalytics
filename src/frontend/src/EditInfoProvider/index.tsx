@@ -36,7 +36,6 @@ interface EditInfoProviderProps {
     infoProvider?: FrontendInfoProvider;
 }
 
-
 //TODO: task list for the team
 /*
 DONE:
@@ -46,15 +45,15 @@ task 2: editing for formulas (Tristan)
 task 3: new formulas (Tristan)
 task 4: integrate diagram components (Janek)
 task 6: keep the component context on reload (Janek)
-NOT DONE:
 task 5: sessionStorage compatibility with AuthDataDialog (Janek)
 task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
 task 8: component for DataSelection (Janek)
-task 9: historized data (Tristan)
 task 10: add additional data sources (Daniel)
-task 11: delete dependencies (???)
 task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
+NOT DONE:
+task 9: historized data (Tristan)
+task 11: delete dependencies (???)
  */
 
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
@@ -67,7 +66,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     /**
      * the current step of the creation process, numbered by 0 to 5
      */
-    const [step, setStep] = React.useState(0);
+    const [editStep, setEditStep] = React.useState(0);
 
     /**
      * The name of the infoprovider that is being edited
@@ -160,7 +159,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const authDialogNeeded = () => {
         const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(): JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         //const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
-        //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
+        //will only trigger if the user has selected a method and noKey - this makes sure he already got to editStep 2 in the current datasource
         //const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
         //if((!noKeyCurrent)&&methodCurrent!=="") return true;
         //else {
@@ -180,8 +179,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         if(sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
             setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || props.infoProvId));
-            //step - disabled since it makes debugging more annoying
-            setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
+            //editStep - disabled since it makes debugging more annoying
+            setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
             //infoProvName
             setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId) || "");
             //infoProvDataSource doesnt need to be fetched since it works with the initial value
@@ -223,13 +222,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         }
     }, [])
 
-    //store step in sessionStorage
+    //store infoProvId in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("infoProvId-" + uniqueId, infoProvId!.toString());
     }, [infoProvId])
+    //store editStep in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("step-" + uniqueId, step.toString());
-    }, [step])
+        sessionStorage.setItem("editStep-" + uniqueId, editStep.toString());
+    }, [editStep])
     //store infoProvName in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("infoProvName-" + uniqueId, infoProvName);
@@ -256,7 +256,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      */
     const clearSessionStorage = () => {
         sessionStorage.removeItem("infoProvId-" + uniqueId);
-        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("editStep-" + uniqueId);
         sessionStorage.removeItem("infoProvName-" + uniqueId);
         sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
         sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
@@ -399,7 +399,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * Increments the step by the given index.
      */
     const handleContinue = (index: number) => {
-        setStep(step + index);
+        setEditStep(editStep + index);
     }
 
     /**
@@ -407,12 +407,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * Decrements the step by the given index or returns to the dashboard if the step was 0.
      */
     const handleBack = (index: number) => {
-        if (step === 0) {
+        if (editStep === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
             return;
         }
-        setStep(step - index)
+        setEditStep(editStep - index)
     }
 
     //TODO: find a better solution than copying - useCallback doesnt allow it to be on top level of helpermethods.tsx
@@ -536,7 +536,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-        //TODO: cleanup sessionStorage
+        clearSessionStorage();
         components?.setCurrent("dashboard")
     }
 
@@ -744,8 +744,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 return (
                     <Grid>
                         <DiagramCreation
-                            continueHandler={() => setStep(0)}
-                            backHandler={() => setStep(0)}
+                            continueHandler={() => setEditStep(0)}
+                            backHandler={() => setEditStep(0)}
                             dataSources={infoProvDataSources}
                             diagrams={infoProvDiagrams}
                             setDiagrams={setInfoProvDiagrams}
@@ -763,7 +763,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         <React.Fragment>
             {!newDataSourceMode && (
                 <Container maxWidth={"md"}>
-                    <Stepper activeStep={step}>
+                    <Stepper activeStep={editStep}>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>
@@ -772,7 +772,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     </Stepper>
                 </Container>
             )}
-            {selectContent(step)}
+            {selectContent(editStep)}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}
