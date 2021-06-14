@@ -384,33 +384,39 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }
 
 
+
+
+    //TODO: find out why this method is called too often
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
-            backendDataSources.push({
-                datasource_name: dataSource.apiName,
-                api: {
-                    api_info: {
-                        type: "request",
-                        api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
-                        url_pattern: dataSource.query,
+            //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
+            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
+                backendDataSources.push({
+                    datasource_name: dataSource.apiName,
+                    api: {
+                        api_info: {
+                            type: "request",
+                            api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                            url_pattern: dataSource.query,
+                        },
+                        method: dataSource.noKey ? "noAuth" : dataSource.method,
+                        response_type: "json", // TODO Add xml support
                     },
-                    method: dataSource.noKey ? "noAuth" : dataSource.method,
-                    response_type: "json", // TODO Add xml support
-                },
-                transform: [],
-                storing: [],
-                formulas: dataSource.customData,
-                schedule: {
-                    type: dataSource.schedule.type,
-                    time: dataSource.schedule.time,
-                    date: "",
-                    time_interval: dataSource.schedule.interval,
-                    weekdays: dataSource.schedule.weekdays
-                },
-                selected_data: dataSource.selectedData,
-                historized_data: dataSource.historizedData,
-            })
+                    transform: [],
+                    storing: [],
+                    formulas: dataSource.customData,
+                    schedule: {
+                        type: dataSource.schedule.type,
+                        time: dataSource.schedule.time,
+                        date: "",
+                        time_interval: dataSource.schedule.interval,
+                        weekdays: dataSource.schedule.weekdays
+                    },
+                    selected_data: dataSource.selectedData,
+                    historized_data: dataSource.historizedData,
+                })
+            }
         });
         return backendDataSources;
     }
@@ -758,6 +764,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setName={(name: string) => setName(name)}
                         dataSources={dataSources}
                         setDataSources={setDataSources}
+                        apiName={apiName}
                         setApiName={setApiName}
                         setQuery={setQuery}
                         setApiKeyInput1={setApiKeyInput1}
@@ -771,6 +778,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        dataSourcesKeys={dataSourcesKeys}
+                        setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
                     />
                 )
             case 6:
