@@ -161,6 +161,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      */
     const handleSuccessDiagramPreview = (jsonData: any) => {
         //TODO: set the image path to the current one returned by the backend
+        const imgBlob = jsonData.blob();
+        setImageURL(URL.createObjectURL(imgBlob));
     }
 
     //extracts method from props to use it in the dependencies of handleErrorDiagramPreview
