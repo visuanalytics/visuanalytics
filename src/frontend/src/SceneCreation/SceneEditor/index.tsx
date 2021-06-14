@@ -761,7 +761,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(objectCopy);
         setItems(localItems);
         
-      }, 50)
+      }, 200)
       
 
     }
@@ -873,6 +873,55 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     } else {
       setCurrentBGColor(backGroundColor);
     }
+  }
+
+  /**
+   * //TODO 
+   * 1) Bild ohne Texte 
+   * 
+   * Width, Height, Position X, Position Y, objectName
+   */
+  const createExport = () => {
+    
+    const jsonExport = {
+      "images" : {
+        "name": {
+          //baseImg 
+        }
+      } 
+    }
+
+    const baseImg = {
+      "type": "pillow",
+      "path": "name.png",
+      "overlay": [
+        //contains image / text
+      ]
+    }
+
+    const image = {
+      "description": "",
+      "type": "image",
+      "pos_x": 0, //X-Coordinate
+      "pos_y": 0, //Y-Coordinate
+      "size_x": 0, //Breite
+      "size_y": 0, //Höhe
+      "color": "RGBA",
+      "pattern": "name.png" //Diagrammname
+    }
+
+    const text = {
+      "description": "", //optional
+      "type": "text",
+      "anchor_point": "center",
+      "pos_x": 0, //item.x
+      "pos_y": 0, //item.y
+      "color": "#000000", //item.color
+      "font_size": 20, //item.fontSize
+      "font": "fonts/Arial.ttf", //item.font
+      "pattern": "Datum: {_req|api_key}"
+   }
+   
   }
 
   return (
@@ -1180,17 +1229,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 <Grid item container xs={12} justify={"center"} spacing={10}>
                   <Grid item xs={3}>
                     <Button className={classes.button} onClick={clearCanvas}> ZURÜCKSETZEN </Button><br /><br />
-                    <TextField id="itemType" onChange={(e) => selectType(e)} className={classes.selection} label={"Typ"} select value={selectedType}>
-                      <MenuItem value="Circle">Kreis</MenuItem>
-                      <MenuItem value="Rectangle">Rechteck</MenuItem>
-                      <MenuItem value="Line">Dreieck</MenuItem>
-                      <MenuItem value="Star">Stern</MenuItem>
-                      <MenuItem value="Text">Text</MenuItem>
-                    </TextField><br /><br />
-                    <TextField className={classes.buttonText} id="text" value={currentTextContent} label={"Textinhalt"} onChange={(e) => setCurrentTextContent(e.target.value)}></TextField> <br /><br/>
-                    
                     <Typography className={classes.labels} variant={"button"}> Farbe: </Typography>
                     <input className={classes.buttonColor} id="itemColor" type={"color"} onChange={switchItemColor} disabled={disableColor()} value={currentItemColor} /><br /><br />
+                    <Typography className={classes.labels} variant={"button"}> Schriftfarbe: </Typography>
+                    <input className={classes.buttonColor} id="fontColor" type="color" onChange={(e) => changeFontColor(e)} disabled={!disableColor()} value={currentFontColor} />
                   </Grid>
                   <Grid item xs={3}>
                     <Button className={classes.button} id="del" onClick={deleteItem} >{deleteText}</Button><br /><br />
@@ -1215,9 +1257,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                       <MenuItem value={"Georgia"} style={{ "fontFamily": "Georgia" }}>Georgia</MenuItem >
                       <MenuItem value={"Times New Roman"} style={{ "fontFamily": "Times New Roman" }}>Times New Roman</MenuItem >
                     </TextField><br /><br />
-                    
-                    <Typography className={classes.labels} variant={"button"}> Schriftfarbe: </Typography>
-                    <input className={classes.buttonColor} id="fontColor" type="color" onChange={(e) => changeFontColor(e)} disabled={!disableColor()} value={currentFontColor} /><br />
                   </Grid>
                   <Grid item xs={3}>
                     <Button className={classes.button} id="undo" onClick={undo}> RÜCKGÄNGIG MACHEN </Button><br /><br />
@@ -1248,19 +1287,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                       label={"Schriftgröße (PX)"}
                       value={currentFontSize}
                     ></TextField><br /><br />
-                    <TextField
-                      className={classes.buttonNumber}
-                      id="rotation"
-                      type="number"
-                      InputProps={{
-                        inputProps: {
-                          min: 0, max: 359, step: 1,
-                        }
-                      }}
-                      onChange={(e) => changeCurrentRotation(e)}
-                      label={"Rotation (Grad)"}
-                      value={currentRotation}
-                    ></TextField><br /><br />
+                    
                   </Grid>
                   <Grid item xs={3}>
                     <Button className={classes.button} onClick={dupe}> Klonen </Button><br /><br />
@@ -1296,7 +1323,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
           </Grid>
           <Grid item xs={5}>
             <Grid item xs={12} className={classes.rightButtons}>
-              <Typography variant={"h4"} align={"center"}> TEXTE </Typography>
+              <Typography variant={"h4"} align={"center"}> ELEMENT HINZUFÜGEN </Typography><br/>
+              <Grid container item xs={12} justify={"space-evenly"}>
+                     
+                <TextField id="itemType" onChange={(e) => selectType(e)} className={classes.selection} label={"Typ"} select value={selectedType}>
+                  <MenuItem value="Circle">Kreis</MenuItem>
+                  <MenuItem value="Rectangle">Rechteck</MenuItem>
+                  <MenuItem value="Line">Dreieck</MenuItem>
+                  <MenuItem value="Star">Stern</MenuItem>
+                  <MenuItem value="Text">Text</MenuItem>
+                </TextField>
+                <TextField className={classes.buttonText} id="text" value={currentTextContent} label={"Textinhalt"} onChange={(e) => setCurrentTextContent(e.target.value)}></TextField>
+              </Grid><br/>
+              <Typography variant={"h4"} align={"center"}> TEXTE </Typography><br/>
               <Grid item xs={12}>
                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
                   <List disablePadding={true}>
@@ -1305,10 +1344,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 </Box>
                 <Button className={classes.showData} variant="contained" onClick={() => setDataList(testDataList)}>
                   Testdaten
-                </Button><br/><br/>
+                </Button><br/>
               </Grid>
-              <Grid item xs={12}>
-                <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography>
+              <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography><br/>
+              <Grid item xs={12} >
                 <FormControlLabel className={classes.checkBox}
                   control={
                     <Checkbox
@@ -1319,7 +1358,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     />
                   }
                   label="Hintergrundfarbe verwenden"
-                /><br/>
+                /><br />
                 <label className={classes.labels}> Hintergrundfarbe: </label>
                 <input
                   className={classes.buttonColor}
@@ -1329,14 +1368,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                   disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
                   value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
                 /><br />
-                <Button className={classes.button} onClick={switchBackground} style={{width: "80%"}}> HINTERGRUNDBILD WÄHLEN </Button><br /><br/>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant={"h4"} align={"center"}> BILDER </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography>
-              </Grid>
+                <Button className={classes.button} onClick={switchBackground} style={{ width: "80%" }}> HINTERGRUNDBILD WÄHLEN </Button>
+              </Grid><br/>
+              <Typography variant={"h4"} align={"center"}> BILDER </Typography><br/>
+              <Grid container item xs={12} justify={"space-evenly"}><br/></Grid>
+              <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>
+              <Grid container item xs={12} justify={"space-evenly"}><br/></Grid>
             </Grid>
           </Grid>
         </Grid>
@@ -1344,3 +1381,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     </StepFrame>
   );
 }
+
+/**
+ * <TextField
+                      className={classes.buttonNumber}
+                      id="rotation"
+                      type="number"
+                      InputProps={{
+                        inputProps: {
+                          min: 0, max: 359, step: 1,
+                        }
+                      }}
+                      onChange={(e) => changeCurrentRotation(e)}
+                      label={"Rotation (Grad)"}
+                      value={currentRotation}
+                    ></TextField><br /><br />
+ */
