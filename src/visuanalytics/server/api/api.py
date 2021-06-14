@@ -166,7 +166,9 @@ def infprovtestdatensatz():
 @api.route("/testdiagram", methods=["POST"])
 def test_diagram():
     """
+    Erzeugt ein Testbild mit Zufallswerten zu einem Diagramm.
 
+    Die Response enthält das Bild als BLOB-File.
     """
     diagram_info = request.json
     try:
@@ -533,7 +535,7 @@ def get_scene(id):
     Endpunkt '/scene/<id>' (GET).
 
     Route über die das Json-Objekt der Szene geladen werden kann.
-    :param scene_id: Die ID zu der Szene welche geladen werden soll.
+    :param id: Die ID zu der Szene welche geladen werden soll.
     """
     try:
         scene_json = queries.get_scene(id)
@@ -555,7 +557,7 @@ def update_scene(id):
 
     Route über die die Daten einer Szene verändert werden können.
     Request muss das Json-Objekt enthälten welches das alte Objekt überschreiben soll.
-    :param scene_id: ID der Szene die überschrieben werden soll.
+    :param id: ID der Szene die überschrieben werden soll.
     """
     updated_data = request.json
     try:
@@ -594,7 +596,7 @@ def delete_scene(id):
     Endpunkt '/scene/<id>' (DELETE).
 
     Route über die eine Szene anhand ihrer ID gelöscht werden kann.
-    :param scene_id: ID der Szene die gelöscht werden soll.
+    :param id: ID der Szene die gelöscht werden soll.
     """
     try:
         success = queries.delete_scene(id)

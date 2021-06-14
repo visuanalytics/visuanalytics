@@ -72,7 +72,9 @@ def insert_infoprovider(infoprovider):
     Methode für das einfügen eines neuen Infoproviders.
 
     :param infoprovider: Ein Dictionary welches den Namen des Infoproviders, den Schedule sowie die Steps 'api', 'transform' und 'storing' enthält.
-    :return: Gibt einen boolschen Wert zurück welcher den Status.
+    :type infoprovider: Json-Objekt.
+
+    :return: Gibt an, ob das Hinzufügen erfolgreich war.
     """
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
@@ -216,6 +218,8 @@ def get_infoprovider_file(infoprovider_id):
     Generiert den Pfad zu der Datei eines gegebenen Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: Integer.
+
     :return: Pfad zur Json Datei des Infoproviders.
     """
     con = db.open_con_f()
@@ -231,6 +235,8 @@ def get_datasource_file(datasource_id):
     Läd den Pfad zu der Json-Date einger gegebenen Datenquelle
 
     :param datasource_id: ID der Datenquelle
+    :type datasource_id: Integer.
+
     :return: Pfad zu Json-Datei der Datenquelle
     """
     con = db.open_con_f()
@@ -248,6 +254,8 @@ def get_infoprovider(infoprovider_id):
     Methode für das Laden eines Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: Integer.
+
     :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
     """
     infoprovider_json = {}
@@ -270,7 +278,11 @@ def update_infoprovider(infoprovider_id, updated_data):
     Methode mit der die Daten eines Infoproviders verändert werden können.
 
     :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: Integer.
     :param updated_data: Dictionary welches die Keys 'infoprovider_name', 'api', 'transform', 'storing' oder 'schedule' enthalten kann. Ist ein Key nicht vorhanden so werden die entprechenden Daten auch nicht verändert.
+    :type updated_data: Json-Objekt.
+
+    :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
 
@@ -407,7 +419,9 @@ def delete_infoprovider(infoprovider_id):
     Entfernt den Infoprovider mit der gegebenen ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
+    :type infoprovider_id: Integer.
+
+    :return: Boolschen Wert welcher angibt, ob das Löschen erfolgreich war.
     """
     con = db.open_con_f()
     # Prüfen ob der Infoproivder vorhanden ist
@@ -432,13 +446,14 @@ def delete_infoprovider(infoprovider_id):
 
 def insert_scene(scene):
     """
-    Adds a scene to the database.
+    Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
 
-    :param scene: Scene-object of the new scene.
-    :type scene: Json with the keys 'scene_name', 'used_images', 'used_infoproviders' and 'images'.
-                    'used_images' and 'used_infoproviders contain a list of image_id's and infoprovider_id's. 'images'
-                    is the configuration of the image-step
-    :return: Success of insert-progress
+    :param scene: Objekt welches die Szene beschreibt.
+    :type scene: Json-Objekt mit den Keys 'scene_name', 'used_images', 'used_infoproviders' und 'images'.
+                    'used_images' und 'used_infoproviders enthalten eine Liste von ID's der Bilder und Infoprovider.
+                    'images' ist die Konfiguration des image-step's.
+
+    :return: Enthält bei einem Fehler Informationen über diesen.
     """
     con = db.open_con_f()
 
@@ -493,15 +508,28 @@ def insert_scene(scene):
 
 
 def get_scene_file(scene_id):
+    """
+    Erzeugt den Pfad zu der Json-Datei einer Szene anhand ihrer ID.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Pfad zu der Json-Datei.
+    """
     con = db.open_con_f()
-    scene_name = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()["scene_name"]
+    res = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()
     con.commit()
-    return _get_scene_path(scene_name) if not None else None
+    return _get_scene_path(res["scene_name"]) if res is not None and not None else None
 
 
 def get_scene(scene_id):
     """
+    Läd die Json-Datei der Szene deren ID gegeben wird.
 
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Json-Objekt der Szenen Datei.
     """
     file_path = get_scene_file(scene_id)
     if file_path is None:
@@ -512,6 +540,11 @@ def get_scene(scene_id):
 
 
 def get_scene_list():
+    """
+    Läd Informationen über alle vorhandenen Szenen.
+
+    :return: Ein Json-Objekt mit den Keys 'scene_id' und 'scene_name' zu jeder Szene.
+    """
     con = db.open_con_f()
     res = con.execute("SELECT * FROM scene")
     con.commit()
@@ -519,7 +552,16 @@ def get_scene_list():
 
 
 def update_scene(scene_id, updated_data):
+    """
+    Updated die Json-Datei und die Tabelleneinträge zu einer Szene.
 
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+    :param updated_data: Neue Daten der Szene.
+    :type updated_data: Json-Objekt.
+
+    :return: Enthölt bei einem Fehler Informationen über diesen.
+    """
     con = db.open_con_f()
 
     scene_name = updated_data["scene_name"]
@@ -586,6 +628,14 @@ def update_scene(scene_id, updated_data):
 
 
 def delete_scene(scene_id):
+    """
+    Entfernt eine Szene aus der Datenbank und löscht die zugehörige Json-Datei.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Zeigt an ob das Löschen erfolgreich war.
+    """
     con = db.open_con_f()
     # testen ob scene vorhanden ist
     res = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
