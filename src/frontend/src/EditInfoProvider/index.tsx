@@ -59,7 +59,7 @@ task 13: send data to backend (Janek)
  */
 
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
@@ -72,8 +72,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The name of the infoprovider that is being edited
      */
 
-    //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState(infoProvider!==undefined ? infoProvider.infoproviderName : "");
+        //infoProvider? infoProvider.name : "TristanTest"
+    const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
 
     //TODO: mind that keyInput is now in map
     //TODO: remove testinput for production
@@ -82,10 +82,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * One DataSource-object holds all information from one api.
      */
 
-    //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-    //fill with test data
+        //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
+        //fill with test data
 
-    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider!==undefined ? infoProvider.dataSources :new Array<DataSource>(
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -138,7 +138,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider !== undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -170,7 +170,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         //create default values in the key map for all dataSources
         //necessary to not run into undefined values
         const map = new Map();
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         data.forEach((dataSource) => {
             map.set(dataSource.apiName, {
                 apiKeyInput1: "",
@@ -499,12 +499,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         dataSourceCopy.historizedData.forEach((historizedItem) => {
             infoProvDiagrams.forEach((diagram) => {
                 //only diagrams with historizedData are relevant
-                if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
                     for (let index = 0; index < diagram.historizedObjects.length; index++) {
                         const historized = diagram.historizedObjects[index];
                         //the dataSource name needs to be added in front of the historized element name since historizedObjects has dataSource name in it paths too
                         //it is also checked if the same diagram has already been marked by another formula or historized data
-                        if(infoProvName + "|" + historizedItem===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                        if (infoProvName + "|" + historizedItem === historized.name && (!diagramsToRemove.includes(diagram.name))) {
                             diagramsToRemove.push(diagram.name);
                             break;
                         }
@@ -515,11 +515,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         //clean diagrams depending on arrays - just find all arrayObjects containing the apiName as head of their key path
         infoProvDiagrams.forEach((diagram) => {
             //only diagrams with array as data are relevant
-            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType === "Array" && diagram.arrayObjects !== undefined) {
                 for (let index = 0; index < diagram.arrayObjects.length; index++) {
                     const array = diagram.arrayObjects[index];
                     //check if the dataSource name at the front is the same as the current apiName
-                    if(infoProvName===array.listItem.parentKeyName) {
+                    if (infoProvName === array.listItem.parentKeyName) {
                         diagramsToRemove.push(diagram.name);
                         break;
                     }
@@ -527,7 +527,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             }
         })
         //delete all diagrams found
-        if(diagramsToRemove.length > 0) {
+        if (diagramsToRemove.length > 0) {
             setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {
                 return !diagramsToRemove.includes(diagram.name);
             }))
@@ -761,8 +761,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const getArraysUsedByDiagrams = () => {
         const arraysInDiagrams: Array<string> = [];
         infoProvDiagrams.forEach((diagram) => {
-            if(diagram.sourceType!=="Array") return;
-            else if(diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType !== "Array") return;
+            else if (diagram.arrayObjects !== undefined) {
                 diagram.arrayObjects.forEach((array) => {
                     //checking for empty parentKeyName is not necessary since the dataSource name is always included
                     arraysInDiagrams.push(array.listItem.parentKeyName + "|" + array.listItem.keyName)
@@ -771,7 +771,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         })
         return arraysInDiagrams;
     }
-
 
 
     /**
@@ -793,9 +792,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             })
         }, handleSuccess, handleError
     );
-
-
-
 
 
     /**
