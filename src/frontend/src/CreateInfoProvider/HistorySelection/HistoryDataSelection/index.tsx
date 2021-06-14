@@ -28,7 +28,7 @@ interface HistoryDataSelectionProps {
  * This component displays the available data for historisation and makes it selectable for the user.
  * @param props The passed properties from the parent
  */
-export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props) => {
+export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props) => {
     const classes = useStyles();
 
     /**
@@ -36,8 +36,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * If data was selected, the time choice is presented, otherwise it is skipped.
      */
     const checkProceedMethod = () => {
-        console.log(props.historizedData.length===0);
-        if(props.historizedData.length===0) {
+        console.log(props.historizedData.length === 0);
+        if (props.historizedData.length === 0) {
             props.handleSkipProceed();
         } else {
             props.handleProceed();
@@ -58,9 +58,9 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
      * Removes an item from the set of selected list items
      * @param data The item to be removed
      */
-    const  removeFromHistorySelection = (data: string) => {
+    const removeFromHistorySelection = (data: string) => {
         props.setHistorizedData(props.historizedData.filter((item) => {
-            return item!== data;
+            return item !== data;
         }));
     };
 
@@ -92,7 +92,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                 <ListItemIcon>
                     <FormControlLabel
                         control={
-                            <Checkbox onClick={() => checkboxHandler(item)} checked={props.historizedData.includes(item)}/>
+                            <Checkbox onClick={() => checkboxHandler(item)}
+                                      checked={props.historizedData.includes(item)}/>
                         }
                         label={''}
                     />

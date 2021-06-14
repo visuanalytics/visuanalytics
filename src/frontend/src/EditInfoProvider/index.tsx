@@ -29,7 +29,10 @@ import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/fo
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 import {useCallFetch} from "../Hooks/useCallFetch";
-import {CreateInfoProvider} from "../CreateInfoProvider";
+import {HistorySelection} from "../CreateInfoProvider/HistorySelection";
+import {extractKeysFromSelection} from "../CreateInfoProvider/helpermethods";
+import {Schedule} from "./types";
+
 
 interface EditInfoProviderProps {
     infoProvId?: number;
@@ -57,6 +60,7 @@ task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
  */
 
+
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
@@ -69,7 +73,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The name of the infoprovider that is being edited
      */
-    //infoProvider? infoProvider.name : "TristanTest"
+
+        //infoProvider? infoProvider.name : "TristanTest"
     const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
 
 
@@ -80,8 +85,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The array with DataSources from the infoprovider that is being edited.
      * One DataSource-object holds all information from one api.
      */
-        //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-        //fill with test data
+
+     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
+     //fill with test data
+
     const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
@@ -136,7 +143,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider!==undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider !== undefined ? infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -161,12 +168,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
+
 
     React.useEffect(() => {
         //create default values in the key map for all dataSources
         //necessary to not run into undefined values
         const map = new Map();
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId)===null?new Array<DataSource>():JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         data.forEach((dataSource) => {
             map.set(dataSource.apiName, {
                 apiKeyInput1: "",
@@ -463,6 +472,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         setInfoProvDataSources(arCopy);
     }
 
+    const setSchedule = (schedule: Schedule) => {
+        const arCopy = infoProvDataSources.slice();
+        arCopy[selectedDataSource].schedule = schedule;
+        setInfoProvDataSources(arCopy)
+    }
+
     /**
      * Handler method for changing the customData of the current data source in infoProvDataSources.
      * Used for the EditDataSelection step.
@@ -489,12 +504,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         dataSourceCopy.historizedData.forEach((historizedItem) => {
             infoProvDiagrams.forEach((diagram) => {
                 //only diagrams with historizedData are relevant
-                if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
                     for (let index = 0; index < diagram.historizedObjects.length; index++) {
                         const historized = diagram.historizedObjects[index];
                         //the dataSource name needs to be added in front of the historized element name since historizedObjects has dataSource name in it paths too
                         //it is also checked if the same diagram has already been marked by another formula or historized data
-                        if(infoProvName + "|" + historizedItem===historized.name&&(!diagramsToRemove.includes(diagram.name))) {
+                        if (infoProvName + "|" + historizedItem === historized.name && (!diagramsToRemove.includes(diagram.name))) {
                             diagramsToRemove.push(diagram.name);
                             break;
                         }
@@ -505,11 +520,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         //clean diagrams depending on arrays - just find all arrayObjects containing the apiName as head of their key path
         infoProvDiagrams.forEach((diagram) => {
             //only diagrams with array as data are relevant
-            if(diagram.sourceType==="Array"&&diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType === "Array" && diagram.arrayObjects !== undefined) {
                 for (let index = 0; index < diagram.arrayObjects.length; index++) {
                     const array = diagram.arrayObjects[index];
                     //check if the dataSource name at the front is the same as the current apiName
-                    if(infoProvName===array.listItem.parentKeyName) {
+                    if (infoProvName === array.listItem.parentKeyName) {
                         diagramsToRemove.push(diagram.name);
                         break;
                     }
@@ -517,7 +532,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             }
         })
         //delete all diagrams found
-        if(diagramsToRemove.length > 0) {
+        if (diagramsToRemove.length > 0) {
             setInfoProvDiagrams(infoProvDiagrams.filter((diagram) => {
                 return !diagramsToRemove.includes(diagram.name);
             }))
@@ -879,16 +894,25 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 )
             case 4:
                 return (
-                    <Grid>
-
-                    </Grid>
+                    <HistorySelection
+                        continueHandler={() => setStep(5)}
+                        backHandler={() => setStep(2)}
+                        selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
+                        customData={infoProvDataSources[selectedDataSource].customData}
+                        historizedData={infoProvDataSources[selectedDataSource].historizedData}
+                        setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
+                        schedule={infoProvDataSources[selectedDataSource].schedule}
+                        selectSchedule={(schedule: Schedule) => setSchedule(schedule)}
+                        historySelectionStep={historySelectionStep}
+                        setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
+                    />
                 )
             case 5:
                 return (
                     <Grid>
                         <DiagramCreation
                             continueHandler={() => setStep(0)}
-                            backHandler={() => setStep(0)}
+                            backHandler={() => setStep(4)}
                             dataSources={infoProvDataSources}
                             diagrams={infoProvDiagrams}
                             setDiagrams={setInfoProvDiagrams}
