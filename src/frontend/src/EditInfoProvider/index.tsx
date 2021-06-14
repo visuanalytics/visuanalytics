@@ -30,7 +30,6 @@ import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {CreateInfoProvider} from "../CreateInfoProvider";
-import {setFlagsFromString} from "v8";
 
 interface EditInfoProviderProps {
     infoProvId?: number;

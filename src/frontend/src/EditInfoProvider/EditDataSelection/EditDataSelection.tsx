@@ -113,8 +113,10 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
+    //extract values from the dataSource to use them in the fetch
     const query = props.dataSource.query;
     const method = props.dataSource.method;
+    const noKey = props.dataSource.noKey
     const apiKeyInput1 = props.apiKeyInput1;
     const apiKeyInput2 = props.apiKeyInput2;
 
@@ -137,12 +139,12 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                api: {
+                api_info: {
                     type: "request",
                     api_key_name: method === "BearerToken" ? apiKeyInput1 : apiKeyInput1 + "||" + apiKeyInput2,
                     url_pattern: query
                 },
-                method: method ? "noAuth" : method,
+                method: noKey ? "noAuth" : method,
                 response_type: "json"
             }),
             signal: abort.signal

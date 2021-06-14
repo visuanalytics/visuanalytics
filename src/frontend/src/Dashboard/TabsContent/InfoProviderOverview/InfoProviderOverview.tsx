@@ -371,7 +371,7 @@ export const InfoProviderOverview: React.FC = () => {
                 <Dialog onClose={() => setEditDialogOpen(false)} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
                     <DialogTitle id="editDialog-title">
-                        "{currentEditName}" bearbeiten!
+                        "{currentEditName}" bearbeiten
                     </DialogTitle>
                     <DialogContent dividers>
                         <Typography gutterBottom>
