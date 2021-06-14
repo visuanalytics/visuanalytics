@@ -109,6 +109,9 @@ export const transformJSON = (jsonData: any, parent = "") => {
                         typeString += x.substring(1, x.length - 1) + ", ";
                     }
                     typeString = typeString.substring(0, typeString.length - 2);
+                    // if the typestring contains opening and closing brackets, objects are the types
+                    // - we dont fully display them since the data would be too big
+                    if(typeString.includes("{")&&typeString.includes("}")) typeString="different object types"
                     resultArray.push({
                         keyName: key + "|0",
                         value: typeString,

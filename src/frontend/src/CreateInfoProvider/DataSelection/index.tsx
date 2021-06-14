@@ -321,7 +321,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             return (
                 <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
-                        { !(data.value === "[Array]" || data.value.includes(", ")) &&
+                        { !(data.value === "[Array]" || data.value.includes(", ") || data.value === "different object types") &&
                             <FormControlLabel
                                 control={
                                     <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
