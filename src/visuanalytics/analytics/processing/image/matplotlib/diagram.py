@@ -155,8 +155,8 @@ def generate_test_diagram(values):
     print("values", values)
     for plot in values["diagram_config"]["plots"]:
         print("plot", plot)
-        plot["plots"]["y"] = np.random.randint(1, 20, 15)
-        plot["plots"].pop("x", None)
+        plot["plot"]["y"] = np.random.randint(1, 20, 15)
+        plot["plot"].pop("x", None)
         fig, ax = create_plot(plot, None, None, get_xy=False)
     file = get_test_diagram_resource_path()
     title = values.get("title", None)
@@ -358,11 +358,11 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
 
 
 def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None):
-    t = values["plots"]["type"]
+    t = values["plot"]["type"]
     if get_xy:
-        values_new = get_x_y(values["plots"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
+        values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
     else:
-        values_new = values["plots"]
+        values_new = values["plot"]
     print("values_new", values_new)
     if t == "line":
         fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
