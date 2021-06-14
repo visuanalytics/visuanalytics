@@ -66,7 +66,7 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => {
     const components = React.useContext(ComponentContext);
 
-    console.log(props.finishDataSourceInEdit);
+    //console.log(props.finishDataSourceInEdit);
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper

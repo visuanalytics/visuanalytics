@@ -315,16 +315,19 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 key: data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName,
                 type: "Array"
             }
-            //array without same_type===false
+            //array that contains primitives with same_type false or true; or containing array
+            //if the array includes another array or has same type false, no selection is allowed and no checkbox will be displayed
             return (
                 <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
                     <ListItemIcon>
-                        <FormControlLabel
-                            control={
-                                <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
-                            }
-                            label={''}
-                        />
+                        { !(data.value === "[Array]" || data.value.includes(", ")) &&
+                            <FormControlLabel
+                                control={
+                                    <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
+                                }
+                                label={''}
+                            />
+                        }
                     </ListItemIcon>
                     <ListItemText
                         primary={data.keyName + " (Array[0]), length: " + data.arrayLength +", content types: " + data.value}
