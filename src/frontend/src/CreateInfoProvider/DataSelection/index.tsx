@@ -313,7 +313,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         } else if(data.arrayRep) {
             const selectedDataObj: SelectedDataItem = {
                 key: data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName,
-                type: "Array"
+                type: "Array",
+                arrayValueType: data.value
             }
             //array that contains primitives with same_type false or true; or containing array
             //if the array includes another array or has same type false, no selection is allowed and no checkbox will be displayed
