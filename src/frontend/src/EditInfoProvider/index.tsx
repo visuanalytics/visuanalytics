@@ -82,7 +82,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      */
         //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
         //fill with test data
-    const [infoProvDataSource, setInfoProvDataSource] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
             apiName: "apiName",
             query: "query",
@@ -784,7 +784,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     );
 
     const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
-        setInfoProvDataSource(infoProvDataSource.concat(dataSource));
+        setInfoProvDataSources(infoProvDataSources.concat(dataSource));
         const mapCopy = new Map(infoProvDataSourcesKeys)
         setInfoProvDataSourcesKeys(mapCopy.set(dataSource.apiName, {
             apiKeyInput1: apiKeyInput1,
