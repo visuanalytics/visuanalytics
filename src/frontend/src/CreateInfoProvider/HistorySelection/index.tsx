@@ -4,7 +4,7 @@ import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {Schedule} from "../types";
+import {Diagram, Schedule} from "../types";
 
 interface HistorySelectionProps {
     continueHandler: () => void;
@@ -17,6 +17,9 @@ interface HistorySelectionProps {
     selectSchedule: (schedule: Schedule) => void;
     historySelectionStep: number;
     setHistorySelectionStep: (step: number) => void;
+    diagrams: Array<Diagram>;
+    setDiagrams: (array: Array<Diagram>) => void;
+    apiName: string;
     addToDataSources?: () => void;
 }
 
@@ -67,6 +70,9 @@ export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
                         selectSchedule={props.selectSchedule}
+                        diagrams={props.diagrams}
+                        setDiagrams={props.setDiagrams}
+                        apiName={props.apiName}
                     />
                 )
             case 2:

@@ -715,7 +715,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 );
             case 3:
@@ -731,6 +734,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         listItems={listItems}
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 )
             case 4:
@@ -747,6 +753,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         historySelectionStep={historySelectionStep}
                         setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
                         addToDataSources={addToDataSources}
+                        diagrams={diagrams}
+                        setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
+                        apiName={apiName}
                     />
                 )
             case 5:
