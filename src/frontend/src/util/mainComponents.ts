@@ -61,12 +61,15 @@ export const mainComponents: MainComponents = {
     icon: HomeIcon,
     navName: "dashboard"
   },
+<<<<<<< HEAD
 
   editInfoProvider: {
     component: EditInfoProvider,
     icon: EditIcon,
     navName: "editInfoProvider"
   },
+=======
+>>>>>>> c97c7f70a6dc559b219835dbb3da5e63b79c8150
   sceneCreation: {
     component: SceneCreation,
     icon: HomeIcon,
@@ -77,4 +80,8 @@ export const mainComponents: MainComponents = {
 /**
  * Type für alle Keys von mainComponents
  */
+<<<<<<< HEAD
 export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "editInfoProvider" | "sceneCreation";
+=======
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "sceneCreation";
+>>>>>>> c97c7f70a6dc559b219835dbb3da5e63b79c8150

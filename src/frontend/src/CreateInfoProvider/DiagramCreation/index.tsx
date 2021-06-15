@@ -459,8 +459,8 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * Selects the displayed content based on the current step
      * 0: Overview of created diagrams with option for more
      * 1: TypeSelection, also includes Selection of concrete Array
-     * 2: Diagram Editor for Arrays
-     * 3: Diagram Editor for historized data
+     * 2: Diagram SceneEditor for Arrays
+     * 3: Diagram SceneEditor for historized data
      * 4: finalize creation
      */
     const selectContent = (step: number) => {

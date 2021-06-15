@@ -12,6 +12,7 @@ interface StepFrameProps {
     large?: undefined|"lg"|"xl";
 }
 
+
 export const StepFrame: React.FC<StepFrameProps> = ({
   heading,
   hintContent,
