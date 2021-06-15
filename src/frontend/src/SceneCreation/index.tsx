@@ -7,7 +7,9 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
-import {DataSource, uniqueId} from "../CreateInfoProvider";
+import {DataSource, FrontendInfoProvider, InfoProviderFromBackend, uniqueId} from "../CreateInfoProvider/types";
+import {DiagramInfo, HistorizedDataInfo} from "./types";
+
 
 
 //TODO: when merged with the new type structure, put this into a global file
@@ -32,7 +34,12 @@ export const SceneCreation = () => {
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     //object of the infoprovider to be used in the scene creation, selected in first step
-    const [infoProvider, setInfoProvider] = React.useState<Array<DataSource>>([]);
+    const [infoProvider, setInfoProvider] = React.useState<FrontendInfoProvider>({} as FrontendInfoProvider);
+    //lists that contain the extracted information of the infoprovider, used to have less computing
+    const [selectedDataList, setSelectedDataList] = React.useState<Array<string>>([]);
+    const [customDataList, setCustomDataList] = React.useState<Array<string>>([]);
+    const [historizedDataList, setHistorizedDataList] = React.useState<Array<HistorizedDataInfo>>([]);
+    const [diagramList, setDiagramList] = React.useState<Array<DiagramInfo>>([]);
 
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
@@ -41,6 +48,14 @@ export const SceneCreation = () => {
         setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
         //infoProvider
         setInfoProvider(sessionStorage.getItem("infoProvider-" + uniqueId )=== null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvider-" + uniqueId)!));
+        //selectedDataList
+        setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
+        //selectedDataList
+        setSelectedDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
+        //selectedDataList
+        setSelectedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
+        //selectedDataList
+        setSelectedDataList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
@@ -55,6 +70,22 @@ export const SceneCreation = () => {
         sessionStorage.setItem("infoProvider-" + uniqueId, JSON.stringify(infoProvider));
     }, [infoProvider])
 
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedDataList-" + uniqueId, JSON.stringify(selectedDataList));
+    }, [selectedDataList])
+
+    React.useEffect(() => {
+        sessionStorage.setItem("customDataList-" + uniqueId, JSON.stringify(customDataList));
+    }, [customDataList])
+
+    React.useEffect(() => {
+        sessionStorage.setItem("historizedDataList-" + uniqueId, JSON.stringify(historizedDataList));
+    }, [historizedDataList])
+
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramList-" + uniqueId, JSON.stringify(diagramList));
+    }, [diagramList])
+
     /**
      * Removes all items of this component from the sessionStorage.
      */
@@ -62,6 +93,10 @@ export const SceneCreation = () => {
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("infoProviderList-" + uniqueId);
         sessionStorage.removeItem("infoProvider-" + uniqueId);
+        sessionStorage.removeItem("selectedDataList-" + uniqueId);
+        sessionStorage.removeItem("customDataList-" + uniqueId);
+        sessionStorage.removeItem("historizedDataList-" + uniqueId);
+        sessionStorage.removeItem("diagramList-" + uniqueId);
     }
 
     // contains the names of the steps to be displayed in the stepper
@@ -153,11 +188,11 @@ export const SceneCreation = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted) handleSuccessFetchAll(data)
+            if (isMounted.current) handleSuccessFetchAll(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if (isMounted) handleErrorFetchAll(err)
+            if (isMounted.current) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
     }, [])
 
@@ -192,7 +227,11 @@ export const SceneCreation = () => {
                         backHandler={() => setStep(step-1)}
                         infoProviderList={infoProviderList}
                         reportError={reportError}
-                        setInfoProvider={(infoProvider: Array<DataSource>) => setInfoProvider(infoProvider)}
+                        setInfoProvider={(infoProvider: FrontendInfoProvider) => setInfoProvider(infoProvider)}
+                        setSelectedDataList={(list: Array<string>) => setSelectedDataList(list)}
+                        setCustomDataList={(list: Array<string>) => setCustomDataList(list)}
+                        setHistorizedDataList={(list: Array<HistorizedDataInfo>) => setHistorizedDataList(list)}
+                        setDiagramList={(list: Array<DiagramInfo>) => setDiagramList(list)}
                     />
                 )
             case 1:
@@ -201,6 +240,10 @@ export const SceneCreation = () => {
                         continueHandler={() => setStep(step+1)}
                         backHandler={() => setStep(step-1)}
                         infoProvider={infoProvider}
+                        selectedDataList={selectedDataList}
+                        customDataList={customDataList}
+                        historizedDataList={historizedDataList}
+                        diagramList={diagramList}
                     />
                 )
         }

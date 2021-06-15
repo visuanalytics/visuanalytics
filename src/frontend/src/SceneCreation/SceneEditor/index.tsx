@@ -2,18 +2,23 @@ import React, { useEffect } from "react";
 import List from "@material-ui/core/List";
 import { ListItem, Button, Grid, Box, TextField, MenuItem, Checkbox, FormControlLabel, Typography } from "@material-ui/core";
 
-import { DataSource } from "../../CreateInfoProvider";
 import { useStyles } from "./style";
 import { StepFrame } from "../../CreateInfoProvider/StepFrame";
 import { hintContents } from "../../util/hintContents";
 import Konva from 'konva';
 import { Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star } from 'react-konva';
 import { TransformerComponent } from './TransformerComponent/index'
+import {FrontendInfoProvider} from "../../CreateInfoProvider/types";
+import {DiagramInfo, HistorizedDataInfo} from "../types";
 
 interface SceneEditorProps {
   continueHandler: () => void;
   backHandler: () => void;
-  infoProvider: Array<DataSource>;
+  infoProvider: FrontendInfoProvider;
+  selectedDataList: Array<string>;
+  customDataList: Array<string>;
+  historizedDataList: Array<HistorizedDataInfo>;
+  diagramList: Array<DiagramInfo>;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -59,7 +64,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
   const [currentRotation, setCurrentRotation] = React.useState(0);
   const [stage, setStage] = React.useState<Konva.Stage | null>();
-  
+
   type myCircle = {
     x: number;
     y: number;

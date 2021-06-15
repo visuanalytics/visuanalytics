@@ -12,31 +12,167 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import {DataSource} from "../../CreateInfoProvider";
+import {DataSource, FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
+import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
+import {DiagramInfo, HistorizedDataInfo} from "../types";
+import MenuItem from "@material-ui/core/MenuItem";
+
 
 interface InfoProviderSelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     infoProviderList: Array<InfoProviderData>;
     reportError: (message: string) => void;
-    setInfoProvider: (infoProvider: Array<DataSource>) => void;
+    setInfoProvider: (infoProvider: FrontendInfoProvider) => void;
+    setSelectedDataList: (list: Array<string>) => void;
+    setCustomDataList: (list: Array<string>) => void;
+    setHistorizedDataList: (list: Array<HistorizedDataInfo>) => void;
+    setDiagramList: (list: Array<DiagramInfo>) => void;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
 
     const classes = useStyles();
+
     //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
     const [selectedId, setSelectedId] = React.useState(0);
 
     /**
+     * Method that processes the answer of the backend by extracting the lists of selectedData, customData,
+     * historizedData and diagrams. Also appends the name of the dataSource to each name if that is necessary.
+     * @param infoProvider The object of the Backend, transformed to the frontend representation.
+     */
+    const processBackendAnswer = (infoProvider: FrontendInfoProvider) => {
+        // set the basic variable containing the complete object
+        props.setInfoProvider(infoProvider);
+        // extract the list of all selectedData, customData and historizedData
+        const selectedDataList: Array<string> = [];
+        const customDataList: Array<string> = [];
+        const historizedDataList: Array<HistorizedDataInfo> = [];
+        infoProvider.dataSources.forEach((dataSource) => {
+            //go through all selectedData
+            //TODO: possibly extract type information
+            dataSource.selectedData.forEach((selectedData) => {
+                selectedDataList.push(dataSource.apiName + "|" + selectedData.key);
+            })
+            //go through all formulas
+            //TODO: possibly display the complete formula
+            dataSource.customData.forEach((customData) => {
+                customDataList.push(dataSource.apiName + "|" + customData.formelName);
+            })
+            //extract the schedule-interval string
+            const intervalString = getIntervalDisplay(dataSource.schedule);
+            //go through all historized data
+            dataSource.historizedData.forEach((historizedData) => {
+                historizedDataList.push({
+                    name: dataSource.apiName + "|" + historizedData,
+                    interval: intervalString
+                });
+            })
+        })
+        //go through all diagrams
+        const diagramList: Array<DiagramInfo> = [];
+        infoProvider.diagrams.forEach((diagram) => {
+            //transforms the type into a readable form
+            let typeString = "";
+            switch(diagram.variant) {
+                case "pieChart": {
+                    typeString = "Tortendiagramm";
+                    break;
+                }
+                case "lineChart": {
+                    typeString = "Liniendiagramm";
+                    break;
+                }
+                case "horizontalBarChart": {
+                    typeString = "Balkendiagramm";
+                    break;
+                }
+                case "verticalBarChart": {
+                    typeString = "Säulendiagramm";
+                    break;
+                }
+
+                case "dotDiagram":
+                    typeString = "Punktdiagramm";
+            }
+            diagramList.push({
+                name: diagram.name,
+                type: typeString
+            })
+        })
+        //set the states with the new lists
+        props.setSelectedDataList(selectedDataList);
+        props.setCustomDataList(customDataList);
+        props.setHistorizedDataList(historizedDataList);
+        props.setDiagramList(diagramList);
+    }
+
+
+    /**
+     * Calculates a string that displays the interval scheme of a given schedule
+     */
+    const getIntervalDisplay = (schedule: Schedule) => {
+        //check for weekly
+        if (schedule.type === "weekly") {
+            if (schedule.weekdays !== undefined && schedule.weekdays.length !== 0) {
+                //check if every day is selected
+                if(schedule.weekdays.length === 7) {
+                    return "24h";
+                }
+                const weekdayNumbers = schedule.weekdays.slice();
+                weekdayNumbers.sort();
+                let weekdayStrings = [getWeekdayString(weekdayNumbers[0])];
+                for(let i = 1; i < weekdayNumbers.length; i++) {
+                    weekdayStrings.push(getWeekdayString(weekdayNumbers[i]));
+                }
+                return "Wochentage ("  + weekdayStrings.join(", ") + ")";
+            }
+        }
+        //check for daily
+        else if (schedule.type === "daily") {
+            return "24h"
+        }
+        //check for interval
+        else if (schedule.type === "interval") {
+            switch (schedule.interval) {
+                case "minute": {
+                    return "1m";
+                }
+                case "quarter": {
+                    return "15m";
+                }
+                case "half": {
+                    return "30m";
+                }
+                case "threequarter": {
+                    return "45m";
+                }
+                case "hour": {
+                    return "1h";
+                }
+                case "quartday": {
+                    return "6h";
+                }
+                case "halfday": {
+                    return "12h"
+                }
+            }
+        }
+        //TODO: ??? what should happen here?
+        return "TO BE DONE"
+    }
+
+    /**
      * Handler for a successful request to the backend for receiving the API data.
-     * Passes the received data to the parent component and proceeds to the next step.
+     * Transforms received data to the frontend data format, passes it to the parent component and proceeds to the next step.
      * param @jsonData The JSON-object delivered by the backend
      */
     const handleFetchInfoProviderSuccess = (jsonData: any) => {
-        const data = jsonData;
-        console.log(jsonData);
-        //TODO: check for errors and set the data of the props infoProvider
+        //console.log(jsonData);
+        const data = jsonData as InfoProviderFromBackend;
+        //transform the infoProvider to frontend format
+        processBackendAnswer(transformBackendInfoProvider(data));
         props.continueHandler();
     }
 
