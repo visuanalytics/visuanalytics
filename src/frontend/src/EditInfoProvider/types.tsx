@@ -13,3 +13,10 @@ export type formelContext = {
     leftParenFlag: boolean;
     rightParenFlag: boolean;
 }
+
+export type Schedule = {
+    type: string;
+    weekdays: number[];
+    time: string;
+    interval: string;
+}

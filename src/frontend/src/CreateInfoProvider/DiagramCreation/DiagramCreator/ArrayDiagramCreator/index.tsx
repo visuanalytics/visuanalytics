@@ -351,18 +351,18 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                             </Typography>
                         </Grid>
 
-                        ):
-                            (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) ? (
-                                <Grid item>
-                                    <Button variant="contained" size="large" color="primary"
-                                            onClick={() => toggleCustomLabel()}>
-                                        {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Attribut-Beschriftung" : "eigene Beschriftungen"}
-                                    </Button>
-                                </Grid>
-                            ) : (
-                                <React.Fragment>
-                                </React.Fragment>
-                            )
+                    ) :
+                    (Array.isArray(props.arrayObjects[selectedArrayOrdinal].listItem.value) ? (
+                            <Grid item>
+                                <Button variant="contained" size="large" color="primary"
+                                        onClick={() => toggleCustomLabel()}>
+                                    {props.arrayObjects[selectedArrayOrdinal].customLabels ? "Attribut-Beschriftung" : "eigene Beschriftungen"}
+                                </Button>
+                            </Grid>
+                        ) : (
+                            <React.Fragment>
+                            </React.Fragment>
+                        )
                     )
                 }
             </Grid>
@@ -381,15 +381,24 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                     </Button>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => {
+            <Dialog
+                onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="previewDialog-title" open={previewOpen}>
+                }}
+                aria-labelledby="previewDialog-title"
+                maxWidth={"md"}
+                fullWidth={true}
+                open={previewOpen}>
                 <DialogTitle id="previewDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                    <Grid container justify={"center"}>
+                        <Grid item>
+                            <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
@@ -414,7 +423,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 <DialogActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" onClick={() => setCancelOpen(false)}>
+                            <Button variant="contained" color={"primary"} onClick={() => setCancelOpen(false)}>
                                 abbrechen
                             </Button>
                         </Grid>
