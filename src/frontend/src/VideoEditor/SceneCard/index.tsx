@@ -11,8 +11,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Collapse from "@material-ui/core/Collapse";
-import Box from "@material-ui/core/Box";
-import List from "@material-ui/core/List";
 import FormControl from "@material-ui/core/FormControl";
 import {DurationType} from "../types";
 
