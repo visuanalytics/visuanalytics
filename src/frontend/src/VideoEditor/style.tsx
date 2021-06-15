@@ -21,13 +21,13 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         sceneContainerBox: {
             width: "100%",
-            height: "100%",
+            height: "25rem",
             overflowY: "hidden",
             marginRight: "20px"
         },
         availableScenesBox: {
             overflowX: "hidden",
-            height: "100%",
+            height: "25rem",
             marginLeft: "20px"
         },
         verticalButtonAlignContainer: {
