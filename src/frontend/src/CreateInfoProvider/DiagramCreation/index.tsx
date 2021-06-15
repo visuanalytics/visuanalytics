@@ -160,7 +160,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccessDiagramPreview = (jsonData: any) => {
-        //TODO: set the image path to the current one returned by the backend
         setImageURL(URL.createObjectURL(jsonData));
     }
 

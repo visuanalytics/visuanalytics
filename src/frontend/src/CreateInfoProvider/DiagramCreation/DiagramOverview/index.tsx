@@ -67,7 +67,6 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
      */
     const handleSuccessDiagramPreview = React.useCallback((jsonData: any) => {
         props.setImageURL(URL.createObjectURL(jsonData));
-        //TODO: set the state that contains the current preview image path returned by the backend
     }, [])
 
     //extract method from props to use it in dependencies of handleErrorDiagramPreview
@@ -259,11 +258,6 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                         zurück
                     </Button>
                 </Grid>
-                <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
-                        weiter
-                    </Button>
-                </Grid>
             </Grid>
             <Dialog aria-labelledby="deleteDialog-title" open={removeDialogOpen}>
                 <DialogTitle id="deleteDialog-title">
@@ -277,7 +271,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 <DialogActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" onClick={() => {
+                            <Button variant="contained" color={"primary"} onClick={() => {
                                 setRemoveDialogOpen(false);
                                 window.setTimeout(() => setItemToRemove(""), 200);
                             }}>
@@ -295,16 +289,20 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             <Dialog onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="previewDialog-title" open={previewOpen}>
-                <DialogTitle id="previewDialog-title">
-                    Vorschau des generierten Diagramm
+            }} aria-labelledby="previewDialog-title" maxWidth={"md"} fullWidth={true} open={previewOpen}>
+                <DialogTitle id="previewDialog-title" >
+                    <Typography variant={"h4"} align="center">Vorschau des generierten Diagramm</Typography>
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="700" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                    <Grid container xs={12} justify={"center"}>
+                        <Grid item>
+                            <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" onClick={() => {
+                        <Button variant="contained" color={"primary"} onClick={() => {
                             setPreviewOpen(false);
                             window.setTimeout(() => props.setSelectedDiagram({} as Diagram), 200);
                         }}>
