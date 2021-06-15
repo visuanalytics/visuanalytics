@@ -60,14 +60,16 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         setPreviewOpen(true);
     }
 
+    const setImageURL = props.setImageURL;
+
     /**
      * Handles the success of the getAll()-method.
      * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
      * @param jsonData the answer from the backend
      */
     const handleSuccessDiagramPreview = React.useCallback((jsonData: any) => {
-        props.setImageURL(URL.createObjectURL(jsonData));
-    }, [])
+        setImageURL(URL.createObjectURL(jsonData));
+    }, [setImageURL])
 
     //extract method from props to use it in dependencies of handleErrorDiagramPreview
     const reportError = props.reportError
@@ -291,10 +293,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 window.setTimeout(() => props.setImageURL(""), 200);
             }} aria-labelledby="previewDialog-title" maxWidth={"md"} fullWidth={true} open={previewOpen}>
                 <DialogTitle id="previewDialog-title" >
-                    <Typography variant={"h4"} align="center">Vorschau des generierten Diagramm</Typography>
+                    Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Grid container xs={12} justify={"center"}>
+                    <Grid container justify={"center"}>
                         <Grid item>
                             <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                         </Grid>

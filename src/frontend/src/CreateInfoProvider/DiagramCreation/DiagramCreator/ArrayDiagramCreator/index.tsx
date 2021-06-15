@@ -391,10 +391,10 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
                 fullWidth={true}
                 open={previewOpen}>
                 <DialogTitle id="previewDialog-title">
-                    <Typography variant={"h4"} align="center">Vorschau des generierten Diagramm</Typography>
+                    Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Grid container xs={12} justify={"center"}>
+                    <Grid container justify={"center"}>
                         <Grid item>
                             <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
                         </Grid>
