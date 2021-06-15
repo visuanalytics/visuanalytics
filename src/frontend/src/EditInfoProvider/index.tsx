@@ -863,10 +863,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
                         apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
                         diagrams={infoProvDiagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                         setSelectedData={(selectedData: Array<SelectedDataItem>) => setSelectedData(selectedData)}
                         setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}
                         setCustomData={(customData: Array<FormelObj>) => setCustomData(customData)}
                         cleanDataSource={(newListItems: Array<ListItemRepresentation>) => cleanDataSource(newListItems)}
+                        infoProvDataSources={infoProvDataSources}
+                        selectedDataSource={selectedDataSource}
                     />
                 );
             case 2:
@@ -906,6 +909,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         selectSchedule={(schedule: Schedule) => setSchedule(schedule)}
                         historySelectionStep={historySelectionStep}
                         setHistorySelectionStep={(step: number) => setHistorySelectionStep(step)}
+                        diagrams={infoProvDiagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                        apiName={infoProvDataSources[selectedDataSource].apiName}
                     />
                 )
             case 5:

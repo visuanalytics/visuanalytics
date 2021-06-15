@@ -87,7 +87,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
      * Method that evaluates if the user has selected something or not.
      * Proceeds to schedule selection if he has, skips it if not.
      */
-    const checkProceedMethod = () => {
+    const checkAndProceed = () => {
         //console.log(props.historizedData.length === 0);
         if (props.historizedData.length === 0) {
             props.handleSkipProceed();
