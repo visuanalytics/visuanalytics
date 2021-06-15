@@ -204,6 +204,17 @@ export const SceneCreation = () => {
         };
     }, []);
 
+    React.useEffect(() => {
+        const leaveAlert = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+        window.addEventListener("beforeunload", leaveAlert);
+        return () => {
+            window.removeEventListener("beforeunload", leaveAlert);
+        }
+    }, [])
+
     /**
      * The list of infoproviders is generated automatically when the component is shown.
      */

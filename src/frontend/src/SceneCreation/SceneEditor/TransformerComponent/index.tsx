@@ -13,18 +13,24 @@ interface TransformerProps {
 export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   const [transformer, setTransformer] = React.useState(new Konva.Transformer())
   const [stage, setStage] = React.useState(transformer.getStage())
+  const [currentNode, setCurrentNode] = React.useState<Konva.Node>()
   const selectedShapeName = props.selectedShapeName;
 
   const checkNode = /*React.useCallback(*/() => {
     if (transformer !== null) {
       setStage(transformer.getStage());
       if (stage !== undefined) {
-        var selectedNode = stage!.findOne("." + selectedShapeName);
-        if (selectedNode !== undefined && selectedNode) {
-          if (selectedNode === transformer.nodes([selectedNode])) {
+        setCurrentNode(stage!.findOne("." + selectedShapeName));
+        if (currentNode !== undefined && currentNode) {
+          if (currentNode === transformer.nodes([currentNode])) {
             return;
           }
-          setTransformer(transformer.nodes([selectedNode]));
+          setTransformer(transformer.nodes([currentNode]));
+          if (currentNode.getClassName() === "Text" || currentNode.getClassName() === "Rect"){
+            transformer.resizeEnabled(false);
+          } else {
+            transformer.resizeEnabled(true);
+          }
         } else {
           transformer.detach();
         }
@@ -32,7 +38,6 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
       }
     }
   }
-  //  , [selectedShapeName, stage, transformer]);
 
   useEffect(() => {
     checkNode();
@@ -40,7 +45,9 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
 
   return (
     <Transformer
-      ref={node => { setTransformer(node!) }}
+      ref={node => { 
+          setTransformer(node!); 
+      }}
     />
   );
 }
