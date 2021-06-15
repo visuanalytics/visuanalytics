@@ -58,7 +58,6 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
         oldHistorizedData.forEach((item) => {
             if(!props.historizedData.includes(item)) missingSelections.push(item);
         })
-        //return false when nothing was removed
         if(missingSelections.length===0) props.handleBack();
         else setBackDialogOpen(true);
     }
@@ -244,7 +243,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps>  = (props
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
-                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle gemachten Änderungen an der Auswahl verworfen werden sollen.
+                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle neu gewählten oder abgewählten Daten verworfen werden.
                     </Typography>
                     <Typography gutterBottom>
                         Wirklich zurückgehen?

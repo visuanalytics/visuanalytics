@@ -317,7 +317,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         oldSelectedData.forEach((item) => {
             if(!props.selectedData.includes(item)) missingSelections.push(item.key);
         })
-        //return false when nothing was removed
         if(missingSelections.length===0) props.backHandler();
         else setBackDialogOpen(true);
     }
@@ -510,7 +509,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
-                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle gemachten Änderungen an der Auswahl verworfen werden sollen.
+                        Das Zurückgehen zum vorherigen Schritt erfordert, dass alle neu gewählten oder abgewählten Daten verworfen werden.
                     </Typography>
                     <Typography gutterBottom>
                         Wirklich zurückgehen?
