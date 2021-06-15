@@ -3,10 +3,14 @@ export enum Direction {
     Right = "RIGHT"
 }
 
+export type DurationType = "fixed" | "exceed"
+
 export type SceneCardData = {
     entryId: string;
     sceneName: string;
-    displayDuration: number;
+    durationType: DurationType;
+    fixedDisplayDuration: number;
+    exceedDisplayDuration: number;
     spokenText: string;
     visible: boolean;
 }

@@ -12,10 +12,30 @@ export const useStyles = makeStyles((theme: Theme) =>
             }
         },
         blockableButtonSecondary: {
+            margin: "auto auto",
+            marginLeft: "30px",
             '& .Mui-disabled': {
                 backgroundColor: theme.palette.secondary.main,
-                opacity: "75%"
+                opacity: "75%",
             }
         },
+        sceneContainerBox: {
+            width: "100%",
+            height: "100%",
+            overflowY: "hidden",
+            marginRight: "20px"
+        },
+        availableScenesBox: {
+            overflowX: "hidden",
+            height: "100%",
+            marginLeft: "20px"
+        },
+        verticalButtonAlignContainer: {
+            display: "flex"
+        },
+        alignedButton: {
+            margin: "auto auto",
+        },
+
     }),
 );

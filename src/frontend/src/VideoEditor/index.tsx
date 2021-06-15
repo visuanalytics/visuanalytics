@@ -31,12 +31,12 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", displayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", displayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_1||0", sceneName: "Szene_1", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_2||0", sceneName: "Szene_2", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_3||0", sceneName: "Szene_3", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_4||0", sceneName: "Szene_4", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_5||0", sceneName: "Szene_5", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_6||0", sceneName: "Szene_6", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
     ]);
 
     /**
@@ -66,7 +66,9 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
         arCopy.push({
             entryId: sceneName + "||" + counter,
             sceneName: sceneName,
-            displayDuration: 1,
+            durationType: "fixed",
+            fixedDisplayDuration: 1,
+            exceedDisplayDuration: 1,
             spokenText: "",
             visible: true
         })
@@ -107,36 +109,50 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
             hintContent={null}
             large={true}
         >
-            <Grid item container>
-                <Grid item container xs={9}>
-                    <Grid item xs={12}>
-                        <TextField fullWidth margin="normal" variant="filled" color="primary"
-                                   label={"Video-Job-Name"} value={videoJobName}
-                                   onChange={(e) => setVideoJobName(e.target.value.replace(" ", "_"))}
-                       />
-                    </Grid>
-                    <Grid container style={{width: "100%", margin: "auto"}}>
+            <Grid container>
+                <Grid item container xs={12} justify="space-between">
+                    <Grid item container xs={8}>
                         <Grid item xs={12}>
-                            <SceneContainer
-                                sceneList={sceneList}
-                                setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
+                            <TextField fullWidth margin="normal" variant="filled" color="primary"
+                                       label={"Video-Job-Name"} value={videoJobName}
+                                       onChange={(e) => setVideoJobName(e.target.value.replace(" ", "_"))}
                             />
                         </Grid>
                     </Grid>
-                </Grid>
-                <Grid item container xs={3}>
-                    <Grid item xs={12}>
-                        <Button disabled={sceneList.length === 0} variant="contained" color="secondary"
-                                onClick={saveHandler} className={classes.blockableButtonSecondary}>
-                            Speichern
-                        </Button>
+                    <Grid item container xs={3} justify="flex-end">
+                        <Grid item className={classes.verticalButtonAlignContainer}>
+                            <Button disabled={sceneList.length === 0} variant="contained" color="primary"
+                                    onClick={saveHandler} className={classes.alignedButton}>
+                                zurück
+                            </Button>
+                        </Grid>
+                        <Grid item className={classes.verticalButtonAlignContainer}>
+                            <Button disabled={sceneList.length === 0} variant="contained" color="secondary"
+                                    onClick={saveHandler} className={classes.blockableButtonSecondary}>
+                                Speichern
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} style={{overflowX: "hidden",}}>
-                            <List>
-                                {availableScenes.map((scene) => renderAvailableScene(scene))}
-                            </List>
-                        </Box>
+                </Grid>
+                <Grid item container xs={12} justify="space-between">
+                    <Grid item container xs={9}>
+                        <Grid container style={{width: "100%", margin: "auto"}}>
+                            <Grid item xs={12}>
+                                <SceneContainer
+                                    sceneList={sceneList}
+                                    setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={3}>
+                        <Grid item xs={12}>
+                            <Box borderColor="primary.main" border={4} className={classes.availableScenesBox}>
+                                <List>
+                                    {availableScenes.map((scene) => renderAvailableScene(scene))}
+                                </List>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
