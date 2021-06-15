@@ -174,8 +174,8 @@ def test_diagram():
     try:
         file_path = generate_test_diagram(diagram_info)
 
-        # return send_file(file_path, "application/json", True)
-        return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
+        return send_file(file_path, "application/json", True)
+        # return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
         # return file_path, 200
     except Exception:
         logger.exception("An error occurred: ")

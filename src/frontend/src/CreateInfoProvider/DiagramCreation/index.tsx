@@ -160,7 +160,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccessDiagramPreview = (jsonData: any) => {
-        //TODO: set the image path to the current one returned by the backend
+        setImageURL(URL.createObjectURL(jsonData));
     }
 
     //extracts method from props to use it in the dependencies of handleErrorDiagramPreview
@@ -218,7 +218,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         }).then((res: Response) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.json();
+            return res.status === 204 ? {} : res.blob();
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted

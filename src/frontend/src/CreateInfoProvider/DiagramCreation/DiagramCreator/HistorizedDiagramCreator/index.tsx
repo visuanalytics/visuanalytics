@@ -456,15 +456,24 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                     </Button>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => {
+            <Dialog
+                onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="deleteDialog-title" open={previewOpen}>
+                }}
+                aria-labelledby="deleteDialog-title"
+                maxWidth={"md"}
+                fullWidth={true}
+                open={previewOpen}>
                 <DialogTitle id="deleteDialog-title">
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                    <Grid container justify={"center"}>
+                        <Grid item>
+                            <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
@@ -489,7 +498,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 <DialogActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" onClick={() => setCancelOpen(false)}>
+                            <Button variant="contained" color={"primary"} onClick={() => setCancelOpen(false)}>
                                 abbrechen
                             </Button>
                         </Grid>
