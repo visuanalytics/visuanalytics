@@ -3,7 +3,8 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {Direction, SceneCardData} from "../types";
+import {Direction, DurationType, SceneCardData} from "../types";
+import {useStyles} from "../style";
 
 interface SceneContainerProps {
     sceneList: Array<SceneCardData>
@@ -11,6 +12,8 @@ interface SceneContainerProps {
 }
 
 export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
+
+    const classes = useStyles();
 
     //true if the timeout for letting scenes reappear is set
     //this is necessary to change the visibility of all invisible scenes with one timeout method so there is no delay
@@ -39,15 +42,36 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
     }
 
     /**
+     * Handler method for changing the duration type of the scene
+     * @param index The index (in the list) of the scene whose type is changed.
+     * @param newDurationType The newly chosen duration type.
+     */
+    const setDurationType = (index: number, newDurationType: DurationType) => {
+        const arCopy = props.sceneList.slice();
+        arCopy[index] = {
+            ...arCopy[index],
+            durationType: newDurationType
+        }
+        props.setSceneList(arCopy);
+    }
+
+    /**
      * Handler method that changes the selected duration of a scene in the video.
      * @param index The index (in the list) of the scene whose duration is changed.
      * @param newDuration The new duration value.
      */
-    const setDisplayDuration = (index: number, newDisplayDuration: number) => {
+    const setDisplayDuration = (index: number, newDisplayDuration: number, type: DurationType) => {
         const arCopy = props.sceneList.slice();
-        arCopy[index] = {
-            ...arCopy[index],
-            displayDuration: newDisplayDuration
+        if(type === "fixed") {
+            arCopy[index] = {
+                ...arCopy[index],
+                fixedDisplayDuration: newDisplayDuration
+            }
+        } else{
+            arCopy[index] = {
+                ...arCopy[index],
+                exceedDisplayDuration: newDisplayDuration
+            }
         }
         props.setSceneList(arCopy);
     }
@@ -137,8 +161,12 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
                             sceneName={sceneEntry.sceneName}
                             moveLeft={() => moveScene(index, Direction.Left)}
                             moveRight={() => moveScene(index, Direction.Right)}
-                            displayDuration={props.sceneList[index].displayDuration}
-                            setDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration)}
+                            durationType={props.sceneList[index].durationType}
+                            setDurationType={(newDurationType: DurationType) => setDurationType(index, newDurationType)}
+                            fixedDisplayDuration={props.sceneList[index].fixedDisplayDuration}
+                            setFixedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration, props.sceneList[index].durationType)}
+                            exceedDisplayDuration={props.sceneList[index].exceedDisplayDuration}
+                            setExceedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration, props.sceneList[index].durationType)}
                             spokenText={props.sceneList[index].spokenText}
                             setSpokenText={(newSpokenText: string) => setSpokenText(index, newSpokenText)}
                             leftDisabled={index === 0}
@@ -153,7 +181,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
 
     return (
         <>
-            <Box borderColor="primary.main" border={4} style={{width: "100%", overflowY: "hidden",}}>
+            <Box borderColor="primary.main" border={4} className={classes.sceneContainerBox}>
                 <List style={{display: 'flex',
                     flexDirection: 'row',
                     padding: 0,}}
