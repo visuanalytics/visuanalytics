@@ -126,6 +126,12 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    const [currentSelectedDataSourceName, setCurrentSelectedDataSourceName] = React.useState("");
+
+    const [creatingNewDataSource, setCreatingNewDataSource] = React.useState(true);
+
+    const [nameChanged, setNameChanged] = React.useState(false);
+
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -168,7 +174,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
-        if(!noKey&&method!=="") {
+        if (!noKey && method !== "") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method
@@ -379,20 +385,18 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }
 
 
-
-
     //TODO: find out why this method is called too often
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
             //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
-            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
+            if (dataSourcesKeys.get(dataSource.apiName) !== undefined) {
                 backendDataSources.push({
                     datasource_name: dataSource.apiName,
                     api: {
                         api_info: {
                             type: "request",
-                            api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                            api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                             url_pattern: dataSource.query,
                         },
                         method: dataSource.noKey ? "noAuth" : dataSource.method,
@@ -568,7 +572,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const checkNameDuplicate = (name: string) => {
         for (let i = 0; i < dataSources.length; i++) {
-            if (dataSources[i].apiName === name) return true;
+            if (creatingNewDataSource && !nameChanged) {
+                if (dataSources[i].apiName === name) return true;
+            } else {
+                if ((dataSources[i].apiName === name) && (dataSources[i].apiName !== currentSelectedDataSourceName)) return true;
+            }
         }
         return false;
     }
@@ -631,12 +639,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
         //TODO: add this to the documentation
     const addToDataSources = () => {
-            //store keys in dataSourcesKeys
-            const mapCopy = new Map(dataSourcesKeys);
-            setDataSourcesKeys(mapCopy.set(apiName, {
-                apiKeyInput1: apiKeyInput1,
-                apiKeyInput2: apiKeyInput2
-            }))
+
+            //TODO: check for old name if the name was changed per back buttons
+            // currentSelectedDataSourceName zeigt den Namen der api, falls zurück betätigt wurde -> ist sonst ""
+
             const dataSource: DataSource = {
                 apiName: apiName,
                 query: query,
@@ -700,6 +706,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        creatingNewDataSource={creatingNewDataSource}
+                        setCreatingNewDataSource={(flag: boolean) => setCreatingNewDataSource(flag)}
+                        currentSelectedDataSourceName={currentSelectedDataSourceName}
+                        setNameChanged={(flag: boolean) => setNameChanged(flag)}
                     />
                 );
             case 2:
@@ -715,7 +725,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
@@ -786,6 +796,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         dataSourcesKeys={dataSourcesKeys}
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                        setCurrentSelectedDataSourceName={(name: string) => setCurrentSelectedDataSourceName(name)}
+                        setCreatingNewDataSource={(flag: boolean) => setCreatingNewDataSource(flag)}
                     />
                 )
             case 6:

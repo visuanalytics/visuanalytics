@@ -19,7 +19,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import { ScheduleTypeTable } from "./ScheduleTypeTable";
+import {ScheduleTypeTable} from "./ScheduleTypeTable";
 import {
     DataSource,
     DataSourceKey,
@@ -57,6 +57,8 @@ interface SettingsOverviewProps {
     setDiagrams: (array: Array<Diagram>) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
+    setCurrentSelectedDataSourceName: (name: string) => void;
+    setCreatingNewDataSource: (flag: boolean) => void;
 }
 
 /**
@@ -86,25 +88,25 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         const diagramsToRemove: Array<string> = [];
         const dataSourceName = props.dataSources[selectedDataSource].apiName;
         props.diagrams.forEach((diagram) => {
-            if(diagram.sourceType==="Array" && diagram.arrayObjects!==undefined) {
+            if (diagram.sourceType === "Array" && diagram.arrayObjects !== undefined) {
                 //diagram with arrays
-                for (let index = 0; index < diagram.arrayObjects.length; index ++) {
-                    if(diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0]===dataSourceName) {
+                for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                    if (diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0] === dataSourceName) {
                         diagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
-            } else if(diagram.sourceType==="Historized" && diagram.historizedObjects!==undefined) {
+            } else if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
                 //diagrams with historized
-                for (let index = 0; index < diagram.historizedObjects.length; index ++) {
-                    if(diagram.historizedObjects[index].name.split("|")[0]===dataSourceName) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    if (diagram.historizedObjects[index].name.split("|")[0] === dataSourceName) {
                         diagramsToRemove.push(diagram.name);
                         break;
                     }
                 }
             }
         })
-        if(diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
+        if (diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
         setDeleteDialogOpen(true);
     }
 
@@ -116,7 +118,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     const deleteSelectedDataSource = () => {
         //delete the dataSource
         props.setDataSources(props.dataSources.filter((dataSource) => {
-            return dataSource.apiName!==props.dataSources[selectedDataSource].apiName;
+            return dataSource.apiName !== props.dataSources[selectedDataSource].apiName;
         }));
         //remove its entries from the key map
         const mapCopy = new Map(props.dataSourcesKeys);
@@ -126,7 +128,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setDataSourcesKeys(mapCopy);
         setSelectedDataSource(props.dataSources.length - 2);
         //if diagrams need to be removed, remove them
-        if(diagramsToRemove.length > 0) {
+        if (diagramsToRemove.length > 0) {
             props.setDiagrams(props.diagrams.filter((diagram) => {
                 return !diagramsToRemove.includes(diagram.name);
             }))
@@ -141,7 +143,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * @param item The entry that should be rendered.
      */
     const renderListItem = (item: string) => {
-        return(
+        return (
             <ListItem key={item} divider={true}>
                 <ListItemText primary={item} secondary={null}/>
             </ListItem>
@@ -195,7 +197,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * It is called when the user changes the selected entry in the data source dropdown.
      * @param event The change event provided by the Select component
      */
-    const handleChangeSelectedDataSource = (event: React.ChangeEvent<{value: unknown}>) => {
+    const handleChangeSelectedDataSource = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedDataSource(event.target.value as number);
     }
 
@@ -211,14 +213,15 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     }
 
     //TODO: Three buttons at the button are not displayed correctly when reducing screen width.
-    return(
+    return (
         <StepFrame
             heading={"Übersicht"}
             hintContent={hintContents.basicSettings}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>
-                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"} label={"Info-Provider Name"}
+                    <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
+                               label={"Info-Provider Name"}
                                value={props.name}
                                onChange={event => (props.setName(event.target.value))}>
                     </TextField>
@@ -238,7 +241,9 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </FormControl>
                     </Grid>
                     <Grid item className={classes.elementLargeMargin}>
-                        <Button disabled={props.dataSources[selectedDataSource].apiName === props.apiName} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
+                        <Button disabled={props.dataSources[selectedDataSource].apiName === props.apiName}
+                                variant="contained" size="large" className={classes.redDeleteButton}
+                                onClick={deleteDataSourceHandler}>
                             Datenquelle Löschen
                         </Button>
                     </Grid>
@@ -290,12 +295,20 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            props.backHandler();
+                            props.setCurrentSelectedDataSourceName(props.dataSources[selectedDataSource].apiName)
+                            props.setCreatingNewDataSource(false);
+                        }}>
                             zurück
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => {
+                            newDataSourceHandler();
+                            props.setCreatingNewDataSource(true);
+                            props.setCurrentSelectedDataSourceName("")
+                        }}>
                             Weitere Datenquelle hinzufügen
                         </Button>
                         <Button onClick={() => props.setStep(6)}>
@@ -328,10 +341,12 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <Typography gutterBottom>
                         Die Datenquelle "{props.dataSources[selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
-                    { diagramsToRemove.length > 0 &&
-                        <Typography gutterBottom>
-                            Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
-                        </Typography>
+                    {diagramsToRemove.length > 0 &&
+                    <Typography gutterBottom>
+                        Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle
+                        nutzen.<br/><br/><br/>Folgende Diagramme sind
+                        betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
+                    </Typography>
                     }
                 </DialogContent>
                 <DialogActions>

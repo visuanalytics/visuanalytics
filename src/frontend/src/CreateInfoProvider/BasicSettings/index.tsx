@@ -42,6 +42,10 @@ interface BasicSettingsProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    currentSelectedDataSourceName: string;
+    creatingNewDataSource: boolean;
+    setCreatingNewDataSource: (flag: boolean) => void;
+    setNameChanged: (flag: boolean) => void;
 }
 
 
@@ -191,6 +195,14 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.continueHandler()
     }
 
+    const displayRightName = (): string => {
+        console.log("!"+props.currentSelectedDataSourceName+"!")
+        if (!props.creatingNewDataSource && props.currentSelectedDataSourceName !== "") {
+            return props.currentSelectedDataSourceName
+        } else {
+            return props.name
+        }
+    }
 
     /**
      * Generates the components content based on the current state.
@@ -219,8 +231,10 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                             <Grid item xs={12}>
                                 <APIInputField
                                     defaultValue="Name der API-Datenquelle"
-                                    value={props.name}
+                                    value={displayRightName()}
                                     changeHandler={(s) => {
+                                        props.setCreatingNewDataSource(true);
+                                        props.setNameChanged(true);
                                         props.setName(s)
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
