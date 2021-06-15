@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React from "react";
 import { CenterNotification, centerNotifcationReducer } from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
@@ -7,7 +7,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
-import {DataSource, FrontendInfoProvider, InfoProviderFromBackend, uniqueId} from "../CreateInfoProvider/types";
+import {DataSource, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo} from "./types";
 
 
@@ -30,7 +30,7 @@ export const SceneCreation = () => {
     const components = React.useContext(ComponentContext);
 
     //the current step of the creation process, numbered by 0 to 1
-    const [step, setStep] = React.useState(0);
+    const [sceneEditorStep, setSceneEditorStep] = React.useState(0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     //object of the infoprovider to be used in the scene creation, selected in first step
@@ -43,7 +43,7 @@ export const SceneCreation = () => {
 
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
-        setStep(Number(sessionStorage.getItem("step-" + uniqueId)||0));
+        setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
         //infoProviderList
         setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
         //infoProvider
@@ -59,8 +59,8 @@ export const SceneCreation = () => {
     }, [])
     //store step in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("step-" + uniqueId, step.toString());
-    }, [step])
+        sessionStorage.setItem("sceneEditorStep-" + uniqueId, sceneEditorStep.toString());
+    }, [sceneEditorStep])
 
     React.useEffect(() => {
         sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
@@ -90,7 +90,7 @@ export const SceneCreation = () => {
      * Removes all items of this component from the sessionStorage.
      */
     const clearSessionStorage = () => {
-        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
         sessionStorage.removeItem("infoProviderList-" + uniqueId);
         sessionStorage.removeItem("infoProvider-" + uniqueId);
         sessionStorage.removeItem("selectedDataList-" + uniqueId);
@@ -122,7 +122,7 @@ export const SceneCreation = () => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleContinue = () => {
-        setStep(step + 1);
+        setSceneEditorStep(sceneEditorStep + 1);
     }
 
     /**
@@ -130,8 +130,8 @@ export const SceneCreation = () => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if(step===0) components?.setCurrent("dashboard")
-        setStep(step-1)
+        if(sceneEditorStep===0) components?.setCurrent("dashboard")
+        setSceneEditorStep(sceneEditorStep-1)
     }
 
     /**
@@ -160,7 +160,7 @@ export const SceneCreation = () => {
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
-    const isMounted = useRef(true);
+    const isMounted = React.useRef(true);
 
     /**
      * Method to fetch all infoproviders from the backend.
@@ -198,7 +198,7 @@ export const SceneCreation = () => {
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
-    useEffect(() => {
+    React.useEffect(() => {
         return () => {
             isMounted.current = false;
         };
@@ -213,6 +213,14 @@ export const SceneCreation = () => {
         }, [fetchAllInfoprovider]
     );
 
+    /**
+     * Method that returns to the dashboard.
+     * Clears the sessionStorage and changes the mainComponent.
+     */
+    const backToDashboard = () => {
+        clearSessionStorage();
+        components?.setCurrent("dashboard");
+    }
 
     /**
      * Returns the rendered component based on the current step.
@@ -223,8 +231,8 @@ export const SceneCreation = () => {
             case 0:
                 return (
                     <InfoProviderSelection
-                        continueHandler={() => setStep(step+1)}
-                        backHandler={() => setStep(step-1)}
+                        continueHandler={() => setSceneEditorStep(step+1)}
+                        backHandler={() => backToDashboard()}
                         infoProviderList={infoProviderList}
                         reportError={reportError}
                         setInfoProvider={(infoProvider: FrontendInfoProvider) => setInfoProvider(infoProvider)}
@@ -237,8 +245,8 @@ export const SceneCreation = () => {
             case 1:
                 return (
                     <SceneEditor
-                        continueHandler={() => setStep(step+1)}
-                        backHandler={() => setStep(step-1)}
+                        continueHandler={() => setSceneEditorStep(step+1)}
+                        backHandler={() => setSceneEditorStep(step-1)}
                         infoProvider={infoProvider}
                         selectedDataList={selectedDataList}
                         customDataList={customDataList}
@@ -252,7 +260,7 @@ export const SceneCreation = () => {
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
-                <Stepper activeStep={step}>
+                <Stepper activeStep={sceneEditorStep}>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel>{label}</StepLabel>
@@ -260,7 +268,7 @@ export const SceneCreation = () => {
                     ))}
                 </Stepper>
             </Container>
-            {selectContent(step)}
+            {selectContent(sceneEditorStep)}
             <CenterNotification
                 handleClose={() => dispatchMessage({ type: "close" })}
                 open={message.open}
