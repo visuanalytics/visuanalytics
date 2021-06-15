@@ -5,11 +5,15 @@ Enthält die API-Endpunkte.
 import flask
 import logging
 
-from flask import (Blueprint, request, send_file)
+from flask import (Blueprint, request, send_file, send_from_directory)
 from werkzeug.utils import secure_filename
 from os import path
 
 from visuanalytics.server.db import db, queries
+
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
+from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path
+from visuanalytics.util.config_manager import get_private, set_private
 
 from ast2json import str2json
 from base64 import b64encode
@@ -27,75 +31,124 @@ def close_db_con(exception):
 
 @api.route("/infprovtestdatensatz", methods=["GET"])
 def infprovtestdatensatz():
+    # Muss noch angepasst werden
     last_id = queries.get_last_infoprovider_id()
     infoprovider = {
         "infoprovider_name": "Test" + str(last_id),
-        "api": {
-            "type": "request",
-            "api_key_name": "wetter",
-            "url_pattern": "http://api.openweathermap.org/data/2.5/weather",
-            "params": {
-                "q": "berlin",
-                "appid": "{_api_key}"
-            }
-        },
-        "transform": [
+        "datasources": [
             {
-                "type": "select",
-                "relevant_keys": [
-                    "_req|api|main|temp",
-                    "_req|api|main|feels_like",
-                    "_req|api|main|temp_min",
-                    "_req|api|main|temp_max"
-                ]
-            },
-            {
-                "type": "transform_dict",
-                "dict_key": "_req|api|main",
+                "datasource_name": "wetter_api",
+                "api": {
+                    "api_info": {
+                        "type": "request",
+                        "api_key_name": "appid||e2fda2d8f176a37636832ca955377714",
+                        "url_pattern": "http://api.openweathermap.org/data/2.5/weather?q=berlin"
+                    },
+                    "method": "KeyInQuery",
+                    "response_type": "json"
+                },
                 "transform": [
                     {
-                        "type": "append",
-                        "keys": [
-                            "_loop"
-                        ],
-                        "new_keys": [
-                            "test"
-                        ],
-                        "append_type": "list"
+                        "type": "select",
+                        "relevant_keys": [
+                            "_req|wetter_api|main|temp",
+                            "_req|wetter_api|main|feels_like",
+                            "_req|wetter_api|main|temp_min",
+                            "_req|wetter_api|main|temp_max"
+                        ]
+                    },
+                    {
+                        "type": "transform_dict",
+                        "dict_key": "_req|wetter_api|main",
+                        "transform": [
+                            {
+                                "type": "append",
+                                "keys": [
+                                    "_loop"
+                                ],
+                                "new_keys": [
+                                    "test"
+                                ],
+                                "append_type": "list"
+                            }
+                        ]
                     }
-                ]
-            }
-        ],
-        "storing": [
+                ],
+                "storing": [
+                    {
+                        "name": "test",
+                        "key": "test"
+                    }
+                ],
+                "formulas": [
+                    {
+                        "formelName": "A",
+                        "formelString": "( _req|wetter_api|main|temp * 24 ) / 7"
+                    }
+                ],
+                "schedule": {
+                    "type": "daily",
+                    "time": "15:24"
+                }
+            },
             {
-                "name": "test",
-                "key": "test"
+                "datasource_name": "joke_api",
+                "api": {
+                    "api_info": {
+                        "type": "request",
+                        "api_key_name": "",
+                        "url_pattern": "https://official-joke-api.appspot.com/jokes/ten"
+                    },
+                    "method": "noAuth",
+                    "response_type": "json"
+                },
+                "transform": [
+                    {
+                        "type": "select",
+                        "relevant_keys": [
+                            "_req|joke_api"
+                        ]
+                    }
+                ],
+                "storing": [
+                    {
+                        "name": "jokes",
+                        "key": "_req|joke_api"
+                    }
+                ],
+                "schedule": {
+                    "type": "weekly",
+                    "time": "10:09",
+                    "weekdays": [0, 5]
+                },
+                "formulas": []
             }
         ],
-        "schedule": {
-            "type": "weekly",
-            "time": "13:30",
-            "weekdays": [0, 5]
-        },
-        "formulas": [
-            {
-                "name": "A",
-                "formula": "( _req|api|main|temp * 7 ) / 24"
-            }
-        ],
-        "images": {
+        "diagrams": {
             "test": {
-                "type": "diagram",
+                "type": "diagram_custom",
                 "diagram_config": {
-                    "type": "line",
-                    "name": "test",
-                    "y": "{test}",
-                    "grid": {
-                        "linestyle": "--"
-                    }
+                    "type": "custom",
+                    "name": "Jokes",
+                    "infoprovider": "jokes_test",
+                    "source_type": "Array",
+                    "plots": [
+                        {
+                            "custom_labels": False,
+                            "primitive": False,
+                            "plot": {
+                                "type": "line",
+                                "y": "{_req|api}",
+                                "numeric_attribute": "id",
+                                "string_attribute": "punchline"
+                            }
+                        }
+                    ]
                 }
             }
-        }
+        },
+        "diagrams_original": {},
+        "arrays_used_in_diagrams": []
     }
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
@@ -110,6 +163,26 @@ def infprovtestdatensatz():
     return "", 200
 
 
+@api.route("/testdiagram", methods=["POST"])
+def test_diagram():
+    """
+    Erzeugt ein Testbild mit Zufallswerten zu einem Diagramm.
+
+    Die Response enthält das Bild als BLOB-File.
+    """
+    diagram_info = request.json
+    try:
+        file_path = generate_test_diagram(diagram_info)
+
+        # return send_file(file_path, "application/json", True)
+        return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
+        # return file_path, 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while generating a test-diagram"})
+        return err, 400
+
+
 @api.route("/checkapi", methods=["POST"])
 def checkapi():
     """
@@ -121,19 +194,19 @@ def checkapi():
         'has_key': <true falls ein api-key gegeben ist>
     }
 
-    Die Response enthält alle Keys die bei der gegenen API abgefragt werden können
+    Die Response enthält alle Keys die bei der gegebenen API abgefragt werden können
     """
     api_info = request.json
     try:
-        if "api" not in api_info:
+        if "api_info" not in api_info:
             err = flask.jsonify({"err_msg": "Missing field 'api'"})
             return err, 400
 
-        if "api_key_name" not in api_info["api"]:
+        if "api_key_name" not in api_info["api_info"]:
             err = flask.jsonify({"err_msg": "Missing API-Key"})
             return err, 400
 
-        if "url_pattern" not in api_info["api"]:
+        if "url_pattern" not in api_info["api_info"]:
             err = flask.jsonify({"err_msg": "Missing URL"})
             return err, 400
 
@@ -145,10 +218,13 @@ def checkapi():
             err = flask.jsonify({"err_msg": "Missing field 'response_type'"})
             return err, 400
 
-        header, parameter = _generate_request_dicts(api_info["api"], api_info["method"])
+        header, parameter = queries.generate_request_dicts(api_info["api_info"], api_info["method"])
+
+        url, params = queries.update_url_pattern(api_info["api_info"]["url_pattern"])
+        parameter.update(params)
         req_data = {
-            "method": api_info["api"].get("method", "get"),
-            "url": api_info["api"]["url_pattern"],
+            "method": api_info["api_info"].get("method", "get"),
+            "url": url,
             "headers": header,
             "params": parameter,
             "response_type": api_info["response_type"]
@@ -177,29 +253,42 @@ def add_infoprovider():
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
 
-        if "api" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'api'"})
+        if "datasources" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing Datasources"})
             return err, 400
 
-        if "transform" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
+        if "diagrams" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
             return err, 400
 
-        if "storing" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
+        if "diagrams_original" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams_original'"})
             return err, 400
 
-        if "schedule" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
-            return err, 400
+        for datasource in infoprovider["datasources"]:
+            if "datasource_name" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'datasource_name' in a datasource"})
+                return err, 400
 
-        if "formulas" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
-            return err, 400
+            if "api" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
 
-        if "images" not in infoprovider:
-            err = flask.jsonify({"err_msg": "Missing field 'images'"})
-            return err, 400
+            if "transform" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "storing" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "formulas" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "schedule" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
@@ -275,31 +364,46 @@ def update_infoprovider(infoprovider_id):
             err = flask.jsonify({"err_msg": "Missing Infoprovider-Name"})
             return err, 400
 
-        if "api" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'api'"})
+        if "datasources" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Datasources"})
             return err, 400
 
-        if "transform" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'transform'"})
+        if "diagrams" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
             return err, 400
 
-        if "storing" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'storing'"})
+        for datasource in updated_data["datasources"]:
+            if "datasource_name" not in datasource:
+                err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
+                return err, 400
+
+            if "api" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "transform" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "storing" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "formulas" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "schedule" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                return err, 400
+
+        update_info = queries.update_infoprovider(infoprovider_id, updated_data)
+
+        if update_info is not None:
+            err = flask.jsonify(update_info)
             return err, 400
 
-        if "schedule" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'schedule'"})
-            return err, 400
-
-        if "formulas" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Field 'formulas'"})
-            return err, 400
-
-        if "images" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing field 'images'"})
-            return err, 400
-
-        return flask.jsonify(queries.update_infoprovider(infoprovider_id, updated_data))
+        return flask.jsonify({"status": "successful"})
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while updating an infoprovider"})
@@ -321,7 +425,6 @@ def get_infoprovider(infoprovider_id):
             err = flask.jsonify({"err_msg": "Unknown infoprovider"})
             return err, 400
 
-        # return send_file(file_path, "application/json", True)
         return flask.jsonify(infoprovider_json)
     except Exception:
         logger.exception("An error occurred: ")
@@ -370,6 +473,232 @@ def testformula():
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while testing a formula"})
+        return err, 400
+
+
+@api.route("/scene", methods=["POST"])
+def add_scene():
+    """
+    Endpunkt '/scene'.
+
+    Route zum Hinzufügen einer neuen Szene.
+    """
+    scene = request.json
+    try:
+        if "scene_name" not in scene:
+            err = flask.jsonify({"err_msg": "Missing Scene-Name"})
+            return err, 400
+
+        if "used_images" not in scene:
+            err = flask.jsonify({"err_msg": "Missing list of used images"})
+            return err, 400
+
+        if "used_infoproviders" not in scene:
+            err = flask.jsonify({"err_msg": "missing list of used infoproviders'"})
+            return err, 400
+
+        if "images" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
+        msg = queries.insert_scene(scene)
+        if msg:
+            err = flask.jsonify({"err_msg": msg})
+            return err, 400
+
+        return "", 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding a scene"})
+        return err, 400
+
+
+@api.route("/scene/all", methods=["GET"])
+def get_all_scenes():
+    """
+    Endpunkt '/scene/all'.
+
+    Route über welche Informationen über alle vorhandenen Szenen ausgelesen werden kann.
+    """
+    try:
+
+        return flask.jsonify(queries.get_scene_list())
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occuured while loading information about all scenes"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["GET"])
+def get_scene(id):
+    """
+    Endpunkt '/scene/<id>' (GET).
+
+    Route über die das Json-Objekt der Szene geladen werden kann.
+    :param id: Die ID zu der Szene welche geladen werden soll.
+    """
+    try:
+        scene_json = queries.get_scene(id)
+        if scene_json is None:
+            err = flask.jsonify({"err_msg": f"Could not load scene with ID {id}"})
+            return err, 400
+
+        return flask.jsonify(scene_json)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading a scene"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["PUT"])
+def update_scene(id):
+    """
+    Endpunkt '/scene/<id>' (PUT).
+
+    Route über die die Daten einer Szene verändert werden können.
+    Request muss das Json-Objekt enthälten welches das alte Objekt überschreiben soll.
+    :param id: ID der Szene die überschrieben werden soll.
+    """
+    updated_data = request.json
+    try:
+        if "scene_name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Scene-Name"})
+            return err, 400
+
+        if "used_images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing list of used images"})
+            return err, 400
+
+        if "used_infoproviders" not in updated_data:
+            err = flask.jsonify({"err_msg": "missing list of used infoproviders'"})
+            return err, 400
+
+        if "images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
+        update_info = queries.update_scene(id, updated_data)
+
+        if update_info is not None:
+            err = flask.jsonify(update_info)
+            return err, 400
+
+        return "Successful", 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while updating the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["DELETE"])
+def delete_scene(id):
+    """
+    Endpunkt '/scene/<id>' (DELETE).
+
+    Route über die eine Szene anhand ihrer ID gelöscht werden kann.
+    :param id: ID der Szene die gelöscht werden soll.
+    """
+    try:
+        success = queries.delete_scene(id)
+        return "", 200 if success else flask.jsonify({"err_msg": f"Could not remove scene with ID {id}"})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/image/add", methods=["PUT"])
+def add_scene_image():
+    """
+    Endpunkt '/image/add'.
+
+    Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
+    Request-Form muss den key name und das Bild selbst enthalten.
+    """
+    try:
+        if "image" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing Image"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Image Name"})
+            return err, 400
+
+        image = request.files["image"]
+        name = request.form["name"]
+
+        if image.filename == '':
+            err = flask.jsonify({"err_msg": "Missing Image Filename"})
+            return err, 400
+
+        if not _check_image_extention(image.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extension"})
+            return err, 400
+
+        file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
+        print("image_name", name + "." + file_extension)
+        file_path = queries.get_scene_image_path(name + "." + file_extension)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
+            return err, 400
+
+        if not queries.insert_image(name + "." + file_extension):
+            err = flask.jsonify({"err_msg": "Image could not be added to the database"})
+            return err, 400
+
+        image.save(file_path)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding an image"})
+        return err, 400
+
+
+@api.route("/image/all", methods=["GET"])
+def get_all_scene_images():
+    """
+    Endpunkt '/image/all'.
+
+    Route über die Informationen über alle Szene-Bilder erhalten werden können.
+    Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
+    """
+    try:
+        images = queries.get_image_list()
+
+        return flask.jsonify(images)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
+        return err, 400
+
+
+@api.route("/image/<id>", methods=["DELETE"])
+def delete_scene_image(id):
+    """
+    Endpunkt '/image/<id>' (DELETE).
+
+    Route über die ein Szenen-Bild gelöscht werden kann.
+    :param image_id: ID des Bildes welches gelöscht werden soll.
+    """
+    try:
+        success = queries.delete_scene_image(id)
+
+        return flask.jsonify({"success": success})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while deleting an image"})
+        return err, 400
+
+
+@api.route("/thumbnailpreview", methods=["POST"])
+def set_preview():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
         return err, 400
 
 
@@ -661,53 +990,6 @@ def logs():
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while getting the logs"})
         return err, 400
-
-
-def _generate_request_dicts(api_info, method):
-    header = {}
-    parameter = {}
-    if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
-    elif method == "noAuth":
-        return header, parameter
-    else:
-        api_key_name = api_info["api_key_name"].split("||")
-        key1 = api_key_name[0]
-        key2 = api_key_name[1]
-
-        if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
-                          .decode("utf-8")})
-        elif method == "KeyInHeader":
-            header.update({key1: key2})
-        elif method == "KeyInQuery":
-            parameter.update({key1: key2})
-
-    return header, parameter
-
-
-def _generate_request_dicts(api_info, method):
-    header = {}
-    parameter = {}
-    # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
-    if method == "BearerToken":
-        header.update({"Authorization": "Bearer " + api_info["api_key_name"]})
-    elif method == "noAuth":
-        return header, parameter
-    else:
-        api_key_name = api_info["api_key_name"].split("||")
-        key1 = api_key_name[0]
-        key2 = api_key_name[1]
-
-        if method == "BasicAuth":
-            header.update({"Authorization": "Basic " + b64encode(key1.encode("utf-8") + b":" + key2.encode("utf-8"))
-                          .decode("utf-8")})
-        elif method == "KeyInHeader":
-            header.update({key1: key2})
-        elif method == "KeyInQuery":
-            parameter.update({key1: key2})
-
-    return header, parameter
 
 
 def _check_json_extention(filename):

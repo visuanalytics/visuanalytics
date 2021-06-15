@@ -17,17 +17,17 @@ interface HistorySelectionProps {
     selectSchedule: (schedule: Schedule) => void;
     historySelectionStep: number;
     setHistorySelectionStep: (step: number) => void;
-    addToDataSources: () => void;
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     apiName: string;
+    addToDataSources?: () => void;
 }
 
 /**
  * Component displaying the fourth step in the creation of a new Info-Provider (Historization).
  * The state of this component handles the input made to its children.
  */
-export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
+export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
 
     /**
      * Handles clicks on the proceed button in the data selection
@@ -48,7 +48,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
      * After that the handler will proceed to the next step of the Infoprovider
      */
     const skipContinueHandler = () => {
-        props.addToDataSources();
+        if (props.addToDataSources) props.addToDataSources();
         props.continueHandler();
     }
 
@@ -91,8 +91,8 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
 
     return (
         <StepFrame
-            heading = "Historisierung"
-            hintContent = {hintContents.historySelection}
+            heading="Historisierung"
+            hintContent={hintContents.historySelection}
         >
             {getContent()}
         </StepFrame>

@@ -355,7 +355,6 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
         }
-        //TODO: explain in documentation why this is not checked on every input in the TextField - takes up too much computation on larger data sets
         //check for duplicates in api names
         if(getListItemsNames(props.listItems).includes(formel)) {
             props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")

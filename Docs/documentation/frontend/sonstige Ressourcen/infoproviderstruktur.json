@@ -3,6 +3,7 @@
     "datasources": [
         {
             "datasource_name": <datasourceName>,
+            "top_level_array": <boolean>
             "api": {
                 "api_info": {
                     "type": "request",                                          (immer gleich)
@@ -30,7 +31,6 @@
             }
             <weitere Keys>
             "selected_data": [selectedData]
-            "arrays_used_in_diagrams": [String]
             "historized_data": [String]                                                      (für historised-data usw. ihr könnt an uns weitergeben was ihr da braucht/ noch abspeichern wollt)
         },
         ...

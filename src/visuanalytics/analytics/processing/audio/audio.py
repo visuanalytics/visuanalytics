@@ -7,6 +7,7 @@ import mimetypes
 
 import gtts.tokenizer.symbols
 from gtts import gTTS
+from pydub import AudioSegment
 
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -72,15 +73,21 @@ def default(values: dict, data: StepData, config: dict):
 
         text = part.audio_parts(values[key]["parts"], data)
 
-        if text[1]:
+        if text[1]:  # wird ausgeführt, falls die Audio nur aus angegebenem Text besteht
             values[key] = _text_to_audio(data, values, text[0], config)
-        else:
+        else:  # wird ausgeführt, falls die Audio auch statische Dateien oder lautlose Audios enthält
             audio_list = []
             for item in values[key]["parts"]:
                 if item["type"] == "text":
                     audio_list.append(_text_to_audio(data, values, item["pattern"], config))
                 if item["type"] == "file":
                     audio_list.append(resources.get_audio_path(item["path"]))
+                if item["type"] == "silent":
+                    duration = item["duration"] * 1000
+                    silence = AudioSegment.silent(duration=duration)
+                    silent_audio_file_path = resources.new_temp_resource_path(data.data["_pipe_id"], "mp3")
+                    silence.export(silent_audio_file_path, format="mp3")
+                    audio_list.append(silent_audio_file_path)
 
             values[key] = _audios_to_audio(audio_list, data)
 

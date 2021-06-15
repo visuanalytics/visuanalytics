@@ -25,9 +25,9 @@ from visuanalytics.util.resources import DATE_FORMAT
 logger = logging.getLogger(__name__)
 
 
-class InfoproviderPipeline(Pipeline):
+class DatasourcePipeline(Pipeline):
     """
-    Enthält alle Informationen zu einer Infoprovider_Pipeline und führt die Steps Api, Transform und Storing aus.
+    Enthält alle Informationen zu einer DatasourcePipeline und führt die Steps Api, Transform und Storing aus.
 
     Benötigt beim Erstellen eine id und eine Instanz der Klasse :class:`Steps` bzw. einer Unterklasse von :class:`Steps`.
     Bei dem Aufruf von Start werden alle Steps der Reihe nach ausgeführt.
@@ -37,9 +37,8 @@ class InfoproviderPipeline(Pipeline):
                0: {"name": "Precondition", "call": precondition},
                1: {"name": "Apis", "call": api},
                2: {"name": "Transform", "call": transform},
-               3: {"name": "Storing", "call": storing},
-               4: {"name": "Images", "call": generate_all_images}}
-    __steps_max = 5
+               3: {"name": "Storing", "call": storing}}
+    __steps_max = 4
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,
@@ -123,11 +122,11 @@ class InfoproviderPipeline(Pipeline):
         self.__log_id = log_id
 
         # Load json config file
-        with resources.open_resource(f"infoprovider/{self.__step_name}.json") as fp:
+        with resources.open_resource(f"datasources/{self.__step_name}.json") as fp:
             self.__config = json.loads(fp.read())
 
         # Load and merge global presets
-        with resources.open_resource(f"infoprovider/global_presets.json") as fp:
+        with resources.open_resource(f"datasources/global_presets.json") as fp:
             global_presets = json.loads(fp.read())
 
         self.__config["presets"] = {**global_presets.get("presets", {}), **self.__config.get("presets", {})}

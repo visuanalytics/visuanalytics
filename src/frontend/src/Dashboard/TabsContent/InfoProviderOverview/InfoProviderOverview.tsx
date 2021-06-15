@@ -11,6 +11,8 @@ import {InfoProviderList} from "./InfoProviderList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 import {answer, fetchAllBackendAnswer, jsonRef} from "../../types";
+import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
+import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 
 /**
@@ -38,9 +40,24 @@ export const InfoProviderOverview: React.FC = () => {
     const [currentDeleteName, setCurrentDeleteName] = React.useState("");
 
     /**
-     * The boolean is used to open the confirm-delete-dialog.
+     * The id from the infoprovider that should be edited
+     */
+    const [currentEditId, setCurrentEditId] = React.useState(0);
+
+    /**
+     * The name from the infoprovider that should be edited
+     */
+    const [currentEditName, setCurrentEditName] = React.useState("");
+
+    /**
+     * The boolean is used to open and close the confirm-delete-dialog.
      */
     const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+
+    /**
+     * The boolean is used to open and close the confirm-edit-dialog.
+     */
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
     //TODO: possibly place in higher level component
     /**
@@ -172,6 +189,15 @@ export const InfoProviderOverview: React.FC = () => {
     }
 
     /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorDelete = (err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }
+
+    /**
      * Request to the backend to delete an infoprovider.
      */
     const deleteInfoProvider = useCallFetch("visuanalytics/infoprovider/" + currentDeleteId, {
@@ -179,7 +205,7 @@ export const InfoProviderOverview: React.FC = () => {
             headers: {
                 "Content-Type": "application/json\n"
             }
-        }, handleSuccessDelete, handleErrorFetchAll
+        }, handleSuccessDelete, handleErrorDelete
     );
 
     //only for test-purposes
@@ -219,6 +245,45 @@ export const InfoProviderOverview: React.FC = () => {
         }, 200);
     }
 
+    /**
+     * Handler method for successful calls to the backend for getting an infoprovider by id.
+     * Takes the object of type InfoProviderFromBackend provided and transforms it to name/string, Array<DataSource>
+     * and Array<Diagram> to use it in editing.
+     * @param jsonData
+     */
+    const handleSuccessEdit = (jsonData: any) => {
+        console.log(jsonData);
+        const data = jsonData as InfoProviderFromBackend;
+        //transform the infoProvider to frontend format
+        const infoProvider = transformBackendInfoProvider(data);
+        components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
+    }
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorEdit = (err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }
+
+    const editInfoProvider = useCallFetch("/visuanalytics/infoprovider/" + currentEditId, {
+            method: "GET"
+        }, handleSuccessEdit, handleErrorEdit
+    );
+
+    const handleEditButton = (infoProv: jsonRef) => {
+        setCurrentEditId(infoProv.infoprovider_id);
+        setCurrentEditName(infoProv.infoprovider_name);
+        setEditDialogOpen(true);
+    }
+
+    const confirmEdit = () => {
+        console.log(currentEditId);
+        editInfoProvider();
+    }
+
     return (
         <StepFrame
             heading="Willkommen bei VisuAnalytics!"
@@ -246,6 +311,7 @@ export const InfoProviderOverview: React.FC = () => {
                             <InfoProviderList
                                 infoprovider={infoprovider}
                                 handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
+                                handleEditButton={(data: jsonRef) => handleEditButton(data)}
                             />
                         </Box>
                     </Grid>
@@ -283,7 +349,12 @@ export const InfoProviderOverview: React.FC = () => {
                         <Grid container justify="space-between">
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
-                                        onClick={() => {setRemoveDialogOpen(false); setCurrentDeleteName("");}}>
+                                        onClick={() => {
+                                            setRemoveDialogOpen(false);
+                                            window.setTimeout(() => {
+                                                setCurrentDeleteName("");
+                                            }, 200);
+                                        }}>
                                     abbrechen
                                 </Button>
                             </Grid>
@@ -292,6 +363,35 @@ export const InfoProviderOverview: React.FC = () => {
                                         onClick={() => confirmDelete()}
                                         className={classes.redDeleteButton}>
                                     Löschen bestätigen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
+                <Dialog onClose={() => setEditDialogOpen(false)} aria-labelledby="editDialog-title"
+                        open={editDialogOpen}>
+                    <DialogTitle id="editDialog-title">
+                        "{currentEditName}" bearbeiten!
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Typography gutterBottom>
+                            Wollen sie den Infoprovider: "{currentEditName}" bearbeiten?
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => setEditDialogOpen(false)}
+                                        className={classes.redDeleteButton}>
+                                    abbrechen
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" color={"secondary"}
+                                        onClick={() => confirmEdit()}
+                                >
+                                    Bearbeiten
                                 </Button>
                             </Grid>
                         </Grid>

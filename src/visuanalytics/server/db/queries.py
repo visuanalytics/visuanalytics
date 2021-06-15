@@ -1,16 +1,23 @@
 import json
 import os
 import shutil
+import io
 
 import humps
 import copy
+from base64 import b64encode, encodebytes
+from copy import deepcopy
+from PIL import Image
 
 from visuanalytics.server.db import db
+from visuanalytics.util.config_manager import get_private, set_private
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
 
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
+DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
+SCENE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/scenes"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
@@ -37,49 +44,151 @@ def get_infoprovider_list():
     return [{"infoprovider_id": row["infoprovider_id"], "infoprovider_name": row["infoprovider_name"]} for row in res]
 
 
+def update_url_pattern(pattern):
+    """
+    Falls die URL, die für eine Request übergeben wird, schon eine Query enthält, wird diese aufgelöst,
+    damit die Paramter dem Request-Objekt als Dictionary übergeben werden können
+
+    :param pattern: URL mit Query (http...?...)
+    :type pattern: str
+    :return: Die Basis-URL ohne Query-Teil und Paramter als Dictionary
+    """
+    params = {}
+    pattern = pattern.split("?")
+    url = pattern[0]
+    if len(pattern) > 1:
+        param_list = pattern[1].split("&")
+        for param in param_list:
+            values = param.split("=")
+            params.update({
+                values[0]: values[1]
+            })
+
+    return url, params
+
+
 def insert_infoprovider(infoprovider):
     """
     Methode für das einfügen eines neuen Infoproviders.
 
     :param infoprovider: Ein Dictionary welches den Namen des Infoproviders, den Schedule sowie die Steps 'api', 'transform' und 'storing' enthält.
-    :return: Gibt einen boolschen Wert zurück welcher den Status.
+    :type infoprovider: Json-Objekt.
+
+    :return: Gibt an, ob das Hinzufügen erfolgreich war.
     """
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
+    datasources = infoprovider["datasources"]
+    diagrams = infoprovider["diagrams"]
+    diagrams_original = infoprovider["diagrams_original"]
+    arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
+
+    # Api obj vorbereiten
+    api_step = {
+        "type": "request_multiple_custom",
+        "use_loop_as_key": True,
+        "steps_value": [],
+        "requests": []
+    }
+    for datasource in datasources:
+        api_key_name = f"{infoprovider['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
+        api_step["steps_value"].append(datasource["datasource_name"])
+        api_step["requests"].append(req_data)
+
+    # Transform obj vorbereiten
+    transform_step = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in datasources]
+
     # Json für das Speicher vorbereiten
     infoprovider_json = {
         "name": infoprovider_name,
-        "api": {
-            "type": "request_multiple_custom",
-            "use_loop_as_key": True,
-            "steps_value": [
-                "api"
-            ],
-            "requests": [
-                infoprovider["api"]
-            ]
-        },
-        "transform": _generate_transform(infoprovider["formulas"], infoprovider["transform"]),
-        "storing": infoprovider["storing"],
-        "formulas": infoprovider["formulas"],
-        "images": infoprovider["images"],
-        "run_config": {}
+        "api": api_step,
+        "transform": transform_step,
+        "images": diagrams,
+        "run_config": {},
+        "datasources": datasources,
+        "diagrams_original": diagrams_original,
+        "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
+
     # Nachschauen ob ein Infoprovider mit gleichem Namen bereits vorhanden ist
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [infoprovider_name]).fetchone()["COUNT(*)"]
     if count > 0:
         return False
 
-    # Json in den Ordner "/infoproviders" speichern
-    with open_resource(_get_infoprovider_path(infoprovider_name), "wt") as f:
+    # Infoprovider-Json in den Ordner "/infoproviders" speichern
+    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "wt") as f:
         json.dump(infoprovider_json, f)
 
-    # Schedule in die entsprechenden Tabellen einfügen
-    if "schedule" in infoprovider:
-        schedule_historisation = infoprovider["schedule"]
-        schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
-        con.execute("INSERT INTO infoprovider (infoprovider_name, schedule_historisation_id) VALUES (?, ?)",
-                    [infoprovider_name, schedule_historisation_id])
+    infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
+                                  [infoprovider_name]).lastrowid
+
+    for datasource in datasources:
+        datasource_name = datasource["datasource_name"]
+
+        api_key_name = f"{infoprovider['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
+
+        datasource_api_step = {
+            "type": "request_multiple_custom",
+            "use_loop_as_key": True,
+            "steps_value": [datasource_name],
+            "requests": [req_data]
+        }
+
+        # Datasource obj vorbereiten
+        datasource_json = {
+            "name": datasource_name,
+            "api": datasource_api_step,
+            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "storing": _generate_storing(datasource["historized_data"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "run_config": {}
+        }
+
+        # Datasource-Json in den Ordner "/datasources" speichern
+        with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
+            json.dump(datasource_json, f)
+
+        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+            # Schedule für Datasource abspeichern
+            schedule_historisation = datasource["schedule"]
+            schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
+
+            # Datenquelle in Datenbank speichern
+            con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
+                        " VALUES (?, ?, ?)",
+                        [datasource_name, schedule_historisation_id, infoprovider_id])
+        else:
+            con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
+                        [datasource_name, infoprovider_id])
 
     con.commit()
 
@@ -106,17 +215,38 @@ def show_weekly():
 
 def get_infoprovider_file(infoprovider_id):
     """
-    Generiert den Pfad zu der Datei eines gegebenen Infoproviders.
+    Generiert den Pfad zu der Datei eines gegebenen Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :return: Pfad zur Json datei des Infoproviders.
+    :type infoprovider_id: Integer.
+
+    :return: Pfad zur Json Datei des Infoproviders.
     """
     con = db.open_con_f()
     # Namen des gegebenen Infoproviders laden
     res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
                       [infoprovider_id]).fetchone()
+    con.commit()
+    return _get_infoprovider_path(res["infoprovider_name"].replace(" ", "-")) if res is not None else None
 
-    return _get_infoprovider_path(res["infoprovider_name"]) if res is not None else None
+
+def get_datasource_file(datasource_id):
+    """
+    Läd den Pfad zu der Json-Date einger gegebenen Datenquelle
+
+    :param datasource_id: ID der Datenquelle
+    :type datasource_id: Integer.
+
+    :return: Pfad zu Json-Datei der Datenquelle
+    """
+    con = db.open_con_f()
+    # Namen der gegebenen Datenquelle laden
+    datasource_name = con.execute("SELECT datasource_name FROM datasource WHERE datasource_id=?",
+                                  [datasource_id]).fetchone()["datasource_name"]
+    infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider INNER JOIN datasource USING (infoprovider_id) WHERE datasource_id=?",
+                                    [datasource_id]).fetchone()["infoprovider_name"]
+    con.commit()
+    return _get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")) if datasource_name is not None else None
 
 
 def get_infoprovider(infoprovider_id):
@@ -124,31 +254,23 @@ def get_infoprovider(infoprovider_id):
     Methode für das Laden eines Infoproviders anhand seiner ID.
 
     :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: Integer.
+
     :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
     """
-    con = db.open_con_f()
     infoprovider_json = {}
-    weekdays = []
+
     # Laden der Json-Datei des Infoproviders
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
-        infoprovider_json.update({"json": json.loads(f.read())})
-    # Laden des Schedules
-    res = con.execute("SELECT * FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?",
-                           [infoprovider_id]).fetchone()
-    infoprovider_json.update({"infoprovider_name": res["infoprovider_name"]})
-    infoprovider_json.update({"schedule": {
-        "type": res["type"],
-        "time": res["time"],
-        "date": res["date"],
-        "time_interval": res["time_interval"]
-    }})
-    # Falls der Schedule-Typ "weekly" ist müssen die Wochentage ebenfalls geladen werden
-    if res["type"] == "weekly":
-        weekly = con.execute("SELECT weekday FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
-        for value in weekly:
-            weekdays.append(value["weekday"])
-        infoprovider_json["schedule"].update({"weekday": weekdays})
-    return infoprovider_json
+        infoprovider_json = json.loads(f.read())
+
+    return {
+        "infoprovider_name": infoprovider_json["name"],
+        "datasources": infoprovider_json["datasources"],
+        "diagrams": infoprovider_json["images"],
+        "diagrams_original": infoprovider_json["diagrams_original"],
+        "arrays_used_in_diagrams": infoprovider_json["arrays_used_in_diagrams"]
+    }
 
 
 def update_infoprovider(infoprovider_id, updated_data):
@@ -156,67 +278,140 @@ def update_infoprovider(infoprovider_id, updated_data):
     Methode mit der die Daten eines Infoproviders verändert werden können.
 
     :param infoprovider_id: ID des Infoproviders.
+    :type infoprovider_id: Integer.
     :param updated_data: Dictionary welches die Keys 'infoprovider_name', 'api', 'transform', 'storing' oder 'schedule' enthalten kann. Ist ein Key nicht vorhanden so werden die entprechenden Daten auch nicht verändert.
+    :type updated_data: Json-Objekt.
+
+    :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
 
     # Testen ob neuer Infoprovider-Name bereits von einem anderen Infoprovider verwendet wird
-    count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?", [updated_data["infoprovider_name"]]).fetchone()["COUNT(*)"]
-    old_infoprovider_data = con.execute("SELECT * FROM infoprovider WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?",
+                        [updated_data["infoprovider_name"]]).fetchone()["COUNT(*)"]
+    old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
+                                        [infoprovider_id]).fetchone()["infoprovider_name"]
+    con.commit()
+    _remove_datasources(con, infoprovider_id)
 
-    if count > 0 and old_infoprovider_data["infoprovider_name"] != updated_data["infoprovider_name"]:
+    if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
+
+    # Infoprovider-Json laden
+    old_file_path = _get_infoprovider_path(old_infoprovider_name)
+
+    with open_resource(old_file_path, "r") as f:
+        infoprovider_json = json.loads(f.read())
+
+    if old_infoprovider_name != updated_data["infoprovider_name"]:
+        os.remove(old_file_path)
 
     # Neuen Infoprovider-Namen setzen
     con.execute("UPDATE infoprovider SET infoprovider_name =? WHERE infoprovider_id=?",
                 [updated_data["infoprovider_name"], infoprovider_id])
 
-    # Infoprovider-Json laden
-    file_path = get_infoprovider_file(infoprovider_id)
+    # Update API-Step vorbereiten
+    api_step_new = {
+        "type": "request_multiple_custom",
+        "use_loop_as_key": True,
+        "steps_value": [],
+        "requests": []
+    }
 
-    with open_resource(file_path, "r") as f:
-        infoprovider_json = json.loads(f.read())
+    datasources = updated_data["datasources"]
+
+    for datasource in datasources:
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+
+        api_step_new["steps_value"].append(datasource["datasource_name"])
+        api_step_new["requests"].append(req_data)
+
+    # Update Transform-Step vorbereiten
+    new_transform = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in updated_data["datasources"]]
+
+    if new_transform is None:
+        return {"err_msg": "could not generate transform-step from formulas"}
 
     # Inhalt des Json's updaten
-    infoprovider_json.update({"api": {
-            "type": "request_multiple_custom",
-            "use_loop_as_key": True,
-            "steps_value": [
-                "api"
-            ],
-            "requests": [
-                updated_data["api"]
-            ]
-        }})
     infoprovider_json.update({"name": updated_data["infoprovider_name"]})
-    new_transform = _generate_transform(updated_data["formulas"], updated_data["transform"])
-    if new_transform is None:
-        return {"err_msg": f"could not generate transform-step from formulas"}
+    infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
-    infoprovider_json.update({"storing": updated_data["storing"]})
-    infoprovider_json.update({"formulas": updated_data["formulas"]})
-    infoprovider_json.update({"images": updated_data["images"]})
-
-    # Alte Schedule-ID abspeichern
-    old_schedule_id = con.execute("SELECT schedule_historisation_id FROM infoprovider WHERE infoprovider_id=?",
-                                  [infoprovider_id]).fetchone()["schedule_historisation_id"]
-    # Alten Schedule löschen
-    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [old_schedule_id])
-    # Alte Einträge aus der Tabelle schedule_historisation_weekday löschen
-    con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?",
-                [old_schedule_id])
-    # Neuen Schedule einfügen (neue weekdays werden ebenfalls eingefügt)
-    schedule_id = _insert_historisation_schedule(con, updated_data["schedule"])
-    # Neue schedule-id in der infoprovider-tabelle eintragen
-    con.execute("UPDATE infoprovider SET schedule_historisation_id=? WHERE infoprovider_id=?",
-                [schedule_id, infoprovider_id])
+    infoprovider_json.update({"images": updated_data["diagrams"]})
+    infoprovider_json.update({"datasources": updated_data["datasources"]})
 
     # Neues Json abspeichern
-    with open_resource(file_path, "w") as f:
+    new_file_path = get_infoprovider_file(infoprovider_id)
+    with open_resource(new_file_path, "w") as f:
         json.dump(infoprovider_json, f)
 
+    for datasource in updated_data["datasources"]:
+        datasource_name = datasource["datasource_name"]
+
+        api_key_name = f"{updated_data['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
+
+        url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
+        parameter.update(params)
+
+        req_data = {
+            "type": datasource["api"]["api_info"]["type"],
+            "method": datasource["api"]["api_info"].get("method", "GET"),
+            "url_pattern": url,
+            "headers": header,
+            "params": parameter,
+            "response_type": datasource["api"]["response_type"]
+        }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
+
+        datasource_api_step = {
+            "type": "request_multiple_custom",
+            "use_loop_as_key": True,
+            "steps_value": [datasource_name],
+            "requests": [req_data]
+        }
+
+        # Datasource obj vorbereiten
+        datasource_json = {
+            "name": datasource_name,
+            "api": datasource_api_step,
+            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "storing": _generate_storing(datasource["storing"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "run_config": {}
+        }
+
+        # Datasource-Json in den Ordner "/datasources" speichern
+        with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
+            json.dump(datasource_json, f)
+
+        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+            # Schedule für Datasource abspeichern
+            schedule_historisation = datasource["schedule"]
+            schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
+
+            # Datenquelle in Datenbank speichern
+            con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
+                        " VALUES (?, ?, ?)",
+                        [datasource_name, schedule_historisation_id, infoprovider_id])
+        else:
+            con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
+                        [datasource_name, infoprovider_id])
+
     con.commit()
-    return {}
+    return None
 
 
 def delete_infoprovider(infoprovider_id):
@@ -224,25 +419,327 @@ def delete_infoprovider(infoprovider_id):
     Entfernt den Infoprovider mit der gegebenen ID.
 
     :param infoprovider_id: ID des Infoproviders.
-    :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
+    :type infoprovider_id: Integer.
+
+    :return: Boolschen Wert welcher angibt, ob das Löschen erfolgreich war.
     """
     con = db.open_con_f()
     # Prüfen ob der Infoproivder vorhanden ist
     res = con.execute("SELECT * FROM infoprovider WHERE infoprovider_id = ?",
                       [infoprovider_id]).fetchone()
     if res is not None:
-        # Json-Datei, Schedule und Infoprovider-Eintrag löschen
+        # Json-Datei von Datenquelle, sowie zugehörige Einträge in Datenbank löschen
+        _remove_datasources(con, infoprovider_id, remove_historised=True)
+
+        # Json-Datei von Infoprovider und zugehörige Ordner löschen
         file_path = get_infoprovider_file(infoprovider_id)
         shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
-        shutil.rmtree(os.path.join(MEMORY_LOCATION, res["infoprovider_name"]), ignore_errors=True)
-
         os.remove(file_path)
-        _remove_historisation_schedule(con, infoprovider_id)
+
+        # Infoprovider aus Datenbank löschen
         con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
         con.commit()
         return True
     con.commit()
     return False
+
+
+def insert_scene(scene):
+    """
+    Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
+
+    :param scene: Objekt welches die Szene beschreibt.
+    :type scene: Json-Objekt mit den Keys 'scene_name', 'used_images', 'used_infoproviders' und 'images'.
+                    'used_images' und 'used_infoproviders enthalten eine Liste von ID's der Bilder und Infoprovider.
+                    'images' ist die Konfiguration des image-step's.
+
+    :return: Enthält bei einem Fehler Informationen über diesen.
+    """
+    con = db.open_con_f()
+
+    scene_name = scene["scene_name"]
+    used_images = scene["used_images"]
+    used_infoproviders = scene["used_infoproviders"]
+    images = scene["images"]
+
+    scene_json = {
+        "scene_name": scene_name,
+        "used_images": used_images,
+        "used_infoproviders": used_infoproviders,
+        "images": images
+    }
+
+    # Prüfen ob scene bereits vorhanden ist
+    count = con.execute("SELECT COUNT(*) FROM scene WHERE scene_name=?", [scene_name]).fetchone()["COUNT(*)"]
+
+    if count > 0:
+        return "given name already in use"
+
+    # insert into scene
+    scene_id = con.execute("INSERT INTO scene (scene_name) VALUES (?)", [scene_name]).lastrowid
+
+    # insert into scene_uses_image
+    for used_image in used_images:
+        # check if image exists
+        count = con.execute("SELECT COUNT(*) FROM image WHERE image_id=?", [used_image]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return f"image with id {used_image} does not exist"
+
+        con.execute("INSERT INTO scene_uses_image (scene_id, image_id) VALUES (?, ?)", [scene_id, used_image])
+
+    # insert into scene_uses_infoprovider
+    for used_infoprovider in used_infoproviders:
+        # check if infoprovider exists
+        count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_id=?", [used_infoprovider]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return f"infoprovider with id {used_infoprovider} does not exist"
+
+        con.execute("INSERT INTO scene_uses_infoprovider (scene_id, infoprovider_id) VALUES (?, ?)", [scene_id, used_infoprovider])
+
+    # save <scene-name>.json
+    file_path = _get_scene_path(scene_name.replace(" ", "-"))
+    print("file_path", file_path)
+    with open_resource(file_path, "wt") as f:
+        print("writing")
+        json.dump(scene, f)
+
+    con.commit()
+    return None
+
+
+def get_scene_file(scene_id):
+    """
+    Erzeugt den Pfad zu der Json-Datei einer Szene anhand ihrer ID.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Pfad zu der Json-Datei.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+    con.commit()
+    return _get_scene_path(res["scene_name"]) if res is not None and not None else None
+
+
+def get_scene(scene_id):
+    """
+    Läd die Json-Datei der Szene deren ID gegeben wird.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Json-Objekt der Szenen Datei.
+    """
+    file_path = get_scene_file(scene_id)
+    if file_path is None:
+        return None
+    with open_resource(file_path, "r") as f:
+        scene_json = json.loads(f.read())
+    return scene_json
+
+
+def get_scene_list():
+    """
+    Läd Informationen über alle vorhandenen Szenen.
+
+    :return: Ein Json-Objekt mit den Keys 'scene_id' und 'scene_name' zu jeder Szene.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM scene")
+    con.commit()
+    return [{"scene_id": row["scene_id"], "scene_name": row["scene_name"]} for row in res]
+
+
+def update_scene(scene_id, updated_data):
+    """
+    Updated die Json-Datei und die Tabelleneinträge zu einer Szene.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+    :param updated_data: Neue Daten der Szene.
+    :type updated_data: Json-Objekt.
+
+    :return: Enthölt bei einem Fehler Informationen über diesen.
+    """
+    con = db.open_con_f()
+
+    scene_name = updated_data["scene_name"]
+    used_images = updated_data["used_images"]
+    used_infoproviders = updated_data["used_infoproviders"]
+    images = updated_data["images"]
+
+    # Altes Json laden
+    old_file_path = get_scene_file(scene_id)
+
+    with open_resource(old_file_path, "r") as f:
+        scene_json = json.loads(f.read())
+
+    # Testen of Name bereits von anderer Szene verwendet wird
+    res = con.execute("SELECT * FROM scene WHERE scene_name=?", [scene_name])
+    for row in res:
+        if row["scene_id"] != scene_id:
+            return {"err_msg": f"There already exists a scene with the name {scene_name}"}
+
+    # Neuen Namen setzen
+    con.execute("UPDATE scene SET scene_name=? WHERE scene_id=?", [scene_name, scene_id])
+
+    # Neue Daten in Json-Datei eintragen
+    scene_json.update({"scene_name": scene_name})
+    scene_json.update({"used_images": used_images})
+    scene_json.update({"used_infoproviders": used_infoproviders})
+    scene_json.update({"images": images})
+
+    # Alte Einträge aus scene_uses_image entfernen
+    con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
+
+    # Alte Einträge aus scene_uses_infoprovider entfernen
+    con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
+
+    # Neue Einträge in scene_uses_image einfügen
+    for used_image in used_images:
+        # Testen ob Image in Tabelle vorhanden ist
+        count = con.execute("SELECT COUNT(*) FROM image WHERE image_id=?", [used_image]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return {"err_msg": f"Image with ID {used_image} does not exist"}
+
+        # In scene_uses_image eintragen
+        con.execute("INSERT INTO scene_uses_image (scene_id, image_id) VALUES (?, ?)", [scene_id, used_image])
+
+    # Neue Einträge in scene_uses_infoprovider einfügen
+    for used_infoprovider in used_infoproviders:
+        # Testen ob Infoproivder in Tabelle vorhanden ist
+        count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_id=?", [used_infoprovider]).fetchone()["COUNT(*)"]
+        if count == 0:
+            return {"err_msg": f"Infoprovider with ID {used_infoprovider} does not exist"}
+
+        # In scene_uses_infoprovider eintragen
+        con.execute("INSERT INTO scene_uses_infoprovider (scene_id, infoprovider_id) VALUES (?, ?)", [scene_id, used_infoprovider])
+
+    # Neues Json abspeichern
+    new_file_path = _get_scene_path(scene_name)
+    if new_file_path != old_file_path:
+        os.remove(old_file_path)
+    with open_resource(new_file_path, "w") as f:
+        json.dump(scene_json, f)
+
+    con.commit()
+    return None
+
+
+def delete_scene(scene_id):
+    """
+    Entfernt eine Szene aus der Datenbank und löscht die zugehörige Json-Datei.
+
+    :param scene_id: ID der Szene.
+    :type scene_id: Integer.
+
+    :return: Zeigt an ob das Löschen erfolgreich war.
+    """
+    con = db.open_con_f()
+    # testen ob scene vorhanden ist
+    res = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+
+    if res is not None:
+        file_path = get_scene_file(scene_id)
+
+        # Eintrag aus scene_uses_image entfernen
+        con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
+
+        # Eintrag aus scene_uses_infoprovider entfernen
+        con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
+
+        # Json-Datei löschen
+        rowcount = con.execute("DELETE FROM scene WHERE scene_id=?", [scene_id]).rowcount
+        if rowcount > 0:
+            os.remove(file_path)
+        con.commit()
+        return True
+    con.commit()
+    return False
+
+
+def insert_image(image_name):
+    """
+    Adds an image to the Database.
+
+    :param image_name: Name of the image.
+    :param image_type: Type of the image. Supported options ars .png .jpeg and .jpg
+    """
+    con = db.open_con_f()
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=?", [image_name]).fetchone()["COUNT(*)"]
+
+    if count > 0:
+        return False
+
+    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    con.commit()
+    return True
+
+
+def get_scene_image_file(image_id):
+    """
+    Generated the file-path of an image by its given ID.
+
+    :param image_id: ID of the image.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
+    return get_scene_image_path(res["image_name"]) if res is not None else None
+
+
+def get_image_list():
+    """
+    Loads information about all images stored in the database.
+
+    :return: Contains ID, name and image-file for each image contained in the database.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM image")
+    con.commit()
+    images = []
+    for row in res:
+        """with open(get_scene_image_path(row["image_name"]), "rb") as f:
+            image_file = f.read()
+        images.append({
+            "image_id": row["image_id"],
+            "image_name": row["image_name"],
+            "image_file": image_file
+        })"""
+        with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
+            byte_arr = f.tobytes()
+            encoded_img = encodebytes(byte_arr).decode('ascii')
+            images.append({
+                "image_id": row["image_id"],
+                "image_name": row["image_name"],
+                "image_file": encoded_img
+            })
+    return images
+    # return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": open(get_scene_image_path(row["image_name"]), "rb")} for row in res]
+
+
+def delete_scene_image(image_id):
+    """
+    Removes an image from the database by a given ID.
+
+    :param image_id: ID of an image.
+    """
+    con = db.open_con_f()
+
+    file_path = get_scene_image_file(image_id)
+
+    # check if image is being used
+    count = con.execute("SELECT COUNT(*) FROM scene_uses_image WHERE image_id=?", [image_id]).fetchone()["COUNT(*)"]
+    if count > 0:
+        return "Error"
+
+    # remove image-file and entry in image-table
+    res = con.execute("DELETE FROM image WHERE image_id=?", [image_id])
+    if res.rowcount > 0:
+        os.remove(file_path)
+    con.commit()
+
+    return "Successful"
 
 
 def get_topic_names():
@@ -386,6 +883,74 @@ def get_logs():
         for log in logs]
 
 
+def generate_request_dicts(api_info, method, api_key_name=None):
+    """
+    Falls die API einen Key benötigt, gibt es verschiedene Varianten, wie der Key in der Request übergeben wird (Query,
+    Header, verschlüsselt etc.). Dazu wird der Key in dem entsprechenden Dict verpackt bzw. der eigentliche Key wird in
+    der privaten Konfig-Datei abgelegt.
+
+    :param api_info: Infos über die Request (Typ, URL etc.)
+    :type api_info: dict
+    :param method: Methode, wie der Key in der Request übergeben werden soll
+    :type method: str
+    :param api_key_name: Name des Keys, falls er in der privaten Konfig-Datei abgespeichert werden soll
+    :type api_key_name: str
+    :return: Aufbereitete Header- und Parameter-Dictionaries
+    """
+    header = {}
+    parameter = {}
+    if method != "noAuth":
+        api_key_for_query = api_info["api_key_name"].split("||")[0]
+        api_key = api_info["api_key_name"].split("||")[1]
+    else:
+        return header, parameter
+
+    if api_key_name:
+        private_config = get_private()
+        private_config["api_keys"].update({api_key_name: api_key})
+        set_private(private_config)
+
+    # Prüft ob und wie sich das Backend bei der API authetifizieren soll und setzt die entsprechenden Parameter
+    if method == "BearerToken":
+        header.update({"Authorization": "Bearer " + ("{_api_key}" if api_key_name else api_key)})
+    else:
+        if method == "BasicAuth":
+            header.update({"Authorization": "Basic " + b64encode(api_key_for_query.encode("utf-8") + b":" + api_key.encode("utf-8"))
+                          .decode("utf-8")})
+        elif method == "KeyInHeader":
+            header.update({api_key_for_query: "{_api_key}" if api_key_name else api_key})
+        elif method == "KeyInQuery":
+            parameter.update({api_key_for_query: "{_api_key}" if api_key_name else api_key})
+
+    return header, parameter
+
+
+def remove_toplevel_key(obj):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = remove_toplevel_key(obj[x])
+    elif type(obj) == dict:
+        for key in list(obj.keys()):
+            obj[key] = remove_toplevel_key(obj[key])
+    elif type(obj) == str:
+        obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
+        if obj[-1] == "|":
+            obj = obj[:-1]
+    return obj
+
+
+def _extend_keys(obj, datasource_name):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = _extend_keys(obj[x], datasource_name)
+    elif type(obj) == dict:
+        for key in list(obj.keys()):
+            obj[key] = _extend_keys(obj[key], datasource_name)
+    elif type(obj) == str:
+        obj = "_req|" + datasource_name + "|" + obj
+    return obj
+
+
 def _insert_param_values(con, job_id, topic_values):
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
@@ -403,11 +968,35 @@ def _generate_transform(formulas, old_transform):
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part = generate_step_transform(formula["formula"], formula["name"])
+        transform_part = generate_step_transform(formula["formelString"], formula["formelName"], copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
         if transform_part is None:
             return None
         transform += transform_part
     return transform
+
+
+def _generate_storing(historized_data, datasource_name):
+    storing = []
+    historized_data = remove_toplevel_key(_extend_keys(historized_data, datasource_name))
+    for key in historized_data:
+        storing.append({
+            "name": key,
+            "key": key
+        })
+    return storing
+
+
+def _remove_datasources(con, infoprovider_id, remove_historised=False):
+    res = con.execute("SELECT * FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+    infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?", [infoprovider_id]).fetchone()["infoprovider_name"]
+    for row in res:
+        file_path = get_datasource_file(row["datasource_id"])
+        os.remove(file_path)
+        if remove_historised:
+            shutil.rmtree(os.path.join(MEMORY_LOCATION, infoprovider_name.replace(" ", "-") + "_" + row["datasource_name"].replace(" ", "-")), ignore_errors=True)
+
+        _remove_historisation_schedule(con, row["datasource_id"])
+        con.execute("DELETE FROM datasource WHERE datasource_id=?", [row["datasource_id"]])
 
 
 def _insert_historisation_schedule(con, schedule):
@@ -422,22 +1011,28 @@ def _insert_historisation_schedule(con, schedule):
                               [type, time, date, time_interval]).lastrowid
     if type == "weekly":
         id_weekdays = [(schedule_id, d) for d in weekdays]
-        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)", id_weekdays)
+        con.executemany("INSERT INTO schedule_historisation_weekday(schedule_historisation_id, weekday) VALUES(?, ?)",
+                        id_weekdays)
     return schedule_id
 
 
-def _remove_historisation_schedule(con, infoprovider_id):
+def _remove_historisation_schedule(con, datasource_id):
     """
     Entfernt den Schedule eines Infoproviders.
 
     :param con: Variable welche auf die Datenbank verweist.
     :param infoprovider_id: ID des Infoproviders.
     """
-    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN infoprovider USING (schedule_historisation_id) WHERE infoprovider_id=?", [infoprovider_id]).fetchone()
+    res = con.execute("SELECT schedule_historisation_id, type FROM schedule_historisation INNER JOIN datasource USING "
+                      "(schedule_historisation_id) WHERE datasource_id=?", [datasource_id]).fetchone()
+    if res is None:
+        return
     if res["type"] == "weekly":
-        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+        con.execute("DELETE FROM schedule_historisation_weekday WHERE schedule_historisation_id=?",
+                    [res["schedule_historisation_id"]])
 
-    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?", [res["schedule_historisation_id"]])
+    con.execute("DELETE FROM schedule_historisation WHERE schedule_historisation_id=?",
+                [res["schedule_historisation_id"]])
 
 
 def _insert_schedule(con, schedule):
@@ -529,6 +1124,19 @@ def _row_to_job(row):
 
 def _get_infoprovider_path(infoprovider_name: str):
     return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
+
+
+def _get_datasource_path(datasource_name: str):
+    return os.path.join(DATASOURCE_LOCATION, datasource_name) + ".json"
+
+
+def _get_scene_path(scene_name: str):
+    return os.path.join(SCENE_LOCATION, scene_name) + ".json"
+
+
+def get_scene_image_path(json_file_name: str):
+    image_info = json_file_name.rsplit(".", 1)
+    return _get_image_path(image_info[0], "scene", image_info[1])
 
 
 def _get_steps_path(json_file_name: str):
