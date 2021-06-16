@@ -2,11 +2,11 @@ import json
 import os
 import shutil
 import io
+import re
 
 import humps
 import copy
 from base64 import b64encode, encodebytes
-from copy import deepcopy
 from PIL import Image
 
 from visuanalytics.server.db import db
@@ -82,6 +82,7 @@ def insert_infoprovider(infoprovider):
     diagrams = infoprovider["diagrams"]
     diagrams_original = infoprovider["diagrams_original"]
     arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
+    transform_step = []
 
     # Api obj vorbereiten
     api_step = {
@@ -109,8 +110,10 @@ def insert_infoprovider(infoprovider):
         api_step["steps_value"].append(datasource["datasource_name"])
         api_step["requests"].append(req_data)
 
-    # Transform obj vorbereiten
-    transform_step = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in datasources]
+        # Transform obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step.append(_generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), datasource["transform"]))
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -165,10 +168,13 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys), remove_toplevel_key(datasource["transform"]))
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "transform": transform_step,
             "storing": _generate_storing(datasource["historized_data"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
@@ -285,6 +291,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
+    new_transform = []
 
     # Testen ob neuer Infoprovider-Name bereits von einem anderen Infoprovider verwendet wird
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?",
@@ -338,8 +345,11 @@ def update_infoprovider(infoprovider_id, updated_data):
         api_step_new["steps_value"].append(datasource["datasource_name"])
         api_step_new["requests"].append(req_data)
 
-    # Update Transform-Step vorbereiten
-    new_transform = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in updated_data["datasources"]]
+        # Transform obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        new_transform.append(
+            _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), datasource["transform"]))
 
     if new_transform is None:
         return {"err_msg": "could not generate transform-step from formulas"}
@@ -385,10 +395,14 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys),
+                                             remove_toplevel_key(datasource["transform"]))
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
+            "transform": transform_step,
             "storing": _generate_storing(datasource["storing"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
@@ -951,8 +965,22 @@ def _extend_keys(obj, datasource_name):
     return obj
 
 
-def _extend_forumla_keys(obj, datasource_name):
-
+def _extend_formula_keys(obj, datasource_name, formula_keys):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = _extend_formula_keys(obj[x], datasource_name, formula_keys)
+    elif type(obj) == dict:
+        if "formelString" in obj:
+            obj["formelString"] = _extend_formula_keys(obj["formelString"], datasource_name, formula_keys)
+    elif type(obj) == str:
+        parts = re.split('[\*/\() \+-]', obj)
+        for part in parts:
+            try:
+                float(part)
+            except Exception:
+                if part != "" and part not in formula_keys:
+                    remove_toplevel_key(part)
+                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part)
     return obj
 
 
@@ -970,10 +998,11 @@ def _insert_param_values(con, job_id, topic_values):
 
 def _generate_transform(formulas, old_transform):
     transform = []
+    counter = 0
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part = generate_step_transform(formula["formelString"], formula["formelName"], copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
+        transform_part, counter = generate_step_transform(formula["formelString"], formula["formelName"], counter, copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
         if transform_part is None:
             return None
         transform += transform_part
