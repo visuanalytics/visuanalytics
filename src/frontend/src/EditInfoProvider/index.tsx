@@ -178,7 +178,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         if(sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
-            setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || props.infoProvId));
+            //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
+            setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
             //editStep - disabled since it makes debugging more annoying
             setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
             //infoProvName

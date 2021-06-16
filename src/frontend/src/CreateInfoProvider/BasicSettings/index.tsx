@@ -187,9 +187,9 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         }
     }
 
-    const handleTestContinue = () => {
+    /*const handleTestContinue = () => {
         props.continueHandler()
-    }
+    }*/
 
 
     /**

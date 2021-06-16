@@ -41,7 +41,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //holds the value true if the loading spinner should be displayed
     const [displaySpinner, setDisplaySpinner] = React.useState(true);
     //true when the dialog for data missmatch errors is open
-    const [errorDialogOpen, setErrorDialogOpen] = React.useState(true);
+    const [errorDialogOpen, setErrorDialogOpen] = React.useState(false);
     //holds the set of listItems as returned by the new api request
     const [newListItems, setNewListItems] = React.useState<Array<ListItemRepresentation>>([]);
 
@@ -161,7 +161,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleTestDataError(err)
         }).finally(() => clearTimeout(timer));
-    }, [handleTestDataSuccess, handleTestDataError, query, method, apiKeyInput1, apiKeyInput2])
+    }, [handleTestDataSuccess, handleTestDataError, query, method, apiKeyInput1, apiKeyInput2, noKey])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore

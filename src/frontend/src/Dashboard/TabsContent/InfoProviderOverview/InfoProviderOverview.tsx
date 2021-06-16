@@ -212,14 +212,14 @@ export const InfoProviderOverview: React.FC = () => {
     //test method that you only have to use once
     //only if the database is deleted you have to use the method again
     //there is no need for a success-method because the backend will not send an answer
-    const testInfo = useCallFetch("/visuanalytics/infprovtestdatensatz", {
+    /*const testInfo = useCallFetch("/visuanalytics/infprovtestdatensatz", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json\n"
             }
         }, () => {
         }, handleErrorFetchAll
-    );
+    );*/
 
     /**
      * helper-method to set the right id and name to delete the right infoprovider.
@@ -256,6 +256,7 @@ export const InfoProviderOverview: React.FC = () => {
         const data = jsonData as InfoProviderFromBackend;
         //transform the infoProvider to frontend format
         const infoProvider = transformBackendInfoProvider(data);
+        console.log(infoProvider)
         components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
     }
 

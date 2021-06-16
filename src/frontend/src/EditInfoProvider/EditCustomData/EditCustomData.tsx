@@ -240,31 +240,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     }
 
 
-    /**
-     * This method is called when the user confirms the delete of an formula.
-     * The formula will be deleted from customData and historizedData
-     */
-    const confirmDelete = () => {
-
-        //TODO: maybe implement a better solution for better runtime
-
-        for (let i: number = 0; i <= props.infoProvDataSources[props.selectedDataSource].customData.length - 1; i++) {
-            if (props.infoProvDataSources[props.selectedDataSource].customData[i].formelName === currentDeleteName) {
-                props.infoProvDataSources[props.selectedDataSource].customData.splice(i, 1);
-            }
-        }
-
-        for (let i: number = 0; i <= props.infoProvDataSources[props.selectedDataSource].historizedData.length - 1; i++) {
-            if (props.infoProvDataSources[props.selectedDataSource].historizedData[i] === currentDeleteName) {
-                props.infoProvDataSources[props.selectedDataSource].historizedData.splice(i, 1);
-            }
-        }
-
-        props.checkForHistorizedData();
-
-        setRemoveDialogOpen(false);
-        setCurrentDeleteName("");
-    }
 
     /**
      * The method sets the currentEditName and opens the edit-dialog
@@ -390,6 +365,41 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                         }}
                                         className={classes.redDeleteButton}>
                                     Löschen bestätigen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogActions>
+                </Dialog>
+                <Dialog onClose={() => {
+                    setEditDialogOpen(false);
+                    window.setTimeout(() => {
+                        setCurrentEditFormel(new FormelObj("", ""));
+                    }, 200);
+                }} aria-labelledby="editDialog-title"
+                        open={editDialogOpen}>
+                    <DialogTitle id="deleteDialog-title">
+                        Wollen Sie die Formel "{currentEditFormel.formelName}" bearbeiten?
+                    </DialogTitle>
+                    <DialogActions>
+                        <Grid container justify="space-between">
+                            <Grid item>
+                                <Button variant="contained"
+                                        onClick={() => {
+                                            setEditDialogOpen(false);
+                                            window.setTimeout(() => {
+                                                setCurrentEditFormel(new FormelObj("", ""));
+                                            }, 200);
+                                        }}
+                                        className={classes.delete}
+                                >
+                                    zurück
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" color={"secondary"}
+                                        onClick={() => confirmEdit()}
+                                >
+                                    bearbeiten
                                 </Button>
                             </Grid>
                         </Grid>
