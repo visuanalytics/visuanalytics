@@ -50,12 +50,13 @@ task 2: editing for formulas (Tristan)
 task 3: new formulas (Tristan)
 task 4: integrate diagram components (Janek)
 task 6: keep the component context on reload (Janek)
+task 10: add additional data sources (Daniel)
+
 NOT DONE:
 task 5: sessionStorage compatibility with AuthDataDialog (Janek)
 task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
 task 8: component for DataSelection (Janek)
 task 9: historized data (Tristan)
-task 10: add additional data sources (Daniel)
 task 11: delete dependencies (???)
 task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
@@ -420,6 +421,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
 
     const steps = [
         "Überblick",
+        "API-Einstellungen",
         "API-Daten",
         "Formeln",
         "Einzelne Formel bearbeiten",
@@ -451,6 +453,89 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         dispatchMessage({type: "reportError", message: message});
     }, []);
 
+    /**
+     * Checks if a given API name already exists in the data sources
+     * This is needed for changing basic settings
+     * @param name The name of the data source which should be checked for duplicate
+     */
+    const checkNameDuplicate = (name: string) => {
+        for(let i = 0; i < infoProvDataSources.length; i++) {
+            if(infoProvDataSources[i].apiName === name) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Method for updating the query of the selected data source
+     * Needed when editing the selected data source
+     * @param query The new query for the selected data source
+     */
+    const setQuery = (query: string) => {
+        const arrCopy = infoProvDataSources.slice();
+        arrCopy[selectedDataSource].query = query;
+        setInfoProvDataSources(arrCopy);
+    }
+
+    /**
+     * Sets the first field from api Keys
+     * Needed when editing the basic settings
+     * @param key The content from the first key input field
+     */
+    const setApiKeyInput1 = (key: string) => {
+        const key2 = infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)
+        const keyMap = new Map(infoProvDataSourcesKeys);
+        setInfoProvDataSourcesKeys(keyMap.set(infoProvDataSources[selectedDataSource].apiName, {
+            apiKeyInput1: key,
+            apiKeyInput2: key2 === undefined ? "" : key2.apiKeyInput2
+        }));
+    }
+
+    /**
+     * Sets the second field from api Keys
+     * Needed when editing the basic settings
+     * @param key The content from the second key input field
+     */
+    const setApiKeyInput2 = (key: string) => {
+        const key1 = infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)
+        const keyMap = new Map(infoProvDataSourcesKeys);
+        setInfoProvDataSourcesKeys(keyMap.set(infoProvDataSources[selectedDataSource].apiName, {
+            apiKeyInput1: key1 === undefined ? "" : key1.apiKeyInput1,
+            apiKeyInput2: key
+        }));
+    }
+
+    /**
+     * Updates the noKey property of the selected data source
+     * Needed for editing the basic settings
+     * @param noKey Value for the property of noKey for the selected data source
+     */
+    const setNoKey = (noKey: boolean) => {
+        const arrCopy = infoProvDataSources.slice();
+        arrCopy[selectedDataSource].noKey = noKey;
+        setInfoProvDataSources(arrCopy);
+    }
+
+    /**
+     * Method which updates the authentication method for the selected data source
+     * Needed when editing the basic settings
+     * @param method The new authentication method for the selected data source
+     */
+    const setMethod = (method: string) => {
+        const arrCopy = infoProvDataSources.slice();
+        arrCopy[selectedDataSource].method = method;
+        setInfoProvDataSources(arrCopy);
+    }
+
+    /**
+     * Method for updating the name for the selected data source
+     * This is needed for editing the basic settings
+     * @param apiName The new api name for the selected data ource
+     */
+    const setApiName = (apiName: string) => {
+        const arrCopy = infoProvDataSources.slice();
+        arrCopy[selectedDataSource].apiName = apiName;
+        setInfoProvDataSources(arrCopy);
+    }
     /**
      * Handler method for changing the selectedData of the current data source in infoProvDataSources.
      * Used for the EditDataSelection step.
@@ -851,7 +936,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         setNewDataSourceMode={setNewDataSourceMode}
                     />
                 );
-            case 1:
+            case 2:
                 //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
                     <EditDataSelection
@@ -872,7 +957,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         selectedDataSource={selectedDataSource}
                     />
                 );
-            case 2:
+            case 3:
                 return (
                     <EditCustomData
                         continueHandler={(index: number) => handleContinue(index)}
@@ -884,7 +969,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
                     />
                 );
-            case 3:
+            case 4:
                 return (
                     <EditSingleFormel
                         continueHandler={(index: number) => handleContinue(index)}
@@ -896,7 +981,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         formel={formelInformation}
                     />
                 )
-            case 4:
+            case 5:
                 return (
                     <HistorySelection
                         continueHandler={() => setStep(5)}
@@ -914,7 +999,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         apiName={infoProvDataSources[selectedDataSource].apiName}
                     />
                 )
-            case 5:
+            case 6:
                 return (
                     <Grid>
                         <DiagramCreation
