@@ -33,6 +33,7 @@ import {HistorySelection} from "../CreateInfoProvider/HistorySelection";
 import {extractKeysFromSelection} from "../CreateInfoProvider/helpermethods";
 import {Schedule} from "./types";
 import {CreateInfoProvider} from "../CreateInfoProvider";
+import {EditBasicSettings} from "./EditBasicSettings";
 
 
 interface EditInfoProviderProps {
@@ -936,6 +937,33 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         setNewDataSourceMode={setNewDataSourceMode}
                     />
                 );
+            case 1:
+                return (
+                    <EditBasicSettings
+                        continueHandler={(index: number) => handleContinue(index)}
+                       backHandler={(index: number) => handleBack(index)}
+                       checkNameDuplicate={checkNameDuplicate}
+                       query={infoProvDataSources[selectedDataSource].query}
+                       setQuery={setQuery}
+                       apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                       setApiKeyInput1={setApiKeyInput1}
+                       apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                       setApiKeyInput2={setApiKeyInput2}
+                       noKey={infoProvDataSources[selectedDataSource].noKey}
+                       setNoKey={setNoKey}
+                       method={infoProvDataSources[selectedDataSource].method}
+                       setMethod={setMethod}
+                       apiName={infoProvDataSources[selectedDataSource].apiName}
+                       setApiName={setApiName}
+                       reportError={reportError}
+                       setSelectedData={setSelectedData}
+                       setCustomData={setCustomData}
+                       setHistorizedData={setHistorizedData}
+                       setSchedule={setSchedule}
+                       setHistorySelectionStep={setHistorySelectionStep}
+                       setListItems={(listItems: Array<ListItemRepresentation>) => {return}}
+                   />
+                )
             case 2:
                 //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
