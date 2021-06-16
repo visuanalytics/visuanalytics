@@ -4,7 +4,7 @@ from ast2json import str2json
 splitString = "uzjhnjtdryfguljkm"
 
 
-def get_transformations(tree, k, key_name):
+def get_transformations(tree, k, key_name, counter):
     """
     Simuliert einen globalen Scope für die Methode, die die Liste der Transformtypen generiert.
 
@@ -14,6 +14,8 @@ def get_transformations(tree, k, key_name):
     :type k: str
     :param key_name: falls es sich nicht um ein Ziwschenergebnis handelt, wird das Ergebnis unter diesem Namen abgespeichert, damit es später wiederverwendet werden kann
     :type key_name: str
+    :param counter: zählt hoch und ist Teil der Namen aller Zwischenvariablen
+    :type counter: number
     :return: Liste der Transformtypen
     """
     operations = {
@@ -73,10 +75,11 @@ def get_transformations(tree, k, key_name):
 
         calculations.append(calculation)
         if k != "tree":
-            return new_key
+            return new_key, counter
+        return None, counter
 
-    build_calc_list(tree, k, 0, key_name=key_name)
-    return calculations
+    tmp, counter = build_calc_list(tree, k, counter, key_name=key_name)
+    return calculations, counter
 
 
 def parse_to_own_format(rep, decimal, loop_var=None):
@@ -119,7 +122,7 @@ def parse_string(calculation_string):
         return None
 
 
-def generate_step_transform(formula, key_name, copy=None, array_key=None, loop_key="", decimal=2):
+def generate_step_transform(formula, key_name, counter, copy=None, array_key=None, loop_key="", decimal=2):
     """
     Erstellt die Liste der Transformtypen für eine Formel, falls die Formel keinen syntaktischen Fehler hat.
     Dabei kann die Formel auf einen einzelnen Key, oder ein ganzes Array angewendet werden.
@@ -156,17 +159,14 @@ def generate_step_transform(formula, key_name, copy=None, array_key=None, loop_k
     ast_rep = parse_string(formula if array_key else formula)
 
     if not ast_rep:
-        return None
+        return None, counter
     else:
         parsed_result = parse_to_own_format(ast_rep["body"][0]["value"], decimal=decimal, loop_var=(loop_var if array_key else None))
 
         if array_key:
-            return result + [{
-                "type": "transform_array",
-                "array_key": copy if copy else array_key,
-                "transform": get_transformations({
+            transformations, counter = get_transformations({
                     "tree": parsed_result
-                }, "tree", key_name) + [
+                }, "tree", key_name, counter) + [
                                  {
                                      "type": "calculate",
                                      "action": "multiply",
@@ -176,8 +176,13 @@ def generate_step_transform(formula, key_name, copy=None, array_key=None, loop_k
                                      "new_keys": [loop_var]
                                  }
                              ]
-            }]
+            return result + [{
+                "type": "transform_array",
+                "array_key": copy if copy else array_key,
+                "transform": transformations
+            }], counter
         else:
-            return result + get_transformations({
+            transformations, counter = get_transformations({
                 "tree": parsed_result
-            }, "tree", key_name)
+            }, "tree", key_name, counter)
+            return result + transformations, counter
