@@ -113,7 +113,7 @@ def insert_infoprovider(infoprovider):
         # Transform obj vorbereiten
         formulas = copy.deepcopy(datasource["formulas"])
         formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step.append(_generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), datasource["transform"]))
+        [transform_step.append(part) for part in _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), datasource["transform"])[:]]
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -974,12 +974,14 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
             obj["formelString"] = _extend_formula_keys(obj["formelString"], datasource_name, formula_keys)
     elif type(obj) == str:
         parts = re.split('[\*/\() \+-]', obj)
+        transformed_keys = []
         for part in parts:
             try:
                 float(part)
             except Exception:
-                if part != "" and part not in formula_keys:
+                if part != "" and part not in formula_keys and part not in transformed_keys:
                     remove_toplevel_key(part)
+                    transformed_keys.append(part)
                     obj = obj.replace(part, "_req|" + datasource_name + "|" + part)
     return obj
 
