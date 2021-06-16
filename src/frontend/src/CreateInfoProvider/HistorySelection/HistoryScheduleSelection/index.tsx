@@ -24,6 +24,7 @@ interface HistoryScheduleSelectionProps {
     schedule: Schedule;
     selectSchedule: (schedule: Schedule) => void;
     addToDataSources?: () => void;
+    newDataSourceInEditMode: boolean;
 }
 
 
@@ -225,7 +226,7 @@ export const HistoryScheduleSelection: React.FC<HistoryScheduleSelectionProps> =
                 <Grid item className={classes.blockableButtonPrimary}>
                     <Button variant="contained" size="large" color="primary" onClick={handleProceed}
                             disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes())) || props.schedule.type === ""}>
-                        weiter
+                        {props.newDataSourceInEditMode ? "abschließen" : "weiter"}
                     </Button>
                 </Grid>
             </Grid>
