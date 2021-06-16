@@ -60,16 +60,16 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         setPreviewOpen(true);
     }
 
+    const setImageURL = props.setImageURL;
+
     /**
      * Handles the success of the getAll()-method.
      * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
      * @param jsonData the answer from the backend
      */
     const handleSuccessDiagramPreview = React.useCallback((jsonData: any) => {
-        //const data = jsonData;
-        //console.log(data);
-        //TODO: set the state that contains the current preview image path returned by the backend
-    }, [])
+        setImageURL(URL.createObjectURL(jsonData));
+    }, [setImageURL])
 
     //extract method from props to use it in dependencies of handleErrorDiagramPreview
     const reportError = props.reportError
@@ -125,7 +125,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
         }).then((res: Response) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.json();
+            return res.status === 204 ? {} : res.blob();
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
@@ -273,7 +273,7 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                 <DialogActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <Button variant="contained" onClick={() => {
+                            <Button variant="contained" color={"primary"} onClick={() => {
                                 setRemoveDialogOpen(false);
                                 window.setTimeout(() => setItemToRemove(""), 200);
                             }}>
@@ -291,16 +291,20 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
             <Dialog onClose={() => {
                 setPreviewOpen(false);
                 window.setTimeout(() => props.setImageURL(""), 200);
-            }} aria-labelledby="previewDialog-title" open={previewOpen}>
-                <DialogTitle id="previewDialog-title">
+            }} aria-labelledby="previewDialog-title" maxWidth={"md"} fullWidth={true} open={previewOpen}>
+                <DialogTitle id="previewDialog-title" >
                     Vorschau des generierten Diagramm
                 </DialogTitle>
                 <DialogContent dividers>
-                    <img width="500" height="600" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                    <Grid container justify={"center"}>
+                        <Grid item>
+                            <img width="640" height="480" alt="Vorschaubild Diagramm" src={props.imageURL}/>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Grid item>
-                        <Button variant="contained" onClick={() => {
+                        <Button variant="contained" color={"primary"} onClick={() => {
                             setPreviewOpen(false);
                             window.setTimeout(() => props.setSelectedDiagram({} as Diagram), 200);
                         }}>

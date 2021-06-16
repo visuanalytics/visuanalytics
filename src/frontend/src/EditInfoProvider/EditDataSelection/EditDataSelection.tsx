@@ -28,10 +28,13 @@ interface EditDataSelectionProps {
     apiKeyInput1: string;
     apiKeyInput2: string;
     diagrams: Array<Diagram>
+    setDiagrams: (diagrams: Array<Diagram>) => void;
     setSelectedData: (selectedData: Array<SelectedDataItem>) => void;
     setHistorizedData: (historizedData: Array<string>) => void;
     setCustomData: (customData: Array<FormelObj>) => void;
     cleanDataSource: (newListItems: Array<ListItemRepresentation>) => void;
+    infoProvDataSources: Array<DataSource>;
+    selectedDataSource: number;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -248,6 +251,9 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     setHistorizedData={props.setHistorizedData}
                     customData={props.dataSource.customData}
                     setCustomData={props.setCustomData}
+                    diagrams={props.diagrams}
+                    setDiagrams={(diagrams: Array<Diagram>) => props.setDiagrams(diagrams)}
+                    apiName={props.infoProvDataSources[props.selectedDataSource].apiName}
                 />
             )
         }

@@ -37,7 +37,7 @@ def infprovtestdatensatz():
         "infoprovider_name": "Test" + str(last_id),
         "datasources": [
             {
-                "name": "wetter_api",
+                "datasource_name": "wetter_api",
                 "api": {
                     "api_info": {
                         "type": "request",
@@ -92,7 +92,7 @@ def infprovtestdatensatz():
                 }
             },
             {
-                "name": "joke_api",
+                "datasource_name": "joke_api",
                 "api": {
                     "api_info": {
                         "type": "request",
@@ -146,7 +146,9 @@ def infprovtestdatensatz():
                     ]
                 }
             }
-        }
+        },
+        "diagrams_original": {},
+        "arrays_used_in_diagrams": []
     }
     queries.insert_infoprovider(infoprovider)
     last_id = queries.get_last_infoprovider_id()
@@ -164,14 +166,16 @@ def infprovtestdatensatz():
 @api.route("/testdiagram", methods=["POST"])
 def test_diagram():
     """
+    Erzeugt ein Testbild mit Zufallswerten zu einem Diagramm.
 
+    Die Response enthält das Bild als BLOB-File.
     """
     diagram_info = request.json
     try:
         file_path = generate_test_diagram(diagram_info)
 
-        # return send_file(file_path, "application/json", True)
-        return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
+        return send_file(file_path, "application/json", True)
+        # return send_from_directory(get_resource_path(TEMP_LOCATION), filename="test_diagram.png")
         # return file_path, 200
     except Exception:
         logger.exception("An error occurred: ")
@@ -255,6 +259,10 @@ def add_infoprovider():
 
         if "diagrams" not in infoprovider:
             err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
+            return err, 400
+
+        if "diagrams_original" not in infoprovider:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams_original'"})
             return err, 400
 
         for datasource in infoprovider["datasources"]:
@@ -465,6 +473,232 @@ def testformula():
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while testing a formula"})
+        return err, 400
+
+
+@api.route("/scene", methods=["POST"])
+def add_scene():
+    """
+    Endpunkt '/scene'.
+
+    Route zum Hinzufügen einer neuen Szene.
+    """
+    scene = request.json
+    try:
+        if "scene_name" not in scene:
+            err = flask.jsonify({"err_msg": "Missing Scene-Name"})
+            return err, 400
+
+        if "used_images" not in scene:
+            err = flask.jsonify({"err_msg": "Missing list of used images"})
+            return err, 400
+
+        if "used_infoproviders" not in scene:
+            err = flask.jsonify({"err_msg": "missing list of used infoproviders'"})
+            return err, 400
+
+        if "images" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
+        msg = queries.insert_scene(scene)
+        if msg:
+            err = flask.jsonify({"err_msg": msg})
+            return err, 400
+
+        return "", 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding a scene"})
+        return err, 400
+
+
+@api.route("/scene/all", methods=["GET"])
+def get_all_scenes():
+    """
+    Endpunkt '/scene/all'.
+
+    Route über welche Informationen über alle vorhandenen Szenen ausgelesen werden kann.
+    """
+    try:
+
+        return flask.jsonify(queries.get_scene_list())
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occuured while loading information about all scenes"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["GET"])
+def get_scene(id):
+    """
+    Endpunkt '/scene/<id>' (GET).
+
+    Route über die das Json-Objekt der Szene geladen werden kann.
+    :param id: Die ID zu der Szene welche geladen werden soll.
+    """
+    try:
+        scene_json = queries.get_scene(id)
+        if scene_json is None:
+            err = flask.jsonify({"err_msg": f"Could not load scene with ID {id}"})
+            return err, 400
+
+        return flask.jsonify(scene_json)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading a scene"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["PUT"])
+def update_scene(id):
+    """
+    Endpunkt '/scene/<id>' (PUT).
+
+    Route über die die Daten einer Szene verändert werden können.
+    Request muss das Json-Objekt enthälten welches das alte Objekt überschreiben soll.
+    :param id: ID der Szene die überschrieben werden soll.
+    """
+    updated_data = request.json
+    try:
+        if "scene_name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Scene-Name"})
+            return err, 400
+
+        if "used_images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing list of used images"})
+            return err, 400
+
+        if "used_infoproviders" not in updated_data:
+            err = flask.jsonify({"err_msg": "missing list of used infoproviders'"})
+            return err, 400
+
+        if "images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
+        update_info = queries.update_scene(id, updated_data)
+
+        if update_info is not None:
+            err = flask.jsonify(update_info)
+            return err, 400
+
+        return "Successful", 200
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while updating the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/scene/<id>", methods=["DELETE"])
+def delete_scene(id):
+    """
+    Endpunkt '/scene/<id>' (DELETE).
+
+    Route über die eine Szene anhand ihrer ID gelöscht werden kann.
+    :param id: ID der Szene die gelöscht werden soll.
+    """
+    try:
+        success = queries.delete_scene(id)
+        return "", 200 if success else flask.jsonify({"err_msg": f"Could not remove scene with ID {id}"})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/image/add", methods=["PUT"])
+def add_scene_image():
+    """
+    Endpunkt '/image/add'.
+
+    Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
+    Request-Form muss den key name und das Bild selbst enthalten.
+    """
+    try:
+        if "image" not in request.files:
+            err = flask.jsonify({"err_msg": "Missing Image"})
+            return err, 400
+
+        if "name" not in request.form:
+            err = flask.jsonify({"err_msg": "Missing Image Name"})
+            return err, 400
+
+        image = request.files["image"]
+        name = request.form["name"]
+
+        if image.filename == '':
+            err = flask.jsonify({"err_msg": "Missing Image Filename"})
+            return err, 400
+
+        if not _check_image_extention(image.filename):
+            err = flask.jsonify({"err_msg": "Invalid file extension"})
+            return err, 400
+
+        file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
+        print("image_name", name + "." + file_extension)
+        file_path = queries.get_scene_image_path(name + "." + file_extension)
+
+        if path.exists(file_path):
+            err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
+            return err, 400
+
+        if not queries.insert_image(name + "." + file_extension):
+            err = flask.jsonify({"err_msg": "Image could not be added to the database"})
+            return err, 400
+
+        image.save(file_path)
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding an image"})
+        return err, 400
+
+
+@api.route("/image/all", methods=["GET"])
+def get_all_scene_images():
+    """
+    Endpunkt '/image/all'.
+
+    Route über die Informationen über alle Szene-Bilder erhalten werden können.
+    Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
+    """
+    try:
+        images = queries.get_image_list()
+
+        return flask.jsonify(images)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
+        return err, 400
+
+
+@api.route("/image/<id>", methods=["DELETE"])
+def delete_scene_image(id):
+    """
+    Endpunkt '/image/<id>' (DELETE).
+
+    Route über die ein Szenen-Bild gelöscht werden kann.
+    :param image_id: ID des Bildes welches gelöscht werden soll.
+    """
+    try:
+        success = queries.delete_scene_image(id)
+
+        return flask.jsonify({"success": success})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while deleting an image"})
+        return err, 400
+
+
+@api.route("/thumbnailpreview", methods=["POST"])
+def set_preview():
+    try:
+
+        return "Not Implemented", 400
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
         return err, 400
 
 
