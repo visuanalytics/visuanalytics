@@ -254,15 +254,10 @@ export const DiagramOverview: React.FC<DiagramOverviewProps> = (props) => {
                     Diagramm hinzufügen
                 </Button>
             </Grid>
-            <Grid item container xs={12} justify="space-between">
+            <Grid item container xs={12} justify="flex-start">
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                         zurück
-                    </Button>
-                </Grid>
-                <Grid item>
-                    <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
-                        weiter
                     </Button>
                 </Grid>
             </Grid>
