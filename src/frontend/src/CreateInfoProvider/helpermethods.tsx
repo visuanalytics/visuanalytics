@@ -75,7 +75,7 @@ export const transformJSON = (jsonData: any, parent = "") => {
                     //when the array contains no values, searching for subobjects only produces errors
                     resultArray.push({
                         keyName: key + "|0",
-                        value: "[Array]",
+                        value: "[keine Werte]",
                         parentKeyName: parent,
                         arrayRep: true,
                         arrayLength: parseInt(array_length)
