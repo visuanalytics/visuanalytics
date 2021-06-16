@@ -40,7 +40,6 @@ interface EditInfoProviderProps {
     infoProvider?: FrontendInfoProvider;
 }
 
-
 //TODO: task list for the team
 /*
 DONE:
@@ -50,101 +49,50 @@ task 2: editing for formulas (Tristan)
 task 3: new formulas (Tristan)
 task 4: integrate diagram components (Janek)
 task 6: keep the component context on reload (Janek)
-NOT DONE:
 task 5: sessionStorage compatibility with AuthDataDialog (Janek)
 task 7: reload data from api in DataSelection and compare if all selectedData-items are contained in the new listItems (Janek)
 task 8: component for DataSelection (Janek)
-task 9: historized data (Tristan)
 task 10: add additional data sources (Daniel)
-task 11: delete dependencies (???)
 task 12: load data from backend (Janek)
 task 13: send data to backend (Janek)
+NOT DONE:
+task 9: historized data (Tristan)
+task 11: delete dependencies (???)
  */
 
-
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
     const components = React.useContext(ComponentContext);
+
+    //stores a copy of the passed infoProviderID - necessary since it is passed via context switch and wont be kept on reload
+    const [infoProvId, setInfoProvId] = React.useState(props.infoProvId !== undefined ? props.infoProvId : 0);
 
     /**
      * the current step of the creation process, numbered by 0 to 5
      */
-    const [step, setStep] = React.useState(0);
+    const [editStep, setEditStep] = React.useState(0);
 
     /**
      * The name of the infoprovider that is being edited
      */
 
-        //infoProvider? infoProvider.name : "TristanTest"
-    const [infoProvName, setInfoProvName] = React.useState(infoProvider !== undefined ? infoProvider.infoproviderName : "");
-
+    const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
 
     const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
-    //TODO: mind that keyInput is now in map
-    //TODO: remove testinput for production
-    /**
-     * The array with DataSources from the infoprovider that is being edited.
-     * One DataSource-object holds all information from one api.
-     */
 
-     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-     //fill with test data
 
-    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
-        {
-            apiName: "apiName",
-            query: "query",
-            //apiKeyInput1: "apiKeyInput1",
-            //apiKeyInput2: "apiKeyInput2",
-            noKey: true,
-            method: "KeyInHeader",
-            selectedData: new Array<SelectedDataItem>(
-                {
-                    key: "Array1|Data0",
-                    type: "Zahl"
-                },
-                {
-                    key: "Array1|Data1",
-                    type: "Zahl"
-                }
-            ),
-            customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
-            historizedData: new Array<string>("formel1", "formel2"),
-            schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
-            listItems: [],
-        },
-        {
-            apiName: "apiName2",
-            query: "query2",
-            //apiKeyInput1: "apiKeyInput1_2",
-            //apiKeyInput2: "apiKeyInput2_2",
-            noKey: false,
-            method: "BearerToken",
-            selectedData: new Array<SelectedDataItem>(
-                {
-                    key: "Array2|Data0",
-                    type: "Zahl"
-                },
-                {
-                    key: "Array2|Data1",
-                    type: "Zahl"
-                }
-            ),
-            customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
-            historizedData: new Array<string>("formel1_2", "Array2|Data0"),
-            schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
-            listItems: [],
-        },
-        ));
 
+    //holds the dataSources of the edited infoProvider
+    //always gets the value from the sessionStorage, but if it is not defined (first entering), the data is fetched from the props
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ?  props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
 
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
-    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
+    const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(props.infoProvider !== undefined ? props.infoProvider.dataSourcesKeys : new Map<string, DataSourceKey>());
 
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(infoProvider !== undefined ? infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider!==undefined ? props.infoProvider.diagrams : new Array<Diagram>());
 
     /**
      * The index to select the right DataSource that is wanted to edit
@@ -172,20 +120,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
 
 
-    React.useEffect(() => {
-        //create default values in the key map for all dataSources
-        //necessary to not run into undefined values
-        const map = new Map();
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
-        data.forEach((dataSource) => {
-            map.set(dataSource.apiName, {
-                apiKeyInput1: "",
-                apiKeyInput2: ""
-            })
-        });
-        setInfoProvDataSourcesKeys(map);
-    }, [])
-
     //TODO: add current state variables if needed
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
@@ -195,6 +129,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         //check the current data source
         //if((!noKey)&&(apiKeyInput1!==""||apiKeyInput2!=="")) return true;
         //check all other data sources
+        console.log(infoProvDataSources);
         for (let index = 0; index < infoProvDataSources.length; index++) {
             const dataSource = infoProvDataSources[index];
             if (infoProvDataSourcesKeys.get(dataSource.apiName) !== undefined) {
@@ -231,55 +166,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Needs to run based on sessionStorage since it is called in the first render.
      */
     const authDialogNeeded = () => {
-        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(
-            {
-                apiName: "apiName",
-                query: "query",
-                //apiKeyInput1: "apiKeyInput1",
-                //apiKeyInput2: "apiKeyInput2",
-                noKey: true,
-                method: "KeyInHeader",
-                selectedData: new Array<SelectedDataItem>(
-                    {
-                        key: "Array1|Data0",
-                        type: "Zahl"
-                    },
-                    {
-                        key: "Array1|Data1",
-                        type: "Zahl"
-                    }
-                ),
-                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
-                historizedData: new Array<string>("formel1", "formel2"),
-                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
-                listItems: [],
-            },
-            {
-                apiName: "apiName2",
-                query: "query2",
-                //apiKeyInput1: "apiKeyInput1_2",
-                //apiKeyInput2: "apiKeyInput2_2",
-                noKey: false,
-                method: "BearerToken",
-                selectedData: new Array<SelectedDataItem>(
-                    {
-                        key: "Array2|Data0",
-                        type: "Zahl"
-                    },
-                    {
-                        key: "Array2|Data1",
-                        type: "Zahl"
-                    }
-                ),
-                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
-                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
-                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
-                listItems: [],
-            },
-        ) : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(): JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         //const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
-        //will only trigger if the user has selected a method and noKey - this makes sure he already got to step 2 in the current datasource
+        //will only trigger if the user has selected a method and noKey - this makes sure he already got to editStep 2 in the current datasource
         //const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
         //if((!noKeyCurrent)&&methodCurrent!=="") return true;
         //else {
@@ -296,95 +185,61 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        //step - disabled since it makes debugging more annoying
-        setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
-        //infoProvName
-        setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId) || "");
-        //infoProvDataSource
-        //TODO: switch to empty array instead of this debugging sample data when the fetching mechanism is implemented
-        setInfoProvDataSources(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(
-            {
-                apiName: "apiName",
-                query: "query",
-                //apiKeyInput1: "apiKeyInput1",
-                //apiKeyInput2: "apiKeyInput2",
-                noKey: true,
-                method: "KeyInHeader",
-                selectedData: new Array<SelectedDataItem>(
-                    {
-                        key: "Array1|Data0",
-                        type: "Zahl"
-                    },
-                    {
-                        key: "Array1|Data1",
-                        type: "Zahl"
-                    }
-                ),
-                customData: new Array<FormelObj>(new FormelObj("formel1", "26 * 2"), new FormelObj("formel2", "formel1 * formel1")),
-                historizedData: new Array<string>("formel1", "formel2"),
-                schedule: {type: "weekly", interval: "", time: "18:00", weekdays: [4, 5]},
-                listItems: [],
-            },
-            {
-                apiName: "apiName2",
-                query: "query2",
-                //apiKeyInput1: "apiKeyInput1_2",
-                //apiKeyInput2: "apiKeyInput2_2",
-                noKey: false,
-                method: "BearerToken",
-                selectedData: new Array<SelectedDataItem>(
-                    {
-                        key: "Array2|Data0",
-                        type: "Zahl"
-                    },
-                    {
-                        key: "Array2|Data1",
-                        type: "Zahl"
-                    }
-                ),
-                customData: new Array<FormelObj>(new FormelObj("formel1_2", "(26 % data / ((7 + 5) * 8) + data2 - 3432412f) * 2"), new FormelObj("formel2_2", "25 * formel1_2 / (3 * (Array2|Data0 - 5))")),
-                historizedData: new Array<string>("formel1_2", "Array2|Data0"),
-                schedule: {type: "weekly", interval: "", time: "16:00", weekdays: [0, 1]},
-                listItems: [],
-            },
-        ) : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
-        //infoProvDiagrams
-        setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId) === null ? new Array<Diagram>() : JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
-        //selectedDataSource
-        setSelectedDataSource(Number(sessionStorage.getItem("selectedDataSource-" + uniqueId) || 0));
-        //formelInformation
-        setFormelInformation(sessionStorage.getItem("formelInformation-" + uniqueId) === null ? {
-            formelName: "",
-            parenCount: 0,
-            formelAsObjects: new Array<StrArg>(),
-            dataFlag: false,
-            numberFlag: false,
-            opFlag: true,
-            leftParenFlag: false,
-            rightParenFlag: false
-        } : JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
+        if(sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
+            //infoProvId
+            //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
+            setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
+            //editStep - disabled since it makes debugging more annoying
+            setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
+            //infoProvName
+            setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId) || "");
+            //infoProvDataSource doesnt need to be fetched since it works with the initial value
+            //infoProvDiagrams
+            setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId) === null ? new Array<Diagram>() : JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
+            //selectedDataSource
+            setSelectedDataSource(Number(sessionStorage.getItem("selectedDataSource-" + uniqueId) || 0));
+            //formelInformation
+            setFormelInformation(sessionStorage.getItem("formelInformation-" + uniqueId) === null ? {
+                formelName: "",
+                parenCount: 0,
+                formelAsObjects: new Array<StrArg>(),
+                dataFlag: false,
+                numberFlag: false,
+                opFlag: true,
+                leftParenFlag: false,
+                rightParenFlag: false
+            } : JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
 
-        //create default values in the key map for all dataSources
-        //necessary to not run into undefined values
-        const map = new Map();
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
-        data.forEach((dataSource) => {
-            map.set(dataSource.apiName, {
-                apiKeyInput1: "",
-                apiKeyInput2: ""
-            })
-        });
-        setInfoProvDataSourcesKeys(map);
+            //create default values in the key map for all dataSources
+            //necessary to not run into undefined values
+            const map = new Map();
+            const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+            data.forEach((dataSource) => {
+                map.set(dataSource.apiName, {
+                    apiKeyInput1: "",
+                    apiKeyInput2: ""
+                })
+            });
+            setInfoProvDataSourcesKeys(map);
 
-        if (authDialogNeeded()) {
-            setAuthDataDialogOpen(true);
+            if (authDialogNeeded()) {
+                setAuthDataDialogOpen(true);
+            }
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            //necessary to not overwrite the map on first entering
+            sessionStorage.setItem("firstEntering-" + uniqueId, "false");
         }
     }, [])
 
-    //store step in sessionStorage
+    //store infoProvId in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("step-" + uniqueId, step.toString());
-    }, [step])
+        sessionStorage.setItem("infoProvId-" + uniqueId, infoProvId!.toString());
+    }, [infoProvId])
+    //store editStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("editStep-" + uniqueId, editStep.toString());
+    }, [editStep])
     //store infoProvName in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("infoProvName-" + uniqueId, infoProvName);
@@ -410,12 +265,19 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Removes all items of this component from the sessionStorage.
      */
     const clearSessionStorage = () => {
-        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("infoProvId-" + uniqueId);
+        sessionStorage.removeItem("editStep-" + uniqueId);
         sessionStorage.removeItem("infoProvName-" + uniqueId);
         sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
         sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
         sessionStorage.removeItem("selectedDataSource-" + uniqueId);
         sessionStorage.removeItem("formelInformation-" + uniqueId);
+        sessionStorage.removeItem("firstEntering-" + uniqueId);
+        sessionStorage.removeItem("historizedObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramSource-" + uniqueId);
+        sessionStorage.removeItem("arrayObjects-" + uniqueId);
+        sessionStorage.removeItem("diagramName-" + uniqueId);
+        sessionStorage.removeItem("diagramStep-" + uniqueId);
     }
 
     const steps = [
@@ -558,7 +420,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Increments the step by the given index.
      */
     const handleContinue = (index: number) => {
-        setStep(step + index);
+        setEditStep(editStep + index);
     }
 
     /**
@@ -566,12 +428,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * Decrements the step by the given index or returns to the dashboard if the step was 0.
      */
     const handleBack = (index: number) => {
-        if (step === 0) {
+        if (editStep === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
             return;
         }
-        setStep(step - index)
+        setEditStep(editStep - index)
     }
 
     //TODO: find a better solution than copying - useCallback doesnt allow it to be on top level of helpermethods.tsx
@@ -695,7 +557,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccess = (jsonData: any) => {
-        //TODO: cleanup sessionStorage
+        clearSessionStorage();
         components?.setCurrent("dashboard")
     }
 
@@ -845,10 +707,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         infoProvName={infoProvName}
                         setInfoProvName={(name: string) => setInfoProvName(name)}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         setSelectedDataSource={(index: number) => setSelectedDataSource(index)}
                         finishNewDataSource={finishNewDataSource}
                         setNewDataSourceMode={setNewDataSourceMode}
+                        infoProvDiagrams={infoProvDiagrams}
+                        setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                        infoProvDataSourcesKeys={infoProvDataSourcesKeys}
+                        setInfoProvDataSourcesKeys={(keys: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(keys)}
                     />
                 );
             case 1:
@@ -879,9 +746,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         checkForHistorizedData={checkForHistorizedData}
                         setFormelInformation={(formel: formelContext) => setFormelInformation(formel)}
+                        infoProvName={infoProvName}
+                        infoProvDiagrams={infoProvDiagrams}
+                        setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                     />
                 );
             case 3:
@@ -891,6 +762,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                         backHandler={(index: number) => handleBack(index)}
                         editInfoProvider={finishEditing}
                         infoProvDataSources={infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
@@ -899,8 +771,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
             case 4:
                 return (
                     <HistorySelection
-                        continueHandler={() => setStep(5)}
-                        backHandler={() => setStep(2)}
+                        continueHandler={() => setEditStep(5)}
+                        backHandler={() => setEditStep(2)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
                         historizedData={infoProvDataSources[selectedDataSource].historizedData}
@@ -918,8 +790,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 return (
                     <Grid>
                         <DiagramCreation
-                            continueHandler={() => setStep(0)}
-                            backHandler={() => setStep(4)}
+                            continueHandler={() => setEditStep(0)}
+                            backHandler={() => setEditStep(0)}
                             dataSources={infoProvDataSources}
                             diagrams={infoProvDiagrams}
                             setDiagrams={setInfoProvDiagrams}
@@ -937,7 +809,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
         <React.Fragment>
             {!newDataSourceMode && (
                 <Container maxWidth={"md"}>
-                    <Stepper activeStep={step}>
+                    <Stepper activeStep={editStep}>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>
@@ -946,7 +818,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                     </Stepper>
                 </Container>
             )}
-            {selectContent(step)}
+            {selectContent(editStep)}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

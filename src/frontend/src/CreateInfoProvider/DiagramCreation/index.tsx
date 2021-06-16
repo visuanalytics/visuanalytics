@@ -349,8 +349,6 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      */
     const getCompatibleHistorized = useCallback((dataSources: Array<DataSource>) => {
         //console.log("getting compatible historized");
-        //TODO: for each datasource
-        //TODO: concat dataSource name
         const compatibleHistorized: Array<string> = []
         //the undefined case should only happen in certain situations that are only possible via debugging
         if(dataSources!==undefined) {
@@ -359,7 +357,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 if(dataSource.historizedData!==undefined&&dataSource.selectedData!==undefined) {
                     dataSource.historizedData.forEach((item) => {
                         dataSource.selectedData.forEach((data) => {
-                            if (data.key === item && data.type === "Zahl") compatibleHistorized.push(dataSource.apiName + "|" + item)
+                            if (data.key === item && (data.type === "Zahl" || (data.type === "Array" && data.arrayValueType !== undefined && data.arrayValueType === "Zahl"))) compatibleHistorized.push(dataSource.apiName + "|" + item)
                         })
                         dataSource.customData.forEach((data) => {
                             if (data.formelName === item) compatibleHistorized.push(dataSource.apiName + "|" + item)

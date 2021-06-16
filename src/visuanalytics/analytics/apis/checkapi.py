@@ -85,14 +85,22 @@ def get_content(obj):
             return {
                 "same_type": True,
                 "length"   : len(obj),
-                "object" : None
+                "object"   : None
             }
         elif same_datatypes(obj):
-            return {
-                "same_type": True,
-                "length"   : len(obj),
-                "object" : get_content(obj[0])
-            }
+            obj_type = type(obj[0]).__name__.lower()
+            if obj_type == "list" or obj_type == "dict":
+                return {
+                    "same_type": True,
+                    "length"   : len(obj),
+                    "object"   : get_content(obj[0])
+                }
+            else:
+                return {
+                    "same_type": True,
+                    "length"   : len(obj),
+                    "type"     : obj_type
+                }
         else:
             result = {
                 "same_type": False,

@@ -66,7 +66,7 @@ This component manages which step is active and displays the corresponding conte
 export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => {
     const components = React.useContext(ComponentContext);
 
-    console.log(props.finishDataSourceInEdit);
+    //console.log(props.finishDataSourceInEdit);
 
     //const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
@@ -87,8 +87,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     ];
 
     //the current step of the creation process, numbered by 0 to 6
-
-    const [step, setStep] = React.useState(0);
+    //TODO: document renaming
+    const [createStep, setCreateStep] = React.useState(0);
     //name of the info-provider
     const [name, setName] = React.useState("");
     //holds the name of the current API
@@ -215,8 +215,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        //step - disabled since it makes debugging more annoying TODO: restore when finished!!
-        setStep(Number(sessionStorage.getItem("step-" + uniqueId) || 0));
+        //createStep - disabled since it makes debugging more annoying
+        setCreateStep(Number(sessionStorage.getItem("createStep-" + uniqueId) || 0));
         //apiName
         setApiName(sessionStorage.getItem("apiName-" + uniqueId) || "");
         //query
@@ -270,8 +270,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
 
     //store step in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("step-" + uniqueId, step.toString());
-    }, [step])
+        sessionStorage.setItem("createStep-" + uniqueId, createStep.toString());
+    }, [createStep])
     //store apiName in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("apiName-" + uniqueId, apiName);
@@ -332,7 +332,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Removes all items of this component from the sessionStorage.
      */
     const clearSessionStorage = () => {
-        sessionStorage.removeItem("step-" + uniqueId);
+        sessionStorage.removeItem("createStep-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
         sessionStorage.removeItem("noKey-" + uniqueId);
@@ -578,8 +578,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Increments the step.
      */
     const handleContinue = () => {
-        if (step === 5) postInfoProvider();
-        else if (step === 4 && props.finishDataSourceInEdit !== undefined) {
+        if (createStep === 5) postInfoProvider();
+        else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
             props.finishDataSourceInEdit({
                 apiName: apiName,
                 query: query,
@@ -593,7 +593,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             }, apiKeyInput1, apiKeyInput2);
             clearSessionStorage();
         } else {
-            setStep(step + 1);
+            setCreateStep(createStep + 1);
             /*console.log(JSON.stringify({
                 infoprovider_name: name,
                 api: {
@@ -614,14 +614,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if (step === 0 && props.cancelNewDataSourceInEdit !== undefined) {
+        if (createStep === 0 && props.cancelNewDataSourceInEdit !== undefined) {
             clearSessionStorage();
             props.cancelNewDataSourceInEdit();
-        } else if (step === 0) {
+        } else if (createStep === 0) {
             clearSessionStorage();
             components?.setCurrent("dashboard")
         }
-        setStep(step - 1)
+        setCreateStep(createStep - 1)
     }
 
 
@@ -763,7 +763,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     <SettingsOverview
                         continueHandler={handleContinue}
                         backHandler={handleBack}
-                        setStep={setStep}
+                        setStep={setCreateStep}
                         name={name}
                         setName={(name: string) => setName(name)}
                         dataSources={dataSources}
@@ -808,7 +808,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     return (
         <React.Fragment>
             <Container maxWidth={"md"}>
-                <Stepper activeStep={step}>
+                <Stepper activeStep={createStep}>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel>{label}</StepLabel>
@@ -816,7 +816,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     ))}
                 </Stepper>
             </Container>
-            {selectContent(step)}
+            {selectContent(createStep)}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

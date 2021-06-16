@@ -18,7 +18,7 @@ import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI
 import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {DataSource} from "../../CreateInfoProvider/types";
+import {DataSource, DataSourceKey, Diagram} from "../../CreateInfoProvider/types";
 import {extractKeysFromSelection} from "../../CreateInfoProvider/helpermethods";
 
 
@@ -29,13 +29,20 @@ interface EditSettingsOverviewProps {
     infoProvName: string;
     setInfoProvName: (name: string) => void;
     infoProvDataSources: Array<DataSource>;
+    setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     setSelectedDataSource: (index: number) => void;
     finishNewDataSource: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     setNewDataSourceMode: (addNewDataSource: boolean) => void;
+    infoProvDiagrams: Array<Diagram>;
+    setInfoProvDiagrams: (diagrams: Array<Diagram>) => void;
+    infoProvDataSourcesKeys: Map<string, DataSourceKey>
+    setInfoProvDataSourcesKeys: (keys: Map<string, DataSourceKey>) => void;
 }
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
+
+    console.log(props.infoProvDataSources);
 
     const classes = useStyles();
 
@@ -43,6 +50,71 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
      * Boolean that is used to open and close the cancel-dialog
      */
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
+
+    //true when the dialog for deleting a datasource is open
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+    //holds the name of all diagrams that need to be removed when deleting the current selection
+    const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+    /**
+     * Handler method for clicking the delete data source button.
+     * Gets the currently selected datasource by the selectedDataSource state and checks if deleting it
+     * will delete any diagrams.
+     * Opens the dialog asking the user for confirmation afterwards
+     */
+    const deleteDataSourceHandler = () => {
+        const diagramsToRemove: Array<string> = [];
+        const dataSourceName = props.infoProvDataSources[props.selectedDataSource].apiName;
+        props.infoProvDiagrams.forEach((diagram) => {
+            if(diagram.sourceType==="Array" && diagram.arrayObjects!==undefined) {
+                //diagram with arrays
+                for (let index = 0; index < diagram.arrayObjects.length; index ++) {
+                    if(diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0]===dataSourceName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            } else if(diagram.sourceType==="Historized" && diagram.historizedObjects!==undefined) {
+                //diagrams with historized
+                for (let index = 0; index < diagram.historizedObjects.length; index ++) {
+                    if(diagram.historizedObjects[index].name.split("|")[0]===dataSourceName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        if(diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
+        setDeleteDialogOpen(true);
+    }
+
+    /**
+     * Method that deletes the currently selected dataSource.
+     * Checks if the state diagramsToRemove contains any items and removes them too, if necessary.
+     * Also sets the selected dataSource to the now last dataSource in the dataSources array.
+     */
+    const deleteSelectedDataSource = () => {
+        //delete the dataSource
+        props.setInfoProvDataSources(props.infoProvDataSources.filter((dataSource) => {
+            return dataSource.apiName!==props.infoProvDataSources[props.selectedDataSource].apiName;
+        }));
+        //remove its entries from the key map
+        const mapCopy = new Map(props.infoProvDataSourcesKeys);
+        if (mapCopy.get(props.infoProvDataSources[props.selectedDataSource].apiName) !== undefined) {
+            mapCopy.delete(props.infoProvDataSources[props.selectedDataSource].apiName)
+        }
+        props.setInfoProvDataSourcesKeys(mapCopy);
+        props.setSelectedDataSource(props.infoProvDataSources.length - 2);
+        //if diagrams need to be removed, remove them
+        if(diagramsToRemove.length > 0) {
+            props.setInfoProvDiagrams(props.infoProvDiagrams.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            }))
+        }
+        //reset the states
+        setDiagramsToRemove([]);
+        setDeleteDialogOpen(false);
+    }
+
 
     /**
      * Method that is called when the use confirms the cancel in the confirm-cancel-dialog
@@ -84,6 +156,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
         )
     }
 
+
     return (
         <StepFrame
             heading={'Bearbeiten eines Infoproviders:'}
@@ -101,6 +174,11 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         <Typography variant="body1">
                             Übersicht über ausgewählte Daten
                         </Typography>
+                        <Grid item className={classes.elementLargeMargin}>
+                            <Button disabled={props.infoProvDataSources.length <= 1} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
+                                Datenquelle Löschen
+                            </Button>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <FormControl fullWidth>
@@ -160,7 +238,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     </Grid>
 
 
-                    <Grid item container xs={12} justify={"space-between"}>
+                    <Grid item container xs={12} justify="space-between">
                         <Grid item>
                             <Button variant={"contained"} size={"large"}
                                     className={classes.redButton}
@@ -175,6 +253,13 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Button>
                         </Grid>
                         <Grid item>
+                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
+                                weiter
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Grid item container xs={12} justify="space-around" className={classes.elementLargeMargin}>
+                        <Grid item>
                             <Button variant="contained" size="large" color="primary"
                                     onClick={() => props.setNewDataSourceMode(true)}>
                                 Neue Datenquelle hinzufügen
@@ -184,11 +269,6 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             <Button variant="contained" color={"secondary"}
                                     onClick={() => props.continueHandler(5)}>
                                 Diagramme
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(1)}>
-                                weiter
                             </Button>
                         </Grid>
                     </Grid>
@@ -222,6 +302,49 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                     </Dialog>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setDeleteDialogOpen(false);
+                window.setTimeout(() => {
+                    setDiagramsToRemove([]);
+                }, 200);
+            }} aria-labelledby="deleteDialog-title"
+                    open={deleteDialogOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Löschen von "{props.infoProvDataSources[props.selectedDataSource].apiName}" bestätigen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Die Datenquelle "{props.infoProvDataSources[props.selectedDataSource].apiName}" wird unwiderruflich gelöscht.
+                    </Typography>
+                    { diagramsToRemove.length > 0 &&
+                    <Typography gutterBottom>
+                        Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
+                    </Typography>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setDeleteDialogOpen(false);
+                                        window.setTimeout(() => {
+                                            setDiagramsToRemove([]);
+                                        }, 200);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => deleteSelectedDataSource()}
+                                    className={classes.redDeleteButton}>
+                                Löschen bestätigen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </StepFrame>
     )
 }
