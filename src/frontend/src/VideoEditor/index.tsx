@@ -83,6 +83,53 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
     }
 
     /**
+     * Takes the values of all states and creates the object for the
+     * backend representing the video.
+     */
+    const createBackendFormat = () => {
+        return {
+            sequence: {
+                type: "successively",
+                transitions: 0.1
+            }
+        }
+    }
+
+    /**
+     * Method that creates the object with all scenes necessary for the backend.
+     */
+    const createImagesObject = () => {
+        //TODO: possibly find smarter solution without any type
+        const imagesObject: any = {};
+        sceneList.forEach((scene) => {
+            imagesObject[scene.entryId] = {}
+        })
+        return imagesObject;
+    }
+
+    /**
+     * Method that creates the object with all audios necessary for the backend.
+     */
+    const createAudioObject = () => {
+        //TODO: possibly find smarter solution without any type
+        const audioObject: any = {};
+        sceneList.forEach((scene) => {
+            audioObject[scene.entryId] = {
+                parts: [
+                    {
+                        type: "text",
+                        pattern: scene.spokenText
+                    },
+                    {
+                        type: "silent",
+                        duration: scene.exceedDisplayDuration
+                    }
+                ]
+            }
+        })
+        return audioObject;
+    }
+    /**
      * Method that renders an available scene with the option to add it to the sceneList
      * @param name The name of the scene to be displayed.
      */
