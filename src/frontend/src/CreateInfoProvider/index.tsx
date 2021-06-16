@@ -756,6 +756,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
+                        newDataSourceInEditMode={props.finishDataSourceInEdit !== undefined}
                     />
                 )
             case 5:

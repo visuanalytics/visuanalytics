@@ -784,6 +784,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         diagrams={infoProvDiagrams}
                         setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                         apiName={infoProvDataSources[selectedDataSource].apiName}
+                        newDataSourceInEditMode={false}
                     />
                 )
             case 5:
