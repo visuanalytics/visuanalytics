@@ -771,8 +771,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             case 4:
                 return (
                     <HistorySelection
-                        continueHandler={() => setStep(5)}
-                        backHandler={() => setStep(2)}
+                        continueHandler={() => setEditStep(5)}
+                        backHandler={() => setEditStep(2)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
                         historizedData={infoProvDataSources[selectedDataSource].historizedData}

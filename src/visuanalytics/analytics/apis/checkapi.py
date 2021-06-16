@@ -88,12 +88,12 @@ def get_content(obj):
                 "object"   : None
             }
         elif same_datatypes(obj):
-            obj_type = get_content(obj[0])
+            obj_type = type(obj[0]).__name__.lower()
             if obj_type == "list" or obj_type == "dict":
                 return {
                     "same_type": True,
                     "length"   : len(obj),
-                    "object"   : obj_type
+                    "object"   : get_content(obj[0])
                 }
             else:
                 return {

@@ -70,7 +70,17 @@ export const transformJSON = (jsonData: any, parent = "") => {
                 array_length = array_length.substring(9);
                 //console.log(array_length);
                 //console.log(subObject);
-                if (same_type_value === "true") {
+                //if the array has no contents, dont inspect the subObject
+                if(array_length === "0") {
+                    //when the array contains no values, searching for subobjects only produces errors
+                    resultArray.push({
+                        keyName: key + "|0",
+                        value: "[Array]",
+                        parentKeyName: parent,
+                        arrayRep: true,
+                        arrayLength: parseInt(array_length)
+                    })
+                } else if (same_type_value === "true") {
                     //check if the value of nextKey is "true" - if this is the case, our value is the subobject
                     //we now need to differentiate if the content is an object or primitives
                     let element = subObject.substring(24 + same_type_value.length + array_length.length).split(":", 1)[0]
