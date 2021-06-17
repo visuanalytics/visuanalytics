@@ -78,6 +78,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [selectedType, setSelectedType] = React.useState("Circle");
   const [selectedObject, setSelectedObject] = React.useState<myCircle | myRectangle | myLine | myStar | myText | myImage>({} as myCircle);
   const [stepSize, setStepSize] = React.useState(5);
+  const [stage, setStage] = React.useState<Konva.Node>()
 
   const [textEditContent, setTextEditContent] = React.useState("");
   const [textEditVisibility, setTextEditVisibility] = React.useState(false);
@@ -140,6 +141,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     height: number;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
 
   type myRectangle = {
@@ -152,6 +155,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     rotation: number;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
 
   type myLine = {
@@ -165,6 +170,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     height: number;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
 
   type myStar = {
@@ -178,6 +185,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     height: number;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
 
   type myText = {
@@ -195,6 +204,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     currentlyRendered: boolean;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
 
   type myImage = {
@@ -208,7 +219,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     color: string;
     baseWidth: number;
     baseHeight: number;
+    scaleX: number;
+    scaleY: number;
   };
+
+  const exportToJSON = () => {
+    const currentStage = stage;
+    const stageJson = currentStage?.toJSON();
+    handleSaveToPC(stageJson!)
+  }
+
+  const handleSaveToPC = (jsonData : string) => {
+    const blob = new Blob([jsonData], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.download = 'test.json';
+    link.href = url;
+    link.click();
+  }
 
   /**
    * gets called when an element drag is started.
@@ -268,7 +296,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const name = e.target.name();
 
     if (e.target === e.target.getStage() || name === "background") {
-
+      setStage(e.target.getStage()!)
       setSelectedItemName("");
       setTextEditVisibility(false);
       setItemSelected(false);
@@ -284,7 +312,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     if (name !== undefined && name !== '') {
-
+      console.log(name)
       setSelectedItemName(name);
       setItemSelected(true);
 
@@ -341,6 +369,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         rotation: 0,
         baseWidth: 100,
         baseHeight: 100,
+        scaleX: 1,
+        scaleY: 1,
+
       }
       items.push(item);
       setCurrentItemColor(nextColor);
@@ -361,6 +392,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         rotation: 0,
         baseWidth: 100,
         baseHeight: 100,
+        scaleX: 1,
+        scaleY: 1,
+        
       } as myRectangle);
       setCurrentItemColor(nextColor);
       setSelectedType("");
@@ -379,6 +413,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         height: 100,
         baseWidth: 100,
         baseHeight: 100,
+        scaleX: 1,
+        scaleY: 1,
+        
       } as myLine);
 
       setSelectedType("");
@@ -394,10 +431,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         id: 'star-' + itemCounter.toString(),
         color: nextColor,
         rotation: 0,
-        width: 100,
+        width: 200,
         height: 100,
-        baseWidth: 100,
+        baseWidth: 200,
         baseHeight: 100,
+        scaleX: 1,
+        scaleY: 1,
+        
       } as myStar);
 
       setCurrentItemColor(nextColor);
@@ -421,6 +461,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         currentlyRendered: true,
         baseWidth: 100,
         baseHeight: 100,
+        scaleX: 1,
+        scaleY: 1,
+        
       } as myText);
 
       setSelectedType("");
@@ -439,6 +482,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         height: imageSource.height,
         baseWidth: imageSource.width,
         baseHeight: imageSource.height,
+        scaleX: 1,
+        scaleY: 1,
+        
       } as myImage)
 
       setSelectedType("");
@@ -685,17 +731,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     const localItems = items.slice();
     const index = items.indexOf(selectedObject);
+    let newObject = {
+        ...selectedObject,
+        x: parseInt((absPos.x).toFixed(0)),
+        y: parseInt((absPos.y).toFixed(0)),
+        scaleX: absTrans.x,
+        scaleY: absTrans.y,
+        rotation: absRot,
+      };  
+    
 
-
-    const newObject = {
-      ...selectedObject,
-      x: parseInt((absPos.x).toFixed(0)),
-      y: parseInt((absPos.y).toFixed(0)),
-      width: parseInt((selectedObject.baseWidth * (absTrans.x)).toFixed(0)),//(selectedObject.width * (absTrans.x)),
-      height: parseInt((selectedObject.baseHeight * (absTrans.y)).toFixed(0)),//(selectedObject.height * (absTrans.y)),
-      rotation: absRot,
-    };
-
+    
     localItems[index] = newObject;
 
     setItems(localItems);
@@ -870,13 +916,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
    * @ true or false depending on the selected item
    */
   const disableColor = (): boolean => {
-    if (itemSelected === true) {
-      if (selectedItemName.startsWith("text") || selectedItemName.startsWith("image")) {
+    if (itemSelected) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  const disableFontColor = () : boolean => {
+    if (itemSelected) {
+      if (selectedItemName.startsWith('text')){
         return true;
       }
       return false;
     } else {
-      return true;
+      return false;
     }
   }
 
@@ -993,19 +1047,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       "type": "image",
       "pos_x": 0, //X-Coordinate
       "pos_y": 0, //Y-Coordinate
-      "size_x": 0, //Breite
-      "size_y": 0, //Höhe
+      "size_x": 0, //Breite optional
+      "size_y": 0, //Höhe optional
       "color": "RGBA",
-      "pattern": "name.png" //Diagrammname
+      "path": "name.png" //Diagrammname "image_name" : "" eventuell
     }
 
     const text = {
       "description": "", //optional
       "type": "text",
-      "anchor_point": "center",
+      "anchor_point": "left",
       "pos_x": 0, //item.x
       "pos_y": 0, //item.y
-      "color": "#000000", //item.color
+      "color": "#000000", //item.color 
       "font_size": 20, //item.fontSize
       "font": "fonts/Arial.ttf", //item.font
       "pattern": "Datum: {_req|api_key}"
@@ -1103,11 +1157,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                           <Circle
                             key={item.id}
                             name={item.id}
-                            width={item.width}
-                            height={item.height}
                             draggable
                             x={item.x}
                             y={item.y}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
                             fill={item.color}
                             radius={item.radius}
                             onDragStart={handleDragStart}
@@ -1141,9 +1195,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             x={item.x}
                             y={item.y}
                             fill={item.color}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
                             width={item.width}
                             height={item.height}
-
                             onDragStart={handleDragStart}
                             onDragMove={handleDragMove}
                             onDragEnd={handleDragEnd}
@@ -1174,20 +1229,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             draggable
                             x={item.x}
                             y={item.y}
-                            width={item.width}
-                            height={item.height}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
                             points={
                               [0, 0, 100, 0, 100, 100]
                             }
-                            stroke={"black"}
+                            stroke={item.color}
                             closed
                             fill={item.color}
                             onDragStart={handleDragStart}
                             onDragMove={handleDragMove}
                             onDragEnd={handleDragEnd}
                             onTransformEnd={onTransformEnd}
-                            scaleX={item.scaleX}
-                            scaleY={item.scaleY}
                             rotation={item.rotation}
                             onMouseOver={mouseOver}
                             onMouseLeave={mouseLeave}
@@ -1218,8 +1271,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             x={item.x}
                             y={item.y}
                             fill={item.color}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
                             width={item.width}
-                            height={item.height}
                             radius={item.radius}
                             onDragStart={handleDragStart}
                             onDragMove={handleDragMove}
@@ -1295,14 +1349,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             y={item.y}
                             width={item.width}
                             height={item.height}
+                            scaleX={item.scaleX}
+                            scaleY={item.scaleY}
                             image={item.image}
                             draggable
                             onDragStart={handleDragStart}
                             onDragMove={handleDragMove}
                             onDragEnd={handleDragEnd}
                             onTransformEnd={onTransformEnd}
-                            scaleX={item.scaleX}
-                            scaleY={item.scaleY}
                             rotation={item.rotation}
                             onMouseOver={mouseOver}
                             onMouseLeave={mouseLeave}
@@ -1322,7 +1376,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                               return pos;
                             }}
                           />)
-
                       ))}
                       <TransformerComponent
                         selectedShapeName={selectedItemName}
@@ -1356,7 +1409,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     <Typography className={classes.labels}
                       variant={"button"}> Schriftfarbe: </Typography>
                     <input className={classes.buttonColor} id="fontColor" type="color"
-                      onChange={(e) => changeFontColor(e)} disabled={!disableColor()}
+                      onChange={(e) => changeFontColor(e)} disabled={!disableFontColor()}
                       value={currentFontColor} />
                   </Grid>
                   <Grid item xs={3}>
@@ -1378,7 +1431,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     ></TextField><br /><br />
                     <TextField id="fontType" onChange={(e) => changeFontFamily(e)}
                       className={classes.selection} label={"Schriftart"}
-                      value={currentFontFamily} select>
+                      value={currentFontFamily} disabled={!selectedItemName.startsWith('text')} select>
                       <MenuItem value={"Arial"} style={{ "fontFamily": "arial" }}>Arial</MenuItem>
                       <MenuItem value={"veranda"}
                         style={{ "fontFamily": "verdana" }}>veranda</MenuItem>
@@ -1400,7 +1453,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         }
                       }}
                       onChange={handleItemWidthChange}
-                      disabled={!itemSelected}
+                      disabled={!selectedItemName.startsWith('rect')}
                       label={"Breite"}
                       value={currentItemWidth}
                     ></TextField><br /><br />
@@ -1434,6 +1487,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                       onChange={(e) => changeFontSize(e)}
                       label={"Schriftgröße (PX)"}
                       value={currentFontSize}
+                      disabled={!selectedItemName.startsWith('text')} 
                     ></TextField><br /><br />
                     <TextField
                       className={classes.buttonNumber}
@@ -1445,7 +1499,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         }
                       }}
                       onChange={handleItemHeightChange}
-                      disabled={!itemSelected}
+                      disabled={!selectedItemName.startsWith('rect')}
                       label={"Höhe"}
                       value={currentItemHeight}
                     ></TextField><br /><br />
@@ -1454,7 +1508,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     <Button className={classes.button} onClick={dupe}> Klonen </Button><br /><br />
                     <TextField id="stepSizeOptions" onChange={(e) => handleStepSizeChange(e)}
                       value={stepSize} className={classes.selection} select
-                      label={"Sprunggröße"}>
+                      label={"Sprunggröße"} disabled={!itemSelected} >
                       <MenuItem value={1}> 1 </MenuItem>
                       <MenuItem value={5}> 5 </MenuItem>
                       <MenuItem value={10}> 10 </MenuItem>
@@ -1477,8 +1531,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                       onChange={(e) => changeTextWidth(e)}
                       label={"Textbreite (PX)"}
                       value={currentTextWidth}
+                      disabled={!selectedItemName.startsWith('text')} 
                     ></TextField><br /><br />
-
+                    
 
                   </Grid>
                 </Grid>
@@ -1518,14 +1573,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
               <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography><br />
               <Grid item xs={12}>
                 <FormControlLabel className={classes.checkBox}
-                  control={
-                    <Checkbox
-                      name="checkedB"
-                      color="primary"
-                      checked={backGroundColorEnabled}
-                      onChange={handleBackground}
-                    />
-                  }
+                  control={<Checkbox name="checkedB" color="primary" checked={backGroundColorEnabled} onChange={handleBackground}/>}
                   label="Hintergrundfarbe verwenden"
                 /><br />
                 <label className={classes.labels}> Hintergrundfarbe: </label>
@@ -1571,4 +1619,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
  label={"Rotation (Grad)"}
  value={currentRotation}
  ></TextField><br /><br />
+
+
+ <Button onClick={exportToJSON}> CREATE JSON </Button>
  */
