@@ -303,8 +303,8 @@ def add_videojob():
     """
     video = request.json
     try:
-        if "video_name" not in video:
-            err = flask.jsonify({"err_msg": "Missing Video-Name"})
+        if "name" not in video:
+            err = flask.jsonify({"err_msg": "Missing Name"})
             return err, 400
 
         if "infoprovider_names" not in video:
@@ -456,8 +456,8 @@ def update_videojob(videojob_id):
     """
     updated_data = request.json
     try:
-        if "video_name" not in updated_data:
-            err = flask.jsonify({"err_msg": "Missing Video-Name"})
+        if "name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Name"})
             return err, 400
 
         if "infoprovider_names" not in updated_data:
@@ -524,13 +524,14 @@ def get_videojob(videojob_id):
     :param videojob_id: ID des Videojobs.
     """
     try:
-        videojob_json = False  # queries.get_videojob(videojob_id)
+        videojob_json = queries.get_videojob(int(videojob_id))
 
         if videojob_json is {}:
             err = flask.jsonify({"err_msg": "Unknown videojob"})
             return err, 400
 
         return flask.jsonify(videojob_json)
+        #return videojob_json
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a Videojob"})

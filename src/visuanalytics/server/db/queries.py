@@ -194,7 +194,19 @@ def insert_infoprovider(infoprovider):
 
 
 def insert_video_job(video, update=False, job_id=None):
-    video_name = video["video_name"]
+    """
+    Methode für das einfügen und aktualisieren eines Videojobs.
+    Falls ein bestehender Videojob aktualisiert werden soll, muss die job_id angegeben werden.
+
+    :param video: Ein Dictionary, welches die Konfiguration eines Videojobs enthält.
+    :type video: dict
+    :param update: Wahrheitswert, der aussagt, ob ein bestehender Videojob aktualisiert werden soll.
+    :type update: bool
+    :param job_id: ID des schon bestehenden Videojobs.
+    :type job_id: int
+    :return: Gibt einen boolschen Wert zurück (Status), oder eine Fehlermeldung (bei Aktualisierungen).
+    """
+    video_name = video["name"]
     for infoprovider_name in video["infoprovider_names"]:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
             infoprovider = json.load(f)
@@ -212,32 +224,40 @@ def insert_video_job(video, update=False, job_id=None):
         if transform_config:
             video["transform"] += infoprovider["transform"]
         else:
-            video["transform"] = infoprovider["transform"]
+            video.update({
+                "transform": infoprovider["transform"]
+            })
         # print("video with transform:", video)
 
-        video["images"].update(infoprovider["images"])
+        #video["images"].update(infoprovider["images"])
+        diagram_config = video.get("diagrams", None)
+        if diagram_config:
+            video["diagrams"] += infoprovider["images"]
+        else:
+            video.update({
+                "diagrams": infoprovider["images"]
+            })
         # print("video with diagrams:", video)
 
     video["storing"] = []
     video["run_config"] = {}
     video["presets"] = {}
     video["info"] = ""
-    schedule = video.pop("schedule", None)
-    delete_schedule = video.pop("deleteSchedule", {
+    schedule = video.get("schedule", None)
+    delete_schedule = video.get("deleteSchedule", {
         "type": "keepCount",
-        "keepCount": 1
+        "keepCount": 2
     })
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
     # print("complete video configuration:", video)
-    path_to_video_json = _get_videojob_path(video_name.replace(" ", "-"))
-    with open_resource(path_to_video_json, "wt") as f:
+    with open_resource(_get_videojob_path(video_name.replace(" ", "-")), "wt") as f:
         json.dump(video, f)
 
     if not update:
-        topic_id = add_topic_get_id(video_name, path_to_video_json)
+        topic_id = add_topic_get_id(video_name, video_name.replace(" ", "-"))
         job = {
-            "jobName": video_name + "_job",
+            "jobName": video_name,
             "schedule": schedule,
             "deleteSchedule": delete_schedule,
             "topicValues": [
@@ -250,7 +270,7 @@ def insert_video_job(video, update=False, job_id=None):
     else:
         topic_id = list(filter(lambda x: x["topicName"] == video_name, get_topic_names()))[0]["topicId"]
         job = {
-            "jobName": video_name + "_job",
+            "jobName": video_name,
             "schedule": schedule,
             "deleteSchedule": delete_schedule,
             "topicValues": [
@@ -261,6 +281,40 @@ def insert_video_job(video, update=False, job_id=None):
         }
         update_job(job_id, job, config=False)
     return True if not update else None
+
+
+def get_videojob(job_id):
+    """
+    Methode, die die Konfiguration eines Videojobs zurück in das Format überführt,
+    welches für das Frontend zum bearbeiten verständlich ist.
+
+    :param job_id: ID des Videojobs, welcher zuürckgeliefert werden soll.
+    :type job_id: int
+    :return: JSON für das Frontend.
+    """
+    job_list = get_job_list()
+    print("job_list", job_list)
+    videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
+    print("videojob", videojob)
+
+    with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
+        video_json = json.load(f)
+
+    video_json.pop("api", None)
+    video_json.pop("transform", None)
+    video_json.pop("storing", None)
+    video_json.pop("run_config", None)
+    video_json.pop("presets", None)
+    video_json.pop("info", None)
+    #for infoprovider_name in video_json["infoprovider_names"]:
+    #    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
+    #        infoprovider = json.load(f)
+    #
+    #    for img in list(infoprovider["images"].keys()):
+    #        video_json["images"].pop(img, None)
+    video_json.pop("diagrams", None)
+
+    return video_json
 
 
 def show_schedule():
@@ -723,7 +777,7 @@ def remove_toplevel_key(obj):
 
 
 def _insert_param_values(con, job_id, topic_values, config=True):
-    print("topic_value in _insert_param_values:", topic_values)
+    #print("topic_value in _insert_param_values:", topic_values)
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
                                   [job_id, t["topicId"], pos]).lastrowid
