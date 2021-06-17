@@ -1562,13 +1562,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 <Box borderColor="primary.main" border={4} borderRadius={5}
                   className={classes.choiceListFrame}>
                   <List disablePadding={true}>
-                    {dataList.map((item) => renderListItem(item))}
+                    {props.selectedDataList.map((item) => renderListItem(item))}
                   </List>
                 </Box>
-                <Button className={classes.showData} variant="contained"
-                  onClick={() => setDataList(testDataList)}>
-                  Testdaten
-                </Button><br />
+
               </Grid>
               <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography><br />
               <Grid item xs={12}>
