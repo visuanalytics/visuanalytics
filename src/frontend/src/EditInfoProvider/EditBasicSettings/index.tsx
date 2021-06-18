@@ -60,15 +60,27 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
     // This state is needed to open or close the dialog when the user goes back
     const [openBackDialog, setOpenBackDialog] = React.useState(false);
 
+    /**
+     * This method proceeds to the next component
+     */
     const continueHandler = () => {
         props.continueHandler(1);
     }
 
+    /**
+     * This method checks if there were any changes to the settings in the basic settings
+     * If yes it opens a dialog
+     * If not, it goes back one step in the process of editing an infoprovider
+     */
     const backHandler = () => {
         if(dataHasChanged()) setOpenBackDialog(true);
         else props.backHandler(1);
     }
 
+    /**
+     * This method is used to go back, if the dialog was shown
+     * This method gets called by the button in the dialog
+     */
     const confirmBack = () => {
         props.setApiName(oldApiName);
         props.setNoKey(oldNoKey);
@@ -80,6 +92,10 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
         props.backHandler(1);
     }
 
+    /**
+     * Checks if any data has changed
+     * The states beginning with the word "old" are compared against the current values
+     */
     const dataHasChanged = () => {
         return (oldApiName !== props.apiName || oldQuery !== props.query || oldMethod !== props.method || oldApiKeyInput1 !== props.apiKeyInput1 || oldApiKeyInput2 !== props.apiKeyInput2 || oldNoKey !== props.noKey);
     }
