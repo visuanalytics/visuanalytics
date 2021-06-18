@@ -17,6 +17,7 @@ import List from "@material-ui/core/List";
 import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
 import {extractKeysFromSelection} from "../../CreateInfoProvider/helpermethods";
+import {BasicSettings} from "../../CreateInfoProvider/BasicSettings";
 
 interface EditBasicSettingsProps {
     continueHandler: (index: number) => void;
@@ -46,9 +47,41 @@ interface EditBasicSettingsProps {
 export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
     const classes = useStyles();
 
+    const continueHandler = () => {
+        props.continueHandler(1);
+    }
+
+    const confirmBack = () => {
+        props.backHandler(1);
+    }
+
     return (
         <React.Fragment>
-
+            <BasicSettings
+                continueHandler={continueHandler}
+                backHandler={confirmBack}
+                checkNameDuplicate={props.checkNameDuplicate}
+                query={props.query}
+                setQuery={props.setQuery}
+                apiKeyInput1={props.apiKeyInput1}
+                setApiKeyInput1={props.setApiKeyInput1}
+                apiKeyInput2={props.apiKeyInput2}
+                setApiKeyInput2={props.setApiKeyInput2}
+                noKey={props.noKey}
+                setNoKey={props.setNoKey}
+                method={props.method}
+                setMethod={props.setMethod}
+                name={props.apiName}
+                setName={props.setApiName}
+                reportError={props.reportError}
+                setSelectedData={props.setSelectedData}
+                setCustomData={props.setCustomData}
+                setHistorizedData={props.setHistorizedData}
+                setSchedule={props.setSchedule}
+                setHistorySelectionStep={props.setHistorySelectionStep}
+                setListItems={props.setListItems}
+                isInEditMode={true}
+            />
         </React.Fragment>
     )
 

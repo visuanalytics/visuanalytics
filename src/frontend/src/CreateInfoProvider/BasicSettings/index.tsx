@@ -42,6 +42,7 @@ interface BasicSettingsProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    isInEditMode: boolean;
 }
 
 
@@ -66,8 +67,13 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     /**
      * Handler method for clicking the "proceed" button.
      * Sends the API data for testing to the backend and displays a loading animation
+     * If this component is called from the editation of an infoprovider the given continue handler will be called. The function terminates afterwards
      */
     const handleProceed = () => {
+        if(props.isInEditMode) {
+            props.continueHandler();
+            return;
+        }
         //check if the settings differ from the old settings
         const wasChanged = (
             props.query !== oldQuery ||
