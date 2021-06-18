@@ -55,22 +55,29 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
     const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
     const [oldApiKeyInput2] = React.useState(props.apiKeyInput2);
     const [oldNoKey] = React.useState(props.noKey);
-    //const components = React.useContext(ComponentContext);
+
+
+    // This state is needed to open or close the dialog when the user goes back
+    const [openBackDialog, setOpenBackDialog] = React.useState(false);
+
     const continueHandler = () => {
         props.continueHandler(1);
     }
 
+    const backHandler = () => {
+        if(dataHasChanged()) setOpenBackDialog(true);
+        else props.backHandler(1);
+    }
+
     const confirmBack = () => {
+        props.setApiName(oldApiName);
+        props.setNoKey(oldNoKey);
+        props.setApiKeyInput1(oldApiKeyInput1);
+        props.setApiKeyInput2(oldApiKeyInput2);
+        props.setMethod(oldMethod);
+        props.setQuery(oldQuery);
+        setOpenBackDialog(false);
         props.backHandler(1);
-        // Reseting everything to old values, when any value was changed
-        if(dataHasChanged()) {
-            props.setApiName(oldApiName);
-            props.setNoKey(oldNoKey);
-            props.setApiKeyInput1(oldApiKeyInput1);
-            props.setApiKeyInput2(oldApiKeyInput2);
-            props.setMethod(oldMethod);
-            props.setQuery(oldQuery);
-        }
     }
 
     const dataHasChanged = () => {
@@ -80,7 +87,7 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
         <React.Fragment>
             <BasicSettings
                 continueHandler={continueHandler}
-                backHandler={confirmBack}
+                backHandler={backHandler}
                 checkNameDuplicate={props.checkNameDuplicate}
                 query={props.query}
                 setQuery={props.setQuery}
@@ -103,6 +110,31 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
                 setListItems={props.setListItems}
                 isInEditMode={true}
             />
+            <Dialog onClose={() => setOpenBackDialog(false)} aria-labelledby="backDialog"
+                    open={openBackDialog}>
+                <DialogTitle id="backDialog-Title">
+                    Änderungen verwerfen?
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Wenn Sie zurück gehen, gehen ihre hier eingestellten Änderungen verloren.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained" color="primary" onClick={() => setOpenBackDialog(false)}>
+                                nein, nicht zurück gehen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" color="primary" onClick={confirmBack} className={classes.redButton}>
+                                ja, zurück gehen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     )
 
