@@ -47,14 +47,35 @@ interface EditBasicSettingsProps {
 export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
     const classes = useStyles();
 
+
+    // Saving old values of states. This is needed when the user clickes the back button
+    const [oldApiName] = React.useState(props.apiName);
+    const [oldQuery] = React.useState(props.query);
+    const [oldMethod] = React.useState(props.method);
+    const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
+    const [oldApiKeyInput2] = React.useState(props.apiKeyInput2);
+    const [oldNoKey] = React.useState(props.noKey);
+    //const components = React.useContext(ComponentContext);
     const continueHandler = () => {
         props.continueHandler(1);
     }
 
     const confirmBack = () => {
         props.backHandler(1);
+        // Reseting everything to old values, when any value was changed
+        if(dataHasChanged()) {
+            props.setApiName(oldApiName);
+            props.setNoKey(oldNoKey);
+            props.setApiKeyInput1(oldApiKeyInput1);
+            props.setApiKeyInput2(oldApiKeyInput2);
+            props.setMethod(oldMethod);
+            props.setQuery(oldQuery);
+        }
     }
 
+    const dataHasChanged = () => {
+        return (oldApiName !== props.apiName || oldQuery !== props.query || oldMethod !== props.method || oldApiKeyInput1 !== props.apiKeyInput1 || oldApiKeyInput2 !== props.apiKeyInput2 || oldNoKey !== props.noKey);
+    }
     return (
         <React.Fragment>
             <BasicSettings
