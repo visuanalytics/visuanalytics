@@ -206,7 +206,7 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 type: backendDataSource.schedule.type,
                 weekdays: backendDataSource.schedule.weekdays,
                 time: backendDataSource.schedule.time,
-                interval: backendDataSource.schedule.time_interval,
+                interval: backendDataSource.schedule.timeInterval,
             },
             listItems: new Array<ListItemRepresentation>(),
         });

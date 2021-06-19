@@ -593,7 +593,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     type: dataSource.schedule.type,
                     time: dataSource.schedule.time,
                     date: "",
-                    time_interval: dataSource.schedule.interval,
+                    timeInterval: dataSource.schedule.interval,
                     weekdays: dataSource.schedule.weekdays
                 },
                 selected_data: dataSource.selectedData,
