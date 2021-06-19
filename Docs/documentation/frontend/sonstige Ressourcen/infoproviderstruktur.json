@@ -26,7 +26,7 @@
                 "type": <type>,                                                 (Möglichkeiten: "daily", "interval", "weekly" usw.) (andere keys von schedule mussen je nach typ gesetzt werden.)
                 "time": <time>,
                 "date": <date>,
-                "time_interval": <timeInterval>,
+                "timeInterval": <timeInterval>,
                 "weekdays": [<int>]
             }
             <weitere Keys>

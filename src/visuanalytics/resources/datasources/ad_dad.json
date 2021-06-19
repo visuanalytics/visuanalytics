@@ -1,0 +1,1 @@
+{"name": "dad", "api": {"type": "request_multiple_custom", "use_loop_as_key": true, "steps_value": ["dad"], "requests": [{"type": "request", "method": "GET", "url_pattern": "", "headers": {}, "params": {}, "response_type": "json"}]}, "transform": [], "storing": [], "run_config": {}}
