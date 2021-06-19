@@ -206,8 +206,10 @@ export const SceneCreation = () => {
 
     React.useEffect(() => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
-            e.preventDefault();
-            e.returnValue = "";
+            if(sceneEditorStep) {
+                e.preventDefault();
+                e.returnValue = "";
+            }
         }
         window.addEventListener("beforeunload", leaveAlert);
         return () => {
