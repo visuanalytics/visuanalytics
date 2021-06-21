@@ -21,6 +21,7 @@ interface HistorySelectionProps {
     setDiagrams: (array: Array<Diagram>) => void;
     apiName: string;
     addToDataSources?: () => void;
+    newDataSourceInEditMode: boolean;
 }
 
 /**
@@ -48,7 +49,9 @@ export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
      * After that the handler will proceed to the next step of the Infoprovider
      */
     const skipContinueHandler = () => {
-        if (props.addToDataSources) props.addToDataSources();
+        if (props.addToDataSources !== undefined || !props.newDataSourceInEditMode) {
+            if(props.addToDataSources) props.addToDataSources();
+        }
         props.continueHandler();
     }
 
@@ -73,6 +76,7 @@ export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
                         diagrams={props.diagrams}
                         setDiagrams={props.setDiagrams}
                         apiName={props.apiName}
+                        newDataSourceInEditMode={props.newDataSourceInEditMode}
                     />
                 )
             case 2:
@@ -83,6 +87,7 @@ export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
                         schedule={props.schedule}
                         selectSchedule={props.selectSchedule}
                         addToDataSources={props.addToDataSources}
+                        newDataSourceInEditMode={props.newDataSourceInEditMode}
                     />
                 )
 

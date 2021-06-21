@@ -19,6 +19,7 @@ interface EditSingleFormelProps {
     backHandler: (index: number) => void;
     editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
+    setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     reportError: (message: string) => void;
     formel: formelContext;
@@ -313,7 +314,9 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             }
 
             arCopy.push(new FormelObj(name, input));
-            props.infoProvDataSources[props.selectedDataSource].customData = arCopy;
+            const dataSourcesCopy =  props.infoProvDataSources.slice();
+            dataSourcesCopy[props.selectedDataSource].customData = arCopy;
+            props.setInfoProvDataSources(dataSourcesCopy);
             fullDelete();
             setName('');
             props.backHandler(1);

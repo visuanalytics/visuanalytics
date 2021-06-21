@@ -44,6 +44,8 @@ interface BasicSettingsProps {
     setListItems: (array: Array<ListItemRepresentation>) => void;
     setApiNameChanged: (flag: boolean) => void;
     oldApiName: string;
+    isInEditMode: boolean;
+
 }
 
 
@@ -68,8 +70,13 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     /**
      * Handler method for clicking the "proceed" button.
      * Sends the API data for testing to the backend and displays a loading animation
+     * If this component is called from the editation of an infoprovider the given continue handler will be called. The function terminates afterwards
      */
     const handleProceed = () => {
+        if(props.isInEditMode) {
+            props.continueHandler();
+            return;
+        }
         //check if the settings differ from the old settings
         const wasChanged = (
             props.query !== oldQuery ||
@@ -189,9 +196,9 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         }
     }
 
-    const handleTestContinue = () => {
+    /*const handleTestContinue = () => {
         props.continueHandler()
-    }
+    }*/
 
     const checkNameChanged = () => {
         if (props.oldApiName !== "") props.setApiNameChanged(props.name !== props.oldApiName);
@@ -336,12 +343,12 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                         zurück
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                {/*<Grid item>
                                     <Button variant="contained" size="large" color="primary"
                                             onClick={handleTestContinue}>
                                         Weiter ohne Backend (Test)
                                     </Button>
-                                </Grid>
+                                </Grid>*/}
                                 <Grid item className={classes.blockableButtonPrimary}>
                                     <Button
                                         disabled={!(props.name !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.name))}
