@@ -70,7 +70,17 @@ export const transformJSON = (jsonData: any, parent = "") => {
                 array_length = array_length.substring(9);
                 //console.log(array_length);
                 //console.log(subObject);
-                if (same_type_value === "true") {
+                //if the array has no contents, dont inspect the subObject
+                if(array_length === "0") {
+                    //when the array contains no values, searching for subobjects only produces errors
+                    resultArray.push({
+                        keyName: key + "|0",
+                        value: "[keine Werte]",
+                        parentKeyName: parent,
+                        arrayRep: true,
+                        arrayLength: parseInt(array_length)
+                    })
+                } else if (same_type_value === "true") {
                     //check if the value of nextKey is "true" - if this is the case, our value is the subobject
                     //we now need to differentiate if the content is an object or primitives
                     let element = subObject.substring(24 + same_type_value.length + array_length.length).split(":", 1)[0]
@@ -109,6 +119,9 @@ export const transformJSON = (jsonData: any, parent = "") => {
                         typeString += x.substring(1, x.length - 1) + ", ";
                     }
                     typeString = typeString.substring(0, typeString.length - 2);
+                    // if the typestring contains opening and closing brackets, objects are the types
+                    // - we dont fully display them since the data would be too big
+                    if(typeString.includes("{")&&typeString.includes("}")) typeString="different object types"
                     resultArray.push({
                         keyName: key + "|0",
                         value: typeString,
@@ -212,6 +225,14 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
             apiKeyInput2: apiKeyInput2
         })
     })
+
+    console.log("created infoProvider for editing:");
+    console.log({
+        infoproviderName: infoProviderName,
+        dataSources: dataSources,
+        dataSourcesKeys: dataSourcesKeys,
+        diagrams: diagrams
+    });
 
     return {
         infoproviderName: infoProviderName,

@@ -36,13 +36,18 @@ def check_api(req_data):
     response = s.send(req.prepare())
 
     try:
+        list_keys = [
+            "same_type",
+            "length",
+            "object"
+        ]
         if req_data["response_type"] == "xml":
             content = get_content(json.loads(json.dumps(xmltodict.parse(response.content), indent=4)))
             if "error" in content:
                 return {
                     "err_msg": "An error occurred while loading the api-data"
                 }, False
-            if type(content) == list:
+            if list_keys == list(filter(lambda x: x in list_keys, content.keys())):
                 content = {
                     "$toplevel_array$": content
                 }
@@ -53,7 +58,7 @@ def check_api(req_data):
                 return {
                     "err_msg": "An error occurred while loading the api-data"
                 }, False
-            if type(content) == list:
+            if list_keys == list(filter(lambda x: x in list_keys, content.keys())):
                 content = {
                     "$toplevel_array$": content
                 }
@@ -80,14 +85,22 @@ def get_content(obj):
             return {
                 "same_type": True,
                 "length"   : len(obj),
-                "object" : None
+                "object"   : None
             }
         elif same_datatypes(obj):
-            return {
-                "same_type": True,
-                "length"   : len(obj),
-                "object" : get_content(obj[0])
-            }
+            obj_type = type(obj[0]).__name__.lower()
+            if obj_type == "list" or obj_type == "dict":
+                return {
+                    "same_type": True,
+                    "length"   : len(obj),
+                    "object"   : get_content(obj[0])
+                }
+            else:
+                return {
+                    "same_type": True,
+                    "length"   : len(obj),
+                    "type"     : obj_type
+                }
         else:
             result = {
                 "same_type": False,

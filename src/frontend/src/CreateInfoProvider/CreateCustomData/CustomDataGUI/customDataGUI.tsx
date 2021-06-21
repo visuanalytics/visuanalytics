@@ -10,10 +10,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {FormelObj} from "./formelObjects/FormelObj";
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     IconButton,
     ListItemSecondaryAction
 } from "@material-ui/core";
@@ -33,7 +29,7 @@ interface CustomDataGUIProps {
     handleLeftParen: (paren: string) => void;
     handleDelete: () => void;
     fullDelete: () => void;
-    deleteCustomData: (formelName: string) => void;
+    deleteCustomDataCheck: (formelName: string) => void;
     handleSave: (formel: string) => void;
     dataFlag: boolean;
     opFlag: boolean;
@@ -47,19 +43,13 @@ interface CustomDataGUIProps {
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
-
-    //boolean value that show if the delete dialog is currently opened
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-
-    //holds the name of the formula currently selected for deletion
-    const [currentDeleteName, setCurrentDeleteName] = React.useState("");
-
+    
     /**
      * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
      * @param data the name of the data-value
      */
     const renderListItemSelectedData = (data: SelectedDataItem) => {
-        if (data.type === 'Zahl') {
+        if (data.type === 'Zahl' || (data.type === "Array" && data.arrayValueType !== undefined && data.arrayValueType === "Zahl")) {
 
             return (
                 <ListItem key={data.key}>
@@ -95,7 +85,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} onClick={() => {setDeleteDialogOpen(true); setCurrentDeleteName(data)}}>
+                    <IconButton edge={"end"} onClick={() => {props.deleteCustomDataCheck(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
@@ -295,48 +285,6 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     </Box>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => {
-                setDeleteDialogOpen(false);
-                window.setTimeout(() => {
-                    setCurrentDeleteName("");
-                }, 200);
-            }} aria-labelledby="deleteDialog-title"
-                    open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
-                    Formel "{currentDeleteName}" wirklich löschen?
-                </DialogTitle>
-                <DialogContent dividers>
-                    <Typography gutterBottom>
-                        "{currentDeleteName}" wird unwiderruflich gelöscht.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Grid container justify="space-between">
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        setDeleteDialogOpen(false);
-                                        setCurrentDeleteName("");
-                                    }}>
-                                abbrechen
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        props.deleteCustomData(currentDeleteName);
-                                        setDeleteDialogOpen(false);
-                                        window.setTimeout(() => {
-                                            setCurrentDeleteName("");
-                                        }, 200);
-                                    }}
-                                    className={classes.redDeleteButton}>
-                                Löschen bestätigen
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </DialogActions>
-            </Dialog>
         </React.Fragment>
     );
 };

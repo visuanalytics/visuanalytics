@@ -8,8 +8,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 interface FormelListProps {
     customDataEdit: Array<FormelObj>
-    handleDelete: (name: string) => void;
     handleEdit: (formel: FormelObj) => void;
+    deleteCustomDataCheck: (formelName: string) => void;
 }
 
 /**
@@ -49,7 +49,7 @@ export const FormelList: React.FC<FormelListProps> = (props) => {
                     <Button variant={"contained"} size={"small"}
                             className={classes.delete}
                             startIcon={<DeleteIcon fontSize="small"/>}
-                            onClick={() => props.handleDelete(data.formelName)}
+                            onClick={() => {props.deleteCustomDataCheck(data.formelName)}}
                     >
                         löschen
                     </Button>

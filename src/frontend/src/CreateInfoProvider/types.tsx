@@ -6,6 +6,7 @@ import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelOb
 export type SelectedDataItem = {
     key: string;
     type: string;
+    arrayValueType?: string;
 }
 
 // data type to save information about the selected schedule for historisation
