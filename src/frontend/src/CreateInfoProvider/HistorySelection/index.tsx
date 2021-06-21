@@ -4,7 +4,7 @@ import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {Schedule} from "../types";
+import {Diagram, Schedule} from "../types";
 
 interface HistorySelectionProps {
     continueHandler: () => void;
@@ -17,14 +17,18 @@ interface HistorySelectionProps {
     selectSchedule: (schedule: Schedule) => void;
     historySelectionStep: number;
     setHistorySelectionStep: (step: number) => void;
-    addToDataSources: () => void;
+    diagrams: Array<Diagram>;
+    setDiagrams: (array: Array<Diagram>) => void;
+    apiName: string;
+    addToDataSources?: () => void;
+    newDataSourceInEditMode: boolean;
 }
 
 /**
  * Component displaying the fourth step in the creation of a new Info-Provider (Historization).
  * The state of this component handles the input made to its children.
  */
-export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
+export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
 
     /**
      * Handles clicks on the proceed button in the data selection
@@ -45,7 +49,9 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
      * After that the handler will proceed to the next step of the Infoprovider
      */
     const skipContinueHandler = () => {
-        props.addToDataSources();
+        if (props.addToDataSources !== undefined || !props.newDataSourceInEditMode) {
+            if(props.addToDataSources) props.addToDataSources();
+        }
         props.continueHandler();
     }
 
@@ -67,6 +73,10 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
                         selectSchedule={props.selectSchedule}
+                        diagrams={props.diagrams}
+                        setDiagrams={props.setDiagrams}
+                        apiName={props.apiName}
+                        newDataSourceInEditMode={props.newDataSourceInEditMode}
                     />
                 )
             case 2:
@@ -77,6 +87,7 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
                         schedule={props.schedule}
                         selectSchedule={props.selectSchedule}
                         addToDataSources={props.addToDataSources}
+                        newDataSourceInEditMode={props.newDataSourceInEditMode}
                     />
                 )
 
@@ -85,8 +96,8 @@ export const HistorySelection: React.FC<HistorySelectionProps>  = (props) => {
 
     return (
         <StepFrame
-            heading = "Historisierung"
-            hintContent = {hintContents.historySelection}
+            heading="Historisierung"
+            hintContent={hintContents.historySelection}
         >
             {getContent()}
         </StepFrame>

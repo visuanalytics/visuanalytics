@@ -2,7 +2,6 @@
 import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 
 
-
 /**
  * This method receives an array with string-arguments and creates the output string with makeStringRep()
  * @param calculation the Array that should be transformed

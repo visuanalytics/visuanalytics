@@ -42,6 +42,7 @@ interface BasicSettingsProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    isInEditMode: boolean;
 }
 
 
@@ -66,9 +67,13 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     /**
      * Handler method for clicking the "proceed" button.
      * Sends the API data for testing to the backend and displays a loading animation
+     * If this component is called from the editation of an infoprovider the given continue handler will be called. The function terminates afterwards
      */
     const handleProceed = () => {
-        //TODO: add new behaviour to documentation
+        if(props.isInEditMode) {
+            props.continueHandler();
+            return;
+        }
         //check if the settings differ from the old settings
         const wasChanged = (
             props.query !== oldQuery ||
@@ -79,7 +84,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         );
         //send a new request to the backend when the user made changes to his settings
         if (wasChanged) {
-            //reset all following settings when a new api request is mad
+            //reset all following settings when a new api request is made
             // Clean up the session storage for all following steps
             sessionStorage.removeItem("selectedData-" + uniqueId);
             sessionStorage.removeItem("customData-" + uniqueId);
@@ -118,7 +123,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         } else {
             //console.log(data.api_keys);
             //props.setApiData(data.api_keys);
-            // TODO: add to documentation
             props.setListItems(transformJSON(data.api_keys));
             //console.log(transformJSON(data.api_keys));
             props.continueHandler();
@@ -189,9 +193,9 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         }
     }
 
-    const handleTestContinue = () => {
+    /*const handleTestContinue = () => {
         props.continueHandler()
-    }
+    }*/
 
 
     /**
@@ -332,12 +336,12 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                         zurück
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                {/*<Grid item>
                                     <Button variant="contained" size="large" color="primary"
                                             onClick={handleTestContinue}>
                                         Weiter ohne Backend (Test)
                                     </Button>
-                                </Grid>
+                                </Grid>*/}
                                 <Grid item className={classes.blockableButtonPrimary}>
                                     <Button
                                         disabled={!(props.name !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.name))}

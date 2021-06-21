@@ -15,7 +15,6 @@ import {InfoProviderFromBackend} from "../../../CreateInfoProvider/types";
 import {transformBackendInfoProvider} from "../../../CreateInfoProvider/helpermethods";
 
 
-
 /**
  * Renders the whole infoprovider-overview component except the infoprovider-list
  */
@@ -213,14 +212,14 @@ export const InfoProviderOverview: React.FC = () => {
     //test method that you only have to use once
     //only if the database is deleted you have to use the method again
     //there is no need for a success-method because the backend will not send an answer
-    const testInfo = useCallFetch("/visuanalytics/infprovtestdatensatz", {
+    /*const testInfo = useCallFetch("/visuanalytics/infprovtestdatensatz", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json\n"
             }
         }, () => {
         }, handleErrorFetchAll
-    );
+    );*/
 
     /**
      * helper-method to set the right id and name to delete the right infoprovider.
@@ -257,6 +256,7 @@ export const InfoProviderOverview: React.FC = () => {
         const data = jsonData as InfoProviderFromBackend;
         //transform the infoProvider to frontend format
         const infoProvider = transformBackendInfoProvider(data);
+        console.log(infoProvider)
         components?.setCurrent("editInfoProvider", {infoProvId: currentEditId, infoProvider: infoProvider})
     }
 
@@ -322,12 +322,12 @@ export const InfoProviderOverview: React.FC = () => {
                                 Historisierungs-Datenbank
                             </Button>
                         </Grid>
-                        <Grid item>
+                        {/*<Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
                                     onClick={() => testInfo()}>
                                 Test-InfoProvider
                             </Button>
-                        </Grid>
+                        </Grid>*/}
                     </Grid>
                 </Grid>
                 <Dialog onClose={() => {
@@ -372,7 +372,7 @@ export const InfoProviderOverview: React.FC = () => {
                 <Dialog onClose={() => setEditDialogOpen(false)} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
                     <DialogTitle id="editDialog-title">
-                        "{currentEditName}" bearbeiten!
+                        "{currentEditName}" bearbeiten
                     </DialogTitle>
                     <DialogContent dividers>
                         <Typography gutterBottom>
@@ -391,7 +391,7 @@ export const InfoProviderOverview: React.FC = () => {
                             <Grid item>
                                 <Button variant="contained" color={"secondary"}
                                         onClick={() => confirmEdit()}
-                                        >
+                                >
                                     Bearbeiten
                                 </Button>
                             </Grid>

@@ -3,7 +3,16 @@ import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import {useStyles} from "../style";
 import Button from "@material-ui/core/Button";
-import {FormControl, Grid, InputLabel, Select, MenuItem, TextField} from "@material-ui/core";
+import {
+    FormControl,
+    Grid,
+    InputLabel,
+    Select,
+    MenuItem,
+    TextField,
+    DialogTitle,
+    DialogContent, DialogActions, Dialog
+} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
@@ -11,7 +20,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import { ScheduleTypeTable } from "./ScheduleTypeTable";
-import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem, uniqueId} from "../types";
+import {
+    DataSource,
+    DataSourceKey,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem,
+    uniqueId
+} from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
 
 interface SettingsOverviewProps {
@@ -22,6 +39,7 @@ interface SettingsOverviewProps {
     setName: (name: string) => void;
     dataSources: DataSource[];
     setDataSources: (dataSources: DataSource[]) => void;
+    apiName: string;
     setApiName: (apiName: string) => void;
     setQuery: (query: string) => void;
     setApiKeyInput1: (apiKeyInput1: string) => void;
@@ -35,6 +53,10 @@ interface SettingsOverviewProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    diagrams: Array<Diagram>;
+    setDiagrams: (array: Array<Diagram>) => void;
+    dataSourcesKeys: Map<string, DataSourceKey>;
+    setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
 }
 
 /**
@@ -47,6 +69,73 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
 
     // The currently selected data source for the settings overview
     const [selectedDataSource, setSelectedDataSource] = React.useState(props.dataSources.length - 1);
+    //true when the dialog for deleting a datasource is open
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+    //holds the name of all diagrams that need to be removed when deleting the current selection
+    const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+
+    //TODO: document delete mechanism
+    /**
+     * Handler method for clicking the delete data source button.
+     * Gets the currently selected datasource by the selectedDataSource state and checks if deleting it
+     * will delete any diagrams.
+     * Opens the dialog asking the user for confirmation afterwards
+     */
+    const deleteDataSourceHandler = () => {
+        //TODO: search for diagrams depending on this
+        const diagramsToRemove: Array<string> = [];
+        const dataSourceName = props.dataSources[selectedDataSource].apiName;
+        props.diagrams.forEach((diagram) => {
+            if(diagram.sourceType==="Array" && diagram.arrayObjects!==undefined) {
+                //diagram with arrays
+                for (let index = 0; index < diagram.arrayObjects.length; index ++) {
+                    if(diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0]===dataSourceName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            } else if(diagram.sourceType==="Historized" && diagram.historizedObjects!==undefined) {
+                //diagrams with historized
+                for (let index = 0; index < diagram.historizedObjects.length; index ++) {
+                    if(diagram.historizedObjects[index].name.split("|")[0]===dataSourceName) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        if(diagramsToRemove.length > 0) setDiagramsToRemove(diagramsToRemove);
+        setDeleteDialogOpen(true);
+    }
+
+    /**
+     * Method that deletes the currently selected dataSource.
+     * Checks if the state diagramsToRemove contains any items and removes them too, if necessary.
+     * Also sets the selected dataSource to the now last dataSource in the dataSources array.
+     */
+    const deleteSelectedDataSource = () => {
+        //delete the dataSource
+        props.setDataSources(props.dataSources.filter((dataSource) => {
+            return dataSource.apiName!==props.dataSources[selectedDataSource].apiName;
+        }));
+        //remove its entries from the key map
+        const mapCopy = new Map(props.dataSourcesKeys);
+        if (mapCopy.get(props.dataSources[selectedDataSource].apiName) !== undefined) {
+            mapCopy.delete(props.dataSources[selectedDataSource].apiName)
+        }
+        props.setDataSourcesKeys(mapCopy);
+        setSelectedDataSource(props.dataSources.length - 2);
+        //if diagrams need to be removed, remove them
+        if(diagramsToRemove.length > 0) {
+            props.setDiagrams(props.diagrams.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            }))
+        }
+        //reset the states
+        setDiagramsToRemove([]);
+        setDeleteDialogOpen(false);
+    }
+
     /**
      * Renders one list item for the list of selected data, custom data or historized data.
      * @param item The entry that should be rendered.
@@ -121,7 +210,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         )
     }
 
-    // TODO: Delete data source button next to every data source.
     //TODO: Three buttons at the button are not displayed correctly when reducing screen width.
     return(
         <StepFrame
@@ -140,13 +228,20 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         Übersicht über ausgewählte Daten
                     </Typography>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <FormControl fullWidth>
-                        <InputLabel id="select-dataSource-dropDown">Wahl der Datenquelle</InputLabel>
-                        <Select value={selectedDataSource} onChange={handleChangeSelectedDataSource}>
-                            {props.dataSources.map((item: DataSource, index: number) => renderDataSource(item, index))}
-                        </Select>
-                    </FormControl>
+                <Grid item container xs={12} md={6} justify="space-around">
+                    <Grid item xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel id="select-dataSource-dropDown">Wahl der Datenquelle</InputLabel>
+                            <Select value={selectedDataSource} onChange={handleChangeSelectedDataSource}>
+                                {props.dataSources.map((item: DataSource, index: number) => renderDataSource(item, index))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item className={classes.elementLargeMargin}>
+                        <Button disabled={props.dataSources[selectedDataSource].apiName === props.apiName} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
+                            Datenquelle Löschen
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
                     <Grid item xs={12}>
@@ -203,22 +298,62 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         <Button variant="contained" size="large" color="primary" onClick={newDataSourceHandler}>
                             Weitere Datenquelle hinzufügen
                         </Button>
-                        <Button onClick={() => props.setStep(6)}>
-                            Zu den Diagrammen
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
-                            abschließen
-                        </Button>
                     </Grid>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={() => props.setStep(6)}>
-                            Diagramme Test
+                            Diagramme
+                        </Button>
+                    </Grid>
+                    <Grid item className={classes.blockableButtonSecondary}>
+                        <Button disabled={props.name === ""} variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
+                            abschließen
                         </Button>
                     </Grid>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setDeleteDialogOpen(false);
+                window.setTimeout(() => {
+                    setDiagramsToRemove([]);
+                }, 200);
+            }} aria-labelledby="deleteDialog-title"
+                    open={deleteDialogOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Löschen von "{props.dataSources[selectedDataSource].apiName}" bestätigen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Die Datenquelle "{props.dataSources[selectedDataSource].apiName}" wird unwiderruflich gelöscht.
+                    </Typography>
+                    { diagramsToRemove.length > 0 &&
+                        <Typography gutterBottom>
+                            Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
+                        </Typography>
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setDeleteDialogOpen(false);
+                                        window.setTimeout(() => {
+                                            setDiagramsToRemove([]);
+                                        }, 200);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => deleteSelectedDataSource()}
+                                    className={classes.redDeleteButton}>
+                                Löschen bestätigen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </StepFrame>
     );
 }

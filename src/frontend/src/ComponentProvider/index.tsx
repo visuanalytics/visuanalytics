@@ -57,6 +57,14 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
         keyName = "dashboard";
         break;
       }
+      case "editInfoProvider": {
+        keyName = "editInfoProvider";
+        break;
+      }
+      case "sceneEditor": {
+        keyName = "sceneEditor";
+        break;
+      }
     }
     sessionStorage.setItem("currentComponent-" + uniqueId, keyName)
   }, [current])
