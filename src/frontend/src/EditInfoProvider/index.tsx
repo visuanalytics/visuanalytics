@@ -62,7 +62,7 @@ task 13: send data to backend (Janek)
  */
 
 
-export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, infoProvider}) => {
+export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({infoProvId, infoProvider}) => {
 
     const components = React.useContext(ComponentContext);
 
@@ -87,8 +87,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
      * One DataSource-object holds all information from one api.
      */
 
-     //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
-     //fill with test data
+        //infoProvider? infoProvider.dataSources : new Array<DataSource>(...)
+        //fill with test data
 
     const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(infoProvider !== undefined ? infoProvider.dataSources : new Array<DataSource>(
         {
@@ -716,9 +716,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = ({ infoProvId, 
                 api: {
                     api_info: {
                         type: "request",
-                        //api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
-                        //TODO: change when the merge has happened
-                        api_key_name: "",
+                        api_key_name: dataSource.method === "BearerToken" ? infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                         url_pattern: dataSource.query,
                     },
                     method: dataSource.noKey ? "noAuth" : dataSource.method,
