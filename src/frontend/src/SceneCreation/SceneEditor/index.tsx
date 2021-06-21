@@ -24,6 +24,7 @@ import { DiagramInfo, HistorizedDataInfo } from "../types";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import { useCallFetch } from "../../Hooks/useCallFetch";
 
 interface SceneEditorProps {
   continueHandler: () => void;
@@ -94,7 +95,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
   const [textEditFontFamily, setTextEditFontFamily] = React.useState("");
   const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
   
-
+  const [baseImage, setBaseImage] = React.useState(new FormData());
+  const [itemJson, setItemJson] = React.useState("");
+  const [textImage, setTextImage] = React.useState<Array<dataImage|dataText>>([])
+  const [exportJSON, setExportJSON] = React.useState("");
 
   React.useEffect(() => {
     sessionStorage.setItem("items-" + uniqueId, JSON.stringify(items));
@@ -326,13 +330,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
       }
     }
     setItems(newArray);
-    
-    const textImage : (dataText|dataImage)[] = [];
+
+    const currentStage = stage;
+    let stageJson = currentStage?.toDataURL();
+    if (stageJson === undefined){
+      stageJson = "Empty Stage";
+    }
+
+    const formData = new FormData();
+    formData.append("image", stageJson);
+    formData.append("name", sceneName + "-background");
+    setBaseImage(formData);
+
     const base : baseImg = {
-      type: "",
-      path: "",
+      type: "pillow",
+      path: sceneName + ".png",
       overlay: textImage
     }
+
     const returnValue : jsonExport = {
       images: {
         name: {
@@ -343,7 +358,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     onlyTextAndImages.forEach(element => {
       if(element.id.startsWith('text')){
-        //TODO erstellen der typelemente
         if('fontSize' in element){
           const itemToPush : dataText = {
             description: "", //optional
@@ -375,13 +389,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
       }
     });
-    const currentStage = stage;
-    let stageJson = currentStage?.toDataURL();
-    if (stageJson === undefined){
-      stageJson = "Empty Stage";
-    }
-    const totalReturn : string = (JSON.stringify(returnValue) + "|||" + JSON.stringify(copyOfItems) + "|||" + stageJson) 
-    console.log(totalReturn);
+
+    setItemJson(JSON.stringify(copyOfItems));
+    setExportJSON(JSON.stringify(returnValue));
+    postBackground();
+//    postScene();
+
+    const totalReturn : string = (JSON.stringify(returnValue) + "|||" + JSON.stringify(copyOfItems) + "|||" + stageJson);
     return totalReturn;
   }
 
@@ -391,6 +405,36 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     link.href = url;
     link.click();
   }
+
+  const handleSuccess = () => {
+
+  }
+
+  const handleError = () => {
+    
+  }
+
+  const postScene = useCallFetch("",{
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(
+      exportJSON
+    )
+    }, handleSuccess, handleError
+  );
+
+  const postBackground = useCallFetch("visuanalytics/image/add",{
+    method: "PUT",
+    headers: {
+      "Content-Type": //"multipart/form-data" 
+                      "application/x-www-form-urlencoded"
+    },
+    body: //baseImage
+    "test"
+  });
+
 
   /**
    * gets called when an element drag is started.
