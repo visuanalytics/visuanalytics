@@ -26,6 +26,7 @@ interface HistoryDataSelectionProps {
     diagrams: Array<Diagram>;
     setDiagrams: (array: Array<Diagram>) => void;
     apiName: string;
+    newDataSourceInEditMode: boolean;
 }
 
 /**
@@ -230,7 +231,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                     </Grid>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={proceedHandler}>
-                            weiter
+                            {(props.historizedData.length === 0 && props.newDataSourceInEditMode) ? "abschließen" : "weiter"}
                         </Button>
                     </Grid>
                 </Grid>

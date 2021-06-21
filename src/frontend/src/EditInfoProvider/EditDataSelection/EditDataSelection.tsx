@@ -44,7 +44,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //holds the value true if the loading spinner should be displayed
     const [displaySpinner, setDisplaySpinner] = React.useState(true);
     //true when the dialog for data missmatch errors is open
-    const [errorDialogOpen, setErrorDialogOpen] = React.useState(true);
+    const [errorDialogOpen, setErrorDialogOpen] = React.useState(false);
     //holds the set of listItems as returned by the new api request
     const [newListItems, setNewListItems] = React.useState<Array<ListItemRepresentation>>([]);
 
@@ -116,8 +116,10 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
+    //extract values from the dataSource to use them in the fetch
     const query = props.dataSource.query;
     const method = props.dataSource.method;
+    const noKey = props.dataSource.noKey
     const apiKeyInput1 = props.apiKeyInput1;
     const apiKeyInput2 = props.apiKeyInput2;
 
@@ -140,12 +142,12 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                api: {
+                api_info: {
                     type: "request",
                     api_key_name: method === "BearerToken" ? apiKeyInput1 : apiKeyInput1 + "||" + apiKeyInput2,
                     url_pattern: query
                 },
-                method: method ? "noAuth" : method,
+                method: noKey ? "noAuth" : method,
                 response_type: "json"
             }),
             signal: abort.signal
@@ -162,7 +164,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleTestDataError(err)
         }).finally(() => clearTimeout(timer));
-    }, [handleTestDataSuccess, handleTestDataError, query, method, apiKeyInput1, apiKeyInput2])
+    }, [handleTestDataSuccess, handleTestDataError, query, method, apiKeyInput1, apiKeyInput2, noKey])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -243,7 +245,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
-                    listItems={props.dataSource.listItems}
+                    listItems={newListItems}
                     setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}
