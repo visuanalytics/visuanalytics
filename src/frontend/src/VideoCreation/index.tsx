@@ -8,6 +8,7 @@ import {VideoEditor} from "./VideoEditor";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {Schedule} from "../CreateInfoProvider/types";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {ScheduleSelection} from "./ScheduleSelection";
 
 /**
  TODO:
@@ -53,12 +54,12 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", durationType: "fixed", fixedDisplayDuration: 1, exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: "", visible: true},
     ]);
 
     /**
@@ -305,7 +306,12 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
             }
             case 2: {
                 return (
-                    <div></div>
+                    <ScheduleSelection
+                        continueHandler={() => continueHandler()}
+                        backHandler={() => backHandler()}
+                        schedule={schedule}
+                        setSchedule={(schedule: Schedule) => setSchedule(schedule)}
+                    />
                 )
             }
 

@@ -218,7 +218,7 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                 <Grid item className={classes.blockableButtonSecondary}>
                     <Button variant="contained" size="large" color="secondary" onClick={props.continueHandler}
                             disabled={(props.schedule.type === "weekly" && props.schedule.weekdays.length === 0) || (currentTimeSelection === null || isNaN(currentTimeSelection.getHours()) || isNaN(currentTimeSelection.getMinutes())) || props.schedule.type === ""}>
-                         "abschließen"
+                         abschließen
                     </Button>
                 </Grid>
             </Grid>

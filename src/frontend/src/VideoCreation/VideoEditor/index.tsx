@@ -45,8 +45,6 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
         arCopy.push({
             entryId: sceneName + "||" + counter,
             sceneName: sceneName,
-            durationType: "fixed",
-            fixedDisplayDuration: 1,
             exceedDisplayDuration: 1,
             spokenText: "",
             visible: true

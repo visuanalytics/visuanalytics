@@ -41,37 +41,17 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
         props.setSceneList(props.sceneList.slice(0, index).concat(props.sceneList.slice(index+1)));
     }
 
-    /**
-     * Handler method for changing the duration type of the scene
-     * @param index The index (in the list) of the scene whose type is changed.
-     * @param newDurationType The newly chosen duration type.
-     */
-    const setDurationType = (index: number, newDurationType: DurationType) => {
-        const arCopy = props.sceneList.slice();
-        arCopy[index] = {
-            ...arCopy[index],
-            durationType: newDurationType
-        }
-        props.setSceneList(arCopy);
-    }
 
     /**
      * Handler method that changes the selected duration of a scene in the video.
      * @param index The index (in the list) of the scene whose duration is changed.
      * @param newDuration The new duration value.
      */
-    const setDisplayDuration = (index: number, newDisplayDuration: number, type: DurationType) => {
+    const setDisplayDuration = (index: number, newDisplayDuration: number) => {
         const arCopy = props.sceneList.slice();
-        if(type === "fixed") {
-            arCopy[index] = {
-                ...arCopy[index],
-                fixedDisplayDuration: newDisplayDuration
-            }
-        } else{
-            arCopy[index] = {
-                ...arCopy[index],
-                exceedDisplayDuration: newDisplayDuration
-            }
+        arCopy[index] = {
+            ...arCopy[index],
+            exceedDisplayDuration: newDisplayDuration
         }
         props.setSceneList(arCopy);
     }
@@ -161,12 +141,8 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
                             sceneName={sceneEntry.sceneName}
                             moveLeft={() => moveScene(index, Direction.Left)}
                             moveRight={() => moveScene(index, Direction.Right)}
-                            durationType={props.sceneList[index].durationType}
-                            setDurationType={(newDurationType: DurationType) => setDurationType(index, newDurationType)}
-                            fixedDisplayDuration={props.sceneList[index].fixedDisplayDuration}
-                            setFixedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration, props.sceneList[index].durationType)}
                             exceedDisplayDuration={props.sceneList[index].exceedDisplayDuration}
-                            setExceedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration, props.sceneList[index].durationType)}
+                            setExceedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration)}
                             spokenText={props.sceneList[index].spokenText}
                             setSpokenText={(newSpokenText: string) => setSpokenText(index, newSpokenText)}
                             leftDisabled={index === 0}
