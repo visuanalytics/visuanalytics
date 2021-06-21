@@ -607,7 +607,7 @@ def delete_scene(id):
         return err, 400
 
 
-@api.route("/image/add", methods=["PUT"])
+@api.route("/image/add", methods=["POST"])
 def add_scene_image():
     """
     Endpunkt '/image/add'.
@@ -623,7 +623,6 @@ def add_scene_image():
         if "name" not in request.form:
             err = flask.jsonify({"err_msg": "Missing Image Name"})
             return err, 400
-
         image = request.files["image"]
         name = request.form["name"]
 
@@ -767,6 +766,7 @@ def add_image():
 
     Route zum hinzufügen eines Bildes für ein Thema.
     """
+
     try:
         if "image" not in request.files:
             err = flask.jsonify({"err_msg": "Missing Image"})
