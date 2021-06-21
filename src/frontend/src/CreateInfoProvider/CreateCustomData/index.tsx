@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {customDataBackendAnswer, Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
-import {getListItemsNames} from "../helpermethods";
+import {checkFindOnlyNumbers, getListItemsNames} from "../helpermethods";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 
@@ -40,7 +40,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     const [input, setInput] = React.useState<string>('');
 
     /**
-     * safes and represents the name-field for a new formel.
+     * saves and represents the name-field for a new formel.
      */
     const [name, setName] = React.useState<string>('');
 
@@ -368,6 +368,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         //check for duplicates in api names
         if (getListItemsNames(props.listItems).includes(formel)) {
             props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")
+            return;
+        }
+        if (checkFindOnlyNumbers(formel)) {
+            props.reportError("Fehler: Der Name darf nicht nur aus Nummern bestehen.")
+            return;
+        }
+        if (formel.includes('(') || formel.includes(')')) {
+            props.reportError("Fehler: Der Name darf keine Klammern enthalten.")
             return;
         }
         //check for duplicates in formula names

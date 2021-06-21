@@ -316,7 +316,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     </Grid>
                     }
                     <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
                             {props.dataSources[selectedDataSource].schedule.type !== "" &&
                             <Grid item xs={12}>
                                 <ScheduleTypeTable schedule={props.dataSources[selectedDataSource].schedule}/>
