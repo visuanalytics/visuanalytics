@@ -700,6 +700,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        isInEditMode={false}
                     />
                 );
             case 2:
