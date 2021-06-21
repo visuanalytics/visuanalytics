@@ -226,7 +226,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                     defaultValue="Name der API-Datenquelle"
                                     value={props.name}
                                     changeHandler={(s) => {
-                                        props.setName(s)
+                                        props.setName(s.replace(' ', '_'))
                                         checkNameChanged();
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"

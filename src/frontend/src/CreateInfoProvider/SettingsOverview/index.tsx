@@ -255,7 +255,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                     <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                label={"Info-Provider Name"}
                                value={props.name}
-                               onChange={event => (props.setName(event.target.value))}>
+                               onChange={event => (props.setName(event.target.value.replace(' ', '_')))}>
                     </TextField>
                 </Grid>
                 <Grid item xs={12} md={6}>
