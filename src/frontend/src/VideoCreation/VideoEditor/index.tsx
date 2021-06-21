@@ -21,7 +21,7 @@ interface VideoEditorProps {
     setVideoJobName: (name: string) => void;
     sceneList: Array<SceneCardData>
     setSceneList: (sceneList: Array<SceneCardData>) => void;
-    availableScenes: Array<string>
+    availableScenes: Array<string>;
     reportError: (message: string) => void;
 }
 
