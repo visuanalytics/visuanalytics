@@ -198,14 +198,19 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      */
     const createImagesObject = () => {
         //TODO: possibly find smarter solution without any type
+        const imagesObject: any = {};
         //stores the appearance frequency for each available scene this is necessary
         // to number the appearances of the scenes to let all keys in the images object be unique
-        const sceneFrequency: Array<number> = new Array(availableScenes.length).fill(1);
-        const imagesObject: any = {};
+        const sceneFrequency: Map<string, number> = new Map();
+        availableScenes.forEach((scene) => sceneFrequency.set(scene, 1));
         sceneList.forEach((scene) => {
             //find the frequency, take its value und increment it
-            imagesObject[scene.sceneName + ""] = {
-                key: scene.sceneName
+            const index = sceneFrequency.get(scene.sceneName);
+            if(index !== undefined) {
+                sceneFrequency.set(scene.sceneName, index + 1);
+                imagesObject[scene.sceneName + "_" + index] = {
+                    key: scene.sceneName
+                }
             }
         })
         return imagesObject;
@@ -217,8 +222,10 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     const createAudiosObject = () => {
         //TODO: possibly find smarter solution without any type
         const audioObject: any = {};
+        let index = 1;
         sceneList.forEach((scene) => {
-            audioObject[scene.entryId] = {
+            //TODO: change as soon as daniel has published his datatype
+            audioObject["audio" + index++] = {
                 parts: [
                     {
                         type: "text",
@@ -236,13 +243,13 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
 
 
     const sendVideoSuccessHandler = (jsonData: any) => {
-
+        components?.setCurrent("dashboard")
     }
 
 
 
     const sendVideoErrorHandler = (err: Error) => {
-
+        reportError("Fehler beim Absenden des Videos: " + err)
     }
 
     const sendVideoToBackend = useCallFetch("visuanalytics/videojob", {
