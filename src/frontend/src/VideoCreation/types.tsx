@@ -14,3 +14,13 @@ export type SceneCardData = {
     spokenText: string;
     visible: boolean;
 }
+
+export type InfoProviderData = {
+    infoprovider_id: number;
+    infoprovider_name: string;
+}
+
+/**
+ * This type is needed because the answer of the backend consists of a list of infProviders.
+ */
+export type fetchAllBackendAnswer = Array<InfoProviderData>

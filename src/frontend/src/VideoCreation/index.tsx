@@ -1,6 +1,6 @@
 import React from "react";
 import {SceneContainer} from "./VideoEditor/SceneContainer";
-import {SceneCardData} from "./types";
+import {fetchAllBackendAnswer, InfoProviderData, SceneCardData} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {ComponentContext} from "../ComponentProvider";
@@ -39,11 +39,15 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
-    //current step of the VideoCreation
+    // current step of the VideoCreation
     const [videoCreationStep, setVideoCreationStep] = React.useState(0)
     // name of the videoJob
     const [videoJobName, setVideoJobName] = React.useState("");
-    //list of the names of all scenes available - holds the data fetched from the backend
+    // list of all available infoproviders
+    const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
+    // list of infoproviders selected by the user
+    const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>([]);
+    // list of the names of all scenes available - holds the data fetched from the backend
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
@@ -83,6 +87,96 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
             setVideoCreationStep(videoCreationStep -1)
         }
     }
+
+
+    /**
+     * Method block for fetching all infoproviders from the backend
+     */
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorFetchInfoProvider = (err: Error) => {
+        //console.log('error');
+        reportError("Fehler: " + err)
+    }
+
+    /**
+     * Handles the success of the fetchAllInfoprovider()-method.
+     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessFetchInfoProvider = (jsonData: any) => {
+        const data = jsonData as fetchAllBackendAnswer;
+        setInfoProviderList(data);
+    }
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = React.useRef(true);
+
+    /**
+     * Method to fetch all infoproviders from the backend.
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
+     * with useCallback in order to be used in useEffect.
+     */
+    const fetchAllInfoprovider = React.useCallback(() => {
+        let url = "/visuanalytics/infoprovider/all"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleSuccessFetchInfoProvider(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorFetchInfoProvider(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+    /**
+     * The list of infoproviders is generated automatically when the component is shown.
+     */
+    React.useEffect(() => {
+            //console.log("Fetcher hook here")
+            fetchAllInfoprovider();
+        }, [fetchAllInfoprovider]
+    );
+
+
+    /**
+     * Method block for fetching all scenes from the backend
+     */
+
+
+
+    /**
+     * Method block for fetching all selected infoproviders from the backend
+     */
 
 
     /**
