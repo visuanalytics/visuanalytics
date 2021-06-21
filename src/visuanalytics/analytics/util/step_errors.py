@@ -70,6 +70,10 @@ class ImageError(StepError):
     pass
 
 
+class DiagramError(StepError):
+    pass
+
+
 class ThumbnailError(StepError):
     pass
 

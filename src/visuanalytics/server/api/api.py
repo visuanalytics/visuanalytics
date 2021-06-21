@@ -302,6 +302,51 @@ def add_infoprovider():
         return err, 400
 
 
+@api.route("/videojob", methods=["POST"])
+def add_videojob():
+    """
+    Endpunkt `/videojob`.
+
+    Route zum Hinzufügen eines Video-Jobs.
+    """
+    video = request.json
+    try:
+        if "name" not in video:
+            err = flask.jsonify({"err_msg": "Missing Name"})
+            return err, 400
+
+        if "infoprovider_names" not in video:
+            err = flask.jsonify({"err_msg": "Missing Infoprovider-Names"})
+            return err, 400
+
+        if "images" not in video:
+            err = flask.jsonify({"err_msg": "Missing Images"})
+            return err, 400
+
+        if "audio" not in video:
+            err = flask.jsonify({"err_msg": "Missing Audio"})
+            return err, 400
+
+        if "sequence" not in video:
+            err = flask.jsonify({"err_msg": "Missing Sequence"})
+            return err, 400
+
+        if "schedule" not in video:
+            err = flask.jsonify({"err_msg": "Missing Schedule"})
+            return err, 400
+
+        if not queries.insert_video_job(video):
+            err = flask.jsonify({"err_msg": f"There already exists a video with the name "
+                                            f"{video['video_name']}"})
+            return err, 400
+
+        return "", 204
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while adding an video"})
+        return err, 400
+
+
 @api.route("/infoprovider/schedules", methods=["GET"])
 def show_schedule():
     """
@@ -410,6 +455,52 @@ def update_infoprovider(infoprovider_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>", methods=["PUT"])
+def update_videojob(videojob_id):
+    """
+    Endpunkt `/videojob/<videojob_id>`.
+
+    Route zum Ändern eines Video-Jobs.
+    """
+    updated_data = request.json
+    try:
+        if "name" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Name"})
+            return err, 400
+
+        if "infoprovider_names" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Infoprovider-Names"})
+            return err, 400
+
+        if "images" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Images"})
+            return err, 400
+
+        if "audio" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Audio"})
+            return err, 400
+
+        if "sequence" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Sequence"})
+            return err, 400
+
+        if "schedule" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing Schedule"})
+            return err, 400
+
+        update_info = queries.insert_video_job(updated_data, update=True, job_id=videojob_id)
+
+        if update_info is not None:
+            err = flask.jsonify(update_info)
+            return err, 400
+
+        return flask.jsonify({"status": "successful"})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while updating a videojob"})
+        return err, 400
+
+
 @api.route("/infoprovider/<infoprovider_id>", methods=["GET"])
 def get_infoprovider(infoprovider_id):
     """
@@ -432,6 +523,29 @@ def get_infoprovider(infoprovider_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>", methods=["GET"])
+def get_videojob(videojob_id):
+    """
+    Endpunkt `/videojob/<videojob_id>`.
+
+    Response enthält das Json zum Videojob.
+    :param videojob_id: ID des Videojobs.
+    """
+    try:
+        videojob_json = queries.get_videojob(int(videojob_id))
+
+        if videojob_json is {}:
+            err = flask.jsonify({"err_msg": "Unknown videojob"})
+            return err, 400
+
+        return flask.jsonify(videojob_json)
+        #return videojob_json
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading a Videojob"})
+        return err, 400
+
+
 @api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
 def delete_infoprovider(infoprovider_id):
     """
@@ -447,6 +561,24 @@ def delete_infoprovider(infoprovider_id):
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while removing an infoprovider"})
+        return err, 400
+
+
+@api.route("/videojob/<videojob_id>", methods=["DELETE"])
+def delete_videojob(videojob_id):
+    """
+    Endpunkt `/videojob/<videojob_id>`.
+
+    Route zum Löschen eines Videojobs.
+
+    :param videojob_id: ID des Videojobs.
+    """
+    try:
+        return flask.jsonify({"status": "successful"}) if queries.delete_videojob(int(videojob_id)) else \
+            flask.jsonify({"err_msg": f"Videojob with ID {videojob_id} could not be removed"})
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while removing a Videojob"})
         return err, 400
 
 
