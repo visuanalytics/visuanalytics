@@ -109,6 +109,14 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
     }
 
     /**
+     * Method, that switches the type of the schedule object to single.
+     * It is called, when the user selects the corresponding radio button.
+     */
+    const changeToSingle = () => {
+        props.setSchedule({...props.schedule, type: "single", time: setScheduleTime(currentTimeSelection)});
+    }
+
+    /**
      * Method that switches the state of the schedule object to interval.
      * It is called, when a user selects the corresponding radio button.
      */
@@ -134,6 +142,15 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
 
     return (
         <Grid container>
+            <Grid item xs={12}>
+                <FormControlLabel value="single" control={
+                    <Radio checked={props.schedule.type === "single"}
+                           value="single"
+                           onChange={changeToSingle}
+                    />
+                } label="Einmalig (sofort)"
+                />
+            </Grid>
             <Grid item xs={12}>
                 <FormControlLabel value="weekly" control={
                     <Radio
