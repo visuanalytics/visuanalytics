@@ -795,6 +795,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         oldApiName={oldApiName}
                         setOldApiName={setOldApiName}
                         apiNameChanged={apiNameChanged}
+                        setApiNameChanged={setApiNameChanged}
                     />
                 )
             case 6:

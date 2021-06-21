@@ -38,6 +38,7 @@ interface CustomDataGUIProps {
     leftParenFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
+    openDeleteDialog: (formelName: string) => void;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
@@ -49,7 +50,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
      * @param data the name of the data-value
      */
     const renderListItemSelectedData = (data: SelectedDataItem) => {
-        if (data.type === 'Zahl') {
+        if (data.type === 'Zahl' || data.type === 'Gleitkommazahl') {
 
             return (
                 <ListItem key={data.key}>
@@ -57,7 +58,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                         control={
                             <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                     onClick={() => props.handleDataButtons(data.key)}>
-                                {data.key}
+                                {(data.key + " (" + data.type + ")")}
                             </Button>
                         }
                         label={''}
@@ -79,13 +80,13 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     control={
                         <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                 onClick={() => props.handleDataButtons(data)}>
-                            {data}
+                            {data + " (Formel)"}
                         </Button>
                     }
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} onClick={() => {props.deleteCustomDataCheck(data)}}>
+                    <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.openDeleteDialog(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
