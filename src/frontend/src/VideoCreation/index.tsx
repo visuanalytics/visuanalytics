@@ -14,18 +14,21 @@ import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {useStyles} from "./style";
 import {VideoEditor} from "./VideoEditor";
+import {InfoProviderSelection} from "./InfoProviderSelection";
 
 /**
  TODO:
- 1: Auslagerung Szeneerstellung in Unterkomponente für Gliederung in 3 Schritte
- 2: Fetching aller Infoprovider
- 3: Anzeigen Auswahl aller Infoprovider
  4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
  5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
  6: Absenden der Daten an das Backend mit Datenformat
  7: sessionStorage einbinden/ermöglichen
  8: Option auf Bearbeitung einbinden
  9: fehlende Docstrings hinzufügen
+
+ DONE:
+ 1: Auslagerung Szenenerstellung in Unterkomponente für Gliederung in 3 Schritte
+ 2: Fetching aller Infoprovider
+ 3: Anzeigen Auswahl aller Infoprovider
  */
 
 
@@ -240,9 +243,15 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
         switch(videoCreationStep) {
             case 0: {
                 return (
-                    <div></div>
+                    <InfoProviderSelection
+                        continueHandler={() => continueHandler()}
+                        backHandler={() => backHandler()}
+                        infoProviderList={infoProviderList}
+                        selectedInfoProvider={selectedInfoProvider}
+                        setSelectedInfoProvider={(selection: Array<InfoProviderData>) => setSelectedInfoProvider(selection)}
+                        reportError={(message: string) => reportError(message)}
+                    />
                 )
-                break;
             }
             case 1: {
                 return (
