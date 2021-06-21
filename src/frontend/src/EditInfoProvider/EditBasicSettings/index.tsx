@@ -1,22 +1,16 @@
 import React from "react";
-import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import {
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
-    Grid, InputLabel, MenuItem, Select,
-    TextField,
+    Grid,
     Typography
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import Box from "@material-ui/core/Box";
-import List from "@material-ui/core/List";
 import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {DataSource, ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
-import {extractKeysFromSelection} from "../../CreateInfoProvider/helpermethods";
+import {ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
 import {BasicSettings} from "../../CreateInfoProvider/BasicSettings";
 
 interface EditBasicSettingsProps {
