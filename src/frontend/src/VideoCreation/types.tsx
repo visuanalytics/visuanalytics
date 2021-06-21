@@ -49,3 +49,20 @@ export type MinimalInfoProvider = {
     }>;
 }
 
+/**
+ * This type is needed to limit the types of a audio element to only the specified ones.
+ * text: Any text the user wants to be spoken by a TTS
+ * pause: The pause that should be between to different audios
+ */
+export type AudioType = "text" | "pause";
+
+/**
+ * This type represents one element for the audio for a scene
+ * An element can only contain one type.
+ * So currently a audio part can be a pause or a text spoken by the TTS
+ */
+export type AudioElement = {
+    type: AudioType;
+    text?: string;
+    duration?: number;
+}
