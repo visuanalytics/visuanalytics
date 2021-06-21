@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import json
@@ -7,6 +8,8 @@ from visuanalytics.util import resources
 from datetime import datetime, timedelta
 from ast import literal_eval
 from visuanalytics.util.resources import get_test_diagram_resource_path
+
+matplotlib.use('Agg')
 
 dpi_default = 100
 default_color = "#000000"
@@ -152,10 +155,8 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_test_diagram(values):
-    print("values", values)
     fig, ax = (None, None)
     for plot in values["diagram_config"]["plots"]:
-        print("plot", plot)
         plot["plot"]["y"] = np.random.randint(1, 20, 15)
         plot["plot"].pop("x", None)
         fig, ax = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
@@ -188,7 +189,6 @@ def generate_test_diagram(values):
 def get_plot_vars(dpi=100):
     fig = plt.figure(dpi=dpi)
     ax = fig.add_subplot()
-    print("new vars created")
     return fig, ax
 
 
@@ -355,7 +355,6 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
 
     values["y"] = y_vals
     values.pop("x", None)
-    print("values", values)
 
     return values
 
@@ -366,7 +365,6 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
     else:
         values_new = values["plot"]
-    print("values_new", values_new)
     if t == "line":
         fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar":
@@ -386,7 +384,6 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
 
     x_ticks = values_new.get("x_ticks", None)
     if x_ticks and len(x_ticks) > 1:
-        print("x_ticks", x_ticks)
         ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
                                color=x_ticks.get("color", default_color))
 
