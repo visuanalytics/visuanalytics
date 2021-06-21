@@ -80,7 +80,7 @@ def insert_infoprovider(infoprovider):
     """
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
-    datasources = infoprovider["datasources"]
+    datasources = copy.deepcopy(infoprovider["datasources"])
     diagrams = infoprovider["diagrams"]
     diagrams_original = infoprovider["diagrams_original"]
     arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
@@ -118,7 +118,12 @@ def insert_infoprovider(infoprovider):
     # Transform obj vorbereiten
     transform_step = []
     for datasource in datasources:
-        transform_step += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
+
+    for datasource in infoprovider["datasources"]:
+        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -127,7 +132,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": datasources,
+        "datasources": infoprovider["datasources"],
         "diagrams_original": diagrams_original,
         "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
@@ -399,6 +404,11 @@ def get_infoprovider(infoprovider_id):
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
         infoprovider_json = json.loads(f.read())
 
+    for datasource in infoprovider_json["datasources"]:
+        api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+        private_config = get_private()
+        datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name] if api_key_name else None
+
     return {
         "infoprovider_name": infoprovider_json["name"],
         "datasources": infoprovider_json["datasources"],
@@ -454,7 +464,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         "requests": []
     }
 
-    datasources = updated_data["datasources"]
+    datasources = copy.deepcopy(updated_data["datasources"])
 
     for datasource in datasources:
         api_key_name = f"{updated_data['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
@@ -482,6 +492,9 @@ def update_infoprovider(infoprovider_id, updated_data):
     new_transform = []
     for datasource in datasources:
         new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+
+    for datasource in updated_data["datasources"]:
+        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
 
     if new_transform is None:
         return {"err_msg": "could not generate transform-step from formulas"}
