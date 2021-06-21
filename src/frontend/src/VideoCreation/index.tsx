@@ -1,5 +1,5 @@
 import React from "react";
-import {SceneContainer} from "./SceneContainer";
+import {SceneContainer} from "./VideoEditor/SceneContainer";
 import {SceneCardData} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
@@ -13,18 +13,34 @@ import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import {useStyles} from "./style";
+import {VideoEditor} from "./VideoEditor";
+
+/**
+ TODO:
+ 1: Auslagerung Szeneerstellung in Unterkomponente für Gliederung in 3 Schritte
+ 2: Fetching aller Infoprovider
+ 3: Anzeigen Auswahl aller Infoprovider
+ 4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
+ 5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
+ 6: Absenden der Daten an das Backend mit Datenformat
+ 7: sessionStorage einbinden/ermöglichen
+ 8: Option auf Bearbeitung einbinden
+ 9: fehlende Docstrings hinzufügen
+ */
 
 
-interface VideoEditorProps {
+interface VideoCreationProps {
 
 }
 
 
-export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProvider}*/) => {
+export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, infoProvider}*/) => {
 
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
+    //current step of the VideoCreation
+    const [videoCreationStep, setVideoCreationStep] = React.useState(0)
     // name of the videoJob
     const [videoJobName, setVideoJobName] = React.useState("");
     //list of the names of all scenes available - holds the data fetched from the backend
@@ -52,28 +68,22 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
         dispatchMessage({type: "reportError", message: message});
     };
 
-    /**
-     * Method that appends a new scene to the list of scenes selected for the video.
-     * @param sceneName The unique name of the scene to be appended
-     */
-    const addScene = (sceneName: string) => {
-        //search all occurrences of this scene and find the highest id number to define the id of this scene
-        let counter = 0;
-        sceneList.forEach((sceneCard) => {
-            if(sceneCard.sceneName === sceneName) counter++;
-        })
-        const arCopy = sceneList.slice();
-        arCopy.push({
-            entryId: sceneName + "||" + counter,
-            sceneName: sceneName,
-            durationType: "fixed",
-            fixedDisplayDuration: 1,
-            exceedDisplayDuration: 1,
-            spokenText: "",
-            visible: true
-        })
-        setSceneList(arCopy);
+
+    const continueHandler = () => {
+        //TODO: additional steps needed?
+        setVideoCreationStep(videoCreationStep -1)
     }
+
+
+    const backHandler = () => {
+        if(videoCreationStep == 0) {
+            //clearSessionStorage()
+            components?.setCurrent("dashboard")
+        } else {
+            setVideoCreationStep(videoCreationStep -1)
+        }
+    }
+
 
     /**
      * Method that handles clicking the save button.
@@ -129,25 +139,39 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
         })
         return audioObject;
     }
-    /**
-     * Method that renders an available scene with the option to add it to the sceneList
-     * @param name The name of the scene to be displayed.
-     */
-    const renderAvailableScene = (name: string) => {
-        return (
-            <ListItem key={name}>
-                <ListItemText>
-                    <Typography variant="body1">
-                        {name}
-                    </Typography>
-                </ListItemText>
-                <ListItemSecondaryAction>
-                    <IconButton color="primary" onClick={() => addScene(name)}>
-                        <AddCircleOutlineIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-        )
+
+
+
+    const selectContent = () => {
+        switch(videoCreationStep) {
+            case 0: {
+                return (
+                    <div></div>
+                )
+                break;
+            }
+            case 1: {
+                return (
+                    <VideoEditor
+                        continueHandler={() => continueHandler()}
+                        backHandler={() => backHandler()}
+                        videoJobName={videoJobName}
+                        setVideoJobName={(name: string) => setVideoJobName(name)}
+                        sceneList={sceneList}
+                        setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
+                        availableScenes={availableScenes}
+                        reportError={(message: string) => reportError(message)}
+                    />
+                )
+            }
+            case 2: {
+                return (
+                    <div></div>
+                )
+            }
+
+
+        }
     }
 
     return (
@@ -156,53 +180,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (/*{ infoProvId, infoProv
             hintContent={null}
             large={true}
         >
-            <Grid container>
-                <Grid item container xs={12} justify="space-between">
-                    <Grid item container xs={8}>
-                        <Grid item xs={12}>
-                            <TextField fullWidth margin="normal" variant="filled" color="primary"
-                                       label={"Video-Job-Name"} value={videoJobName}
-                                       onChange={(e) => setVideoJobName(e.target.value.replace(" ", "_"))}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Grid item container xs={3} justify="flex-end">
-                        <Grid item className={classes.verticalButtonAlignContainer}>
-                            <Button disabled={sceneList.length === 0} variant="contained" color="primary"
-                                    onClick={saveHandler} className={classes.alignedButton}>
-                                zurück
-                            </Button>
-                        </Grid>
-                        <Grid item className={classes.verticalButtonAlignContainer}>
-                            <Button disabled={sceneList.length === 0} variant="contained" color="secondary"
-                                    onClick={saveHandler} className={classes.blockableButtonSecondary}>
-                                Speichern
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item container xs={12} justify="space-between">
-                    <Grid item container xs={9}>
-                        <Grid container style={{width: "100%", margin: "auto"}}>
-                            <Grid item xs={12}>
-                                <SceneContainer
-                                    sceneList={sceneList}
-                                    setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item container xs={3}>
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} className={classes.availableScenesBox}>
-                                <List>
-                                    {availableScenes.map((scene) => renderAvailableScene(scene))}
-                                </List>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
+            {selectContent()}
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}

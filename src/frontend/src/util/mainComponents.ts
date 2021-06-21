@@ -13,7 +13,7 @@ import { CreateInfoProvider } from "../CreateInfoProvider"
 import {Dashboard} from "../Dashboard";
 import {EditInfoProvider} from "../EditInfoProvider";
 import EditIcon from "@material-ui/icons/Edit";
-import {VideoEditor} from "../VideoEditor";
+import {VideoCreation} from "../VideoCreation";
 
 export type MainComponent = {
   component: FC;
@@ -67,7 +67,7 @@ export const mainComponents: MainComponents = {
     navName: "editInfoProvider"
   },
   videoEditor: {
-    component: VideoEditor,
+    component: VideoCreation,
     icon: EditIcon,
     navName: "videoCreator"
   }

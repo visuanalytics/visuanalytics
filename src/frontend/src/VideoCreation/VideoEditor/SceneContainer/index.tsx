@@ -3,8 +3,8 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {Direction, DurationType, SceneCardData} from "../types";
-import {useStyles} from "../style";
+import {Direction, DurationType, SceneCardData} from "../../types";
+import {useStyles} from "../../style";
 
 interface SceneContainerProps {
     sceneList: Array<SceneCardData>
