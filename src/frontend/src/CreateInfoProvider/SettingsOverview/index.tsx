@@ -57,8 +57,6 @@ interface SettingsOverviewProps {
     setDiagrams: (array: Array<Diagram>) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
-    setCurrentSelectedDataSourceName: (name: string) => void;
-    setCreatingNewDataSource: (flag: boolean) => void;
 }
 
 /**
@@ -115,7 +113,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
      * Checks if the state diagramsToRemove contains any items and removes them too, if necessary.
      * Also sets the selected dataSource to the now last dataSource in the dataSources array.
      */
-    const deleteSelectedDataSource = () => {
+    const deleteSelectedDataSource = (deleteDiagrams: boolean) => {
         //delete the dataSource
         props.setDataSources(props.dataSources.filter((dataSource) => {
             return dataSource.apiName !== props.dataSources[selectedDataSource].apiName;
@@ -126,16 +124,46 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
             mapCopy.delete(props.dataSources[selectedDataSource].apiName)
         }
         props.setDataSourcesKeys(mapCopy);
-        setSelectedDataSource(props.dataSources.length - 2);
-        //if diagrams need to be removed, remove them
-        if (diagramsToRemove.length > 0) {
-            props.setDiagrams(props.diagrams.filter((diagram) => {
-                return !diagramsToRemove.includes(diagram.name);
-            }))
+
+        props.dataSources.length <= 1 ? setSelectedDataSource(0) : setSelectedDataSource(props.dataSources.length - 2)
+
+        if (deleteDiagrams) {
+            //if diagrams need to be removed, remove them
+            if (diagramsToRemove.length > 0) {
+                props.setDiagrams(props.diagrams.filter((diagram) => {
+                    return !diagramsToRemove.includes(diagram.name);
+                }))
+            }
+            //reset the states
+            setDiagramsToRemove([]);
         }
-        //reset the states
-        setDiagramsToRemove([]);
+
         setDeleteDialogOpen(false);
+    }
+
+    const manageBackDelete = () => {
+
+        let dataSourceTmp = props.dataSources[selectedDataSource];
+        let dataSourceKeysTmp = props.dataSourcesKeys.get(props.dataSources[selectedDataSource].apiName);
+
+        deleteSelectedDataSource(false);
+
+        props.setApiName(dataSourceTmp.apiName);
+        props.setQuery(dataSourceTmp.query);
+        props.setNoKey(dataSourceTmp.noKey);
+        props.setMethod(dataSourceTmp.method);
+        props.setSelectedData(dataSourceTmp.selectedData);
+        props.setCustomData(dataSourceTmp.customData);
+        props.setHistorizedData(dataSourceTmp.historizedData);
+        props.setSchedule(dataSourceTmp.schedule)
+
+        if (dataSourceKeysTmp) {
+            props.setApiKeyInput1(dataSourceKeysTmp.apiKeyInput1);
+            props.setApiKeyInput2(dataSourceKeysTmp.apiKeyInput2);
+        }
+
+        props.backHandler();
+
     }
 
     /**
@@ -241,7 +269,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </FormControl>
                     </Grid>
                     <Grid item className={classes.elementLargeMargin}>
-                        <Button disabled={props.dataSources[selectedDataSource].apiName === props.apiName}
+                        <Button disabled={props.dataSources.length <= 1}
                                 variant="contained" size="large" className={classes.redDeleteButton}
                                 onClick={deleteDataSourceHandler}>
                             Datenquelle Löschen
@@ -295,20 +323,16 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={() => {
-                            props.backHandler();
-                            props.setCurrentSelectedDataSourceName(props.dataSources[selectedDataSource].apiName)
-                            props.setCreatingNewDataSource(false);
-                        }}>
+                        <Button variant="contained" size="large" color="primary" onClick={() =>
+                            manageBackDelete()
+                        }>
                             zurück
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={() => {
-                            newDataSourceHandler();
-                            props.setCreatingNewDataSource(true);
-                            props.setCurrentSelectedDataSourceName("")
-                        }}>
+                        <Button variant="contained" size="large" color="primary" onClick={() =>
+                            newDataSourceHandler()
+                        }>
                             Weitere Datenquelle hinzufügen
                         </Button>
                         <Button onClick={() => props.setStep(6)}>
@@ -364,7 +388,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button variant="contained"
-                                    onClick={() => deleteSelectedDataSource()}
+                                    onClick={() => deleteSelectedDataSource(true)}
                                     className={classes.redDeleteButton}>
                                 Löschen bestätigen
                             </Button>
