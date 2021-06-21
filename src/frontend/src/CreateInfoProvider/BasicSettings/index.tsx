@@ -42,6 +42,8 @@ interface BasicSettingsProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
+    setApiNameChanged: (flag: boolean) => void;
+    oldApiName: string;
 }
 
 
@@ -191,6 +193,9 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.continueHandler()
     }
 
+    const checkNameChanged = () => {
+        if (props.oldApiName !== "") props.setApiNameChanged(props.name !== props.oldApiName);
+    }
 
     /**
      * Generates the components content based on the current state.
@@ -222,6 +227,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                     value={props.name}
                                     changeHandler={(s) => {
                                         props.setName(s)
+                                        checkNameChanged();
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
                                     checkNameDuplicate={props.checkNameDuplicate}

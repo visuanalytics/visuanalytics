@@ -126,6 +126,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+    const [oldApiName, setOldApiName] = React.useState("");
+
+    const [apiNameChanged, setApiNameChanged] = React.useState(false);
+
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -700,6 +704,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        oldApiName={oldApiName}
+                        setApiNameChanged={setApiNameChanged}
                     />
                 );
             case 2:
@@ -786,6 +792,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         dataSourcesKeys={dataSourcesKeys}
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                        oldApiName={oldApiName}
+                        setOldApiName={setOldApiName}
+                        apiNameChanged={apiNameChanged}
                     />
                 )
             case 6:
