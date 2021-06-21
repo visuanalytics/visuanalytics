@@ -35,8 +35,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);
     // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetchesg
     const minimalInfoProvObjects= React.useRef<Array<MinimalInfoProvider>>([]);
-
-    //git commit -m"finished methods for fetching all selected infoProvider from the backend, resolved issues"
+    
     /**
      * Method block for fetching all selected infoproviders from the backend
      */
