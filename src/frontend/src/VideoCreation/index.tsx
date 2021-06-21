@@ -177,10 +177,6 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
 
 
 
-    /**
-     * Method block for fetching all selected infoproviders from the backend
-     */
-
 
     /**
      * Method that handles clicking the save button.

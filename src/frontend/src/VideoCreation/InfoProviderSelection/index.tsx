@@ -1,5 +1,5 @@
 import React from "react";
-import {InfoProviderData} from "../types";
+import {fetchAllBackendAnswer, InfoProviderData} from "../types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import {ListItem, ListItemText} from "@material-ui/core";
@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import {useStyles} from "../style";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {useCallFetch} from "../../Hooks/useCallFetch";
 
 
 interface InfoProviderSelectionProps {
@@ -24,6 +25,92 @@ interface InfoProviderSelectionProps {
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
 
     const classes = useStyles();
+
+    // true when the continue button is disabled because a fetching from the backend is currently running
+    const [continueDisabled, setContinueDisabled] = React.useState(false);
+
+    // holds all infoProviders that still need to be fetched in a running loop of fetches
+    const [infoProviderToFetch, setInfoProviderToFetch] = React.useState<Array<InfoProviderData>>([]);
+
+    /**
+     * Method block for fetching all selected infoproviders from the backend
+     */
+
+    /**
+     * Fetches the next infoProvider in the list infoProviderToFetch.
+     * If there are no more infoProviders, the fetched data is passed
+     * to the parent component and continue handler is used.
+     */
+    const fetchNextInfoProvider = () => {
+
+    }
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorFetchById = (err: Error) => {
+        //console.log('error');
+        props.reportError("Fehler: " + err)
+    }
+
+    /**
+     * Handles the success of the fetchInfoProviderById()-method.
+     * The json from the response will be transformed to a reduced version only
+     * containing the necessary information.
+     * Also removes the infoProvider from the list infoProviderToFetch.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessFetchById = (jsonData: any) => {
+
+    }
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = React.useRef(true);
+
+    /**
+     * Method to fetch a infoProvider from the backend by its id.
+     * The standard hook "useCallFetch" is not used here since we want to pass an additional parameter 'id'.
+     * Setting the id in the state would cause problems making sure the right value is present when needed.
+     */
+    const fetchInfoProviderById = React.useCallback((id: number) => {
+        let url = "/visuanalytics/infoprovider/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleSuccessFetchById(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorFetchById(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
 
     /**
      * Method to check if a certain infoProviderID is included in the list of selected infoproviders
