@@ -256,7 +256,7 @@ def barh_multiple_plot(values, fig=None, ax=None):
 
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-        ax.set_xticks(np.concatenate((np.array([0]), x)))
+        ax.set_xticks(np.concatenate((np.array([0]), y)))
     ax.barh(y=y - height / 2, width=values["x_up"], height=height, color=color_down)
     ax.barh(y=y + height / 2, width=values["x_down"], height=height, color=color_up)
     return fig, ax
