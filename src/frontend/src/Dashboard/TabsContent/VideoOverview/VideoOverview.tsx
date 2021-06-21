@@ -29,7 +29,7 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
                     <Grid item xs={12}>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 startIcon={<AddCircleIcon fontSize="small"/>}
-                                onClick={() => components?.setCurrent("videoEditor")}>
+                                onClick={() => components?.setCurrent("videoCreator")}>
                             Neuer Video-Job
                         </Button>
                     </Grid>

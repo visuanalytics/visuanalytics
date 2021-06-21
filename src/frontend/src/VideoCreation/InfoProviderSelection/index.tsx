@@ -1,5 +1,5 @@
 import React from "react";
-import {fetchAllBackendAnswer, InfoProviderData} from "../types";
+import {fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider} from "../types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import {ListItem, ListItemText} from "@material-ui/core";
@@ -9,7 +9,7 @@ import Box from "@material-ui/core/Box";
 import {useStyles} from "../style";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import {useCallFetch} from "../../Hooks/useCallFetch";
+import {InfoProviderFromBackend} from "../../CreateInfoProvider/types";
 
 
 interface InfoProviderSelectionProps {
@@ -18,6 +18,7 @@ interface InfoProviderSelectionProps {
     infoProviderList: Array<InfoProviderData>
     selectedInfoProvider: Array<InfoProviderData>
     setSelectedInfoProvider: (selected: Array<InfoProviderData>) => void;
+    setMinimalInfoProvObjects: (objects: Array<MinimalInfoProvider>) => void;
     reportError: (message: string) => void;
 }
 
@@ -29,21 +30,62 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     // true when the continue button is disabled because a fetching from the backend is currently running
     const [continueDisabled, setContinueDisabled] = React.useState(false);
 
-    // holds all infoProviders that still need to be fetched in a running loop of fetches
-    const [infoProviderToFetch, setInfoProviderToFetch] = React.useState<Array<InfoProviderData>>([]);
+    // holds all infoProviders that still need to be fetched
+    // we use useFetch since we often need to change to value without new rendering
+    const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);
+    // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetchesg
+    const minimalInfoProvObjects= React.useRef<Array<MinimalInfoProvider>>([]);
 
+    //git commit -m"finished methods for fetching all selected infoProvider from the backend, resolved issues"
     /**
      * Method block for fetching all selected infoproviders from the backend
      */
 
+
     /**
      * Fetches the next infoProvider in the list infoProviderToFetch.
-     * If there are no more infoProviders, the fetched data is passed
-     * to the parent component and continue handler is used.
+     * If there are no more infoProviders, the continue handler is used.
      */
     const fetchNextInfoProvider = () => {
-
+        //when all infoProviders are fetched, proceed to the next component
+        if(infoProviderToFetch.current.length === 0) {
+            setContinueDisabled(false);
+            // copy the local useRef value to the state of the parent
+            props.setMinimalInfoProvObjects(minimalInfoProvObjects.current)
+            console.log(minimalInfoProvObjects.current)
+            //props.continueHandler();
+        }
+        //if not, fetch the next infoProvider
+        else fetchInfoProviderById(infoProviderToFetch.current[0].infoprovider_id)
     }
+
+    /**
+     * Method that transforms a infoProvider fetched from the backend to a minimal infoProvider
+     * only containing the information necessary for video creation.
+     * @param infoProvider The infoProvider sent by the backend
+     */
+    const createMinimalInfoProvider = (infoProvider: InfoProviderFromBackend) => {
+        const minimalInfoProvider: MinimalInfoProvider = {
+            infoproviderName: infoProvider.infoprovider_name,
+            dataSources: []
+        }
+        infoProvider.datasources.forEach((dataSource) => {
+            minimalInfoProvider.dataSources.push({
+                apiName: dataSource.datasource_name,
+                selectedData: dataSource.selected_data,
+                customData: dataSource.formulas,
+                historizedData: dataSource.historized_data,
+                schedule: {
+                    type: dataSource.schedule.type,
+                    weekdays: dataSource.schedule.weekdays,
+                    time: dataSource.schedule.time,
+                    interval: dataSource.schedule.time_interval,
+                }
+            })
+        })
+        return minimalInfoProvider;
+    }
+
 
     /**
      * Handles the error-message if an error appears.
@@ -51,18 +93,31 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      */
     const handleErrorFetchById = (err: Error) => {
         //console.log('error');
-        props.reportError("Fehler: " + err)
+        props.reportError("Fehler: " + err);
+        setContinueDisabled(false);
     }
+
 
     /**
      * Handles the success of the fetchInfoProviderById()-method.
-     * The json from the response will be transformed to a reduced version only
+     * The json from the response will be transformed to a minimal version only
      * containing the necessary information.
      * Also removes the infoProvider from the list infoProviderToFetch.
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchById = (jsonData: any) => {
-
+        const data = jsonData as InfoProviderFromBackend;
+        //add the transformed minimal infoProvider to the list of the parent component
+        const arCopy = minimalInfoProvObjects.current.slice();
+        arCopy.push(createMinimalInfoProvider(data));
+        minimalInfoProvObjects.current = (arCopy);
+        //remove the infoProvider from the list that still needs to be fetched
+        infoProviderToFetch.current = infoProviderToFetch.current.filter((infoProvider) => {
+            return infoProvider.infoprovider_name !== data.infoprovider_name;
+        })
+        //console.log("added a new infoprovider");
+        //console.log(infoProviderToFetch);
+        fetchNextInfoProvider();
     }
 
     //this static value will be true as long as the component is still mounted
@@ -74,7 +129,8 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      * The standard hook "useCallFetch" is not used here since we want to pass an additional parameter 'id'.
      * Setting the id in the state would cause problems making sure the right value is present when needed.
      */
-    const fetchInfoProviderById = React.useCallback((id: number) => {
+    const fetchInfoProviderById = (id: number) => {
+        console.log("called");
         let url = "/visuanalytics/infoprovider/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -101,7 +157,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             //only called when the component is still mounted
             if (isMounted.current) handleErrorFetchById(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -145,7 +201,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
     const renderListItem = (infoProvider: InfoProviderData) => {
         return (
-            <ListItem>
+            <ListItem key={infoProvider.infoprovider_id}>
                 <ListItemIcon>
                     <Checkbox
                         checked={checkIdIncluded(infoProvider.infoprovider_id)}
@@ -184,7 +240,11 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={props.selectedInfoProvider.length === 0} variant="contained" size="large" color="primary" onClick={props.continueHandler}>
+                    <Button disabled={continueDisabled || props.selectedInfoProvider.length === 0} variant="contained" size="large" color="primary" onClick={() => {
+                       infoProviderToFetch.current = props.selectedInfoProvider;
+                       setContinueDisabled(true);
+                       fetchNextInfoProvider();
+                    }}>
                         weiter
                     </Button>
                 </Grid>

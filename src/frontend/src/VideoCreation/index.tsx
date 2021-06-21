@@ -1,17 +1,8 @@
 import React from "react";
-import {SceneContainer} from "./VideoEditor/SceneContainer";
-import {fetchAllBackendAnswer, InfoProviderData, SceneCardData} from "./types";
+import {fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider, SceneCardData} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {ComponentContext} from "../ComponentProvider";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import {ListItem, ListItemSecondaryAction, ListItemText, TextField} from "@material-ui/core";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import List from "@material-ui/core/List";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import {useStyles} from "./style";
 import {VideoEditor} from "./VideoEditor";
 import {InfoProviderSelection} from "./InfoProviderSelection";
@@ -37,7 +28,7 @@ interface VideoCreationProps {
 }
 
 
-export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, infoProvider}*/) => {
+export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
 
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
@@ -50,6 +41,8 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     // list of infoproviders selected by the user
     const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>([]);
+    // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
+    const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
     // list of the names of all scenes available - holds the data fetched from the backend
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
@@ -83,7 +76,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
 
 
     const backHandler = () => {
-        if(videoCreationStep == 0) {
+        if(videoCreationStep === 0) {
             //clearSessionStorage()
             components?.setCurrent("dashboard")
         } else {
@@ -245,6 +238,7 @@ export const VideoCreation: React.FC<VideoCreationProps> = (/*{ infoProvId, info
                         infoProviderList={infoProviderList}
                         selectedInfoProvider={selectedInfoProvider}
                         setSelectedInfoProvider={(selection: Array<InfoProviderData>) => setSelectedInfoProvider(selection)}
+                        setMinimalInfoProvObjects={(objects: Array<MinimalInfoProvider>) => setMinimalInfoProvObjects(objects)}
                         reportError={(message: string) => reportError(message)}
                     />
                 )

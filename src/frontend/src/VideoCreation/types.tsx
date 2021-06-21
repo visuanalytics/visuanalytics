@@ -1,3 +1,13 @@
+import {
+    DataSource,
+    DataSourceKey,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem
+} from "../CreateInfoProvider/types";
+import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+
 export enum Direction {
     Left = "LEFT",
     Right = "RIGHT"
@@ -20,7 +30,22 @@ export type InfoProviderData = {
     infoprovider_name: string;
 }
 
-/**
- * This type is needed because the answer of the backend consists of a list of infProviders.
- */
+// type of the answer for fetching all Infoprovider from Backend
 export type fetchAllBackendAnswer = Array<InfoProviderData>
+
+/**
+ * Reduced version of a infoprovider that only contains its name, all dataSources
+ * with name, selectedData, customData, historizedData and the schedule object.
+ * This ist only the data used in VideoEditor and is needed to save memory when potentially
+ * many infoProvider are being loaded/stored at the same time.
+ */
+export type MinimalInfoProvider = {
+    infoproviderName: string;
+    dataSources: Array<{
+        apiName: string;
+        selectedData: SelectedDataItem[];
+        customData: FormelObj[];
+        historizedData: string[];
+        schedule: Schedule;
+    }>;
+}

@@ -66,7 +66,7 @@ export const mainComponents: MainComponents = {
     icon: EditIcon,
     navName: "editInfoProvider"
   },
-  videoEditor: {
+  videoCreator: {
     component: VideoCreation,
     icon: EditIcon,
     navName: "videoCreator"
