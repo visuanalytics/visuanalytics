@@ -589,6 +589,7 @@ def delete_infoprovider(infoprovider_id):
     con.commit()
     return False
 
+
 def delete_videojob(videojob_id):
     """
     Entfernt den Videojob mit der gegebenen ID.
@@ -602,6 +603,7 @@ def delete_videojob(videojob_id):
     delete_job(videojob_id)
 
     return True
+
 
 def insert_scene(scene):
     """
@@ -823,10 +825,10 @@ def insert_image(image_name):
     Adds an image to the Database.
 
     :param image_name: Name of the image.
-    :param image_type: Type of the image. Supported options ars .png .jpeg and .jpg
     """
     con = db.open_con_f()
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=?", [image_name]).fetchone()["COUNT(*)"]
+    name = image_name.rsplit(".", 1)[0]
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
     if count > 0:
         return False
@@ -856,15 +858,8 @@ def get_image_list():
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image")
     con.commit()
-    images = []
+    """images = []
     for row in res:
-        """with open(get_scene_image_path(row["image_name"]), "rb") as f:
-            image_file = f.read()
-        images.append({
-            "image_id": row["image_id"],
-            "image_name": row["image_name"],
-            "image_file": image_file
-        })"""
         with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
             byte_arr = f.tobytes()
             encoded_img = encodebytes(byte_arr).decode('ascii')
@@ -873,8 +868,8 @@ def get_image_list():
                 "image_name": row["image_name"],
                 "image_file": encoded_img
             })
-    return images
-    # return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": open(get_scene_image_path(row["image_name"]), "rb")} for row in res]
+    return images"""
+    return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
 
 def delete_scene_image(image_id):
@@ -899,6 +894,7 @@ def delete_scene_image(image_id):
     con.commit()
 
     return "Successful"
+
 
 def get_topic_names():
     con = db.open_con_f()
@@ -1317,6 +1313,7 @@ def _row_to_job(row):
 
 def _get_infoprovider_path(infoprovider_name: str):
     return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
+
 
 def _get_videojob_path(video_name: str):
     return os.path.join(VIDEOJOB_LOCATION, video_name) + ".json"

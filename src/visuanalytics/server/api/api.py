@@ -739,7 +739,7 @@ def delete_scene(id):
         return err, 400
 
 
-@api.route("/image/add", methods=["PUT"])
+@api.route("/image/add", methods=["POST"])
 def add_scene_image():
     """
     Endpunkt '/image/add'.
@@ -768,7 +768,6 @@ def add_scene_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        print("image_name", name + "." + file_extension)
         file_path = queries.get_scene_image_path(name + "." + file_extension)
 
         if path.exists(file_path):
@@ -805,13 +804,31 @@ def get_all_scene_images():
         return err, 400
 
 
+@api.route("/image/<id>", methods=["GET"])
+def get_image(id):
+    """
+    Endpunkt '/image/<id>' (GET).
+
+    Route über die ein Szenen-Bild geladen werden kann.
+    :param id: ID des Bilders welches gesendet werden soll.
+    """
+    try:
+        file_path = queries.get_scene_image_file(id)
+
+        return send_file(file_path, "application/json", True)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading a scene-image"})
+        return err, 400
+
+
 @api.route("/image/<id>", methods=["DELETE"])
 def delete_scene_image(id):
     """
     Endpunkt '/image/<id>' (DELETE).
 
     Route über die ein Szenen-Bild gelöscht werden kann.
-    :param image_id: ID des Bildes welches gelöscht werden soll.
+    :param id: ID des Bildes welches gelöscht werden soll.
     """
     try:
         success = queries.delete_scene_image(id)
