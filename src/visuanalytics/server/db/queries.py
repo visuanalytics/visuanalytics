@@ -7,6 +7,7 @@ import re
 import humps
 import copy
 from base64 import b64encode, encodebytes
+from copy import deepcopy
 from PIL import Image
 
 from visuanalytics.server.db import db
