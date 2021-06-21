@@ -58,7 +58,7 @@ def get_transformations(tree, k, key_name, counter):
         for key in keys:
             if type(current_calc[key]) == dict:
                 counter += 1
-                current_calc[key] = build_calc_list(current_calc, key, counter)
+                current_calc[key], temporary = build_calc_list(current_calc, key, counter)
 
         calculation = calc_template.copy()
         calculation["action"] = operations[current_calc["operator"]]

@@ -175,7 +175,7 @@ def insert_infoprovider(infoprovider):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -403,7 +403,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["storing"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["storing"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -953,15 +953,18 @@ def remove_toplevel_key(obj):
     return obj
 
 
-def _extend_keys(obj, datasource_name):
+def _extend_keys(obj, datasource_name, formula_keys):
     if type(obj) == list:
         for x in range(len(obj)):
-            obj[x] = _extend_keys(obj[x], datasource_name)
+            obj[x] = _extend_keys(obj[x], datasource_name, formula_keys)
     elif type(obj) == dict:
         for key in list(obj.keys()):
-            obj[key] = _extend_keys(obj[key], datasource_name)
+            obj[key] = _extend_keys(obj[key], datasource_name, formula_keys)
     elif type(obj) == str:
-        obj = "_req|" + datasource_name + "|" + obj
+        if obj not in formula_keys:
+            obj = "_req|" + datasource_name + "|" + obj
+        else:
+            obj = datasource_name + "|" + obj
     return obj
 
 
@@ -1011,13 +1014,13 @@ def _generate_transform(formulas, old_transform):
     return transform
 
 
-def _generate_storing(historized_data, datasource_name):
+def _generate_storing(historized_data, datasource_name, formula_keys):
     storing = []
-    historized_data = remove_toplevel_key(_extend_keys(historized_data, datasource_name))
+    historized_data = remove_toplevel_key(historized_data)
     for key in historized_data:
         storing.append({
-            "name": key,
-            "key": key
+            "name": key.replace("|", "_"),
+            "key": "_req|" + datasource_name + "|" + key if key not in formula_keys else key
         })
     return storing
 
