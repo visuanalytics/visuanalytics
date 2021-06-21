@@ -30,12 +30,13 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     // true when the continue button is disabled because a fetching from the backend is currently running
     const [continueDisabled, setContinueDisabled] = React.useState(false);
 
+
     // holds all infoProviders that still need to be fetched
     // we use useFetch since we often need to change to value without new rendering
     const infoProviderToFetch= React.useRef<Array<InfoProviderData>>([]);
     // holds all minimal infoProvider fetched so far - necessary since the parent state wont change between fetchesg
     const minimalInfoProvObjects= React.useRef<Array<MinimalInfoProvider>>([]);
-    
+
     /**
      * Method block for fetching all selected infoproviders from the backend
      */

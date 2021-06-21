@@ -30,6 +30,7 @@ export type InfoProviderData = {
     infoprovider_name: string;
 }
 
+
 // type of the answer for fetching all Infoprovider from Backend
 export type fetchAllBackendAnswer = Array<InfoProviderData>
 
@@ -49,3 +50,4 @@ export type MinimalInfoProvider = {
         schedule: Schedule;
     }>;
 }
+

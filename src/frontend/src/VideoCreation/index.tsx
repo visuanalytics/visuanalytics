@@ -28,6 +28,7 @@ interface VideoCreationProps {
 }
 
 
+
 export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
 
     const classes = useStyles();
@@ -41,8 +42,10 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     // list of infoproviders selected by the user
     const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>([]);
+
     // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
     const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
+
     // list of the names of all scenes available - holds the data fetched from the backend
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
