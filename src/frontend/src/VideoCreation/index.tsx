@@ -6,10 +6,12 @@ import {ComponentContext} from "../ComponentProvider";
 import {useStyles} from "./style";
 import {VideoEditor} from "./VideoEditor";
 import {InfoProviderSelection} from "./InfoProviderSelection";
+import {Schedule} from "../CreateInfoProvider/types";
+import {useCallFetch} from "../Hooks/useCallFetch";
 
 /**
  TODO:
- 4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
+
  5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
  6: Absenden der Daten an das Backend mit Datenformat
  7: sessionStorage einbinden/ermöglichen
@@ -20,6 +22,7 @@ import {InfoProviderSelection} from "./InfoProviderSelection";
  1: Auslagerung Szenenerstellung in Unterkomponente für Gliederung in 3 Schritte
  2: Fetching aller Infoprovider
  3: Anzeigen Auswahl aller Infoprovider
+ 4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
  */
 
 
@@ -38,14 +41,14 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     const [videoCreationStep, setVideoCreationStep] = React.useState(0)
     // name of the videoJob
     const [videoJobName, setVideoJobName] = React.useState("");
+    //schedule of the videojob
+    const [schedule, setSchedule] = React.useState<Schedule>({type: "", interval: "", time: "", weekdays: []})
     // list of all available infoproviders
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     // list of infoproviders selected by the user
     const [selectedInfoProvider, setSelectedInfoProvider] = React.useState<Array<InfoProviderData>>([]);
-
     // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
     const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
-
     // list of the names of all scenes available - holds the data fetched from the backend
     const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
     // sorted list of all scenes that are selected for the video
@@ -73,8 +76,8 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
 
 
     const continueHandler = () => {
-        //TODO: additional steps needed?
-        setVideoCreationStep(videoCreationStep -1)
+        if (videoCreationStep === 2) sendVideoToBackend();
+        else setVideoCreationStep(videoCreationStep + 1);
     }
 
 
@@ -172,14 +175,10 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      */
 
 
-
-
     /**
-     * Method that handles clicking the save button.
+     * Method block for sending the created videojob to the backend.
      */
-    const saveHandler = () => {
 
-    }
 
     /**
      * Takes the values of all states and creates the object for the
@@ -199,9 +198,15 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      */
     const createImagesObject = () => {
         //TODO: possibly find smarter solution without any type
+        //stores the appearance frequency for each available scene this is necessary
+        // to number the appearances of the scenes to let all keys in the images object be unique
+        const sceneFrequency: Array<number> = new Array(availableScenes.length).fill(1);
         const imagesObject: any = {};
         sceneList.forEach((scene) => {
-            imagesObject[scene.entryId] = {}
+            //find the frequency, take its value und increment it
+            imagesObject[scene.sceneName + ""] = {
+                key: scene.sceneName
+            }
         })
         return imagesObject;
     }
@@ -209,7 +214,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     /**
      * Method that creates the object with all audios necessary for the backend.
      */
-    const createAudioObject = () => {
+    const createAudiosObject = () => {
         //TODO: possibly find smarter solution without any type
         const audioObject: any = {};
         sceneList.forEach((scene) => {
@@ -229,6 +234,37 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         return audioObject;
     }
 
+
+    const sendVideoSuccessHandler = (jsonData: any) => {
+
+    }
+
+
+
+    const sendVideoErrorHandler = (err: Error) => {
+
+    }
+
+    const sendVideoToBackend = useCallFetch("visuanalytics/videojob", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                videojob_name: videoJobName,
+                images: createImagesObject(),
+                audio: {
+                    audios: {
+                        createAudiosObject
+                    }
+                },
+                sequence: {
+                    type: "successively",
+                    transitions: 0.1
+                }
+            })
+        }, sendVideoSuccessHandler, sendVideoErrorHandler
+    );
 
 
     const selectContent = () => {

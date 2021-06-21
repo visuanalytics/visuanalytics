@@ -50,5 +50,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        elementSmallMargin: {
+            marginTop: "5px"
+        },
     }),
 );

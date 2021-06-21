@@ -53,7 +53,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             // copy the local useRef value to the state of the parent
             props.setMinimalInfoProvObjects(minimalInfoProvObjects.current)
             console.log(minimalInfoProvObjects.current)
-            //props.continueHandler();
+            props.continueHandler();
         }
         //if not, fetch the next infoProvider
         else fetchInfoProviderById(infoProviderToFetch.current[0].infoprovider_id)
