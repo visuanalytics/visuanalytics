@@ -3,7 +3,7 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {AudioElement, Direction, DurationType, SceneCardData} from "../../types";
+import {AudioElement, Direction, SceneCardData} from "../../types";
 import {useStyles} from "../../style";
 
 interface SceneContainerProps {
@@ -45,7 +45,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
     /**
      * Handler method that changes the selected duration of a scene in the video.
      * @param index The index (in the list) of the scene whose duration is changed.
-     * @param newDuration The new duration value.
+     * @param newDisplayDuration The new duration value.
      */
     const setDisplayDuration = (index: number, newDisplayDuration: number) => {
         const arCopy = props.sceneList.slice();

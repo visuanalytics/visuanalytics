@@ -1,5 +1,5 @@
 import React from "react";
-import {fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider} from "../types";
+import {InfoProviderData, MinimalInfoProvider} from "../types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import {ListItem, ListItemText} from "@material-ui/core";
