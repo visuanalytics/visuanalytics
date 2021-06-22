@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer} from "react";
+import React from "react";
 import List from "@material-ui/core/List";
 import {
     ListItem,
@@ -12,20 +12,19 @@ import {
     Typography, ListItemIcon, ListItemSecondaryAction, ListItemText,
 
 } from "@material-ui/core";
-import {Theme} from "@material-ui/core/styles"
 import {useStyles} from "./style";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import {hintContents} from "../../util/hintContents";
 import Konva from 'konva';
 import {Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star} from 'react-konva';
-import {TransformerComponent} from './TransformerComponent/index'
+import {TransformerComponent} from './TransformerComponent'
 import {FrontendInfoProvider} from "../../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo} from "../types";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import { centerNotifcationReducer } from "../../util/CenterNotification";
+import {centerNotifcationReducer, CenterNotification} from "../../util/CenterNotification";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -38,16 +37,11 @@ interface SceneEditorProps {
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
-    let theme: Theme;
     let timeOut = 0;
     const uniqueId = "sceneEditorID"
 
-    //TODO: only for debugging purposes, remove in production
-    const testDataList = ["data1", "data2", "data3", "data4"]
-
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
-
     const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
@@ -67,8 +61,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
-
-    const [dataList, setDataList] = React.useState<Array<string>>([]);
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
 
@@ -76,11 +68,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [itemSelected, setItemSelected] = React.useState(false);
     const [itemCounter, setItemCounter] = React.useState(0);
     const [imageSource, setImageSource] = React.useState<HTMLImageElement>(new window.Image());
-    const [itemsLength, setItemsLength] = React.useState(0);
 
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<myCircle | myRectangle | myLine | myStar | myText | myImage>>([]);
 
-    const [savedText, setSavedText] = React.useState<myCircle | myRectangle | myLine | myStar | myText | myImage>({} as myCircle);
     const [sceneName, setSceneName] = React.useState("emptyScene");
     const [selectedItemName, setSelectedItemName] = React.useState("");
     const [selectedType, setSelectedType] = React.useState("Circle");
@@ -109,27 +99,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         severity: "error",
     });
 
-    const reportError = (message: string) => {
-        dispatchMessage({type: "reportError", message: message});
-    };
+    //TODO useEffects to fix reloading
 
     React.useEffect(() => {
+        console.log(JSON.stringify(items))
         sessionStorage.setItem("items-" + uniqueId, JSON.stringify(items));
-    }, [items])
+    }, [items.length])
     React.useEffect(() => {
         sessionStorage.setItem("recentlyRemovedItems-" + uniqueId, JSON.stringify(recentlyRemovedItems));
     }, [recentlyRemovedItems])
     React.useEffect(() => {
         sessionStorage.setItem("selectedObject-" + uniqueId, JSON.stringify(selectedObject));
     }, [selectedObject])
-
     React.useEffect(() => {
         setItems(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<myCircle | myRectangle | myLine | myStar | myText | myImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<myCircle | myRectangle | myLine | myStar | myText | myImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!));
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as myCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
     }, [])
-
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -151,6 +138,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("schedule-" + uniqueId);
     }
 
+    /**
+     * Custom types for different elements
+     */
     type myCircle = {
         x: number;
         y: number;
@@ -243,12 +233,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         scaleX: number;
         scaleY: number;
     };
-
+    /**
+     * Types for the export of the final scene
+     */
     type jsonExport = {
         scene_name: string
         used_images: number[]
         used_infoproviders: number[]
         images: baseImg
+        scene_items: string
     }
 
     type baseImg = {
@@ -280,49 +273,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         pattern: string // "Datum: {_req|api_key}"
     }
 
-    const createFinalExport = () => {
-        const filtered = filterTextAndImage();
-        console.log(filtered[0], filtered[1]);
-
-    }
-
-    const filterTextAndImage = () => {
-        let returnArray = [];
-        let itemCopy = items.slice();
-        let onlyTextAndImages = [];
-        for (let index = 0; index < itemCopy.length; index++) {
-            const element = itemCopy[index];
-            const localIndex = itemCopy.indexOf(element);
-            if (element.id.startsWith('text')) {
-                onlyTextAndImages.push(itemCopy.splice(localIndex, 1));
-            }
-            if (element.id.startsWith('image')) {
-                onlyTextAndImages.push(itemCopy.splice(localIndex, 1));
-            }
-        }
-        returnArray.push(itemCopy);
-        returnArray.push(onlyTextAndImages);
-        return returnArray;
-    }
-
-
-    const exporter = () => {
-        exportToJSON();
-    }
-
+    /**
+     * Handler to save the scene as png file
+     */
     const saveHandler = () => {
-        const currentStage = stage;
-        let stageJson = currentStage?.toDataURL();
+        let stageJson = stage?.toDataURL();
         if (stageJson === undefined) {
             stageJson = "Empty Stage";
         }
         return stageJson;
     }
 
-    useEffect(() => {
-        let copyOfItems = exportToJSON();
-    }, [sceneName]);
-
+    /**
+     * Method to create the export for the backend
+     */
     const exportToJSON = async () => {
         let copyOfItems = items.slice();
         let onlyTextAndImages = [];
@@ -360,12 +324,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             overlay: textImage
         }
 
-        const returnValue: jsonExport = {
-            scene_name: sceneName,
-            used_images: [],//number[]
-            used_infoproviders: [],
-            images:  base
-        }
+
 
         onlyTextAndImages.forEach(element => {
             if (element.id.startsWith('text')) {
@@ -402,79 +361,71 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         });
 
         setItemJson(JSON.stringify(copyOfItems));
+
+        const returnValue: jsonExport = {
+            scene_name: sceneName,
+            used_images: [],//number[]
+            used_infoproviders: [],
+            images:  base,
+            scene_items: itemJson,
+        }
+
         setExportJSON(returnValue);
-        return copyOfItems
     }
 
-    const delayedItemChange = (itemList: any) => {
-        window.clearTimeout(timeOut);
-        timeOut = window.setTimeout(() => {
-            setItems(itemList);
-        }, 200);
+    /**
+     * Handler for the button to save the scene and go back to the overview
+     */
+    const saveButtonHandler = () => {
+        if (itemCounter === 0){
+            dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
+            return;
+        }
+        exportToJSON()
+        postBackground();
+        postScene();
     }
 
-    const handleSaveToPC = (url: string, name: string) => {
-        const link = document.createElement('a');
-        link.download = name;
-        link.href = url;
-        link.click();
-    }
-
-    const handleSuccess = () => {
-
-    }
-
-    const handleError = () => {
-
-    }
-
+    /**
+     * Method to POST the text and images to the backend
+     */
     const postScene = useCallFetch("visuanalytics/scene", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(
-                exportJSON
-            )
-        }, handleSuccess, handleError
+            body: JSON.stringify(exportJSON)
+        }
     );
 
-    const saveButtonHandler = () => {
-        if (/*TODO Scene is empty*/false){
-            //reportError("Die Szene ist leer!");
-            return;
-        }
-        exportToJSON();
-        postBackground();
-        postScene();
-    }
-
+    /**
+     * Method to POST the scene background
+     */
     const postBackground = useCallFetch("visuanalytics/image/add", {
         method: "POST",
         headers: {},
         body: baseImage
     });
 
-
     /**
-     * gets called when an element drag is started.
-     * @param e drag event
+     * Method to change the cursor
+     * Gets called when an element drag is started.
      */
-    const handleDragStart = (e: any) => {
+    const handleDragStart = () => {
         setCurrentCursor("grabbing");
     };
 
     /**
-     * gets called multiple times during the drag of an item
-     * @param e drag event
+     * Method to handle the move of an element
+     * Gets called whenever the user moves an element
      */
-    const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const handleDragMove = () => {
     }
 
     /**
-     * gets called when a drag event comes to an end
+     * Method to handle the end of a drag event
+     * Gets called when a drag event comes to an end
      * @param e drag event
-     * @returns nothing, return is used as a break condition in case the user drags an item outside of the canvas.
      */
     const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
         setCurrentCursor("grab");
@@ -504,11 +455,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     };
 
     /**
-     * This function gets called everytime the user clicks on the canvas.
+     * Method to handle the onMouseDown Event on the canvas
+     * Gets called everytime the user clicks on the canvas.
      * @param e click event
-     * @returns is again used as a break from the function
      */
-
     const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
 
         const name = e.target.name();
@@ -554,9 +504,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     };
 
     /**
-     * This function gets called whenever the user clicks on the canvas to add an item.
+     * Method to handle the onClick Event on the canvas
+     * Gets called whenever the user clicks on the canvas to add an item.
      * @param e onClick Event
-     * @returns nothing
      */
 
     const handleCanvasClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
@@ -709,13 +659,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user changes the x coordinate of an item. The coordinate will be updated in the item.
+     * Method to handle the change of the X Coordinate of an element
+     * Gets called whenever the value of the corresponding field changes
      */
     const handleCoordinatesXChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-
-
         setCurrentXCoordinate(parseInt(event.target.value))
-
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         const objectCopy = {
@@ -728,7 +676,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user changes the y coordinate of an item. The coordinate will be updated in the item.
+     * Method to handle the change of the Y Coordinate of an element
+     * Gets called whenever the value of the corresponding field changes
      */
     const handleCoordinatesYChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setCurrentYCoordinate(parseInt(event.target.value));
@@ -744,20 +693,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user edits the text of an existing text-field.
-     * @param e onChange Event
+     * Method to handle the change of the value of a text field
+     * Gets called while editing a text field
      */
     const handleTextEdit = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-
         setTextEditContent(e.target.value);
     };
 
     /**
-     * This function is called whenever a user double clicks on an existing text.
-     * @param e onDoubleClick Event
+     * Method to handle the double click on a text element
      */
-    const handleTextDblClick = (e: any) => {
-
+    const handleTextDblClick = () => {
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         let backup: any = items[index];
@@ -779,21 +725,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setTextEditFontFamily(objectCopy.fontFamily);
         setTextEditFontColor(objectCopy.color);
         setCurrentlyEditing(true);
-
     };
 
     /**
-     * This function gets called whenever the user presses a key while editing a text.
-     * @param e onKeyDown Event
+     * Method to handle keypresses in an editing area
      */
     const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter') {
             const localItems = items.slice();
             const index = items.indexOf(selectedObject);
-            const content = textEditContent;
             const objectCopy = {
                 ...selectedObject,
-                textContent: content,
+                textContent: textEditContent,
                 currentlyRendered: true,
             };
             localItems[index] = objectCopy;
@@ -804,19 +747,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     };
 
     /**
-     * This function is called whenever the user presses the "Clear Canvas" button
+     * Method to clear the canvas but keep removed elements
      */
     const clearCanvas = () => {
-
         setCurrentCursor("crosshair");
-
         setCurrentXCoordinate(0);
         setCurrentYCoordinate(0);
-
         setCurrentItemColor("#000000");
         setBackGroundColor("#FFFFFF");
         setCurrentFontColor("#000000");
-
         setItems([]);
         setSelectedItemName("");
         setSelectedType("");
@@ -832,20 +771,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called, when the user changes the size of amount he wants to move an item on the x or y axis per step.
+     * Method to handle the change of the stepsize for the x and y coordinates
      */
     const handleStepSizeChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-
         setStepSize(parseInt(event.target.value));
     }
 
     /**
-     * This function is called to get the relative pointer position of the cursor on the canvas
-     * @param e onClick Event
+     * Method to get the relative position of the pointer to the stage
      * @returns the position of the pointer
      */
     const getRelativePointerPosition = (e: any) => {
-
         const stage = e.target.getStage();
         let pos;
         pos = stage.getPointerPosition();
@@ -853,8 +789,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Function to select the type of element, that will get added next
-     * @param type the type of element you want to add
+     * Method to select the type of element, that will get added next
      */
     const selectType = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setCurrentCursor("crosshair");
@@ -862,12 +797,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called when the user wants to delete and element (either the last element or the currently selected one)
+     * Method to delete an element
+     * Gets called whenever the corresponding button is pressed
      */
     const deleteItem = () => {
-
         const lastElem = [...recentlyRemovedItems];
-        if (itemSelected === false) {
+        if (!itemSelected) {
             if (items.length > 0) {
                 const poppedItem = items.pop();
                 if (poppedItem !== undefined) {
@@ -890,12 +825,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * this function is called, when the user deletes an item and wants to undo that action
+     * Method do undo the last delete operation
      */
     const undo = () => {
-
         const lastElem = [...recentlyRemovedItems];
-
         if (recentlyRemovedItems.length > 0) {
             const poppedItem = lastElem.pop();
             if (poppedItem !== undefined) {
@@ -906,17 +839,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called when the user wants to duplicate a selected element.
-     * It is important to note that the element will be a new element with the properties copied over from the old element once
+     * Method to duplicate an element.
+     * Gets called whenever the corresponding button is pressed.
+     * Both elements are seperate with their own properties.
+     * Changing one element will NOT change the other element after the duplication has happened.
      */
     const dupe = () => {
-
-        if (itemSelected === true) {
-            const id = selectedItemName;
+        if (itemSelected) {
             const parts = selectedItemName.split('-');
-
             const localItems = items.slice();
-
             localItems.push({
                 ...selectedObject,
                 id: parts[0] + '-' + Math.random() * Math.random(),
@@ -926,10 +857,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called when the users stops transforming an element
+     * Method to handle the end of a transform event
      * @param e Transform Event
      */
-    const onTransformEnd = (e: any) => {
+    const handleTransformEnd = (e: any) => {
         const selectedNode = e.target.getStage().findOne("." + selectedItemName);
         const absPos = selectedNode.getAbsolutePosition();
         const absTrans = selectedNode.getAbsoluteScale();
@@ -937,7 +868,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
-        let newObject = {
+        localItems[index] = {
             ...selectedObject,
             x: parseInt((absPos.x).toFixed(0)),
             y: parseInt((absPos.y).toFixed(0)),
@@ -946,9 +877,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             rotation: absRot,
         };
 
-
-        localItems[index] = newObject;
-
         setItems(localItems);
         setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
         setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
@@ -956,7 +884,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user makes changes to the font family of a text element
+     * Method to handle the change of a text elements font family
      */
     const changeFontFamily = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (itemSelected && selectedItemName.startsWith('text')) {
@@ -976,7 +904,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user makes changes to the font size of a text element
+     * Method to handle the change of a text elements font size
      */
     const changeFontSize = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (itemSelected && selectedItemName.startsWith('text')) {
@@ -996,14 +924,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * This function is called whenever the user makes changes to the font color of a text element
+     * Method to handle the change of a text elements font color
      */
     const changeFontColor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         delayedFontColorChange(event.target.value)
     }
 
     /**
-     * This function is called whenever the user makes changes to the text width of a text element
+     * Method to handle the change of a text elements width
      */
     const changeTextWidth = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (itemSelected && selectedItemName.startsWith('text')) {
@@ -1021,21 +949,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
-    const selectFile = () => {
-        setSelectedType("Image");
-    }
-
     /**
-     * Function to change the color of an element selected by a user
+     * Method to change the color of an element selected by a user
      */
     const switchItemColor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         delayedItemColorChange(event.target.value)
     }
 
+    /**
+     * Method to change the color of an element with a delay to reduce frontend lag
+     * @param color is the new color
+     */
     const delayedItemColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
-            if (itemSelected === true) {
+            if (itemSelected) {
                 const localItems = items.slice();
                 const index = localItems.indexOf(selectedObject)
 
@@ -1052,6 +980,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }, 200);
     }
 
+    /**
+     * Method to change the color of a text elements font with a delay to reduce frontend lag
+     * @param color is the new color
+     */
     const delayedFontColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
@@ -1071,14 +1003,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }, 200);
     }
 
+    /**
+     * Method to change the background color of the canvas to reduce frontend lag
+     * @param color is the new color
+     */
     const delayedBackgroundColorChange = (color: string) => {
         window.clearTimeout(timeOut);
         timeOut = window.setTimeout(() => {
             setCurrentBGColor(color);
         }, 200);
     }
+
     /**
-     * Function to change the background color incase it is not an image
+     * Method to change the background color incase the background is set to be a color
      */
     const switchBGColor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
@@ -1086,7 +1023,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Function to switch between an image and a backgroundcolor
+     * Method to switch between a backgroundimage and a backgroundcolor
      */
     const switchBackground = () => {
         if (backGroundType === "COLOR") {
@@ -1101,7 +1038,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Function to change the mouse cursor if the user hovers over a selected element
+     * Method to change the mouse cursor if the user hovers over a selected element
      */
     const mouseOver = () => {
         if (itemSelected) {
@@ -1110,43 +1047,36 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Function to change cursor back to default when the user doesn't hover an element anymore
+     * Method to change cursor back to default when the user doesn't hover an element anymore
      */
     const mouseLeave = () => {
         setCurrentCursor("crosshair");
     }
 
     /**
-     * Function to stop the user from using the coloring options on elements that do not use the coloring options
-     * @ true or false depending on the selected item
+     * Method to stop the user from using the coloring options on elements that do not use the coloring options
+     * @returns true or false depending on the selected item
      */
     const disableColor = (): boolean => {
-        if (itemSelected) {
-            return false;
-        } else {
-            return true;
-        }
+        return !itemSelected;
     }
 
+    /**
+     * Method to disallow users from changing the font color when no text element is selected
+     */
     const disableFontColor = (): boolean => {
         if (itemSelected) {
-            if (selectedItemName.startsWith('text')) {
-                return true;
-            }
-            return false;
+            return selectedItemName.startsWith('text');
         } else {
             return false;
         }
     }
-
-    //TODO: load dataList from the infoProvider props
 
     /**
      * Method to handle the selection of data from the list of available api data.
      * @param item The item selected by the user
      */
     const handleItemSelect = (item: string) => {
-
         items.push({
             x: 20,
             y: 20,
@@ -1184,8 +1114,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
-    const handleBackground = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-
+    /**
+     * Method to handle if a user unchecks the backgroundcolor checkbox
+     */
+    const handleBackground = () => {
         backGroundColorEnabled ? setBackGroundColorEnabled(false) : setBackGroundColorEnabled(true);
         if (backGroundColorEnabled) {
             setCurrentBGColor("#FFFFFF");
@@ -1195,7 +1127,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
-
+    /**
+     * Method to handle the change of the width of an item
+     * @param event The onChange event
+     */
     const handleItemWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
@@ -1210,7 +1145,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     }
 
-
+    /**
+     * Method to handle the change of the height of an item
+     * @param event The onChange event
+     */
     const handleItemHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
@@ -1225,7 +1163,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setCurrentItemHeight(event.target.valueAsNumber);
 
     }
-
 
     //TODO: custom icons
     /**
@@ -1326,7 +1263,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
+                                                        onTransformEnd={handleTransformEnd}
                                                         rotation={item.rotation}
                                                         onMouseOver={mouseOver}
                                                         onMouseLeave={mouseLeave}
@@ -1361,7 +1298,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
+                                                        onTransformEnd={handleTransformEnd}
                                                         rotation={item.rotation}
                                                         onMouseOver={mouseOver}
                                                         onMouseLeave={mouseLeave}
@@ -1399,7 +1336,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
+                                                        onTransformEnd={handleTransformEnd}
                                                         rotation={item.rotation}
                                                         onMouseOver={mouseOver}
                                                         onMouseLeave={mouseLeave}
@@ -1437,7 +1374,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
+                                                        onTransformEnd={handleTransformEnd}
                                                         rotation={item.rotation}
                                                         onMouseOver={mouseOver}
                                                         onMouseLeave={mouseLeave}
@@ -1469,8 +1406,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
-                                                        onDblClick={(e: any) => handleTextDblClick(e)}
+                                                        onTransformEnd={handleTransformEnd}
+                                                        onDblClick={(e: any) => handleTextDblClick()}
                                                         fontSize={item.fontSize}
                                                         fontFamily={item.fontFamily}
                                                         scaleX={item.scaleX}
@@ -1517,7 +1454,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragStart={handleDragStart}
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
-                                                        onTransformEnd={onTransformEnd}
+                                                        onTransformEnd={handleTransformEnd}
                                                         rotation={item.rotation}
                                                         onMouseOver={mouseOver}
                                                         onMouseLeave={mouseLeave}
@@ -1697,8 +1634,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             value={currentTextWidth}
                                             disabled={!selectedItemName.startsWith('text')}
                                         ></TextField><br/><br/>
-                                        <Button className={classes.button} onClick={exporter}> CREATE EXPORT </Button>
-
                                     </Grid>
                                 </Grid>
                             </Box>
@@ -1762,6 +1697,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
+            <CenterNotification
+                handleClose={() => dispatchMessage({type: "close"})}
+                open={message.open}
+                message={message.message}
+                severity={message.severity}
+            />
         </StepFrame>
     );
 }
@@ -1774,15 +1715,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
  id="rotation"
  type="number"
  InputProps={{
-                        inputProps: {
-                          min: 0, max: 359, step: 1,
-                        }
-                      }}
+    inputProps: {
+      min: 0, max: 359, step: 1,
+    }
+ }}
  onChange={(e) => changeCurrentRotation(e)}
  label={"Rotation (Grad)"}
  value={currentRotation}
  ></TextField><br /><br />
-
-
-
  */
