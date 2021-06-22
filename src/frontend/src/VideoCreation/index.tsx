@@ -1,25 +1,26 @@
 import React from "react";
-import {BackendAudioType, fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider, SceneCardData} from "./types";
+import {
+    BackendAudioType,
+    FetchAllInfoProviderAnswer,
+    FetchAllScenesAnswer,
+    InfoProviderData,
+    MinimalInfoProvider,
+    SceneCardData
+} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {ComponentContext} from "../ComponentProvider";
-import {useStyles} from "./style";
 import {VideoEditor} from "./VideoEditor";
 import {InfoProviderSelection} from "./InfoProviderSelection";
 import {
-    DataSource,
-    Diagram,
-    ListItemRepresentation,
     Schedule,
-    SelectedDataItem,
     uniqueId
 } from "../CreateInfoProvider/types";
 import {ScheduleSelection} from "./ScheduleSelection";
-import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {useCallFetch} from "../Hooks/useCallFetch";
 
 /**
  TODO:
- 7: sessionStorage einbinden/ermöglichen
  8: alle Szenen aus dem Backend fetchen
  8: Option auf Bearbeitung einbinden
  9: fehlende Docstrings hinzufügen
@@ -31,18 +32,12 @@ import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/fo
  4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
  5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
  6: Absenden der Daten an das Backend mit Datenformat
+ 7: sessionStorage einbinden/ermöglichen
  */
 
 
-interface VideoCreationProps {
+export const VideoCreation = () => {
 
-}
-
-
-
-export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
-
-    const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
     // current step of the VideoCreation
@@ -92,9 +87,16 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         //minimalInfoProvObjects
         setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
         //availableScenes
-        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
+        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? ["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
         //sceneList
-        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? new Array<SceneCardData>() : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
+        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [
+            {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
+            {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
+            {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
+            {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
+            {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
+            {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
+        ] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
     }, [])
 
     //store videoCreationStep in sessionStorage
@@ -194,7 +196,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchInfoProvider = (jsonData: any) => {
-        const data = jsonData as fetchAllBackendAnswer;
+        const data = jsonData as FetchAllInfoProviderAnswer;
         setInfoProviderList(data);
     }
 
@@ -258,24 +260,47 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      * Method block for fetching all scenes from the backend
      */
 
+    /**
+     * Handles the success of the fetchAllScenes()-method.
+     * The json from the response will be looped trough to copy all scene names to the availableScenes state.
+     * Goes to the next step afterwards since it is called from the proceed of step 1.
+     * si
+     * @param jsonData the answer from the backend
+     */
+    const fetchAllScenesSuccess = (jsonData: any) => {
+        const data = jsonData as FetchAllScenesAnswer;
+        const availableScenes: Array<string> = [];
+        data.forEach((scene) => availableScenes.push(scene.scene_name));
+        //setAvailableScenes(availableScenes);
+        continueHandler();
+    }
+
+    /**
+     * Handles errors of the fetchAllInfoprovider()-method by displaying an error message.
+     * @param err The error that the backend sent
+     */
+    const fetchAllScenesError = (err: Error) => {
+        reportError("Fehler beim Laden aller Szenen: " + err)
+    }
+
+    /**
+     * Method that fetches all available scenes from the backend to
+     * display them in the videoCreation.
+     */
+    const fetchAllScenes = useCallFetch("/visuanalytics/scene/all",
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        },
+        fetchAllScenesSuccess, fetchAllScenesError
+    )
+
 
     /**
      * Method block for sending the created videojob to the backend.
      */
-
-
-    /**
-     * Takes the values of all states and creates the object for the
-     * backend representing the video.
-     */
-    const createBackendFormat = () => {
-        return {
-            sequence: {
-                type: "successively",
-                transitions: 0.1
-            }
-        }
-    }
 
     /**
      * Method that creates the object with all scenes necessary for the backend.
@@ -335,11 +360,9 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         components?.setCurrent("dashboard")
     }
 
-
     const sendVideoErrorHandler = (err: Error) => {
         reportError("Fehler beim Absenden des Videos: " + err)
     }
-
 
     /**
      * Method to send the completed videojob to the backend.
@@ -406,6 +429,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
                         setSelectedInfoProvider={(selection: Array<InfoProviderData>) => setSelectedInfoProvider(selection)}
                         setMinimalInfoProvObjects={(objects: Array<MinimalInfoProvider>) => setMinimalInfoProvObjects(objects)}
                         reportError={(message: string) => reportError(message)}
+                        fetchAllScenes={() => fetchAllScenes()}
                     />
                 )
             }

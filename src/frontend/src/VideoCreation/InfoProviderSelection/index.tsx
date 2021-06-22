@@ -20,6 +20,7 @@ interface InfoProviderSelectionProps {
     setSelectedInfoProvider: (selected: Array<InfoProviderData>) => void;
     setMinimalInfoProvObjects: (objects: Array<MinimalInfoProvider>) => void;
     reportError: (message: string) => void;
+    fetchAllScenes: () => void;
 }
 
 
@@ -44,7 +45,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
     /**
      * Fetches the next infoProvider in the list infoProviderToFetch.
-     * If there are no more infoProviders, the continue handler is used.
+     * If there are no more infoProviders, fetching of all scenes is triggered.
      */
     const fetchNextInfoProvider = () => {
         //when all infoProviders are fetched, proceed to the next component
@@ -52,8 +53,9 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             setContinueDisabled(false);
             // copy the local useRef value to the state of the parent
             props.setMinimalInfoProvObjects(minimalInfoProvObjects.current)
-            console.log(minimalInfoProvObjects.current)
-            props.continueHandler();
+            console.log(minimalInfoProvObjects.current);
+            //fetch all scenes
+            props.fetchAllScenes();
         }
         //if not, fetch the next infoProvider
         else fetchInfoProviderById(infoProviderToFetch.current[0].infoprovider_id)

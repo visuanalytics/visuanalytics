@@ -19,14 +19,27 @@ export type SceneCardData = {
     visible: boolean;
 }
 
+/**
+ * Type of a infoprovider as it is returned by the route /infoprovider/all
+ */
 export type InfoProviderData = {
     infoprovider_id: number;
     infoprovider_name: string;
 }
 
+// type of the answer for fetching all Infoprovider from Backend
+export type FetchAllInfoProviderAnswer = Array<InfoProviderData>
+
+/**
+ * Type of a scene as it is returned by the route /scene/all
+ */
+export type SceneData = {
+    scene_id: number;
+    scene_name: string;
+}
 
 // type of the answer for fetching all Infoprovider from Backend
-export type fetchAllBackendAnswer = Array<InfoProviderData>
+export type FetchAllScenesAnswer = Array<SceneData>
 
 /**
  * Reduced version of a infoprovider that only contains its name, all dataSources
