@@ -315,18 +315,12 @@ export const VideoCreation = () => {
         console.trace()
         //TODO: possibly find smarter solution without any type
         const imagesObject: any = {};
-        //stores the appearance frequency for each available scene this is necessary
-        // to number the appearances of the scenes to let all keys in the images object be unique
-        const sceneFrequency: Map<string, number> = new Map();
-        availableScenes.forEach((scene) => sceneFrequency.set(scene, 1));
+        //index to label each scene - secures the ordering and allows use the same scene multiple times
+        let index = 1;
         sceneList.forEach((scene) => {
             //find the frequency, take its value und increment it
-            const index = sceneFrequency.get(scene.sceneName);
-            if(index !== undefined) {
-                sceneFrequency.set(scene.sceneName, index + 1);
-                imagesObject[scene.sceneName + "_" + index] = {
-                    key: scene.sceneName
-                }
+            imagesObject[index++ + "_" + scene.sceneName] = {
+                key: scene.sceneName
             }
         })
         console.log(imagesObject);
