@@ -19,7 +19,7 @@ export type SceneCardData = {
     entryId: string;
     sceneName: string;
     exceedDisplayDuration: number;
-    spokenText: string;
+    spokenText: Array<AudioElement>;
     visible: boolean;
 }
 
@@ -64,5 +64,15 @@ export type AudioType = "text" | "pause";
 export type AudioElement = {
     type: AudioType;
     text?: string;
+    duration?: number;
+}
+
+/**
+ * Type of a single audio used to send to the backend.
+ * Always contains a type, and depending on it either a pattern/text or a duration.
+ */
+export type BackendAudioType = {
+    type: "text"|"silent"
+    pattern?: string;
     duration?: number;
 }

@@ -12,7 +12,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import Collapse from "@material-ui/core/Collapse";
 import FormControl from "@material-ui/core/FormControl";
-import {DurationType} from "../../types";
+import {AudioElement, DurationType} from "../../types";
 
 
 
@@ -23,8 +23,8 @@ export interface SceneCardProps {
     moveRight: () => void;
     exceedDisplayDuration: number;
     setExceedDisplayDuration: (newExceedDisplayDuration: number) => void;
-    spokenText: string;
-    setSpokenText: (newSpokenText: string) => void;
+    spokenText: Array<AudioElement>;
+    setSpokenText: (newSpokenText: Array<AudioElement>) => void;
     leftDisabled: boolean;
     rightDisabled: boolean;
     removeScene: () => void;
@@ -130,7 +130,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                     </Grid>
                     <Grid item xs={12} className={classes.elementLargeMargin}>
                         <Typography>
-                            Gesprochener Text: {props.spokenText}
+                            Gesprochener Text:
                         </Typography>
                     </Grid>
                 </Grid>

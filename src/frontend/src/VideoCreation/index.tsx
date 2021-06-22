@@ -1,5 +1,5 @@
 import React from "react";
-import {fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider, SceneCardData} from "./types";
+import {BackendAudioType, fetchAllBackendAnswer, InfoProviderData, MinimalInfoProvider, SceneCardData} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {ComponentContext} from "../ComponentProvider";
@@ -51,16 +51,17 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
     // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
     const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
     // list of the names of all scenes available - holds the data fetched from the backend
-    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Wetter_heute", "Regen_Vorschau", "Fußball-Ergebnisse", "Begrüßung"]);
+    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"]);
     // sorted list of all scenes that are selected for the video
     const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: "", visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: "", visible: true},
+        {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
+        {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
+        {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
+        {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
+        {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
+        {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
     ]);
+
 
     /**
      * setup for error notification
@@ -198,6 +199,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      * Method that creates the object with all scenes necessary for the backend.
      */
     const createImagesObject = () => {
+        console.trace()
         //TODO: possibly find smarter solution without any type
         const imagesObject: any = {};
         //stores the appearance frequency for each available scene this is necessary
@@ -214,6 +216,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
                 }
             }
         })
+        console.log(imagesObject);
         return imagesObject;
     }
 
@@ -225,18 +228,22 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         const audioObject: any = {};
         let index = 1;
         sceneList.forEach((scene) => {
-            //TODO: change as soon as daniel has published his datatype
-            audioObject["audio" + index++] = {
-                parts: [
-                    {
+            const parts: Array<BackendAudioType> = [];
+            scene.spokenText.forEach((audioElement) => {
+                if(audioElement.type === "text") {
+                    parts.push({
                         type: "text",
-                        pattern: scene.spokenText
-                    },
-                    {
+                        pattern: audioElement.text
+                    })
+                } else {
+                    parts.push({
                         type: "silent",
-                        duration: scene.exceedDisplayDuration
-                    }
-                ]
+                        duration: audioElement.duration
+                    })
+                }
+            })
+            audioObject["audio" + index++] = {
+                parts: parts
             }
         })
         return audioObject;
@@ -262,13 +269,18 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
                 videojob_name: videoJobName,
                 images: createImagesObject(),
                 audio: {
-                    audios: {
-                        createAudiosObject
-                    }
+                    audios: createAudiosObject()
                 },
                 sequence: {
                     type: "successively",
                     transitions: 0.1
+                },
+                schedule: {
+                    type: schedule.type,
+                    time: schedule.time,
+                    date: "",
+                    time_interval: schedule.interval,
+                    weekdays: schedule.weekdays
                 }
             })
         }, sendVideoSuccessHandler, sendVideoErrorHandler

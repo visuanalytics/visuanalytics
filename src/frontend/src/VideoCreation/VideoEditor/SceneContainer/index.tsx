@@ -3,7 +3,7 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {Direction, DurationType, SceneCardData} from "../../types";
+import {AudioElement, Direction, DurationType, SceneCardData} from "../../types";
 import {useStyles} from "../../style";
 
 interface SceneContainerProps {
@@ -61,7 +61,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
      * @param index The index (in the list) of the scene whose text is changed.
      * @param newSpokenText The new spoken text
      */
-    const setSpokenText = (index: number, newSpokenText: string) => {
+    const setSpokenText = (index: number, newSpokenText: Array<AudioElement>) => {
         const arCopy = props.sceneList.slice();
         arCopy[index] = {
             ...arCopy[index],
@@ -144,7 +144,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
                             exceedDisplayDuration={props.sceneList[index].exceedDisplayDuration}
                             setExceedDisplayDuration={(newDisplayDuration: number) => setDisplayDuration(index, newDisplayDuration)}
                             spokenText={props.sceneList[index].spokenText}
-                            setSpokenText={(newSpokenText: string) => setSpokenText(index, newSpokenText)}
+                            setSpokenText={(newSpokenText: Array<AudioElement>) => setSpokenText(index, newSpokenText)}
                             leftDisabled={index === 0}
                             rightDisabled={index === props.sceneList.length - 1}
                             removeScene={() => removeScene(index)}

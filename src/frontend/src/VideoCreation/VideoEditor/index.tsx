@@ -46,7 +46,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
             entryId: sceneName + "||" + counter,
             sceneName: sceneName,
             exceedDisplayDuration: 1,
-            spokenText: "",
+            spokenText: [],
             visible: true
         })
         props.setSceneList(arCopy);
