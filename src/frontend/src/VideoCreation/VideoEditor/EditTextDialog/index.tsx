@@ -21,16 +21,37 @@ interface EditTextDialogProps {
 export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const classes = useStyles();
 
+    const [newPause, setNewPause] = React.useState<number | undefined>(0);
+
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>([{
         type: "text",
         text: ""
     }]);
 
+    const addNewText = () => {
+        const arrCopy = audioElements.slice();
+        arrCopy.push({
+            type: "pause",
+            duration: newPause
+        }, {
+            type: "text",
+            text: ""
+        });
+        setAudioElements(arrCopy);
+        setNewPause(0);
+    }
+
     const renderEditElement = (id: string, audioElement: AudioElement) => {
         if(audioElement.type === "text" && audioElement.text !== undefined) {
             return (
                 <Grid item xs={12}>
-                    <TextField id={id} multiline rowsMax={3} value={audioElement.text}/>
+                    <TextField id={id} label="TTS-Text" multiline rowsMax={3} defaultValue={audioElement.text}/>
+                </Grid>
+            )
+        } else if(audioElement.type === "pause" && audioElement.duration !== undefined) {
+            return (
+                <Grid item>
+                    <TextField id={id} label="Pause in ms" type="number" defaultValue={audioElement.duration}/>
                 </Grid>
             )
         }
@@ -44,10 +65,31 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                     <Grid item xs={12}>
                         Fügen Sie hier Texte und Pausen zur gewählten Szene {props.sceneName} hinzu.
                     </Grid>
-                    <Grid container>
-                        {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index.toString(), audioElement))}
+                    <Grid container justify="space-between">
+                        <Grid container xs={12} md={6}>
+                            <Grid item>
+                                <Typography variant="h5">Elemente</Typography>
+                            </Grid>
+                            {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index.toString(), audioElement))}
+                            <Grid item>
+                                <Typography variant="h6">
+                                    Neuer Text-Abschnitt
+                                </Typography>
+                            </Grid>
+                            <TextField label="Pause vor nächstem Text in ms" type="number" defaultValue={0} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                            <Grid item className={classes.blockableButtonPrimary}>
+                                <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0} onClick={addNewText}>
+                                    Neuen Abschnitt hinzufügen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid container xs={12} md={6}>
+                            <Typography variant="h5">
+                                API-Daten
+                            </Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
+                    </Grid>
             </DialogContent>
             <DialogActions>
                 <Grid container justify="space-between">
