@@ -42,8 +42,8 @@ interface BasicSettingsProps {
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
-    setApiNameChanged: (flag: boolean) => void;
-    oldApiName: string;
+    setApiNameChanged?: (flag: boolean) => void;
+    oldApiName?: string;
     isInEditMode: boolean;
 
 }
@@ -201,7 +201,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     }*/
 
     const checkNameChanged = () => {
-        if (props.oldApiName !== "") props.setApiNameChanged(props.name !== props.oldApiName);
+        if (props.oldApiName !== "" && props.setApiNameChanged !== undefined) props.setApiNameChanged(props.name !== props.oldApiName);
     }
 
     /**
