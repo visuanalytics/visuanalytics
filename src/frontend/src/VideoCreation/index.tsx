@@ -21,9 +21,7 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 
 /**
  TODO:
- 8: alle Szenen aus dem Backend fetchen
- 8: Option auf Bearbeitung einbinden
- 9: fehlende Docstrings hinzufügen
+ 10: Option auf Bearbeitung einbinden
 
  DONE:
  1: Auslagerung Szenenerstellung in Unterkomponente für Gliederung in 3 Schritte
@@ -33,9 +31,13 @@ import {useCallFetch} from "../Hooks/useCallFetch";
  5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
  6: Absenden der Daten an das Backend mit Datenformat
  7: sessionStorage einbinden/ermöglichen
+ 8: alle Szenen aus dem Backend fetchen
+ 9: fehlende Docstrings hinzufügen
  */
 
-
+/**
+ * Wrapper component for the videoCreation process.
+ */
 export const VideoCreation = () => {
 
     const components = React.useContext(ComponentContext);
@@ -160,13 +162,19 @@ export const VideoCreation = () => {
         dispatchMessage({type: "reportError", message: message});
     }, [dispatchMessage])
 
-
+    /**
+     * Handler method for the proceed/continue buttons. Increments the step by 1
+     * and triggers sending the videojob to the backend when the end is reached.
+     */
     const continueHandler = () => {
         if (videoCreationStep === 2) sendVideoToBackend();
         else setVideoCreationStep(videoCreationStep + 1);
     }
 
-
+    /**
+     * Handler method for back buttons. Decrements the step by 1 and returns
+     * to the dashboard when clicking back on the first step.
+     */
     const backHandler = () => {
         if(videoCreationStep === 0) {
             clearSessionStorage()
@@ -182,11 +190,10 @@ export const VideoCreation = () => {
      */
 
     /**
-     * Handles the error-message if an error appears.
-     * @param err the shown error
+     * Handles the error-message if an error appears while fetching with fetchAllInfoprovider().
+     * @param err The error returned by the backend
      */
     const handleErrorFetchInfoProvider = React.useCallback((err: Error) => {
-        //console.log('error');
         reportError("Fehler: " + err)
     }, [reportError])
 
@@ -264,14 +271,13 @@ export const VideoCreation = () => {
      * Handles the success of the fetchAllScenes()-method.
      * The json from the response will be looped trough to copy all scene names to the availableScenes state.
      * Goes to the next step afterwards since it is called from the proceed of step 1.
-     * si
      * @param jsonData the answer from the backend
      */
     const fetchAllScenesSuccess = (jsonData: any) => {
         const data = jsonData as FetchAllScenesAnswer;
         const availableScenes: Array<string> = [];
         data.forEach((scene) => availableScenes.push(scene.scene_name));
-        //setAvailableScenes(availableScenes);
+        //setAvailableScenes(availableScenes); //TODO: comment in once testing is done
         continueHandler();
     }
 
@@ -303,7 +309,7 @@ export const VideoCreation = () => {
      */
 
     /**
-     * Method that creates the object with all scenes necessary for the backend.
+     * Method that creates the object with all scenes displayed as "images" necessary for the backend.
      */
     const createImagesObject = () => {
         console.trace()
@@ -336,6 +342,7 @@ export const VideoCreation = () => {
         let index = 1;
         sceneList.forEach((scene) => {
             const parts: Array<BackendAudioType> = [];
+            //for each text and pause, add a part to the configuration
             scene.spokenText.forEach((audioElement) => {
                 if(audioElement.type === "text") {
                     parts.push({
@@ -349,6 +356,13 @@ export const VideoCreation = () => {
                     })
                 }
             })
+            //after all texts and pauses were included, add a silent track for the exceed duration
+            if(scene.exceedDisplayDuration > 0) {
+                parts.push({
+                    type: "silent",
+                    duration: scene.exceedDisplayDuration
+                })
+            }
             audioObject["audio" + index++] = {
                 parts: parts
             }
@@ -356,10 +370,19 @@ export const VideoCreation = () => {
         return audioObject;
     }
 
+    //TODO: check the status of the answer
+    /**
+     * Handler method for success on posting the video to the backend.
+     * @param jsonData The answer returned by the backend.
+     */
     const sendVideoSuccessHandler = (jsonData: any) => {
         components?.setCurrent("dashboard")
     }
 
+    /**
+     * Handler method for errors when posting the video to the backend.
+     * @param err The error sent from the backend.
+     */
     const sendVideoErrorHandler = (err: Error) => {
         reportError("Fehler beim Absenden des Videos: " + err)
     }
@@ -416,7 +439,9 @@ export const VideoCreation = () => {
         }).finally(() => clearTimeout(timer));
     }
 
-
+    /**
+     * Method that selects which component should be shown by evaluating the current step.
+     */
     const selectContent = () => {
         switch(videoCreationStep) {
             case 0: {

@@ -25,11 +25,12 @@ interface VideoEditorProps {
     reportError: (message: string) => void;
 }
 
-
+/**
+ * Component displaying the second step of the videoCreation, the editing of the video itself.
+ */
 export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
 
     const classes = useStyles();
-
 
     /**
      * Method that appends a new scene to the list of scenes selected for the video.
@@ -51,7 +52,6 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
         })
         props.setSceneList(arCopy);
     }
-
 
 
     /**

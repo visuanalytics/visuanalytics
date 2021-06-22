@@ -23,7 +23,9 @@ interface InfoProviderSelectionProps {
     fetchAllScenes: () => void;
 }
 
-
+/**
+ * Component that displays the selection of infoproviders that should be available for text-to-speech values.
+ */
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
 
     const classes = useStyles();
@@ -41,7 +43,6 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     /**
      * Method block for fetching all selected infoproviders from the backend
      */
-
 
     /**
      * Fetches the next infoProvider in the list infoProviderToFetch.
@@ -90,15 +91,13 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
 
     /**
-     * Handles the error-message if an error appears.
-     * @param err the shown error
+     * Handles errors of fetching infoProvider with fetchInfoProviderById()
+     * @param err The error returned by the backend.
      */
     const handleErrorFetchById = (err: Error) => {
-        //console.log('error');
         props.reportError("Fehler: " + err);
         setContinueDisabled(false);
     }
-
 
     /**
      * Handles the success of the fetchInfoProviderById()-method.
@@ -200,6 +199,10 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         }
     }
 
+    /**
+     * Method that renders a single item in the list of available infoproviders.
+     * @param infoProvider The infoprovider list item that should be rendered.
+     */
     const renderListItem = (infoProvider: InfoProviderData) => {
         return (
             <ListItem key={infoProvider.infoprovider_id}>
