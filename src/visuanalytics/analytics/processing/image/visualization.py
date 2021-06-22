@@ -63,6 +63,10 @@ def generate_all_diagrams(values: dict, step_data: StepData):
     :param values: Werte aus der JSON-Datei
     :param step_data: Daten aus der API
     """
+    if not values.get("diagrams", None):
+        # continue, if the step 'diagrams' does not exist (for old stepdata-files)
+        return
+
     for key, item in enumerate(values["diagrams"]):
         diagram_func = get_type_func(values["diagrams"][item], DIAGRAM_TYPES)
 
