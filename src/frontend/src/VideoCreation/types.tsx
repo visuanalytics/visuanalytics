@@ -4,13 +4,18 @@ import {
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
+/**
+ * Type containing all directions a sceneCard can be moved to.
+ */
 export enum Direction {
     Left = "LEFT",
     Right = "RIGHT"
 }
 
-export type DurationType = "fixed" | "exceed"
-
+/**
+ * Type representing the data of a single scene selected by the user to be displayed
+ * in the video. Named "sceneCard" since the selection is shown as a row of cards.
+ */
 export type SceneCardData = {
     entryId: string;
     sceneName: string;

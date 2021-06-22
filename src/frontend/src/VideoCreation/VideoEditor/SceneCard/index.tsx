@@ -25,7 +25,7 @@ export interface SceneCardProps {
 }
 
 /**
- * Component for a draggable scene used in the interface of the videoEditor.
+ * Component for a selected scene used in the interface of the videoEditor.
  */
 export const SceneCard: React.FC<SceneCardProps> = (props) => {
 
@@ -37,18 +37,26 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
     //timeout for setting the props value of exceedDisplayDuration shortly after the user has stopped input
     const [timeoutExceedDisplayDuration, setTimeoutExceedDisplayDuration] = React.useState(0);
 
-
-
+    /**
+     * Handler method for change events on the slider input of this scene.
+     * Sets the local value storing the duration and calls the method that starts the timer for overwriting parent state.
+     * @param event The event caused by changing the slider.
+     * @param newDuration The new duration selected in the slider component.
+     */
     const handleExceedDurationSliderChange = (event: object, newDuration: number | number[]) => {
         setLocalExceedDisplayDuration(Number(newDuration));
         changePropsExceedDisplayDuration();
     }
 
+    /**
+     * Handler method for change events on the numeric input of this scene.
+     * Sets the local value storing the duration and calls the method that starts the timer for overwriting parent state.
+     * @param event The event caused by changing the numeric input.
+     */
     const handleExceedDurationInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLocalExceedDisplayDuration(Number(event.target.value))
         changePropsExceedDisplayDuration();
     }
-
 
     /**
      * Method that changes the exceedDisplayDuration state value of the higher component 200ms after the user has made a change.

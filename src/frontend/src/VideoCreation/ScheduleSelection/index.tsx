@@ -27,8 +27,7 @@ interface ScheduleSelectionProps {
 
 
 /**
- * This component holds the second step of step four in the creation of an Infoprovider (Time selection for historization)
- * @param props The passed properties from the parent
+ * Component for selecting the schedule a videojob should be displayed with.
  */
 export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
 

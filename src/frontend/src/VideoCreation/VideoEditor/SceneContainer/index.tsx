@@ -11,6 +11,9 @@ interface SceneContainerProps {
     setSceneList: (sceneList: Array<SceneCardData>) => void;
 }
 
+/**
+ * Component that displays the container holding all scenes selected by the user.
+ */
 export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
 
     const classes = useStyles();
@@ -34,7 +37,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
 
     /**
      * Method that removes a scene from the list of selected Scenes
-     * @param index
+     * @param index The index of the scene that should be removed.
      */
     const removeScene = (index: number) => {
         //concat the sceneList before and behind the element to be removed
@@ -156,15 +159,13 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
     }
 
     return (
-        <>
-            <Box borderColor="primary.main" border={4} className={classes.sceneContainerBox}>
-                <List style={{display: 'flex',
-                    flexDirection: 'row',
-                    padding: 0,}}
-                >
-                    {props.sceneList.map((sceneEntry, index) => renderSceneEntry(sceneEntry, index))}
-                </List>
-            </Box>
-        </>
+        <Box borderColor="primary.main" border={4} className={classes.sceneContainerBox}>
+            <List style={{display: 'flex',
+                flexDirection: 'row',
+                padding: 0,}}
+            >
+                {props.sceneList.map((sceneEntry, index) => renderSceneEntry(sceneEntry, index))}
+            </List>
+        </Box>
     )
 }
