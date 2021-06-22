@@ -648,12 +648,14 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
+    scene_items = scene["scene_items"]
 
     scene_json = {
         "scene_name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
-        "images": images
+        "images": images,
+        "scene_items": scene_items
     }
 
     # Prüfen ob scene bereits vorhanden ist
@@ -688,7 +690,7 @@ def insert_scene(scene):
     print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
         print("writing")
-        json.dump(scene, f)
+        json.dump(scene_json, f)
 
     con.commit()
     return None
@@ -755,6 +757,7 @@ def update_scene(scene_id, updated_data):
     used_images = updated_data["used_images"]
     used_infoproviders = updated_data["used_infoproviders"]
     images = updated_data["images"]
+    scene_items = updated_data["scene_items"]
 
     # Altes Json laden
     old_file_path = get_scene_file(scene_id)
@@ -762,10 +765,12 @@ def update_scene(scene_id, updated_data):
     with open_resource(old_file_path, "r") as f:
         scene_json = json.loads(f.read())
 
+    old_name = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()["scene_name"]
+
     # Testen of Name bereits von anderer Szene verwendet wird
     res = con.execute("SELECT * FROM scene WHERE scene_name=?", [scene_name])
     for row in res:
-        if row["scene_id"] != scene_id:
+        if row["scene_id"] != scene_id and scene_name != old_name:
             return {"err_msg": f"There already exists a scene with the name {scene_name}"}
 
     # Neuen Namen setzen
@@ -776,6 +781,7 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
+    scene_json.update({"scene_items": scene_items})
 
     # Alte Einträge aus scene_uses_image entfernen
     con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
@@ -857,11 +863,11 @@ def insert_image(image_name):
     count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
     if count > 0:
-        return False
+        return None
 
-    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    image_id = con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name]).lastrowid
     con.commit()
-    return True
+    return image_id
 
 
 def get_scene_image_file(image_id):
