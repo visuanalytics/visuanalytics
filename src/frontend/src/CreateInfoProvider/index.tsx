@@ -580,13 +580,13 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Increments the step.
      */
     const handleContinue = () => {
-        if (step === 5) {
+        if (createStep === 5) {
             if (name.length <= 0) {
                 reportError("Bitte geben Sie dem Infoprovider einen Namen!");
             } else {
                 postInfoProvider();
             }
-        } else if (step === 4 && props.finishDataSourceInEdit !== undefined) {
+        } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
 
             props.finishDataSourceInEdit({
                 apiName: apiName,
