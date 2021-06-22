@@ -8,6 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {AudioElement} from "../../types";
+import {Message, MessageOutlined} from "@material-ui/icons";
+import {EditTextDialog} from "../EditTextDialog";
 
 
 export interface SceneCardProps {
@@ -37,7 +39,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
     //timeout for setting the props value of exceedDisplayDuration shortly after the user has stopped input
     const [timeoutExceedDisplayDuration, setTimeoutExceedDisplayDuration] = React.useState(0);
 
-
+    const [openTextEditDialog, setOpenTextEditDialog] = React.useState(false)
 
     const handleExceedDurationSliderChange = (event: object, newDuration: number | number[]) => {
         setLocalExceedDisplayDuration(Number(newDuration));
@@ -68,86 +70,104 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
      */
 
     return (
-        <Card variant="outlined" color="primary" style={{width: "300px"}}>
-            <CardContent>
-                <Grid item container>
-                    <Grid item xs={10}>
-                        <Typography>
-                            {props.sceneName}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <IconButton aria-label="Szene löschen" onClick={() => props.removeScene()} className={classes.redDeleteIcon}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item container xs={12} className={classes.elementLargeMargin}>
-                        <Grid item xs={3}>
-                            <Typography variant="body1" id={props.sceneName + "-durationExceed-input"}>
-                                Dauer:
+        <React.Fragment>
+            <Card variant="outlined" color="primary" style={{width: "300px"}}>
+                <CardContent>
+                    <Grid item container>
+                        <Grid item xs={10}>
+                            <Typography>
+                                {props.sceneName}
                             </Typography>
                         </Grid>
-                        <Grid item xs={9}>
-                            <Slider
-                                value={localExceedDisplayDuration}
-                                getAriaValueText={() => props.exceedDisplayDuration + " Sekunden"}
-                                onChange={handleExceedDurationSliderChange}
-                                aria-labelledby={props.sceneName + "-durationExceed-input"}
-                                step={1}
-                                min={0}
-                                max={300}
-                                valueLabelDisplay="auto"
+                        <Grid item xs={2}>
+                            <IconButton aria-label="Szene löschen" onClick={() => props.removeScene()} className={classes.redDeleteIcon}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item container xs={12} className={classes.elementLargeMargin}>
+                            <Grid item xs={3}>
+                                <Typography variant="body1" id={props.sceneName + "-durationExceed-input"}>
+                                    Dauer:
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <Slider
+                                    value={localExceedDisplayDuration}
+                                    getAriaValueText={() => props.exceedDisplayDuration + " Sekunden"}
+                                    onChange={handleExceedDurationSliderChange}
+                                    aria-labelledby={props.sceneName + "-durationExceed-input"}
+                                    step={1}
+                                    min={0}
+                                    max={300}
+                                    valueLabelDisplay="auto"
 
-                            />
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid item container xs={12}>
-                        <Grid item xs={3}>
-                            <Input
-                                value={localExceedDisplayDuration}
-                                margin="dense"
-                                onChange={handleExceedDurationInputChange}
-                                inputProps={{
-                                    step: 1,
-                                    min: 0,
-                                    max: 300,
-                                    type: 'number',
-                                    "aria-labelledby": props.sceneName + "-durationExceed-input",
-                                }}
-                            />
+                        <Grid item container xs={12}>
+                            <Grid item xs={3}>
+                                <Input
+                                    value={localExceedDisplayDuration}
+                                    margin="dense"
+                                    onChange={handleExceedDurationInputChange}
+                                    inputProps={{
+                                        step: 1,
+                                        min: 0,
+                                        max: 300,
+                                        type: 'number',
+                                        "aria-labelledby": props.sceneName + "-durationExceed-input",
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={9}>
+                                <Typography variant="body1">
+                                    Sekunden
+                                </Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={9}>
-                            <Typography variant="body1">
-                                Sekunden
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <Typography>
+                                Gesprochener Text:
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12} className={classes.elementLargeMargin}>
-                        <Typography>
-                            Gesprochener Text:
-                        </Typography>
+                </CardContent>
+                <CardActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <IconButton aria-label="Text hinzufügen" onClick={() => setOpenTextEditDialog(true)}>
+                                <MessageOutlined
+                                    fontSize="large"
+                                />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton aria-label="Szene nach links bewegen" disabled={props.leftDisabled} onClick={props.moveLeft}>
+                                <ArrowBackIcon
+                                    fontSize="large"
+                                />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton aria-label="Szene nach rechts bewegen" disabled={props.rightDisabled} onClick={props.moveRight}>
+                                <ArrowForwardIcon
+                                    fontSize="large"
+                                />
+                            </IconButton>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </CardContent>
-            <CardActions>
-                <Grid container justify="space-between">
-                    <Grid item>
-                        <IconButton aria-label="Szene nach links bewegen" disabled={props.leftDisabled} onClick={props.moveLeft}>
-                            <ArrowBackIcon
-                                fontSize="large"
-                            />
-                        </IconButton>
-                    </Grid>
-                    <Grid item>
-                        <IconButton aria-label="Szene nach rechts bewegen" disabled={props.rightDisabled} onClick={props.moveRight}>
-                            <ArrowForwardIcon
-                                fontSize="large"
-                            />
-                        </IconButton>
-                    </Grid>
-                </Grid>
-            </CardActions>
-        </Card>
-    )
+                </CardActions>
+            </Card>
+            {openTextEditDialog &&
+                <EditTextDialog
+                sceneName={props.sceneName}
+                openEditTextDialog={openTextEditDialog}
+                setOpenEditTextDialog={setOpenTextEditDialog}
+                spokenText={props.spokenText}
+                setSpokenText={props.setSpokenText}
+                />
+            }
+        </React.Fragment>
+    );
 
 }
