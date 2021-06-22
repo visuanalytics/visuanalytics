@@ -633,6 +633,10 @@ def add_scene():
             err = flask.jsonify({"err_msg": "Missing field 'images'"})
             return err, 400
 
+        if "scene_items" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'scene_items'"})
+            return err, 400
+
         msg = queries.insert_scene(scene)
         if msg:
             err = flask.jsonify({"err_msg": msg})
