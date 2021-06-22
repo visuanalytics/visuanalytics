@@ -774,12 +774,14 @@ def add_scene_image():
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
-        if not queries.insert_image(name + "." + file_extension):
+        image_id = queries.insert_image(name + "." + file_extension)
+        if not image_id:
             err = flask.jsonify({"err_msg": "Image could not be added to the database"})
             return err, 400
 
         image.save(file_path)
-        return "", 204
+        msg = flask.jsonify({"image_id": image_id})
+        return msg, 200
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while adding an image"})

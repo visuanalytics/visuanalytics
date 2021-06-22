@@ -857,11 +857,11 @@ def insert_image(image_name):
     count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
     if count > 0:
-        return False
+        return None
 
-    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    image_id = con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name]).lastrowid
     con.commit()
-    return True
+    return image_id
 
 
 def get_scene_image_file(image_id):
