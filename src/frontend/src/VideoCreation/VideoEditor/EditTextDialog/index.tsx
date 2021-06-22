@@ -7,7 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 import {AudioElement} from "../../types";
 
 interface EditTextDialogProps {
@@ -21,6 +21,19 @@ interface EditTextDialogProps {
 export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const classes = useStyles();
 
+    const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>([{
+        type: "text",
+        text: ""
+    }]);
+
+    const renderEditElement = (id: string, audioElement: AudioElement) => {
+        return (
+            <Grid item>
+                Hallo welt!
+            </Grid>
+        );
+    }
+
     return (
         <Dialog aria-labelledby="EditTextDialog-Title" open={props.openEditTextDialog}>
             <DialogTitle id="EditTextDialog-Title">Text für {props.sceneName} bearbeiten</DialogTitle>
@@ -28,6 +41,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 <Grid container>
                     <Grid item xs={12}>
                         Fügen Sie hier Texte und Pausen zur gewählten Szene {props.sceneName} hinzu.
+                    </Grid>
+                    <Grid container>
+                        {audioElements.map((audioElement: AudioElement, index: number) => {console.log("Executing"); renderEditElement("5", audioElement)})}
                     </Grid>
                 </Grid>
             </DialogContent>
