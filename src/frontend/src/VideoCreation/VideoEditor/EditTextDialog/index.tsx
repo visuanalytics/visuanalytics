@@ -28,10 +28,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",
         text: ""
-    }] : (props.spokenText[props.spokenText.length - 1].type === "pause" ? props.spokenText.concat({
-        type: "text",
-        text: ""
-    }) : props.spokenText));
+    }] : props.spokenText);
 
     const addNewText = () => {
         const arrCopy = audioElements.slice();
