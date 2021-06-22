@@ -9,11 +9,13 @@ from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_diagram, generate_diagram_custom
 from visuanalytics.analytics.processing.image.pillow.overlay import OVERLAY_TYPES
 from visuanalytics.analytics.processing.image.wordcloud import wordcloud as wc
-from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError
+from visuanalytics.analytics.util.step_errors import raise_step_error, ImageError, DiagramError
 from visuanalytics.analytics.util.type_utils import get_type_func, register_type_func
 from visuanalytics.util import resources
 
+
 IMAGE_TYPES = {}
+DIAGRAM_TYPES = {}
 """Ein Dictionary bestehend aus allen Image-Typ-Methoden."""
 
 
@@ -25,6 +27,16 @@ def register_image(func):
     :return: Funktion mit try/except-Block
     """
     return register_type_func(IMAGE_TYPES, ImageError, func)
+
+
+def register_diagram(func):
+    """Registriert die übergebene Funktion und versieht sie mit einem `"try/except"`-Block.
+    Fügt eine Typ-Funktion dem Dictionary DIAGRAM_TYPES hinzu.
+
+    :param func: die zu registrierende Funktion
+    :return: Funktion mit try/except-Block
+    """
+    return register_type_func(DIAGRAM_TYPES, DiagramError, func)
 
 
 @raise_step_error(ImageError)
@@ -40,6 +52,21 @@ def generate_all_images(values: dict, step_data: StepData):
         image_func = get_type_func(values["images"][item], IMAGE_TYPES)
 
         values["images"][item] = image_func(values["images"][item], step_data, values["images"])
+
+
+@raise_step_error(DiagramError)
+def generate_all_diagrams(values: dict, step_data: StepData):
+    """
+    Durchläuft jedes Bild in values (in der JSON), überprüft welcher Typ des Bildes vorliegt und ruft die
+    passende Typ-Methode auf. Nach der Erstellung der Bilder wird der Bauplan des Bilder (in values) mit dem Bildpfad ersetzt.
+
+    :param values: Werte aus der JSON-Datei
+    :param step_data: Daten aus der API
+    """
+    for key, item in enumerate(values["diagrams"]):
+        diagram_func = get_type_func(values["diagrams"][item], DIAGRAM_TYPES)
+
+        values["diagrams"][item] = diagram_func(values["diagrams"][item], step_data, values["diagrams"])
 
 
 @register_image
@@ -102,7 +129,7 @@ def diagram(values: dict, step_data: StepData, prev_paths):
     return generate_diagram(values, step_data, prev_paths)
 
 
-@register_image
+@register_diagram
 def diagram_custom(values: dict, step_data: StepData, prev_paths):
     """
     Erstellt ein Diagram mit Hilfe der Python-Bibliothek MatPlotLib.
