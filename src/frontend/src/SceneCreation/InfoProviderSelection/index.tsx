@@ -12,10 +12,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
-import {DataSource, FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
+import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
 import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
 import {DiagramInfo, HistorizedDataInfo} from "../types";
-import MenuItem from "@material-ui/core/MenuItem";
 
 
 interface InfoProviderSelectionProps {
