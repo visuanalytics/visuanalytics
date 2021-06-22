@@ -7,8 +7,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@material-ui/core";
 import {AudioElement} from "../../types";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 
 interface EditTextDialogProps {
     sceneName: string;
@@ -44,6 +46,13 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         setNewPause(0);
     }
 
+    const deleteText = (index: number) => {
+        const arrCopy = audioElements.slice();
+        if(index >= audioElements.length - 2) arrCopy.splice(index - 1, 2);
+        else arrCopy.splice(index, 2);
+        setAudioElements(arrCopy);
+    }
+
     const changeElement = (event: React.ChangeEvent<HTMLInputElement>) => {
         const editedElement = Number(event.target.id);
         const arrCopy = audioElements.slice();
@@ -53,21 +62,36 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     }
 
     const saveNewAudio = () => {
-        props.setSpokenText(audioElements.slice(0, (audioElements[audioElements.length - 1].type === "text" && audioElements[audioElements.length - 1].text === "") ? audioElements.length - 1 : audioElements.length));
+        props.setSpokenText(audioElements.slice());
         props.setOpenEditTextDialog(false);
     }
 
-    const renderEditElement = (id: string, audioElement: AudioElement) => {
+    const isInvalidCombination = () => {
+        for(let i = 0; i < audioElements.length; i++) {
+            if(audioElements[i].type === "text" && audioElements[i].text === "") return true;
+            else if(audioElements[i].type === "pause" && (audioElements[i].duration === undefined || audioElements[i].duration! < 0)) return true;
+        }
+        return false;
+    }
+
+    const renderEditElement = (id: number, audioElement: AudioElement) => {
         if(audioElement.type === "text" && audioElement.text !== undefined) {
             return (
-                <Grid item xs={12}>
-                    <TextField id={id} label="TTS-Text" multiline rowsMax={3} value={audioElement.text} onChange={changeElement}/>
+                <Grid container key={id} justify="space-between">
+                    <Grid item xs={12} md={10}>
+                        <TextField error={audioElement.text === ""} id={id.toString()} label="TTS-Text" multiline rowsMax={3} value={audioElement.text} onChange={changeElement}/>
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        <IconButton aria-label="Abschnitt löschen" disabled={audioElements.length <= 2} onClick={() => deleteText(id)}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </Grid>
                 </Grid>
             )
         } else if(audioElement.type === "pause" && audioElement.duration !== undefined) {
             return (
                 <Grid item>
-                    <TextField id={id} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
+                    <TextField error={audioElement.duration === undefined || audioElement.duration < 0} id={id.toString()} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
                 </Grid>
             )
         }
@@ -86,15 +110,15 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                             <Grid item>
                                 <Typography variant="h5">Elemente</Typography>
                             </Grid>
-                            {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index.toString(), audioElement))}
+                            {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index, audioElement))}
                             <Grid item>
                                 <Typography variant="h6">
                                     Neuer Text-Abschnitt
                                 </Typography>
                             </Grid>
-                            <TextField label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                            <TextField error={newPause === undefined || newPause < 0} label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
                             <Grid item className={classes.blockableButtonPrimary}>
-                                <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0} onClick={addNewText}>
+                                <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === ""} onClick={addNewText}>
                                     Neuen Abschnitt hinzufügen
                                 </Button>
                             </Grid>
@@ -115,7 +139,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="primary" onClick={saveNewAudio}>
+                        <Button variant="contained" color="primary" disabled={isInvalidCombination()} onClick={saveNewAudio}>
                             Speichern
                         </Button>
                     </Grid>
