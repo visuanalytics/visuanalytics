@@ -95,10 +95,10 @@ def random_text(values, data):
     """
     len_pattern = len(values["pattern"])
     if len_pattern == 1:
-        return data.format(values["pattern"][0], values)
+        return data.format(values["pattern"][0], values), True
     else:
         rand = randint(0, len_pattern - 1)
-        return data.format(values["pattern"][rand], values)
+        return data.format(values["pattern"][rand], values), True
 
 @register_audio_parts
 def silent(values, data):
