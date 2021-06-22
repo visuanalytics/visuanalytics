@@ -14,6 +14,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             height: 400,
             marginTop: "20px",
             marginBottom: "10px",
+            overflow: 'auto'
         },
         listFrame: {
             width: "100%",
