@@ -385,6 +385,8 @@ export const SceneCreation = () => {
                         customDataList={customDataList}
                         historizedDataList={historizedDataList}
                         diagramList={diagramList}
+                        imageList={imageList}
+                        setImageList={(images: Array<string>) => setImageList(images)}
                     />
                 )
         }

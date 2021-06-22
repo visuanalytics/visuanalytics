@@ -34,6 +34,8 @@ interface SceneEditorProps {
     customDataList: Array<string>;
     historizedDataList: Array<HistorizedDataInfo>;
     diagramList: Array<DiagramInfo>;
+    imageList: Array<string>;
+    setImageList: (images: Array<string>) => void;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -1115,6 +1117,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
+     * Method that renders a single entry in the list of all available images
+     * @param image The URL of the image to be displayed.
+     * @param index The index of the image (used to make keys unique)
+     */
+    const renderImageEntry = (image: string, index: number) => {
+        //TODO: when images are available, check how the size should look like
+        return (
+            <Grid item xs={4}>
+                <img src={image} width="50px" height="30px"/>
+            </Grid>
+        )
+    }
+
+    /**
      * Method to handle if a user unchecks the backgroundcolor checkbox
      */
     const handleBackground = () => {
@@ -1641,9 +1657,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     </Grid>
                     <Grid item xs={5}>
                         <Grid item xs={12} className={classes.rightButtons}>
-                            <Typography variant={"h4"} align={"center"}> ELEMENT HINZUFÜGEN </Typography><br/>
-                            <Grid container item xs={12} justify={"space-evenly"}>
-
+                            <Typography variant={"h4"} align={"center"}>
+                                ELEMENT HINZUFÜGEN
+                            </Typography>
+                            <Grid container item xs={12} justify={"space-evenly"} className={classes.elementLargeMargin}>
                                 <TextField id="itemType" onChange={(e) => selectType(e)} className={classes.selection}
                                            label={"Typ"} select value={selectedType}>
                                     <MenuItem value="Circle">Kreis</MenuItem>
@@ -1656,7 +1673,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                            label={"Textinhalt"}
                                            onChange={(e) => setCurrentTextContent(e.target.value)}></TextField>
                             </Grid><br/>
-                            <Typography variant={"h4"} align={"center"}> TEXTE </Typography><br/>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    TEXTE
+                                </Typography><br/>
+                            </Grid>
                             <Grid item xs={12}>
                                 <Box borderColor="primary.main" border={4} borderRadius={5}
                                      className={classes.choiceListFrame}>
@@ -1665,8 +1686,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     </List>
                                 </Box>
 
+                            </Grid><br/>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    HINTERGRUND
+                                </Typography><br/>
                             </Grid>
-                            <Typography variant={"h4"} align={"center"}> HINTERGRUND </Typography><br/>
+
                             <Grid item xs={12}>
                                 <FormControlLabel className={classes.checkBox}
                                                   control={<Checkbox name="checkedB" color="primary"
@@ -1684,15 +1710,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
                                 /><br/>
                                 <Button className={classes.button} onClick={switchBackground}
-                                        style={{width: "80%"}}> HINTERGRUNDBILD WÄHLEN </Button>
+                                        style={{width: "80%"}}>
+                                    HINTERGRUNDBILD WÄHLEN
+                                </Button>
                             </Grid><br/>
-                            <Typography variant={"h4"} align={"center"}> BILDER </Typography><br/>
-                            <Grid container item xs={12} justify={"space-evenly"}><br/></Grid>
-                            <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>
-                            <List>
-                                {props.diagramList.map((diagram) => renderDiagramListEntry(diagram))}
-                            </List>
-                            <Grid container item xs={12} justify={"space-evenly"}><br/></Grid>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    BILDER
+                                </Typography>
+                            </Grid>
+                            <Grid item container xs={12} className={classes.elementLargeMargin}>
+                                {props.imageList.map((image, index) => renderImageEntry(image, index))}
+                            </Grid><br/>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>
+                            </Grid>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <List>
+                                    {props.diagramList.map((diagram) => renderDiagramListEntry(diagram))}
+                                </List>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
