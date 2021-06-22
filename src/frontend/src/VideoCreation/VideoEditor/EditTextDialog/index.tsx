@@ -27,11 +27,13 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     }]);
 
     const renderEditElement = (id: string, audioElement: AudioElement) => {
-        return (
-            <Grid item>
-                Hallo welt!
-            </Grid>
-        );
+        if(audioElement.type === "text" && audioElement.text !== undefined) {
+            return (
+                <Grid item xs={12}>
+                    <TextField id={id} multiline rowsMax={3} value={audioElement.text}/>
+                </Grid>
+            )
+        }
     }
 
     return (
@@ -43,7 +45,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                         Fügen Sie hier Texte und Pausen zur gewählten Szene {props.sceneName} hinzu.
                     </Grid>
                     <Grid container>
-                        {audioElements.map((audioElement: AudioElement, index: number) => {console.log("Executing"); renderEditElement("5", audioElement)})}
+                        {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index.toString(), audioElement))}
                     </Grid>
                 </Grid>
             </DialogContent>
