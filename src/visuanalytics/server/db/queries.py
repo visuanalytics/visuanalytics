@@ -252,6 +252,19 @@ def insert_video_job(video, update=False, job_id=None):
             })
         # print("video with diagrams:", video)
 
+    images = video.get("images", None)
+    scene_names = list(map(lambda x: images[x]["key"], list(images.keys())))
+    scenes = get_scene_list()
+    scenes = list(filter(lambda x: x["scene_name"] in scene_names, scenes))
+    # print("scenes", scenes)
+    # print("scene_names", scene_names)
+    scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
+    # print("scenes", scenes)
+    for k, v in images.items():
+        images[k] = list(filter(lambda x: x["scene_name"] == v["key"], scenes))[0]["images"]
+    # print("images", json.dumps(images, indent=4))
+
+    video["images"] = images
     video["storing"] = []
     video["run_config"] = {}
     video["presets"] = {}
