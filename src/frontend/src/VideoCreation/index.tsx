@@ -336,6 +336,7 @@ export const VideoCreation = () => {
         let index = 1;
         sceneList.forEach((scene) => {
             const parts: Array<BackendAudioType> = [];
+            //for each text and pause, add a part to the configuration
             scene.spokenText.forEach((audioElement) => {
                 if(audioElement.type === "text") {
                     parts.push({
@@ -349,6 +350,13 @@ export const VideoCreation = () => {
                     })
                 }
             })
+            //after all texts and pauses were included, add a silent track for the exceed duration
+            if(scene.exceedDisplayDuration > 0) {
+                parts.push({
+                    type: "silent",
+                    duration: scene.exceedDisplayDuration
+                })
+            }
             audioObject["audio" + index++] = {
                 parts: parts
             }
