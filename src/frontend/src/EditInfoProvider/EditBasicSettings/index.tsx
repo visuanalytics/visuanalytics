@@ -111,8 +111,8 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
                 setNoKey={props.setNoKey}
                 method={props.method}
                 setMethod={props.setMethod}
-                name={props.apiName}
-                setName={props.setApiName}
+                apiName={props.apiName}
+                setApiName={props.setApiName}
                 reportError={props.reportError}
                 setSelectedData={props.setSelectedData}
                 setCustomData={props.setCustomData}

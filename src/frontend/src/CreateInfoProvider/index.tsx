@@ -698,8 +698,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setNoKey={(noKey: boolean) => setNoKey(noKey)}
                         method={method}
                         setMethod={(method: string) => setMethod(method)}
-                        name={apiName}
-                        setName={(name: string) => setApiName(name)}
+                        apiName={apiName}
+                        setApiName={(name: string) => setApiName(name)}
                         reportError={reportError}
                         setSelectedData={setSelectedData}
                         setCustomData={setCustomData}
