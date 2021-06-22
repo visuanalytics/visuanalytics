@@ -19,3 +19,10 @@ export type fetchAllBackendAnswer = Array<jsonRef>
 export type answer = {
     err_msg: string;
 }
+
+export type jsonRefScene = {
+    scene_id: number;
+    scene_name: string;
+}
+
+export type fetchAllScenesAnswer = Array<jsonRefScene>

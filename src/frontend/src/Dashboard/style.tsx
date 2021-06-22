@@ -9,6 +9,12 @@ export const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
             backgroundColor: theme.palette.background.paper,
         },
+        listFrameScenes: {
+            width: "100%",
+            height: 400,
+            marginTop: "20px",
+            marginBottom: "10px",
+        },
         listFrame: {
             width: "100%",
             height: 350,
@@ -68,6 +74,9 @@ export const useStyles = makeStyles((theme: Theme) =>
             '&:hover': {
                 backgroundColor: theme.palette.error.dark,
             },
+        },
+        media: {
+            heigth: 140,
         }
     }),
 );
