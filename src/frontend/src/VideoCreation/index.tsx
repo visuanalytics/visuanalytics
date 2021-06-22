@@ -72,9 +72,9 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         severity: "error",
     });
 
-    const reportError = (message: string) => {
+    const reportError = React.useCallback((message: string) => {
         dispatchMessage({type: "reportError", message: message});
-    };
+    }, [dispatchMessage])
 
 
     const continueHandler = () => {
@@ -101,10 +101,10 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
      * Handles the error-message if an error appears.
      * @param err the shown error
      */
-    const handleErrorFetchInfoProvider = (err: Error) => {
+    const handleErrorFetchInfoProvider = React.useCallback((err: Error) => {
         //console.log('error');
         reportError("Fehler: " + err)
-    }
+    }, [reportError])
 
     /**
      * Handles the success of the fetchAllInfoprovider()-method.
@@ -152,7 +152,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorFetchInfoProvider(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }, [handleErrorFetchInfoProvider])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -249,21 +249,33 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         return audioObject;
     }
 
-
     const sendVideoSuccessHandler = (jsonData: any) => {
         components?.setCurrent("dashboard")
     }
-
 
 
     const sendVideoErrorHandler = (err: Error) => {
         reportError("Fehler beim Absenden des Videos: " + err)
     }
 
-    const sendVideoToBackend = useCallFetch("visuanalytics/videojob", {
+
+    /**
+     * Method to send the completed videojob to the backend.
+     * The standard hook "useCallFetch" is not used here because it caused calls of the functions
+     * called inside of it on every render.
+     */
+    const sendVideoToBackend = () => {
+        let url = "visuanalytics/videojob";
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json\n"
             },
             body: JSON.stringify({
                 videojob_name: videoJobName,
@@ -282,9 +294,22 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
                     time_interval: schedule.interval,
                     weekdays: schedule.weekdays
                 }
-            })
-        }, sendVideoSuccessHandler, sendVideoErrorHandler
-    );
+            }),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) sendVideoSuccessHandler(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) sendVideoErrorHandler(err)
+        }).finally(() => clearTimeout(timer));
+    }
 
 
     const selectContent = () => {

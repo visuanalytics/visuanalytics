@@ -1,8 +1,4 @@
 import {
-    DataSource,
-    DataSourceKey,
-    Diagram,
-    ListItemRepresentation,
     Schedule,
     SelectedDataItem
 } from "../CreateInfoProvider/types";

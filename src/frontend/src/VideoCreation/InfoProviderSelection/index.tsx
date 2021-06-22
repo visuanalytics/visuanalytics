@@ -130,7 +130,6 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      * Setting the id in the state would cause problems making sure the right value is present when needed.
      */
     const fetchInfoProviderById = (id: number) => {
-        console.log("called");
         let url = "/visuanalytics/infoprovider/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
