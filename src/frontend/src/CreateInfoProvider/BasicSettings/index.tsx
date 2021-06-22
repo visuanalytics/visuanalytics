@@ -14,7 +14,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
+import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
 import {transformJSON} from "../helpermethods";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
@@ -41,11 +41,10 @@ interface BasicSettingsProps {
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
+    diagrams: Array<Diagram>
+    setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
-    setApiNameChanged?: (flag: boolean) => void;
-    oldApiName?: string;
     isInEditMode: boolean;
-
 }
 
 
@@ -200,9 +199,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.continueHandler()
     }*/
 
-    const checkNameChanged = () => {
-        if (props.oldApiName !== "" && props.setApiNameChanged !== undefined) props.setApiNameChanged(props.name !== props.oldApiName);
-    }
 
     /**
      * Generates the components content based on the current state.
@@ -234,7 +230,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                     value={props.name}
                                     changeHandler={(s) => {
                                         props.setName(s.replace(' ', '_'))
-                                        checkNameChanged();
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
                                     checkNameDuplicate={props.checkNameDuplicate}

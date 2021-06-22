@@ -57,10 +57,6 @@ interface SettingsOverviewProps {
     setDiagrams: (array: Array<Diagram>) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
-    oldApiName: string;
-    setOldApiName: (name: string) => void;
-    apiNameChanged: boolean;
-    setApiNameChanged: (flag: boolean) => void;
 }
 
 /**
@@ -328,8 +324,6 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained" size="large" color="primary" onClick={() => {
-                            props.setOldApiName(props.dataSources[selectedDataSource].apiName);
-                            props.setApiNameChanged(false);
                             manageBackDelete();
                         }}>
                             zurück

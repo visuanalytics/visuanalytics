@@ -827,11 +827,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                        setHistorizedData={setHistorizedData}
                        setSchedule={setSchedule}
                        setHistorySelectionStep={setHistorySelectionStep}
+                        diagrams={infoProvDiagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                        setListItems={(listItems: Array<ListItemRepresentation>) => {return}}
                    />
                 )
             case 2:
-                //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
                     <EditDataSelection
                         continueHandler={(index: number) => handleContinue(index)}
