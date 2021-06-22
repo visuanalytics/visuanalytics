@@ -23,10 +23,13 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
 
     const [newPause, setNewPause] = React.useState<number | undefined>(0);
 
-    const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>([{
+    const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",
         text: ""
-    }]);
+    }] : (props.spokenText[props.spokenText.length - 1].type === "pause" ? props.spokenText.concat({
+        type: "text",
+        text: ""
+    }) : props.spokenText));
 
     const addNewText = () => {
         const arrCopy = audioElements.slice();
@@ -41,17 +44,30 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         setNewPause(0);
     }
 
+    const changeElement = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const editedElement = Number(event.target.id);
+        const arrCopy = audioElements.slice();
+        if(arrCopy[editedElement].type === "text") arrCopy[editedElement].text = event.target.value;
+        else if(arrCopy[editedElement].type === "pause") arrCopy[editedElement].duration = Number(event.target.value);
+        setAudioElements(arrCopy);
+    }
+
+    const saveNewAudio = () => {
+        props.setSpokenText(audioElements.slice(0, (audioElements[audioElements.length - 1].type === "text" && audioElements[audioElements.length - 1].text === "") ? audioElements.length - 1 : audioElements.length));
+        props.setOpenEditTextDialog(false);
+    }
+
     const renderEditElement = (id: string, audioElement: AudioElement) => {
         if(audioElement.type === "text" && audioElement.text !== undefined) {
             return (
                 <Grid item xs={12}>
-                    <TextField id={id} label="TTS-Text" multiline rowsMax={3} defaultValue={audioElement.text}/>
+                    <TextField id={id} label="TTS-Text" multiline rowsMax={3} value={audioElement.text} onChange={changeElement}/>
                 </Grid>
             )
         } else if(audioElement.type === "pause" && audioElement.duration !== undefined) {
             return (
                 <Grid item>
-                    <TextField id={id} label="Pause in ms" type="number" defaultValue={audioElement.duration}/>
+                    <TextField id={id} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
                 </Grid>
             )
         }
@@ -76,7 +92,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                     Neuer Text-Abschnitt
                                 </Typography>
                             </Grid>
-                            <TextField label="Pause vor nächstem Text in ms" type="number" defaultValue={0} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                            <TextField label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
                             <Grid item className={classes.blockableButtonPrimary}>
                                 <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0} onClick={addNewText}>
                                     Neuen Abschnitt hinzufügen
@@ -91,7 +107,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                     </Grid>
                     </Grid>
             </DialogContent>
-            <DialogActions>
+            <DialogActions className={classes.elementLargeMargin}>
                 <Grid container justify="space-between">
                     <Grid item>
                         <Button variant="contained" color="primary" onClick={() => props.setOpenEditTextDialog(false)}>
@@ -99,7 +115,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" color="primary">
+                        <Button variant="contained" color="primary" onClick={saveNewAudio}>
                             Speichern
                         </Button>
                     </Grid>
