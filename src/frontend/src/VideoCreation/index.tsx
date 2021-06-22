@@ -6,16 +6,21 @@ import {ComponentContext} from "../ComponentProvider";
 import {useStyles} from "./style";
 import {VideoEditor} from "./VideoEditor";
 import {InfoProviderSelection} from "./InfoProviderSelection";
-import {Schedule} from "../CreateInfoProvider/types";
-import {useCallFetch} from "../Hooks/useCallFetch";
+import {
+    DataSource,
+    Diagram,
+    ListItemRepresentation,
+    Schedule,
+    SelectedDataItem,
+    uniqueId
+} from "../CreateInfoProvider/types";
 import {ScheduleSelection} from "./ScheduleSelection";
+import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 /**
  TODO:
-
- 5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
- 6: Absenden der Daten an das Backend mit Datenformat
  7: sessionStorage einbinden/ermöglichen
+ 8: alle Szenen aus dem Backend fetchen
  8: Option auf Bearbeitung einbinden
  9: fehlende Docstrings hinzufügen
 
@@ -24,6 +29,8 @@ import {ScheduleSelection} from "./ScheduleSelection";
  2: Fetching aller Infoprovider
  3: Anzeigen Auswahl aller Infoprovider
  4: Abfragen aller ausgewählten Infoprovider und Laden von Daten
+ 5: Schedule-Auswahl schreiben (wie bei Historisierung mit neuer Option "einmalig")
+ 6: Absenden der Daten an das Backend mit Datenformat
  */
 
 
@@ -62,6 +69,81 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
         {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
     ]);
 
+    /**
+     * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
+     * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
+     */
+    React.useEffect(() => {
+        //videoCreationStep
+        setVideoCreationStep(Number(sessionStorage.getItem("videoCreationStep-" + uniqueId) || 0));
+        //videoJobName
+        setVideoJobName(sessionStorage.getItem("videoJobName-" + uniqueId) || "");
+        //schedule
+        setSchedule(sessionStorage.getItem("schedule-" + uniqueId) === null ? {
+            type: "",
+            interval: "",
+            time: "",
+            weekdays: []
+        } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
+        //infoProviderList
+        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
+        //selectedInfoProvider
+        setSelectedInfoProvider(sessionStorage.getItem("selectedInfoProvider-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("selectedInfoProvider-" + uniqueId)!));
+        //minimalInfoProvObjects
+        setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
+        //availableScenes
+        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? new Array<string>() : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
+        //sceneList
+        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? new Array<SceneCardData>() : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
+    }, [])
+
+    //store videoCreationStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("videoCreationStep-" + uniqueId, videoCreationStep.toString());
+    }, [videoCreationStep])
+    //store videoJobName in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("videoJobName-" + uniqueId, videoJobName);
+    }, [videoJobName])
+    //store schedule in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("schedule-" + uniqueId, JSON.stringify(schedule));
+    }, [schedule])
+    //store infoProviderList in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
+    }, [infoProviderList])
+    //store selectedInfoProvider in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedInfoProvider-" + uniqueId, JSON.stringify(selectedInfoProvider));
+    }, [selectedInfoProvider])
+    //store minimalInfoProvObjects in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("minimalInfoProvObjects-" + uniqueId, JSON.stringify(minimalInfoProvObjects));
+    }, [minimalInfoProvObjects])
+    //store availableScenes in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("availableScenes-" + uniqueId, JSON.stringify(availableScenes));
+    }, [availableScenes])
+    //store availableScenes in sessionStorage by using JSON.stringify on it
+    React.useEffect(() => {
+        sessionStorage.setItem("sceneList-" + uniqueId, JSON.stringify(sceneList));
+    }, [sceneList])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("videoCreationStep-" + uniqueId);
+        sessionStorage.removeItem("videoJobName-" + uniqueId);
+        sessionStorage.removeItem("schedule-" + uniqueId);
+        sessionStorage.removeItem("infoProviderList-" + uniqueId);
+        sessionStorage.removeItem("selectedInfoProvider-" + uniqueId);
+        sessionStorage.removeItem("minimalInfoProvObjects-" + uniqueId);
+        sessionStorage.removeItem("availableScenes-" + uniqueId);
+        sessionStorage.removeItem("sceneList-" + uniqueId);
+    }
+
 
     /**
      * setup for error notification
@@ -85,7 +167,7 @@ export const VideoCreation = (/*{ infoProvId, infoProvider}*/) => {
 
     const backHandler = () => {
         if(videoCreationStep === 0) {
-            //clearSessionStorage()
+            clearSessionStorage()
             components?.setCurrent("dashboard")
         } else {
             setVideoCreationStep(videoCreationStep -1)

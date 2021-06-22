@@ -7,13 +7,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from "@material-ui/core/IconButton";
 import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import Collapse from "@material-ui/core/Collapse";
-import FormControl from "@material-ui/core/FormControl";
-import {AudioElement, DurationType} from "../../types";
-
+import {AudioElement} from "../../types";
 
 
 export interface SceneCardProps {
