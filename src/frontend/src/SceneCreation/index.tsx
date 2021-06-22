@@ -35,6 +35,8 @@ export const SceneCreation = () => {
     const [diagramList, setDiagramList] = React.useState<Array<DiagramInfo>>([]);
     //list of paths of the images fetched from the backend
     const [imageList, setImageList] = React.useState<Array<string>>([]);
+    //true when the continue of step 0 is disabled - used for blocking the button until all fetches are done
+    const [step0ContinueDisabled, setStep0ContinueDisabled] = React.useState(false);
 
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
@@ -125,7 +127,10 @@ export const SceneCreation = () => {
      * Decrements the step or returns to the dashboard if the step was 0.
      */
     const handleBack = () => {
-        if(sceneEditorStep===0) components?.setCurrent("dashboard")
+        if(sceneEditorStep===0) {
+            clearSessionStorage();
+            components?.setCurrent("dashboard");
+        }
         setSceneEditorStep(sceneEditorStep-1)
     }
 
@@ -220,6 +225,9 @@ export const SceneCreation = () => {
         if(allImageList.current.length === 0) {
             //set the state to the fetched list
             setImageList(imageFetchResults.current);
+            console.log(imageFetchResults.current);
+            //enable the continue button again
+            setStep0ContinueDisabled(false);
             //continue since this is called from finishing step 1
             handleContinue();
         } else {
@@ -250,7 +258,9 @@ export const SceneCreation = () => {
      * @param err The error sent by the backend.
      */
     const handleImageByIdError = (err: Error) => {
-       reportError("Fehler beim Abrufen eines Bildes: " + err)
+       reportError("Fehler beim Abrufen eines Bildes: " + err);
+        //enable the continue button again
+        setStep0ContinueDisabled(false);
     }
 
     /**
@@ -341,14 +351,6 @@ export const SceneCreation = () => {
         }, [fetchAllInfoprovider]
     );
 
-    /**
-     * Method that returns to the dashboard.
-     * Clears the sessionStorage and changes the mainComponent.
-     */
-    const backToDashboard = () => {
-        clearSessionStorage();
-        components?.setCurrent("dashboard");
-    }
 
     /**
      * Returns the rendered component based on the current step.
@@ -360,7 +362,7 @@ export const SceneCreation = () => {
                 return (
                     <InfoProviderSelection
                         continueHandler={() => setSceneEditorStep(step+1)}
-                        backHandler={() => backToDashboard()}
+                        backHandler={() => handleBack()}
                         infoProviderList={infoProviderList}
                         reportError={reportError}
                         setInfoProvider={(infoProvider: FrontendInfoProvider) => setInfoProvider(infoProvider)}
@@ -368,13 +370,16 @@ export const SceneCreation = () => {
                         setCustomDataList={(list: Array<string>) => setCustomDataList(list)}
                         setHistorizedDataList={(list: Array<HistorizedDataInfo>) => setHistorizedDataList(list)}
                         setDiagramList={(list: Array<DiagramInfo>) => setDiagramList(list)}
+                        fetchImageList={() => fetchImageList()}
+                        step0ContinueDisabled={step0ContinueDisabled}
+                        setStep0ContinueDisabled={(disabled: boolean) => setStep0ContinueDisabled(disabled)}
                     />
                 )
             case 1:
                 return (
                     <SceneEditor
-                        continueHandler={() => setSceneEditorStep(step+1)}
-                        backHandler={() => setSceneEditorStep(step-1)}
+                        continueHandler={() => handleContinue()}
+                        backHandler={() => handleBack()}
                         infoProvider={infoProvider}
                         selectedDataList={selectedDataList}
                         customDataList={customDataList}

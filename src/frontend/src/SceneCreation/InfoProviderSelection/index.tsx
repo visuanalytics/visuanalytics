@@ -1,6 +1,5 @@
 import React from "react";
 import {useStyles} from "../style";
-import {InfoProviderData} from "../index";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -14,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
 import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
-import {DiagramInfo, HistorizedDataInfo} from "../types";
+import {DiagramInfo, HistorizedDataInfo, InfoProviderData} from "../types";
 
 
 interface InfoProviderSelectionProps {
@@ -27,6 +26,9 @@ interface InfoProviderSelectionProps {
     setCustomDataList: (list: Array<string>) => void;
     setHistorizedDataList: (list: Array<HistorizedDataInfo>) => void;
     setDiagramList: (list: Array<DiagramInfo>) => void;
+    fetchImageList: () => void;
+    step0ContinueDisabled: boolean;
+    setStep0ContinueDisabled: (disabled: boolean) => void;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
@@ -237,10 +239,14 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonPrimary}>
-                        <Button disabled={ selectedId === 0 } variant="contained"
+                        <Button disabled={ props.step0ContinueDisabled || selectedId === 0 } variant="contained"
                                 size="large"
                                 color={"primary"}
-                                onClick={() => fetchInfoProviderById()}>
+                                onClick={() => {
+                                    props.setStep0ContinueDisabled(true);
+                                    fetchInfoProviderById();
+                                    props.fetchImageList();
+                                }}>
                             weiter
                         </Button>
                     </Grid>
