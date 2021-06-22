@@ -83,7 +83,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <IconButton onClick={() => props.removeScene()} className={classes.redDeleteIcon}>
+                        <IconButton aria-label="Szene löschen" onClick={() => props.removeScene()} className={classes.redDeleteIcon}>
                             <DeleteIcon />
                         </IconButton>
                     </Grid>
@@ -138,14 +138,14 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
             <CardActions>
                 <Grid container justify="space-between">
                     <Grid item>
-                        <IconButton disabled={props.leftDisabled} onClick={props.moveLeft}>
+                        <IconButton aria-label="Szene nach links bewegen" disabled={props.leftDisabled} onClick={props.moveLeft}>
                             <ArrowBackIcon
                                 fontSize="large"
                             />
                         </IconButton>
                     </Grid>
                     <Grid item>
-                        <IconButton disabled={props.rightDisabled} onClick={props.moveRight}>
+                        <IconButton aria-label="Szene nach rechts bewegen" disabled={props.rightDisabled} onClick={props.moveRight}>
                             <ArrowForwardIcon
                                 fontSize="large"
                             />
