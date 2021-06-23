@@ -268,13 +268,16 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item className={classes.elementLargeMargin}>
-                        <Button disabled={props.dataSources.length <= 1}
-                                variant="contained" size="large" className={classes.redDeleteButton}
-                                onClick={deleteDataSourceHandler}>
-                            Datenquelle Löschen
-                        </Button>
+                    <Grid item container className={classes.elementLargeMargin} justify="space-around">
+                        <Grid item className={classes.blockableButtonDelete}>
+                            <Button disabled={props.dataSources.length <= 1}
+                                    variant="contained" size="large"
+                                    onClick={deleteDataSourceHandler} className={classes.redDeleteButton}>
+                                Datenquelle Löschen
+                            </Button>
+                        </Grid>
                     </Grid>
+
                 </Grid>
                 <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
                     <Grid item xs={12}>

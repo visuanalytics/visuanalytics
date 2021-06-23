@@ -70,6 +70,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 opacity: "75%"
             }
         },
+        blockableButtonDelete: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.error.main,
+                opacity: "60%"
+            }
+        },
         redDeleteButton: {
             color: '#FFFFFF',
             backgroundColor: theme.palette.error.main,
