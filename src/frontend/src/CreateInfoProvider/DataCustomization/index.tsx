@@ -41,6 +41,7 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                     <ArrayProcessing
                         continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
                         backHandler={props.backHandler}
+                        reportError={props.reportError}
                     />
                 )
             }

@@ -24,6 +24,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 interface ArrayProcessingProps {
     continueHandler: () => void;
     backHandler: () => void;
+    reportError: (message: string) => void;
 }
 
 /**
@@ -86,6 +87,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * to the list of processings.
      */
     const addProcessing = () => {
+        //check for name duplicate first
+        for (let index = 0; index < processingsList.length; index++) {
+            if(name === processingsList[index].name) {
+                props.reportError("Der gewählte Name ist bereits vergeben!")
+                return;
+            }
+        }
         const arCopy = processingsList.slice();
         arCopy.push({
             name: name,
@@ -93,6 +101,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
             operation: operations[selectedOperationIndex]
         })
         setProcessingsList(arCopy);
+        setName("");
+        setSelectedArrayIndex(-1);
+        setSelectedOperationIndex(-1);
     }
 
     /**
