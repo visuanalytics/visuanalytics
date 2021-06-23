@@ -1,5 +1,5 @@
 //import React from "react";
-import {StrArg} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 /**
  * A type to hold all important information to initialize the EditSingleDataGUI correctly
  */

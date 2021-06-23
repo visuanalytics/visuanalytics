@@ -9,7 +9,7 @@ import {
     testDataBackendAnswer
 } from "../../CreateInfoProvider/types";
 import {getListItemsNames, transformJSON} from "../../CreateInfoProvider/helpermethods";
-import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";

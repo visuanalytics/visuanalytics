@@ -10,7 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
-import {FormelObj} from "../../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Diagram, Schedule} from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 

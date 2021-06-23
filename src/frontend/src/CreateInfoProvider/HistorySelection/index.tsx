@@ -3,7 +3,7 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Diagram, Schedule} from "../types";
 
 interface HistorySelectionProps {

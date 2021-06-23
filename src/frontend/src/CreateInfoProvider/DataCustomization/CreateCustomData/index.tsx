@@ -1,15 +1,15 @@
 import React from "react";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/formelObjects/StrArg";
-import {useStyles} from "../style";
-import {hintContents} from "../../util/hintContents";
-import {StepFrame} from "../StepFrame";
+import {useStyles} from "../../style";
+import {hintContents} from "../../../util/hintContents";
+import {StepFrame} from "../../StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
-import {useCallFetch} from "../../Hooks/useCallFetch";
-import {customDataBackendAnswer, Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
-import {getListItemsNames} from "../helpermethods";
+import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {customDataBackendAnswer, Diagram, ListItemRepresentation, SelectedDataItem} from "../../types";
+import {getListItemsNames} from "../../helpermethods";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 
