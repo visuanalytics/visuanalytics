@@ -5,13 +5,13 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 import {TypeSelection} from "./TypeSelection";
 import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
-import {CreateCustomData} from "./CreateCustomData";
+import {CreateCustomData} from "./DataCustomization/CreateCustomData";
 import Container from "@material-ui/core/Container";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
-import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
+import {FormelObj} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
 import {
     DataSource,
     DataSourceKey,
@@ -25,6 +25,7 @@ import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
 import {DiagramCreation} from "./DiagramCreation";
+import {DataCustomization} from "./DataCustomization";
 
 
 /* TODO: list of bugfixes to be made by Janek
@@ -74,7 +75,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
-        "Formeln",
+        "Datenverarbeitungen",
         "Historisierung",
         "Gesamtübersicht",
         "Diagrammerstellung"
@@ -82,7 +83,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
-        "Formeln",
+        "Datenverarbeitungen",
         "Historisierung",
     ];
 
@@ -119,6 +120,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
+    //represents the current step in data customization: 0 is array processing, 1 is formula and 2 is string processing
+    const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
     // Holds an array of all data sources for the Infoprovider
     const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
@@ -247,6 +250,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
         setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 1));
+        //dataCustomizationStep
+        setDataCustomizationStep(Number(sessionStorage.getItem("dataCustomizationStep-" + uniqueId) || 0));
         // Already created data sources
         setDataSources(sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
         //listItems
@@ -320,6 +325,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
     }, [historySelectionStep])
+    //store dataCustomizationStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
+    }, [dataCustomizationStep])
     // Store data sources in session storage by using JSON-stringify on it
     React.useEffect(() => {
         sessionStorage.setItem("dataSources-" + uniqueId, JSON.stringify(dataSources));
@@ -347,6 +356,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         sessionStorage.removeItem("dataSources-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
+        sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
     }
 
@@ -733,9 +743,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 );
             case 3:
                 return (
-                    <CreateCustomData
+                    <DataCustomization
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        dataCustomizationStep={dataCustomizationStep}
+                        setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                         selectedData={selectedData}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}

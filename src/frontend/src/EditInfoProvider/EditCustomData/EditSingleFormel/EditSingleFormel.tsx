@@ -1,11 +1,11 @@
 import React from "react";
-import {StrArg} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {StrArg} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
 import {useStyles} from "../../style";
 import {hintContents} from "../../../util/hintContents";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
 import {calculationToString} from "../../helpermethods";

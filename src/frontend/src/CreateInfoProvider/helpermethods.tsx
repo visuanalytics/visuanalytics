@@ -158,7 +158,7 @@ export const transformJSON = (jsonData: any, parent = "") => {
 };
 
 
-/* CreateCustomData */
+/* DataCustomization */
 /**
  * Returns an array of all elements contained in the listItems. Used for checking duplicate names in formula creation.
  * Also includes the names of arrays and objects to avoid further problems, even though they cant be selected (yet).
