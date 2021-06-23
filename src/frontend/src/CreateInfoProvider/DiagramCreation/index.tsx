@@ -309,7 +309,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                             } else if (item.value !== "[Array]" && !item.value.includes(",")) {
                                 //when the value is not array and has no commas, the array contains primitive values of the same type
                                 //check if the primitive type is numeric
-                                if (item.value === "Zahl") {
+                                if (item.value === "Zahl" || item.value === "Gleitkommazahl") {
                                     const editedItem = {
                                         ...item,
                                         parentKeyName: item.parentKeyName === "" ? dataSource.apiName : dataSource.apiName + "|" + item.parentKeyName
@@ -357,7 +357,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                 if(dataSource.historizedData!==undefined&&dataSource.selectedData!==undefined) {
                     dataSource.historizedData.forEach((item) => {
                         dataSource.selectedData.forEach((data) => {
-                            if (data.key === item && (data.type === "Zahl" || (data.type === "Array" && data.arrayValueType !== undefined && data.arrayValueType === "Zahl"))) compatibleHistorized.push(dataSource.apiName + "|" + item)
+                            if (data.key === item && (data.type === "Zahl" || data.type === "Gleitkommazahl" || (data.type === "Array" && data.arrayValueType !== undefined && (data.arrayValueType === "Zahl" || data.arrayValueType === "Gleitkommazahl")))) compatibleHistorized.push(dataSource.apiName + "|" + item)
                         })
                         dataSource.customData.forEach((data) => {
                             if (data.formelName === item) compatibleHistorized.push(dataSource.apiName + "|" + item)

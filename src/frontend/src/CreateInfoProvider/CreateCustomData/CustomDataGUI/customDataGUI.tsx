@@ -51,7 +51,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
      */
     const renderListItemSelectedData = (data: SelectedDataItem) => {
       
-        if (data.type === 'Zahl' || data.type === 'Gleitkommazahl' || (data.type === "Array" && data.arrayValueType !== undefined && data.arrayValueType === "Zahl")) {
+        if (data.type === "Zahl" || data.type === "Gleitkommazahl" || (data.type === "Array" && data.arrayValueType !== undefined && (data.arrayValueType === "Zahl" || data.arrayValueType === "Gleitkommazahl"))) {
 
 
             return (
