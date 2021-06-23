@@ -1,16 +1,11 @@
 import React from "react";
 import {useStyles} from "../../style";
-import {hintContents} from "../../../util/hintContents";
 import Grid from "@material-ui/core/Grid";
 import {StepFrame} from "../../StepFrame";
-import List from "@material-ui/core/List";
 import Box from "@material-ui/core/Box";
 import {
     Button, Divider,
     IconButton,
-    ListItem,
-    ListItemSecondaryAction,
-    ListItemText,
     TextField,
     Typography
 } from "@material-ui/core";
@@ -19,12 +14,23 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {getListItemsNames} from "../../helpermethods";
+import {Diagram, ListItemRepresentation} from "../../types";
+import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
 interface ArrayProcessingProps {
     continueHandler: () => void;
     backHandler: () => void;
     reportError: (message: string) => void;
+    listItems: Array<ListItemRepresentation>;
+    customData: Array<FormelObj>;
+    setCustomData: (customData: Array<FormelObj>) => void;
+    diagrams: Array<Diagram>;
+    setDiagrams: (diagrams: Array<Diagram>) => void;
+    historizedData: Array<string>
+    setHistorizedData: (historizedData: Array<string>) => void;
+    apiName: string;
 }
 
 /**
@@ -36,7 +42,7 @@ DONE:
 
 TODO:
 
- 5: Namensprüfung auf Duplikate in listItems, customData -> beim Laden eine Liste aller Namen generieren und gegenprüfen? -> aktualisieren, wenn man etwas mitlöscht
+ 5: Namensprüfung auf Duplikate in listItems und customData
  6: Liste bereits erstellter Daten mit Button zum Löschen
  x: Beim Löschen einer angelegten Verarbeitung: Durchsuche alle Formeln, Diagramme und Historisierung nach Verwendung des Werts
  y: Nutzer mit Dialog um Bestätigung des Löschens bitten
@@ -83,17 +89,35 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     ]
 
     /**
-     * Handler method for the "save" button that adds the current seleciton as a new processing
+     * Method that checks if a name is already used by another processing,
+     * api data or formula
+     * @param name The name to be checked.
+     */
+    const checkNameDuplicate = (name: string) => {
+        //check all processings
+        for (let index = 0; index < processingsList.length; index++) {
+            if(name === processingsList[index].name) return true;
+        }
+        //check api data names
+        if(getListItemsNames(props.listItems).includes(name)) return true;
+        //check formula names
+        for (let index = 0; index < props.customData.length; index++) {
+            if(name === props.customData[index].formelName) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Handler method for the "save" button that adds the current selection as a new processing
      * to the list of processings.
      */
     const addProcessing = () => {
         //check for name duplicate first
-        for (let index = 0; index < processingsList.length; index++) {
-            if(name === processingsList[index].name) {
-                props.reportError("Der gewählte Name ist bereits vergeben!")
-                return;
-            }
+        if(checkNameDuplicate(name)) {
+            props.reportError("Der gewählte Name ist bereits vergeben!")
+            return;
         }
+
         const arCopy = processingsList.slice();
         arCopy.push({
             name: name,
@@ -106,12 +130,90 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         setSelectedOperationIndex(-1);
     }
 
+    //both variables are useRef to be able to change values between renders
+    //list of the names of all formulas to be removed with the currently deleted processing
+    const formulasToRemove = React.useRef<Array<string>>([]);
+    //list of the names of all diagrams to be removed with the currently deleted processing
+    const diagramsToRemove = React.useRef<Array<string>>([]);
+
     /**
-     * Method that removes a entry of the processings list by the given index.
+     * Checks if any delete dependencies exist for a given processing:
+     * Returns true if formulas or diagrams need to be removed with the processing,
+     * false if not.
+     * @param name The name of the processing to search dependencies for
+     */
+    const checkDeleteDependencies = (name: string) => {
+        //check all formulas if the use this processing
+        props.customData.forEach((formula) => {
+            if(formula.formelString.includes(name)) formulasToRemove.current.push(formula.formelName);
+        })
+
+        //check all diagrams if they use this processing
+        props.diagrams.forEach((diagram) => {
+            //only diagrams with historized data can use processings and need to be checked
+            if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const historized = diagram.historizedObjects[index];
+                    //the dataSource name needs to be added in front of the processings name since historizedObjects has dataSource name in it paths too
+                    if (props.apiName + "|" + name === historized.name) {
+                        diagramsToRemove.current.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+
+        return formulasToRemove.current.length !== 0 || diagramsToRemove.current.length !== 0;
+    }
+
+    /**
+     * Method that handles clicking the remove icon for a processing.
+     * Checks if any delete dependencies exist - if so, a dialog will ask
+     * for confirmation, otherwise, the value is deleted.
+     * @param index The index of the element to be deleted.
+     */
+    const removeProcessingHandler = (index: number) => {
+        //Clear lists - normally should be empty but it makes the method work on its own safer
+        formulasToRemove.current = [];
+        diagramsToRemove.current = [];
+        if(checkDeleteDependencies(processingsList[index].name)) {
+            //TODO: display dialog
+            return;
+        }
+        removeProcessing(index);
+    }
+
+    /**
+     * Method that removes a processing as well as all
+     * historized data, formulas and diagrams depending on it.
      * @param index The index of the element to be deleted.
      */
     const removeProcessing = (index: number) => {
-
+        //remove the element from historizedData
+        if(props.historizedData.includes(processingsList[index].name)) {
+            props.setHistorizedData(props.historizedData.filter((data) => {
+                return data !== processingsList[index].name;
+            }))
+        }
+        //remove the formulas using the historizedData
+        if(formulasToRemove.current.length !== 0) {
+            props.setCustomData(props.customData.filter((formel) => {
+               return !formulasToRemove.current.includes(formel.formelName);
+            }))
+        }
+        //remove the diagrams using the historizedData
+        if(diagramsToRemove.current.length !== 0) {
+            props.setDiagrams(props.diagrams.filter((diagram) => {
+                return !diagramsToRemove.current.includes(diagram.name);
+            }))
+        }
+        //reset the list of formulas and diagrams to remove
+        formulasToRemove.current = [];
+        diagramsToRemove.current = [];
+        //remove the processing from the list of processings
+        const arCopy = processingsList.slice();
+        arCopy.splice(index, 1);
+        setProcessingsList(arCopy);
     }
 
     /**
@@ -149,7 +251,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * Method that renders an entry in the list of all processings created by the user.
      * @param processing The object of the processing to be displayed.
      */
-    const renderProcessingsListEntry = (processing: ArrayProcessing) => {
+    const renderProcessingsListEntry = (processing: ArrayProcessing, index: number) => {
         return (
             <React.Fragment key={processing.name}>
                 <Grid item container xs={12}>
@@ -159,7 +261,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                         </Typography>
                     </Grid>
                     <Grid item xs={4}>
-                        <IconButton className={classes.redDeleteIcon}>
+                        <IconButton className={classes.redDeleteIcon}
+                            onClick={() => removeProcessingHandler(index)}
+                        >
                             <DeleteIcon />
                         </IconButton>
                     </Grid>
@@ -239,7 +343,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 <Grid item container xs={12} md={3}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                         <Grid item container xs={12}>
-                            {processingsList.map((processing) => renderProcessingsListEntry(processing))}
+                            {processingsList.map((processing, index) => renderProcessingsListEntry(processing, index))}
                         </Grid>
                     </Box>
                 </Grid>
