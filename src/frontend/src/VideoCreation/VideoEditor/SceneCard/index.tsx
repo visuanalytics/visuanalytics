@@ -7,7 +7,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import IconButton from "@material-ui/core/IconButton";
 import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {AudioElement} from "../../types";
+import {AudioElement, MinimalInfoProvider} from "../../types";
 import {Message, MessageOutlined} from "@material-ui/icons";
 import {EditTextDialog} from "../EditTextDialog";
 
@@ -24,6 +24,7 @@ export interface SceneCardProps {
     leftDisabled: boolean;
     rightDisabled: boolean;
     removeScene: () => void;
+    minimalInfoproviders: Array<MinimalInfoProvider>;
 }
 
 /**
@@ -175,6 +176,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                 setOpenEditTextDialog={setOpenTextEditDialog}
                 spokenText={props.spokenText}
                 setSpokenText={props.setSpokenText}
+                minimalInfoproviders={props.minimalInfoproviders}
                 />
             }
         </React.Fragment>

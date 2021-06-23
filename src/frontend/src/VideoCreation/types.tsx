@@ -46,6 +46,14 @@ export type SceneData = {
 // type of the answer for fetching all Infoprovider from Backend
 export type FetchAllScenesAnswer = Array<SceneData>
 
+export type MinimalDataSource = {
+    apiName: string;
+    selectedData: SelectedDataItem[];
+    customData: FormelObj[];
+    historizedData: string[];
+    schedule: Schedule;
+}
+
 /**
  * Reduced version of a infoprovider that only contains its name, all dataSources
  * with name, selectedData, customData, historizedData and the schedule object.
@@ -54,13 +62,7 @@ export type FetchAllScenesAnswer = Array<SceneData>
  */
 export type MinimalInfoProvider = {
     infoproviderName: string;
-    dataSources: Array<{
-        apiName: string;
-        selectedData: SelectedDataItem[];
-        customData: FormelObj[];
-        historizedData: string[];
-        schedule: Schedule;
-    }>;
+    dataSources: Array<MinimalDataSource>;
 }
 
 /**

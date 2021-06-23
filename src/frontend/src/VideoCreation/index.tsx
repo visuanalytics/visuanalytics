@@ -463,6 +463,7 @@ export const VideoCreation = () => {
                         setSceneList={(sceneList: Array<SceneCardData>) => setSceneList(sceneList)}
                         availableScenes={availableScenes}
                         reportError={(message: string) => reportError(message)}
+                        minimalInfoproviders={minimalInfoProvObjects}
                     />
                 )
             }

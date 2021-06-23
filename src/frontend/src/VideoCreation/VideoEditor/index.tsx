@@ -1,6 +1,6 @@
 import React from "react";
 import {SceneContainer} from "./SceneContainer";
-import {SceneCardData} from "../types";
+import {MinimalInfoProvider, SceneCardData} from "../types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
@@ -23,6 +23,7 @@ interface VideoEditorProps {
     setSceneList: (sceneList: Array<SceneCardData>) => void;
     availableScenes: Array<string>;
     reportError: (message: string) => void;
+    minimalInfoproviders: Array<MinimalInfoProvider>;
 }
 
 /**
@@ -108,6 +109,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                             <SceneContainer
                                 sceneList={props.sceneList}
                                 setSceneList={(sceneList: Array<SceneCardData>) => props.setSceneList(sceneList)}
+                                minimalInfoproviders={props.minimalInfoproviders}
                             />
                         </Grid>
                     </Grid>

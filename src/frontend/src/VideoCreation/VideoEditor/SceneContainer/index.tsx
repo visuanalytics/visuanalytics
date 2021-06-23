@@ -3,12 +3,13 @@ import {SceneCard} from "../SceneCard";
 import Box from "@material-ui/core/Box";
 import {Collapse, ListItem} from "@material-ui/core";
 import List from "@material-ui/core/List";
-import {AudioElement, Direction, SceneCardData} from "../../types";
+import {AudioElement, Direction, MinimalInfoProvider, SceneCardData} from "../../types";
 import {useStyles} from "../../style";
 
 interface SceneContainerProps {
     sceneList: Array<SceneCardData>
     setSceneList: (sceneList: Array<SceneCardData>) => void;
+    minimalInfoproviders: Array<MinimalInfoProvider>;
 }
 
 /**
@@ -151,6 +152,7 @@ export const SceneContainer: React.FC<SceneContainerProps> = (props) => {
                             leftDisabled={index === 0}
                             rightDisabled={index === props.sceneList.length - 1}
                             removeScene={() => removeScene(index)}
+                            minimalInfoproviders={props.minimalInfoproviders}
                         />
                     </React.Fragment>
                 </Collapse>

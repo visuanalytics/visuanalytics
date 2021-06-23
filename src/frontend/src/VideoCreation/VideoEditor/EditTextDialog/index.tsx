@@ -2,15 +2,13 @@ import React from "react";
 import {useStyles} from "../../style";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Select from "@material-ui/core/Select"
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
-import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField} from "@material-ui/core";
-import {AudioElement} from "../../types";
+import {Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, TextField} from "@material-ui/core";
+import {AudioElement, MinimalDataSource, MinimalInfoProvider} from "../../types";
 import DeleteIcon from "@material-ui/icons/Delete";
-
+import {extractKeysFromSelection} from "../../../CreateInfoProvider/helpermethods"
+import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface EditTextDialogProps {
     sceneName: string;
@@ -18,6 +16,7 @@ interface EditTextDialogProps {
     setOpenEditTextDialog: (openEditTextDialog: boolean) => void;
     spokenText: Array<AudioElement>;
     setSpokenText: (newText: Array<AudioElement>) => void;
+    minimalInfoproviders: Array<MinimalInfoProvider>;
 }
 
 export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
@@ -29,6 +28,14 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         type: "text",
         text: ""
     }] : props.spokenText);
+
+    const [showInfoproviderData, setShowInfoproviderData] = React.useState<Array<boolean>>(new Array(props.minimalInfoproviders.length).fill(false));
+
+    const toggleInfoproviderData = (index: number) => {
+        const arrCopy = showInfoproviderData.slice();
+        arrCopy[index] = !arrCopy[index];
+        setShowInfoproviderData(arrCopy);
+    }
 
     const addNewText = () => {
         const arrCopy = audioElements.slice();
@@ -87,11 +94,59 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
             )
         } else if(audioElement.type === "pause" && audioElement.duration !== undefined) {
             return (
-                <Grid item>
+                <Grid key={id} item>
                     <TextField error={audioElement.duration === undefined || audioElement.duration < 0} id={id.toString()} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
                 </Grid>
             )
         }
+    }
+
+    const renderSelectedDataAndCustomData = (item: string) => {
+        return (
+            <ListItem key={item} divider={true}>
+                <Button id={item} variant="contained" size="large">
+                    {item}
+                </Button>
+            </ListItem>
+        );
+    }
+
+    const renderDataSource = (dataSource: MinimalDataSource, infoProviderName: string) => {
+        return (
+            <List key={dataSource.apiName} disablePadding={true}>
+                {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(item.formelName))}
+            </List>
+        );
+    }
+
+    const renderInfoproviderData = (dataSources: Array<MinimalDataSource>, infoproviderName: string, infoproviderIndex: number) => {
+        return (
+            <Grid key={infoproviderName} container>
+                <Grid container>
+                    <Grid item xs={12} md={10}>
+                        <Typography variant="body1">
+                            {infoproviderName}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} md={2}>
+                        {!showInfoproviderData[infoproviderIndex] &&
+                        <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => toggleInfoproviderData(infoproviderIndex)}>
+                            <ExpandMore/>
+                        </IconButton>
+                        }
+                        {showInfoproviderData[infoproviderIndex] &&
+                        <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => toggleInfoproviderData(infoproviderIndex)}>
+                            <ExpandLess/>
+                        </IconButton>
+                        }
+                    </Grid>
+                </Grid>
+                <Collapse in={showInfoproviderData[infoproviderIndex]}>
+                    {dataSources.map((dataSource: MinimalDataSource) => renderDataSource(dataSource, infoproviderName))}
+                </Collapse>
+            </Grid>
+        );
     }
 
     return (
@@ -103,7 +158,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                         Fügen Sie hier Texte und Pausen zur gewählten Szene {props.sceneName} hinzu.
                     </Grid>
                     <Grid container justify="space-between">
-                        <Grid container xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <Grid item>
                                 <Typography variant="h5">Elemente</Typography>
                             </Grid>
@@ -120,10 +175,15 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Grid container xs={12} md={6}>
-                            <Typography variant="h5">
-                                API-Daten
-                            </Typography>
+                        <Grid item xs={12} md={6}>
+                            <Grid item>
+                                <Typography variant="h5">
+                                    API-Daten
+                                </Typography>
+                            </Grid>
+                            <Grid container>
+                                {props.minimalInfoproviders.map((minimalInfoprovider: MinimalInfoProvider, infoproviderIndex: number) => renderInfoproviderData(minimalInfoprovider.dataSources, minimalInfoprovider.infoproviderName, infoproviderIndex))}
+                            </Grid>
                         </Grid>
                     </Grid>
                     </Grid>
