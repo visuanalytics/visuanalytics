@@ -85,6 +85,9 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        redDeleteIcon: {
+            color: theme.palette.error.main
+        },
         header: {
             color: theme.palette.primary.main
         },
@@ -104,5 +107,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        typographyLineBreak: {
+            overflowWrap: "break-word"
+        }
     }),
 );
