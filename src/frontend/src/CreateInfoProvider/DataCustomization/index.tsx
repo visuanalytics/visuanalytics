@@ -42,6 +42,14 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
                         backHandler={props.backHandler}
                         reportError={props.reportError}
+                        listItems={props.listItems}
+                        customData={props.customData}
+                        setCustomData={props.setCustomData}
+                        diagrams={props.diagrams}
+                        setDiagrams={props.setDiagrams}
+                        historizedData={props.historizedData}
+                        setHistorizedData={props.setHistorizedData}
+                        apiName={props.apiName}
                     />
                 )
             }
