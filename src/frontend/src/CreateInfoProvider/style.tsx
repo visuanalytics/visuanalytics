@@ -22,6 +22,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        mediumListFrame: {
+            width: "100%",
+            height: 250,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "5px",
+            marginBottom: "0px"
+        },
         smallListFrame: {
             width: "100%",
             height: 170,
