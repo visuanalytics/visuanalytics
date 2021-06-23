@@ -218,13 +218,15 @@ export const ScheduleSelection: React.FC<ScheduleSelectionProps> = (props) => {
                     />
                 </MuiPickersUtilsProvider>
             </Grid>
-            <Collapse in={props.schedule.type === "interval"}>
-                <Grid item xs={12} className={classes.elementSmallMargin}>
-                    <Typography variant="body2">
-                        Bei der Historisierung in Intervallen wird automatisch die aktuellste Zeit gewählt.
-                    </Typography>
-                </Grid>
-            </Collapse>
+            <Grid item xs={12}>
+                <Collapse in={props.schedule.type === "interval"}>
+                    <Grid item xs={12} className={classes.elementSmallMargin}>
+                        <Typography variant="body2">
+                            Bei der Historisierung in Intervallen wird automatisch die aktuellste Zeit gewählt.
+                        </Typography>
+                    </Grid>
+                </Collapse>
+            </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
                     <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>

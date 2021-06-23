@@ -3,7 +3,7 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         elementLargeMargin: {
-            marginTop: "10px"
+            marginTop: "10px",
         },
         redDeleteIcon: {
             color: theme.palette.error.main,
@@ -17,9 +17,21 @@ export const useStyles = makeStyles((theme: Theme) =>
                 opacity: "75%"
             }
         },
-        blockableButtonSecondary: {
+        alignLeftButton: {
+            margin: "auto auto",
+        },
+        verticalAlignBlockableButtonPrimary: {
+            display: "flex",
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.primary.main,
+                opacity: "75%"
+            }
+        },
+        alignRightButton: {
             margin: "auto auto",
             marginLeft: "30px",
+        },
+        blockableButtonSecondary: {
             '& .Mui-disabled': {
                 backgroundColor: theme.palette.secondary.main,
                 opacity: "75%",
@@ -36,12 +48,6 @@ export const useStyles = makeStyles((theme: Theme) =>
             height: "25rem",
             marginLeft: "20px"
         },
-        verticalButtonAlignContainer: {
-            display: "flex"
-        },
-        alignedButton: {
-            margin: "auto auto",
-        },
         listFrame: {
             width: "100%",
             height: 400,
@@ -53,5 +59,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         elementSmallMargin: {
             marginTop: "5px"
         },
+        fixedWarningContainer: {
+            height: "65px"
+        }
     }),
 );

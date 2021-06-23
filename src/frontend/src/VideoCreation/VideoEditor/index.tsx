@@ -87,15 +87,15 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
                     </Grid>
                 </Grid>
                 <Grid item container xs={3} justify="flex-end">
-                    <Grid item className={classes.verticalButtonAlignContainer}>
+                    <Grid item className={classes.verticalAlignBlockableButtonPrimary}>
                         <Button variant="contained" color="primary"
-                                onClick={props.backHandler} className={classes.alignedButton}>
+                                onClick={props.backHandler} className={classes.alignLeftButton}>
                             zurück
                         </Button>
                     </Grid>
-                    <Grid item className={classes.verticalButtonAlignContainer}>
+                    <Grid item className={classes.verticalAlignBlockableButtonPrimary}>
                         <Button disabled={props.sceneList.length === 0} variant="contained" color="primary"
-                                onClick={props.continueHandler} className={classes.blockableButtonSecondary}>
+                                onClick={props.continueHandler} className={classes.alignRightButton}>
                             weiter
                         </Button>
                     </Grid>

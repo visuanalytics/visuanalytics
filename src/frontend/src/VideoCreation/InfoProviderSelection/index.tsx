@@ -10,6 +10,7 @@ import {useStyles} from "../style";
 import Checkbox from "@material-ui/core/Checkbox";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import {InfoProviderFromBackend} from "../../CreateInfoProvider/types";
+import {Alert} from "@material-ui/lab";
 
 
 interface InfoProviderSelectionProps {
@@ -221,7 +222,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
 
     return (
-        <Grid container>
+        <Grid container justify="space-around">
             <Grid item xs={12}>
                 <Typography variant="body1">
                     Bitte wählen sie die Infoprovider, deren Datenwerte in der Videoerstellung für Text-to-Speech zur Verfügung stehen sollen:
@@ -234,8 +235,13 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     </List>
                 </Box>
             </Grid>
-            <Grid item xs={12}>
-                Warnung
+            <Grid item xs={12} className={classes.fixedWarningContainer}>
+                {props.selectedInfoProvider.length > 5 &&
+                <Alert severity="warning">
+                    <strong>Warnung:</strong> Es müssen die Informationen aller ausgewählten Infoprovider gleichzeitig geladen werden.<br/>
+                    Bitte berücksichtigen sie, dass bei einer größeren Menge und sehr großen Infoprovidern Performance-Einbußen auftreten können.
+                </Alert>
+                }
             </Grid>
             <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                 <Grid item>
@@ -244,7 +250,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     </Button>
                 </Grid>
                 <Grid item className={classes.blockableButtonPrimary}>
-                    <Button disabled={continueDisabled || props.selectedInfoProvider.length === 0} variant="contained" size="large" color="primary" onClick={() => {
+                    <Button disabled={continueDisabled} variant="contained" size="large" color="primary" onClick={() => {
                        infoProviderToFetch.current = props.selectedInfoProvider;
                        setContinueDisabled(true);
                        fetchNextInfoProvider();
