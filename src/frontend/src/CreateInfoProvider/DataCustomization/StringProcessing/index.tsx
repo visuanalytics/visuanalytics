@@ -1,5 +1,7 @@
 import React from "react";
 import {useStyles} from "../../style";
+import {StepFrame} from "../../StepFrame";
+import Grid from "@material-ui/core/Grid";
 
 
 interface StringProcessingProps {
@@ -19,7 +21,13 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
 
     return(
-        <React.Fragment>
-        </React.Fragment>
+        <StepFrame
+            heading="String-Verarbeitung"
+            hintContent={null}
+        >
+            <Grid container>
+
+            </Grid>
+        </StepFrame>
     );
 }

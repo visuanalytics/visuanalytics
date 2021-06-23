@@ -3,6 +3,7 @@ import {Diagram, ListItemRepresentation, SelectedDataItem, uniqueId} from "../ty
 import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {useStyles} from "../style";
 import {CreateCustomData} from "./CreateCustomData";
+import {ArrayProcessing} from "./ArrayProcessing";
 
 
 interface DataCustomizationProps {
@@ -37,14 +38,17 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
         switch(props.dataCustomizationStep) {
             case 0: {
                 return (
-                    <div></div>
+                    <ArrayProcessing
+                        continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
+                        backHandler={props.backHandler}
+                    />
                 )
             }
             case 1: {
                 return (
                     <CreateCustomData
-                        continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep -1)}
-                        backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep -1)}
+                        continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
+                        backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
                         selectedData={props.selectedData}
                         setSelectedData={props.setSelectedData}
                         customData={props.customData}
