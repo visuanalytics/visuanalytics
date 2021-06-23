@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import {StepFrame} from "../../StepFrame";
 import Box from "@material-ui/core/Box";
 import {
-    Button, Divider,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider,
     IconButton,
     TextField,
     Typography
@@ -65,6 +65,10 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     const [availableArrays, setAvailableArrays] = React.useState<Array<string>>(["array1", "array2", "array3"]);
     //list of all created processing pairs
     const [processingsList, setProcessingsList] = React.useState<Array<ArrayProcessing>>([]);
+    //index of the item currently to be removed
+    const [currentRemoveIndex, setCurrentRemoveIndex] = React.useState(-1);
+    //true when the dialog for confirming removal of processings is open
+    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
 
 
@@ -349,17 +353,72 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary">
+                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
                             zurück
                         </Button>
                     </Grid>
                     <Grid item >
-                        <Button variant="contained" size="large" color="primary">
+                        <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
                             weiter
                         </Button>
                     </Grid>
                 </Grid>
             </Grid>
+            <Dialog onClose={() => {
+                setRemoveDialogOpen(false);
+                window.setTimeout(() => {
+                    formulasToRemove.current = []
+                    diagramsToRemove.current = [];
+                    setCurrentRemoveIndex(-1);
+                }, 200);
+            }} aria-labelledby="deleteDialog-title"
+                    open={removeDialogOpen}>
+                <DialogTitle id="deleteDialog-title">
+                    Löschen von "{currentRemoveIndex >= 0 ? processingsList[currentRemoveIndex].name : ""}" bestätigen
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Durch das Löschen von "{currentRemoveIndex >= 0 ? processingsList[currentRemoveIndex].name : ""}" müssen Formeln und/oder Diagramme gelöscht werden, die dieses nutzen.
+                    </Typography>
+                    <Typography gutterBottom>
+                        {formulasToRemove.current.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.current.join(", ") : ""}
+                    </Typography>
+                    <Typography gutterBottom>
+                        {diagramsToRemove.current.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.current.join(", ") : ""}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setRemoveDialogOpen(false);
+                                        window.setTimeout(() => {
+                                            formulasToRemove.current = []
+                                            diagramsToRemove.current = [];
+                                            setCurrentRemoveIndex(-1);
+                                        }, 200);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        removeProcessing(currentRemoveIndex);
+                                        window.setTimeout(() => {
+                                            formulasToRemove.current = []
+                                            diagramsToRemove.current = [];
+                                            setCurrentRemoveIndex(-1);
+                                        }, 200);
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                Löschen bestätigen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </StepFrame>
     );
 }
