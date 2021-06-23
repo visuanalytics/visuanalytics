@@ -331,6 +331,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
         }
 
         setConfirmDeleteDialog(false);
+        window.setTimeout(() => setCurrentDeleteName(""), 200);
         //delete diagrams that used this formula
     }
 
@@ -550,7 +551,10 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     </Grid>
                 </DialogActions>
             </Dialog>
-            <Dialog onClose={() => setConfirmDeleteDialog(false)} aria-labelledby="deleteDialog-title"
+            <Dialog onClose={() => {
+                setConfirmDeleteDialog(false);
+                window.setTimeout(() => setCurrentDeleteName(""), 200);
+            }} aria-labelledby="deleteDialog-title"
                     open={confirmDeleteDialog}>
                 <DialogTitle id="deleteDialog-title">
                     "{currentDeleteName}" löschen!
@@ -564,7 +568,10 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     <Grid container justify="space-between">
                         <Grid item>
                             <Button variant="contained" color={"secondary"}
-                                    onClick={() => setConfirmDeleteDialog(false)}
+                                    onClick={() => {
+                                        setConfirmDeleteDialog(false);
+                                        window.setTimeout(() => setCurrentDeleteName(""), 200);
+                                    }}
                             >
                                 abbrechen
                             </Button>
