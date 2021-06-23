@@ -342,7 +342,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button disabled={props.name === ""} variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
                             abschließen
                         </Button>
                     </Grid>
