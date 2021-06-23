@@ -11,6 +11,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         elementLargeMargin: {
             marginTop: "10px"
         },
+        elementExtraLargeMargin: {
+            marginTop: "25px"
+        },
         listFrame: {
             width: "100%",
             height: 400,
@@ -102,5 +105,9 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        historizedOverviewContainer: {
+            marginTop: "10px",
+            height: "100%"
+        }
     }),
 );

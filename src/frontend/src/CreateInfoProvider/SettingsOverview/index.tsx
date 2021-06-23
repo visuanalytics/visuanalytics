@@ -230,6 +230,47 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     }
 
     /**
+     * Displays the history content of the current dataSource. Used to only show the boxes when data was historized.
+     */
+    const getHistoryContent = () => {
+        if(props.dataSources[selectedDataSource].historizedData.length > 0) {
+            return (
+                <React.Fragment>
+                    <Grid item xs={12}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
+                            <List disablePadding={true}>
+                                {props.dataSources[selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
+                            </List>
+                        </Box>
+                    </Grid>
+                    {props.dataSources[selectedDataSource].schedule.type !== "" &&
+                    <Grid item xs={12} className={classes.elementSmallMargin}>
+                        <Typography variant="h6">
+                            Historisierungszeiten
+                        </Typography>
+                    </Grid>
+                    }
+                    <Grid item xs={12}>
+                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
+                            {props.dataSources[selectedDataSource].schedule.type !== "" &&
+                            <Grid item xs={12}>
+                                <ScheduleTypeTable schedule={props.dataSources[selectedDataSource].schedule}/>
+                            </Grid>
+                            }
+                        </Box>
+                    </Grid>
+                </React.Fragment>
+            )
+        } else {
+            return (
+                <Typography variant="body1">
+                    Es wurden für diese Datenquelle keine Daten zur Historisierung ausgewählt.
+                </Typography>
+            )
+        }
+    }
+
+    /**
      * Renders one entry of the Select component for all data sources.
      * @param dataSource The data source that wants to be rendered.
      * @param dataSourceNumber The index of the data source in the dataSources array.
@@ -294,34 +335,14 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Box>
                     </Grid>
                 </Grid>
-                <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
+                <Grid item container xs={12} md={5} className={classes.historizedOverviewContainer}>
                     <Grid item xs={12}>
-                        <Typography variant="h5">
+                        <Typography variant="h5" >
                             Zu historisierende Daten
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
-                            <List disablePadding={true}>
-                                {props.dataSources[selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
-                            </List>
-                        </Box>
-                    </Grid>
-                    {props.dataSources[selectedDataSource].schedule.type !== "" &&
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Historisierungszeiten
-                        </Typography>
-                    </Grid>
-                    }
-                    <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.smallListFrame}>
-                            {props.dataSources[selectedDataSource].schedule.type !== "" &&
-                            <Grid item xs={12}>
-                                <ScheduleTypeTable schedule={props.dataSources[selectedDataSource].schedule}/>
-                            </Grid>
-                            }
-                        </Box>
+                    <Grid item container xs={12} className={props.dataSources[selectedDataSource].historizedData.length === 0 ? classes.elementExtraLargeMargin : classes.elementLargeMargin}>
+                        {getHistoryContent()}
                     </Grid>
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
