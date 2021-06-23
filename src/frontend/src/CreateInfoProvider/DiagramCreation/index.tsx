@@ -550,7 +550,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                                 <TextField error={isNameDuplicate()}
                                            helperText={isNameDuplicate() ? "Dieser Name wird bereits durch ein Diagramm anderes verwendet" : null}
                                            variant="outlined" label="Diagramm-Name" value={diagramName}
-                                           onChange={(e) => setDiagramName(e.target.value)}/>
+                                           onChange={(e) => setDiagramName(e.target.value.replace(' ', '_'))}/>
                             </FormControl>
                         </Grid>
                         <Grid item container xs={12} justify="space-between"
