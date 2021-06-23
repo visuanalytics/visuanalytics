@@ -5,12 +5,20 @@ import Grid from "@material-ui/core/Grid";
 import {StepFrame} from "../../StepFrame";
 import List from "@material-ui/core/List";
 import Box from "@material-ui/core/Box";
-import {Button, TextField, Typography} from "@material-ui/core";
+import {
+    Button, Divider,
+    IconButton,
+    ListItem,
+    ListItemSecondaryAction,
+    ListItemText,
+    TextField,
+    Typography
+} from "@material-ui/core";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
-import {uniqueId} from "../../types";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 interface ArrayProcessingProps {
@@ -78,10 +86,19 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * to the list of processings.
      */
     const addProcessing = () => {
-
+        const arCopy = processingsList.slice();
+        arCopy.push({
+            name: name,
+            array: availableArrays[selectedArrayIndex],
+            operation: operations[selectedOperationIndex]
+        })
+        setProcessingsList(arCopy);
     }
 
-
+    /**
+     * Method that removes a entry of the processings list by the given index.
+     * @param index The index of the element to be deleted.
+     */
     const removeProcessing = (index: number) => {
 
     }
@@ -122,7 +139,25 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * @param processing The object of the processing to be displayed.
      */
     const renderProcessingsListEntry = (processing: ArrayProcessing) => {
-
+        return (
+            <React.Fragment key={processing.name}>
+                <Grid item container xs={12}>
+                    <Grid item xs={8}>
+                        <Typography className={classes.typographyLineBreak}>
+                            {processing.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <IconButton className={classes.redDeleteIcon}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+            </React.Fragment>
+        )
     }
 
 
@@ -183,6 +218,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                         <Grid item className={classes.blockableButtonSecondary}>
                             <Button color="secondary" variant="contained" size="large"
                                     disabled={name === "" || selectedArrayIndex < 0 || selectedOperationIndex < 0}
+                                    onClick={() => addProcessing()}
                             >
                                 Speichern
                             </Button>
@@ -191,9 +227,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} md={3}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
-                        <List disablePadding={true}>
+                        <Grid item container xs={12}>
                             {processingsList.map((processing) => renderProcessingsListEntry(processing))}
-                        </List>
+                        </Grid>
                     </Box>
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
