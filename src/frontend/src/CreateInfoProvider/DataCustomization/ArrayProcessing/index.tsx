@@ -39,13 +39,16 @@ DONE:
  2: Alle Aktionen auflisten, die möglich sind
  3: Eingabe: Nutzer wählt erst ein Array, dann eine Aktion
  4: Dazu muss ein Name gewählt werden - dann Button speichern
-
-TODO:
-
  5: Namensprüfung auf Duplikate in listItems und customData
  6: Liste bereits erstellter Daten mit Button zum Löschen
- x: Beim Löschen einer angelegten Verarbeitung: Durchsuche alle Formeln, Diagramme und Historisierung nach Verwendung des Werts
- y: Nutzer mit Dialog um Bestätigung des Löschens bitten
+ 7: Beim Löschen einer angelegten Verarbeitung: Durchsuche alle Formeln, Diagramme und Historisierung nach Verwendung des Werts
+ 8: Nutzer mit Dialog um Bestätigung des Löschens bitten
+TODO:
+9: Alle kompatiblen Arrays beim Laden berechnen - numerische Arrays, vielleicht auch alle numerischen Attribute aus Objekten in Arrays
+10: Design-Verbesserungen
+
+
+
  */
 
 /**
@@ -91,6 +94,55 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         {name: "max", displayName: "Maximum"},
         {name: "min", displayName: "Minimum"},
     ]
+
+    /**
+     * Method that goes trough all list items and searches all arrays that are processable.
+     * Following arrays are processable: Numeric primitive Arrays (integer or floating point),
+     * arrays with objects that contain a numeric attribute (each one will be shown on its own
+     * @param listItems The listItems to be searched through. Necessary for recursive calls.
+     */
+    const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean) => {
+        let compatibleArraysList: Array<string> = [];
+        listItems.forEach((listItem) => {
+            //check if the search is for arrays or only primitive values because its a recursive search inside an object in array
+            if(noArray) {
+                //only search for primitive numeric values
+                if(!listItem.arrayRep && !Array.isArray(listItem.value) && (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl"))
+                    compatibleArraysList.push((listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+            } else {
+                //check if it is a primative array containing
+                if(listItem.arrayRep) {
+                    //check for primitive arrays
+                    if(!Array.isArray(listItem.value)) {
+                        if(listItem.value === "Zahl" || listItem.value === "Gleitkommazahl")
+                            compatibleArraysList.push((listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                    } else {
+                        //the array contains an object - search for all primitive numeric values in it  (subobjects are also supported)
+                        listItem.value.forEach((value: ListItemRepresentation) => {
+                            if(value.value === "Zahl" || value.value === "Gleitkommazahl")
+                                compatibleArraysList.push((value.parentKeyName + "|" + value.keyName).replace("|0", ""));
+                            else if((!value.arrayRep) && Array.isArray(value.value)) {
+                                //search through variables but only care about primitives and subobjects, not arrays
+                                compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true));
+                            }
+                        })
+                    }
+                } else if(Array.isArray(listItem.value)) {
+                    //the element is an object, its children need to be searched through - also mind arrays in this search
+                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, false));
+                }
+            }
+        })
+        return compatibleArraysList;
+    }, []);
+
+    /**
+     * Load the list of processable arrays when mounting the component
+     */
+    React.useEffect(() => {
+        setAvailableArrays(getProcessableArrays(props.listItems, false));
+    }, [])
+
 
     /**
      * Method that checks if a name is already used by another processing,
@@ -254,6 +306,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     /**
      * Method that renders an entry in the list of all processings created by the user.
      * @param processing The object of the processing to be displayed.
+     * @param index The index of the entry in the list.
      */
     const renderProcessingsListEntry = (processing: ArrayProcessing, index: number) => {
         return (
