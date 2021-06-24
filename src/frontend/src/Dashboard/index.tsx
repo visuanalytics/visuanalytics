@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {
     AppBar, Grid, Tab, Tabs
 } from "@material-ui/core";
@@ -9,6 +9,8 @@ import {
 import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/InfoProviderOverview";
 import {SceneOverview} from "./TabsContent/SceneOverview/SceneOverview"
 import {VideoOverview} from "./TabsContent/VideoOverview/VideoOverview"
+import {fetchAllScenesAnswer, jsonRefScene} from "./types";
+import {centerNotifcationReducer} from "../util/CenterNotification";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -43,6 +45,9 @@ export const DashboardTabs = () =>  {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        if (newValue === 1) {
+            console.log("Hier wurde Szenen ausgewählt!")
+        }
         setValue(newValue);
     };
 
@@ -65,7 +70,7 @@ export const DashboardTabs = () =>  {
             </Grid>
             <Grid item xs={12}>
                 <TabContent value={value} index={1}>
-                    <SceneOverview test={'Szenen'}/>
+                    <SceneOverview/>
                 </TabContent>
             </Grid>
             <Grid item xs={12}>

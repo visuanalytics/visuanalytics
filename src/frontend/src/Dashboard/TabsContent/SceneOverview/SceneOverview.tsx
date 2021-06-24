@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import {hintContents} from "../../../util/hintContents";
-import {Grid, Typography} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import {useStyles} from "../../style";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -10,7 +10,6 @@ import {centerNotifcationReducer, CenterNotification} from "../../../util/Center
 import {SceneList} from "./SceneList";
 
 interface SceneOverviewProps {
-    test: string;
 }
 
 export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
@@ -18,6 +17,18 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     const classes = useStyles();
 
     const [scenes, setScenes] = React.useState(new Array<jsonRefScene>());
+
+    const [previewImgList, setPreviewImgList] = React.useState(new Array<string>());
+
+    const allScenes = React.useRef<Array<jsonRefScene>>([]);
+
+    const scenePreviewImgURLs = React.useRef<Array<string>>([]);
+
+    const [detailDialogOpen, setDetailDialogOpen] = React.useState(false);
+
+    const [currentImg, setCurrentImg] = React.useState("");
+
+    const [currentScene, setCurrentScene] = React.useState<jsonRefScene>({scene_id: -1, scene_name: ""})
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
@@ -37,6 +48,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
      * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
      * with useCallback in order to be used in useEffect.
      */
+
     const fetchAllScenes = React.useCallback(() => {
         let url = "/visuanalytics/scene/all"
         //if this variable is set, add it to the url
@@ -108,10 +120,74 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         ];
 
         const data = jsonData as fetchAllScenesAnswer;
+        allScenes.current = data;
         setScenes(data);
     }
 
-    return(
+    const fetchPreviewImgById = (id: number) => {
+        //TODO: implement right route and cut "- 1"
+        console.log(id + " in fetchPreviewImgById");
+        let url = "/visuanalytics/image/" + (id - 1)
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) {
+                handleFetchImageByIdSuccess(data)
+            }
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleFetchImageByIdError(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+    const handleFetchImageByIdSuccess = (data: any) => {
+        scenePreviewImgURLs.current.push(URL.createObjectURL(data));
+
+        fetchPreviewImages();
+    }
+
+    const handleFetchImageByIdError = (err: Error) => {
+        console.log("Fehler: " + err)
+    }
+
+    const fetchPreviewImages = () => {
+        if (allScenes.current.length === 0) {
+            setPreviewImgList(scenePreviewImgURLs.current);
+            console.log("imgList: ----------> " + scenePreviewImgURLs.current);
+        } else {
+            const nextId = allScenes.current[0].scene_id;
+
+            allScenes.current = allScenes.current.filter((scene) => {
+                return scene.scene_id !== nextId;
+            })
+
+            fetchPreviewImgById(nextId);
+        }
+    }
+
+    const setCurrent = (data: jsonRefScene) => {
+        setCurrentScene(data);
+        setCurrentImg(previewImgList[data.scene_id - 1]);
+    }
+
+    return (
         <StepFrame
             heading="Willkommen bei VisuAnalytics!"
             hintContent={hintContents.sceneOverview}
@@ -120,12 +196,19 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                 <Grid item container xs={12}>
                     Scene-Overview
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                     <Typography variant={"h5"}>
                         Angelegte Szenen:
                     </Typography>
                 </Grid>
-                <Grid item container xs={6} justify={"flex-end"}>
+                <Grid item xs={4}>
+                    <Button variant={"contained"} size={"large"} color={"secondary"}
+                            onClick={fetchPreviewImages}
+                    >
+                        Szenen laden
+                    </Button>
+                </Grid>
+                <Grid item container xs={4} justify={"flex-end"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 startIcon={<AddCircleIcon fontSize="small"/>}>
@@ -134,9 +217,60 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                     </Grid>
                 </Grid>
                 <Grid item container xs={12} justify={"center"}>
-                    <SceneList scenes={scenes}/>
+                    <SceneList
+                        scenes={scenes}
+                        previewImgList={previewImgList}
+                        setDetailDialogOpen={(flag: boolean) => setDetailDialogOpen(flag)}
+                        setCurrent={(data: jsonRefScene) => setCurrent(data)}
+                    />
                 </Grid>
             </Grid>
+            <Dialog
+                onClose={() => {
+                    setDetailDialogOpen(false);
+                    window.setTimeout(() => {}, 200);}
+                }
+                aria-labelledby="deleteDialog-title"
+                open={detailDialogOpen}
+                maxWidth={"md"}
+                fullWidth={true}
+            >
+                <DialogTitle id="deleteDialog-title">
+                    {currentScene.scene_name}
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Grid container justify={"center"}>
+                        <Grid item>
+                            <img width="480" height="270" alt="Vorschaubild Diagramm" src={currentImg}/>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    color={"secondary"}
+                                    onClick={() => dispatchMessage({type: "reportError", message: 'Edit not implemented'})}
+                            >
+                                Bearbeiten
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" color={"primary"} onClick={() => setDetailDialogOpen(false)}>
+                                zurück
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    className={classes.redDeleteButton}
+                                    onClick={() => dispatchMessage({type: "reportError", message: 'Delete not implemented'})}
+                            >
+                                Löschen
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
             <CenterNotification
                 handleClose={() => dispatchMessage({type: "close"})}
                 open={message.open}
