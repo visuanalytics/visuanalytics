@@ -126,7 +126,8 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         radioButtonListWrapText: {
             overflowWrap: "break-word",
-            marginTop: "0.5rem"
+            marginTop: "0.5rem",
+            paddingRight: "0.1rem"
         }
     })
 );

@@ -288,7 +288,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                                 Strings
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Grid item container xs={12} className={classes.elementLargeMargin}>
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.mediumListFrame}>
                                 {availableStrings.map((string, index) => renderStringListItem(string, index))}
                             </Box>
