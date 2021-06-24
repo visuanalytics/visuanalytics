@@ -116,13 +116,17 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
-
         historizedOverviewContainer: {
             marginTop: "10px",
             height: "100%"
         },
         typographyLineBreak: {
             overflowWrap: "break-word"
+        },
+        processingListingText: {
+            overflowWrap: "break-word",
+            paddingLeft: "0.8rem",
+            paddingTop: "0.6rem"
         },
         radioButtonListWrapText: {
             overflowWrap: "break-word",

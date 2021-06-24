@@ -4,14 +4,12 @@ import Grid from "@material-ui/core/Grid";
 import {StepFrame} from "../../StepFrame";
 import Box from "@material-ui/core/Box";
 import {
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider,
+    Button,
+    Divider,
     IconButton,
     TextField,
     Typography
 } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
@@ -38,6 +36,8 @@ interface StringProcessingProps {
  1: grundlegende Datenstrukturen für alle Strings sowie Operationen auf diesen anlegen
  2: Anzeige im Interface mit zwei Textfeldern für Ersetzung und einem Textfeld für den Namen
  3: Methode zum Hinzufügen neu erstellter Operationen
+ TODO:
+
  4: Möglichkeit zum Löschen von Operationen
  5:
  6:
@@ -63,10 +63,6 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     const [availableStrings, setAvailableStrings] = React.useState<Array<string>>(["string_1", "string_2", "string_3"]);
     //list of all created processing pairs
     const [replacementList, setReplacementList] = React.useState<Array<StringReplacement>>([]);
-    //index of the item currently to be removed
-    const [currentRemoveIndex, setCurrentRemoveIndex] = React.useState(-1);
-    //true when the dialog for confirming removal of processings is open
-    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
 
 
     type StringReplacement = {
@@ -75,6 +71,53 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
         replace: string;
         with: string;
     }
+
+    /**
+     * Method that calculates all available strings for the list generation.
+     * @param listItems The list with the frontend representation of the api data.
+     * @param noArray True when the search is for an object inside an array and arrays should be ignored
+     */
+    const getAvailableStrings = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean) => {
+        let availableStrings: Array<string> = [];
+
+        listItems.forEach((listItem) => {
+            if(noArray) {
+                //only search for primitive numeric values
+                if(!listItem.arrayRep && !Array.isArray(listItem.value) && listItem.value === "Text")
+                    availableStrings.push(listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName);
+            } else {
+                //check if it is an array
+                if(listItem.arrayRep) {
+                    if(Array.isArray(listItem.value)) {
+                        //array containing object - recursive search with ignoring array is necessary
+                        availableStrings = availableStrings.concat(getAvailableStrings(listItem.value, true));
+
+                    } else {
+                        //array containing primitives
+                        if(listItem.value === "Text")
+                            availableStrings.push(listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName)
+                    }
+                } else if(Array.isArray(listItem.value)) {
+                    //object - recursive search without ignoring arrays is necessary
+                    availableStrings = availableStrings.concat(getAvailableStrings(listItem.value, false));
+                } else {
+                    //the value is a primitive value
+                    if(listItem.value === "Text") availableStrings.push(listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName)
+                }
+            }
+        })
+        return availableStrings;
+    }, [])
+
+    //extract listItems from props to use in dependencies
+    const listItems = props.listItems;
+
+    /**
+     * Get the available strings when mounting
+     */
+    React.useEffect(() => {
+        setAvailableStrings(getAvailableStrings(listItems, false));
+    }, [listItems, getAvailableStrings])
 
 
     /**
@@ -117,42 +160,8 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
         setReplacementList(arCopy);
         setName("");
         setSelectedStringIndex(-1);
-    }
-
-    //both variables are useRef to be able to change values between renders
-    //list of the names of all formulas to be removed with the currently deleted processing
-    const formulasToRemove = React.useRef<Array<string>>([]);
-    //list of the names of all diagrams to be removed with the currently deleted processing
-    const diagramsToRemove = React.useRef<Array<string>>([]);
-
-    /**
-     * Checks if any delete dependencies exist for a given processing:
-     * Returns true if formulas or diagrams need to be removed with the processing,
-     * false if not.
-     * @param name The name of the processing to search dependencies for
-     */
-    const checkDeleteDependencies = (name: string) => {
-        //check all formulas if the use this processing
-        props.customData.forEach((formula) => {
-            if(formula.formelString.includes(name)) formulasToRemove.current.push(formula.formelName);
-        })
-
-        //check all diagrams if they use this processing
-        props.diagrams.forEach((diagram) => {
-            //only diagrams with historized data can use processings and need to be checked
-            if(diagram.sourceType==="Historized"&&diagram.historizedObjects!==undefined) {
-                for (let index = 0; index < diagram.historizedObjects.length; index++) {
-                    const historized = diagram.historizedObjects[index];
-                    //the dataSource name needs to be added in front of the processings name since historizedObjects has dataSource name in it paths too
-                    if (props.apiName + "|" + name === historized.name) {
-                        diagramsToRemove.current.push(diagram.name);
-                        break;
-                    }
-                }
-            }
-        })
-
-        return formulasToRemove.current.length !== 0 || diagramsToRemove.current.length !== 0;
+        setReplaceString("");
+        setWithString("");
     }
 
     /**
@@ -162,48 +171,18 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
      * @param index The index of the element to be deleted.
      */
     const removeReplacementHandler = (index: number) => {
-        //Clear lists - normally should be empty but it makes the method work on its own safer
-        formulasToRemove.current = [];
-        diagramsToRemove.current = [];
-        if(checkDeleteDependencies(replacementList[index].name)) {
-            //TODO: display dialog
-            return;
-        }
-        removeReplacement(index);
-    }
-
-    /**
-     * Method that removes a replacement as well as all
-     * historized data, formulas and diagrams depending on it.
-     * @param index The index of the element to be deleted.
-     */
-    const removeReplacement = (index: number) => {
         //remove the element from historizedData
         if(props.historizedData.includes(replacementList[index].name)) {
             props.setHistorizedData(props.historizedData.filter((data) => {
                 return data !== replacementList[index].name;
             }))
         }
-        //remove the formulas using the historizedData
-        if(formulasToRemove.current.length !== 0) {
-            props.setCustomData(props.customData.filter((formel) => {
-                return !formulasToRemove.current.includes(formel.formelName);
-            }))
-        }
-        //remove the diagrams using the historizedData
-        if(diagramsToRemove.current.length !== 0) {
-            props.setDiagrams(props.diagrams.filter((diagram) => {
-                return !diagramsToRemove.current.includes(diagram.name);
-            }))
-        }
-        //reset the list of formulas and diagrams to remove
-        formulasToRemove.current = [];
-        diagramsToRemove.current = [];
-        //remove the processing from the list of processings
+        //remove the processing from the list of replacements
         const arCopy = replacementList.slice();
         arCopy.splice(index, 1);
         setReplacementList(arCopy);
     }
+
 
     /**
      * Method that renders an entry in the list of available strings.
@@ -216,7 +195,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                 <Grid item xs={2}>
                     <Radio
                         checked={selectedStringIndex === index}
-                        onChange={(e) => setSelectedStringIndex(index)}
+                        onChange={() => setSelectedStringIndex(index)}
                         value={index}
                         inputProps={{ 'aria-label': stringName }}
                     />
@@ -235,7 +214,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
     /**
      * Method that renders an entry in the list of all replacements created by the user.
-     * @param processing The object of the replacement to be displayed.
+     * @param replacement The object of the replacement to be displayed.
      * @param index The index of the entry in the list.
      */
     const renderProcessingsListEntry = (replacement: StringReplacement, index: number) => {
@@ -243,7 +222,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
             <React.Fragment key={replacement.name}>
                 <Grid item container xs={12}>
                     <Grid item xs={8}>
-                        <Typography className={classes.typographyLineBreak}>
+                        <Typography className={classes.processingListingText}>
                             {replacement.name}
                         </Typography>
                     </Grid>
@@ -351,61 +330,6 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Dialog onClose={() => {
-                setRemoveDialogOpen(false);
-                window.setTimeout(() => {
-                    formulasToRemove.current = []
-                    diagramsToRemove.current = [];
-                    setCurrentRemoveIndex(-1);
-                }, 200);
-            }} aria-labelledby="deleteDialog-title"
-                    open={removeDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
-                    Löschen von "{currentRemoveIndex >= 0 ? replacementList[currentRemoveIndex].name : ""}" bestätigen
-                </DialogTitle>
-                <DialogContent dividers>
-                    <Typography gutterBottom>
-                        Durch das Löschen von "{currentRemoveIndex >= 0 ? replacementList[currentRemoveIndex].name : ""}" müssen Formeln und/oder Diagramme gelöscht werden, die dieses nutzen.
-                    </Typography>
-                    <Typography gutterBottom>
-                        {formulasToRemove.current.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.current.join(", ") : ""}
-                    </Typography>
-                    <Typography gutterBottom>
-                        {diagramsToRemove.current.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.current.join(", ") : ""}
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Grid container justify="space-between">
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        setRemoveDialogOpen(false);
-                                        window.setTimeout(() => {
-                                            formulasToRemove.current = []
-                                            diagramsToRemove.current = [];
-                                            setCurrentRemoveIndex(-1);
-                                        }, 200);
-                                    }}>
-                                abbrechen
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained"
-                                    onClick={() => {
-                                        removeReplacement(currentRemoveIndex);
-                                        window.setTimeout(() => {
-                                            formulasToRemove.current = []
-                                            diagramsToRemove.current = [];
-                                            setCurrentRemoveIndex(-1);
-                                        }, 200);
-                                    }}
-                                    className={classes.redDeleteButton}>
-                                Löschen bestätigen
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </DialogActions>
-            </Dialog>
         </StepFrame>
     );
 }
