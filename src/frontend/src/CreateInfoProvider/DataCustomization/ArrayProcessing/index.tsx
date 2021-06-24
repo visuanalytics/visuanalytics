@@ -43,8 +43,8 @@ DONE:
  6: Liste bereits erstellter Daten mit Button zum Löschen
  7: Beim Löschen einer angelegten Verarbeitung: Durchsuche alle Formeln, Diagramme und Historisierung nach Verwendung des Werts
  8: Nutzer mit Dialog um Bestätigung des Löschens bitten
+ 9: Alle kompatiblen Arrays beim Laden berechnen - numerische Arrays, vielleicht auch alle numerischen Attribute aus Objekten in Arrays
 TODO:
-9: Alle kompatiblen Arrays beim Laden berechnen - numerische Arrays, vielleicht auch alle numerischen Attribute aus Objekten in Arrays
 10: Design-Verbesserungen
 
 
@@ -282,11 +282,21 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      */
     const renderArrayListItem = (array: string, index: number) => {
         return (
-            <FormControlLabel value={index} control={
-                <Radio
-                />
-            } label={array} key={array}
-            />
+            <Grid item container xs={12} key={array}>
+                <Grid item xs={2}>
+                    <Radio
+                        checked={selectedArrayIndex === index}
+                        onChange={(e) => setSelectedArrayIndex(index)}
+                        value={index}
+                        inputProps={{ 'aria-label': array }}
+                    />
+                </Grid>
+                <Grid item xs={10}>
+                    <Typography variant="body1" className={classes.radioButtonListWrapText}>
+                        {array}
+                    </Typography>
+                </Grid>
+            </Grid>
         )
     }
 
@@ -297,11 +307,21 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      */
     const renderOperationListItem = (operation: Operation, index: number) => {
         return (
-            <FormControlLabel value={index} control={
-                <Radio
-                />
-            } label={operation.displayName} key={operation.name}
-            />
+            <Grid item container xs={12} key={operation.name}>
+                <Grid item xs={3}>
+                    <Radio
+                        checked={selectedOperationIndex === index}
+                        onChange={(e) => setSelectedOperationIndex(index)}
+                        value={index}
+                        inputProps={{ 'aria-label': operation.displayName }}
+                    />
+                </Grid>
+                <Grid item xs={9}>
+                    <Typography variant="body1" className={classes.radioButtonListWrapText}>
+                        {operation.displayName}
+                    </Typography>
+                </Grid>
+            </Grid>
         )
     }
 
@@ -361,14 +381,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                                 Arrays
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Grid item container xs={12} className={classes.elementLargeMargin}>
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.mediumListFrame}>
-                                <FormControl>
-                                    <RadioGroup value={selectedArrayIndex}
-                                                onChange={(e) => setSelectedArrayIndex(Number(e.target.value))}>
-                                        {availableArrays.map((array, index) => renderArrayListItem(array, index))}
-                                    </RadioGroup>
-                                </FormControl>
+                                {availableArrays.map((array, index) => renderArrayListItem(array, index))}
                             </Box>
                         </Grid>
                     </Grid>
@@ -378,14 +393,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                                 Operationen
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Grid item xs={12} container className={classes.elementLargeMargin}>
                             <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.mediumListFrame}>
-                                <FormControl>
-                                    <RadioGroup value={selectedOperationIndex}
-                                                onChange={(e) => setSelectedOperationIndex(Number(e.target.value))}>
-                                        {operations.map((operation, index) => renderOperationListItem(operation, index))}
-                                    </RadioGroup>
-                                </FormControl>
+                                {operations.map((operation, index) => renderOperationListItem(operation, index))}
                             </Box>
                         </Grid>
                     </Grid>
