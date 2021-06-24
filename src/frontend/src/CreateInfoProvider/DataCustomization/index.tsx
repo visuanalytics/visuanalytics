@@ -4,6 +4,7 @@ import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelOb
 import {useStyles} from "../style";
 import {CreateCustomData} from "./CreateCustomData";
 import {ArrayProcessing} from "./ArrayProcessing";
+import {StringProcessing} from "./StringProcessing";
 
 
 interface DataCustomizationProps {
@@ -74,7 +75,19 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
             }
             case 2: {
                 return (
-                    <div></div>
+                    <StringProcessing
+                        continueHandler={props.continueHandler}
+                        backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
+                        reportError={props.reportError}
+                        listItems={props.listItems}
+                        customData={props.customData}
+                        setCustomData={props.setCustomData}
+                        diagrams={props.diagrams}
+                        setDiagrams={props.setDiagrams}
+                        historizedData={props.historizedData}
+                        setHistorizedData={props.setHistorizedData}
+                        apiName={props.apiName}
+                    />
                 )
             }
         }
