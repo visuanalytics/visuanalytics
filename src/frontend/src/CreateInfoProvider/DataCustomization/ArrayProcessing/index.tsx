@@ -9,9 +9,6 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
@@ -100,6 +97,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * Following arrays are processable: Numeric primitive Arrays (integer or floating point),
      * arrays with objects that contain a numeric attribute (each one will be shown on its own
      * @param listItems The listItems to be searched through. Necessary for recursive calls.
+     * @param noArray True when the search is for an object inside an array and arrays should be ignored
      */
     const getProcessableArrays = React.useCallback((listItems: Array<ListItemRepresentation>, noArray: boolean) => {
         let compatibleArraysList: Array<string> = [];
@@ -108,19 +106,19 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
             if(noArray) {
                 //only search for primitive numeric values
                 if(!listItem.arrayRep && !Array.isArray(listItem.value) && (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl"))
-                    compatibleArraysList.push((listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                    compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
             } else {
                 //check if it is a primative array containing
                 if(listItem.arrayRep) {
                     //check for primitive arrays
                     if(!Array.isArray(listItem.value)) {
                         if(listItem.value === "Zahl" || listItem.value === "Gleitkommazahl")
-                            compatibleArraysList.push((listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                            compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
                     } else {
                         //the array contains an object - search for all primitive numeric values in it  (subobjects are also supported)
                         listItem.value.forEach((value: ListItemRepresentation) => {
                             if(value.value === "Zahl" || value.value === "Gleitkommazahl")
-                                compatibleArraysList.push((value.parentKeyName + "|" + value.keyName).replace("|0", ""));
+                                compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
                             else if((!value.arrayRep) && Array.isArray(value.value)) {
                                 //search through variables but only care about primitives and subobjects, not arrays
                                 compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true));
@@ -236,7 +234,8 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         formulasToRemove.current = [];
         diagramsToRemove.current = [];
         if(checkDeleteDependencies(processingsList[index].name)) {
-            //TODO: display dialog
+            setCurrentRemoveIndex(index);
+            setRemoveDialogOpen(true);
             return;
         }
         removeProcessing(index);
@@ -286,7 +285,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 <Grid item xs={2}>
                     <Radio
                         checked={selectedArrayIndex === index}
-                        onChange={(e) => setSelectedArrayIndex(index)}
+                        onChange={() => setSelectedArrayIndex(index)}
                         value={index}
                         inputProps={{ 'aria-label': array }}
                     />
@@ -311,7 +310,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 <Grid item xs={3}>
                     <Radio
                         checked={selectedOperationIndex === index}
-                        onChange={(e) => setSelectedOperationIndex(index)}
+                        onChange={() => setSelectedOperationIndex(index)}
                         value={index}
                         inputProps={{ 'aria-label': operation.displayName }}
                     />
@@ -336,7 +335,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
             <React.Fragment key={processing.name}>
                 <Grid item container xs={12}>
                     <Grid item xs={8}>
-                        <Typography className={classes.typographyLineBreak}>
+                        <Typography className={classes.processingListingText}>
                             {processing.name}
                         </Typography>
                     </Grid>

@@ -107,8 +107,10 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
-        typographyLineBreak: {
-            overflowWrap: "break-word"
+        processingListingText: {
+            overflowWrap: "break-word",
+            paddingLeft: "0.8rem",
+            paddingTop: "0.6rem"
         },
         radioButtonListWrapText: {
             overflowWrap: "break-word",
