@@ -136,12 +136,15 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         return compatibleArraysList;
     }, []);
 
+    //extract listItems from props to use in dependencies
+    const listItems = props.listItems;
+
     /**
      * Load the list of processable arrays when mounting the component
      */
     React.useEffect(() => {
-        setAvailableArrays(getProcessableArrays(props.listItems, false));
-    }, [])
+        setAvailableArrays(getProcessableArrays(listItems, false));
+    }, [getProcessableArrays, listItems])
 
 
     /**
