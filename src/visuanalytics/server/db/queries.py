@@ -420,7 +420,8 @@ def get_infoprovider(infoprovider_id):
     for datasource in infoprovider_json["datasources"]:
         api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
         private_config = get_private()
-        datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name] if api_key_name else None
+        if api_key_name:
+            datasource["api"]["api_info"]["api_key_name"] = private_config["api_keys"][api_key_name]
 
     return {
         "infoprovider_name": infoprovider_json["name"],
@@ -1130,6 +1131,8 @@ def remove_toplevel_key(obj):
         obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
         if obj[-1] == "|":
             obj = obj[:-1]
+        if obj[0] == "|":
+            obj = obj[1:]
     return obj
 
 
@@ -1163,9 +1166,10 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
                 float(part)
             except Exception:
                 if part != "" and part not in formula_keys and part not in transformed_keys:
-                    remove_toplevel_key(part)
                     transformed_keys.append(part)
-                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part)
+                    part_temp = remove_toplevel_key(part)
+                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part_temp)
+    print("obj", obj)
     return obj
 
 
