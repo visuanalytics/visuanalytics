@@ -144,8 +144,8 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
-    # file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    file = resources.get_image_path(values["diagram_config"]["infoproviderName"] + "/" + values["diagram_config"]["name"] + ".png")
+    file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
+    # file = resources.get_image_path(values["diagram_config"]["infoproviderName"] + "/" + values["diagram_config"]["name"] + ".png")
     with resources.open_resource(file, "wt") as f:
         pass
 

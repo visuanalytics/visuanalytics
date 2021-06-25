@@ -150,8 +150,15 @@ def update_log_finish(id: int, state: int, duration: int):
 def get_interval(res):
     return INTERVAL.get(res["time_interval"])
 
-def insert_next_execution_time(id: int, next_execution: str):
+def insert_next_execution_time(id: int, next_execution: str, is_job: bool = False):
+    #print("insert_next_execution_time()")
+    #print("id:", id)
+    #print("next_execution:", next_execution)
     with db.open_con() as con:
-        schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
-        con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        if is_job:
+            schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
+            con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        else:
+            schedule_id = con.execute("SELECT schedule_historisation_id FROM datasource WHERE datasource_id = ?", [id]).fetchone()["schedule_historisation_id"]
+            con.execute("UPDATE schedule_historisation SET next_execution = ? WHERE schedule_historisation_id = ?", [next_execution, schedule_id])
         con.commit()
