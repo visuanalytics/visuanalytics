@@ -75,7 +75,8 @@ class Scheduler(object):
     def _check_datetime(now: datetime, run_time: datetime):
         return now.date() >= run_time.date() and now.hour >= run_time.hour and now.minute >= run_time.minute
 
-    def _check_interval(self, now: datetime, interval: dict, job_id: int, db_use: bool = False):
+    def _check_interval(self, now: datetime, interval: dict, job_id: int, db_use: bool = False, is_job: bool = False):
+        #print("_check_interval()")
         next_run = self._interval.get(job_id, None)
         run = False
         next_execution = now + timedelta(**interval)
@@ -89,7 +90,7 @@ class Scheduler(object):
 
         if run or next_run is None:
             if db_use:
-                job.insert_next_execution_time(job_id, str(next_execution))
+                job.insert_next_execution_time(job_id, str(next_execution), is_job=is_job)
 
             self._interval[job_id] = {"time": next_execution, "interval": interval}
             logger.info(f"job({job_id}) is executed next at {self._interval.get(job_id, {}).get('time', None)}")

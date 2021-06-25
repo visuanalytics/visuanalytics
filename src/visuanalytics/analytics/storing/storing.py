@@ -34,8 +34,8 @@ def storing(values: dict, data: StepData):
                         continue
                 except (FileNotFoundError, IndexError):
                     pass
-            with open(resources.new_memory_resource_path(data.get_config("job_name"), name),
-                      'w') as fp:
+            file_name = resources.new_memory_resource_path(data.get_config("job_name"), name)
+            with open(file_name, 'w') as fp:
                 json.dump(new_data, fp)
             delete_memory_files(data.get_config("job_name"),
                                 value["name"], data.get_data(value.get("count", 10), values, int))

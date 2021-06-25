@@ -122,8 +122,11 @@ def insert_infoprovider(infoprovider):
         formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
         transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
 
-    for datasource in infoprovider["datasources"]:
-        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
+    datasources_copy = deepcopy(infoprovider["datasources"])
+    for datasource in datasources_copy:
+        api_key_name_temp = datasource["api"]["api_info"].get("api_key_name", None)
+        if api_key_name_temp:
+            datasource["api"]["api_info"]["api_key_name"] = api_key_name_temp.split("||")[0] + "||"
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -132,7 +135,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": infoprovider["datasources"],
+        "datasources": datasources_copy,
         "diagrams_original": diagrams_original,
         "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
@@ -507,8 +510,11 @@ def update_infoprovider(infoprovider_id, updated_data):
     for datasource in datasources:
         new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
 
-    for datasource in updated_data["datasources"]:
-        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
+    datasources_copy = deepcopy(updated_data["datasources"])
+    for datasource in datasources_copy:
+        api_key_name_temp = datasource["api"]["api_info"].get("api_key_name", None)
+        if api_key_name_temp:
+            datasource["api"]["api_info"]["api_key_name"] = api_key_name_temp.split("||")[0] + "||"
 
     if new_transform is None:
         return {"err_msg": "could not generate transform-step from formulas"}
@@ -518,7 +524,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
     infoprovider_json.update({"images": updated_data["diagrams"]})
-    infoprovider_json.update({"datasources": updated_data["datasources"]})
+    infoprovider_json.update({"datasources": datasources_copy})
 
     # Neues Json abspeichern
     new_file_path = get_infoprovider_file(infoprovider_id)
@@ -562,7 +568,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["storing"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -1159,7 +1165,7 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
         if "formelString" in obj:
             obj["formelString"] = _extend_formula_keys(obj["formelString"], datasource_name, formula_keys)
     elif type(obj) == str:
-        parts = re.split('[\*/\() \+-]', obj)
+        parts = re.split('[\*/\() %\+-]', obj)
         transformed_keys = []
         for part in parts:
             try:
@@ -1435,7 +1441,12 @@ def _unpack_schedule(schedule):
     type = humps.decamelize(schedule["type"])
     time = schedule["time"] if type != "interval" else None
     date = schedule["date"] if type == "on_date" else None
-    time_interval = schedule["timeInterval"] if type == "interval" else None
+    if type == "interval":
+        time_interval = schedule.get("timeInterval", None)
+        if not time_interval:
+            time_interval = schedule["time_interval"]
+    else:
+        time_interval = None
     weekdays = schedule["weekdays"] if type == "weekly" else None
     return type, time, date, weekdays, time_interval
 

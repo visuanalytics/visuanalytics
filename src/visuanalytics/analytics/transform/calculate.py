@@ -185,3 +185,12 @@ def calculate_add(values: dict, data: StepData):
     :param data: Daten aus der API
     """
     _bi_calculate(values, data, operator.add)
+
+@register_calculate
+def calculate_modulo(values: dict, data: StepData):
+    """Dividiert gegebene Werte durch Werte, die in divide_by stehen und gibt den Restwert zurück.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    _bi_calculate(values, data, operator.mod)

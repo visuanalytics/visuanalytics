@@ -191,7 +191,7 @@ def new_memory_resource_path(job_name: str, name: str):
    :param name: Name der Datei (ohne Datum)
     """
     os.makedirs(get_memory_path("", name, job_name), exist_ok=True)
-    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d')}.json", name, job_name)
+    return get_memory_path(f"{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}.json", name, job_name)
 
 
 def open_resource(path: str, mode: str = "rt"):
