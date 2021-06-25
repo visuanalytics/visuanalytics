@@ -455,7 +455,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                                         [infoprovider_id]).fetchone()["infoprovider_name"]
     con.commit()
-    _remove_datasources(con, infoprovider_id)
+    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
 
     if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
@@ -1135,9 +1135,9 @@ def remove_toplevel_key(obj):
             obj[key] = remove_toplevel_key(obj[key])
     elif type(obj) == str:
         obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
-        if obj[-1] == "|":
+        if len(obj) > 0 and obj[-1] == "|":
             obj = obj[:-1]
-        if obj[0] == "|":
+        if len(obj) > 0 and obj[0] == "|":
             obj = obj[1:]
     return obj
 
@@ -1208,18 +1208,43 @@ def _generate_transform(formulas, old_transform):
 
 def _generate_storing(historized_data, datasource_name, formula_keys):
     storing = []
+    print("historized_data", historized_data)
     historized_data = remove_toplevel_key(historized_data)
+    print("formula_keys", formula_keys)
+    print("historized_data", historized_data)
     for key in historized_data:
+        key_string = "_req|" + datasource_name + "|" + key if key not in formula_keys else key
+        if key_string[-1] == "|":
+            key_string = key_string[:-1]
         storing.append({
             "name": key.replace("|", "_"),
-            "key": "_req|" + datasource_name + "|" + key if key not in formula_keys else key
+            "key": key_string
         })
     return storing
 
 
-def _remove_datasources(con, infoprovider_id, remove_historised=False):
+def _remove_unused_memory(datasource_names, infoprovider_name):
+    print("datasource_names:", datasource_names)
+    pre = infoprovider_name + "_"
+    dirs = [f.path for f in os.scandir(MEMORY_LOCATION) if f.is_dir()]
+    print("dirs:", dirs)
+    dirs = list(filter(lambda x: re.search(pre + ".*", x), dirs))
+    print("dirs:", dirs)
+    datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
+    print("datasource_memory_dirs:", datasource_memory_dirs)
+    for index, dir in enumerate(dirs):
+        print(dir, datasource_memory_dirs[index] in datasource_names)
+        if not datasource_memory_dirs[index] in datasource_names:
+            shutil.rmtree(dir, ignore_errors=True)
+
+
+def _remove_datasources(con, infoprovider_id, remove_historised=False, datasource_names=None):
     res = con.execute("SELECT * FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
     infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?", [infoprovider_id]).fetchone()["infoprovider_name"]
+
+    if datasource_names:
+        _remove_unused_memory(datasource_names, infoprovider_name)
+
     for row in res:
         file_path = get_datasource_file(row["datasource_id"])
         os.remove(file_path)
