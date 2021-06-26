@@ -10,6 +10,7 @@ import {extractKeysFromSelection} from "../../../CreateInfoProvider/helpermethod
 import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import { Schedule } from "../../../CreateInfoProvider/types";
+import {ScheduleTypeTable} from "../../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 
 interface EditTextDialogProps {
     sceneName: string;
@@ -225,93 +226,6 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         );
     }
 
-    const getWeekdayAsString = (weekdayIndex: number) => {
-        switch (weekdayIndex) {
-            case 0: return "Mo.";
-            case 1: return "Di.";
-            case 2: return "Mi.";
-            case 3: return "Do.";
-            case 4: return "Fr.";
-            case 5: return "Sa.";
-            case 6: return "So.";
-            default: return "This should never happen";
-        }
-    }
-
-    const getWeekdayString = () => {
-        let weekdayStringArray: Array<string> = [];
-        const weekdayNumberArray = selectedSchedule.weekdays.sort();
-        for(let i = 0; i < weekdayNumberArray.length; i++) {
-            weekdayStringArray.push(getWeekdayAsString(weekdayNumberArray[i]));
-        }
-        return weekdayStringArray.join(", ");
-    }
-
-    const getTypeString = (type: string) => {
-        switch (type) {
-            case "weekly":
-                return "Wochentage";
-            case "daily":
-                return "Täglich";
-            case "interval":
-                return "Intervall";
-            default:
-                return "This should never happen."
-        }
-    }
-
-    const getIntervalString = (selectedInterval: string) => {
-        switch (selectedInterval) {
-            case "minute":
-                return "Jede Minute";
-            case "quarter":
-                return "Alle 15 Minuten";
-            case "half":
-                return "Alle 30 Minuten";
-            case "threequarter":
-                return "Alle 45 Minuten";
-            case "hour":
-                return "Jede Stunde";
-            case "quartday":
-                return "Alle 6 Stunden";
-            case "halfday":
-                return "Alle 12 Stunden";
-        }
-    }
-
-    const getScheduleInformation = () => {
-        return (
-            <React.Fragment>
-                <Grid item>
-                    <Typography variant="body1">
-                        Typ: {getTypeString(selectedSchedule.type)}
-                    </Typography>
-                </Grid>
-                {selectedSchedule.type === "weekly" &&
-                    <Grid item>
-                        <Typography variant="body1">
-                            Wochentage: {getWeekdayString()}
-                        </Typography>
-                    </Grid>
-                }
-                {(selectedSchedule.type === "weekly" || selectedSchedule.type === "daily") &&
-                <Grid item>
-                    <Typography variant="body1">
-                        Uhrzeit: {selectedSchedule.time}
-                    </Typography>
-                </Grid>
-                }
-                {selectedSchedule.type === "interval" &&
-                <Grid item>
-                    <Typography variant="body1">
-                        Intervall: {getIntervalString(selectedSchedule.interval)}
-                    </Typography>
-                </Grid>
-                }
-            </React.Fragment>
-        )
-    }
-
     return (
         <React.Fragment>
             <Dialog aria-labelledby="EditTextDialog-Title" open={props.openEditTextDialog}>
@@ -385,7 +299,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                 Informationen zu Historisierungszeitpunkten des gewählten Elements:
                             </Typography>
                         </Grid>
-                        {getScheduleInformation()}
+                        <Grid item>
+                            <ScheduleTypeTable schedule={selectedSchedule}/>
+                        </Grid>
                         <Grid item>
                             <TextField error={selectedInterval === undefined || selectedInterval < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={selectedInterval} onChange={event => setSelectedInterval(event.target.value === "" ? undefined : Number(event.target.value))}/>
                         </Grid>
