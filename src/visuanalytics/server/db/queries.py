@@ -12,6 +12,7 @@ from PIL import Image
 
 from visuanalytics.server.db import db
 from visuanalytics.util.config_manager import get_private, set_private
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
@@ -19,6 +20,7 @@ from visuanalytics.util.infoprovider_utils import generate_step_transform
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
 VIDEOJOB_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
+TEMP_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/temp"))
 SCENE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/scenes"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
@@ -202,6 +204,9 @@ def insert_infoprovider(infoprovider):
 
     con.commit()
 
+    for diagram_name, diagram in diagrams.items():
+        generate_test_diagram(diagram, infoprovider_name=infoprovider_name, diagram_name=diagram_name)
+
     return True
 
 
@@ -318,9 +323,9 @@ def get_videojob(job_id):
     :return: JSON für das Frontend.
     """
     job_list = get_job_list()
-    print("job_list", job_list)
+    #print("job_list", job_list)
     videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
-    print("videojob", videojob)
+    #print("videojob", videojob)
 
     with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
         video_json = json.load(f)
@@ -522,6 +527,11 @@ def update_infoprovider(infoprovider_id, updated_data):
     with open_resource(new_file_path, "w") as f:
         json.dump(infoprovider_json, f)
 
+    shutil.rmtree(os.path.join(TEMP_LOCATION, old_infoprovider_name), ignore_errors=True)
+
+    for diagram_name, diagram in updated_data["diagrams"].items():
+        generate_test_diagram(diagram, infoprovider_name=updated_data["infoprovider_name"], diagram_name=diagram_name)
+
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["datasource_name"]
 
@@ -603,6 +613,7 @@ def delete_infoprovider(infoprovider_id):
 
         # Json-Datei von Infoprovider und zugehörige Ordner löschen
         file_path = get_infoprovider_file(infoprovider_id)
+        shutil.rmtree(os.path.join(TEMP_LOCATION, res["infoprovider_name"]), ignore_errors=True)
         shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
         os.remove(file_path)
 
@@ -685,9 +696,9 @@ def insert_scene(scene):
 
     # save <scene-name>.json
     file_path = _get_scene_path(scene_name.replace(" ", "-"))
-    print("file_path", file_path)
+    #print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
-        print("writing")
+        #print("writing")
         json.dump(scene_json, f)
 
     con.commit()
@@ -1166,7 +1177,7 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
                     transformed_keys.append(part)
                     part_temp = remove_toplevel_key(part)
                     obj = obj.replace(part, "_req|" + datasource_name + "|" + part_temp)
-    print("obj", obj)
+    #print("obj", obj)
     return obj
 
 
@@ -1199,10 +1210,7 @@ def _generate_transform(formulas, old_transform):
 
 def _generate_storing(historized_data, datasource_name, formula_keys):
     storing = []
-    print("historized_data", historized_data)
     historized_data = remove_toplevel_key(historized_data)
-    print("formula_keys", formula_keys)
-    print("historized_data", historized_data)
     for key in historized_data:
         key_string = "_req|" + datasource_name + "|" + key if key not in formula_keys else key
         if key_string[-1] == "|":

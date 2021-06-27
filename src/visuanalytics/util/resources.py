@@ -122,14 +122,20 @@ def get_temp_resource_path(path: str, pipeline_id: str):
     return get_resource_path(os.path.join(TEMP_LOCATION, pipeline_id, path))
 
 
-def get_test_diagram_resource_path():
+def get_test_diagram_resource_path(infoprovider_name=None, diagram_name=None):
     """Erstellt einen absoluten Pfad zu der übergebene Ressource im Temp-Ordner.
 
-    :param path: Pfad zur Ressource, relativ zum `resources/temp`-Ordner.
-    :param pipeline_id: id der Pipeline von der die Funktion aufgerufen wurde.
-    :type pipeline_id: str
+    :param infoprovider_name: Name des Infoproviders der das Diagram enthält.
+    :param diagram_name: Name des Diagrams innerhalb des Infoproviders.
     """
-    return get_resource_path(os.path.join(TEMP_LOCATION, "test_diagram.png"))
+    if infoprovider_name:
+        path = infoprovider_name + "/"
+    else:
+        return get_resource_path(os.path.join(TEMP_LOCATION, "tmp_diagram.png"))
+    path += (diagram_name if diagram_name else "") + ".png"
+    path = get_resource_path(os.path.join(TEMP_LOCATION, path))
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    return path
 
 
 def get_relative_temp_resource_path(path: str, pipeline_id: str):
@@ -282,6 +288,7 @@ def delete_infoprovider_resource(path: str):
 
     with contextlib.suppress(FileNotFoundError):
         os.remove(get_infoprovider_path(path))
+
 
 def delete_resource(path: str):
     """Löscht die übergebene Ressource.
