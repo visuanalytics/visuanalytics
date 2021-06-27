@@ -861,6 +861,22 @@ def delete_scene(scene_id):
     return False
 
 
+def get_scene_preview(scene_id):
+    """
+    Loads the Preview-image of a Scene.
+
+    :param scene_id: ID of a scene.
+    """
+    con = db.open_con_f()
+    with open_resource(get_scene_file(scene_id)) as f:
+        scene_json = json.loads(f.read())
+    for image_id in scene_json["used_images"]:
+        image_name = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()["image_name"]
+        if "preview" in image_name:
+            return get_scene_image_path(image_name)
+    return None
+
+
 def insert_image(image_name):
     """
     Adds an image to the Database.
@@ -1393,8 +1409,8 @@ def _get_scene_path(scene_name: str):
     return os.path.join(SCENE_LOCATION, scene_name) + ".json"
 
 
-def get_scene_image_path(json_file_name: str):
-    image_info = json_file_name.rsplit(".", 1)
+def get_scene_image_path(image_file_name: str):
+    image_info = image_file_name.rsplit(".", 1)
     return _get_image_path(image_info[0], "scene", image_info[1])
 
 
