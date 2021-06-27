@@ -405,7 +405,7 @@ def get_videojob(videojob_id):
             return err, 400
 
         return flask.jsonify(videojob_json)
-        #return videojob_json
+        # return videojob_json
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a Videojob"})
@@ -606,6 +606,24 @@ def delete_scene(id):
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/scene/<id>/preview", methods=["GET"])
+def get_scene_preview(id):
+    """
+    Endpunkt '/scene/<id>/preview (GET).
+
+    Route über die das Preview-Bild einer Szene abgefragt werden kann.
+    :param id: ID der Szene, deren Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_scene_preview(id)
+        err = flask.jsonify({"err_msg": f"Scene preview could not be loaded for the scene with the ID {id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading the preview-image of the scene with the ID {id}"})
         return err, 400
 
 
