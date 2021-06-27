@@ -154,13 +154,16 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
     return file
 
 
-def generate_test_diagram(values):
+def generate_test_diagram(values, infoprovider_name=None, diagram_name=None):
     fig, ax = (None, None)
     for plot in values["diagram_config"]["plots"]:
         plot["plot"]["y"] = np.random.randint(1, 20, 15)
         plot["plot"].pop("x", None)
         fig, ax = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
-    file = get_test_diagram_resource_path()
+
+    print("name", infoprovider_name, "diagram_name", diagram_name)
+    file = get_test_diagram_resource_path(infoprovider_name=infoprovider_name, diagram_name=diagram_name)
+    print("file_name", file)
     title = values.get("title", None)
     x_label = values.get("x_label", None)
     y_label = values.get("y_label", None)
