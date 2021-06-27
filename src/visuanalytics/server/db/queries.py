@@ -26,15 +26,6 @@ AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../
 MEMORY_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", ML))
 
 
-def get_last_infoprovider_id():
-    con = db.open_con_f()
-    last_id = 0
-    count = con.execute("SELECT COUNT(*) FROM infoprovider").fetchone()["COUNT(*)"]
-    if count != 0:
-        last_id = con.execute("SELECT seq FROM sqlite_sequence WHERE name='infoprovider'").fetchone()["seq"]
-    return last_id
-
-
 def get_infoprovider_list():
     """
     Methode für das Laden aller Infoprovider.
