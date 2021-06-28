@@ -617,7 +617,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 customData: customData,
                 historizedData: historizedData,
                 schedule: schedule,
-                listItems: listItems
+                listItems: listItems,
+                arrayProcessingsList: arrayProcessingsList,
+                stringReplacementList: stringReplacementList
             }, apiKeyInput1, apiKeyInput2);
             clearSessionStorage();
         } else {
@@ -637,6 +639,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         }
     }
 
+    //TODO: also set the array processings and string replacements when switching current data source as soon as the functionality is available in this branch
     /**
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.
@@ -674,7 +677,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 customData: customData,
                 historizedData: historizedData,
                 schedule: schedule,
-                listItems: listItems
+                listItems: listItems,
+                arrayProcessingsList: arrayProcessingsList,
+                stringReplacementList: stringReplacementList
             };
             for (let i = 0; i < dataSources.length; i++) {
                 if (dataSources[i].apiName === apiName) {
@@ -824,6 +829,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         dataSourcesKeys={dataSourcesKeys}
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                     />
                 )
             case 6:

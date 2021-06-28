@@ -360,7 +360,11 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
                             if (data.key === item && (data.type === "Zahl" || (data.type === "Array" && data.arrayValueType !== undefined && data.arrayValueType === "Zahl"))) compatibleHistorized.push(dataSource.apiName + "|" + item)
                         })
                         dataSource.customData.forEach((data) => {
-                            if (data.formelName === item) compatibleHistorized.push(dataSource.apiName + "|" + item)
+                            if (data.formelName === item) compatibleHistorized.push(dataSource.apiName + "|" + item);
+                        })
+                        //also check the array processings
+                        dataSource.arrayProcessingsList.forEach((processing) => {
+                            if (processing.name === item) compatibleHistorized.push(dataSource.apiName + "|" + item);
                         })
                     })
                 }
