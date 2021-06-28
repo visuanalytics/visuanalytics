@@ -160,7 +160,6 @@ def generate_test_diagram(values):
         plot["plot"]["y"] = np.random.randint(1, 20, 15)
         plot["plot"].pop("x", None)
         fig, ax = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
-
     file = get_test_diagram_resource_path()
     title = values.get("title", None)
     x_label = values.get("x_label", None)
