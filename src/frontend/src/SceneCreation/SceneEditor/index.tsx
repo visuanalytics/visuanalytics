@@ -308,7 +308,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
         const stageJson = saveHandler();
 
-        if (stageJson !== "Empty Stage"){
+        if (stageJson !== "Empty Stage") {
             let localBlob = await fetch(stageJson).then(res => res.blob());
 
             let file = new File([localBlob], 'background.png');
@@ -325,7 +325,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             path: sceneName + "_background.png",
             overlay: textImage
         }
-
 
 
         onlyTextAndImages.forEach(element => {
@@ -368,7 +367,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scene_name: sceneName,
             used_images: [],//number[]
             used_infoproviders: [],
-            images:  base,
+            images: base,
             scene_items: itemJson,
         }
 
@@ -379,7 +378,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Handler for the button to save the scene and go back to the overview
      */
     const saveButtonHandler = () => {
-        if (itemCounter === 0){
+        if (itemCounter === 0) {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
@@ -1125,7 +1124,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //TODO: when images are available, check how the size should look like
         return (
             <Grid item xs={4}>
-                <img src={image} width="50px" height="30px"/>
+                <img src={image} width="50px" height="30px" alt={"Image can not be displayed!"}/>
             </Grid>
         )
     }
@@ -1423,7 +1422,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
                                                         onTransformEnd={handleTransformEnd}
-                                                        onDblClick={(e: any) => handleTextDblClick()}
+                                                        onDblClick={() => handleTextDblClick()}
                                                         fontSize={item.fontSize}
                                                         fontFamily={item.fontFamily}
                                                         scaleX={item.scaleX}
@@ -1544,7 +1543,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             disabled={!itemSelected}
                                             label={"X Koordinate"}
                                             value={currentXCoordinate}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                         <TextField id="fontType" onChange={(e) => changeFontFamily(e)}
                                                    className={classes.selection} label={"Schriftart"}
                                                    value={currentFontFamily}
@@ -1573,7 +1572,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             disabled={!selectedItemName.startsWith('rect')}
                                             label={"Breite"}
                                             value={currentItemWidth}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Button className={classes.button} id="undo" onClick={undo}> RÜCKGÄNGIG
@@ -1591,7 +1590,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             disabled={!itemSelected}
                                             label={"Y Koordinate"}
                                             value={currentYCoordinate}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                         <TextField
                                             className={classes.buttonNumber}
                                             id="fontSize"
@@ -1605,7 +1604,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             label={"Schriftgröße (PX)"}
                                             value={currentFontSize}
                                             disabled={!selectedItemName.startsWith('text')}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                         <TextField
                                             className={classes.buttonNumber}
                                             id="heigthOfItem"
@@ -1619,7 +1618,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             disabled={!selectedItemName.startsWith('rect')}
                                             label={"Höhe"}
                                             value={currentItemHeight}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                     </Grid>
                                     <Grid item xs={3}>
                                         <Button className={classes.button} onClick={dupe}> Klonen </Button><br/><br/>
@@ -1649,7 +1648,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                             label={"Textbreite (PX)"}
                                             value={currentTextWidth}
                                             disabled={!selectedItemName.startsWith('text')}
-                                        ></TextField><br/><br/>
+                                        /><br/><br/>
                                     </Grid>
                                 </Grid>
                             </Box>
@@ -1660,7 +1659,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <Typography variant={"h4"} align={"center"}>
                                 ELEMENT HINZUFÜGEN
                             </Typography>
-                            <Grid container item xs={12} justify={"space-evenly"} className={classes.elementLargeMargin}>
+                            <Grid container item xs={12} justify={"space-evenly"}
+                                  className={classes.elementLargeMargin}>
                                 <TextField id="itemType" onChange={(e) => selectType(e)} className={classes.selection}
                                            label={"Typ"} select value={selectedType}>
                                     <MenuItem value="Circle">Kreis</MenuItem>
@@ -1671,7 +1671,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 </TextField>
                                 <TextField className={classes.buttonText} id="text" value={currentTextContent}
                                            label={"Textinhalt"}
-                                           onChange={(e) => setCurrentTextContent(e.target.value)}></TextField>
+                                           onChange={(e) => setCurrentTextContent(e.target.value)}/>
                             </Grid><br/>
                             <Grid item xs={12} className={classes.elementLargeMargin}>
                                 <Typography variant={"h4"} align={"center"}>
