@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import List from "@material-ui/core/List";
 import {
     ListItem,
@@ -38,11 +38,12 @@ interface SceneEditorProps {
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     let timeOut = 0;
-    const uniqueId = "sceneEditorID"
+    let uploadCounter = 1;
+    const uniqueId = "sceneEditorID";
 
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
-    const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
+    //const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
     const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image());
@@ -62,21 +63,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
-
+    const [usedImagesArray, setUsedImagesArray] = React.useState<Array<number>>([])
 
     const [items, setItems] = React.useState<Array<myCircle | myRectangle | myLine | myStar | myText | myImage>>([]);
     const [itemSelected, setItemSelected] = React.useState(false);
     const [itemCounter, setItemCounter] = React.useState(0);
-    const [imageSource, setImageSource] = React.useState<HTMLImageElement>(new window.Image());
+    //const [imageSource, setImageSource] = React.useState<HTMLImageElement>(new window.Image());
 
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<myCircle | myRectangle | myLine | myStar | myText | myImage>>([]);
 
-    const [sceneName, setSceneName] = React.useState("emptyScene");
+    const [sceneName, setSceneName] = React.useState("");
     const [selectedItemName, setSelectedItemName] = React.useState("");
     const [selectedType, setSelectedType] = React.useState("Circle");
     const [selectedObject, setSelectedObject] = React.useState<myCircle | myRectangle | myLine | myStar | myText | myImage>({} as myCircle);
     const [stepSize, setStepSize] = React.useState(5);
-    const [stage, setStage] = React.useState<Konva.Node>()
+    const [stage, setStage] = React.useState<Konva.Stage>()
 
     const [textEditContent, setTextEditContent] = React.useState("");
     const [textEditVisibility, setTextEditVisibility] = React.useState(false);
@@ -89,8 +90,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
     const [itemJson, setItemJson] = React.useState("");
-    const [textImage, setTextImage] = React.useState<Array<dataImage | dataText>>([])
     const [exportJSON, setExportJSON] = React.useState<jsonExport>();
+    const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
 
     // setup for error notification
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
@@ -121,7 +122,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Removes all items of this component from the sessionStorage.
      */
-    const clearSessionStorage = () => {
+    /*const clearSessionStorage = () => {
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
@@ -136,7 +137,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
-    }
+    }*/
 
     /**
      * Custom types for different elements
@@ -273,38 +274,123 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         pattern: string // "Datum: {_req|api_key}"
     }
 
+    type responseData = {
+        image_id: number
+    }
+
+    /**
+     * Method to duplicate the stage at an invisible position to create the preview image
+     */
+    const dupeStage = (itemArray : Array<myCircle | myRectangle | myLine | myStar | myText | myImage>) => {
+        let duplicateStage = new Konva.Stage({container: "backgroundStage", visible: true, width: 960, height: 540});
+        let duplicateLayer = new Konva.Layer;
+        duplicateStage.destroyChildren();
+        if (backGroundType === "COLOR"){
+            duplicateLayer.add(new Konva.Rect({
+                fill: currentBGColor,
+                width: 960,
+                height: 540
+            }))
+        }
+        for (let i = 0; i < itemArray.length; i++) {
+            let duplicateItem : any;
+            if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")){
+                if (itemArray[i].id.startsWith("circle")){
+                    duplicateItem = new Konva.Circle({
+                        radius: 50,
+                        x: itemArray[i].x,
+                        y: itemArray[i].y,
+                        fill: itemArray[i].color,
+                        id: itemArray[i].id,
+                        scaleX: itemArray[i].scaleX,
+                        scaleY: itemArray[i].scaleY,
+                        width: itemArray[i].width,
+                        height: itemArray[i].height,
+                        rotation: itemArray[i].rotation,
+                    })
+                } else if (itemArray[i].id.startsWith("rect")){
+                    duplicateItem = new Konva.Rect({
+                        fill: itemArray[i].color,
+                        id: itemArray[i].id,
+                        scaleX: itemArray[i].scaleX,
+                        scaleY: itemArray[i].scaleY,
+                        width: itemArray[i].width,
+                        height: itemArray[i].height,
+                        x: itemArray[i].x,
+                        y: itemArray[i].y,
+                        rotation: itemArray[i].rotation,
+                    })
+                } else if (itemArray[i].id.startsWith("line")){
+                    duplicateItem = new Konva.Line({
+                        fill: itemArray[i].color,
+                        id: itemArray[i].id,
+                        scaleX: itemArray[i].scaleX,
+                        scaleY: itemArray[i].scaleY,
+                        width: itemArray[i].width,
+                        height: itemArray[i].height,
+                        rotation: itemArray[i].rotation,
+                        x: itemArray[i].x,
+                        y: itemArray[i].y,
+                        points: [0,0,100,0,100,100],
+                        closed: true,
+                        stroke: itemArray[i].color,
+                    })
+                } else if (itemArray[i].id.startsWith("star")){
+                    duplicateItem = new Konva.Star({
+                        numPoints: 5,
+                        innerRadius: 50,
+                        outerRadius: 100,
+                        fill: itemArray[i].color,
+                        id: itemArray[i].id,
+                        scaleX: itemArray[i].scaleX,
+                        scaleY: itemArray[i].scaleY,
+                        x: itemArray[i].x,
+                        y: itemArray[i].y,
+                        rotation: itemArray[i].rotation,
+                    })
+                }
+                duplicateLayer.add(duplicateItem);
+            }
+
+        }
+        duplicateStage.add(duplicateLayer);
+        return duplicateStage;
+    }
     /**
      * Handler to save the scene as png file
      */
-    const saveHandler = () => {
-        let stageJson = stage?.toDataURL();
+    const saveHandler = (currentStage : Konva.Stage) => {
+        let stageJson = currentStage?.toDataURL();
         if (stageJson === undefined) {
             stageJson = "Empty Stage";
         }
         return stageJson;
     }
 
+    useEffect(() => {
+        exportToBackend(usedImagesArray);
+    }, [sceneName])
+
     /**
      * Method to create the export for the backend
      */
-    const exportToJSON = async () => {
+    const exportToBackend = async (usedImages : number[]) => {
         let copyOfItems = items.slice();
         let onlyTextAndImages = [];
         let newArray: any = [];
+        let localTextImage : Array<dataText|dataImage> = [];
         for (let index = 0; index < copyOfItems.length; index++) {
-            const element = copyOfItems[index];
-            const localIndex = copyOfItems.indexOf(element);
-            if (element.id.startsWith('text')) {
-                onlyTextAndImages.push(copyOfItems[localIndex] as myText);
-            } else if (element.id.startsWith('image')) {
-                onlyTextAndImages.push(copyOfItems[localIndex] as myImage);
+            if (copyOfItems[index].id.startsWith('text')) {
+                onlyTextAndImages.push(copyOfItems[index] as myText);
+            } else if (copyOfItems[index].id.startsWith('image')) {
+                onlyTextAndImages.push(copyOfItems[index] as myImage);
             } else {
-                newArray.push(copyOfItems[localIndex])
+                newArray.push(copyOfItems[index])
             }
         }
-        setItems(newArray);
-
-        const stageJson = saveHandler();
+        setItemJson(JSON.stringify(copyOfItems))
+        let duplicateOfStage = dupeStage(copyOfItems);
+        const stageJson = saveHandler(duplicateOfStage);
 
         if (stageJson !== "Empty Stage"){
             let localBlob = await fetch(stageJson).then(res => res.blob());
@@ -317,15 +403,34 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
             setBaseImage(formData);
         }
+        if (stage !== undefined){
+            const originalStage = saveHandler(stage);
+
+            if (originalStage !== "Empty Stage"){
+                let localBlob = await fetch(originalStage).then(res => res.blob());
+
+                let file = new File([localBlob], 'preview.png');
+                let formData = new FormData();
+
+                formData.append('image', file);
+                formData.append('name', sceneName + '_preview');
+
+                setPreviewImage(formData);
+            }
+        }
 
         const base: baseImg = {
             type: "pillow",
             path: sceneName + "_background.png",
-            overlay: textImage
+            overlay: localTextImage
         }
-
-
-
+        const returnValue: jsonExport = {
+            scene_name: sceneName,
+            used_images: usedImages,
+            used_infoproviders: [],
+            images:  base,
+            scene_items: JSON.stringify(copyOfItems),
+        }
         onlyTextAndImages.forEach(element => {
             if (element.id.startsWith('text')) {
                 if ('fontSize' in element) {
@@ -340,7 +445,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         font: "fonts/" + element.fontFamily + ".tff", // "fonts/{item.font}.ttf"
                         pattern: element.textContent // "Datum: {_req|api_key}"
                     }
-                    textImage.push(itemToPush);
+                    localTextImage.push(itemToPush);
                 }
                 console.log('text', element.id);
             } else if (element.id.startsWith('image')) {
@@ -355,22 +460,22 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         color: "RGBA",
                         path: "string" //Diagrammname "image_name" : "" eventuell
                     }
-                    textImage.push(itemToPush);
+                    localTextImage.push(itemToPush);
                 }
             }
         });
-
-        setItemJson(JSON.stringify(copyOfItems));
-
-        const returnValue: jsonExport = {
-            scene_name: sceneName,
-            used_images: [],//number[]
-            used_infoproviders: [],
-            images:  base,
-            scene_items: itemJson,
-        }
-
         setExportJSON(returnValue);
+    }
+
+    const handleSuccess = (jsonData : any) => {
+        let usedImages : number[] = [];
+        usedImages.push((jsonData as responseData).image_id);
+        setUsedImagesArray(usedImages);
+        exportToBackend(usedImages);
+    }
+
+    const handleError = (err : Error) => {
+        console.log(usedImagesArray)
     }
 
     /**
@@ -381,8 +486,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
-        exportToJSON()
         postBackground();
+        postPreview();
         postScene();
     }
 
@@ -405,7 +510,19 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         method: "POST",
         headers: {},
         body: baseImage
-    });
+        },
+        jsonData => handleSuccess(jsonData),(err => handleError(err))
+    );
+
+    /**
+     * Method to POST the scene preview
+     */
+    const postPreview = useCallFetch("visuanalytics/image/add", {
+            method: "POST",
+            headers: {},
+            body: previewImage
+        }
+    );
 
     /**
      * Method to change the cursor
@@ -466,7 +583,22 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (e.target === e.target.getStage() || name === "background") {
             setStage(e.target.getStage()!)
             setSelectedItemName("");
-            currentlyEditing ? setTextEditVisibility(true) : setTextEditVisibility(false);
+            if (currentlyEditing){
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: textEditContent,
+                    currentlyRendered: true,
+                };
+                localItems[index] = objectCopy;
+                setSelectedObject(objectCopy);
+                setItems(localItems);
+                setTextEditVisibility(false);
+                setCurrentlyEditing(false);
+            } else {
+                setTextEditVisibility(false);
+            }
             setItemSelected(false);
             setDeleteText("Letztes Elem. entf.");
             return;
@@ -508,7 +640,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Gets called whenever the user clicks on the canvas to add an item.
      * @param e onClick Event
      */
-
     const handleCanvasClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
 
         const local = getRelativePointerPosition(e);
@@ -635,7 +766,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
 
             return;
-        } else if (selectedType === "image") {
+        } /*else if (selectedType === "image") {
             items.push({
                 id: 'image-' + itemCounter.toString(),
                 x: parseInt(localX.toFixed(0)),
@@ -655,7 +786,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setItemCounter(itemCounter + 1);
 
             return;
-        }
+        }*/
     }
 
     /**
@@ -703,7 +834,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the double click on a text element
      */
-    const handleTextDblClick = () => {
+    const handleTextDblClick = (e: any) => {
+        console.log(e.target);
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         let backup: any = items[index];
@@ -743,6 +875,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setSelectedObject(objectCopy);
             setItems(localItems);
             setTextEditVisibility(false);
+            setCurrentlyEditing(false);
         }
     };
 
@@ -876,7 +1009,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: absTrans.y,
             rotation: absRot,
         };
-
+        console.log(absTrans.x, absTrans.y)
         setItems(localItems);
         setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
         setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
@@ -1027,11 +1160,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const switchBackground = () => {
         if (backGroundType === "COLOR") {
-            setBackGroundNext("COLOR");
+            //setBackGroundNext("COLOR");
             setBackGroundType("IMAGE");
             setCurrentBGColor("#FFFFFF");
         } else if (backGroundType === "IMAGE") {
-            setBackGroundNext("IMAGE");
+            //setBackGroundNext("IMAGE");
             setBackGroundType("COLOR");
             setCurrentBGColor(backGroundColor);
         }
@@ -1081,7 +1214,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             x: 20,
             y: 20,
             id: 'text-' + itemCounter.toString(),
-            textContent: item,
+            textContent: '{' + item + '}',
             width: currentTextWidth,
             scaleX: 1,
             scaleY: 1,
@@ -1213,7 +1346,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Grid>
                             <Grid item>
                                 <Button size={"large"} variant={"contained"} className={classes.topButtons}
-                                        onClick={() => saveButtonHandler()}>
+                                        onClick={() => saveButtonHandler()} disabled={sceneName === ""}>
                                     Speichern
                                 </Button>
                             </Grid>
@@ -1407,7 +1540,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         onDragMove={handleDragMove}
                                                         onDragEnd={handleDragEnd}
                                                         onTransformEnd={handleTransformEnd}
-                                                        onDblClick={(e: any) => handleTextDblClick()}
+                                                        onDblClick={(e: any) => handleTextDblClick(e)}
                                                         fontSize={item.fontSize}
                                                         fontFamily={item.fontFamily}
                                                         scaleX={item.scaleX}
@@ -1703,24 +1836,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 message={message.message}
                 severity={message.severity}
             />
+            <div id={"backgroundStage"} style={{
+                position: "absolute",
+                top: "-9999px",
+            }}></div>
         </StepFrame>
+
     );
 }
 
 //TODO: possibly extract the selection list into another component for better structure
-
-/**
- * <TextField
- className={classes.buttonNumber}
- id="rotation"
- type="number"
- InputProps={{
-    inputProps: {
-      min: 0, max: 359, step: 1,
-    }
- }}
- onChange={(e) => changeCurrentRotation(e)}
- label={"Rotation (Grad)"}
- value={currentRotation}
- ></TextField><br /><br />
- */
