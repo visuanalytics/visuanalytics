@@ -81,10 +81,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
 
     const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
-<<<<<<< HEAD
 
-=======
->>>>>>> 92755a74 (integrated arrayprocessing and string replacement in editing by inserting new wrapper component for data customization step)
     //holds the dataSources of the edited infoProvider
     //always gets the value from the sessionStorage, but if it is not defined (first entering), the data is fetched from the props
     const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ?  props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
@@ -192,6 +189,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             setEditStep(Number(sessionStorage.getItem("editStep-" + uniqueId) || 0));
             //infoProvName
             setInfoProvName(sessionStorage.getItem("infoProvName-" + uniqueId) || "");
+            //newDataSourceMode
+            setNewDataSourceMode(sessionStorage.getItem("newDataSourceMode-" + uniqueId) === "true");
             //infoProvDataSource doesnt need to be fetched since it works with the initial value
             //infoProvDiagrams
             setInfoProvDiagrams(sessionStorage.getItem("infoProvDiagrams-" + uniqueId) === null ? new Array<Diagram>() : JSON.parse(sessionStorage.getItem("infoProvDiagrams-" + uniqueId)!));
@@ -247,6 +246,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("infoProvName-" + uniqueId, infoProvName);
     }, [infoProvName])
+    //store newDataSourceMode in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("noKey-" + uniqueId, newDataSourceMode ? "true" : "false");
+    }, [newDataSourceMode])
     // Store infoProvDataSource in session storage
     React.useEffect(() => {
         sessionStorage.setItem("infoProvDataSources-" + uniqueId, JSON.stringify(infoProvDataSources));
@@ -279,6 +282,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("infoProvId-" + uniqueId);
         sessionStorage.removeItem("editStep-" + uniqueId);
         sessionStorage.removeItem("infoProvName-" + uniqueId);
+        sessionStorage.removeItem("newDataSourceMode-" + uniqueId);
         sessionStorage.removeItem("infoProvDataSources-" + uniqueId);
         sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
         sessionStorage.removeItem("selectedDataSource-" + uniqueId);

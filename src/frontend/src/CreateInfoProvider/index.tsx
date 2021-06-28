@@ -414,7 +414,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
-    
+
     //TODO: find out why this method is called too often
     /**
      * Method that creates the array of dataSources in the backend format for
