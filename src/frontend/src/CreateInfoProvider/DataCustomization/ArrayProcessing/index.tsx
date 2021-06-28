@@ -461,11 +461,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                         <Grid item>
                             <Button variant="contained"
                                     onClick={() => {
-                                        removeProcessing(currentRemoveIndex);
+                                        setRemoveDialogOpen(false);
+                                        const index = currentRemoveIndex;
+                                        setCurrentRemoveIndex(-1);
+                                        removeProcessing(index);
                                         window.setTimeout(() => {
                                             formulasToRemove.current = []
                                             diagramsToRemove.current = [];
-                                            setCurrentRemoveIndex(-1);
                                         }, 200);
                                     }}
                                     className={classes.redDeleteButton}>
