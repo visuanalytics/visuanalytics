@@ -23,7 +23,7 @@ import {
     Plots,
     ListItemRepresentation,
     SelectedDataItem,
-    uniqueId
+    uniqueId, ArrayProcessingData, StringReplacementData
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
@@ -882,12 +882,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     />
                 )
             case 5:
+                //TODO: real implementations for array processings and string replacements
                 return (
                     <HistorySelection
                         continueHandler={() => setEditStep(6)}
                         backHandler={() => setEditStep(2)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
+                        arrayProcessingsList={[]}
+                        stringReplacementList={[]}
                         historizedData={infoProvDataSources[selectedDataSource].historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={infoProvDataSources[selectedDataSource].schedule}

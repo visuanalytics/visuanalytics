@@ -11,7 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import {useStyles} from "../../style";
 import {FormelObj} from "../../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {Diagram, Schedule} from "../../types";
+import {ArrayProcessingData, Diagram, Schedule, StringReplacementData} from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 
 interface HistoryDataSelectionProps {
@@ -20,6 +20,8 @@ interface HistoryDataSelectionProps {
     handleBack: () => void;
     selectedData: Array<string>;
     customData: Array<FormelObj>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     selectSchedule: (schedule: Schedule) => void;
@@ -170,8 +172,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
      * @param data The name of the list item key the checkbox was set for.
      */
     const checkboxHandler = (data: string) => {
-        console.log(data);
-        console.log(props.historizedData.includes(data));
+        //console.log(data);
+        //console.log(props.historizedData.includes(data));
         if (props.historizedData.includes(data)) {
             removeFromHistorySelection(data);
         } else {
@@ -220,6 +222,8 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                         <List disablePadding={true} key="listRoot2">
                             {props.customData.map((item) => renderListItem(item.formelName))}
                             {props.selectedData.map((item) => renderListItem(item))}
+                            {props.arrayProcessingsList.map((item) => renderListItem(item.name))}
+                            {props.stringReplacementList.map((item) => renderListItem(item.name))}
                         </List>
                     </Box>
                 </Grid>
