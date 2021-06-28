@@ -27,7 +27,7 @@ import {
     BackendCalculate,
     BackendReplacement
 } from "./types";
-import {extractKeysFromSelection} from "./helpermethods";
+import {createCalculates, createReplacements, extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
 import {DiagramCreation} from "./DiagramCreation";
@@ -413,8 +413,13 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const handleError = (err: Error) => {
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
+
     
     //TODO: find out why this method is called too often
+    /**
+     * Method that creates the array of dataSources in the backend format for
+     * the existing data sources.
+     */
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
@@ -453,17 +458,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         return backendDataSources;
     }
 
-    /*type BackendDiagram = {
-        type: string;
-        diagram_config: {
-            type: string;
-            name: string;
-            infoprovider: string;
-            sourceType: string;
-            plots: Array<Plots>;
-        }
-    }*/
-
+    /**
+     * Method that creates an array of diagrams in the backend format
+     * for the existing diagrams.
+     */
     const createBackendDiagrams = () => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};

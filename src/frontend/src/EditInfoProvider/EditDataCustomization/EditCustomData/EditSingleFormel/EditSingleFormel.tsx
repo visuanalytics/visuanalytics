@@ -1,18 +1,25 @@
 import React from "react";
-import {StrArg} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-import {useStyles} from "../../style";
-import {hintContents} from "../../../util/hintContents";
-import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
+import {StrArg} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {useStyles} from "../../../style";
+import {hintContents} from "../../../../util/hintContents";
+import {StepFrame} from "../../../../CreateInfoProvider/StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
+<<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 import {calculationToString} from "../../helpermethods";
 import {formelContext} from "../../types";
 import {DataSource} from "../../../CreateInfoProvider/types";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {checkFindOnlyNumbers} from "../../../CreateInfoProvider/helpermethods";
+=======
+import {calculationToString} from "../../../helpermethods";
+import {FormelContext} from "../../../types";
+import {DataSource} from "../../../../CreateInfoProvider/types";
+import {useCallFetch} from "../../../../Hooks/useCallFetch";
+>>>>>>> 92755a74 (integrated arrayprocessing and string replacement in editing by inserting new wrapper component for data customization step):src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -22,7 +29,7 @@ interface EditSingleFormelProps {
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     reportError: (message: string) => void;
-    formel: formelContext;
+    formel: FormelContext;
 }
 
 /**
