@@ -7,12 +7,18 @@ import {StepFrame} from "../../StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
-
+import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {
+    ArrayProcessingData,
+    customDataBackendAnswer,
+    Diagram,
+    ListItemRepresentation,
+    SelectedDataItem
+} from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import {customDataBackendAnswer, Diagram, ListItemRepresentation, SelectedDataItem} from "../../types";
 import {checkFindOnlyNumbers, getListItemsNames} from "../../helpermethods";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
+
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -21,6 +27,7 @@ interface CreateCustomDataProps {
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     customData: Array<FormelObj>;
     setCustomData: (array: Array<FormelObj>) => void;
+    arrayProcessingsList: Array<ArrayProcessingData>;
     reportError: (message: string) => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
@@ -459,6 +466,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     <CustomDataGUI
                         selectedData={props.selectedData}
                         customData={props.customData}
+                        arrayProcessingsList={props.arrayProcessingsList}
                         input={input}
                         name={name}
                         setName={(name: string) => setName(name)}

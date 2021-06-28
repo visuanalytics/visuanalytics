@@ -69,6 +69,7 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         setSelectedData={props.setSelectedData}
                         customData={props.customData}
                         setCustomData={props.setCustomData}
+                        arrayProcessingsList={props.arrayProcessingsList}
                         reportError={props.reportError}
                         listItems={props.listItems}
                         historizedData={props.historizedData}
