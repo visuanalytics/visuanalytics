@@ -18,7 +18,6 @@ import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ScheduleTypeTable} from "./ScheduleTypeTable";
 
 import {
@@ -33,6 +32,7 @@ import {
 } from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
 import * as Process from "process";
+import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
@@ -161,6 +161,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setCustomData(dataSourceTmp.customData);
         props.setHistorizedData(dataSourceTmp.historizedData);
         props.setSchedule(dataSourceTmp.schedule)
+        props.setArrayProcessingsList(dataSourceTmp.arrayProcessingsList);
+        props.setStringReplacementList(dataSourceTmp.stringReplacementList);
 
         if (dataSourceKeysTmp) {
             props.setApiKeyInput1(dataSourceKeysTmp.apiKeyInput1);
