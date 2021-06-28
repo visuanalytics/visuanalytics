@@ -3,7 +3,18 @@ import {useStyles} from "../../style";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import {Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, TextField} from "@material-ui/core";
+import {
+    Collapse,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    IconButton,
+    List,
+    ListItem,
+    TextField
+} from "@material-ui/core";
 import {AudioElement, MinimalDataSource, MinimalInfoProvider} from "../../types";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {extractKeysFromSelection} from "../../../CreateInfoProvider/helpermethods"
@@ -11,6 +22,7 @@ import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomData
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import { Schedule } from "../../../CreateInfoProvider/types";
 import {ScheduleTypeTable} from "../../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
+import Box from "@material-ui/core/Box";
 
 interface EditTextDialogProps {
     sceneName: string;
@@ -120,12 +132,12 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const renderEditElement = (id: number, audioElement: AudioElement) => {
         if(audioElement.type === "text" && audioElement.text !== undefined) {
             return (
-                <Grid container key={id} justify="space-between">
+                <Grid container key={id} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item xs={12} md={10}>
-                        <TextField error={audioElement.text === ""} id={id.toString()} label="TTS-Text" multiline rowsMax={3} value={audioElement.text} onChange={changeElement} onClick={() => handleClickOnTTSTextField(id)}/>
+                        <TextField fullWidth error={audioElement.text === ""} id={id.toString()} label="TTS-Text" multiline rowsMax={3} value={audioElement.text} onChange={changeElement} onClick={() => handleClickOnTTSTextField(id)}/>
                     </Grid>
                     <Grid item xs={12} md={2}>
-                        <IconButton aria-label="Abschnitt löschen" disabled={audioElements.length <= 2} onClick={() => deleteText(id)}>
+                        <IconButton aria-label="Abschnitt löschen" disabled={audioElements.length <= 2} onClick={() => deleteText(id)} className={classes.redDeleteIcon}>
                             <DeleteIcon/>
                         </IconButton>
                     </Grid>
@@ -133,8 +145,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
             )
         } else if(audioElement.type === "pause" && audioElement.duration !== undefined) {
             return (
-                <Grid key={id} item>
-                    <TextField error={audioElement.duration === undefined || audioElement.duration < 0} id={id.toString()} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
+                <Grid key={id} item xs={10} className={classes.elementLargeMargin}>
+                    <TextField fullWidth error={audioElement.duration === undefined || audioElement.duration < 0} id={id.toString()} label="Pause in ms" type="number" defaultValue={audioElement.duration} onChange={changeElement}/>
                 </Grid>
             )
         }
@@ -148,19 +160,20 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
 
     const renderHistorizedData = (item: string, schedule: Schedule) => {
         return (
-            <ListItem key={item} divider={true}>
+            <ListItem key={item}>
                 <Button variant="contained" size="large" onClick={() => handleClickOnHistorizedData(item, schedule)}>
-                    {item}
+                    <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
         );
     }
 
+    //TODO: possibly find better solution than abusing span
     const renderSelectedDataAndCustomData = (item: string) => {
         return (
-            <ListItem key={item} divider={true}>
+            <ListItem key={item}>
                 <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(item)}>
-                    {item}
+                    <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
         );
@@ -168,41 +181,47 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
 
     const renderDataSource = (dataSource: MinimalDataSource, infoProviderName: string) => {
         return (
-            <Grid container>
-                <Grid item>
-                    <Typography variant="h6">
+            <Grid item container xs={12}>
+                <Grid item xs={12}>
+                    <Typography variant="body1" className={classes.categoryText}>
                         Gewählte Daten
                     </Typography>
                 </Grid>
-                <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                    {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
-                </List>
-                <Grid item>
-                    <Typography variant="h6">
+                <Grid item xs={12}>
+                    <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
+                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                    </List>
+                </Grid>
+                <Grid item xs={12} className={classes.elementLargeMargin}>
+                    <Typography variant="body1" className={classes.categoryText}>
                         Formeln
                     </Typography>
                 </Grid>
-                <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                    {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(item.formelName))}
-                </List>
-                <Grid item>
-                    <Typography variant="h6">
+                <Grid item xs={12} className={classes.elementLargeMargin}>
+                    <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
+                        {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(item.formelName))}
+                    </List>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="body1" className={classes.categoryText}>
                         Historisierte Daten
                     </Typography>
                 </Grid>
-                <List key={dataSource.apiName + "-HistorizedData"} disablePadding={true}>
-                    {dataSource.historizedData.map((item: string) => renderHistorizedData(item, dataSource.schedule))}
-                </List>
+                <Grid item xs={12}>
+                    <List key={dataSource.apiName + "-HistorizedData"} disablePadding={true}>
+                        {dataSource.historizedData.map((item: string) => renderHistorizedData(item, dataSource.schedule))}
+                    </List>
+                </Grid>
             </Grid>
         );
     }
 
     const renderInfoproviderData = (dataSources: Array<MinimalDataSource>, infoproviderName: string, infoproviderIndex: number) => {
         return (
-            <Grid key={infoproviderName} container>
-                <Grid container>
+            <Grid key={infoproviderName} item container xs={12}>
+                <Grid item container xs={12}>
                     <Grid item xs={12} md={10}>
-                        <Typography variant="body1">
+                        <Typography variant="h6" style={{marginTop: "0.5rem"}}>
                             {infoproviderName}
                         </Typography>
                     </Grid>
@@ -219,51 +238,64 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                         }
                     </Grid>
                 </Grid>
-                <Collapse in={showInfoproviderData[infoproviderIndex]}>
-                    {dataSources.map((dataSource: MinimalDataSource) => renderDataSource(dataSource, infoproviderName))}
-                </Collapse>
+                <Grid item xs={12}>
+                    <Collapse in={showInfoproviderData[infoproviderIndex]}>
+                        {dataSources.map((dataSource: MinimalDataSource) => renderDataSource(dataSource, infoproviderName))}
+                    </Collapse>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider className={classes.greyDivider}/>
+                </Grid>
             </Grid>
         );
     }
 
     return (
         <React.Fragment>
-            <Dialog aria-labelledby="EditTextDialog-Title" open={props.openEditTextDialog}>
+            <Dialog aria-labelledby="EditTextDialog-Title" maxWidth="md" open={props.openEditTextDialog}>
                 <DialogTitle id="EditTextDialog-Title">Text für {props.sceneName} bearbeiten</DialogTitle>
                 <DialogContent dividers>
                     <Grid container>
                         <Grid item xs={12}>
-                            Fügen Sie hier Texte und Pausen zur gewählten Szene {props.sceneName} hinzu.
+                            Fügen Sie hier Texte und Pausen zur gewählten Szene <strong>{props.sceneName}</strong> hinzu.
                         </Grid>
-                        <Grid container justify="space-between">
-                            <Grid item xs={12} md={6}>
-                                <Grid item>
-                                    <Typography variant="h5">Elemente</Typography>
-                                </Grid>
-                                {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index, audioElement))}
-                                <Grid item>
-                                    <Typography variant="h6">
-                                        Neuer Text-Abschnitt
-                                    </Typography>
-                                </Grid>
-                                <Grid item>
-                                    <TextField error={newPause === undefined || newPause < 0} label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
-                                </Grid>
-                                <Grid item className={classes.blockableButtonPrimary}>
-                                    <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === ""} onClick={addNewText}>
-                                        Neuen Abschnitt hinzufügen
-                                    </Button>
-                                </Grid>
+                        <Grid container justify="space-between" className={classes.elementLargeMargin}>
+
+                            <Grid item xs={12} md={5}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.editDialogListFrame}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h5">Elemente</Typography>
+                                    </Grid>
+                                    {audioElements.map((audioElement: AudioElement, index: number) => renderEditElement(index, audioElement))}
+                                    <Grid item xs={12}>
+                                        <Divider  className={classes.greyDivider} />
+                                    </Grid>
+                                    <Grid item xs={12} className={classes.elementLargeMargin}>
+                                        <Typography variant="h6">
+                                            Neuer Text-Abschnitt
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <TextField fullWidth error={newPause === undefined || newPause < 0} label="Pause vor nächstem Text in ms" type="number" value={newPause} onChange={event => setNewPause(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                                    </Grid>
+                                    <Grid item xs={12} className={classes.blockableButtonPrimaryMarginTop}>
+                                        <Button variant="contained" color="primary" disabled={newPause === undefined || newPause < 0 || audioElements[audioElements.length - 1].text === ""} onClick={addNewText}>
+                                            Neuen Abschnitt hinzufügen
+                                        </Button>
+                                    </Grid>
+                                </Box>
                             </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Grid item>
-                                    <Typography variant="h5">
-                                        API-Daten
-                                    </Typography>
-                                </Grid>
-                                <Grid container>
-                                    {props.minimalInfoproviders.map((minimalInfoprovider: MinimalInfoProvider, infoproviderIndex: number) => renderInfoproviderData(minimalInfoprovider.dataSources, minimalInfoprovider.infoproviderName, infoproviderIndex))}
-                                </Grid>
+                            <Grid item container xs={12} md={6}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.editDialogListFrame}>
+                                    <Grid item xs={12}>
+                                        <Typography variant="h5">
+                                            API-Daten
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item container xs={12}>
+                                        {props.minimalInfoproviders.map((minimalInfoprovider: MinimalInfoProvider, infoproviderIndex: number) => renderInfoproviderData(minimalInfoprovider.dataSources, minimalInfoprovider.infoproviderName, infoproviderIndex))}
+                                    </Grid>
+                                </Box>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -275,8 +307,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button variant="contained" color="primary" disabled={isInvalidCombination()} onClick={saveNewAudio}>
+                        <Grid item className={classes.blockableButtonSecondary}>
+                            <Button variant="contained" color="secondary" disabled={isInvalidCombination()} onClick={saveNewAudio}>
                                 Speichern
                             </Button>
                         </Grid>
@@ -314,8 +346,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button variant="contained" color="primary" disabled={selectedInterval === undefined || selectedInterval < 0} onClick={() => insertHistorizedData()}>
+                        <Grid item className={classes.blockableButtonSecondary}>
+                            <Button variant="contained" color="secondary" disabled={selectedInterval === undefined || selectedInterval < 0} onClick={() => insertHistorizedData()}>
                                 Speichern
                             </Button>
                         </Grid>

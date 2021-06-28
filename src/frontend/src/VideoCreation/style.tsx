@@ -5,6 +5,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         elementLargeMargin: {
             marginTop: "10px",
         },
+        elementExtraLargeMargin: {
+            marginTop: "20px"
+        },
         redDeleteIcon: {
             color: theme.palette.error.main,
             '&:hover': {
@@ -12,6 +15,13 @@ export const useStyles = makeStyles((theme: Theme) =>
             }
         },
         blockableButtonPrimary: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.primary.main,
+                opacity: "75%"
+            }
+        },
+        blockableButtonPrimaryMarginTop: {
+            marginTop: "10px",
             '& .Mui-disabled': {
                 backgroundColor: theme.palette.primary.main,
                 opacity: "75%"
@@ -54,13 +64,37 @@ export const useStyles = makeStyles((theme: Theme) =>
             overflow: 'auto',
             overflowX: "hidden",
             marginTop: "20px",
-            marginBottom: "10px"
+            marginBottom: "10px",
+        },
+        editDialogListFrame: {
+            width: "100%",
+            height: 400,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "20px",
+            marginBottom: "10px",
+            margin: "auto",
+            padding: "20px"
         },
         elementSmallMargin: {
             marginTop: "5px"
         },
         fixedWarningContainer: {
             height: "65px"
+        },
+        greyDivider: {
+            marginTop: "20px",
+            height: "3px",
+            backgroundColor: "grey"
+        },
+        overflowButtonText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "left"
+        },
+        categoryText: {
+            fontSize: "1.1rem",
+            fontWeight: "bold"
         }
     }),
 );

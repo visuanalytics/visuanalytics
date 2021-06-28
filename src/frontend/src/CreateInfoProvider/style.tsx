@@ -95,6 +95,6 @@ export const useStyles = makeStyles((theme: Theme) =>
             overflowX: "hidden",
             marginTop: "20px",
             marginBottom: "10px"
-        },
+        }
     }),
 );
