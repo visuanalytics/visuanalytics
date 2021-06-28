@@ -674,6 +674,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 transform: [],
                 storing: [],
                 formulas: dataSource.customData,
+                calculates: [],
+                replacements: [],
                 schedule: {
                     type: dataSource.schedule.type,
                     time: dataSource.schedule.time,
@@ -683,6 +685,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 },
                 selected_data: dataSource.selectedData,
                 historized_data: dataSource.historizedData,
+                arrayProcessingsList: [],
+                stringReplacementList: []
             })
         });
         return backendDataSources;

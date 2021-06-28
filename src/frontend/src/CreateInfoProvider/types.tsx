@@ -31,6 +31,31 @@ export type DataSource = {
     stringReplacementList: Array<StringReplacementData>;
 }
 
+/**
+ * Type that represents an array processing in the backend,
+ * called "Calculate" there.
+ */
+export type BackendCalculate = {
+    type: string;
+    action: string;
+    keys: Array<String>;
+    new_keys: Array<String>;
+    decimal: number;
+}
+
+/**
+ * Type that represents a string replacement in the backend,
+ * called "Replacement" there.
+ */
+export type BackendReplacement = {
+    type: string;
+    keys: Array<String>;
+    new_keys: Array<String>;
+    old_value: string;
+    new_value: string;
+    count: number;
+}
+
 //data Source as sent to and returned from the backend
 export type BackendDataSource = {
     datasource_name: string;
@@ -46,7 +71,9 @@ export type BackendDataSource = {
     // TODO use real data type for arrays (Backend needs to provide information)
     transform: Array<any>;
     storing: Array<any>;
-    formulas: Array<FormelObj>
+    formulas: Array<FormelObj>,
+    calculates: Array<BackendCalculate>;
+    replacements: Array<BackendReplacement>;
     schedule: {
         type: string;
         time: string;
@@ -56,6 +83,8 @@ export type BackendDataSource = {
     };
     selected_data: Array<SelectedDataItem>;
     historized_data: Array<string>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
 
 //type/format of infoproviders returned by the backend

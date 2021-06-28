@@ -18,7 +18,14 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram, Plots, BackendDataSource, ArrayProcessingData, StringReplacementData
+    uniqueId,
+    Diagram,
+    Plots,
+    BackendDataSource,
+    ArrayProcessingData,
+    StringReplacementData,
+    BackendCalculate,
+    BackendReplacement
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
@@ -406,8 +413,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const handleError = (err: Error) => {
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
-
-
+    
     //TODO: find out why this method is called too often
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
@@ -428,6 +434,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
+                    calculates: createCalculates(dataSource.arrayProcessingsList),
+                    replacements: createReplacements(dataSource.stringReplacementList),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
@@ -437,6 +445,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     },
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
+                    arrayProcessingsList: dataSource.arrayProcessingsList,
+                    stringReplacementList: dataSource.stringReplacementList
                 })
             }
         });

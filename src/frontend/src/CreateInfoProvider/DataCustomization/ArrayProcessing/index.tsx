@@ -77,8 +77,8 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     //TODO: consult backend to find out which operations are possible
     //list of all available operations pair of internal name (should be unique) and display name
     const operations: Array<Operation> = [
-        {name: "sum", displayName: "Summe"},
-        {name: "avg", displayName: "Durchschnitt"},
+        //{name: "sum", displayName: "Summe"},
+        {name: "mean", displayName: "Mittelwert"},
         {name: "max", displayName: "Maximum"},
         {name: "min", displayName: "Minimum"},
     ]
