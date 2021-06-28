@@ -109,7 +109,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                         //the array contains an object - search for all primitive numeric values in it  (subobjects are also supported)
                         listItem.value.forEach((value: ListItemRepresentation) => {
                             if(value.value === "Zahl" || value.value === "Gleitkommazahl")
-                                compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                                compatibleArraysList.push((value.parentKeyName === "" ? value.keyName : value.parentKeyName + "|" + value.keyName).replace("|0", ""));
                             else if((!value.arrayRep) && Array.isArray(value.value)) {
                                 //search through variables but only care about primitives and subobjects, not arrays
                                 compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(value.value, true));
