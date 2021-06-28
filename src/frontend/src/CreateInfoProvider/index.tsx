@@ -5,7 +5,6 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 import {TypeSelection} from "./TypeSelection";
 import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
-import {CreateCustomData} from "./DataCustomization/CreateCustomData";
 import Container from "@material-ui/core/Container";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -19,7 +18,7 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram, Plots, BackendDataSource
+    uniqueId, Diagram, Plots, BackendDataSource, ArrayProcessingData
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
@@ -128,6 +127,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [dataSourcesKeys, setDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+    //list of all array processings defined
+    const [arrayProcessingsList, setArrayProcessingsList] = React.useState<Array<ArrayProcessingData>>([]);
+
 
 
     /**
@@ -256,6 +258,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         setDataSources(sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
         //listItems
         setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        //arrayProcessingsList
+        setArrayProcessingsList(sessionStorage.getItem("arrayProcessingsList-" + uniqueId) === null ? new Array<ArrayProcessingData>() : JSON.parse(sessionStorage.getItem("arrayProcessingsList-" + uniqueId)!));
 
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
@@ -337,6 +341,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
     }, [listItems])
+    // Store arrayProcessingsList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("arrayProcessingsList-" + uniqueId, JSON.stringify(arrayProcessingsList));
+    }, [arrayProcessingsList])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -358,6 +366,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
+        sessionStorage.removeItem("arrayProcessingsList-" + uniqueId);
     }
 
 
@@ -759,6 +768,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
+                        arrayProcessingsList={arrayProcessingsList}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
                     />
                 )
             case 4:
