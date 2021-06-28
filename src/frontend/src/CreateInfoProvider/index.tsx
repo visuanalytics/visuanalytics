@@ -140,7 +140,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [stringReplacementList, setStringReplacementList] = React.useState<Array<StringReplacementData>>([]);
 
 
-
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage

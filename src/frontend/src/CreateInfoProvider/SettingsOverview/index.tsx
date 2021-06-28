@@ -19,7 +19,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {ScheduleTypeTable} from "./ScheduleTypeTable";
-
 import {
     ArrayProcessingData,
     DataSource,
@@ -31,7 +30,6 @@ import {
     uniqueId
 } from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
-import * as Process from "process";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface SettingsOverviewProps {

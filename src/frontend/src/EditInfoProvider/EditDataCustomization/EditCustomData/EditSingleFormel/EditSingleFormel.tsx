@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import {FormelObj} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
+<<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 <<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 import {calculationToString} from "../../helpermethods";
 import {formelContext} from "../../types";
@@ -15,11 +16,16 @@ import {DataSource} from "../../../CreateInfoProvider/types";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {checkFindOnlyNumbers} from "../../../CreateInfoProvider/helpermethods";
 =======
+=======
+>>>>>>> bdb3fe8a78e3a7118fa31d7b048e29ce817c63bf:src/frontend/src/EditInfoProvider/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 import {calculationToString} from "../../../helpermethods";
 import {FormelContext} from "../../../types";
 import {DataSource} from "../../../../CreateInfoProvider/types";
 import {useCallFetch} from "../../../../Hooks/useCallFetch";
+<<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 >>>>>>> 92755a74 (integrated arrayprocessing and string replacement in editing by inserting new wrapper component for data customization step):src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
+=======
+>>>>>>> bdb3fe8a78e3a7118fa31d7b048e29ce817c63bf:src/frontend/src/EditInfoProvider/EditCustomData/EditSingleFormel/EditSingleFormel.tsx
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
