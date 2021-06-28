@@ -200,3 +200,12 @@ export type Operation = {
     name: string;
     displayName: string;
 }
+
+
+/* StringProcessings */
+export type StringReplacementData = {
+    name: string;
+    string: string;
+    replace: string;
+    with: string;
+}
