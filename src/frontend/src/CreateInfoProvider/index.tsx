@@ -781,6 +781,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         backHandler={handleBack}
                         selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
+                        arrayProcessingsList={arrayProcessingsList}
+                        stringReplacementList={stringReplacementList}
                         historizedData={historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={schedule}
