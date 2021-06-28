@@ -202,6 +202,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 leftParenFlag: false,
                 rightParenFlag: false
             } : JSON.parse(sessionStorage.getItem("formelInformation-" + uniqueId)!));
+            //historySelectionStep
+            setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 0));
+            //dataCustomizationStep
+            setDataCustomizationStep(Number(sessionStorage.getItem("dataCustomizationStep-" + uniqueId) || 0));
 
             //create default values in the key map for all dataSources
             //necessary to not run into undefined values
@@ -253,6 +257,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("formelInformation-" + uniqueId, JSON.stringify(formelInformation));
     }, [formelInformation])
+    //store historySelectionStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
+    }, [historySelectionStep])
+    //store dataCustomizationStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
+    }, [dataCustomizationStep])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -265,6 +277,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("infoProvDiagrams-" + uniqueId);
         sessionStorage.removeItem("selectedDataSource-" + uniqueId);
         sessionStorage.removeItem("formelInformation-" + uniqueId);
+        sessionStorage.removeItem("historySelectionStep-" + uniqueId);
+        sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
         sessionStorage.removeItem("firstEntering-" + uniqueId);
         sessionStorage.removeItem("historizedObjects-" + uniqueId);
         sessionStorage.removeItem("diagramSource-" + uniqueId);
