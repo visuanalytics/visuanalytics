@@ -27,7 +27,7 @@ import {
     BackendCalculate,
     BackendReplacement
 } from "./types";
-import {extractKeysFromSelection} from "./helpermethods";
+import {createCalculates, createReplacements, extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
 import {DiagramCreation} from "./DiagramCreation";
@@ -413,92 +413,12 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
-    /**
-     * Method that transforms a list of array processings into a list of calculate
-     * objects as they are needed by the backend
-     * @param processings The list of array processings to be transformed
-     */
-    const createCalculates = (processings: Array<ArrayProcessingData>) => {
-        const calculates: Array<BackendCalculate> = [];
-        const meanNames: Array<string> = [];
-        const meanReplaceNames: Array<string> = [];
-        const minNames: Array<string> = [];
-        const minReplaceNames: Array<string> = [];
-        const maxNames: Array<string> = [];
-        const maxReplaceNames: Array<string> = [];
-        processings.forEach((processing) => {
-            switch(processing.operation.name) {
-                case "mean": {
-                    meanNames.push("_loop|" + processing.array);
-                    meanReplaceNames.push("_loop|" + processing.name);
-                    break;
-                }
-                case "min": {
-                    minNames.push("_loop|" + processing.array);
-                    minReplaceNames.push("_loop|" + processing.name);
-                    break;
-                }
-                case "max": {
-                    maxNames.push("_loop|" + processing.array);
-                    maxReplaceNames.push("_loop|" + processing.name);
-                }
-            }
-        })
-        //add the object for the mean calculations
-        if(meanNames.length > 0) {
-            calculates.push({
-                type: "calculate",
-                action: "mean",
-                keys: meanNames,
-                new_keys: meanReplaceNames,
-                decimal: 2
-            });
-        }
-        //add the object for the min calculations
-        if(minNames.length > 0) {
-            calculates.push({
-                type: "calculate",
-                action: "mean",
-                keys: minNames,
-                new_keys: minReplaceNames,
-                decimal: 2
-            });
-        }
-        //add the object for the max calculations
-        if(maxNames.length > 0) {
-            calculates.push({
-                type: "calculate",
-                action: "mean",
-                keys: maxNames,
-                new_keys: maxReplaceNames,
-                decimal: 2
-            });
-        }
-        return calculates;
-    }
-
-    /**
-     * Method that transforms a list of string replacements into a list of replacement
-     * objects as they are needed by the backend
-     * @param replacements The list of string replacements to be transformed
-     */
-    const createReplacements = (replacements: Array<StringReplacementData>) => {
-        const replacementObjects: Array<BackendReplacement> = [];
-        replacements.forEach((replacement) => {
-            replacementObjects.push({
-                type: "replace",
-                keys: [replacement.string],
-                new_keys: [replacement.name],
-                old_value: replacement.replace,
-                new_value: replacement.with,
-                count: -1
-            });
-        })
-        return replacementObjects;
-    }
-
 
     //TODO: find out why this method is called too often
+    /**
+     * Method that creates the array of dataSources in the backend format for
+     * the existing data sources.
+     */
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
@@ -537,17 +457,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         return backendDataSources;
     }
 
-    /*type BackendDiagram = {
-        type: string;
-        diagram_config: {
-            type: string;
-            name: string;
-            infoprovider: string;
-            sourceType: string;
-            plots: Array<Plots>;
-        }
-    }*/
-
+    /**
+     * Method that creates an array of diagrams in the backend format
+     * for the existing diagrams.
+     */
     const createBackendDiagrams = () => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};

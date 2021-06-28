@@ -1,10 +1,11 @@
 import {
+    ArrayProcessingData, BackendCalculate, BackendReplacement,
     DataSource,
     DataSourceKey,
     Diagram,
     InfoProviderFromBackend,
     ListItemRepresentation,
-    SelectedDataItem
+    SelectedDataItem, StringReplacementData
 } from "./types";
 
 /* CreateInfoProvider */
@@ -16,6 +17,91 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     const keyArray = new Array<string>();
     selectedData.forEach((item) => keyArray.push(item.key));
     return keyArray;
+}
+
+
+/**
+ * Method that transforms a list of array processings into a list of calculate
+ * objects as they are needed by the backend
+ * @param processings The list of array processings to be transformed
+ */
+export const createCalculates = (processings: Array<ArrayProcessingData>) => {
+    const calculates: Array<BackendCalculate> = [];
+    const meanNames: Array<string> = [];
+    const meanReplaceNames: Array<string> = [];
+    const minNames: Array<string> = [];
+    const minReplaceNames: Array<string> = [];
+    const maxNames: Array<string> = [];
+    const maxReplaceNames: Array<string> = [];
+    processings.forEach((processing) => {
+        switch(processing.operation.name) {
+            case "mean": {
+                meanNames.push("_loop|" + processing.array);
+                meanReplaceNames.push("_loop|" + processing.name);
+                break;
+            }
+            case "min": {
+                minNames.push("_loop|" + processing.array);
+                minReplaceNames.push("_loop|" + processing.name);
+                break;
+            }
+            case "max": {
+                maxNames.push("_loop|" + processing.array);
+                maxReplaceNames.push("_loop|" + processing.name);
+            }
+        }
+    })
+    //add the object for the mean calculations
+    if(meanNames.length > 0) {
+        calculates.push({
+            type: "calculate",
+            action: "mean",
+            keys: meanNames,
+            new_keys: meanReplaceNames,
+            decimal: 2
+        });
+    }
+    //add the object for the min calculations
+    if(minNames.length > 0) {
+        calculates.push({
+            type: "calculate",
+            action: "mean",
+            keys: minNames,
+            new_keys: minReplaceNames,
+            decimal: 2
+        });
+    }
+    //add the object for the max calculations
+    if(maxNames.length > 0) {
+        calculates.push({
+            type: "calculate",
+            action: "mean",
+            keys: maxNames,
+            new_keys: maxReplaceNames,
+            decimal: 2
+        });
+    }
+    return calculates;
+}
+
+/**
+ * Method that transforms a list of string replacements into a list of replacement
+ * objects as they are needed by the backend
+ * @param replacements The list of string replacements to be transformed
+ */
+export const createReplacements = (replacements: Array<StringReplacementData>) => {
+    const replacementObjects: Array<BackendReplacement> = [];
+    replacements.forEach((replacement) => {
+        replacementObjects.push({
+            type: "replace",
+            keys: [replacement.string],
+            new_keys: [replacement.name],
+            old_value: replacement.replace,
+            new_value: replacement.with,
+            count: -1
+        });
+    })
+    return replacementObjects;
 }
 
 
@@ -209,8 +295,8 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 interval: backendDataSource.schedule.time_interval,
             },
             listItems: new Array<ListItemRepresentation>(),
-            arrayProcessingsList: [],
-            stringReplacementList: []
+            arrayProcessingsList: backendDataSource.arrayProcessingsList,
+            stringReplacementList: backendDataSource.stringReplacementList
         });
         //set the api keys in the map
         let apiKeyInput1: string;
