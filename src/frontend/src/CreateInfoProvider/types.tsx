@@ -26,7 +26,9 @@ export type DataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
-    listItems: Array<ListItemRepresentation>
+    listItems: Array<ListItemRepresentation>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
 
 //data Source as sent to and returned from the backend

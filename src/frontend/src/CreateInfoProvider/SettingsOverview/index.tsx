@@ -22,15 +22,17 @@ import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelO
 import {ScheduleTypeTable} from "./ScheduleTypeTable";
 
 import {
+    ArrayProcessingData,
     DataSource,
     DataSourceKey,
     Diagram,
     ListItemRepresentation,
     Schedule,
-    SelectedDataItem,
+    SelectedDataItem, StringReplacementData,
     uniqueId
 } from "../types";
 import {extractKeysFromSelection} from "../helpermethods";
+import * as Process from "process";
 
 interface SettingsOverviewProps {
     continueHandler: () => void;
@@ -58,6 +60,8 @@ interface SettingsOverviewProps {
     setDiagrams: (array: Array<Diagram>) => void;
     dataSourcesKeys: Map<string, DataSourceKey>;
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
+    setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
 }
 
 /**
@@ -196,6 +200,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         sessionStorage.removeItem("schedule-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
+        sessionStorage.removeItem("arrayProcessingsList-" + uniqueId);
+        sessionStorage.removeItem("stringReplacementList-" + uniqueId);
 
         // Reset the states that need to be cleaned
         props.setApiName("");
@@ -211,6 +217,8 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
         props.setListItems(new Array<ListItemRepresentation>());
+        props.setArrayProcessingsList(new Array<ArrayProcessingData>());
+        props.setStringReplacementList(new Array<StringReplacementData>());
     }
 
     /**

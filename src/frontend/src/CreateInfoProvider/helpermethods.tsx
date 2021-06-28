@@ -209,6 +209,7 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
     return onlyNumbers;
 }
 
+//TODO: add the string replacement and array processings here
 /**
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation
  * @param data
@@ -237,6 +238,8 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 interval: backendDataSource.schedule.time_interval,
             },
             listItems: new Array<ListItemRepresentation>(),
+            arrayProcessingsList: [],
+            stringReplacementList: []
         });
         //set the api keys in the map
         let apiKeyInput1: string;
