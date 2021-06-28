@@ -12,7 +12,7 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {Diagram, ListItemRepresentation} from "../../types";
+import {ArrayProcessingData, Diagram, ListItemRepresentation, Operation} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
@@ -20,6 +20,8 @@ interface ArrayProcessingProps {
     continueHandler: () => void;
     backHandler: () => void;
     reportError: (message: string) => void;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
     listItems: Array<ListItemRepresentation>;
     customData: Array<FormelObj>;
     setCustomData: (customData: Array<FormelObj>) => void;
@@ -63,8 +65,6 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
     const [selectedOperationIndex, setSelectedOperationIndex] = React.useState(-1);
     //list of all arrays available
     const [availableArrays, setAvailableArrays] = React.useState<Array<string>>(["array1", "array2", "array3"]);
-    //list of all created processing pairs
-    const [processingsList, setProcessingsList] = React.useState<Array<ArrayProcessing>>([]);
     //index of the item currently to be removed
     const [currentRemoveIndex, setCurrentRemoveIndex] = React.useState(-1);
     //true when the dialog for confirming removal of processings is open
@@ -72,16 +72,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
 
 
 
-    type ArrayProcessing = {
-        name: string;
-        array: string;
-        operation: Operation;
-    }
 
-    type Operation = {
-        name: string;
-        displayName: string;
-    }
 
     //TODO: consult backend to find out which operations are possible
     //list of all available operations pair of internal name (should be unique) and display name
@@ -152,8 +143,8 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      */
     const checkNameDuplicate = (name: string) => {
         //check all processings
-        for (let index = 0; index < processingsList.length; index++) {
-            if(name === processingsList[index].name) return true;
+        for (let index = 0; index < props.arrayProcessingsList.length; index++) {
+            if(name === props.arrayProcessingsList[index].name) return true;
         }
         //check api data names
         if(getListItemsNames(props.listItems).includes(name)) return true;
@@ -175,13 +166,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
             return;
         }
 
-        const arCopy = processingsList.slice();
+        const arCopy = props.arrayProcessingsList.slice();
         arCopy.push({
             name: name,
             array: availableArrays[selectedArrayIndex],
             operation: operations[selectedOperationIndex]
         })
-        setProcessingsList(arCopy);
+        props.setArrayProcessingsList(arCopy);
         setName("");
         setSelectedArrayIndex(-1);
         setSelectedOperationIndex(-1);
@@ -233,7 +224,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         //Clear lists - normally should be empty but it makes the method work on its own safer
         formulasToRemove.current = [];
         diagramsToRemove.current = [];
-        if(checkDeleteDependencies(processingsList[index].name)) {
+        if(checkDeleteDependencies(props.arrayProcessingsList[index].name)) {
             setCurrentRemoveIndex(index);
             setRemoveDialogOpen(true);
             return;
@@ -248,9 +239,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      */
     const removeProcessing = (index: number) => {
         //remove the element from historizedData
-        if(props.historizedData.includes(processingsList[index].name)) {
+        if(props.historizedData.includes(props.arrayProcessingsList[index].name)) {
             props.setHistorizedData(props.historizedData.filter((data) => {
-                return data !== processingsList[index].name;
+                return data !== props.arrayProcessingsList[index].name;
             }))
         }
         //remove the formulas using the historizedData
@@ -269,9 +260,9 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         formulasToRemove.current = [];
         diagramsToRemove.current = [];
         //remove the processing from the list of processings
-        const arCopy = processingsList.slice();
+        const arCopy = props.arrayProcessingsList.slice();
         arCopy.splice(index, 1);
-        setProcessingsList(arCopy);
+        props.setArrayProcessingsList(arCopy);
     }
 
     /**
@@ -330,7 +321,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * @param processing The object of the processing to be displayed.
      * @param index The index of the entry in the list.
      */
-    const renderProcessingsListEntry = (processing: ArrayProcessing, index: number) => {
+    const renderProcessingsListEntry = (processing: ArrayProcessingData, index: number) => {
         return (
             <React.Fragment key={processing.name}>
                 <Grid item container xs={12}>
@@ -412,7 +403,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 <Grid item container xs={12} md={3}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                         <Grid item container xs={12}>
-                            {processingsList.map((processing, index) => renderProcessingsListEntry(processing, index))}
+                            {props.arrayProcessingsList.map((processing, index) => renderProcessingsListEntry(processing, index))}
                         </Grid>
                     </Box>
                 </Grid>
@@ -439,11 +430,11 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
             }} aria-labelledby="deleteDialog-title"
                     open={removeDialogOpen}>
                 <DialogTitle id="deleteDialog-title">
-                    Löschen von "{currentRemoveIndex >= 0 ? processingsList[currentRemoveIndex].name : ""}" bestätigen
+                    Löschen von "{currentRemoveIndex >= 0 ? props.arrayProcessingsList[currentRemoveIndex].name : ""}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
-                        Durch das Löschen von "{currentRemoveIndex >= 0 ? processingsList[currentRemoveIndex].name : ""}" müssen Formeln und/oder Diagramme gelöscht werden, die dieses nutzen.
+                        Durch das Löschen von "{currentRemoveIndex >= 0 ? props.arrayProcessingsList[currentRemoveIndex].name : ""}" müssen Formeln und/oder Diagramme gelöscht werden, die dieses nutzen.
                     </Typography>
                     <Typography gutterBottom>
                         {formulasToRemove.current.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.current.join(", ") : ""}

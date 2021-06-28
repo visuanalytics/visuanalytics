@@ -188,3 +188,15 @@ export type Plots = {
         };
     };
 }
+
+/* ArrayProcessings */
+export type ArrayProcessingData = {
+    name: string;
+    array: string;
+    operation: Operation;
+}
+
+export type Operation = {
+    name: string;
+    displayName: string;
+}
