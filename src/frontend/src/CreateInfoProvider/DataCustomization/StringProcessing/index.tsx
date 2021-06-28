@@ -13,7 +13,7 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {Diagram, ListItemRepresentation} from "../../types";
+import {Diagram, ListItemRepresentation, StringReplacementData} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
@@ -21,6 +21,8 @@ interface StringProcessingProps {
     continueHandler: () => void;
     backHandler: () => void;
     reportError: (message: string) => void;
+    stringReplacementList: Array<StringReplacementData>;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
     listItems: Array<ListItemRepresentation>;
     customData: Array<FormelObj>;
     setCustomData: (customData: Array<FormelObj>) => void;
@@ -62,15 +64,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     //list of all strings available
     const [availableStrings, setAvailableStrings] = React.useState<Array<string>>(["string_1", "string_2", "string_3"]);
     //list of all created processing pairs
-    const [replacementList, setReplacementList] = React.useState<Array<StringReplacement>>([]);
 
-
-    type StringReplacement = {
-        name: string;
-        string: string;
-        replace: string;
-        with: string;
-    }
 
     /**
      * Method that calculates all available strings for the list generation.
@@ -127,8 +121,8 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
      */
     const checkNameDuplicate = (name: string) => {
         //check all processings
-        for (let index = 0; index < replacementList.length; index++) {
-            if(name === replacementList[index].name) return true;
+        for (let index = 0; index < props.stringReplacementList.length; index++) {
+            if(name === props.stringReplacementList[index].name) return true;
         }
         //check api data names
         if(getListItemsNames(props.listItems).includes(name)) return true;
@@ -150,14 +144,14 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
             return;
         }
 
-        const arCopy = replacementList.slice();
+        const arCopy = props.stringReplacementList.slice();
         arCopy.push({
             name: name,
             string: availableStrings[selectedStringIndex],
             replace: replaceString,
             with: withString
         })
-        setReplacementList(arCopy);
+        props.setStringReplacementList(arCopy);
         setName("");
         setSelectedStringIndex(-1);
         setReplaceString("");
@@ -172,15 +166,15 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
      */
     const removeReplacementHandler = (index: number) => {
         //remove the element from historizedData
-        if(props.historizedData.includes(replacementList[index].name)) {
+        if(props.historizedData.includes(props.stringReplacementList[index].name)) {
             props.setHistorizedData(props.historizedData.filter((data) => {
-                return data !== replacementList[index].name;
+                return data !== props.stringReplacementList[index].name;
             }))
         }
         //remove the processing from the list of replacements
-        const arCopy = replacementList.slice();
+        const arCopy = props.stringReplacementList.slice();
         arCopy.splice(index, 1);
-        setReplacementList(arCopy);
+        props.setStringReplacementList(arCopy);
     }
 
 
@@ -217,7 +211,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
      * @param replacement The object of the replacement to be displayed.
      * @param index The index of the entry in the list.
      */
-    const renderProcessingsListEntry = (replacement: StringReplacement, index: number) => {
+    const renderProcessingsListEntry = (replacement: StringReplacementData, index: number) => {
         return (
             <React.Fragment key={replacement.name}>
                 <Grid item container xs={12}>
@@ -313,7 +307,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                 <Grid item container xs={12} md={3}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
                         <Grid item container xs={12}>
-                            {replacementList.map((processing, index) => renderProcessingsListEntry(processing, index))}
+                            {props.stringReplacementList.map((processing, index) => renderProcessingsListEntry(processing, index))}
                         </Grid>
                     </Box>
                 </Grid>

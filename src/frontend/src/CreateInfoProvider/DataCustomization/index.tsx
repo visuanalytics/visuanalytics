@@ -1,5 +1,5 @@
 import React from "react";
-import {ArrayProcessingData, Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
+import {ArrayProcessingData, Diagram, ListItemRepresentation, SelectedDataItem, StringReplacementData} from "../types";
 import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {useStyles} from "../style";
 import {CreateCustomData} from "./CreateCustomData";
@@ -25,6 +25,8 @@ interface DataCustomizationProps {
     apiName: string;
     arrayProcessingsList: Array<ArrayProcessingData>
     setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    stringReplacementList: Array<StringReplacementData>;
+    setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
 }
 
 /**
@@ -83,6 +85,8 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         continueHandler={props.continueHandler}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
                         reportError={props.reportError}
+                        stringReplacementList={props.stringReplacementList}
+                        setStringReplacementList={props.setStringReplacementList}
                         listItems={props.listItems}
                         customData={props.customData}
                         setCustomData={props.setCustomData}

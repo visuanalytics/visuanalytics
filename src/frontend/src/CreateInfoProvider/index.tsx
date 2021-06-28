@@ -18,7 +18,7 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram, Plots, BackendDataSource, ArrayProcessingData
+    uniqueId, Diagram, Plots, BackendDataSource, ArrayProcessingData, StringReplacementData
 } from "./types";
 import {extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
@@ -129,6 +129,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
     //list of all array processings defined
     const [arrayProcessingsList, setArrayProcessingsList] = React.useState<Array<ArrayProcessingData>>([]);
+    //list of all string replacement processings defined
+    const [stringReplacementList, setStringReplacementList] = React.useState<Array<StringReplacementData>>([]);
 
 
 
@@ -260,6 +262,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
         //arrayProcessingsList
         setArrayProcessingsList(sessionStorage.getItem("arrayProcessingsList-" + uniqueId) === null ? new Array<ArrayProcessingData>() : JSON.parse(sessionStorage.getItem("arrayProcessingsList-" + uniqueId)!));
+        //stringReplacementList
+        setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId) === null ? new Array<StringReplacementData>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!));
 
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
@@ -345,6 +349,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("arrayProcessingsList-" + uniqueId, JSON.stringify(arrayProcessingsList));
     }, [arrayProcessingsList])
+    // Store stringReplacementList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("stringReplacementList-" + uniqueId, JSON.stringify(stringReplacementList));
+    }, [stringReplacementList])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -367,6 +375,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
         sessionStorage.removeItem("arrayProcessingsList-" + uniqueId);
+        sessionStorage.removeItem("stringReplacementList-" + uniqueId);
     }
 
 
@@ -770,6 +779,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         apiName={apiName}
                         arrayProcessingsList={arrayProcessingsList}
                         setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        stringReplacementList={stringReplacementList}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                     />
                 )
             case 4:
