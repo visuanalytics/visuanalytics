@@ -16,8 +16,9 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const classes = useStyles();
 
+    //saves all scenes
     const [scenes, setScenes] = React.useState(new Array<jsonRefScene>());
-
+    //all image-URLs
     const [previewImgList, setPreviewImgList] = React.useState(new Array<string>());
 
     const allScenes = React.useRef<Array<jsonRefScene>>([]);
@@ -44,11 +45,10 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     });
 
     /**
-     * Method to fetch all infoproviders from the backend.
+     * Method to fetch all scenes from the backend.
      * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
      * with useCallback in order to be used in useEffect.
      */
-
     const fetchAllScenes = React.useCallback(() => {
         let url = "/visuanalytics/scene/all"
         //if this variable is set, add it to the url
@@ -89,7 +89,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     }, []);
 
     /**
-     * The list of infoproviders is generated automatically when the component is shown.
+     * The list of scenes is generated automatically when the component is shown.
      */
     React.useEffect(() => {
             //console.log("Fetcher hook here")
@@ -102,13 +102,12 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
      * @param err the shown error
      */
     const handleErrorFetchAll = (err: Error) => {
-        //console.log('error');
         dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
     }
 
     /**
-     * Handles the success of the fetchAllInfoprovider()-method.
-     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * Handles the success of the fetchAllScenes()-method.
+     * The json from the response will be transformed to an array of jsonRefScenes and saved in Scenes and allScenes.
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchAll = (jsonData: any) => {
@@ -124,8 +123,16 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         setScenes(data);
     }
 
+    /**
+     * The method is used to fetch the preview-image at the given id. The answer will be transformed via blob() and shows
+     * the right image-path.
+     * @param id the id to find the right image
+     */
     const fetchPreviewImgById = (id: number) => {
         //TODO: implement right route and cut "- 1"
+        //"id - 1" is used here because the scene-id starts by 1 and the images-id ist starting by 0.
+        //in the end the scene-id and the images-id will match
+        //the right route has to be implemented in the backend
         console.log(id + " in fetchPreviewImgById");
         let url = "/visuanalytics/image/" + (id - 1)
         //if this variable is set, add it to the url
@@ -157,16 +164,27 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         }).finally(() => clearTimeout(timer));
     }
 
+    /**
+     * The success-handle of fetchPreviewImgById(). The URL will be saved in previewImgURLs.
+     * @param data the answer from fetchPreviewImgById()
+     */
     const handleFetchImageByIdSuccess = (data: any) => {
         scenePreviewImgURLs.current.push(URL.createObjectURL(data));
 
         fetchPreviewImages();
     }
 
+    /**
+     * The error-handler of fetchPreviewImgById(). The Error will be shown to the user.
+     * @param err the error form fetchPreviewImgById()
+     */
     const handleFetchImageByIdError = (err: Error) => {
         console.log("Fehler: " + err)
     }
 
+    /**
+     * This method will call fetchPreviewImgById() for the first element of allScenes.
+     */
     const fetchPreviewImages = () => {
         if (allScenes.current.length === 0) {
             setPreviewImgList(scenePreviewImgURLs.current);
@@ -182,7 +200,13 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         }
     }
 
+    /**
+     * this method is used to set currentScene and currentImg. These are used to display right information
+     * in the detailDialog
+     * @param data the jsonRefScene-Object that should be set to current.
+     */
     const setCurrent = (data: jsonRefScene) => {
+        //TODO: implement method to find the right preview-image for the given SceneId
         setCurrentScene(data);
         setCurrentImg(previewImgList[data.scene_id - 1]);
     }
