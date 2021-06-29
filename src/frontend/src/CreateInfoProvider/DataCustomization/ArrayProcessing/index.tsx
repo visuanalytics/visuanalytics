@@ -45,9 +45,6 @@ DONE:
  9: Alle kompatiblen Arrays beim Laden berechnen - numerische Arrays, vielleicht auch alle numerischen Attribute aus Objekten in Arrays
 TODO:
 10: Design-Verbesserungen
-
-
-
  */
 
 /**
@@ -95,9 +92,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
         listItems.forEach((listItem) => {
             //check if the search is for arrays or only primitive values because its a recursive search inside an object in array
             if(noArray) {
-                //only search for primitive numeric values
+                //only search for primitive numeric values and objects
                 if(!listItem.arrayRep && !Array.isArray(listItem.value) && (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl"))
                     compatibleArraysList.push((listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName).replace("|0", ""));
+                else if(!listItem.arrayRep && Array.isArray(listItem.value)) {
+                    //the element is an object, its children need to be searched through - dont check arrays in this search
+                    compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true));
+                }
             } else {
                 //check if it is a primative array containing
                 if(listItem.arrayRep) {

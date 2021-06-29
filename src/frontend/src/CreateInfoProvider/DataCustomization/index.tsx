@@ -33,8 +33,8 @@ interface DataCustomizationProps {
  * Wrapper component for the three steps of data customization: Array processing, formula creation, string processing.
  */
 export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
-    const classes = useStyles();
 
+    const classes = useStyles();
 
     /**
      * Method that selects the contents to be displayed based on the current step.

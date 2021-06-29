@@ -63,8 +63,6 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     const [withString, setWithString] = React.useState("");
     //list of all strings available
     const [availableStrings, setAvailableStrings] = React.useState<Array<string>>(["string_1", "string_2", "string_3"]);
-    //list of all created processing pairs
-
 
     /**
      * Method that calculates all available strings for the list generation.
@@ -76,9 +74,11 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
         listItems.forEach((listItem) => {
             if(noArray) {
-                //only search for primitive numeric values
+                //only search for primitive string values and objects
                 if(!listItem.arrayRep && !Array.isArray(listItem.value) && listItem.value === "Text")
                     availableStrings.push(listItem.parentKeyName === "" ? listItem.keyName : listItem.parentKeyName + "|" + listItem.keyName);
+                else if(!listItem.arrayRep && Array.isArray(listItem.value))
+                    availableStrings = availableStrings.concat(getAvailableStrings(listItem.value, true));
             } else {
                 //check if it is an array
                 if(listItem.arrayRep) {
