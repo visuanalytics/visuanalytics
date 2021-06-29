@@ -511,137 +511,135 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const localX: number = local.x;
         const localY: number = local.y;
 
-        if (selectedType === "") {
-            return;
-        } else if (selectedType === "Circle") {
-            const nextColor = Konva.Util.getRandomColor();
-            const item: CustomCircle = {
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                radius: 50,
-                id: 'circle-' + itemCounter.toString(),
-                color: nextColor,
-                width: 100,
-                height: 100,
-                rotation: 0,
-                baseWidth: 100,
-                baseHeight: 100,
-                scaleX: 1,
-                scaleY: 1,
+        switch (selectedType) {
+            case "":
+                return;
+            case "Circle": {
+                let nextColor = Konva.Util.getRandomColor();
+                const item: CustomCircle = {
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    radius: 50,
+                    id: 'circle-' + itemCounter.toString(),
+                    color: nextColor,
+                    width: 100,
+                    height: 100,
+                    rotation: 0,
+                    baseWidth: 100,
+                    baseHeight: 100,
+                    scaleX: 1,
+                    scaleY: 1,
 
+                }
+                items.push(item);
+                setCurrentItemColor(nextColor);
+                incrementCounterResetType();
+                return;
             }
-            items.push(item);
-            setCurrentItemColor(nextColor);
+            case "Rectangle": {
+                let nextColor = Konva.Util.getRandomColor();
+                items.push({
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    width: 100,
+                    height: 100,
+                    id: 'rect-' + itemCounter.toString(),
+                    color: nextColor,
+                    rotation: 0,
+                    baseWidth: 100,
+                    baseHeight: 100,
+                    scaleX: 1,
+                    scaleY: 1,
 
-            incrementCounterResetType();
-            return;
+                } as CustomRectangle);
+                setCurrentItemColor(nextColor);
+                incrementCounterResetType();
+                return;
+            }
 
-        } else if (selectedType === "Rectangle") {
-            const nextColor = Konva.Util.getRandomColor();
-            items.push({
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                width: 100,
-                height: 100,
-                id: 'rect-' + itemCounter.toString(),
-                color: nextColor,
-                rotation: 0,
-                baseWidth: 100,
-                baseHeight: 100,
-                scaleX: 1,
-                scaleY: 1,
+            case "Line": {
+                items.push({
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    id: 'line-' + itemCounter.toString(),
+                    color: "black",
+                    strokeWidth: 10,
+                    rotation: 0,
+                    width: 100,
+                    height: 100,
+                    baseWidth: 100,
+                    baseHeight: 100,
+                    scaleX: 1,
+                    scaleY: 1,
 
-            } as CustomRectangle);
-            setCurrentItemColor(nextColor);
-            incrementCounterResetType();
+                } as CustomLine);
+                incrementCounterResetType();
+                return;
+            }
 
-            return;
-        } else if (selectedType === "Line") {
-            items.push({
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                id: 'line-' + itemCounter.toString(),
-                color: "black",
-                strokeWidth: 10,
-                rotation: 0,
-                width: 100,
-                height: 100,
-                baseWidth: 100,
-                baseHeight: 100,
-                scaleX: 1,
-                scaleY: 1,
+            case "Star": {
+                let nextColor = Konva.Util.getRandomColor();
+                items.push({
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    numPoints: 5,
+                    id: 'star-' + itemCounter.toString(),
+                    color: nextColor,
+                    rotation: 0,
+                    width: 200,
+                    height: 100,
+                    baseWidth: 200,
+                    baseHeight: 100,
+                    scaleX: 1,
+                    scaleY: 1,
 
-            } as CustomLine);
-            incrementCounterResetType();
+                } as CustomStar);
+                setCurrentItemColor(nextColor);
+                incrementCounterResetType();
+                return;
+            }
+            case "Text": {
+                items.push({
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    id: 'text-' + itemCounter.toString(),
+                    textContent: currentTextContent,
+                    width: currentTextWidth,
+                    rotation: 0,
+                    fontFamily: currentFontFamily,
+                    fontSize: currentFontSize,
+                    color: currentFontColor,
+                    height: 20,
+                    padding: 2,
+                    currentlyRendered: true,
+                    baseWidth: 100,
+                    baseHeight: 100,
+                    scaleX: 1,
+                    scaleY: 1,
+                } as CustomText);
+                incrementCounterResetType();
+                return;
+            }
 
-            return;
-        } else if (selectedType === "Star") {
-            const nextColor = Konva.Util.getRandomColor();
-            items.push({
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                numPoints: 5,
-                id: 'star-' + itemCounter.toString(),
-                color: nextColor,
-                rotation: 0,
-                width: 200,
-                height: 100,
-                baseWidth: 200,
-                baseHeight: 100,
-                scaleX: 1,
-                scaleY: 1,
+            /*case "image": {
+                items.push({
+                    id: 'image-' + itemCounter.toString(),
+                    x: parseInt(localX.toFixed(0)),
+                    y: parseInt(localY.toFixed(0)),
+                    rotation: 0,
+                    image: imageSource,
+                    width: imageSource.width,
+                    height: imageSource.height,
+                    baseWidth: imageSource.width,
+                    baseHeight: imageSource.height,
+                    scaleX: 1,
+                    scaleY: 1,
 
-            } as CustomStar);
-
-            setCurrentItemColor(nextColor);
-            incrementCounterResetType();
-
-            return;
-        } else if (selectedType === "Text") {
-            items.push({
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                id: 'text-' + itemCounter.toString(),
-                textContent: currentTextContent,
-                width: currentTextWidth,
-                rotation: 0,
-                fontFamily: currentFontFamily,
-                fontSize: currentFontSize,
-                color: currentFontColor,
-                height: 20,
-                padding: 2,
-                currentlyRendered: true,
-                baseWidth: 100,
-                baseHeight: 100,
-                scaleX: 1,
-                scaleY: 1,
-
-            } as CustomText);
-
-            incrementCounterResetType();
-
-
-            return;
-        } /*else if (selectedType === "image") {
-            items.push({
-                id: 'image-' + itemCounter.toString(),
-                x: parseInt(localX.toFixed(0)),
-                y: parseInt(localY.toFixed(0)),
-                rotation: 0,
-                image: imageSource,
-                width: imageSource.width,
-                height: imageSource.height,
-                baseWidth: imageSource.width,
-                baseHeight: imageSource.height,
-                scaleX: 1,
-                scaleY: 1,
-
-            } as CustomImage)
-
-            incrementCounterResetType();
-
-            return;
-        }*/
+                } as CustomImage)
+                incrementCounterResetType();
+                return;
+            }*/
+        }
     }
 
     /**
