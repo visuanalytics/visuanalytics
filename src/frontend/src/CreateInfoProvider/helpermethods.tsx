@@ -180,6 +180,34 @@ export const getListItemsNames = (listItems: Array<ListItemRepresentation>) => {
     return listItemNames;
 }
 
+/**
+ * Receives a string and checks if it consist only of numbers (0-9).
+ * @param arg The String to be checked.
+ */
+export const checkFindOnlyNumbers = (arg: string): boolean => {
+
+    let onlyNumbers: boolean = true;
+
+    for (let i: number = 0; i <= arg.length - 1; i++) {
+
+        if (arg.charAt(i) !== '0' &&
+            arg.charAt(i) !== '1' &&
+            arg.charAt(i) !== '2' &&
+            arg.charAt(i) !== '3' &&
+            arg.charAt(i) !== '4' &&
+            arg.charAt(i) !== '5' &&
+            arg.charAt(i) !== '6' &&
+            arg.charAt(i) !== '7' &&
+            arg.charAt(i) !== '8' &&
+            arg.charAt(i) !== '9'
+        ) {
+            onlyNumbers = false;
+        }
+
+    }
+
+    return onlyNumbers;
+}
 
 /**
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation

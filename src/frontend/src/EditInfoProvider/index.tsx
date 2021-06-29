@@ -63,7 +63,9 @@ task 9: historized data (Tristan)
 task 11: delete dependencies (???)
  */
 
+
 export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
+
 
     const components = React.useContext(ComponentContext);
 
@@ -82,8 +84,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [infoProvName, setInfoProvName] = React.useState(props.infoProvider !== undefined ? props.infoProvider.infoproviderName : "");
 
     const [newDataSourceMode, setNewDataSourceMode] = React.useState(false);
-
-
 
     //holds the dataSources of the edited infoProvider
     //always gets the value from the sessionStorage, but if it is not defined (first entering), the data is fetched from the props
@@ -665,9 +665,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 api: {
                     api_info: {
                         type: "request",
-                        //api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
-                        //TODO: change when the merge has happened
-                        api_key_name: "",
+                        api_key_name: dataSource.method === "BearerToken" ? infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                         url_pattern: dataSource.query,
                     },
                     method: dataSource.noKey ? "noAuth" : dataSource.method,
@@ -829,11 +827,12 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                        setHistorizedData={setHistorizedData}
                        setSchedule={setSchedule}
                        setHistorySelectionStep={setHistorySelectionStep}
+                        diagrams={infoProvDiagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                        setListItems={(listItems: Array<ListItemRepresentation>) => {return}}
                    />
                 )
             case 2:
-                //TODO: replace test values as soon as merged with branch containing sessionStorage
                 return (
                     <EditDataSelection
                         continueHandler={(index: number) => handleContinue(index)}
