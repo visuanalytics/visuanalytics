@@ -62,6 +62,23 @@ def calculate_max(values: dict, data: StepData):
 
 
 @register_calculate
+def calculate_sum(values: dict, data: StepData):
+    """Findet den Maximalwert von Werten, die in einem Array stehen.
+
+    :param values: Werte aus der JSON-Datei
+    :param data: Daten aus der API
+    """
+    for idx, key in data.loop_key(values["keys"], values):
+        value = data.get_data(key, values)
+        new_key = get_new_keys(values, idx)
+        new_value = sum(value)
+        data.insert_data(new_key, new_value, values)
+
+        if values.get("save_idx_to", None):
+            data.insert_data(values["save_idx_to"][idx], value.index(new_value), values)
+
+
+@register_calculate
 def calculate_min(values: dict, data: StepData):
     """Findet den Minimalwert von Werten, die in einem Array stehen.
 

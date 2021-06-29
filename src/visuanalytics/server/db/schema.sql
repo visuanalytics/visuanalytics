@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Fr Mai 28 15:07:46 2021
+-- File generated with SQLiteStudio v3.3.3 on Di Jun 29 10:21:21 2021
 --
 -- Text encoding used: System
 --
@@ -125,6 +125,23 @@ CREATE TABLE job_topic_position (
                         NOT NULL,
     position    INTEGER CHECK (position >= 0)
                         NOT NULL
+);
+
+
+-- Table: job_uses_scene
+DROP TABLE IF EXISTS job_uses_scene;
+
+CREATE TABLE job_uses_scene (
+    job_uses_scene_id INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    job_id            INTEGER REFERENCES job (job_id) ON DELETE CASCADE
+                                                      ON UPDATE CASCADE
+                              NOT NULL,
+    scene_id          INTEGER REFERENCES scene (scene_id) ON DELETE CASCADE
+                                                          ON UPDATE CASCADE
+                              NOT NULL,
+    scene_is_preview  BOOLEAN NOT NULL
 );
 
 
