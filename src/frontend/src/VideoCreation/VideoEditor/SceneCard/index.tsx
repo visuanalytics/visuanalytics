@@ -39,7 +39,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
     const [localExceedDisplayDuration, setLocalExceedDisplayDuration] = React.useState(props.exceedDisplayDuration);
     //timeout for setting the props value of exceedDisplayDuration shortly after the user has stopped input
     const [timeoutExceedDisplayDuration, setTimeoutExceedDisplayDuration] = React.useState(0);
-
+    //true when a dialog for editing the spokenText of a scene is opened
     const [openTextEditDialog, setOpenTextEditDialog] = React.useState(false)
 
     /**

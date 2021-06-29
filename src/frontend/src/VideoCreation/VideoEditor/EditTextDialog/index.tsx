@@ -158,6 +158,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
         setShowHistorizedDialog(true);
     }
 
+    //TODO: possibly find better solution than abusing span
     const renderHistorizedData = (item: string, schedule: Schedule) => {
         return (
             <ListItem key={item}>
@@ -221,7 +222,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
             <Grid key={infoproviderName} item container xs={12}>
                 <Grid item container xs={12}>
                     <Grid item xs={12} md={10}>
-                        <Typography variant="h6" style={{marginTop: "0.5rem"}}>
+                        <Typography variant="h6" className={classes.infoProvNameTitle}>
                             {infoproviderName}
                         </Typography>
                     </Grid>
@@ -260,7 +261,6 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                             Fügen Sie hier Texte und Pausen zur gewählten Szene <strong>{props.sceneName}</strong> hinzu.
                         </Grid>
                         <Grid container justify="space-between" className={classes.elementLargeMargin}>
-
                             <Grid item xs={12} md={5}>
                                 <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.editDialogListFrame}>
                                     <Grid item xs={12}>

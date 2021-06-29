@@ -95,6 +95,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         categoryText: {
             fontSize: "1.1rem",
             fontWeight: "bold"
+        },
+        infoProvNameTitle: {
+            marginTop: "0.5rem"
         }
     }),
 );
