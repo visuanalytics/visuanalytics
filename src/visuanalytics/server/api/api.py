@@ -144,8 +144,20 @@ def add_infoprovider():
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
@@ -153,7 +165,7 @@ def add_infoprovider():
                 return err, 400
 
             if "schedule" not in datasource:
-                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                err = flask.jsonify({f"err_msg": f"Missing schedule for datasource {datasource['name']}"})
                 return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
@@ -296,8 +308,20 @@ def update_infoprovider(infoprovider_id):
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:

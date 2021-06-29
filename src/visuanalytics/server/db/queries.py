@@ -114,6 +114,8 @@ def insert_infoprovider(infoprovider):
         formulas = copy.deepcopy(datasource["formulas"])
         formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
         transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
+        transform_step += datasource["calculates"]
+        transform_step += datasource["replacements"]
 
     datasources_copy = deepcopy(infoprovider["datasources"])
     for datasource in datasources_copy:
@@ -177,6 +179,8 @@ def insert_infoprovider(infoprovider):
         formulas = copy.deepcopy(datasource["formulas"])
         formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
         transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys), remove_toplevel_key(datasource["transform"]))
+        transform_step += datasource["calculates"]
+        transform_step += datasource["replacements"]
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
@@ -515,6 +519,8 @@ def update_infoprovider(infoprovider_id, updated_data):
     new_transform = []
     for datasource in datasources:
         new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+        new_transform += datasource["calculates"]
+        new_transform += datasource["replacements"]
 
     datasources_copy = deepcopy(updated_data["datasources"])
     for datasource in datasources_copy:
@@ -575,6 +581,8 @@ def update_infoprovider(infoprovider_id, updated_data):
         formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
         transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys),
                                              remove_toplevel_key(datasource["transform"]))
+        new_transform += datasource["calculates"]
+        new_transform += datasource["replacements"]
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
