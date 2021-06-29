@@ -49,7 +49,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
-    const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image());
+    const [backgroundImage/*, setBackgroundImage*/] = React.useState<HTMLImageElement>(new window.Image());
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
 
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
@@ -75,7 +75,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
 
-    const [sceneName, setSceneName] = React.useState("Leere Szene");
+    const [sceneName, setSceneName] = React.useState("Leere_Szene");
     const [selectedItemName, setSelectedItemName] = React.useState("");
     const [selectedType, setSelectedType] = React.useState("Circle");
     const [selectedObject, setSelectedObject] = React.useState<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>({} as CustomCircle);
@@ -92,7 +92,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
-    const [itemJson, setItemJson] = React.useState("");
+    //const [itemJson, setItemJson] = React.useState("");
     const [exportJSON, setExportJSON] = React.useState<JsonExport>();
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
 
@@ -121,6 +121,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
     }, [])
+
+    useEffect(() => {
+        exportToBackend(usedImagesArray);
+    }, [sceneName])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -231,28 +235,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         return stageJson;
     }
 
-    useEffect(() => {
-        exportToBackend(usedImagesArray);
-    }, [sceneName])
-
     /**
      * Method to create the export for the backend
      */
     const exportToBackend = async (usedImages : number[]) => {
         let copyOfItems = items.slice();
         let onlyTextAndImages = [];
-        let newArray: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage> = [];
         let localTextImage : Array<DataText|DataImage> = [];
         for (let index = 0; index < copyOfItems.length; index++) {
             if (copyOfItems[index].id.startsWith('text')) {
                 onlyTextAndImages.push(copyOfItems[index] as CustomText);
             } else if (copyOfItems[index].id.startsWith('image')) {
                 onlyTextAndImages.push(copyOfItems[index] as CustomImage);
-            } else {
-                newArray.push(copyOfItems[index])
             }
         }
-        setItemJson(JSON.stringify(copyOfItems))
+        //setItemJson(JSON.stringify(copyOfItems))
         let duplicateOfStage = dupeStage(copyOfItems);
         const stageJson = saveHandler(duplicateOfStage);
 
@@ -339,7 +336,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     const handleError = (err : Error) => {
-        console.log(usedImagesArray)
+        console.log(err, usedImagesArray)
     }
 
     /**
@@ -479,8 +476,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setSelectedObject(foundItem!);
 
             const index = items.indexOf(foundItem!);
+
             if (items[index].id.startsWith("text")) {
-                setCurrentFontColor(items[index].color)
+                setCurrentFontColor(items[index].color);
+                setCurrentFontFamily((items[index] as any).fontFamily);
+                setCurrentFontSize((items[index] as any).fontSize);
+                setCurrentTextWidth((items[index] as any).width);
             }
             if (!items[index].id.startsWith("image")) {
                 setCurrentItemColor(items[index].color!);
@@ -797,7 +798,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 }
             }
             setRecentlyRemovedItems(lastElem);
-            setDeleteText("Letztes Elem. entf.");
         } else {
             const index = items.indexOf(selectedObject);
 
@@ -807,7 +807,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             setItemSelected(false);
-            setDeleteText("Letztes Elem. entf.");
         }
     }
 
@@ -1045,7 +1044,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns true or false depending on the selected item
      */
     const disableColor = (): boolean => {
-        return !itemSelected;
+        if (selectedItemName.startsWith('text')){
+            return true;
+        }
+        return (!itemSelected) ;
     }
 
     /**
@@ -1108,6 +1110,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const renderImageEntry = (image: string, index: number) => {
         //TODO: when images are available, check how the size should look like
+        console.log(index)
         return (
             <Grid item xs={4}>
                 <img src={image} width="50px" height="30px" alt={"Image can not be displayed!"}/>
@@ -1555,7 +1558,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         /><br/><br/>
                                     </Grid>
                                     <Grid item xs={3}>
-                                        <Button className={classes.button} id="undo" onClick={undo}> RÜCKGÄNGIG
+                                        <Button className={classes.button} id="undo" onClick={undo} disabled={recentlyRemovedItems.length === 0}> RÜCKGÄNGIG
                                             MACHEN </Button><br/><br/>
                                         <TextField
                                             className={classes.buttonNumber}
@@ -1689,7 +1692,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
                                     value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
                                 /><br/>
-                                <Button className={classes.button} onClick={switchBackground}
+                                <Button className={classes.button} onClick={switchBackground} disabled={true}
                                         style={{width: "80%"}}>
                                     HINTERGRUNDBILD WÄHLEN
                                 </Button>
