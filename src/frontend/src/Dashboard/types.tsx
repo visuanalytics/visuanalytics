@@ -20,9 +20,26 @@ export type answer = {
     err_msg: string;
 }
 
-export type jsonRefScene = {
+/**
+ * Data type representing a scene as it was sent from the backend.
+ */
+export type BackendScene = {
     scene_id: number;
     scene_name: string;
 }
 
-export type fetchAllScenesAnswer = Array<jsonRefScene>
+/**
+ * Data type representing the answer the backend delivers on the route
+ * /scene/all
+ */
+export type FetchAllScenesAnswer = Array<BackendScene>
+
+/**
+ * Represents a single preview image for a scene - contains the URL of the image
+ * and its id.
+ */
+export type PreviewImage = {
+    URL: string;
+    id: number;
+}
+

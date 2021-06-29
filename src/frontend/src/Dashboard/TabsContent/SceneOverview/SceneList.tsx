@@ -1,14 +1,14 @@
 import React from "react";
-import {jsonRefScene} from "../../types";
+import {BackendScene, PreviewImage} from "../../types";
 import {Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography} from "@material-ui/core";
 import {useStyles} from "../../style";
 
 
 interface SceneListProps {
-    scenes: Array<jsonRefScene>;
-    previewImgList: Array<string>;
+    scenes: Array<BackendScene>;
+    previewImgList: Array<PreviewImage>;
     setDetailDialogOpen: (flag: boolean) => void;
-    setCurrent: (data: jsonRefScene) => void;
+    setCurrent: (data: BackendScene) => void;
 }
 
 export const SceneList: React.FC<SceneListProps> = (props) => {
@@ -21,7 +21,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
         imgId.current = -1
     }
 
-    const renderSceneCard = (data: jsonRefScene) => {
+    const renderSceneCard = (data: BackendScene) => {
 
         imgId.current = imgId.current + 1;
 
@@ -41,7 +41,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
                         props.setCurrent(data);
                         props.setDetailDialogOpen(true);
                     }}>
-                        <img width="240" height="135" alt="Vorschaubild Diagramm" src={props.previewImgList[imgId.current]}/>
+                        <img width="240" height="135" alt="Vorschaubild Diagramm" src={props.previewImgList[imgId.current].URL}/>
                         <CardContent>
                             <Typography gutterBottom variant={"h6"}>
                                 {data.scene_name}
