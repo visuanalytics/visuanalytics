@@ -10,7 +10,7 @@ import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/InfoProvi
 import {SceneOverview} from "./TabsContent/SceneOverview/SceneOverview"
 import {VideoOverview} from "./TabsContent/VideoOverview/VideoOverview"
 import {FetchAllScenesAnswer, BackendScene, PreviewImage} from "./types";
-import {centerNotifcationReducer} from "../util/CenterNotification";
+import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
@@ -54,15 +54,15 @@ export const DashboardTabs = () =>  {
             setValue(newValue);
     };
 
+    //true if the spinner animation is displayed - used for waiting while the scenes are fetched
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
-
-
+    //moutable list of all scenes - fetched from the backend
     const allScenes = React.useRef<Array<BackendScene>>([]);
-
+    //mutable list of scenes that still need to be fetched - fetching all previews works through this list
     const scenesToFetch = React.useRef<Array<BackendScene>>([]);
-
+    //list of all preview images (one for each scene) with ID and image URL
     const previewImgList = React.useRef<Array<PreviewImage>>([]);
-
+    //id of the currently fetched image
     const currentFetchId = React.useRef<number>(-1);
 
 
@@ -70,7 +70,6 @@ export const DashboardTabs = () =>  {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
-    /* <========================================================================================================================================================>*/
 
     /**
      * setup for error notification
@@ -81,33 +80,32 @@ export const DashboardTabs = () =>  {
         severity: "error",
     });
 
+    const reportError = (message: string) => {
+        dispatchMessage({ type: "reportError", message: message });
+    };
+
     /**
-     * Handles the error-message if an error appears.
+     * Handler for errors for fetching all scenes from the backend.
      * @param err the shown error
      */
     const handleErrorFetchAll = (err: Error) => {
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+        reportError('Fehler: ' + err);
     }
-
 
     /**
      * Handles the success of the fetchAllScenes()-method.
-     * The json from the response will be transformed to an array of jsonRefScenes and saved in Scenes and allScenes.
+     * The json from the response will be transformed to an array of BackendScene and saved in allScenes.
      * @param jsonData the answer from the backend
      */
     const handleSuccessFetchAll = (jsonData: any) => {
-        /*jsonData = [
-            {"scene_id": 1, "scene_name": "tristan_der_aal"},
-            {"scene_id": 2, "scene_name": "ein_szenen_test"},
-            {"scene_id": 3, "scene_name": "und_noch_ein_test"},
-            {"scene_id": 4, "scene_name": "ka_was_hier_stehen_soll"}
-        ];*/
-
         const data = jsonData as FetchAllScenesAnswer;
+        //save the answer in allScenes
         allScenes.current = data;
+        //set the list of scenes to fetch
         scenesToFetch.current = data;
-        console.log(scenesToFetch.current)
+        //activate the spinner animation while loading
         setDisplaySpinner(true);
+        //start fetching all preview images
         fetchPreviewImages();
     }
 
@@ -154,8 +152,6 @@ export const DashboardTabs = () =>  {
             isMounted.current = false;
         };
     }, []);
-
-    /* <========================================================================================================================================================>*/
 
 
     /**
@@ -216,13 +212,16 @@ export const DashboardTabs = () =>  {
      * @param err the error form fetchPreviewImgById()
      */
     const handleFetchImageByIdError = (err: Error) => {
-        console.log("Fehler: " + err);
+        reportError("Fehler: " + err);
+        //deactivate the spinner to return to the previous dashboard tab
         setDisplaySpinner(false);
     }
 
 
     /**
-     * This method will call fetchPreviewImgById() for the first element of allScenes.
+     * Method that fetches all preview images for scenes from the backend.
+     * Recursively goes through scenesToFetch and gets all scenes that are left.
+     * When no scene is left, it disables the spinner and sets the value of the tab to scenes.
      */
     const fetchPreviewImages = () => {
         if (scenesToFetch.current.length === 0) {
@@ -292,7 +291,12 @@ export const DashboardTabs = () =>  {
                 </Grid>
             </React.Fragment>
             }
-
+            <CenterNotification
+                handleClose={() => dispatchMessage({type: "close"})}
+                open={message.open}
+                message={message.message}
+                severity={message.severity}
+            />
         </Grid>
     );
 }

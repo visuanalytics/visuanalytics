@@ -18,9 +18,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const classes = useStyles();
 
-    console.log(props.scenes);
-    console.log(props.previewImgList);
-
+    //TODO: add sessionStorage support
     //List of all available scenes, fetched from the backend.
     const [scenes, setScenes] = React.useState<Array<BackendScene>>(props.scenes);
     //List of the URLs of the preview images for the scenes
