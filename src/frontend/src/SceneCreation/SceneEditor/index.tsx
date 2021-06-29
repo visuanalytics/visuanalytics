@@ -120,16 +120,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!));
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
-    }, [items])
+    }, [])
 
     useEffect(() => {
         exportToBackend(usedImagesArray);
-    }, [sceneName, usedImagesArray])
+    }, [sceneName])
 
     /**
      * Removes all items of this component from the sessionStorage.
      */
-    /*const clearSessionStorage = () => {
+    const clearSessionStorage = () => {
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
@@ -144,7 +144,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
-    }*/
+    }
 
     /**
      * Method to duplicate the stage at an invisible position to create the preview image
@@ -461,7 +461,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const clickedOnTransformer =
             e.target.getParent().className === "Transformer";
         if (clickedOnTransformer) {
-
             return;
         }
 
@@ -470,7 +469,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setSelectedItemName(name);
             setItemSelected(true);
 
-            setDeleteText("LÖSCHEN");
+            setDeleteText("AUSGEW. ELEM. ENTF.");
             const id = name;
             const foundItem = items.find((i: any) => i.id === id);
             setSelectedObject(foundItem!);
@@ -1166,6 +1165,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     }
 
+    //TODO Fetch Diagramms
+    const addDiagramm = (diagram: DiagramInfo) => {
+        console.log("diagram " + diagram.name + " should be added to the canvas here")
+    }
+
+
     //TODO: custom icons
     /**
      * Method that renders an entry in the list of available diagrams.
@@ -1182,7 +1187,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 </ListItemText>
                 <ListItemSecondaryAction>
                     <IconButton
-                        onClick={() => console.log("diagram " + diagram.name + " should be added to the canvas here")}>
+                        onClick={() => addDiagramm(diagram)}>
                         <AddCircleOutlineIcon/>
                     </IconButton>
                 </ListItemSecondaryAction>
