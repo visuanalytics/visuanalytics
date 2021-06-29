@@ -12,7 +12,7 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {ArrayProcessingData, Diagram, ListItemRepresentation, Operation} from "../../types";
+import {ArrayProcessingData, Diagram, ListItemRepresentation, Operation, StringReplacementData} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
@@ -22,6 +22,7 @@ interface ArrayProcessingProps {
     reportError: (message: string) => void;
     arrayProcessingsList: Array<ArrayProcessingData>;
     setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
+    stringReplacementList: Array<StringReplacementData>
     listItems: Array<ListItemRepresentation>;
     customData: Array<FormelObj>;
     setCustomData: (customData: Array<FormelObj>) => void;
@@ -143,9 +144,13 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
      * @param name The name to be checked.
      */
     const checkNameDuplicate = (name: string) => {
-        //check all processings
+        //check all array processings
         for (let index = 0; index < props.arrayProcessingsList.length; index++) {
             if(name === props.arrayProcessingsList[index].name) return true;
+        }
+        //check all string replacements
+        for (let index = 0; index < props.stringReplacementList.length; index++) {
+            if(name === props.stringReplacementList[index].name) return true;
         }
         //check api data names
         if(getListItemsNames(props.listItems).includes(name)) return true;

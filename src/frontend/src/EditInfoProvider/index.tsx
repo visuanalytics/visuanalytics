@@ -926,18 +926,21 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
                         formel={formelInformation}
+                        listItems={infoProvDataSources[selectedDataSource].listItems}
+                        customData={infoProvDataSources[selectedDataSource].customData}
+                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
+                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
                     />
                 )
             case 5:
-                //TODO: real implementations for array processings and string replacements
                 return (
                     <HistorySelection
                         continueHandler={() => setEditStep(6)}
                         backHandler={() => setEditStep(2)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
-                        arrayProcessingsList={[]}
-                        stringReplacementList={[]}
+                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
+                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
                         historizedData={infoProvDataSources[selectedDataSource].historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={infoProvDataSources[selectedDataSource].schedule}

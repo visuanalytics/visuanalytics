@@ -13,7 +13,7 @@ import {
 import Radio from "@material-ui/core/Radio";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {getListItemsNames} from "../../helpermethods";
-import {Diagram, ListItemRepresentation, StringReplacementData} from "../../types";
+import {ArrayProcessingData, Diagram, ListItemRepresentation, StringReplacementData} from "../../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 
@@ -23,6 +23,7 @@ interface StringProcessingProps {
     reportError: (message: string) => void;
     stringReplacementList: Array<StringReplacementData>;
     setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
+    arrayProcessingsList: Array<ArrayProcessingData>
     listItems: Array<ListItemRepresentation>;
     customData: Array<FormelObj>;
     setCustomData: (customData: Array<FormelObj>) => void;
@@ -120,7 +121,11 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
      * @param name The name to be checked.
      */
     const checkNameDuplicate = (name: string) => {
-        //check all processings
+        //check all array processings
+        for (let index = 0; index < props.arrayProcessingsList.length; index++) {
+            if(name === props.arrayProcessingsList[index].name) return true;
+        }
+        //check all string replacements
         for (let index = 0; index < props.stringReplacementList.length; index++) {
             if(name === props.stringReplacementList[index].name) return true;
         }

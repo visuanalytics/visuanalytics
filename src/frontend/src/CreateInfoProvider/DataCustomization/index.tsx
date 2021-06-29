@@ -49,6 +49,7 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         reportError={props.reportError}
                         arrayProcessingsList={props.arrayProcessingsList}
                         setArrayProcessingsList={props.setArrayProcessingsList}
+                        stringReplacementList={props.stringReplacementList}
                         listItems={props.listItems}
                         customData={props.customData}
                         setCustomData={props.setCustomData}
@@ -70,6 +71,7 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         customData={props.customData}
                         setCustomData={props.setCustomData}
                         arrayProcessingsList={props.arrayProcessingsList}
+                        stringReplacementList={props.stringReplacementList}
                         reportError={props.reportError}
                         listItems={props.listItems}
                         historizedData={props.historizedData}
@@ -88,6 +90,7 @@ export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
                         reportError={props.reportError}
                         stringReplacementList={props.stringReplacementList}
                         setStringReplacementList={props.setStringReplacementList}
+                        arrayProcessingsList={props.arrayProcessingsList}
                         listItems={props.listItems}
                         customData={props.customData}
                         setCustomData={props.setCustomData}

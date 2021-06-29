@@ -13,7 +13,7 @@ import {
     customDataBackendAnswer,
     Diagram,
     ListItemRepresentation,
-    SelectedDataItem
+    SelectedDataItem, StringReplacementData
 } from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -28,6 +28,7 @@ interface CreateCustomDataProps {
     customData: Array<FormelObj>;
     setCustomData: (array: Array<FormelObj>) => void;
     arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
     reportError: (message: string) => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
@@ -394,7 +395,20 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 return;
             }
         }
-
+        //check for duplicates in array processings names
+        for (let i: number = 0; i < props.arrayProcessingsList.length; i++) {
+            if (props.arrayProcessingsList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer Array-Verarbeitung genutzt.")
+                return;
+            }
+        }
+        //check for duplicates in string replacement names
+        for (let i: number = 0; i < props.stringReplacementList.length; i++) {
+            if (props.stringReplacementList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer String-Verarbeitung genutzt.")
+                return;
+            }
+        }
         //funktioniert nur, wenn das backend läuft:
         sendTestData();
 
