@@ -324,9 +324,9 @@ def get_videojob(job_id):
     :return: JSON für das Frontend.
     """
     job_list = get_job_list()
-    print("job_list", job_list)
+    # print("job_list", job_list)
     videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
-    print("videojob", videojob)
+    # print("videojob", videojob)
 
     with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
         video_json = json.load(f)
@@ -418,9 +418,12 @@ def get_infoprovider(infoprovider_id):
         infoprovider_json = json.loads(f.read())
 
     for datasource in infoprovider_json["datasources"]:
+
         api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
         private_config = get_private()
-        datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name] if api_key_name else None
+        if api_key_name:
+            datasource["api"]["api_info"]["api_key_name"] = private_config["api_keys"][api_key_name]
 
     return {
         "infoprovider_name": infoprovider_json["name"],
@@ -687,9 +690,9 @@ def insert_scene(scene):
 
     # save <scene-name>.json
     file_path = _get_scene_path(scene_name.replace(" ", "-"))
-    print("file_path", file_path)
+    # print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
-        print("writing")
+        # print("writing")
         json.dump(scene_json, f)
 
     con.commit()
