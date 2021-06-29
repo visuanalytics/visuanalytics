@@ -1,10 +1,8 @@
 import React from "react";
 import {ArrayProcessing} from "../../CreateInfoProvider/DataCustomization/ArrayProcessing";
-import {useStyles} from "../style";
 import {
     ArrayProcessingData, DataSource,
     Diagram,
-    ListItemRepresentation,
     SelectedDataItem,
     StringReplacementData
 } from "../../CreateInfoProvider/types";
@@ -41,7 +39,7 @@ interface EditDataCustomizationProps {
  * Wrapper component for the three steps of data customization: Array processing, formula creation, string processing.
  */
 export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (props) => {
-    const classes = useStyles();
+    //const classes = useStyles();
 
 
     /**

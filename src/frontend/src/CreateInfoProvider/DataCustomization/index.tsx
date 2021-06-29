@@ -1,7 +1,6 @@
 import React from "react";
 import {ArrayProcessingData, Diagram, ListItemRepresentation, SelectedDataItem, StringReplacementData} from "../types";
 import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {useStyles} from "../style";
 import {CreateCustomData} from "./CreateCustomData";
 import {ArrayProcessing} from "./ArrayProcessing";
 import {StringProcessing} from "./StringProcessing";
@@ -34,7 +33,7 @@ interface DataCustomizationProps {
  */
 export const DataCustomization: React.FC<DataCustomizationProps> = (props) => {
 
-    const classes = useStyles();
+    //const classes = useStyles();
 
     /**
      * Method that selects the contents to be displayed based on the current step.

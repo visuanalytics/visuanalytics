@@ -24,8 +24,6 @@ import {
     BackendDataSource,
     ArrayProcessingData,
     StringReplacementData,
-    BackendCalculate,
-    BackendReplacement
 } from "./types";
 import {createCalculates, createReplacements, extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";

@@ -27,6 +27,8 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
  */
 export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     const calculates: Array<BackendCalculate> = [];
+    const sumNames: Array<string> = [];
+    const sumReplaceNames: Array<string> = [];
     const meanNames: Array<string> = [];
     const meanReplaceNames: Array<string> = [];
     const minNames: Array<string> = [];
@@ -35,6 +37,11 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     const maxReplaceNames: Array<string> = [];
     processings.forEach((processing) => {
         switch(processing.operation.name) {
+            case "sum": {
+                sumNames.push("_loop|" + processing.array);
+                sumReplaceNames.push("_loop|" + processing.name);
+                break;
+            }
             case "mean": {
                 meanNames.push("_loop|" + processing.array);
                 meanReplaceNames.push("_loop|" + processing.name);
@@ -51,6 +58,16 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
             }
         }
     })
+    //add the object for the sum calculations
+    if(sumNames.length > 0) {
+        calculates.push({
+            type: "calculate",
+            action: "sum",
+            keys: sumNames,
+            new_keys: sumReplaceNames,
+            decimal: 2
+        });
+    }
     //add the object for the mean calculations
     if(meanNames.length > 0) {
         calculates.push({
@@ -65,7 +82,7 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     if(minNames.length > 0) {
         calculates.push({
             type: "calculate",
-            action: "mean",
+            action: "min",
             keys: minNames,
             new_keys: minReplaceNames,
             decimal: 2
@@ -75,7 +92,7 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     if(maxNames.length > 0) {
         calculates.push({
             type: "calculate",
-            action: "mean",
+            action: "max",
             keys: maxNames,
             new_keys: maxReplaceNames,
             decimal: 2
