@@ -184,23 +184,45 @@ Neben diesen Scroll-Problemen gab es wie bereits erwähnt auch Probleme mit dem 
 * Aus diesen Gründen sehen wir die Integration dieser Module als kritisch an, da ihre Funktionalität nicht garantiert werden kann und ihre fehlende Pflege dafür sorgen könnte, dass unser von ihnen abhängiges Produkt eines Tages plötzlich nicht mehr funktioniert - das sollte um jeden Preis vermieden werden.
 * Daher haben wir uns nach einigen Stunden Auseinandersetzung mit der Materie vorläufig gegen eine Drag-And-Drop-Lösung und für eine einfachere, Button-basierte Variante entschieden, um überhaupt einen fertigen und funktionalen Videoeditor abzuliefern.
 
-## SceneCard
+### SceneCard
 Wie bereits im Abschnitt **SceneContainer** angesprochen wird eine einzelne vom Nutzer ausgewählte Szene als **SceneCard**-Komponente dargestellt. Diese erhält per **props** die Werte und Setter-Methoden aller relevanten Eigenschaften für die jeweilige Szene.
 
 Dargestellt wird die Szene durch eine **Card**-Komponente von Material-UI, die den Namen der Szene sowie Einstellungen für Anzeigedauer und Text enthält.
 * Für die Eingabe der Dauer über die TTS-Dauer hinaus wird ein **Slider** verwendet, der durch einen **Input** ergänzt wird. Auf diese Weise kann der Slider genutzt werden, gleichzeitig aber auch händisch eine Eingabe erfolgen. Diese Option ist auch für die Barrierefreiheit bedeutsam.
 * Die zweite Einstellung ist der gesprochene Text
 
-!!! HIER FOLGEN DIE ERLÄUTERUNGEN!!!
-
-
-### State-Updates für Anzeigedauer
+#### State-Updates für Anzeigedauer
 Die Nutzung von Slidern verstärken ein allgemeines Problem, welches mit Eingabeelementen auftritt, deren Wert ein State einer höheren Komponente ist: Werden schnell viele Eingaben hintereinander gemacht wird das Frontend sehr ruckelig, da extrem viele Rerenders der höher liegenden Komponente und damit der ganzen Ansicht notwendig werden.
 * Bei den Slidern finden besonders schnelle und viele Änderungen statt, da bei einer Bewegung alle 1er-Schritte als State-Änderung registriert werden. Zwar fasst React diese Änderungen teilweise zusammen, dennoch ist es nicht wirklich responsiv.
 * Als Lösung verwenden wir **localExceedDisplayDuration** als State direkt innerhalb von **SceneCard**, welches den Wert des Slider und Inputs hält.
     * Anhand des Timers **timeoutExceedDisplayDuration** wird mit der Methode **changePropsExceedDisplayDuration** gewartet, bis 200ms lang keine Änderung stattfindet. Erst dann wird der State von **VideoEditor** überschrieben, indem man die Dauer der Szene dort neu setzt und **sceneList** überschreibt.
 * Auf diese Weise wird nicht **VideoEditor**, sondern nur **SceneCard** neu gerendert, wenn man den Slider bedient - dadurch lassen sich die Performance-Probleme größtenteils lösen und die User Experience wird verbessert.
 
+### EditTextDialog
+In **EditTextDialog wird ein Dialog gerendert, welcher die Bearbeitung für TTS-Texte ermöglicht. Dabei wurde dieser Dialog nicht in **SceneCard** direkt integriert, da dieser viel eigene Logik enthält und die Komponente aufgebläht hätte. In der Komponente **SceneCard** gibt es lediglich einen State, welcher dafür zuständig ist, den Dialog bei Bedarf anzuzeigen. Der State dafür heißt **showEditTextDialog** und wird bei Klick auf entsprechenden Button auf true gesetzt. Gleichzeitig wird der State und dessen Setter dem Dialog mittels props übergeben. Damit dieser sich selbst schließen kann.
+
+Der Dialog selbst enthält States, um das hinzufügen von TTS-Parts und Pausen zu verwalten.
+
+**audioElements** ist dabei das Array, welches nach und nach vom Nutzer durch die verschiedenen Aktionen gefüllt werden kann. Dabei wird das Array (bestehend aus Objekten vom Typ **AudioElement**) entweder mit dem übergebenen **spokenText** initialisiert oder mit einem leeren Text-Eintrag, falls **spokenText** leer ist. Dies ist notwendig damit im Dialog standardmäßig ein Textfeld angezeigt wird, in welches der Nutzer Text eingeben kann.
+
+Das rendering von Textfeldern für Pausen und TTS-Parts kann dabei durch eine einzige Methode (**renderEditElement**) erledigt werden. Diese Methode rendert dabei konditionell verschiedene Textfelder mit unterschiedlichen Labels. Das rendering hängt dabei vom Typen des aktuellen Elements ab, welches der Funktion übergeben wird. Die Funktion wird dabei wieder in einer **.map**-Funktion aufgerufen, welche auf **audioElements** angewendet wird. Die übergebene ID an **renderEditElement** wird als ID der Textfelder gesetzt. Dies wird wichtig, sobald Texte editiert werden und an entsprechender Stelle im Array **audioElements** ersetzt / erweitert werden müssen. Auch für die Löschung von Abschnitten ist dies wichtig.
+
+Mittels **changeElement** werden die Änderungen, welche in oben beschriebenen Textfeldern gemacht werden, verarbeitet. Dabei wird zuerst die ID des übergebenen Events mittels `event.target.id` aus dem Event geholt. Nun wird im Array **audioElements** nachgeschaut, ob dieses Element ein Text oder eine Pause ist.
+* Im Falle eines Textes kann der Value des Events einfach an `audioElements[index].text` geschrieben werden, wobei index hier als Platzhalter für den tatsächlichen Index im Array dient.
+Im Falle einer Pause, wird die `duration` des entsprechenden Elementes gesetzt (und nicht der Text). Dazu kann der Value des Events gefahrlos zu `number` konvertiert werden, da die zugehörigen Textfelder nur Zahlen erlauben.
+
+Das löschen von Elementen wird mittels **deleteText** erledigt. Diese Methode bekommt den Index des Textfelds übergeben, welches gelöscht werden soll. Dabei enthält jedes Rendering eines Textfelds einen Button, welcher als onClick-Event die Löschmethode besitzt und den Index des Textfelds weitergibt. Die Methode löscht dabei aber nicht nur das Textfeld, da ansonsten mehrere Pausen aneinander gehängt werden könnten. Dies ist von uns allerdings nicht beabsichtigt. Um dieses Problem zu lösen, wird die nachfolgende Pause ebenfalls mitgelöscht. Sollte das Textfeld allerdings das letzte Element sein, so wird die vorhergehende Pause gelöscht. Somit wird sichergestellt, dass die Abfolge von "Text", "Pause" niemals gebrochen wird.
+
+Das hinzufügen eines neuen Text-Abschnitts erfolgt durch einen Button, welcher nach allen Audioelementen gerendert wird. Dieser ist allerdings nur anklickbar, wenn:
+1. Im aktuell letzten Textfeld ein Text eingetragen ist.
+2. Der State **newPause** einen Wert besitzt (nicht undefined) und dieser >= 0 ist.
+
+Sind diese Voraussetzungen erfüllt, so kann der Button angeklickt werden und ruft die Methode **addNewText** auf. Diese Methode fügt zunächst die Pause hinzu, deren Länge aktuell durch newPause definiert wird. Anschließend wird ein weiteres Audioelement gepusht, welches den Typen "text" besitzt und einen leeren Text als Wert hält. Danach wird **newPause** wieder auf 0 gesetzt, um am Ende des nächsten Abschnittes wieder eine gleichbleibende Darstellung zu ermöglichen. Würden wir dies nicht tun, so wäre die Standardzeit für jede neue Pause die vorher festgelegte (jeweils des vorher hinzugefügten Abschnitts).
+
+#### Speichern und abbrechen der TTS-Bearbeitung
+Mittels **saveNewAudio** wird mit dem Setter von **spokenText** (übergeben mittels props) **spokenText** in der höherliegenden Komponente mit dem Array **audioElements** überschrieben. Dabei wird **spokenText** nicht für die oben erklärten Operationen verwendet, da somit das Zurücksetzen bei Abbruch der Bearbeitung schwieriger wäre. Nachdem der State überschrieben wurde, wird der Dialog mittels des übergebenen Setters geschlossen und alle Szenen werden wieder angezeigt.
+
+Für das schließen des Dialogs wurde keine eigene Methode implementiert, da dies einfach im Button "abbrechen" über die Setter-Methode, welche das rendering des Dialogs regelt, im onClick-Event direkt getan werden kann. Die entsprechende Setter-Methode, wurde dem Dialog mittels props übergeben.
 
 ## ScheduleSelection
 Nachdem der Nutzer das Video selbst fertig konfiguriert hat kommt die Auswahl der Generierungszeitpunkte hinzu, durch die ein Videojob vollständig wird. Diese Auswahl findet in der Komponente **ScheduleSelection** statt, deren Grundaufbau eine leicht veränderte Kopie der Komponente **HistoryScheduleSelection** aus der Erstellung der Infoprovider ist.
