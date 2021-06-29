@@ -223,6 +223,7 @@ def insert_video_job(video, update=False, job_id=None):
     :type job_id: int
     :return: Gibt einen boolschen Wert zurück (Status), oder eine Fehlermeldung (bei Aktualisierungen).
     """
+    con = db.open_con_f()
     video_name = video["name"]
     for infoprovider_name in video["infoprovider_names"]:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
@@ -262,6 +263,7 @@ def insert_video_job(video, update=False, job_id=None):
     scenes = list(filter(lambda x: x["scene_name"] in scene_names, scenes))
     # print("scenes", scenes)
     # print("scene_names", scene_names)
+    scene_ids = list(map(lambda x: x["scene_id"], scenes))
     scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
     # print("scenes", scenes)
     for k, v in images.items():
@@ -310,6 +312,14 @@ def insert_video_job(video, update=False, job_id=None):
             ]
         }
         update_job(job_id, job, config=False)
+
+    # Einträge in Tabelle job_uses_scene updaten
+    job_id = con.execute("SELECT job_id FROM job WHERE job_name=?", [video_name]).fetchone()["job_id"]
+    con.execute("DELETE FROM job_uses_scene WHERE job_id=?", [job_id])
+    for scene_id in scene_ids:
+        con.execute("INSERT INTO job_uses_scene (job_id, scene_id, scene_is_preview) VALUES (?, ?, ?)", [job_id, scene_id, False])
+    con.commit()
+
     return True if not update else None
 
 
@@ -617,6 +627,11 @@ def delete_infoprovider(infoprovider_id):
         shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
         os.remove(file_path)
 
+        # Scenen und Videos die Infoprovider verwenden löschen
+        scenes = con.execute("SELECT * FROM scene_uses_infoprovider WHERE infoprovider_id=?", [infoprovider_id])
+        for scene in scenes:
+            delete_scene(scene["scene_id"])
+
         # Infoprovider aus Datenbank löschen
         con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
         con.commit()
@@ -632,10 +647,13 @@ def delete_videojob(videojob_id):
     :param videojob_id: ID des Videojobs.
     :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
     """
+    con = db.open_con_f()
     job_list = get_job_list()
     topic_id = list(filter(lambda x: x["jobId"] == videojob_id, job_list))[0]["topicValues"][0]["topicId"]
     delete_topic(topic_id)
     delete_job(videojob_id)
+    con.execute("DELETE FROM job_uses_scene WHERE job_id=?", [videojob_id])
+    con.commit()
 
     return True
 
@@ -851,6 +869,11 @@ def delete_scene(scene_id):
         # Eintrag aus scene_uses_infoprovider entfernen
         con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
 
+        # Lösche Video-jobs die diese Szene verwenden
+        jobs = con.execute("SELECT * FROM job_uses_scene WHERE scene_id=?", [scene_id])
+        for job in jobs:
+            delete_videojob(job["job_id"])
+
         # Json-Datei löschen
         rowcount = con.execute("DELETE FROM scene WHERE scene_id=?", [scene_id]).rowcount
         if rowcount > 0:
@@ -863,13 +886,17 @@ def delete_scene(scene_id):
 
 def get_scene_preview(scene_id):
     """
-    Loads the Preview-image of a Scene.
+    Läd das Preview-Bild einer Szene
 
-    :param scene_id: ID of a scene.
+    :param scene_id: ID der Szene.
     """
     con = db.open_con_f()
+
+    # Szenen-Json laden um verwendetet Bilder auslesen zu können
     with open_resource(get_scene_file(scene_id)) as f:
         scene_json = json.loads(f.read())
+
+    # Nach Preview-Bild suchen
     for image_id in scene_json["used_images"]:
         image_name = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()["image_name"]
         if "preview" in image_name:
@@ -879,14 +906,15 @@ def get_scene_preview(scene_id):
 
 def insert_image(image_name):
     """
-    Adds an image to the Database.
+    Fügt ein Bild zu der Datenbank hinzu.
 
-    :param image_name: Name of the image.
+    :param image_name: Name des Bildes.
     """
     con = db.open_con_f()
     name = image_name.rsplit(".", 1)[0]
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
+    # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
     if count > 0:
         return None
 
@@ -897,54 +925,44 @@ def insert_image(image_name):
 
 def get_scene_image_file(image_id):
     """
-    Generated the file-path of an image by its given ID.
+    Generiert den Dateipfad zu einem Bild anhand seiner ID.
 
-    :param image_id: ID of the image.
+    :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
     res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
+    con.commit()
     return get_scene_image_path(res["image_name"]) if res is not None else None
 
 
 def get_image_list():
     """
-    Loads information about all images stored in the database.
+    Läd Informationen über alle in der Datenbank enthaltenen Bilder.
 
-    :return: Contains ID, name and image-file for each image contained in the database.
+    :return: Enthölt eine Liste an Objekten welche je die ID und den Namen des Bildes enthalten.
     """
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image")
     con.commit()
-    """images = []
-    for row in res:
-        with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
-            byte_arr = f.tobytes()
-            encoded_img = encodebytes(byte_arr).decode('ascii')
-            images.append({
-                "image_id": row["image_id"],
-                "image_name": row["image_name"],
-                "image_file": encoded_img
-            })
-    return images"""
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
 
 def delete_scene_image(image_id):
     """
-    Removes an image from the database by a given ID.
+    Entfernt ein Bild aus der Datenbank.
 
-    :param image_id: ID of an image.
+    :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
 
     file_path = get_scene_image_file(image_id)
 
-    # check if image is being used
-    count = con.execute("SELECT COUNT(*) FROM scene_uses_image WHERE image_id=?", [image_id]).fetchone()["COUNT(*)"]
-    if count > 0:
-        return "Error"
+    # Entferne Szenen und Videos die dieses Bild verwenden
+    res = con.execute("SELECT * FROM scene_uses_image WHERE image_id=?", [image_id])
+    for scene in res:
+        delete_scene(scene["scene_id"])
 
-    # remove image-file and entry in image-table
+    # Entfernen Datei aus Ordnerstruktur und Eintrag aus Tabelle 'image'
     res = con.execute("DELETE FROM image WHERE image_id=?", [image_id])
     if res.rowcount > 0:
         os.remove(file_path)
