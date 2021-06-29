@@ -38,24 +38,6 @@ Ein für uns sehr wichtiger Aspekt der UX war, dass bei einem Neuladen der Seite
 * Beim Beenden des Vorgangs wird über `handleSuccess`, welches bei einer erfolgreichen Info-Provider-Erstellung ausgelöst wird, der Speicher geleert.
 <br></br>
 
-### Kommunikation mit dem Backend
-Die Methode `postInfoProvider()` dient dem Senden eines Info-Providers an den Backend-Endpunkt */infoprovider* und wird soll beim Bestätigen der Gesamtübersicht aufgerufen werden. Ihr Body umfasst das erstellte JSON-Objekt in folgendem Format:
-```javascript
-{
-    infoprovider_name: name,    //Name des erstellten Info-Providers
-    api: {
-        type: "request",
-        api_key_name: method==="BearerToken"?apiKeyInput1:apiKeyInput1 + "||" + apiKeyInput2, //Key-Datenwerte je nach Authentifizieruungsmethode
-        url_pattern: query //vom Nutzer gestellte Query
-    },
-    method: noKey?"noAuth":method,  //gewählte Authentifizierungsmethode
-    transform: Array.from(selectedData),    //ausgewählte API-Daten
-    storing: Array.from(historizedData),    //zur Historisierung gewählte Daten
-    customData: Array.from(customData)  //eigene Formeln
-}
-```
-<br></br>
-
 ### Styles
 In der Datei **styles.tsx** ist auf Ebene von `CreateInfoProvider` eine Datei angelegt, die die CSS-Klassen für alle Komponenten dieses Schrittes enthält. Dies ist insbesondere sinnvoll, da sich viele Komponenten die gleichen Style-Eigenschaften teilen. Alle Komponentne greifen für ihre Styles auf diese Datei zu.
 
@@ -527,52 +509,6 @@ Diese Probleme ließen sich für uns am besten mit einer eigenen Methode zum Fet
 * Zuletzt ist noch wichtig, dass die Antwort des Backend nur dann noch beantwortet werden darf, wenn die aufrufende Komponente (also **DiagramCreation**) noch gemounted/geladen ist. Dazu wird die State-Variable **isMounted** auf true gesetzt und geprüft, bevor das Ergebnis behandelt wird.
     * Durch eine *useEffect*-Hook, in der eine Methode zurückgegeben wird, definiert man eine Cleanup-Methode, die beim Unmounten der Komponente isMounted auf *false* setzt, sodass die Antworten der Request nicht mehr beantwortet werden.
 
-#### Datenformat
-Das Datenformat, in dem die Informationen über ein Diagramm an das Backend gesendet werden orientiert sich an dem Format, welches auch die Diagramm-Generierung des bisherigen Projektes im Backend erwartet. Basierend darauf wurde folgendes Format entworfen, in dem der Typ **Plots** zur Kapselung der Informationen über ein einzelnes Array/historisiertes Datum verwendet wird:
-```javascript
-{
-    type: string //"diagram_custom";
-    diagram_config: {
-        type: string; //"custom"
-        name: string; //diagramName
-        plots: Plots;
-    }    
-}
-
-export type Plots = {
-    customLabels?: boolean;
-    primitive?: boolean;
-    dateLabels?: boolean;
-    plots: {
-        type: string;
-        x: Array<number>;
-        y: string;
-        style: string;
-        color: string;
-        numericAttribute?: string;
-        stringAttribute?: string;
-        dateFormat?: string;
-        x_ticks: {
-            ticks: Array<string>;
-        };
-    };
-}
-```
-* Im Grunde entspricht das Format einem im Backend genutzten Objekt für mehrere Diagramme, die gemeinsam gedruckt werden sollen. Die Objekte beginnen mit einem **type: "diagram_custom"**, der angibt, dass es ein Diagramm ist. Es folgt dann ein Unterobjekt **diagram_config**, in dem **infoProviderName**, **type "custom"** und ein Name **name** gefolgt von einem Array **plots** zu finden sind.
-* Als erstes ist statt dem richtigen Plot-Array in Plots eine Reihe an Meta-Informationen enthalten: **customLabels** wird nur bei Arrays genutzt und auf true gesetzt, wenn eigene Beschriftungen genutzt wurden. **primitive** wird genauso nur bei Arrays genutzt und gibt an, ob das Array primitive Daten (true) oder Objekte (false) enthält.
-    * **dateLabels** wird nur bei historisierten Daten verwendet und gibt an, dass als Beschriftung das jeweilige Datum genutzt werden soll.
-* In jedem Plots-Array ist dann ein Diagrammtyp **type** angegeben (das Backend ermöglicht das Vermischen verschiedener Typen, hier ist er bei jedem gleich).
-* Das Array **x** ist ein Array von Zahlen und enthält bei Diagrammen mit Arrays die Indizes, die aus dem Array angezeigt werden sollen. Dies sind immmer die Indizes 0 bis *amount*-1. Bei historisierten Daten hingegen steht in diesem Array die Anzahl der Intervalle, die das angezeigte Datum in der Vergangenheit liegen soll.
-* Der String **y** enthält dann den Namen des Arrays bzw. historisierten Datums, von dem Daten angezeigt werden sollen.
-* **color** ist die vom Nutzer gewählte Farbe.
-* Die folgenden Attribute sind optional: **numericAttribute** und **stringAttribute** werden bei Arrays genutzt und enthalten die Namen der gewählten Attribute (bei String nur, wenn keine eigenen Beschriftungen gewählt werden).
-    * **dateFormat** wird nur bei historisierten Daten genutzt und gibt das Datumsformat an, das gebraucht wird, wenn die Beschriftungen Daten sein sollen.
-* Zuletzt enthält das Objekt **x_ticks** ein Array mit Strings **ticks**. Diese sind die vom Benutzer manuell gewählten Beschriftungen, sofern er solche nutzt.
-    * Man könnte in **x_ticks** auch Style-Informationen ergänzen, diese nutzen wir vorher nicht.
-Die Unterscheidung zwischen Array und historisierten Daten kann anhand dessen gemacht werden, welche Keys enthalten sind und welche nicht.
-
-Die Methode **createPlots** nimmt ein Diagramm entgegen und erstellt ein Plots-Objekt nach genau diesem Vorgaben, um es in das an das Backend gesendete JSON zu integrieren. Die Methode unterscheidet, ob es ein Diagramm mit Arrays oder mit historisierten Daten ist und baut das Objekt passend auf.
-
 
 ### Anzeige der einzelnen Schritte
 Der Mechanismus, welcher verwendet wird, um sequenziell durch die einzelnen Schritte der Diagrammerstellung zu gehen, ist der gleiche wie auch bei **CreateInfoProvider**: Es gibt im State eine Variable **diagramStep**, die als Zahlwert den aktuellen Schritt hält, an dem sich der Nutzer befindet.
@@ -755,3 +691,217 @@ In der Methode selbst wird zunächst unterschieden, ob die Komponente über **Ar
 Bei Änderungen an den Eingabefeldern wird **labelChangeHandler** genutzt, welcher nach gleichem Schema wie im vorherigen Abschnitt zwischen Array und historisierten Daten differenziert. Es wird dann jeweils der String mit der Eingabe überschrieben und das Objekt im Array neu gesetzt.
 
 <div style="page-break-after: always;"></div>
+
+# Senden eines Infoproviders an das Backend
+Den Abschluss der gesamten Infoprovider-Erstellung stellt das Senden des fertig erstellten Infoproviders an das Backend dar. Dazu müssen die im Prozess gesammelten Informationen derartig transformiert werden, dass sie das von uns gewünschte Datenformat haben, das in diesem Abschnitt erläutert werden soll.
+
+Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst große Anteile der im Backend benötigten Struktur im Frontend passend generiert werden, gleichzeitig aber auch alle Informationen so gespeichert sind, dass sie zum Bearbeiten des Infoproviders leicht zugänglich sind. Wenn ein konkreter Infoprovider per ID angefragt wird (das ist bei der Bearbeitung der Fall) liefert das Backend genau das JSON-Objekt zurück, welches beim Erstellen durch das Frontend geliefert wurde - daher muss diese Datenstruktur so ausgelegt sein, dass die Informationen zur Bearbeitung zugänglich sind.
+* Ein Nachteil ist, dass manche Information redundant dargestellt wird - hinsichtlich des restlichen Codes zahlt sich diese "Investition" jedoch aus.
+
+Abgesendet wird das fertige Datenformat durch den Button "Abschließen" in **SettingsOverview** - dann wird die in **CreateInfoProvider** liegende Methode **postInfoProvider aufgerufen**.
+
+## Überblick des Datenformats
+Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für einen Infoprovider, über das wir mit dem Backend kommunzieren - im folgenden soll dann auf die einzelnen Abschnitte im Detail eingegangen werden.
+```javascript
+{
+    infoprovider_name: <infoproviderName>,
+    datasources: [
+        {
+            datasource_name: <datasourceName>,
+            top_level_array: <boolean>
+            api: {
+                api_info: {
+                    type: "request",
+                    api_key_name: "key||########",
+                    url_pattern: <url>
+                },
+                method: <method>,
+                response_type: <responseType>
+            },
+            transform: [],
+            storing: [],
+            formulas: [
+                {
+                    formelName: <formelName>,
+                    formelString: <formelString>
+                },
+                ...
+            ],
+            calculates: [
+                {
+                    type: "calculate",
+                    action: <action>,
+                    keys: [
+                        "_loop|" + <arrayName>,
+                        ...
+                    ],
+                    new_keys: [
+                        "_loop|" + <processingName>,
+                    ],
+                    decimal: 2
+                },
+                ...
+            ],
+            replacements: [
+                {
+                   type: "replace",
+                   keys: [
+                       <stringName>
+                   ],
+                   new_keys: [
+                       <replacementName>
+                   ],
+                    old_value: <ersetzungsString>,
+                    new_value: <einfügeString>,
+                    count: -1
+                },
+                ...
+            ]
+            schedule: {
+                type: <type>,
+                time: <time>,
+                date: <date>,
+                time_interval: <timeInterval>,
+                weekdays: [<int>]
+            }
+            selected_data: [selectedData]
+            historized_data: [String]
+            arrayProcessingsList: [ArrayProcessingData]
+            stringReplacementList: [StringReplacementData]
+        },
+        ...
+    ],
+    diagrams: {
+        <diagramName>: {
+            type: "diagram_custom",
+            diagram_config: {
+                type: "custom",
+                name: <diagramName>,
+                infoprovider: <infoproviderName>,
+                sourceType: <sourceType>,
+                plots: [
+                    {
+                        customLabels: <boolean>,
+                        primitive: <boolean>,
+                        dateLabels: <boolean>,
+                        plot: {
+                            type: <type>,
+                            x: [<indices>],
+                            y: "{<keyName>}",
+                            numeric_attribute: <numericAttributeKey>,
+                            string_attribute: <stringAttributeKey>,
+                            color: <#hexcode>,
+                            x_ticks: {
+                                ticks: <Array<string>>
+                            } 
+                        }
+                    },
+                    ...
+                ]
+            }
+        },
+        ...
+    }
+    diagrams_original: <Array<Diagram>>
+    arrays_used_in_diagrams: <Array<string>>
+}
+
+```
+Wie man sehen kann, umfasst das Format auf höchster Ebene fünf Informationen:
+* **infoprovider_name**, der Name des Infoproviders.
+* **datasources**, ein Array mit den Objekten zu allen Datenquellen des Infoproviders.
+* **diagrams**, ein Array mit Objekten für alle erstellten Diagramme.
+* **diagrams_original**, das Diagramm-Objekt aus dem Frontend.
+    * Es wird gespeichert, weil die Darstellung in **diagrams** deutlich komplexer und ungeeignet ist, um bei der Bearbeitung noch einmal geladen zu werden. Daher speichert man das originale Objekt, das man bei einer Bearbeitung einfach weiterverwenden kann.
+* **arrays_used_in_diagrams**, eine Auflistung aller in Diagrammen genutzten Arrays - des Backend benötigt diese.
+
+## Datenquellen-Format
+Jede Datenquelle besitzt einen Namen, der win **datasource_name** gespeichert wird. Weiterhin hat die Datenquelle ein Objekt **api**, welches die grundlegenden Informationen zur angefragten Datenquelle umfasst:
+* Das Unterobjekt **api_info** listet die Informationen zur Anfrage: **type** ist immer gleich gesetzt und wird für das Backend benötigt, **api_key_name** enthält die Authentifizierungsdaten. Dabei unterscheidet sich das Format je nach der Methode:
+    * Bei **BearerToken** ist nur ein String dargestellt, der das Token ist. Bei **BasicAuth** und **DigestAuth** sind Nutzername und Passwort getrennt durch zwei Pipe-Symbole dargestellt. Bei **KeyInHeader** und **KeyInQuery** sind Attributsname und Wert des Keys durch die Pipe-Symbole getrennt dargestellt.
+    * **url_pattern** ist die angefragte URL, ggf. mit Query-Parametern.
+* **method** gibt die Authentifizierungsmethode an.
+* Unter **response_type** listen wir den erwarteten Rückgabetyp - das ist entweder **json** oder **xml**, wir haben derzeit nur **json** genutzt.
+
+Als nächstes folgen Arrays mit den Daten zu der jeweiligen Datenquelle. Hier ist zunächst auffällig, dass **transform** und **storing** beide leere Arrays sind. Das liegt daran, dass das Backend das gesendete Objekt weiterverwendet und diese beiden Keys braucht - sie werden aber nicht durch das Frontend, sondern das Backend selbst befüllt.
+
+**formulas** umfasst alle vom Nutzer erstellten Formeln. Es handelt sich um ein Array von Objekten, die im Grunde den vom Frontend genutzten Typ **FormelObj** haben. Hier kann also direkt **customData** der Datenquelle übergeben werden.
+
+**calculates** ist bereits etwas komplizierter - unter diesem Namen werden alle Array-Verarbeitungen gespeichert. Dabei handelt es sich um ein Array, welches allgemein Objekte der dargestellten Struktur enthält. Wichtig ist dabei aber zu wissen, das **nicht** für jede Verarbeitung ein eigenes Objekt vorliegt, sondern insgesamt genau 4.
+* Das liegt daran, dass ein Objekt immer für einen Operations-Typ steht - bei uns **sum**, **mean**, **min** und **max**. Im Key **action** wird gespeichert, für welche Operation dieses Array gilt.
+* Entsprechend werden bei der Erstellung alle Verarbeitungen eines Typs gesammelt und in ein Objekt geschrieben. In **keys** findet sich eine Auflistung der Arrays, die verarbeitet werden sollen. Ihnen wird `_loop|` vorangestellt, da dies im Backend dafür sorgt, dass einmal alle Elemente des Arrays durchlaufen werden.
+    * Analog ist **new_keys** ein Array mit allen Namen, die die als Ergebnis der Operation entstandenen Keys haben sollen. Dabei ist es von Seiten des Backends optional, ein solches Array anzugeben - ist es leer, so werden die **keys** der API durch die verarbeitete Variante ersetzt.
+        * Wir haben uns aber entschieden, aus Gründen der Einfachheit Ergebnisse von Array-Operationen immer als neue Datenwerte zu speichern.
+* Zuletzt gibt **decimals** an, wie viele Dezimalstellen bei der Berechnung genutzt werden sollen - wir haben hier pauschal 2 festgelegt. Eine allgemeine Möglichkeit zur Einstellung könnte aber im Frontend implementiert werden.
+
+**replacements** ist dann das Array von allen String-Verarbeitungen und hat ein ähnliches Format. Hier ist es jedoch so, dass für jede String-Verarbeitung ein eigenes Objekt existiert. Das Array **key** den Namen des zu verarbeitenden Strings, **new_keys** den Namen des durch die Verarbeitung entstehenden Namens. Auch hier ist **new_keys** optional, sodass man die Werte der API ersetzen lassen könnte. Wir legen jedoch immer neue Daten an.
+* Obwohl beide Keys nur einen Namen umfassen müssen für das Backend-Datenformat Arrays genutzt werden.
+* **old_value** ist dann der zu erstzende String, während **new_value** der einzufügende String ist.
+* Abschließend gibt **count** an, wir oft eine solche Ersetzung stattfinden soll. Da das Frontend (derzeit) keine Option hat, dies einzustellen verwenden wir **-1**, welches beliebig oft Ersetzungen ermöglicht.
+
+Es folgt mit **schedule** das Objekt, welches die Informationen der Historisierungs-Schedule umfasst. Im Grunde ist das Format genau gleich wie der Frontent-Datentyp **Schedule**, hat aber andere Namen sowie einen zusätzlichen Key **date**. Dieser ist nur wegen des Backend-Datenformats nötig und bleibt bei uns leer.
+
+**historized_data** benötigt das Backend um zu wissen, welche Daten historisiert wurden.
+
+Es folgen drei Arrays, die für die Verarbeitung im Backend nicht benötigt werden - **selected_data**, , **arrayProcessingsList** und **stringReplacementList**. Die ausgewählten Daten dienen nur der Eingrenzung der Anzeigemenge im Frontend und die Array-Operationen bzw. String-Ersetzungen werden als eigene Datenstrukturen für das Backend aufbereitet. Wir geben diese dennoch in das Datenformat ein, da wir die Informationen aller drei beim Bearbeiten wiederherstellen müssen - die Wiederherstellung aus **calculates** würde beispielsweise einen eigenen Methodendurchlauf erfordern usw., weshalb wir die komfortable Möglichkeit nutzen, die Daten direkt in der vom Frontend benötigten Form im Backend zu lagern.
+
+### Methode zur Generierung
+**postInfoProvider** übernimmt die Generierung dieses Datenformats nicht selbst, sondern ruft die Methode **createDataSources** auf. Diese durchläuft das Array **dataSources** mit allen Datenquellen und generiert für jede Datenquelle ein Objekt des Typ **BackendDataSource**, der dem vorgestellten Format entspricht.
+
+Dabei werden größtenteils die Werte aus den **DataSource**-Objekten in die entsprechenden Keys kopiert. Hervorzuheben ist die Generierung der Authentifizierungsdaten, bei welchen anhand von **method** unterschieden wird, ob nur ein String (BearerToken) oder zwei per Pipe-Symbol konkatenierte Strings geschrieben werden müssen (alle anderen Methoden).
+```javascript
+api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+```
+Gegenüber den Methoden des Frontends kommt noch die neue Methode **noAuth** hinzu, die wir setzen, wenn **noKey true** ist, d.h. keine Authentifizierung genutzt wird.
+
+Zuletzt werden **CreateCalculates** und **createReplacements** aufgerufen, um die entsprechenden Arrays zu generieren:
+* **createCalculates** geht dabei durch alle Array-Verarbeitungen durch und gruppiert diese in vier Arrays, eines für jeden Operationstyp. Basierend auf dieser Gruppierung generiert es dann die vier Objekte.
+* **createReplacements** funktioniert einfacher, da man hier einfach nur alle String-Ersetzungen durchgehen muss und jeweils ein passendes Objekt generiert.
+
+## Diagramm-Datenformat
+Das Datenformat, in dem die Informationen über ein Diagramm an das Backend gesendet werden orientiert sich an dem Format, welches auch die Diagramm-Generierung des bisherigen Projektes im Backend erwartet. Basierend darauf wurde folgendes Format entworfen, in dem der Typ **Plots** zur Kapselung der Informationen über ein einzelnes Array/historisiertes Datum verwendet wird:
+```javascript
+{
+    type: string //"diagram_custom";
+    diagram_config: {
+        type: string; //"custom"
+        name: string; //diagramName
+        sourceType: string; //"Array" oder "Historized"
+        plots: Plots;
+    }    
+}
+
+export type Plots = {
+    customLabels?: boolean;
+    primitive?: boolean;
+    dateLabels?: boolean;
+    plots: {
+        type: string;
+        x: Array<number>;
+        y: string;
+        style: string;
+        color: string;
+        numericAttribute?: string;
+        stringAttribute?: string;
+        dateFormat?: string;
+        x_ticks: {
+            ticks: Array<string>;
+        };
+    };
+}
+```
+* Im Grunde entspricht das Format einem im Backend genutzten Objekt für mehrere Diagramme, die gemeinsam gedruckt werden sollen. Die Objekte beginnen mit einem **type: "diagram_custom"**, der angibt, dass es ein Diagramm ist. Es folgt dann ein Unterobjekt **diagram_config**, in dem **infoProviderName**, **type "custom"** und ein Name **name** gefolgt von einem Array **plots** zu finden sind. Zudem gibt es noch **sourceType**, welcher angibt, ob es ein Diagramm aus Arrays oder historisierten Daten ist. Anhand dieses Keys weiß das Backend, welche Keys es in **plots** zu erwarten hat.
+* Als erstes ist statt dem richtigen Plot-Array in Plots eine Reihe an Meta-Informationen enthalten: **customLabels** wird nur bei Arrays genutzt und auf true gesetzt, wenn eigene Beschriftungen genutzt wurden. **primitive** wird genauso nur bei Arrays genutzt und gibt an, ob das Array primitive Daten (true) oder Objekte (false) enthält.
+    * **dateLabels** wird nur bei historisierten Daten verwendet und gibt an, dass als Beschriftung das jeweilige Datum genutzt werden soll.
+* In jedem Plots-Array ist dann ein Diagrammtyp **type** angegeben (das Backend ermöglicht das Vermischen verschiedener Typen, hier ist er bei jedem gleich).
+* Das Array **x** ist ein Array von Zahlen und enthält bei Diagrammen mit Arrays die Indizes, die aus dem Array angezeigt werden sollen. Dies sind immmer die Indizes 0 bis *amount*-1. Bei historisierten Daten hingegen steht in diesem Array die Anzahl der Intervalle, die das angezeigte Datum in der Vergangenheit liegen soll.
+* Der String **y** enthält dann den Namen des Arrays bzw. historisierten Datums, von dem Daten angezeigt werden sollen.
+* **color** ist die vom Nutzer gewählte Farbe.
+* Die folgenden Attribute sind optional: **numericAttribute** und **stringAttribute** werden bei Arrays genutzt und enthalten die Namen der gewählten Attribute (bei String nur, wenn keine eigenen Beschriftungen gewählt werden).
+    * **dateFormat** wird nur bei historisierten Daten genutzt und gibt das Datumsformat an, das gebraucht wird, wenn die Beschriftungen Daten sein sollen.
+* Zuletzt enthält das Objekt **x_ticks** ein Array mit Strings **ticks**. Diese sind die vom Benutzer manuell gewählten Beschriftungen, sofern er solche nutzt.
+    * Man könnte in **x_ticks** auch Style-Informationen ergänzen, diese nutzen wir vorher nicht.
+Die Unterscheidung zwischen Array und historisierten Daten kann anhand dessen gemacht werden, welche Keys enthalten sind und welche nicht.
+
+Die Methode **createPlots** nimmt ein Diagramm entgegen und erstellt ein Plots-Objekt nach genau diesem Vorgaben, um es in das an das Backend gesendete JSON zu integrieren. Die Methode unterscheidet, ob es ein Diagramm mit Arrays oder mit historisierten Daten ist und baut das Objekt passend auf.
+* **postInfoProvider** ruft entsprechend diese Methode auf.
