@@ -108,7 +108,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     React.useEffect(() => {
         console.log(JSON.stringify(items))
         sessionStorage.setItem("items-" + uniqueId, JSON.stringify(items));
-    }, [items.length])
+    }, [items])
     React.useEffect(() => {
         sessionStorage.setItem("recentlyRemovedItems-" + uniqueId, JSON.stringify(recentlyRemovedItems));
     }, [recentlyRemovedItems])
@@ -120,11 +120,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!));
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
-    }, [])
+    }, [items])
 
     useEffect(() => {
         exportToBackend(usedImagesArray);
-    }, [sceneName])
+    }, [sceneName, usedImagesArray])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -151,7 +151,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const dupeStage = (itemArray : Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
         let duplicateStage = new Konva.Stage({container: "backgroundStage", visible: true, width: 960, height: 540});
-        let duplicateLayer = new Konva.Layer;
+        let duplicateLayer = new Konva.Layer();
         duplicateStage.destroyChildren();
         if (backGroundType === "COLOR"){
             duplicateLayer.add(new Konva.Rect({
@@ -1111,7 +1111,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(index)
         return (
             <Grid item xs={4}>
-                <img src={image} width="50px" height="30px" alt={"Image can not be displayed!"}/>
+                <img src={image} width="50px" height="30px" alt={"Can not be displayed!"}/>
             </Grid>
         )
     }
