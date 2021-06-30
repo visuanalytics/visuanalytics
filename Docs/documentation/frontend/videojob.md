@@ -1,8 +1,9 @@
-# Videojob (VideoCreation)
+# Videojob
 Die Komponentenstruktur der Anwendung ist in diesem Abschnitt wie folgt aufgebaut:
 ![Übersicht_VideoCreator.png](images/videojob/Übersicht_VideoCreator.png)
 <div style="page-break-after: always;"></div>
 
+## VideoCreation
 Die Hauptkomponente des Videojob-Editors, die vom Dashboard aus aufgerufen wird ist **VideoCreation**. Sie verwaltet alle für die Erstellung von Videojobs notwendigen States und ruft die anderen Komponenten in ihrem Rendering auf. Dazu verwaltet sie als **videoCreationStep** den aktuellen Schritt, der den Wert 0-2 annehmen kann, da der Prozess aus drei Schritten besteht:
 1. Auswahl der Infoprovider für Text-To-Speech
 2. Erstellung des eigentlichen Videos
@@ -10,7 +11,7 @@ Die Hauptkomponente des Videojob-Editors, die vom Dashboard aus aufgerufen wird 
 
 * Über den Step hinaus enthält der State u.a. den Namen des Videojobs **videoJobName**, die Erstellungszeitpunkte als **schedule** sowie **sceneList**, welcher die Liste aller vom Nutzer ausgewählten Szenen ist.
 
-## Fetch-Methoden
+### Fetch-Methoden
 Weiterhin enthält die Komponente drei Fetch-Methoden, durch die eine Datenkommunikation mit dem Backend stattfindet:
 * **fetchAllInfoProvider**, welche vom Backend den Namen und die IDs aller verfügbaren Infoprovider holt.
 * **fetchAllScenes**, welche vom Backend Namen und IDS aller verfügbaren Szenen holt.
@@ -47,9 +48,7 @@ Die Darstellung der Liste aller Infoprovider erfolgt so, wie es aus zahlreichen 
     * Falls ja, so wird er aus dieser Liste entfernt, falls nein wird er hinzugefügt.
     * **checkIDIncluded** geht schlicht **selectedInfoProvider** durch und prüft, ob die ID des angeklickten Infoproviders gefunden werden kann - wenn ja, so ist der gewählte Infoprovider bereits enthalten.
 
-!!!!!!!!!!!!!!!!!!!
-WARNUNGSDARSTELLUNG
-!!!!!!!!!!!!!!!!!!!!
+Um den Nutzer auf das mögliche Problem einer hohen Speicherauslastung bei vielen, sehr großen Infoprovidern gleichzeitig aufmerksam zu machen haben wir uns entschlossen, eine Warnung anzuzeigen. Diese ist standardmäßig verborgen und wird dargestellt, sobald der mehr als 5 Infoprovider ausgewählt wurden. Für eine Justierung dieses Schwellenwerts wären Praxis-Daten zur durchschnittlichen Auslastung je Infoprovider notwendig.
 
 
 ### Abfragen aller Infoprovider vom Backend
@@ -161,7 +160,7 @@ Aus diesem Grund wollten wir eine Art Tausch-Animation, die genutzt wird, wenn m
 * Nun kommt **renderSceneEntry** ins Spiel: In der Methode wird zunächst geprüft, ob die Szene nicht sichtbar ist. Falls dies der Fall ist, so wird geprüft, ob die Variable **timeoutSet** bereits gesetzt wurde. Dies ist eine mit **useRef** für die Komponente angelegte Variable, die genutzt wird um zu speichern, ob bereits ein Timer zum erneuten Einblenden der Elemente gestartet wurde.
     * Ist **timeoutSet** **false**, so wurde noch kein Timer gesetzt und anschließend mit **setTimeout** ein Timer für die verzögerte Ausführung von Code gestartet. Mit **timeoutSet.current = true** markiert man dann, dass ein Timer gesetzt wurde.
         * Dieser verzögert ausgeführte Code durchläuft die Szenenliste und setzt **visible** überall dort auf **true**, wo es den Wert false hat.
-        * Anschließend setzt man **timeoutSet** wieder auf **false**, damit dies für diese nächste Animation zurückgesetzt ist.
+        * Anschließend setzt man **timeoutSet** wieder auf **false**, damit dies für die nächste Animation zurückgesetzt ist.
 * Die Dauer des **setTimeout** ist 300ms. Die beiden Szenen werden also für 300ms ausgeblendet, bevor sie über 800ms an ihrer neuen Position mit einer Animation wieder eingeblendet werden.
     * Leider ist eine Animation beim Ausblenen nicht möglich, da sich die Datenwerte der Szenen bereits zum Zeitpunkt des Ausblendens ändern und man so bereits beim Ausblenden die neuen Beschriftungen sehen würde.
 
@@ -199,7 +198,7 @@ Die Nutzung von Slidern verstärken ein allgemeines Problem, welches mit Eingabe
 * Auf diese Weise wird nicht **VideoEditor**, sondern nur **SceneCard** neu gerendert, wenn man den Slider bedient - dadurch lassen sich die Performance-Probleme größtenteils lösen und die User Experience wird verbessert.
 
 ### EditTextDialog
-In **EditTextDialog wird ein Dialog gerendert, welcher die Bearbeitung für TTS-Texte ermöglicht. Dabei wurde dieser Dialog nicht in **SceneCard** direkt integriert, da dieser viel eigene Logik enthält und die Komponente aufgebläht hätte. In der Komponente **SceneCard** gibt es lediglich einen State, welcher dafür zuständig ist, den Dialog bei Bedarf anzuzeigen. Der State dafür heißt **showEditTextDialog** und wird bei Klick auf entsprechenden Button auf true gesetzt. Gleichzeitig wird der State und dessen Setter dem Dialog mittels props übergeben. Damit dieser sich selbst schließen kann.
+In **EditTextDialog** wird ein Dialog gerendert, welcher die Bearbeitung für TTS-Texte ermöglicht. Dabei wurde dieser Dialog nicht in **SceneCard** direkt integriert, da dieser viel eigene Logik enthält und die Komponente aufgebläht hätte. In der Komponente **SceneCard** gibt es lediglich einen State, welcher dafür zuständig ist, den Dialog bei Bedarf anzuzeigen. Der State dafür heißt **showEditTextDialog** und wird bei Klick auf entsprechenden Button auf true gesetzt. Gleichzeitig wird der State und dessen Setter dem Dialog mittels props übergeben. Damit dieser sich selbst schließen kann.
 
 Der Dialog selbst enthält States, um das hinzufügen von TTS-Parts und Pausen zu verwalten.
 
@@ -270,7 +269,7 @@ Entsprechend hat die Komponente wieder den gleichen Grundaufbau mit **RadioButto
 Gegenüber der Vorlagen-Komponente wurde modifiziert, dass Logik-Methoden, die mit der Unterscheidung zwischen Bearbeitung und Erstellung von Infoprovidern sowie dem Speichern von Datenquellen zusammenhängen, entfernt wurden. Geändert wurde außerdem der "weiter"-Button zu einem "Abschließen"-Button, der den erstellten Videojob an das Backend sendet (Erläuterung im folgenden Abschnitt).
 
 
-### Senden der Daten an das Backend
+## Senden der Daten an das Backend
 Nach Abschluss der Erstellung des Videojobs muss dieser an das Backend übermittelt werden, um von diesem in der Video-Generierung genutzt werden zu können. Dabei wird wie auch bei den Infoprovidern ein großer Teil der Erstellung des Datenformats bereits auf Ebene des Frontends vorgenommen. Das Grundgerüst der Umsetzung bilden zwei Objekte: **images**, welches alle Szenen in der Reihenfolge enthält, in der sie angezeigt werden sollen und **audio**, in welchem alle durch Text-To-Speech vorzulesenden Texte enthalten sind.
 
 Das Datenformat sieht dabei allgemein so aus (images und audio sind beispielhaft):
@@ -323,7 +322,7 @@ Die allgemeine Generierung findet in der Methode **sendVideoToBackend** statt, w
     * Gleiches gilt für **schedule**, welches dem gleichnamigen State entnommen werden kann. Hier sind lediglich Änderungen der Key-Namen notwendig, wie es bereits vom Datenformat der Infoprovider bekannt ist.
 * **sequence** wird nicht durch den Nutzer beeinflusst und hat immer den gleichen Wert, entsprechend wird es auch konstant in **sendVideoToBackend** definiert.
 
-#### images-Objekt
+### images-Objekt
 Für das images-Objekt gibt es die Methode **createImagesObject()**, welche zur Erstellung des Objektes dient. Allgemein gilt für das Datenformat, dass ein Objekt geliefert werden soll, welches jede Szene als Key enthält, die im Video auftritt.
 * Die Reihenfolge, in der die Schlüssel dabei angelegt sind ist gleichzeitig die Abspielreihenfolge.
 
@@ -336,7 +335,7 @@ Die Methode erstellt ein leeres Objekt **imagesObject** vom Typ any - dies ist k
 * Durch den eindeutigen Index bleibt so jeder Key eindeutig, gleichzeitig sorgt der aufsteigende Index am Anfang des Keys dafür, dass die alphanumerische Sortierung unsere Reihenfolge nicht zerstört.
 
 
-#### audios-Objekt
+### audios-Objekt
 Analog zum images-Objekt muss auch ein Objekt **audios** angelegt werden. Dieses soll die Definitionen der Tonspuren zu allen Szenen enthalten. Es handelt sich wieder um ein Objekt, in dem jeder Key für eine Tonspur einer Szene steht.
 * Zur Zuordnung gilt: Die erste Audio wird der ersten Szene zugeordnet, die zweite Audio der zweiten Szene usw.
 * Die **audio**-Objekte im Inneren werden ebenfalls mit einem **index** durchnummeriert - das sichert die Einzigartigkeit der Keys und sorgt dafür, dass die Sortierung genau der unserer Szenenliste entspricht.
