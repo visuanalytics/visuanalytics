@@ -279,6 +279,49 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
 
 
     /**
+     * Method that checks an object (array of ListItemRepresentation) for arrays that are
+     * compatible for diagram usage. Works recursively if it finds other objects.
+     * @param object The object to be checked.
+     * @param dataSourceName The name of the dataSource the object belongs to - necessary for naming.
+     */
+    const checkInnerObject = React.useCallback((object: Array<ListItemRepresentation>, dataSourceName: string) => {
+        let compatibleArrays: Array<ListItemRepresentation> = [];
+        object.forEach((listItem) => {
+            if (listItem.arrayRep) {
+                if (Array.isArray(listItem.value)) {
+                    //this is an array containing objects
+                    //check if the object contains a numeric value
+                    if (checkObjectForNumeric(listItem.value)) {
+                        //create a copy of the item with changed parentKeyName that has the dataSource in front
+                        const editedItem = {
+                            ...listItem,
+                            keyName: listItem.keyName.slice(-2) === "|0" ? listItem.keyName.substring(0, listItem.keyName.length - 2) : listItem.keyName,
+                            parentKeyName: listItem.parentKeyName === "" ? dataSourceName : dataSourceName + "|" + listItem.parentKeyName
+                        }
+                        compatibleArrays.push(editedItem);
+                    }
+                } else if (listItem.value !== "[Array]" && !listItem.value.includes(",")) {
+                    //when the value is not array and has no commas, the array contains primitive values of the same type
+                    //check if the primitive type is numeric
+                    if (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl") {
+                        const editedItem = {
+                            ...listItem,
+                            keyName: listItem.keyName.slice(-2) === "|0" ? listItem.keyName.substring(0, listItem.keyName.length - 2) : listItem.keyName,
+                            parentKeyName: listItem.parentKeyName === "" ? dataSourceName : dataSourceName + "|" + listItem.parentKeyName
+                        }
+                        compatibleArrays.push(editedItem);
+                    }
+                }
+            } else if (Array.isArray(listItem.value)) {
+                //this is an object, we need to check if one of its values is an array
+                compatibleArrays = compatibleArrays.concat(checkInnerObject(listItem.value, dataSourceName));
+            }
+        });
+        return compatibleArrays;
+    }, [])
+    
+
+    /**
      * Runs through the provided array of listItems recursively and returns all arrays that are compatible for diagram usage.
      * @param listItems The array to be processed.
      * Arrays are compatible if they only contain items of the same type or objects.
@@ -327,49 +370,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
             })
         }
         return compatibleArrays;
-    }, [])
-
-    /**
-     * Method that checks an object (array of ListItemRepresentation) for arrays that are
-     * compatible for diagram usage. Works recursively if it finds other objects.
-     * @param object The object to be checked.
-     * @param dataSourceName The name of the dataSource the object belongs to - necessary for naming.
-     */
-    const checkInnerObject = (object: Array<ListItemRepresentation>, dataSourceName: string) => {
-        let compatibleArrays: Array<ListItemRepresentation> = [];
-        object.forEach((listItem) => {
-            if (listItem.arrayRep) {
-                if (Array.isArray(listItem.value)) {
-                    //this is an array containing objects
-                    //check if the object contains a numeric value
-                    if (checkObjectForNumeric(listItem.value)) {
-                        //create a copy of the item with changed parentKeyName that has the dataSource in front
-                        const editedItem = {
-                            ...listItem,
-                            keyName: listItem.keyName.slice(-2) === "|0" ? listItem.keyName.substring(0, listItem.keyName.length - 2) : listItem.keyName,
-                            parentKeyName: listItem.parentKeyName === "" ? dataSourceName : dataSourceName + "|" + listItem.parentKeyName
-                        }
-                        compatibleArrays.push(editedItem);
-                    }
-                } else if (listItem.value !== "[Array]" && !listItem.value.includes(",")) {
-                    //when the value is not array and has no commas, the array contains primitive values of the same type
-                    //check if the primitive type is numeric
-                    if (listItem.value === "Zahl" || listItem.value === "Gleitkommazahl") {
-                        const editedItem = {
-                            ...listItem,
-                            keyName: listItem.keyName.slice(-2) === "|0" ? listItem.keyName.substring(0, listItem.keyName.length - 2) : listItem.keyName,
-                            parentKeyName: listItem.parentKeyName === "" ? dataSourceName : dataSourceName + "|" + listItem.parentKeyName
-                        }
-                        compatibleArrays.push(editedItem);
-                    }
-                }
-            } else if (Array.isArray(listItem.value)) {
-                //this is an object, we need to check if one of its values is an array
-                compatibleArrays = compatibleArrays.concat(checkInnerObject(listItem.value, dataSourceName));
-            }
-        });
-        return compatibleArrays;
-    }
+    }, [checkInnerObject])
 
     /**
      * Evaluates if the object contains a numeric value (not in sub-objects but on the highest level).
