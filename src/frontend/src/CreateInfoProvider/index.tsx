@@ -125,6 +125,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [dataSourcesKeys, setDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+    //true when the button for submitting in settingsOverview is blocked because a posting is running - stored here because methods here need to change it
+    const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
 
 
     /**
@@ -360,6 +362,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
 
     const reportError = (message: string) => {
         dispatchMessage({type: "reportError", message: message});
+        setSubmitInfoProviderDisabled(false);
     };
 
     /**
@@ -368,6 +371,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
         clearSessionStorage();
+        setSubmitInfoProviderDisabled(false);
         components?.setCurrent("dashboard")
     }, [components]);
 
@@ -604,6 +608,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             if (name.length <= 0) {
                 reportError("Bitte geben Sie dem Infoprovider einen Namen!");
             } else {
+                setSubmitInfoProviderDisabled(true);
                 postInfoProvider();
             }
         } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
@@ -820,6 +825,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         dataSourcesKeys={dataSourcesKeys}
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                        submitInfoProviderDisabled={submitInfoProviderDisabled}
                     />
                 )
             case 6:
