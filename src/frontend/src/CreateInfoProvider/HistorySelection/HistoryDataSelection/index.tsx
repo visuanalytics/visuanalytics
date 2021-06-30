@@ -179,7 +179,6 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
             console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
-        props.selectSchedule({type: "", interval: "", time: "", weekdays: []});
     };
 
 
