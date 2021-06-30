@@ -205,7 +205,23 @@ Der Dialog selbst enthält States, um das hinzufügen von TTS-Parts und Pausen z
 
 **audioElements** ist dabei das Array, welches nach und nach vom Nutzer durch die verschiedenen Aktionen gefüllt werden kann. Dabei wird das Array (bestehend aus Objekten vom Typ **AudioElement**) entweder mit dem übergebenen **spokenText** initialisiert oder mit einem leeren Text-Eintrag, falls **spokenText** leer ist. Dies ist notwendig damit im Dialog standardmäßig ein Textfeld angezeigt wird, in welches der Nutzer Text eingeben kann.
 
-Das rendering von Textfeldern für Pausen und TTS-Parts kann dabei durch eine einzige Methode (**renderEditElement**) erledigt werden. Diese Methode rendert dabei konditionell verschiedene Textfelder mit unterschiedlichen Labels. Das rendering hängt dabei vom Typen des aktuellen Elements ab, welches der Funktion übergeben wird. Die Funktion wird dabei wieder in einer **.map**-Funktion aufgerufen, welche auf **audioElements** angewendet wird. Die übergebene ID an **renderEditElement** wird als ID der Textfelder gesetzt. Dies wird wichtig, sobald Texte editiert werden und an entsprechender Stelle im Array **audioElements** ersetzt / erweitert werden müssen. Auch für die Löschung von Abschnitten ist dies wichtig.
+Ein Objekt vom Typ **AudioElement** hat dabei die folgende Struktur*
+
+```javascript
+export type AudioElement = {
+    type: AudioType;
+    text?: string;
+    duration?: number;
+}
+```
+
+`text` und `duration` sind dabei beide optional und es wird pro Element nur einer der beiden Werte gesetzt. Auf welchen von beiden man dabei beim aktuell betrachteten Element zugriefen kann, wird im Grunde durch den Typen angegeben:
+* Typ "text" = Zugriff auf Attribut `text`.
+* Typ "pause" = Zugriff auf Attribut `duration`
+
+Bevor auf diese Attribute zugegriffen werden kann, muss allerdings trotzdem eine Prüfung auf "ungleich undefined" erfolgen oder der Wert muss explizit mittels "!" angegeben werden. Letzteres sollte in der Softwareentwicklung allerdings eher vermieden werden. 
+
+Das rendering von Textfeldern für Pausen und TTS-Parts kann durch eine einzige Methode (**renderEditElement**) erledigt werden. Diese Methode rendert dabei konditionell verschiedene Textfelder mit unterschiedlichen Labels. Das rendering hängt dabei vom Typen des aktuellen Elements ab, welches der Funktion übergeben wird. Die Funktion wird dabei wieder in einer **.map**-Funktion aufgerufen, welche auf **audioElements** angewendet wird. Die übergebene ID an **renderEditElement** wird als ID der Textfelder gesetzt. Dies wird wichtig, sobald Texte editiert werden und an entsprechender Stelle im Array **audioElements** ersetzt / erweitert werden müssen. Auch für die Löschung von Abschnitten ist dies wichtig.
 
 Mittels **changeElement** werden die Änderungen, welche in oben beschriebenen Textfeldern gemacht werden, verarbeitet. Dabei wird zuerst die ID des übergebenen Events mittels `event.target.id` aus dem Event geholt. Nun wird im Array **audioElements** nachgeschaut, ob dieses Element ein Text oder eine Pause ist.
 * Im Falle eines Textes kann der Value des Events einfach an `audioElements[index].text` geschrieben werden, wobei index hier als Platzhalter für den tatsächlichen Index im Array dient.
@@ -223,6 +239,26 @@ Sind diese Voraussetzungen erfüllt, so kann der Button angeklickt werden und ru
 Mittels **saveNewAudio** wird mit dem Setter von **spokenText** (übergeben mittels props) **spokenText** in der höherliegenden Komponente mit dem Array **audioElements** überschrieben. Dabei wird **spokenText** nicht für die oben erklärten Operationen verwendet, da somit das Zurücksetzen bei Abbruch der Bearbeitung schwieriger wäre. Nachdem der State überschrieben wurde, wird der Dialog mittels des übergebenen Setters geschlossen und alle Szenen werden wieder angezeigt.
 
 Für das schließen des Dialogs wurde keine eigene Methode implementiert, da dies einfach im Button "abbrechen" über die Setter-Methode, welche das rendering des Dialogs regelt, im onClick-Event direkt getan werden kann. Die entsprechende Setter-Methode, wurde dem Dialog mittels props übergeben.
+
+#### Anzeigen und hinzufügen von API-Daten
+Das Design des Dialogs ist in zwei Spalten aufgeteilt. Der Aufbau und die Funktionen der linken Spalte haben wir bereits besprochen. In der rechten Spalte befinden sich alle Aktionen für für API-Daten der Infoprovider. Hierbei wird in Funktionen mehrfach eine **.map**-Funktion angewendet, um alle Elemente in der richtigen Reihenfolge zu rendern. Dabei sieht der Ablauf wie folgt aus:
+1. Das Rendering der Komponente selbst, ruft **.map** auf alle Infoprovider auf. Innerhalb von **.map** wird **renderInfoproviderData** aufgerufen. Diese Methode bekommt den Index des Infoproviders, sowie dessen Namen und Datenquellen. Der Index wird benötigt, um im State **showInfoproviderData** nachzuschauen, ob die Daten (Selected, Custom und Historized Data) eingeklappt oder ausgeklappt sein sollen. Gleichzeitig kann mit Hilfe dieses State ein **collapse**-Element verwendet werden. Dieses rendert, falls `showInfoproviderData[index]` true ist,, die zugehörigen Daten. Die zugehörigen Buttons zum aus- / einklappen, rufen mittels onClick-Event die Funktion **toggleInfoproviderData** auf und übergeben den Index des Infoproviders, welcher zu ihnen gehört. Der Wert von **showInfoproviderData** wird mittels dieser Funktion an entsprechendem Index invertiert.
+2. Wenn die Daten des Infoproviders angezeigt werden sollen, so wird auf dessen Datenquellen die map-Funktion aufgerufen, welche für jedes Element **renderDataSource** aufruft und den zugehörigen Infoprovidernamen ebenfalls übergibt.
+3. **renderDataSource** rendert sowohl die ausgewählten, eigenen und historisierten Daten in drei Listen. Dazu wird für alle drei Felder der **dataSource** eine map-Funktion darauf aufgerufen.
+    1. Die map-Funktion für **selectedData** wird auf das Array aufgerufen, welches entsteht, wenn man sich aus **selectedData** nur die Keys holt. Dabei wird hier die Funktion **renderSelectedDataAndCustomData* aufgerufen, welche den vollständigen Key des Wertes als Attribut bekommt. Vollständig bedeutet dabei "Infoprovidername|Datenquellenname|Attributsname".
+    2. Für **customData** wird das gleiche Verfahren angewandt, allerdings muss hier nicht erst eine Methode aufgerufen werden, die die Keys aus diesem Array zurückliefert. Innerhalb von **map** wird dabei die gleiche Funktion wie für **selectedData** aufgerufen, da es beim rendering hier keine Unterschiede gibt.
+    3. Für **historizedData** gibt es eine eigene Funktion, **renderHistorizedData**. Diese wird benötigt, da das Rendering dieser Daten andere Aktionen bei einem onClick-Event auslösen wird.
+
+**renderSelectedDataAndCustomData** rendert für jedes übergebene **item** ein einzelnes Listenelement mit einem Button, der den Namen des Items anzeigt und als onClick-Event die Funktion **insertSelectedOrCustomData** mit dem aktuellen Item aufruft. Diese Funktion widerum nutzt den State **lastEditedTTSText**, um das Item in das zuletzt angeklickte TTS-Textfeld einzufügen. Dieser Index ändert sich, wann immer ein Nutzer mit der Maus ein anderes TTS-Textfeld auswählt.
+
+Bei den historisierten Daten wird jedoch nicht sofort mit anklicken des Buttons das Element gesetzt, obwohl das Rendering der Buttons genau wie oben funktioniert. Da bei den historisierten Daten vor dem Einfügen allerdings noch ein Intervall gewählt werden muss, sind andere und weitere Schritte nötig:
+
+Der onClick-Handler für die Elemente innerhalb von **renderHistorizedData** ruft **handleClickOnHistorizedData** auf und übergibt ihr das **Schedule**-Objekt und den Namen des Elements. Beide Werte werden dann im State (**selectedHistorizedElement** bzw. **selectedSchedule**) gespeichert. Anschließend wird von der Methode noch der State **showAddHistorizedDialog** auf true gesetzt, wodurch sich der Dialog für die Intervallauswahl öffnet.
+
+Der Dialog selbst zeigt mittels der Komponente **ScheduleTypeTable** (bereits beschrieben bei der Erstellung des Infoproviders) die Informationen zu den Historisierungszeitpunkten an. Hier kann der Nutzer nun ein Intervall festlegen. Dabei gilt jedoch, dass dieses minimal 0 sein muss, andernfalls wird der "Speichern"-Button ausgegraut. Intervall 0 beschreibt dabei den letzten Historisierungszeipunkt, 1 den vorletzten, usw. Ändert der Nutzer das Intervall, so wird dies im State **selectedInterval** gespeichert. Mit Klick auf "Speichern" werden die Werte aus den States **selectedHistorizedElement** und **selectedElement** von der Methode **insertHistorizedData** verwendet. Diese funktioniert ähnlich wie auch schon **insertSelectedOrCustomData**.
+
+##### Formatierung von eingefügten Elementen
+Eingefügte Daten von **selectedData** und oder **customData** beginnen mit "{:" und enden mit ":}". Bei historisierten Daten ist dies ähnlich, allerdings kommt vor dem schließenden Teil noch ein Paar von geschweiften Klammern "{}", in welchen der Wert des ausgewählten Intervalls eingetragen ist. Also beispielsweise "{1}".
 
 ## ScheduleSelection
 Nachdem der Nutzer das Video selbst fertig konfiguriert hat kommt die Auswahl der Generierungszeitpunkte hinzu, durch die ein Videojob vollständig wird. Diese Auswahl findet in der Komponente **ScheduleSelection** statt, deren Grundaufbau eine leicht veränderte Kopie der Komponente **HistoryScheduleSelection** aus der Erstellung der Infoprovider ist.
