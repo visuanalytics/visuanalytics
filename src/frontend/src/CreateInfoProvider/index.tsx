@@ -126,6 +126,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
 
+
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
      * Needs to be separated from authDialogNeeded since this uses state while authDialogNeeded uses sessionStorage
@@ -168,7 +169,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
-        if(!noKey&&method!=="") {
+        if (!noKey && method !== "") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method
@@ -379,20 +380,18 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }
 
 
-
-
     //TODO: find out why this method is called too often
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
             //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
-            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
+            if (dataSourcesKeys.get(dataSource.apiName) !== undefined) {
                 backendDataSources.push({
                     datasource_name: dataSource.apiName,
                     api: {
                         api_info: {
                             type: "request",
-                            api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                            api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                             url_pattern: dataSource.query,
                         },
                         method: dataSource.noKey ? "noAuth" : dataSource.method,
@@ -578,8 +577,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Increments the step.
      */
     const handleContinue = () => {
-        if (createStep === 5) postInfoProvider();
-        else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
+        if (createStep === 5) {
+            if (name.length <= 0) {
+                reportError("Bitte geben Sie dem Infoprovider einen Namen!");
+            } else {
+                postInfoProvider();
+            }
+        } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
+
             props.finishDataSourceInEdit({
                 apiName: apiName,
                 query: query,
@@ -631,12 +636,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
         //TODO: add this to the documentation
     const addToDataSources = () => {
+
             //store keys in dataSourcesKeys
             const mapCopy = new Map(dataSourcesKeys);
             setDataSourcesKeys(mapCopy.set(apiName, {
                 apiKeyInput1: apiKeyInput1,
                 apiKeyInput2: apiKeyInput2
             }))
+
             const dataSource: DataSource = {
                 apiName: apiName,
                 query: query,
@@ -691,15 +698,18 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setNoKey={(noKey: boolean) => setNoKey(noKey)}
                         method={method}
                         setMethod={(method: string) => setMethod(method)}
-                        name={apiName}
-                        setName={(name: string) => setApiName(name)}
+                        apiName={apiName}
+                        setApiName={(name: string) => setApiName(name)}
                         reportError={reportError}
                         setSelectedData={setSelectedData}
                         setCustomData={setCustomData}
                         setHistorizedData={setHistorizedData}
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
+                        diagrams={diagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setDiagrams(diagrams)}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
+                        isInEditMode={false}
                     />
                 );
             case 2:
@@ -715,7 +725,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
