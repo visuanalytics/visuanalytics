@@ -43,7 +43,7 @@ interface EditSettingsOverviewProps {
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
 
-    console.log(props.infoProvDataSources);
+    //console.log(props.infoProvDataSources);
 
     const classes = useStyles();
 

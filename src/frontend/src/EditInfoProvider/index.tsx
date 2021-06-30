@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
@@ -27,7 +27,6 @@ import {
 import {FormelObj} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {DiagramCreation} from "../CreateInfoProvider/DiagramCreation";
 import {AuthDataDialog} from "../CreateInfoProvider/AuthDataDialog";
-import {useCallFetch} from "../Hooks/useCallFetch";
 import {HistorySelection} from "../CreateInfoProvider/HistorySelection";
 import {createCalculates, createReplacements, extractKeysFromSelection} from "../CreateInfoProvider/helpermethods";
 import {Schedule} from "./types";
@@ -561,13 +560,107 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         setEditStep(editStep - index)
     }
 
-    //TODO: find a better solution than copying - useCallback doesnt allow it to be on top level of helpermethods.tsx
+
+    //TODO: find better option than just copy it
+    //TODO: update as soon as the possibility of having new dataSources exists
+    /**
+     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
+     */
+    const buildDataSourceSelection = () => {
+        const dataSourceSelection: Array<authDataDialogElement> = [];
+        //check the current data source and add it as an option
+        /*if(!noKey) {
+            dataSourceSelection.push({
+                name: "current--"+ uniqueId,
+                method: method
+            })
+        }*/
+        //check all other data sources
+        if (infoProvDataSources !== undefined) {
+            infoProvDataSources.forEach((dataSource) => {
+                //input is necessary if any method of authentication is being used
+                if (!dataSource.noKey) {
+                    //add to the selection
+                    dataSourceSelection.push({
+                        name: dataSource.apiName,
+                        method: dataSource.method
+                    })
+                }
+            })
+        }
+        return dataSourceSelection
+    }
+
+    /**
+     * Method to send the edited infoprovider to the backend.
+     * The backend will now update the infoprovider with the new data.
+     */
+    const finishEditing = () => {
+        setSubmitInfoProviderDisabled(true);
+        postInfoProvider();
+    }
+
+
+    /**
+     * Handler for the return of a successful call to the backend (posting info-provider)
+     * @param jsonData The JSON-object delivered by the backend
+     */
+    const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
+        clearSessionStorage();
+        setSubmitInfoProviderDisabled(false);
+        components?.setCurrent("dashboard")
+    }, [components]);
+
+    /**
+     * Handler for unsuccessful call to the backend (posting info-provider)
+     * @param err The error returned by the backend
+     */
+    const handleErrorPostInfoProvider = React.useCallback((err: Error) => {
+        setSubmitInfoProviderDisabled(false);
+        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
+    }, []);
+
+
+    //TODO: find out why this method is called too often
+    const createDataSources = React.useCallback(() => {
+        const backendDataSources: Array<BackendDataSource> = [];
+        infoProvDataSources.forEach((dataSource) => {
+            //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
+            if (infoProvDataSourcesKeys.get(dataSource.apiName) !== undefined) {
+                backendDataSources.push({
+                    datasource_name: dataSource.apiName,
+                    api: {
+                        api_info: {
+                            type: "request",
+                            api_key_name: dataSource.method === "BearerToken" ? infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                            url_pattern: dataSource.query,
+                        },
+                        method: dataSource.noKey ? "noAuth" : dataSource.method,
+                        response_type: "json", // TODO Add xml support
+                    },
+                    transform: [],
+                    storing: [],
+                    formulas: dataSource.customData,
+                    schedule: {
+                        type: dataSource.schedule.type,
+                        time: dataSource.schedule.time,
+                        date: "",
+                        time_interval: dataSource.schedule.interval,
+                        weekdays: dataSource.schedule.weekdays
+                    },
+                    selected_data: dataSource.selectedData,
+                    historized_data: dataSource.historizedData,
+                })
+            }
+        });
+        return backendDataSources;
+    }, [infoProvDataSources, infoProvDataSourcesKeys]);
+
     /**
      * Creates the plots array for a selected diagram to be sent to the backend.
      * @param diagram the diagram to be transformed
      */
     const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -638,103 +731,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return plotArray;
     }, [])
 
-    //TODO: find better option than just copy it
-    //TODO: update as soon as the possibility of having new dataSources exists
-    /**
-     * Method to construct an array of all dataSources names where the user needs to re-enter his authentication data.
-     */
-    const buildDataSourceSelection = () => {
-        const dataSourceSelection: Array<authDataDialogElement> = [];
-        //check the current data source and add it as an option
-        /*if(!noKey) {
-            dataSourceSelection.push({
-                name: "current--"+ uniqueId,
-                method: method
-            })
-        }*/
-        //check all other data sources
-        if (infoProvDataSources !== undefined) {
-            infoProvDataSources.forEach((dataSource) => {
-                //input is necessary if any method of authentication is being used
-                if (!dataSource.noKey) {
-                    //add to the selection
-                    dataSourceSelection.push({
-                        name: dataSource.apiName,
-                        method: dataSource.method
-                    })
-                }
-            })
-        }
-        return dataSourceSelection
-    }
-
-    /**
-     * Method to send the edited infoprovider to the backend.
-     * The backend will now update the infoprovider with the new data.
-     */
-    const finishEditing = () => {
-        setSubmitInfoProviderDisabled(true);
-        postInfoProvider();
-    }
-
-
-    /**
-     * Handler for the return of a successful call to the backend (posting info-provider)
-     * @param jsonData The JSON-object delivered by the backend
-     */
-    const handleSuccess = (jsonData: any) => {
-        clearSessionStorage();
-        setSubmitInfoProviderDisabled(false);
-        components?.setCurrent("dashboard")
-    }
-
-    /**
-     * Handler for unsuccessful call to the backend (posting info-provider)
-     * @param err The error returned by the backend
-     */
-    const handleError = (err: Error) => {
-        setSubmitInfoProviderDisabled(false);
-        reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
-    }
-
-
-    const createDataSources = () => {
-        const backendDataSources: Array<BackendDataSource> = [];
-        infoProvDataSources.forEach((dataSource) => {
-            backendDataSources.push({
-                datasource_name: dataSource.apiName,
-                api: {
-                    api_info: {
-                        type: "request",
-                        api_key_name: dataSource.method === "BearerToken" ? infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + infoProvDataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
-                        url_pattern: dataSource.query,
-                    },
-                    method: dataSource.noKey ? "noAuth" : dataSource.method,
-                    response_type: "json", // TODO Add xml support
-                },
-                transform: [],
-                storing: [],
-                formulas: dataSource.customData,
-                calculates: createCalculates(dataSource.arrayProcessingsList),
-                replacements: createReplacements(dataSource.stringReplacementList),
-                schedule: {
-                    type: dataSource.schedule.type,
-                    time: dataSource.schedule.time,
-                    date: "",
-                    timeInterval: dataSource.schedule.interval,
-                    weekdays: dataSource.schedule.weekdays
-                },
-                selected_data: dataSource.selectedData,
-                historized_data: dataSource.historizedData,
-                arrayProcessingsList: dataSource.arrayProcessingsList,
-                stringReplacementList: dataSource.stringReplacementList
-            })
-        });
-        return backendDataSources;
-    }
-
-    const createBackendDiagrams = () => {
-        console.log("backend");
+    
+    const createBackendDiagrams = React.useCallback(() => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
         infoProvDiagrams.forEach((diagram) => {
@@ -750,14 +748,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             }
         })
         return diagramsObject;
-    }
+    }, [createPlots, infoProvDiagrams, infoProvName]);
+
 
     //TODO: test this method when it is used
     /**
      * Method that creates a list of all arrays that are used in diagrams.
      * Necessary for forming the object of the infoprovider sent to the backend.
      */
-    const getArraysUsedByDiagrams = () => {
+    const getArraysUsedByDiagrams = React.useCallback(() => {
         const arraysInDiagrams: Array<string> = [];
         infoProvDiagrams.forEach((diagram) => {
             if (diagram.sourceType !== "Array") return;
@@ -769,16 +768,28 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             }
         })
         return arraysInDiagrams;
-    }
+    }, [infoProvDiagrams]);
 
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
 
     /**
-     * Method to post all settings for the Info-Provider made by the user to the backend.
-     * The backend will use this data to create the desired Info-Provider.
+     * Method to send a diagram to the backend for testing.
+     * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
-    const postInfoProvider = useCallFetch("visuanalytics/infoprovider/" + infoProvId,
-        {
-            method: "PUT",
+    const postInfoProvider = React.useCallback(() => {
+        //("fetcher called");
+        let url = "visuanalytics/infoprovider"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -788,9 +799,30 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 diagrams: createBackendDiagrams(),
                 diagrams_original: infoProvDiagrams,
                 arrays_used_in_diagrams: getArraysUsedByDiagrams()
-            })
-        }, handleSuccess, handleError
-    );
+            }),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleSuccessPostInfoProvider(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorPostInfoProvider(err)
+        }).finally(() => clearTimeout(timer));
+    }, [createBackendDiagrams, createDataSources, infoProvDiagrams, getArraysUsedByDiagrams, handleErrorPostInfoProvider, handleSuccessPostInfoProvider, infoProvName])
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
         setInfoProvDataSources(infoProvDataSources.concat(dataSource));
