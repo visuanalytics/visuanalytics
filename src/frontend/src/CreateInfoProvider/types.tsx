@@ -124,7 +124,7 @@ export type testDataBackendAnswer = {
  */
 export type ListItemRepresentation = {
     keyName: string;
-    value: any;
+    value: string|Array<ListItemRepresentation>;
     parentKeyName: string;
     arrayRep: boolean;
     arrayLength: number;
