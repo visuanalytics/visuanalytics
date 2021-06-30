@@ -168,8 +168,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
-        //check the current data source and add it as an option
-        if (!noKey && method !== "") {
+        //check the current data source and add it as an option - not used when in SettingsOverview!
+        if (createStep < 5 && !noKey && method !== "") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method

@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
-import {/*transformJSON,*/ extractKeysFromSelection} from "../helpermethods";
+import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
@@ -52,7 +52,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
     //sample JSON-data to test the different depth levels and parsing
-    /*const sample2 = {
+    const sample2 = {
         "season_helper": {
             "Envelope": {
                 "Body": {
@@ -181,7 +181,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         },
         "Vorherige-Season": "Text",
         "Test-Zahl": "Zahl"
-    };*/
+    };
 
 
     /**
@@ -499,7 +499,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         <Button variant="contained" size="large" color="primary" disabled={props.selectedData.length===0} onClick={handleContinue}>
                             weiter
                         </Button>
-                        {/*<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>*/}
+                        {<Button variant="contained" size="large" onClick={() => {props.setListItems(transformJSON(sample2))}}>Janek Test</Button>}
                     </Grid>
                 </Grid>
             </Grid>
