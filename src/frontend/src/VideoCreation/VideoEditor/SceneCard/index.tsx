@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {AudioElement, MinimalInfoProvider} from "../../types";
-import {Message, MessageOutlined} from "@material-ui/icons";
+import {MessageOutlined} from "@material-ui/icons";
 import {EditTextDialog} from "../EditTextDialog";
 
 
@@ -49,7 +49,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
      * If the scene does not contain any spoken text an empty string will be returned
      */
     const getSpokenTextBeginning = () => {
-        if(props.spokenText.length == 0 || props.spokenText[0].type !== "text") return "";
+        if(props.spokenText.length === 0 || props.spokenText[0].type !== "text") return "";
         if (props.spokenText[0].text !== undefined) return props.spokenText[0].text.length <= 20 ? props.spokenText[0].text : props.spokenText[0].text.slice(0, 20) + "...";
     }
 
