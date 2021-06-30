@@ -114,6 +114,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
     //represents the current step in data customization: 0 is array processing, 1 is formula and 2 is string processing
     const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
+    //true when the button for submitting the infoprovider is blocked because a request is running
+    const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
+
 
 
     //TODO: add current state variables if needed
@@ -670,6 +673,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * The backend will now update the infoprovider with the new data.
      */
     const finishEditing = () => {
+        setSubmitInfoProviderDisabled(true);
         postInfoProvider();
     }
 
@@ -680,6 +684,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      */
     const handleSuccess = (jsonData: any) => {
         clearSessionStorage();
+        setSubmitInfoProviderDisabled(false);
         components?.setCurrent("dashboard")
     }
 
@@ -688,6 +693,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param err The error returned by the backend
      */
     const handleError = (err: Error) => {
+        setSubmitInfoProviderDisabled(false);
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }
 
@@ -728,6 +734,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }
 
     const createBackendDiagrams = () => {
+        console.log("backend");
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
         infoProvDiagrams.forEach((diagram) => {
@@ -840,6 +847,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                         infoProvDataSourcesKeys={infoProvDataSourcesKeys}
                         setInfoProvDataSourcesKeys={(keys: Map<string, DataSourceKey>) => setInfoProvDataSourcesKeys(keys)}
+                        submitInfoProviderDisabled={submitInfoProviderDisabled}
                     />
                 );
             case 1:
@@ -866,10 +874,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                        setHistorizedData={setHistorizedData}
                        setSchedule={setSchedule}
                        setHistorySelectionStep={setHistorySelectionStep}
-                        diagrams={infoProvDiagrams}
-                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                       diagrams={infoProvDiagrams}
+                       setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
                        setListItems={(listItems: Array<ListItemRepresentation>) => {return}}
-                   />
+                    />
                 )
             case 2:
                 return (

@@ -136,6 +136,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [arrayProcessingsList, setArrayProcessingsList] = React.useState<Array<ArrayProcessingData>>([]);
     //list of all string replacement processings defined
     const [stringReplacementList, setStringReplacementList] = React.useState<Array<StringReplacementData>>([]);
+    //true when the button for submitting in settingsOverview is blocked because a posting is running - stored here because methods here need to change it
+    const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
 
 
     /**
@@ -392,6 +394,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
 
     const reportError = (message: string) => {
         dispatchMessage({type: "reportError", message: message});
+        setSubmitInfoProviderDisabled(false);
     };
 
     /**
@@ -400,6 +403,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
         clearSessionStorage();
+        setSubmitInfoProviderDisabled(false);
         components?.setCurrent("dashboard")
     }, [components]);
 
@@ -453,33 +457,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             }
         });
         return backendDataSources;
-<<<<<<< HEAD
-    }
-
-    /**
-     * Method that creates an array of diagrams in the backend format
-     * for the existing diagrams.
-     */
-    const createBackendDiagrams = () => {
-        //TODO: possibly find smarter solution without any type
-        const diagramsObject: any = {};
-        diagrams.forEach((diagram) => {
-            diagramsObject[diagram.name] = {
-                type: "diagram_custom",
-                diagram_config: {
-                    type: "custom",
-                    name: diagram.name,
-                    infoprovider: name,
-                    sourceType: diagram.sourceType,
-                    plots: createPlots(diagram)
-                }
-            }
-        })
-        return diagramsObject;
-    }
-=======
     }, [dataSources, dataSourcesKeys]);
->>>>>>> d6309fba (changed postInfoProvider method to chain to memoized version with useCallFetch to avoid alls on every render caused by useCallFetch)
 
     /**
      * Creates the plots array for a selected diagram to be sent to the backend.
@@ -670,6 +648,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
             if (name.length <= 0) {
                 reportError("Bitte geben Sie dem Infoprovider einen Namen!");
             } else {
+                setSubmitInfoProviderDisabled(true);
                 postInfoProvider();
             }
         } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
@@ -901,6 +880,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
                         setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
                         setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
+                        submitInfoProviderDisabled={submitInfoProviderDisabled}
                     />
                 )
             case 6:

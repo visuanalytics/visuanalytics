@@ -38,6 +38,7 @@ interface EditSettingsOverviewProps {
     setInfoProvDiagrams: (diagrams: Array<Diagram>) => void;
     infoProvDataSourcesKeys: Map<string, DataSourceKey>
     setInfoProvDataSourcesKeys: (keys: Map<string, DataSourceKey>) => void;
+    submitInfoProviderDisabled: boolean;
 }
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
@@ -55,6 +56,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     //holds the name of all diagrams that need to be removed when deleting the current selection
     const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+
     /**
      * Handler method for clicking the delete data source button.
      * Gets the currently selected datasource by the selectedDataSource state and checks if deleting it
@@ -246,8 +248,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button variant="contained" color={"secondary"}
+                        <Grid item className={classes.blockableButtonSecondary}>
+                            <Button disabled={props.submitInfoProviderDisabled} variant="contained" color={"secondary"}
                                     onClick={() => props.editInfoProvider()}>
                                 Speichern
                             </Button>

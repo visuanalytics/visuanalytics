@@ -60,6 +60,7 @@ interface SettingsOverviewProps {
     setDataSourcesKeys: (map: Map<string, DataSourceKey>) => void;
     setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
     setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
+    submitInfoProviderDisabled: boolean;
 }
 
 /**
@@ -375,7 +376,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonSecondary}>
-                        <Button variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
+                        <Button disabled={props.submitInfoProviderDisabled} variant="contained" size="large" color="secondary" onClick={props.continueHandler}>
                             abschließen
                         </Button>
                     </Grid>
