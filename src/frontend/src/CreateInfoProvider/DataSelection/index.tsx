@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
-import {/*transformJSON,*/ extractKeysFromSelection, transformJSON} from "../helpermethods";
+import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
 import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
