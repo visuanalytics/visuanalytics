@@ -289,7 +289,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                        {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(item.formelName))}
+                        {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -299,7 +299,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-HistorizedData"} disablePadding={true}>
-                        {dataSource.historizedData.map((item: string) => renderHistorizedData(item, dataSource.schedule))}
+                        {dataSource.historizedData.map((item: string) => renderHistorizedData(infoProviderName + "|" + dataSource.apiName + "|" + item, dataSource.schedule))}
                     </List>
                 </Grid>
             </Grid>
@@ -420,32 +420,32 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container>
-                        <Grid item>
+                        <Grid item xs={12}>
                             <Typography variant="body1">
                                 Legen Sie bitte das Intervall fest, welches für die TTS verwendet werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte, usw.
                             </Typography>
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={12}>
                             <Typography variant="h5">
                                 Informationen zu Historisierungszeitpunkten des gewählten Elements:
                             </Typography>
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={12}>
                             <ScheduleTypeTable schedule={selectedSchedule}/>
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={12}>
                             <TextField error={selectedInterval === undefined || selectedInterval < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={selectedInterval} onChange={event => setSelectedInterval(event.target.value === "" ? undefined : Number(event.target.value))}/>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions className={classes.elementLargeMargin}>
                     <Grid container justify="space-between">
-                        <Grid item>
+                        <Grid item xs={12}>
                             <Button variant="contained" color="primary" onClick={() => cancelHistorizedDataAdding()}>
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item className={classes.blockableButtonSecondary}>
+                        <Grid item xs={12} className={classes.blockableButtonSecondary}>
                             <Button variant="contained" color="secondary" disabled={selectedInterval === undefined || selectedInterval < 0} onClick={() => insertHistorizedData()}>
                                 Speichern
                             </Button>

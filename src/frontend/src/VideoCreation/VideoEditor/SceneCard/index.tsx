@@ -42,6 +42,11 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
     //true when a dialog for editing the spokenText of a scene is opened
     const [openTextEditDialog, setOpenTextEditDialog] = React.useState(false)
 
+    const getSpokenTextBeginning = () => {
+        if(props.spokenText.length == 0 || props.spokenText[0].type !== "text") return "";
+        if (props.spokenText[0].text !== undefined) return props.spokenText[0].text.length <= 20 ? props.spokenText[0].text : props.spokenText[0].text.slice(0, 20) + "...";
+    }
+
     /**
      * Handler method for change events on the slider input of this scene.
      * Sets the local value storing the duration and calls the method that starts the timer for overwriting parent state.
@@ -138,7 +143,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                         </Grid>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography>
-                                Gesprochener Text:
+                                Gesprochener Text: {getSpokenTextBeginning()}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -146,7 +151,7 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                 <CardActions>
                     <Grid container justify="space-between">
                         <Grid item>
-                            <IconButton aria-label="Text hinzufügen" onClick={() => setOpenTextEditDialog(true)}>
+                            <IconButton aria-label="Text bearbeiten" onClick={() => setOpenTextEditDialog(true)}>
                                 <MessageOutlined
                                     fontSize="large"
                                 />
