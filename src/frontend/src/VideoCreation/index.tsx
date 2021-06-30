@@ -343,11 +343,14 @@ export const VideoCreation = () => {
                         type: "text",
                         pattern: audioElement.text
                     })
-                } else {
-                    parts.push({
-                        type: "silent",
-                        duration: audioElement.duration
-                    })
+                } else if (audioElement.duration !== undefined) {
+                    //when the duration is 0, no silent track is needed for the pause
+                    if(audioElement.duration > 0) {
+                        parts.push({
+                            type: "silent",
+                            duration: audioElement.duration
+                        })
+                    }
                 }
             })
             //after all texts and pauses were included, add a silent track for the exceed duration
