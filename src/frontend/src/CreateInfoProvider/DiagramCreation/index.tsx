@@ -319,7 +319,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
         });
         return compatibleArrays;
     }, [])
-    
+
 
     /**
      * Runs through the provided array of listItems recursively and returns all arrays that are compatible for diagram usage.
