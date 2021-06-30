@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {CenterNotification, centerNotifcationReducer} from "../util/CenterNotification";
 import {BasicSettings} from "./BasicSettings";
-import {useCallFetch} from "../Hooks/useCallFetch";
 import {TypeSelection} from "./TypeSelection";
 import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
@@ -362,7 +361,6 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
 
     const reportError = (message: string) => {
         dispatchMessage({type: "reportError", message: message});
-        setSubmitInfoProviderDisabled(false);
     };
 
     /**
@@ -380,6 +378,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * @param err The error returned by the backend
      */
     const handleErrorPostInfoProvider = React.useCallback((err: Error) => {
+        setSubmitInfoProviderDisabled(false);
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
     }, []);
 
