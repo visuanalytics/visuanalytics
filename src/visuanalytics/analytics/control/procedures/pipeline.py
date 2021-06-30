@@ -11,7 +11,7 @@ from visuanalytics.analytics.apis.api import api_request, api
 from visuanalytics.analytics.control.procedures.step_data import StepData
 from visuanalytics.analytics.precondition.precondition import precondition
 from visuanalytics.analytics.processing.audio.audio import generate_audios
-from visuanalytics.analytics.processing.image.visualization import generate_all_images
+from visuanalytics.analytics.processing.image.visualization import generate_all_images, generate_all_diagrams
 from visuanalytics.analytics.sequence.sequence import link
 from visuanalytics.analytics.storing.storing import storing
 from visuanalytics.analytics.thumbnail.thumbnail import thumbnail
@@ -36,12 +36,13 @@ class Pipeline(object):
                1: {"name": "Apis", "call": api},
                2: {"name": "Transform", "call": transform},
                3: {"name": "Storing", "call": storing},
-               4: {"name": "Images", "call": generate_all_images},
-               5: {"name": "Thumbnail", "call": thumbnail},
-               6: {"name": "Audios", "call": generate_audios},
-               7: {"name": "Sequence", "call": link},
-               8: {"name": "Ready"}}
-    __steps_max = 8
+               4: {"name": "Diagrams", "call": generate_all_diagrams},
+               5: {"name": "Images", "call": generate_all_images},
+               6: {"name": "Thumbnail", "call": thumbnail},
+               7: {"name": "Audios", "call": generate_audios},
+               8: {"name": "Sequence", "call": link},
+               9: {"name": "Ready"}}
+    __steps_max = 9
     __log_states = {"running": 0, "finished": 1, "error": -1}
 
     def __init__(self, job_id: int, pipeline_id: str, step_name: str, steps_config=None, log_to_db=False,

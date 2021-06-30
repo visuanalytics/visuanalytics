@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import json
@@ -7,6 +8,8 @@ from visuanalytics.util import resources
 from datetime import datetime, timedelta
 from ast import literal_eval
 from visuanalytics.util.resources import get_test_diagram_resource_path
+
+matplotlib.use('Agg')
 
 dpi_default = 100
 default_color = "#000000"
@@ -142,7 +145,7 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
 
 def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
     # file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    file = resources.get_image_path(values["diagram_config"]["infoprovider"] + "/" + values["diagram_config"]["name"] + ".png")
+    file = resources.get_image_path(values["diagram_config"]["infoproviderName"] + "/" + values["diagram_config"]["name"] + ".png")
     with resources.open_resource(file, "wt") as f:
         pass
 
@@ -152,12 +155,11 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_test_diagram(values):
-    print("values", values)
+    fig, ax = (None, None)
     for plot in values["diagram_config"]["plots"]:
-        print("plot", plot)
         plot["plot"]["y"] = np.random.randint(1, 20, 15)
         plot["plot"].pop("x", None)
-        fig, ax = create_plot(plot, None, None, get_xy=False)
+        fig, ax = create_plot(plot, None, None, get_xy=False, fig=fig, ax=ax)
     file = get_test_diagram_resource_path()
     title = values.get("title", None)
     x_label = values.get("x_label", None)
@@ -254,7 +256,7 @@ def barh_multiple_plot(values, fig=None, ax=None):
 
     if not fig and not ax:
         fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-        ax.set_xticks(np.concatenate((np.array([0]), x)))
+        ax.set_xticks(np.concatenate((np.array([0]), y)))
     ax.barh(y=y - height / 2, width=values["x_up"], height=height, color=color_down)
     ax.barh(y=y + height / 2, width=values["x_down"], height=height, color=color_up)
     return fig, ax
@@ -340,10 +342,10 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
             array = step_data.format(values["y"])
             array = literal_eval(array)
             array = list(map(array.__getitem__, values.get("x", np.arange(len(array)))))
-            y_vals = list(map(float, list(map(lambda x: x[values["numeric_attribute"]], array))))
+            y_vals = list(map(float, list(map(lambda x: x[values["numericAttribute"]], array))))
             if not custom_labels:
                 x_ticks = values.get("x_ticks", {})
-                x_ticks.update({"ticks": list(map(lambda x: x[values["string_attribute"]], array))})
+                x_ticks.update({"ticks": list(map(lambda x: x[values["stringAttribute"]], array))})
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
@@ -352,7 +354,6 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
 
     values["y"] = y_vals
     values.pop("x", None)
-    print("values", values)
 
     return values
 
@@ -363,7 +364,6 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         values_new = get_x_y(values["plot"], step_data, array_source, custom_labels=values.get("custom_labels", False), primitive=values.get("primitive", True), data_labels=values.get("data_labels", False))
     else:
         values_new = values["plot"]
-    print("values_new", values_new)
     if t == "line":
         fig, ax = line_plot(values=values_new, fig=fig, ax=ax)
     elif t == "bar":
@@ -383,7 +383,6 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
 
     x_ticks = values_new.get("x_ticks", None)
     if x_ticks and len(x_ticks) > 1:
-        print("x_ticks", x_ticks)
         ax.set_xticklabels([None] + x_ticks["ticks"], fontdict=x_ticks.get("fontdict", default_fontdict),
                                color=x_ticks.get("color", default_color))
 

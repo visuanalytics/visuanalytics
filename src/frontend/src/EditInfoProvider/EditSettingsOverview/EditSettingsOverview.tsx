@@ -167,7 +167,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                    label={"Info-Provider Name"}
                                    value={props.infoProvName}
-                                   onChange={event => (props.setInfoProvName(event.target.value))}>
+                                   onChange={event => (props.setInfoProvName(event.target.value.replace(' ', '_')))}>
                         </TextField>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -267,7 +267,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         </Grid>
                         <Grid item>
                             <Button variant="contained" color={"secondary"}
-                                    onClick={() => props.continueHandler(5)}>
+                                    onClick={() => props.continueHandler(6)}>
                                 Diagramme
                             </Button>
                         </Grid>

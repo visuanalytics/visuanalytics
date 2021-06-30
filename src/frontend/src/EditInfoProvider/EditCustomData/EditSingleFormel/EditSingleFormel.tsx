@@ -12,6 +12,7 @@ import {calculationToString} from "../../helpermethods";
 import {formelContext} from "../../types";
 import {DataSource} from "../../../CreateInfoProvider/types";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {checkFindOnlyNumbers} from "../../../CreateInfoProvider/helpermethods";
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -271,6 +272,14 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
             props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
+        }
+        if (checkFindOnlyNumbers(formel)) {
+            props.reportError("Fehler: Der Name darf nicht nur aus Nummern bestehen.")
+            return;
+        }
+        if (formel.includes('(') || formel.includes(')')) {
+            props.reportError("Fehler: Der Name darf keine Klammern enthalten.")
+            return;
         }
 
 
