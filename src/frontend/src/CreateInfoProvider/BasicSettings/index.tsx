@@ -127,9 +127,14 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
             props.query !== oldQuery
         );
         //send a new request to the backend when the user made changes to his settings
-        if (wasChanged) {
+        if (wasChanged && oldQuery !== "") {
             setRemoveDialogOpen(true);
-        } else {
+        } else if (wasChanged) {
+            //in this case, the user is in this settings for this first time
+            //send the data to the api
+            sendTestData();
+            setDisplaySpinner(true);
+        }else {
             //just continue when there were no changes
             props.continueHandler();
         }
@@ -138,6 +143,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     /**
      * Method called when proceeding after changing the api data - deletes all states
      * related to this datasource since it cannot be verified that the data will be the same after it.
+     * The only thing not deleted is listItems because this is necessary for workin with errors.
      */
     const deleteAllDependencies = () => {
         //reset all following settings when a new api request is made
@@ -147,7 +153,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         sessionStorage.removeItem("historizedData-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
-        sessionStorage.removeItem("listItems-" + uniqueId);
+        //sessionStorage.removeItem("listItems-" + uniqueId);
 
         // Reset the states of the following steps
         //props.setApiData({});
@@ -156,7 +162,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.setHistorizedData(new Array<string>());
         props.setSchedule({type: "", interval: "", time: "", weekdays: []});
         props.setHistorySelectionStep(1);
-        props.setListItems(new Array<ListItemRepresentation>());
+        //props.setListItems(new Array<ListItemRepresentation>());
         //find all diagrams with this dataSource and delete them
         const diagramsToDelete: Array<string> = [];
         props.diagrams.forEach((diagram) => {
@@ -185,9 +191,6 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         props.setDiagrams(props.diagrams.filter((diagram) => {
             return !diagramsToDelete.includes(diagram.name);
         }));
-        //send the data to the api
-        sendTestData();
-        setDisplaySpinner(true);
     }
 
     /**
@@ -203,6 +206,8 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         } else {
             //console.log(data.api_keys);
             //props.setApiData(data.api_keys);
+            //everytime we get a new answer, all previous data is deleted
+            deleteAllDependencies();
             props.setListItems(transformJSON(data.api_keys));
             //console.log(transformJSON(data.api_keys));
             props.continueHandler();
@@ -456,7 +461,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                         Durch eine Änderung in der API-Abfrage muss die API erneut angefragt werden.
                     </Typography>
                     <Typography gutterBottom>
-                        Durch die neue Abfrage und damit möglicherweise geänderten Antwortdaten müssen alle Formeln und Diagramme, die diese Datenquelle nutzen entfernt werden.
+                        Durch die neue Abfrage und die mit ihr möglicherweise geänderten Antwortdaten müssen alle Formeln und Diagramme, die diese Datenquelle nutzen, entfernt werden, sofern die Abfrage erfolgreich ist.
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -472,8 +477,10 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                         <Grid item>
                             <Button variant="contained"
                                     onClick={() => {
-                                        deleteAllDependencies();
                                         setRemoveDialogOpen(false);
+                                        //send the data to the api
+                                        sendTestData();
+                                        setDisplaySpinner(true);
                                     }}
                                     className={classes.redDeleteButton}>
                                 Änderung bestätigen
