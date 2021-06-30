@@ -42,6 +42,12 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
     //true when a dialog for editing the spokenText of a scene is opened
     const [openTextEditDialog, setOpenTextEditDialog] = React.useState(false)
 
+    /**
+     * Gets the beginning of the spoken text for the scene
+     * If the spoken text is less then or equal to 20 characters, the whole text is printed, in all other cases the first 20 characters of the spoken text will be printed
+     * Note that just the first part of text from the array of spokenText is used
+     * If the scene does not contain any spoken text an empty string will be returned
+     */
     const getSpokenTextBeginning = () => {
         if(props.spokenText.length == 0 || props.spokenText[0].type !== "text") return "";
         if (props.spokenText[0].text !== undefined) return props.spokenText[0].text.length <= 20 ? props.spokenText[0].text : props.spokenText[0].text.slice(0, 20) + "...";
