@@ -219,6 +219,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         //createStep - disabled since it makes debugging more annoying
         setCreateStep(Number(sessionStorage.getItem("createStep-" + uniqueId) || 0));
+        //name
+        setName(sessionStorage.getItem("name-" + uniqueId) || "");
         //apiName
         setApiName(sessionStorage.getItem("apiName-" + uniqueId) || "");
         //query
@@ -274,6 +276,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("createStep-" + uniqueId, createStep.toString());
     }, [createStep])
+    //store name in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("name-" + uniqueId, name);
+    }, [name])
     //store apiName in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("apiName-" + uniqueId, apiName);
@@ -335,6 +341,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
     const clearSessionStorage = () => {
         sessionStorage.removeItem("createStep-" + uniqueId);
+        sessionStorage.removeItem("name-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
         sessionStorage.removeItem("noKey-" + uniqueId);
