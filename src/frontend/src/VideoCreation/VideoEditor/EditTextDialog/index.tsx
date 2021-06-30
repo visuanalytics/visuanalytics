@@ -44,10 +44,10 @@ interface EditTextDialogProps {
 export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     const classes = useStyles();
 
-    // The state, which holds the value for a pause that should be added. Please not, that this state is not used for modifying existing pauses
+    // The state, which holds the value for a pause that should be added. Please note that this state is not used for modifying existing pauses
     const [newPause, setNewPause] = React.useState<number | undefined>(0);
 
-    // This state holds all information for the audio of the scene. Audio canbe text or pause at the moment. If non spoken text is provided, an audio element with no text is generated for the state
+    // This state holds all information for the audio of the scene. Audio can be text or pause at the moment. If non spoken text is provided, an audio element with no text is generated for the state
     const [audioElements, setAudioElements] = React.useState<Array<AudioElement>>(props.spokenText.length === 0 ? [{
         type: "text",
         text: ""
@@ -83,7 +83,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * Inserts the data from an selected element or from custom data.
      * For both categories the insertion process is equal, so there is no need of two methods.
      * The item is always inserted to the textfield, which was clicked last by the mouse.
-     * @param item The item name that should be added to the textfield. This sthould be the full path, beginning with the infoprovider name
+     * @param item The item name that should be added to the textfield. This should be the full path, beginning with the infoprovider name
      */
     const insertSelectedOrCustomData = (item: string) => {
         const arrCopy = audioElements.slice();
@@ -106,7 +106,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     }
 
     /**
-     * Toggles, if the data of a clicked infoprovider should be visible or not.
+     * Toggles if the data of a clicked infoprovider should be visible or not.
      * @param index
      */
     const toggleInfoproviderData = (index: number) => {
@@ -118,7 +118,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     /**
      * Adds a new textfield to the edit dialog.
      * Before this textfield, the selected pause from the user is inserted.
-     * After this operation the newPause state will be reseted to its default value
+     * After this operation the newPause state will be resetted to its default value
      */
     const addNewText = () => {
         const arrCopy = audioElements.slice();
@@ -148,8 +148,8 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
 
     /**
      * Everytime a user changes an existing text element or pause this method will be called to update the corresponding fields and states
-     * The ID of the target is used to identifiy the index in the audioElements-array.
-     * If the type of the element, which should be added is pause, the value of the event will be converted to a number, othervice the string will be used without further conversions
+     * The ID of the target is used to identify the index in the audioElements-array.
+     * If the type of the element, which should be added is pause, the value of the event will be converted to a number, otherwise the string will be used without further conversions
      * @param event The event sent from the element
      */
     const changeElement = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,7 +194,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     /**
      * This method renders the input fields for the audio element which is passed in
      * The given index of the element will be used as the ID for the input fields
-     * Dependend on the type of the current element, different fields will be rendered. This way it is not required to have two methods.
+     * Depending on the type of the current element, different fields will be rendered. This way it is not required to have two methods.
      * @param id This is the index of the element from the audioElements-array.
      * @param audioElement The audio element which should be rendered
      */
@@ -222,9 +222,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     }
 
     /**
-     * Method, which is called, when the user clicks on a historized element
+     * Method which is called when the user clicks on a historized element
      * This is needed to prepare all states and then opening the dialog for the interval selection
-     * @param item The string (item name) which belonges to the historized element
+     * @param item The string (item name) which belongs to the historized element
      * @param schedule The corresponding schedule object for the selected element
      */
     const handleClickOnHistorizedData = (item: string, schedule: Schedule) => {
@@ -265,9 +265,9 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
     }
 
     /**
-     * Renders all information for a single data source of an infoprovider. This information includes, selected, custom and historized data
+     * Renders all information for a single data source of an infoprovider. This information includes selected, custom and historized data
      * @param dataSource The data source that should be rendered
-     * @param infoProviderName The infoprovider name that belonges to the data source. This is needed for constructing the whole path of an item
+     * @param infoProviderName The infoprovider name that belongs to the data source. This is needed for constructing the whole path of an item
      */
     const renderDataSource = (dataSource: MinimalDataSource, infoProviderName: string) => {
         return (
@@ -310,7 +310,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * Renders all information for one infoprovider
      * @param dataSources The data sources the infoprovider holds
      * @param infoproviderName The name of the infoprovider that should be rendered
-     * @param infoproviderIndex The index of the infoprovider in the array. This is needed for toggeling the visibility of its data
+     * @param infoproviderIndex The index of the infoprovider in the array. This is needed for toggling the visibility of its data
      */
     const renderInfoproviderData = (dataSources: Array<MinimalDataSource>, infoproviderName: string, infoproviderIndex: number) => {
         return (
