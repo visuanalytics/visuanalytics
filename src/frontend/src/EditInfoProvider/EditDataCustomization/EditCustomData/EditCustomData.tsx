@@ -23,27 +23,23 @@ interface EditCustomDataProps {
     infoProvName: string;
     infoProvDiagrams: Array<Diagram>
     setInfoProvDiagrams: (diagrams: Array<Diagram>) => void;
+    setHistorizedData: (historizedData: Array<string>) => void;
+    setCustomData: (customData: Array<FormelObj>) => void;
 }
 
 export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
 
     const classes = useStyles();
 
-    /**
-     * boolean that is used to open and close the remove-dialog
-     */
-    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
-
-    /**
-     * the formel-name from the formel that should be deleted
-     */
-    const [currentDeleteName, setCurrentDeleteName] = React.useState("");
-
-    //array of all historizedData without the formula that is about to be deleted
-    const [newHistorizedData, setNewHistorizedData] = React.useState<Array<string>>([]);
-
+    // these variables are used for the delete dependency mechanism
+    //name of the formula currently to remove
+    const [formelToRemove, setFormelToRemove] = React.useState<string>("");
     //names of all diagrams that depend on the formula to remove
     const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+    //names of all formulas that depend on the formula that is to be removed
+    const [formulasToRemove, setFormulasToRemove] = React.useState<Array<string>>([]);
+    //boolean that is used to open and close the remove-dialog
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
     /**
      * boolean that is used to open and close the edit-dialog
@@ -63,70 +59,141 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     const historizedData = props.infoProvDataSources[props.selectedDataSource].historizedData;
 
     /**
+     * Method that finds all diagrams that depend on a certain formula, returns an array with their names.
+     * @param formelName The name of the formula to search for.
+     */
+    const findDependentDiagrams = (formelName: string) => {
+        const diagramsToRemove: Array<string> = [];
+        //check for diagrams
+        props.infoProvDiagrams.forEach((diagram) => {
+            if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
+                for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                    const historized = diagram.historizedObjects[index];
+                    //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
+                    if (apiName + "|" + formelName === historized.name) {
+                        diagramsToRemove.push(diagram.name);
+                        break;
+                    }
+                }
+            }
+        })
+        return diagramsToRemove;
+    }
+
+
+    /**
      * The method prepares deleting the chosen formula.
-     * It checks if historized data and diagrams need to be removed with the formula.
-     * If it only accounts historizedData, deletion is directly, if diagrams need to be removed, the user is
-     * asked for confirmation.
+     * It checks if formulas or diagrams need to be removed with the formula.
+     * Prepares the states containing these elements and opens a dialog which can display them.
      * @param formelName is the name of the formula that has to be deleted.
      */
     const deleteCustomDataCheck = (formelName: string) => {
         //TODO: documentation
-        //create a copy of historizedData without the formula (if it is contained in it)
-        const newHistorizedData = historizedData.filter((item) => {
-            return item!==formelName;
+        //find all diagrams to remove
+        let diagramsToRemove: Array<string> = findDependentDiagrams(formelName);
+        const formulasToRemove: Array<string> = [];
+        console.log(formelName);
+        //check if any formula needs to be removed
+        props.infoProvDataSources[props.selectedDataSource].customData.forEach((formula) => {
+            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) {
+                formulasToRemove.push(formula.formelName);
+            }
         })
-        //when the formula is historized, we have to delete it in the state and check if it was used in diagrams
-        const diagramsToRemove: Array<string> = [];
-        if(newHistorizedData.length < historizedData.length) {
-            //check for diagrams
-            props.infoProvDiagrams.forEach((diagram) => {
-                if (diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
-                    for (let index = 0; index < diagram.historizedObjects.length; index++) {
-                        const historized = diagram.historizedObjects[index];
-                        //the dataSource name needs to be added in front of the formula name since historizedObjects has dataSource name in it paths too
-                        if (apiName + "|" + formelName === historized.name) {
-                            diagramsToRemove.push(diagram.name);
-                            break;
-                        }
-                    }
-                }
-            })
-        }
-        if(diagramsToRemove.length!==0) {
-            //if diagrams have to be removed, ask the user for confirmation before deleting it
-            setDiagramsToRemove(diagramsToRemove);
-            setNewHistorizedData(newHistorizedData);
-            setCurrentDeleteName(formelName);
-            setRemoveDialogOpen(true);
-        } else {
-            //when no diagrams have to be removed we can proceed without asking the user
-            deleteCustomData(formelName, newHistorizedData, diagramsToRemove);
-        }
+        //set the detected results in the states
+        setDiagramsToRemove(diagramsToRemove);
+        setFormulasToRemove(formulasToRemove);
+        setFormelToRemove(formelName);
+        setDeleteDialogOpen(true);
     }
 
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newHistorizedData = React.useRef<Array<string>>([]);
+    //mutable list of diagrams - used because multiple modifications in one render are necessary in two functions at the same time
+    const newDiagrams = React.useRef<Array<Diagram>>([]);
+    //mutable list of formulas - used because multiple modifications in one render are necessary in two functions at the same time
+    const newCustomData = React.useRef<Array<FormelObj>>([]);
 
-    const deleteCustomData = (formelName: string, newHistorizedData: Array<string>, diagramsToRemove: Array<string>) => {
+    /**
+     * Method that deletes a formula and all historized data, formulas and diagrams depending on it.
+     * Also starts a method that will perform recursive deletion for formulas and diagrams.
+     * @param formelName The name of the formula to be deleted.
+     * @param diagramsToRemove The list of the names of all diagrams to remove.
+     * @param formulasToRemove The list of the names of all formulas to remove.
+     */
+    const deleteCustomData = (formelName: string, diagramsToRemove: Array<string>, formulasToRemove: Array<string>) => {
+        //initialize the lists of data to be edited
+        newHistorizedData.current = historizedData.slice();
+        newDiagrams.current = props.infoProvDiagrams.slice();
+        newCustomData.current = customData.slice();
         //delete the data from the customData-Array
-        for (let i: number = 0; i <= customData.length - 1; i++) {
-            if (customData[i].formelName === formelName) {
-                const arCopy = customData.slice();
-                arCopy.splice(i, 1);
-                const dataSourcesCopy = props.infoProvDataSources.slice();
-                dataSourcesCopy[props.selectedDataSource].customData = arCopy;
-                props.setInfoProvDataSources(dataSourcesCopy);
+        for (let i: number = 0; i <= newCustomData.current.length - 1; i++) {
+            if (newCustomData.current[i].formelName === formelName) {
+                newCustomData.current.splice(i, 1);
                 break;
             }
         }
         //delete it from historizedData if necessary
-        const dataSourcesCopy = props.infoProvDataSources.slice();
-        dataSourcesCopy[props.selectedDataSource].historizedData = newHistorizedData;
-        props.setInfoProvDataSources(dataSourcesCopy);
-        //delete diagrams depending on it if they exist
-        if(diagramsToRemove.length > 0) {
-            props.setInfoProvDiagrams(props.infoProvDiagrams.filter((diagram) => {
-                return !diagramsToRemove.includes(diagram.name);
-            }))
+        newHistorizedData.current = newHistorizedData.current.filter((data) => {
+            return data !== formelName;
+        })
+        //delete the formulas depending on it
+        if(formulasToRemove.length > 0) {
+            newCustomData.current = newCustomData.current.filter((formula) => {
+                return !formulasToRemove.includes(formula.formelName);
+            })
         }
+        //delete diagrams depending on it if they exist
+        if (diagramsToRemove.length > 0) {
+            newDiagrams.current = newDiagrams.current.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            })
+        }
+        if(formulasToRemove.length > 0) {
+            formulasToRemove.forEach((formula) => {
+                deleteFormulaDependents(formula)
+            })
+        }
+        props.setHistorizedData(newHistorizedData.current);
+        props.setInfoProvDiagrams(newDiagrams.current);
+        props.setCustomData(newCustomData.current);
+        newHistorizedData.current = [];
+        newDiagrams.current = [];
+        newCustomData.current = [];
+    }
+
+    /**
+     * Method that searches all diagrams and formulas depending on a formula to delete them.
+     * For each formula found, it will recursively repeat this process.
+     * Also removes from historizedData.
+     * @param formelName The formel to be deleted.
+     */
+    const deleteFormulaDependents = (formelName: string) => {
+        //remove the formula from historized data if it is contained
+        newHistorizedData.current = newHistorizedData.current.filter((data) => {
+            return data !== formelName;
+        })
+        //search all diagrams and delete them
+        const diagramsToRemove = findDependentDiagrams(formelName);
+        if (diagramsToRemove.length > 0) {
+            newDiagrams.current = newDiagrams.current.filter((diagram) => {
+                return !diagramsToRemove.includes(diagram.name);
+            })
+        }
+        //find all formulas depending on the formula
+        const dependentFormulas: Array<string> = [];
+        newCustomData.current.forEach((formula) => {
+            if (formula.formelString.includes(formelName + " ") || formula.formelString.endsWith(formelName)) dependentFormulas.push(formula.formelName);
+        })
+        //remove all dependent formulas
+        if (dependentFormulas.length > 0) {
+            newCustomData.current = newCustomData.current.filter((formula) => {
+                return !dependentFormulas.includes(formula.formelName);
+            })
+        }
+        //for each dependent formula, recursively repeat this
+        dependentFormulas.forEach((dependentFormula) => {
+            deleteFormulaDependents(dependentFormula);
+        })
     }
 
 
@@ -287,7 +354,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         <Box borderColor="primary.main" border={6} borderRadius={5}
                              className={classes.listFrame}>
                             <FormelList
-                                customDataEdit={props.infoProvDataSources[props.selectedDataSource].customData}
+                                customDataEdit={customData}
                                 handleEdit={(formel: FormelObj) => handleEdit(formel)}
                                 deleteCustomDataCheck={(formelName: string) => deleteCustomDataCheck(formelName)}
                             />
@@ -321,32 +388,44 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                     </Grid>
                 </Grid>
                 <Dialog onClose={() => {
-                    setRemoveDialogOpen(false);
+                    setDeleteDialogOpen(false);
                     window.setTimeout(() => {
-                        setCurrentDeleteName("");
-                        setNewHistorizedData([]);
+                        setFormelToRemove("");
                         setDiagramsToRemove([]);
+                        setFormulasToRemove([]);
                     }, 200);
                 }} aria-labelledby="deleteDialog-title"
-                        open={removeDialogOpen}>
+                        open={deleteDialogOpen}>
                     <DialogTitle id="deleteDialog-title">
-                        Löschen von {currentDeleteName} bestätigen
+                        Löschen von {formelToRemove} bestätigen
                     </DialogTitle>
                     <DialogContent dividers>
                         <Typography gutterBottom>
-                            Das Löschen der Formel {currentDeleteName} wird folgende Diagramme entfernen, da sie die Formel nutzen:  {diagramsToRemove.join(", ")}
+                            Wollen sie die Formel: "{formelToRemove}" wirklich löschen?
                         </Typography>
+                        { diagramsToRemove.length !==0 &&
+                        <Typography gutterBottom>
+                            Das Löschen der Formel wird folgende Diagramme entfernen, da sie die Formel
+                            nutzen: {diagramsToRemove.join(", ")}
+                        </Typography>
+                        }
+                        { formulasToRemove.length !==0 &&
+                        <Typography gutterBottom>
+                            Das Löschen der Formel wird folgende Formeln entfernen, da sie die Formel
+                            nutzen: {formulasToRemove.join(", ")}<br/> Durch das Löschen der Formeln können Diagramme und Formeln gelöscht werden, die diese nutzen (kaskadierende Löschung).
+                        </Typography>
+                        }
                     </DialogContent>
                     <DialogActions>
                         <Grid container justify="space-between">
                             <Grid item>
                                 <Button variant="contained"
                                         onClick={() => {
-                                            setRemoveDialogOpen(false);
+                                            setDeleteDialogOpen(false);
                                             window.setTimeout(() => {
-                                                setCurrentDeleteName("");
-                                                setNewHistorizedData([]);
+                                                setFormelToRemove("");
                                                 setDiagramsToRemove([]);
+                                                setFormulasToRemove([]);
                                             }, 200);
                                         }}>
                                     abbrechen
@@ -355,12 +434,12 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                             <Grid item>
                                 <Button variant="contained"
                                         onClick={() => {
-                                            deleteCustomData(currentDeleteName, newHistorizedData, diagramsToRemove);
-                                            setRemoveDialogOpen(false);
+                                            deleteCustomData(formelToRemove, diagramsToRemove, formulasToRemove);
+                                            setDeleteDialogOpen(false);
                                             window.setTimeout(() => {
-                                                setCurrentDeleteName("");
-                                                setNewHistorizedData([]);
+                                                setFormelToRemove("");
                                                 setDiagramsToRemove([]);
+                                                setFormulasToRemove([]);
                                             }, 200);
                                         }}
                                         className={classes.redDeleteButton}>
