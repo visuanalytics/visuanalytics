@@ -193,7 +193,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const formulas: Array<string> = [];
         props.customData.forEach((formula) => {
             //if the name is included, it is used by the formula
-            if(formula.formelString.includes(data)) formulas.push(formula.formelName)
+            if(formula.formelString.includes(data + " ") || formula.formelString.endsWith(data)) formulas.push(formula.formelName)
         })
         return formulas;
     }

@@ -731,7 +731,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return plotArray;
     }, [])
 
-    
+
     const createBackendDiagrams = React.useCallback(() => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
