@@ -4,18 +4,15 @@ import {StepFrame} from "../StepFrame";
 import {hintContents} from "../../util/hintContents";
 import List from "@material-ui/core/List";
 import Button from "@material-ui/core/Button";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Grid from "@material-ui/core/Grid";
+import Grid, {GridSize} from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Box from "@material-ui/core/Box";
 import {transformJSON, extractKeysFromSelection} from "../helpermethods";
 import {Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
 import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Divider} from "@material-ui/core";
 
 interface DataSelectionProps {
     continueHandler: () => void;
@@ -56,7 +53,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         "season_helper": {
             "Envelope": {
                 "Body": {
-                    "GetMatchByMatchIDResponse": {
+                    "GetMatchByMatchIDResponseABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": {
                         "GetMatchByMatchIDResult": {
                             "leagueSaison": "Text"
                         }
@@ -68,15 +65,15 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     "same_type": true,
                     "length": 3,
                     "object": {
-                        "Zahl1": "Zahl",
+                        "Zahl1ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": "Zahl",
                         "Zahl2": "Zahl"
                     }
                 },
-                "ArrayInObject": {
+                "ArrayInObjectABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": {
                     "same_type": true,
                     "length": 3,
                     "object": {
-                        "Menge": "Zahl",
+                        "MengeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA": "Zahl",
                         "Gewicht": "Zahl",
                         "Bezeichnung": "Text",
                         "Kürzel": "Text"
@@ -94,7 +91,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 }
             }
         },
-        "Spiele": {
+        "SpieleABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": {
             "same_type": true,
             "length": 2,
             "object": {
@@ -180,7 +177,7 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             }
         },
         "Vorherige-Season": "Text",
-        "Test-Zahl": "Zahl"
+        "Test-ZahlABCDEFGHIJKLMNOPQRSTUVWXYZ123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789": "Zahl"
     };
 
 
@@ -361,20 +358,23 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      */
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
         indexCounter++;
+        const xsSize = level>0?11:12;
         if(Array.isArray(data.value)) {
             //object or array with same_type===true
             return (
-                <React.Fragment key={indexCounter + "listFragment"}>
-                    <ListItem style={{marginLeft: level * 30}}
-                              key={data.parentKeyName === "" ? data.keyName : data.parentKeyName + "|" + data.keyName}
-                              divider={true}>
-                        <ListItemText
-                            primary={data.arrayRep ? data.keyName + " (Array[0]), length: " + data.arrayLength : data.keyName + " (object)"}
-                            secondary={null}
-                        />
-                    </ListItem>
+                <Grid item container justify="flex-end" xs={xsSize as GridSize} className={classes.dataSelectionListItem} key={data.parentKeyName === "" ? data.keyName : data.parentKeyName + "|" + data.keyName}>
+                    <Grid item container xs={12}>
+                        <Grid item xs={12}>
+                            <Typography className={classes.processingListingText}>
+                                {data.arrayRep ? data.keyName + " (Array[0]), length: " + data.arrayLength : data.keyName + " (object)"}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Divider />
+                    </Grid>
                     {data.value.map((item) => renderListItem(item, level + 1))}
-                </React.Fragment>
+                </Grid>
             )
         } else if(data.arrayRep) {
             const selectedDataObj: SelectedDataItem = {
@@ -385,8 +385,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
             //array that contains primitives with same_type false or true; or containing array
             //if the array includes another array or has same type false, no selection is allowed and no checkbox will be displayed
             return (
-                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
-                    <ListItemIcon>
+                <Grid item container justify="flex-end" xs={xsSize as GridSize} className={classes.dataSelectionListItem} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName}>
+                    <Grid item className={classes.dataSelectionCheckboxItem}>
                         { !(data.value === "[Array]" || data.value.includes(", ") || data.value === "different object types") &&
                             <FormControlLabel
                                 control={
@@ -395,12 +395,18 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                                 label={''}
                             />
                         }
-                    </ListItemIcon>
-                    <ListItemText
-                        primary={data.keyName + " (Array[0]), length: " + data.arrayLength +", content types: " + data.value}
-                        secondary={null}
-                    />
-                </ListItem>
+                    </Grid>
+                    <Grid item container xs={11}>
+                        <Grid item xs={12}>
+                            <Typography className={classes.processingListingText}>
+                                {data.keyName + " (Array[0]), length: " + data.arrayLength +", content types: " + data.value}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Divider />
+                    </Grid>
+                </Grid>
             )
         } else {
             const selectedDataObj: SelectedDataItem = {
@@ -408,20 +414,26 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                 type: data.value
             }
             return (
-                <ListItem style={{marginLeft: level*30}} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName} divider={true}>
-                    <ListItemIcon>
+                <Grid item container justify="flex-end" xs={xsSize as GridSize} className={classes.dataSelectionListItem} key={data.parentKeyName===""?data.keyName:data.parentKeyName + "|" + data.keyName}>
+                    <Grid item className={classes.dataSelectionCheckboxItem}>
                         <FormControlLabel
                             control={
                                 <Checkbox onClick={() => checkboxHandler(selectedDataObj)} checked={extractKeysFromSelection(props.selectedData).includes(selectedDataObj.key)}/>
                             }
                             label={''}
                         />
-                    </ListItemIcon>
-                    <ListItemText
-                        primary={data.keyName + " - " + data.value}
-                        secondary={null}
-                    />
-                </ListItem>
+                    </Grid>
+                    <Grid item container xs={11}>
+                        <Grid item xs={12}>
+                            <Typography className={classes.processingListingText}>
+                                {data.keyName + " - " + data.value}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} className={classes.elementLargeMargin}>
+                        <Divider />
+                    </Grid>
+                </Grid>
             )
         }
     };
@@ -474,11 +486,13 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                         Folgende Datenwerte wurden von der Request zurückgegeben:
                     </Typography>
                 </Grid>
-                <Grid item xs={10}>
-                    <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame} key={indexCounter + "listBox"}>
-                        <List disablePadding={true} key={indexCounter + "listRoot"}>
-                            {props.listItems.map((item) => renderListItem(item, 0))}
-                        </List>
+                <Grid item container xs={10}>
+                    <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.listFrame}>
+                        <Grid item container xs={12} justify="flex-end">
+                            <List disablePadding={true}  style={{width: "100%"}}>
+                                {props.listItems.map((item) => renderListItem(item, 0))}
+                            </List>
+                        </Grid>
                     </Box>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>

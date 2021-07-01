@@ -108,6 +108,17 @@ export const useStyles = makeStyles((theme: Theme) =>
         historizedOverviewContainer: {
             marginTop: "10px",
             height: "100%"
+        },
+        processingListingText: {
+            overflowWrap: "break-word",
+            paddingLeft: "0.8rem",
+            paddingTop: "0.6rem"
+        },
+        dataSelectionListItem: {
+            marginTop: "10px",
+        },
+        dataSelectionCheckboxItem: {
+            width: "20px"
         }
     }),
 );
