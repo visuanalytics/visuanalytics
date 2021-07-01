@@ -38,7 +38,6 @@ interface CustomDataGUIProps {
     leftParenFlag: boolean;
     leftParenCount: number;
     rightParenCount: number;
-    openDeleteDialog: (formelName: string) => void;
 }
 
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
@@ -88,7 +87,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     label={''}
                 />
                 <ListItemSecondaryAction>
-                    <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.openDeleteDialog(data)}}>
+                    <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.deleteCustomDataCheck(data)}}>
                         <DeleteIcon color={"error"}/>
                     </IconButton>
                 </ListItemSecondaryAction>
