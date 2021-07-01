@@ -25,7 +25,7 @@ export type StatusMessage = "error" | "warning" | "success";
 export type LogEntry = {
     logID: number;
     status: StatusMessage;
-    statusDate: string;
-    statusTime: string;
+    logDate: string;
+    logTime: string;
     message: string;
 }
