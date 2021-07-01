@@ -193,6 +193,8 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
         const formulas: Array<string> = [];
         props.customData.forEach((formula) => {
             //if the name is included, it is used by the formula
+            //TODO: if another data that includes the name followed by a whitespace, there would be a match
+            //possible solutions: no whitespaces or array of data for each formula
             if(formula.formelString.includes(data + " ") || formula.formelString.endsWith(data)) formulas.push(formula.formelName)
         })
         return formulas;

@@ -905,6 +905,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         infoProvName={infoProvName}
                         infoProvDiagrams={infoProvDiagrams}
                         setInfoProvDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                        setHistorizedData={(historizedData: Array<string>) => setHistorizedData(historizedData)}
+                        setCustomData={(customData: Array<FormelObj>) => setCustomData(customData)}
                     />
                 );
             case 4:
