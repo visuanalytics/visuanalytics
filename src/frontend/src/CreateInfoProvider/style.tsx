@@ -132,6 +132,12 @@ export const useStyles = makeStyles((theme: Theme) =>
             overflowWrap: "break-word",
             marginTop: "0.5rem",
             paddingRight: "0.1rem"
+        },
+        dataSelectionListItem: {
+            marginTop: "10px",
+        },
+        dataSelectionCheckboxItem: {
+            width: "20px"
         }
     })
 );
