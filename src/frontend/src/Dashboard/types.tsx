@@ -19,3 +19,11 @@ export type fetchAllBackendAnswer = Array<jsonRef>
 export type answer = {
     err_msg: string;
 }
+
+export type StatusMessage = "error" | "warning" | "success";
+
+export type LogEntry = {
+    logID: number;
+    status: StatusMessage;
+    message: string;
+}
