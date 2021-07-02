@@ -83,7 +83,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     type: dataSource.schedule.type,
                     weekdays: dataSource.schedule.weekdays,
                     time: dataSource.schedule.time,
-                    interval: dataSource.schedule.time_interval,
+                    interval: dataSource.schedule.timeInterval,
                 }
             })
         })
