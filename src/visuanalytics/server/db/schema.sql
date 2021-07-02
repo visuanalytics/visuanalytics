@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Fr Mai 28 15:07:46 2021
+-- File generated with SQLiteStudio v3.3.3 on Fr Jul 2 15:55:54 2021
 --
 -- Text encoding used: System
 --
@@ -106,7 +106,9 @@ CREATE TABLE job_logs (
     error_msg       TEXT,
     error_traceback TEXT,
     duration        INT,
-    start_time      DATETIME
+    start_time      DATETIME,
+    pipeline_type   VARCHAR  NOT NULL
+                             DEFAULT JOB
 );
 
 
@@ -125,6 +127,23 @@ CREATE TABLE job_topic_position (
                         NOT NULL,
     position    INTEGER CHECK (position >= 0)
                         NOT NULL
+);
+
+
+-- Table: job_uses_scene
+DROP TABLE IF EXISTS job_uses_scene;
+
+CREATE TABLE job_uses_scene (
+    job_uses_scene_id INTEGER PRIMARY KEY AUTOINCREMENT
+                              UNIQUE
+                              NOT NULL,
+    job_id            INTEGER REFERENCES job (job_id) ON DELETE CASCADE
+                                                      ON UPDATE CASCADE
+                              NOT NULL,
+    scene_id          INTEGER REFERENCES scene (scene_id) ON DELETE CASCADE
+                                                          ON UPDATE CASCADE
+                              NOT NULL,
+    scene_is_preview  BOOLEAN NOT NULL
 );
 
 
