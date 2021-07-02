@@ -3,6 +3,7 @@ import os
 import shutil
 import io
 import re
+import time
 
 import humps
 import copy
@@ -670,7 +671,7 @@ def get_infoprovider_logs(infoprovider_id):
             "errorMsg": datasource_log["error_msg"],
             "errorTraceback": datasource_log["error_traceback"],
             "duration": datasource_log["duration"],
-            "startTime": datasource_log["start_time"]
+            "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(datasource_log["start_time"]))
         }) for datasource_log in datasource_logs]
     return logs
 
@@ -694,7 +695,7 @@ def get_videojob_logs(videojob_id):
         "errorMsg": log["error_msg"],
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
-        "startTime": log["start_time"]
+        "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(log["start_time"]))
     } for log in logs]
 
 
