@@ -49,7 +49,7 @@ export type BackendDataSource = {
         type: string;
         time: string;
         date: string;
-        time_interval: string;
+        timeInterval: string;
         weekdays: Array<number>;
     };
     selected_data: Array<SelectedDataItem>;
