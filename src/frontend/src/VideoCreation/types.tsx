@@ -2,7 +2,7 @@ import {
     Schedule,
     SelectedDataItem
 } from "../CreateInfoProvider/types";
-import {FormelObj} from "../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 /**
  * Type containing all directions a sceneCard can be moved to.
