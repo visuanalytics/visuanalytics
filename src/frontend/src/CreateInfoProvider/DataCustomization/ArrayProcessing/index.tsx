@@ -101,7 +101,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                     compatibleArraysList = compatibleArraysList.concat(getProcessableArrays(listItem.value, true));
                 }
             } else {
-                //check if it is a primative array containing
+                //check if it is a primitive array containing
                 if(listItem.arrayRep) {
                     //check for primitive arrays
                     if(!Array.isArray(listItem.value)) {
