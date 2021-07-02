@@ -48,7 +48,7 @@ interface StringProcessingProps {
  */
 
 /**
- * Component for processing of string - user can define replacing of certain sequences by others.
+ * Component for processing of strings - user can define replacing of certain sequences by others.
  */
 export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
@@ -66,7 +66,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
     const [availableStrings, setAvailableStrings] = React.useState<Array<string>>(["string_1", "string_2", "string_3"]);
 
     /**
-     * Method that calculates all available strings for the list generation.
+     * Method that calculates all available strings for the list representation.
      * @param listItems The list with the frontend representation of the api data.
      * @param noArray True when the search is for an object inside an array and arrays should be ignored
      */
@@ -165,8 +165,8 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
     /**
      * Method that handles clicking the remove icon for a replacement.
-     * Checks if any delete dependencies exist - if so, a dialog will ask
-     * for confirmation, otherwise, the value is deleted.
+     * Checks if any delete dependencies exist - if so, they will be deleted as well.
+     * Otherwise just the string replacement object will be deleted.
      * @param index The index of the element to be deleted.
      */
     const removeReplacementHandler = (index: number) => {
