@@ -1,5 +1,5 @@
 import React from "react";
-import {useStyles} from "../../style";
+import {useStyles} from "../../../style";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -14,11 +14,12 @@ import {
     ListItemSecondaryAction
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {SelectedDataItem} from "../../types";
+import {ArrayProcessingData, SelectedDataItem} from "../../../types";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
     customData: Array<FormelObj>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
     input: string;
     name: string;
     setName: (name: string) => void;
@@ -95,6 +96,26 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
             </ListItem>
         );
     };
+
+    /**
+     * Renders the Buttons for array processings. All content from customData is shown with delete-option
+     * @param processing the object of the array processing
+     */
+    const renderListItemArrayProcessings = (processing: ArrayProcessingData) => {
+        return (
+            <ListItem key={processing.name}>
+                <FormControlLabel
+                    control={
+                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                                onClick={() => props.handleDataButtons(processing.name)}>
+                            {processing.name + " (Array-Verarbeitung)"}
+                        </Button>
+                    }
+                    label={''}
+                />
+            </ListItem>
+        );
+    }
 
     /**
      * Renders the buttons shown in the CustomData-GUI
@@ -283,6 +304,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                          className={classes.listFrameData}>
                         <List>
                             {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
+                            {props.arrayProcessingsList.map((processing) => renderListItemArrayProcessings(processing))}
                             {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
                         </List>
                     </Box>

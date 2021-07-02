@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
 import {BasicSettings} from "../../CreateInfoProvider/BasicSettings";
+import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditBasicSettingsProps {
     continueHandler: (index: number) => void;

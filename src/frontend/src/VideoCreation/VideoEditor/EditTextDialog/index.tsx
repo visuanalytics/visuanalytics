@@ -18,11 +18,11 @@ import {
 import {AudioElement, MinimalDataSource, MinimalInfoProvider} from "../../types";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {extractKeysFromSelection} from "../../../CreateInfoProvider/helpermethods"
-import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import { Schedule } from "../../../CreateInfoProvider/types";
 import {ScheduleTypeTable} from "../../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import Box from "@material-ui/core/Box";
+import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 /**
  * This interface contains the values the component gets, passed in by props

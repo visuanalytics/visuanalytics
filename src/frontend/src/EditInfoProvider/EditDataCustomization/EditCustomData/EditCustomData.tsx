@@ -1,15 +1,15 @@
 import React from "react";
-import {StepFrame} from "../../CreateInfoProvider/StepFrame";
+import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import {useStyles} from "../style";
+import {useStyles} from "../../style";
 import Box from "@material-ui/core/Box";
 import {FormelList} from "./FormelList";
-import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {StrArg} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-import {formelContext} from "../types";
-import {checkFindOnlyNumbers, checkOperator} from "../helpermethods";
-import {DataSource, Diagram} from "../../CreateInfoProvider/types";
+import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {StrArg} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {FormelContext} from "../../types";
+import {checkFindOnlyNumbers, checkOperator} from "../../helpermethods";
+import {DataSource, Diagram} from "../../../CreateInfoProvider/types";
 
 interface EditCustomDataProps {
     continueHandler: (index: number) => void;
@@ -19,7 +19,7 @@ interface EditCustomDataProps {
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     checkForHistorizedData: () => void;
-    setFormelInformation: (formel: formelContext) => void;
+    setFormelInformation: (formel: FormelContext) => void;
     infoProvName: string;
     infoProvDiagrams: Array<Diagram>
     setInfoProvDiagrams: (diagrams: Array<Diagram>) => void;
@@ -135,11 +135,11 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
      * @param formelName The name from the formula.
      * @param formelString The actual formula as string.
      */
-    const makeFormelContext = (formelName: string, formelString: string): formelContext => {
+    const makeFormelContext = (formelName: string, formelString: string): FormelContext => {
 
         //"empty" formelContext-object
         //all parameters will be set in this method
-        let finalFormel: formelContext = {
+        let finalFormel: FormelContext = {
             formelName: "",
             parenCount: 0,
             formelAsObjects: new Array<StrArg>(),
@@ -221,7 +221,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
      * Receives a formelContext-object an sets the deciding flags for the EditSingleDataGUI
      * @param formel The formelContext where the flags has to be set
      */
-    const setRightFlags = (formel: formelContext) => {
+    const setRightFlags = (formel: FormelContext) => {
 
         if (formel.formelAsObjects[formel.formelAsObjects.length - 1].isNumber) {
             formel.opFlag = false;
