@@ -648,6 +648,56 @@ def delete_infoprovider(infoprovider_id):
     return False
 
 
+def get_infoprovider_logs(infoprovider_id):
+    """
+    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+
+    :param infoprovider_id: ID eines Infoproviders.
+    :return: Liste aller gefundenen Logs.
+    """
+    con = db.open_con_f()
+    datasource_ids = con.execute("SELECT datasource_id FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+    logs = []
+    for datasource_id in datasource_ids:
+        datasource_logs = con.execute("SELECT job_id, datasource_name, state, error_msg, error_traceback, duration, start_time "
+                                      "from job_logs INNER JOIN datasource ON job_logs.job_id=datasource.datasource_id "
+                                      "WHERE pipeline_type='DATASOURCE' AND datasource.datasource_id=?"
+                                      "ORDER BY job_logs_id DESC", [datasource_id["datasource_id"]]).fetchall()
+        [logs.append({
+            "datasource_id": datasource_log["job_id"],
+            "datasource_name": datasource_log["datasource_name"],
+            "state": datasource_log["state"],
+            "errorMsg": datasource_log["error_msg"],
+            "errorTraceback": datasource_log["error_traceback"],
+            "duration": datasource_log["duration"],
+            "startTime": datasource_log["start_time"]
+        }) for datasource_log in datasource_logs]
+    return logs
+
+
+def get_videojob_logs(videojob_id):
+    """
+    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+
+    :param videojob_id: ID eines Infoproviders.
+    :return: Liste aller gefundenen Logs.
+    """
+    con = db.open_con_f()
+    logs = con.execute("SELECT job_id, job_name, state, error_msg, error_traceback, duration, start_time "
+                                  "from job_logs INNER JOIN job USING (job_id) "
+                                  "WHERE pipeline_type='JOB' AND job_id=?"
+                                  "ORDER BY job_logs_id DESC", [videojob_id]).fetchall()
+    return [{
+        "videojob_id": log["job_id"],
+        "videojob_name": log["job_name"],
+        "state": log["state"],
+        "errorMsg": log["error_msg"],
+        "errorTraceback": log["error_traceback"],
+        "duration": log["duration"],
+        "startTime": log["start_time"]
+    } for log in logs]
+
+
 def delete_videojob(videojob_id):
     """
     Entfernt den Videojob mit der gegebenen ID.

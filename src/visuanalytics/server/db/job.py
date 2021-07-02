@@ -119,9 +119,9 @@ def get_datasource_run_info(datasource_id):
         return datasource_name, datasource_name, {}
 
 
-def insert_log(job_id: int, state: int, start_time: datetime):
+def insert_log(job_id: int, state: int, start_time: datetime, pipeline_type='JOB'):
     with db.open_con() as con:
-        con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
+        con.execute("INSERT INTO job_logs(job_id, state, start_time, pipeline_type) values (?, ?, ?, ?)", [job_id, state, start_time, pipeline_type])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
 

@@ -454,6 +454,23 @@ def delete_infoprovider(infoprovider_id):
         return err, 400
 
 
+@api.route("/infoprovider/<infoprovider_id>/logs", methods=["GET"])
+def get_infoprovider_logs(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_infoprovider_logs(infoprovider_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>", methods=["DELETE"])
 def delete_videojob(videojob_id):
     """
@@ -469,6 +486,23 @@ def delete_videojob(videojob_id):
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while removing a Videojob"})
+        return err, 400
+
+
+@api.route("/videojob/<videojob_id>/logs", methods=["GET"])
+def get_videojob_logs(videojob_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_videojob_logs(videojob_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojo_id}"})
         return err, 400
 
 

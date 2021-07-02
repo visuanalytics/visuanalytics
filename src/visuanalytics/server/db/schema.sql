@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Di Jun 29 10:21:21 2021
+-- File generated with SQLiteStudio v3.3.3 on Fr Jul 2 15:55:54 2021
 --
 -- Text encoding used: System
 --
@@ -106,7 +106,9 @@ CREATE TABLE job_logs (
     error_msg       TEXT,
     error_traceback TEXT,
     duration        INT,
-    start_time      DATETIME
+    start_time      DATETIME,
+    pipeline_type   VARCHAR  NOT NULL
+                             DEFAULT JOB
 );
 
 
