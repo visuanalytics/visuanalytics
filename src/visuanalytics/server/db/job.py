@@ -119,9 +119,9 @@ def get_datasource_run_info(datasource_id):
         return datasource_name, datasource_name, {}
 
 
-def insert_log(job_id: int, state: int, start_time: datetime):
+def insert_log(job_id: int, state: int, start_time: datetime, pipeline_type='JOB'):
     with db.open_con() as con:
-        con.execute("INSERT INTO job_logs(job_id, state, start_time) values (?, ?, ?)", [job_id, state, start_time])
+        con.execute("INSERT INTO job_logs(job_id, state, start_time, pipeline_type) values (?, ?, ?, ?)", [job_id, state, start_time, pipeline_type])
         id = con.execute("SELECT last_insert_rowid() as id").fetchone()
         con.commit()
 
@@ -150,8 +150,15 @@ def update_log_finish(id: int, state: int, duration: int):
 def get_interval(res):
     return INTERVAL.get(res["time_interval"])
 
-def insert_next_execution_time(id: int, next_execution: str):
+def insert_next_execution_time(id: int, next_execution: str, is_job: bool = False):
+    #print("insert_next_execution_time()")
+    #print("id:", id)
+    #print("next_execution:", next_execution)
     with db.open_con() as con:
-        schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
-        con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        if is_job:
+            schedule_id = con.execute("SELECT schedule_id FROM job WHERE job_id = ?", [id]).fetchone()["schedule_id"]
+            con.execute("UPDATE schedule SET next_execution = ? WHERE schedule_id = ?", [next_execution, schedule_id])
+        else:
+            schedule_id = con.execute("SELECT schedule_historisation_id FROM datasource WHERE datasource_id = ?", [id]).fetchone()["schedule_historisation_id"]
+            con.execute("UPDATE schedule_historisation SET next_execution = ? WHERE schedule_historisation_id = ?", [next_execution, schedule_id])
         con.commit()

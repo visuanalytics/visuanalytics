@@ -29,140 +29,6 @@ def close_db_con(exception):
     db.close_con_f()
 
 
-@api.route("/infprovtestdatensatz", methods=["GET"])
-def infprovtestdatensatz():
-    # Muss noch angepasst werden
-    last_id = queries.get_last_infoprovider_id()
-    infoprovider = {
-        "infoprovider_name": "Test" + str(last_id),
-        "datasources": [
-            {
-                "datasource_name": "wetter_api",
-                "api": {
-                    "api_info": {
-                        "type": "request",
-                        "api_key_name": "appid||e2fda2d8f176a37636832ca955377714",
-                        "url_pattern": "http://api.openweathermap.org/data/2.5/weather?q=berlin"
-                    },
-                    "method": "KeyInQuery",
-                    "response_type": "json"
-                },
-                "transform": [
-                    {
-                        "type": "select",
-                        "relevant_keys": [
-                            "_req|wetter_api|main|temp",
-                            "_req|wetter_api|main|feels_like",
-                            "_req|wetter_api|main|temp_min",
-                            "_req|wetter_api|main|temp_max"
-                        ]
-                    },
-                    {
-                        "type": "transform_dict",
-                        "dict_key": "_req|wetter_api|main",
-                        "transform": [
-                            {
-                                "type": "append",
-                                "keys": [
-                                    "_loop"
-                                ],
-                                "new_keys": [
-                                    "test"
-                                ],
-                                "append_type": "list"
-                            }
-                        ]
-                    }
-                ],
-                "storing": [
-                    {
-                        "name": "test",
-                        "key": "test"
-                    }
-                ],
-                "formulas": [
-                    {
-                        "formelName": "A",
-                        "formelString": "( _req|wetter_api|main|temp * 24 ) / 7"
-                    }
-                ],
-                "schedule": {
-                    "type": "daily",
-                    "time": "15:24"
-                }
-            },
-            {
-                "datasource_name": "joke_api",
-                "api": {
-                    "api_info": {
-                        "type": "request",
-                        "api_key_name": "",
-                        "url_pattern": "https://official-joke-api.appspot.com/jokes/ten"
-                    },
-                    "method": "noAuth",
-                    "response_type": "json"
-                },
-                "transform": [
-                    {
-                        "type": "select",
-                        "relevant_keys": [
-                            "_req|joke_api"
-                        ]
-                    }
-                ],
-                "storing": [
-                    {
-                        "name": "jokes",
-                        "key": "_req|joke_api"
-                    }
-                ],
-                "schedule": {
-                    "type": "weekly",
-                    "time": "10:09",
-                    "weekdays": [0, 5]
-                },
-                "formulas": []
-            }
-        ],
-        "diagrams": {
-            "test": {
-                "type": "diagram_custom",
-                "diagram_config": {
-                    "type": "custom",
-                    "name": "Jokes",
-                    "infoprovider": "jokes_test",
-                    "source_type": "Array",
-                    "plots": [
-                        {
-                            "custom_labels": False,
-                            "primitive": False,
-                            "plot": {
-                                "type": "line",
-                                "y": "{_req|api}",
-                                "numeric_attribute": "id",
-                                "string_attribute": "punchline"
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "diagrams_original": {},
-        "arrays_used_in_diagrams": []
-    }
-    queries.insert_infoprovider(infoprovider)
-    last_id = queries.get_last_infoprovider_id()
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    last_id += 1
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    last_id += 1
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    return "", 200
-
-
 @api.route("/testdiagram", methods=["POST"])
 def test_diagram():
     """
@@ -278,8 +144,20 @@ def add_infoprovider():
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
@@ -287,7 +165,7 @@ def add_infoprovider():
                 return err, 400
 
             if "schedule" not in datasource:
-                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                err = flask.jsonify({f"err_msg": f"Missing schedule for datasource {datasource['name']}"})
                 return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
@@ -430,8 +308,20 @@ def update_infoprovider(infoprovider_id):
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
@@ -539,7 +429,7 @@ def get_videojob(videojob_id):
             return err, 400
 
         return flask.jsonify(videojob_json)
-        #return videojob_json
+        # return videojob_json
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a Videojob"})
@@ -564,6 +454,23 @@ def delete_infoprovider(infoprovider_id):
         return err, 400
 
 
+@api.route("/infoprovider/<infoprovider_id>/logs", methods=["GET"])
+def get_infoprovider_logs(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_infoprovider_logs(infoprovider_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>", methods=["DELETE"])
 def delete_videojob(videojob_id):
     """
@@ -582,6 +489,23 @@ def delete_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>/logs", methods=["GET"])
+def get_videojob_logs(videojob_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_videojob_logs(videojob_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojo_id}"})
+        return err, 400
+
+
 @api.route("/testformula", methods=["POST"])
 def testformula():
     """
@@ -596,7 +520,7 @@ def testformula():
             err = flask.jsonify({"err_msg": "Missing field 'formula'"})
             return err, 400
 
-        str2json(formula["formula"])
+        str2json(queries.remove_toplevel_key(formula["formula"]).replace("|", "uzjhnjtdryfguljkm"))
         return flask.jsonify({"accepted": True})
 
     except SyntaxError:
@@ -740,6 +664,24 @@ def delete_scene(id):
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": f"An error occurred while deleting the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/scene/<id>/preview", methods=["GET"])
+def get_scene_preview(id):
+    """
+    Endpunkt '/scene/<id>/preview (GET).
+
+    Route über die das Preview-Bild einer Szene abgefragt werden kann.
+    :param id: ID der Szene, deren Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_scene_preview(id)
+        err = flask.jsonify({"err_msg": f"Scene preview could not be loaded for the scene with the ID {id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading the preview-image of the scene with the ID {id}"})
         return err, 400
 
 
