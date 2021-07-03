@@ -49,6 +49,7 @@ interface SceneEditorProps {
     diagramList: Array<DiagramInfo>;
     imageList: Array<string>;
     setImageList: (images: Array<string>) => void;
+    editMode: boolean;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -107,7 +108,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
     const [imageToUpload, setImageToUpload] = React.useState<FormData>(new FormData());
     //const [itemJson, setItemJson] = React.useState("");
-    const [exportJSON, setExportJSON] = React.useState<JsonExport>();
+    const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
@@ -1583,14 +1584,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     onMouseOver={mouseOver}
                                                     onMouseLeave={mouseLeave}
                                                     dragBoundFunc={function (pos: Konva.Vector2d) {
-                                                        if (pos.x > 960 - item.width) {
-                                                            pos.x = 960 - item.width
+                                                        if (pos.x > 960 - item.width * item.scaleX) {
+                                                            pos.x = 960 - item.width * item.scaleX
                                                         }
                                                         if (pos.x < 0) {
                                                             pos.x = 0
                                                         }
-                                                        if (pos.y > 540 - item.height) {
-                                                            pos.y = 540 - item.height
+                                                        if (pos.y > 540 - item.height * item.scaleY) {
+                                                            pos.y = 540 - item.height * item.scaleY
                                                         }
                                                         if (pos.y < 0) {
                                                             pos.y = 0
@@ -1862,7 +1863,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <Typography variant={"h4"} align={"center"}>
                                 BILDER
                             </Typography><br/>
-                            <Button className={classes.button} onClick={handleFileUploadClick}>
+                            <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
                                 BILD HOCHLADEN
                                 <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
                             </Button>

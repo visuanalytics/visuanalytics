@@ -136,12 +136,32 @@ export const useStyles = makeStyles((theme: Theme) =>
             border: "5px solid",
             borderColor: theme.palette.primary.main,
             align: "center",
+            overflow: "auto",
         },
 
         button: {
             backgroundColor: theme.palette.primary.main,
             color: "white",
             padding: "5px 15px",
+            align: "center",
+            display: "inline-block",
+            fontSize: "16px",
+            marginLeft: "10px",
+            marginTop: "10px",
+            transitionDuration: "0.4s",
+            cursor: "pointer",
+            borderRadius: "5px",
+            width: "220px",
+            '&:hover': {
+                backgroundColor: theme.palette.primary.light,
+            }
+        },
+
+        uploadButton: {
+            backgroundColor: theme.palette.primary.main,
+            color: "white",
+            padding: "5px 15px",
+            textAlign: "center",
             align: "center",
             display: "inline-block",
             fontSize: "16px",

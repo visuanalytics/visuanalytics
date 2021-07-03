@@ -387,6 +387,7 @@ export const SceneCreation = () => {
                         diagramList={diagramList}
                         imageList={imageList}
                         setImageList={(images: Array<string>) => setImageList(images)}
+                        editMode={false}
                     />
                 )
         }
