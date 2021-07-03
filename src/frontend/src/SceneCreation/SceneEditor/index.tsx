@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import List from "@material-ui/core/List";
 import {
     ListItem,
@@ -53,8 +53,9 @@ interface SceneEditorProps {
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     let timeOut = 0;
-    //let uploadCounter = 1;
-    const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
+    const imageIDArray = React.useRef<Array<number>>([])
+    const inputReference = React.useRef<HTMLInputElement>(null)
+    //const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
 
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
@@ -78,7 +79,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
-    const [usedImagesArray, setUsedImagesArray] = React.useState<Array<number>>([])
+    //const [usedImagesArray, setUsedImagesArray] = React.useState<Array<number>>([])
 
     const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
     const [itemSelected, setItemSelected] = React.useState(false);
@@ -104,9 +105,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
+    const [imageToUpload, setImageToUpload] = React.useState<FormData>(new FormData());
     //const [itemJson, setItemJson] = React.useState("");
     const [exportJSON, setExportJSON] = React.useState<JsonExport>();
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
+    const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
+    const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
 
     // setup for error notification
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
@@ -117,7 +121,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     //TODO useEffects to fix reloading
 
-    React.useEffect(() => {
+    /*React.useEffect(() => {
         console.log(JSON.stringify(items))
         sessionStorage.setItem("items-" + uniqueId, JSON.stringify(items));
     }, [items])
@@ -132,16 +136,37 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!));
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
-    }, [])
+    }, [])*/
 
-    useEffect(() => {
-        exportToBackend(usedImagesArray);
-    }, [sceneName])
+    React.useEffect(() => {
+        if (imageToUpload.has('image')){
+            postImage();
+        }
+    }, [imageToUpload]);
+
+    React.useEffect(() => {
+        if (exportJSON !== null){
+            postScene();
+        }
+    }, [exportJSON]);
+
+    React.useEffect(() => {
+        createBackgroundImage();
+        createPreviewImage();
+
+    }, [items, sceneName]);
+
+    React.useEffect(() => {
+        if(backgroundPosted && previewPosted){
+            let json = createJSONExport();
+            setExportJSON(json);
+        }
+    }, [previewPosted]);
 
     /**
      * Removes all items of this component from the sessionStorage.
      */
-    const clearSessionStorage = () => {
+    /*const clearSessionStorage = () => {
         sessionStorage.removeItem("step-" + uniqueId);
         sessionStorage.removeItem("apiName-" + uniqueId);
         sessionStorage.removeItem("query-" + uniqueId);
@@ -156,16 +181,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
-    }
-
-    /**
-     * Method to duplicate the stage at an invisible position to create the preview image
-     */
-    const dupeStage = (itemArray: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
+    }*/
+    const dupeStage = (itemArray : Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
         let duplicateStage = new Konva.Stage({container: "backgroundStage", visible: true, width: 960, height: 540});
         let duplicateLayer = new Konva.Layer();
         duplicateStage.destroyChildren();
-        if (backGroundType === "COLOR") {
+        if (backGroundType === "COLOR"){
             duplicateLayer.add(new Konva.Rect({
                 fill: currentBGColor,
                 width: 960,
@@ -173,9 +194,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }))
         }
         for (let i = 0; i < itemArray.length; i++) {
-            let duplicateItem: any;
-            if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")) {
-                if (itemArray[i].id.startsWith("circle")) {
+            let duplicateItem : any;
+            if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")){
+                if (itemArray[i].id.startsWith("circle")){
                     duplicateItem = new Konva.Circle({
                         radius: 50,
                         x: itemArray[i].x,
@@ -188,7 +209,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         height: itemArray[i].height,
                         rotation: itemArray[i].rotation,
                     })
-                } else if (itemArray[i].id.startsWith("rect")) {
+                } else if (itemArray[i].id.startsWith("rect")){
                     duplicateItem = new Konva.Rect({
                         fill: itemArray[i].color,
                         id: itemArray[i].id,
@@ -200,7 +221,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         y: itemArray[i].y,
                         rotation: itemArray[i].rotation,
                     })
-                } else if (itemArray[i].id.startsWith("line")) {
+                } else if (itemArray[i].id.startsWith("line")){
                     duplicateItem = new Konva.Line({
                         fill: itemArray[i].color,
                         id: itemArray[i].id,
@@ -211,11 +232,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         rotation: itemArray[i].rotation,
                         x: itemArray[i].x,
                         y: itemArray[i].y,
-                        points: [0, 0, 100, 0, 100, 100],
+                        points: [0,0,100,0,100,100],
                         closed: true,
                         stroke: itemArray[i].color,
                     })
-                } else if (itemArray[i].id.startsWith("star")) {
+                } else if (itemArray[i].id.startsWith("star")){
                     duplicateItem = new Konva.Star({
                         numPoints: 5,
                         innerRadius: 50,
@@ -239,7 +260,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Handler to save the scene as png file
      */
-    const saveHandler = (currentStage: Konva.Stage) => {
+    const saveHandler = (currentStage : Konva.Stage) => {
         let stageJson = currentStage?.toDataURL();
         if (stageJson === undefined) {
             stageJson = "Empty Stage";
@@ -247,22 +268,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         return stageJson;
     }
 
-    /**
-     * Method to create the export for the backend
-     */
-    const exportToBackend = async (usedImages: number[]) => {
-        let copyOfItems = items.slice();
-        let onlyTextAndImages = [];
-        let localTextImage: Array<DataText | DataImage> = [];
-        for (let index = 0; index < copyOfItems.length; index++) {
-            if (copyOfItems[index].id.startsWith('text')) {
-                onlyTextAndImages.push(copyOfItems[index] as CustomText);
-            } else if (copyOfItems[index].id.startsWith('image')) {
-                onlyTextAndImages.push(copyOfItems[index] as CustomImage);
-            }
-        }
-        //setItemJson(JSON.stringify(copyOfItems))
-        let duplicateOfStage = dupeStage(copyOfItems);
+    const createBackgroundImage = async () => {
+        const copyOfItems = items.slice();
+        const duplicateOfStage = dupeStage(copyOfItems);
         const stageJson = saveHandler(duplicateOfStage);
 
         if (stageJson !== "Empty Stage") {
@@ -276,10 +284,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
             setBaseImage(formData);
         }
-        if (stage !== undefined) {
+    }
+
+    const createPreviewImage = async () => {
+        if (stage !== undefined){
             const originalStage = saveHandler(stage);
 
-            if (originalStage !== "Empty Stage") {
+            if (originalStage !== "Empty Stage"){
                 let localBlob = await fetch(originalStage).then(res => res.blob());
 
                 let file = new File([localBlob], 'preview.png');
@@ -291,6 +302,22 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 setPreviewImage(formData);
             }
         }
+    }
+
+    /**
+     * Method to create the export for the backend
+     */
+    const createJSONExport = () => {
+        let copyOfItems = items.slice();
+        let onlyTextAndImages = [];
+        let localTextImage : Array<DataText|DataImage> = [];
+        for (let index = 0; index < copyOfItems.length; index++) {
+            if (copyOfItems[index].id.startsWith('text')) {
+                onlyTextAndImages.push(copyOfItems[index] as CustomText);
+            } else if (copyOfItems[index].id.startsWith('image')) {
+                onlyTextAndImages.push(copyOfItems[index] as CustomImage);
+            }
+        }
 
         const base: BaseImg = {
             type: "pillow",
@@ -299,9 +326,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         const returnValue: JsonExport = {
             scene_name: sceneName,
-            used_images: usedImages,
+            used_images: imageIDArray.current,
             used_infoproviders: [],
-            images: base,
+            images:  base,
             scene_items: JSON.stringify(copyOfItems),
         }
         onlyTextAndImages.forEach(element => {
@@ -337,31 +364,40 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 }
             }
         });
-        setExportJSON(returnValue);
+        return returnValue;
     }
 
-    const handleSuccess = (jsonData: any) => {
-        let usedImages: number[] = [];
-        usedImages.push((jsonData as ResponseData).image_id);
-        setUsedImagesArray(usedImages);
-        exportToBackend(usedImages);
+    const handleBackgroundSuccess = (jsonData : any) => {
+        imageIDArray.current.push((jsonData as ResponseData).image_id);
+        setBackgroundPosted(true);
     }
 
-    const handleError = (err: Error) => {
-        console.log(err, usedImagesArray)
+    const handlePreviewSuccess = (jsonData : any) => {
+        imageIDArray.current.push((jsonData as ResponseData).image_id);
+        setPreviewPosted(true);
+    }
+
+    const handleSceneSuccess = (jsonData : any) => {
+        console.log(jsonData)
+    }
+
+
+    const handleError = (err : Error) => {
+        console.log(err)
     }
 
     /**
      * Handler for the button to save the scene and go back to the overview
      */
-    const saveButtonHandler = () => {
+    const saveButtonHandler = (step : number) => {
         if (itemCounter === 0) {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
-        postBackground();
-        postPreview();
-        postScene();
+        if (step === 0){
+            postBackground();
+            postPreview();
+        }
     }
 
     /**
@@ -373,7 +409,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(exportJSON)
-        }
+        },
+        jsonData => handleSceneSuccess(jsonData), (err => handleError(err))
     );
 
     /**
@@ -384,7 +421,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             headers: {},
             body: baseImage
         },
-        jsonData => handleSuccess(jsonData), (err => handleError(err))
+        jsonData => handleBackgroundSuccess(jsonData),(err => handleError(err))
     );
 
     /**
@@ -394,7 +431,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             method: "POST",
             headers: {},
             body: previewImage
-        }
+        },
+        jsonData => handlePreviewSuccess(jsonData),(err => handleError(err))
     );
 
     /**
@@ -449,7 +487,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (e.target === e.target.getStage() || name === "background") {
             setStage(e.target.getStage()!)
             setSelectedItemName("");
-            if (currentlyEditing) {
+            if (currentlyEditing){
                 const localItems = items.slice();
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
@@ -628,6 +666,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleX: 1,
                     scaleY: 1,
                 } as CustomText);
+                setCurrentTextWidth(200);
                 incrementCounterResetType();
                 return;
             }
@@ -651,6 +690,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 return;
             }*/
         }
+    }
+
+    const addImageElement = (image : HTMLImageElement) => {
+        items.push({
+            id: 'image-' + itemCounter.toString(),
+            x: 0,
+            y: 0,
+            rotation: 0,
+            image: image,
+            width: image.width,
+            height: image.height,
+            baseWidth: image.width,
+            baseHeight: image.height,
+            scaleX: 1,
+            scaleY: 1,
+
+        } as CustomImage)
+        incrementCounterResetType();
     }
 
     /**
@@ -807,6 +864,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 }
             }
             setRecentlyRemovedItems(lastElem);
+            setItemCounter(itemCounter - 1);
         } else {
             const index = items.indexOf(selectedObject);
 
@@ -816,6 +874,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             setItemSelected(false);
+            setItemCounter(itemCounter - 1)
         }
     }
 
@@ -1053,10 +1112,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns true or false depending on the selected item
      */
     const disableColor = (): boolean => {
-        if (selectedItemName.startsWith('text')) {
+        if (selectedItemName.startsWith('text')){
             return true;
         }
-        return (!itemSelected);
+        return (!itemSelected) ;
     }
 
     /**
@@ -1075,27 +1134,47 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param item The item selected by the user
      */
     const handleItemSelect = (item: string) => {
-        items.push({
-            x: 20,
-            y: 20,
-            id: 'text-' + itemCounter.toString(),
-            textContent: '{' + item + '}',
-            width: currentTextWidth,
-            scaleX: 1,
-            scaleY: 1,
-            rotation: 0,
-            fontFamily: currentFontFamily,
-            fontSize: currentFontSize,
-            color: currentFontColor,
-            height: 20,
-            padding: 2,
-            currentlyRendered: true,
-            baseWidth: currentTextWidth,
-            baseHeight: 20,
-        } as CustomText);
-        setCurrentTextContent(item);
-        setTextEditContent(item);
-        setItemCounter(itemCounter + 1);
+        if (!itemSelected){
+            items.push({
+                x: 20,
+                y: 20,
+                id: 'text-' + itemCounter.toString(),
+                textContent: '{' + item + '}',
+                width: 200,
+                scaleX: 1,
+                scaleY: 1,
+                rotation: 0,
+                fontFamily: currentFontFamily,
+                fontSize: currentFontSize,
+                color: currentFontColor,
+                height: 20,
+                padding: 2,
+                currentlyRendered: true,
+                baseWidth: 200,
+                baseHeight: 20,
+            } as CustomText);
+            setCurrentTextWidth(200);
+            setCurrentTextContent(item);
+            setTextEditContent(item);
+            setItemCounter(itemCounter + 1);
+        } else {
+            console.log(selectedItemName);
+            if (selectedItemName.startsWith('text') && !currentlyEditing){
+                console.log('Text selected');
+                const localItems = items.slice();
+                const index = items.indexOf(selectedObject);
+                const objectCopy = {
+                    ...selectedObject,
+                    textContent: (selectedObject as CustomText).textContent + ' {' + item + '}'
+                };
+                localItems[index] = objectCopy;
+                setItems(localItems);
+                setSelectedObject(objectCopy);
+            }
+            if (currentlyEditing){
+                setTextEditContent(textEditContent + ' {' + item + '}');
+            }
+        }
     }
 
     /**
@@ -1112,6 +1191,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
+    const handleImageClick = (src : string, index: number) => {
+        console.log(index)
+        let image = new window.Image();
+        image.src = src;
+        addImageElement(image);
+    }
+
     /**
      * Method that renders a single entry in the list of all available images
      * @param image The URL of the image to be displayed.
@@ -1119,10 +1205,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const renderImageEntry = (image: string, index: number) => {
         //TODO: when images are available, check how the size should look like
-        console.log(index)
         return (
             <Grid item xs={4}>
-                <img src={image} width="50px" height="30px" alt={"Can not be displayed!"}/>
+                <img src={image} width="50px" height="30px" alt={"Can not be displayed!"} onClick={() => handleImageClick(image, index)}/>
             </Grid>
         )
     }
@@ -1207,6 +1292,33 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
+    const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files !== null){
+            console.log(event.target.files[0])
+            let formData = new FormData();
+            let name = event.target.files[0].name.split('.');
+            console.log(name[0])
+
+            formData.append('image', event.target.files[0]);
+            formData.append('name', name[0]);
+            setImageToUpload(formData);
+        }
+    }
+
+    const postImage = useCallFetch("visuanalytics/image/add", {
+            method: "POST",
+            headers: {},
+            body: imageToUpload
+        }
+    );
+
+    const handleFileUploadClick = () => {
+        if (inputReference.current !== null){
+            inputReference.current.click();
+        }
+
+    }
+
     return (
         <StepFrame
             heading={"Szenen-Editor"}
@@ -1231,7 +1343,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button size={"large"} variant={"contained"} className={classes.topButtons}
-                                    onClick={() => saveButtonHandler()} disabled={sceneName === ""}>
+                                    onClick={() => saveButtonHandler(0)} disabled={sceneName === ""}>
                                 Speichern
                             </Button>
                         </Grid>
@@ -1749,7 +1861,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography variant={"h4"} align={"center"}>
                                 BILDER
-                            </Typography>
+                            </Typography><br/>
+                            <Button className={classes.button} onClick={handleFileUploadClick}>
+                                BILD HOCHLADEN
+                                <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
+                            </Button>
                         </Grid>
                         <Grid item container xs={12} className={classes.elementLargeMargin}>
                             {props.imageList.map((image, index) => renderImageEntry(image, index))}
