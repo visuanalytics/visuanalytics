@@ -103,7 +103,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
 
         editorCanvas: {
-
             backgroundColor: "rgb(255, 255, 255)",
             border: "solid 5px",
             borderColor: theme.palette.primary.main,
@@ -219,9 +218,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
 
         lowerButtons: {
+            color: theme.palette.primary.main,
             marginLeft: "10px",
             marginTop: "10px",
             height: "250px",
+            width: "960px"
         },
 
         labels: {
