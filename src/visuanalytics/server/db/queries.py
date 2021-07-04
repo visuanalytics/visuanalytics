@@ -717,6 +717,21 @@ def delete_videojob(videojob_id):
     return True
 
 
+def get_videojob_preview(videojob_id):
+    """
+    Generiert den Pfad zu dem Preview-Bild eines Videojobs.
+
+    :param videojob_id: ID des Videojobs.
+    :return: Dateipfad zu dem Preview-Bild.
+    """
+    con = db.open_con_f()
+
+    scene = con.execute("SELECT * FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()
+
+    return get_scene_preview(scene["scene_id"]) if scene else None
+
+
 def insert_scene(scene):
     """
     Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
@@ -951,6 +966,11 @@ def get_scene_preview(scene_id):
     """
     con = db.open_con_f()
 
+    # Testen ob Scene existiert
+    count = con.execute("SELECT COUNT(*) FROM scene WHERE scene_id=?", [scene_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        return None
+
     # Szenen-Json laden um verwendetet Bilder auslesen zu können
     with open_resource(get_scene_file(scene_id)) as f:
         scene_json = json.loads(f.read())
@@ -1028,6 +1048,38 @@ def delete_scene_image(image_id):
     con.commit()
 
     return "Successful"
+
+
+def set_videojob_preview(videojob_id, scene_id):
+    """
+    Setzt eine gegebene Szene als das Previewbild eines Videos.
+
+    :param videojob_id: ID eines Videojobs.
+    :param scene_id: ID einer Szene.
+    :return: Eine Fehlermeldung im Json-Format falls vorhanden.
+    """
+    con = db.open_con_f()
+
+    # Testen ob Videojob und Szene existieren
+    scene = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+    videojob = con.execute("SELECT * FROM job WHERE job_id=?", [videojob_id]).fetchone()
+    if videojob is None:
+        return {"err_msg": f"Videojob with ID {videojob_id} does not exist"}
+    if scene is None:
+        return {"err_msg": f"Scene with ID {scene_id} does not exist"}
+
+    # Testen ob bereits eine Szene als preview gesetzt ist
+    count = con.execute("SELECT COUNT(*) FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        con.execute("INSERT INTO job_uses_scene (job_id, scene_id, scene_is_preview) VALUES (?, ?, ?)",
+                    [videojob_id, scene_id, True])
+    else:
+        con.execute("UPDATE job_uses_scene SET scene_id=? WHERE job_id=? AND scene_is_preview=TRUE",
+                    [scene_id, videojob_id])
+
+    con.commit()
+    return None
 
 
 def get_topic_names():

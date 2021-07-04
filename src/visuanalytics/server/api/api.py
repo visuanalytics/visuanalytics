@@ -489,6 +489,25 @@ def delete_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>/preview", methods=["GET"])
+def get_videojob_preview(videojob_id):
+    """
+    Endpunkt '/videojob/<id>/preview (GET).
+
+    Route über die das Preview-Bild eines Videos abgefragt werden kann.
+    :param videojob_id: ID des Videos, dessen Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_videojob_preview(videojob_id)
+        err = flask.jsonify({"err_msg": f"Video preview could not be loaded for a videojob with the ID {videojob_id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify(
+            {"err_msg": f"An error occurred while loading the preview-image of a videojob with the ID {videojob_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>/logs", methods=["GET"])
 def get_videojob_logs(videojob_id):
     """
@@ -496,7 +515,7 @@ def get_videojob_logs(videojob_id):
 
     Route um alle Logs der Datenquellen eines Infoproviders zu laden.
 
-    :param infoprovider_id: ID des Infoproviders.
+    :param videojob_id: ID des Infoproviders.
     """
     try:
         return flask.jsonify(queries.get_videojob_logs(videojob_id))
@@ -790,9 +809,28 @@ def delete_scene_image(id):
 
 @api.route("/thumbnailpreview", methods=["POST"])
 def set_preview():
+    """
+    Format: {
+        videojob_id: ####,
+        scene_id: ####,
+    }
+    """
+    data = request.json
     try:
+        if "videojob_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'videojob_id'"})
+            return err, 400
 
-        return "Not Implemented", 400
+        if "scene_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'scene_id'"})
+            return err, 400
+
+        msg = queries.set_videojob_preview(data["videojob_id"], data["scene_id"])
+        if msg:
+            err = flask.jsonify(msg)
+            return err, 400
+
+        return "", 200
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
