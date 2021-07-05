@@ -489,7 +489,7 @@ export const VideoCreation = () => {
         <StepFrame
             heading={"Video-Editor"}
             hintContent={null}
-            large={true}
+            large={"lg"}
         >
             {selectContent()}
             <CenterNotification

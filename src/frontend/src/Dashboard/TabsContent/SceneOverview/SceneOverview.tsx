@@ -34,7 +34,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
                                 startIcon={<AddCircleIcon fontSize="small"/>}
-                                onClick={() => components?.setCurrent("sceneCreation")}>
+                                onClick={() => components?.setCurrent("sceneEditor")}>
                             Neue Szene erstellen
                         </Button>
                     </Grid>
