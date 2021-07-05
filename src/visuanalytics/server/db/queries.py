@@ -979,25 +979,27 @@ def get_scene_preview(scene_id):
     for image_id in scene_json["used_images"]:
         image_name = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()["image_name"]
         if "preview" in image_name:
-            return get_scene_image_path(image_name)
+            image_data = image_name.rsplit(".", 1)
+            return get_image_path(image_data[0], "scene", image_data[1])
     return None
 
 
-def insert_image(image_name):
+def insert_image(image_name, folder):
     """
     Fügt ein Bild zu der Datenbank hinzu.
 
     :param image_name: Name des Bildes.
+    :param folder: Ordner unter dem das Bild gespeichert werden soll.
     """
     con = db.open_con_f()
     name = image_name.rsplit(".", 1)[0]
 
     # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=? AND folder=?", [name + ".jpg", name + ".jpeg", name + ".png", folder]).fetchone()["COUNT(*)"]
     if count > 0:
         return None
 
-    image_id = con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name]).lastrowid
+    image_id = con.execute("INSERT INTO image (image_name, folder) VALUES (?, ?)", [image_name, folder]).lastrowid
     con.commit()
     return image_id
 
@@ -1009,19 +1011,20 @@ def get_scene_image_file(image_id):
     :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
+    res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
-    return get_scene_image_path(res["image_name"]) if res is not None else None
+    image_data = res["image_name"].rsplit(".", 1)
+    return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
 
 
-def get_image_list():
+def get_image_list(folder):
     """
     Läd Informationen über alle in der Datenbank enthaltenen Bilder.
 
     :return: Enthölt eine Liste an Objekten welche je die ID und den Namen des Bildes enthalten.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT * FROM image")
+    res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
     con.commit()
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
@@ -1538,16 +1541,11 @@ def _get_scene_path(scene_name: str):
     return os.path.join(SCENE_LOCATION, scene_name) + ".json"
 
 
-def get_scene_image_path(image_file_name: str):
-    image_info = image_file_name.rsplit(".", 1)
-    return _get_image_path(image_info[0], "scene", image_info[1])
-
-
 def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def _get_image_path(json_file_name: str, folder: str, image_type: str):
+def get_image_path(json_file_name: str, folder: str, image_type: str):
     if folder != '':
         os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
         return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type

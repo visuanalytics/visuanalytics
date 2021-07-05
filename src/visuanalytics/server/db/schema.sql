@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.3.3 on Fr Jul 2 15:55:54 2021
+-- File generated with SQLiteStudio v3.3.3 on Mo Jul 5 09:46:32 2021
 --
 -- Text encoding used: System
 --
@@ -45,7 +45,8 @@ CREATE TABLE image (
     image_id   INTEGER PRIMARY KEY AUTOINCREMENT
                        UNIQUE
                        NOT NULL,
-    image_name VARCHAR NOT NULL
+    image_name VARCHAR NOT NULL,
+    folder     VARCHAR NOT NULL
 );
 
 
