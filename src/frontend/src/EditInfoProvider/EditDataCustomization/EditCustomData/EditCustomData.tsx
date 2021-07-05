@@ -49,7 +49,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     /**
      * the formel.name from the formel that should be edited
      */
-    const [currentEditFormel, setCurrentEditFormel] = React.useState(new FormelObj("", ""));
+    const [currentEditFormel, setCurrentEditFormel] = React.useState(new FormelObj("", "", []));
 
 
 
@@ -324,7 +324,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
     const confirmEdit = () => {
         props.setFormelInformation(makeFormelContext(currentEditFormel.formelName, currentEditFormel.formelString));
         setEditDialogOpen(false);
-        setCurrentEditFormel(new FormelObj("", ""));
+        setCurrentEditFormel(new FormelObj("", "",[]));
         props.continueHandler(1);
     }
 
@@ -452,7 +452,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                 <Dialog onClose={() => {
                     setEditDialogOpen(false);
                     window.setTimeout(() => {
-                        setCurrentEditFormel(new FormelObj("", ""));
+                        setCurrentEditFormel(new FormelObj("", "",[]));
                     }, 200);
                 }} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
@@ -466,7 +466,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                                         onClick={() => {
                                             setEditDialogOpen(false);
                                             window.setTimeout(() => {
-                                                setCurrentEditFormel(new FormelObj("", ""));
+                                                setCurrentEditFormel(new FormelObj("", "",[]));
                                             }, 200);
                                         }}
                                         className={classes.delete}

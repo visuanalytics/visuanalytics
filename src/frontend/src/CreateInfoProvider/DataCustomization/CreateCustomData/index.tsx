@@ -102,6 +102,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     //true if the deletion dialog is opened
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
+    const usedFormulaAndApiData= React.useRef<Array<string>>([]);
+
     /**
      * Handler for operatorButtons.
      * The flags and the input are updated.
@@ -132,6 +134,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         dataAsObj.push(new StrArg(data, false, false, false, false));
         setInput(calculationToString(dataAsObj));
+
+        const arrTmp = usedFormulaAndApiData.current;
+        let alreadyContains: boolean = false;
+        for (let i: number = 0; i < arrTmp.length; i++) {
+            if (arrTmp[i] === data) alreadyContains = true;
+        }
+        if (!alreadyContains) arrTmp.push(data);
+        usedFormulaAndApiData.current = arrTmp;
     }
 
     /**
@@ -257,6 +267,14 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
             setNumberFlag(false);
             setRightParenFlag(true);
             setLeftParenFlag(false);
+
+            const arrTmp = usedFormulaAndApiData.current;
+            for (let i: number = 0; i < arrTmp.length; i++) {
+                if (arrTmp[i] === dataAsObj[dataAsObj.length - 1].makeStringRep()) {
+                    arrTmp.splice(i,1);
+                }
+            }
+            usedFormulaAndApiData.current = arrTmp;
         }
 
         dataAsObj.pop();
@@ -275,6 +293,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         setDataAsObj(new Array<StrArg>(0));
         setInput('');
+        usedFormulaAndApiData.current = [];
 
         setRightParenCount(0);
         setLeftParenCount(0);
@@ -394,7 +413,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
      * Method that searches all diagrams and formulas depending on a formula to delete them.
      * For each formula found, it will recursively repeat this process.
      * Also removes from historizedData.
-     * @param formelName The formel to be deleted.
+     * @param formelName The formula to be deleted.
      */
     const deleteFormulaDependents = (formelName: string) => {
         //remove the formula from historized data if it is contained
@@ -428,8 +447,8 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
     /**
      * Handle for the Save-Button. Cancels if the Name-Field or the Input-Box field is empty.
      * Also checks if the name is already in use for another formula or in any of the data provided by the api
-     * Saves the formel in CustomData and refreshes the Input-Box.
-     * @param formel the name of the formel
+     * Saves the formula in CustomData and refreshes the Input-Box.
+     * @param formel the name of the formula
      */
     const handleSave = (formel: string) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
@@ -496,7 +515,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
 
         if (data.accepted) {
             const arCopy = props.customData.slice();
-            arCopy.push(new FormelObj(name, input));
+            arCopy.push(new FormelObj(name, input, usedFormulaAndApiData.current));
             props.setCustomData(arCopy);
             fullDelete();
             setName('');
