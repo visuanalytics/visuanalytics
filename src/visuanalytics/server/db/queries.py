@@ -112,10 +112,11 @@ def insert_infoprovider(infoprovider):
     # Transform obj vorbereiten
     transform_step = []
     for datasource in datasources:
+        transform_step += datasource["transform"]
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(datasource["transform"]))
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
 
     datasources_copy = deepcopy(infoprovider["datasources"])
@@ -177,16 +178,17 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
-        transform_step = datasource["calculates"]
+        transform_step = datasource["transform"]
+        transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys), remove_toplevel_key(datasource["transform"]))
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys), remove_toplevel_key(transform_step))
         transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys, datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -588,7 +590,7 @@ def update_infoprovider(infoprovider_id, updated_data):
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys, datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -1381,8 +1383,8 @@ def _generate_transform(formulas, old_transform):
     return transform
 
 
-def _generate_storing(historized_data, datasource_name, formula_keys):
-    storing = []
+def _generate_storing(historized_data, datasource_name, formula_keys, old_storing):
+    storing = old_storing
     historized_data = remove_toplevel_key(historized_data)
     for key in historized_data:
         key_string = "_req|" + datasource_name + "|" + key if key not in formula_keys else key
