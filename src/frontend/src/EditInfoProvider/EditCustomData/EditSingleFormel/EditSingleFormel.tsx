@@ -313,7 +313,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                 }
             }
 
-            arCopy.push(new FormelObj(name, input));
+            arCopy.push(new FormelObj(name, input, []));
             const dataSourcesCopy =  props.infoProvDataSources.slice();
             dataSourcesCopy[props.selectedDataSource].customData = arCopy;
             props.setInfoProvDataSources(dataSourcesCopy);

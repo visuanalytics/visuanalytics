@@ -12,9 +12,12 @@ export class FormelObj {
      */
     formelString: string;
 
-    constructor(formelName: string, formelString: string) {
+    usedFormulaAndApiData: Array<string>;
+
+    constructor(formelName: string, formelString: string, usedFormulasAndApiData: Array<string>) {
         this.formelName = formelName;
         this.formelString = formelString;
+        this.usedFormulaAndApiData = usedFormulasAndApiData;
     }
 
 }
