@@ -388,6 +388,7 @@ export const SceneCreation = () => {
                         imageList={imageList}
                         setImageList={(images: Array<string>) => setImageList(images)}
                         editMode={false}
+                        reportError={(message: string) => reportError(message)}
                     />
                 )
         }

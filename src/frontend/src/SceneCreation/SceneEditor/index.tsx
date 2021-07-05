@@ -50,6 +50,7 @@ interface SceneEditorProps {
     imageList: Array<string>;
     setImageList: (images: Array<string>) => void;
     editMode: boolean;
+    reportError: (message: string) => void;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -378,22 +379,121 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setPreviewPosted(true);
     }
 
-    const handleImageSuccess = (jsonData: any) => {
-        let img = imageToUpload.get('image');
-        let imageid = 0;
-        let response = JSON.stringify(jsonData);
-        if (response.includes("\"image_id\"")){
-            let responseSplit = response.split(":");
-            let split = responseSplit[1].split("}");
-            imageid = parseInt(split[0]);
-            console.log(imageid);
-        }
+    /**
+     * Type of the backend answer when posting a new image.
+     */
+    type imagePostBackendAnswer = {
+        image_id: number;
+    }
+
+    /**
+     * Handler method for successful backend calls for posting new images to the backend.
+     * Takes the id of the created image delivered by the backend and starts fetching the image
+     * for this id to have it displayed in the list of images.
+     * @param jsonData The JSON object returned by the backend, containing the ID of the new image.
+     */
+    const postImageSuccessHandler = (jsonData: any) => {
+        //get the object of the uploaded image from the FormData
+        const img = imageToUpload.get('image');
+        const data = jsonData as imagePostBackendAnswer;
+        //extract the backend id of the newly created image from the backend
+        const imageId = data.image_id;
+        // check if the image is valid
         if (img !== null && img instanceof File) {
-            console.log(img.name);
-            renderImageEntry(img.name, imageid);
+            console.log("new image: " + img.name);
+            //start fetching the new image from the backend
+            fetchImageById(imageId);
         }
+        // reset the state containing the image to be uploaded
         setImageToUpload(new FormData());
     }
+
+    /**
+     * Method that handles errors for posting an image to the backend.
+     * @param err The error sent by the backend.
+     */
+    const postImageErrorHandler = (err: Error) => {
+        props.reportError("Fehler beim Abrufen eines Bildes: " + err);
+    }
+
+    /**
+     * Method to POST an Image uploaded by the user to the backend.
+     */
+    const postImage = useCallFetch("visuanalytics/image/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            body: imageToUpload
+        }, postImageSuccessHandler, postImageErrorHandler
+    )
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = React.useRef(true);
+
+    /**
+     * Method that handles successful fetches of images from the backend
+     * @param jsonData  The image as blob sent by the backend.
+     */
+    const handleImageByIdSuccess = (jsonData: any) => {
+        //create a URL for the blob image and update the list of images with it
+        const arCopy = props.imageList.slice();
+        arCopy.push(URL.createObjectURL(jsonData));
+        props.setImageList(arCopy);
+    }
+
+    /**
+     * Method that handles errors for fetching an image from the backend.
+     * @param err The error sent by the backend.
+     */
+    const handleImageByIdError = (err: Error) => {
+        props.reportError("Fehler beim Abrufen eines Bildes: " + err);
+    }
+
+    /**
+     * Method to fetch a single image by id from the backend.
+     * The standard hook "useCallFetch" is not used here since we want to pass an id
+     * as additional argument (storing in state is no alternative because there wont be re-render).
+     */
+    const fetchImageById = (id: number) => {
+        let url = "/visuanalytics/image/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleImageByIdSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleImageByIdError(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
 
     const handleSceneSuccess = (jsonData : any) => {
         console.log(jsonData);
@@ -454,15 +554,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         jsonData => handlePreviewSuccess(jsonData),(err => handleError(err))
     );
 
-    /**
-     * Method to POST an Image
-     */
-    const postImage = useCallFetch("visuanalytics/image/add", {
-            method: "POST",
-            headers: {},
-            body: imageToUpload
-        }, jsonData => {handleImageSuccess(jsonData)},err => {handleError(err)}
-    );
+
 
     /**
      * Method to change the cursor
