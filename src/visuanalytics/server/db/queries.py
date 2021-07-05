@@ -272,7 +272,7 @@ def insert_video_job(video, update=False, job_id=None):
     scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
     # print("scenes", scenes)
     for k, v in images.items():
-        images[k] = list(filter(lambda x: x["scene_name"] == v["key"], scenes))[0]["images"]
+        images[k] = list(filter(lambda x: x["name"] == v["key"], scenes))[0]["images"]
     # print("images", json.dumps(images, indent=4))
 
     video["images"] = images
@@ -752,7 +752,7 @@ def insert_scene(scene):
     scene_items = scene["scene_items"]
 
     scene_json = {
-        "scene_name": scene_name,
+        "name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
         "images": images,
@@ -878,7 +878,7 @@ def update_scene(scene_id, updated_data):
     con.execute("UPDATE scene SET scene_name=? WHERE scene_id=?", [scene_name, scene_id])
 
     # Neue Daten in Json-Datei eintragen
-    scene_json.update({"scene_name": scene_name})
+    scene_json.update({"name": scene_name})
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
