@@ -692,7 +692,7 @@ Bei Änderungen an den Eingabefeldern wird **labelChangeHandler** genutzt, welch
 
 <div style="page-break-after: always;"></div>
 
-# Senden eines Infoproviders an das Backend
+## Senden eines Infoproviders an das Backend
 Den Abschluss der gesamten Infoprovider-Erstellung stellt das Senden des fertig erstellten Infoproviders an das Backend dar. Dazu müssen die im Prozess gesammelten Informationen derartig transformiert werden, dass sie das von uns gewünschte Datenformat haben, das in diesem Abschnitt erläutert werden soll.
 
 Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst große Anteile der im Backend benötigten Struktur im Frontend passend generiert werden, gleichzeitig aber auch alle Informationen so gespeichert sind, dass sie zum Bearbeiten des Infoproviders leicht zugänglich sind. Wenn ein konkreter Infoprovider per ID angefragt wird (das ist bei der Bearbeitung der Fall) liefert das Backend genau das JSON-Objekt zurück, welches beim Erstellen durch das Frontend geliefert wurde - daher muss diese Datenstruktur so ausgelegt sein, dass die Informationen zur Bearbeitung zugänglich sind.
@@ -700,8 +700,8 @@ Das allgemeine Ziel beim Entwurf des Datenformats war, dass bereits möglichst g
 
 Abgesendet wird das fertige Datenformat durch den Button "Abschließen" in **SettingsOverview** - dann wird die in **CreateInfoProvider** liegende Methode **postInfoProvider aufgerufen**.
 
-## Überblick des Datenformats
-Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für einen Infoprovider, über das wir mit dem Backend kommunzieren - im folgenden soll dann auf die einzelnen Abschnitte im Detail eingegangen werden.
+### Überblick über das Datenformat
+Das folgende Datenformat ist unsere allgemeine Definition des Datenformats für einen Infoprovider, über das wir mit dem Backend kommunizieren - im folgenden soll dann auf die einzelnen Abschnitte im Detail eingegangen werden.
 ```javascript
 {
     infoprovider_name: <infoproviderName>,
@@ -812,11 +812,11 @@ Wie man sehen kann, umfasst das Format auf höchster Ebene fünf Informationen:
 * **datasources**, ein Array mit den Objekten zu allen Datenquellen des Infoproviders.
 * **diagrams**, ein Array mit Objekten für alle erstellten Diagramme.
 * **diagrams_original**, das Diagramm-Objekt aus dem Frontend.
-    * Es wird gespeichert, weil die Darstellung in **diagrams** deutlich komplexer und ungeeignet ist, um bei der Bearbeitung noch einmal geladen zu werden. Daher speichert man das originale Objekt, das man bei einer Bearbeitung einfach weiterverwenden kann.
+    * Dieses wird gespeichert, weil die Darstellung in **diagrams** deutlich komplexer und ungeeignet ist, um bei der Bearbeitung verwendet zu werden. Daher speichert man das originale Objekt, welches man bei der Bearbeitung wiederverwenden kann.
 * **arrays_used_in_diagrams**, eine Auflistung aller in Diagrammen genutzten Arrays - des Backend benötigt diese.
 
 ## Datenquellen-Format
-Jede Datenquelle besitzt einen Namen, der win **datasource_name** gespeichert wird. Weiterhin hat die Datenquelle ein Objekt **api**, welches die grundlegenden Informationen zur angefragten Datenquelle umfasst:
+Jede Datenquelle besitzt einen Namen, der in **datasource_name** gespeichert wird. Weiterhin hat die Datenquelle ein Objekt **api**, welches die grundlegenden Informationen zur angefragten Datenquelle umfasst:
 * Das Unterobjekt **api_info** listet die Informationen zur Anfrage: **type** ist immer gleich gesetzt und wird für das Backend benötigt, **api_key_name** enthält die Authentifizierungsdaten. Dabei unterscheidet sich das Format je nach der Methode:
     * Bei **BearerToken** ist nur ein String dargestellt, der das Token ist. Bei **BasicAuth** und **DigestAuth** sind Nutzername und Passwort getrennt durch zwei Pipe-Symbole dargestellt. Bei **KeyInHeader** und **KeyInQuery** sind Attributsname und Wert des Keys durch die Pipe-Symbole getrennt dargestellt.
     * **url_pattern** ist die angefragte URL, ggf. mit Query-Parametern.
@@ -834,10 +834,10 @@ Als nächstes folgen Arrays mit den Daten zu der jeweiligen Datenquelle. Hier is
         * Wir haben uns aber entschieden, aus Gründen der Einfachheit Ergebnisse von Array-Operationen immer als neue Datenwerte zu speichern.
 * Zuletzt gibt **decimals** an, wie viele Dezimalstellen bei der Berechnung genutzt werden sollen - wir haben hier pauschal 2 festgelegt. Eine allgemeine Möglichkeit zur Einstellung könnte aber im Frontend implementiert werden.
 
-**replacements** ist dann das Array von allen String-Verarbeitungen und hat ein ähnliches Format. Hier ist es jedoch so, dass für jede String-Verarbeitung ein eigenes Objekt existiert. Das Array **key** den Namen des zu verarbeitenden Strings, **new_keys** den Namen des durch die Verarbeitung entstehenden Namens. Auch hier ist **new_keys** optional, sodass man die Werte der API ersetzen lassen könnte. Wir legen jedoch immer neue Daten an.
+**replacements** ist dann das Array von allen String-Verarbeitungen und hat ein ähnliches Format. Hier ist es jedoch so, dass für jede String-Verarbeitung ein eigenes Objekt existiert. Das Array **key** speichert den Namen des zu verarbeitenden Strings, **new_keys** den Namen des durch die Verarbeitung entstehenden Namens. Auch hier ist **new_keys** optional, sodass man die Werte der API ersetzen lassen könnte. Wir legen jedoch immer neue Daten an.
 * Obwohl beide Keys nur einen Namen umfassen müssen für das Backend-Datenformat Arrays genutzt werden.
-* **old_value** ist dann der zu erstzende String, während **new_value** der einzufügende String ist.
-* Abschließend gibt **count** an, wir oft eine solche Ersetzung stattfinden soll. Da das Frontend (derzeit) keine Option hat, dies einzustellen verwenden wir **-1**, welches beliebig oft Ersetzungen ermöglicht.
+* **old_value** ist dann der zu ersetzende String, während **new_value** der einzufügende String ist.
+* Abschließend gibt **count** an, wie oft eine solche Ersetzung stattfinden soll. Da das Frontend (derzeit) keine Option hat, dies einzustellen verwenden wir **-1**, welches beliebig oft Ersetzungen ermöglicht.
 
 Es folgt mit **schedule** das Objekt, welches die Informationen der Historisierungs-Schedule umfasst. Im Grunde ist das Format genau gleich wie der Frontent-Datentyp **Schedule**, hat aber andere Namen sowie einen zusätzlichen Key **date**. Dieser ist nur wegen des Backend-Datenformats nötig und bleibt bei uns leer.
 
