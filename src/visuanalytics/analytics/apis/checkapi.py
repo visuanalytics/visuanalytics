@@ -99,7 +99,7 @@ def get_content(obj):
                 return {
                     "same_type": True,
                     "length"   : len(obj),
-                    "type"     : obj_type
+                    "type"     : get_content(obj[0])
                 }
         else:
             result = {

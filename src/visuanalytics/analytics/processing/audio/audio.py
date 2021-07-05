@@ -8,6 +8,7 @@ import mimetypes
 import gtts.tokenizer.symbols
 from gtts import gTTS
 from pydub import AudioSegment
+from random import randint
 
 from visuanalytics.analytics.apis.api import api_request
 from visuanalytics.analytics.control.procedures.step_data import StepData
@@ -82,6 +83,13 @@ def default(values: dict, data: StepData, config: dict):
                     audio_list.append(_text_to_audio(data, values, item["pattern"], config))
                 if item["type"] == "file":
                     audio_list.append(resources.get_audio_path(item["path"]))
+                if item["type"] == "random_text":
+                    len_pattern = len(item["pattern"])
+                    if len_pattern == 1:
+                        audio_list.append(_text_to_audio(data, values, item["pattern"][0], config))
+                    else:
+                        rand = randint(0, len_pattern - 1)
+                        audio_list.append(_text_to_audio(data, values, item["pattern"][rand], config))
                 if item["type"] == "silent":
                     duration = item["duration"] * 1000
                     silence = AudioSegment.silent(duration=duration)
@@ -89,7 +97,18 @@ def default(values: dict, data: StepData, config: dict):
                     silence.export(silent_audio_file_path, format="mp3")
                     audio_list.append(silent_audio_file_path)
 
-            values[key] = _audios_to_audio(audio_list, data)
+            # values[key] = _audios_to_audio(audio_list, data)
+            values[key] = combine_audios(audio_list, data)
+
+
+def combine_audios(audio_list, data: StepData):
+    audios = [AudioSegment.from_mp3(file_name) for file_name in audio_list]
+    combined = AudioSegment.empty()
+    for audio in audios:
+        combined += audio
+    combined_audio_path = resources.new_temp_resource_path(data.data["_pipe_id"], "mp3")
+    combined.export(combined_audio_path, format="mp3")
+    return combined_audio_path
 
 
 @register_generate_audio

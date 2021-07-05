@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import io
+import re
 
 import humps
 import copy
@@ -16,6 +17,7 @@ from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION a
 from visuanalytics.util.infoprovider_utils import generate_step_transform
 
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
+VIDEOJOB_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
 SCENE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/scenes"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
@@ -78,10 +80,11 @@ def insert_infoprovider(infoprovider):
     """
     con = db.open_con_f()
     infoprovider_name = infoprovider["infoprovider_name"]
-    datasources = infoprovider["datasources"]
+    datasources = copy.deepcopy(infoprovider["datasources"])
     diagrams = infoprovider["diagrams"]
     diagrams_original = infoprovider["diagrams_original"]
     arrays_used_in_diagrams = infoprovider["arrays_used_in_diagrams"]
+    transform_step = []
 
     # Api obj vorbereiten
     api_step = {
@@ -92,6 +95,7 @@ def insert_infoprovider(infoprovider):
     }
     for datasource in datasources:
         api_key_name = f"{infoprovider['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
         header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
 
         url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
@@ -105,12 +109,21 @@ def insert_infoprovider(infoprovider):
             "params": parameter,
             "response_type": datasource["api"]["response_type"]
         }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
 
         api_step["steps_value"].append(datasource["datasource_name"])
         api_step["requests"].append(req_data)
 
     # Transform obj vorbereiten
-    transform_step = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in datasources]
+    transform_step = []
+    for datasource in datasources:
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
+
+    for datasource in infoprovider["datasources"]:
+        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -119,7 +132,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": datasources,
+        "datasources": infoprovider["datasources"],
         "diagrams_original": diagrams_original,
         "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
@@ -165,11 +178,14 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys), remove_toplevel_key(datasource["transform"]))
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
-            "storing": _generate_storing(datasource["historized_data"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "transform": transform_step,
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -177,7 +193,7 @@ def insert_infoprovider(infoprovider):
         with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -193,6 +209,143 @@ def insert_infoprovider(infoprovider):
     con.commit()
 
     return True
+
+
+def insert_video_job(video, update=False, job_id=None):
+    """
+    Methode für das einfügen und aktualisieren eines Videojobs.
+    Falls ein bestehender Videojob aktualisiert werden soll, muss die job_id angegeben werden.
+
+    :param video: Ein Dictionary, welches die Konfiguration eines Videojobs enthält.
+    :type video: dict
+    :param update: Wahrheitswert, der aussagt, ob ein bestehender Videojob aktualisiert werden soll.
+    :type update: bool
+    :param job_id: ID des schon bestehenden Videojobs.
+    :type job_id: int
+    :return: Gibt einen boolschen Wert zurück (Status), oder eine Fehlermeldung (bei Aktualisierungen).
+    """
+    video_name = video["name"]
+    for infoprovider_name in video["infoprovider_names"]:
+        with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
+            infoprovider = json.load(f)
+        # print("loaded infoprovider:", infoprovider)
+
+        api_config = video.get("api", None)
+        if api_config:
+            video["api"]["steps_value"] += infoprovider["api"]["steps_value"]
+            video["api"]["requests"] += infoprovider["api"]["requests"]
+        else:
+            video["api"] = infoprovider["api"]
+        # print("video with requests:", video)
+
+        transform_config = video.get("transform", None)
+        if transform_config:
+            video["transform"] += infoprovider["transform"]
+        else:
+            video.update({
+                "transform": infoprovider["transform"]
+            })
+        # print("video with transform:", video)
+
+        #video["images"].update(infoprovider["images"])
+        diagram_config = video.get("diagrams", None)
+        if diagram_config:
+            video["diagrams"] += infoprovider["images"]
+        else:
+            video.update({
+                "diagrams": infoprovider["images"]
+            })
+        # print("video with diagrams:", video)
+
+    images = video.get("images", None)
+    scene_names = list(map(lambda x: images[x]["key"], list(images.keys())))
+    scenes = get_scene_list()
+    scenes = list(filter(lambda x: x["scene_name"] in scene_names, scenes))
+    # print("scenes", scenes)
+    # print("scene_names", scene_names)
+    scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
+    # print("scenes", scenes)
+    for k, v in images.items():
+        images[k] = list(filter(lambda x: x["scene_name"] == v["key"], scenes))[0]["images"]
+    # print("images", json.dumps(images, indent=4))
+
+    video["images"] = images
+    video["storing"] = []
+    video["run_config"] = {}
+    video["presets"] = {}
+    video["info"] = ""
+    schedule = video.get("schedule", None)
+    delete_schedule = video.get("deleteSchedule", {
+        "type": "keepCount",
+        "keepCount": 2
+    })
+    if not schedule:
+        return False if not update else {"err_msg": "could not read schedule from JSON"}
+    # print("complete video configuration:", video)
+    with open_resource(_get_videojob_path(video_name.replace(" ", "-")), "wt") as f:
+        json.dump(video, f)
+
+    if not update:
+        topic_id = add_topic_get_id(video_name, video_name.replace(" ", "-"))
+        job = {
+            "jobName": video_name,
+            "schedule": schedule,
+            "deleteSchedule": delete_schedule,
+            "topicValues": [
+                {
+                    "topicId": topic_id
+                }
+            ]
+        }
+        insert_job(job, config=False)
+    else:
+        topic_id = list(filter(lambda x: x["topicName"] == video_name, get_topic_names()))[0]["topicId"]
+        job = {
+            "jobName": video_name,
+            "schedule": schedule,
+            "deleteSchedule": delete_schedule,
+            "topicValues": [
+                {
+                    "topicId": topic_id
+                }
+            ]
+        }
+        update_job(job_id, job, config=False)
+    return True if not update else None
+
+
+def get_videojob(job_id):
+    """
+    Methode, die die Konfiguration eines Videojobs zurück in das Format überführt,
+    welches für das Frontend zum bearbeiten verständlich ist.
+
+    :param job_id: ID des Videojobs, welcher zuürckgeliefert werden soll.
+    :type job_id: int
+    :return: JSON für das Frontend.
+    """
+    job_list = get_job_list()
+    print("job_list", job_list)
+    videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
+    print("videojob", videojob)
+
+    with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
+        video_json = json.load(f)
+
+    video_json.pop("api", None)
+    video_json.pop("transform", None)
+    video_json.pop("storing", None)
+    video_json.pop("run_config", None)
+    video_json.pop("presets", None)
+    video_json.pop("info", None)
+    #for infoprovider_name in video_json["infoprovider_names"]:
+    #    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
+    #        infoprovider = json.load(f)
+    #
+    #    for img in list(infoprovider["images"].keys()):
+    #        video_json["images"].pop(img, None)
+    video_json.pop("diagrams", None)
+
+    return video_json
 
 
 def show_schedule():
@@ -264,6 +417,11 @@ def get_infoprovider(infoprovider_id):
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
         infoprovider_json = json.loads(f.read())
 
+    for datasource in infoprovider_json["datasources"]:
+        api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+        private_config = get_private()
+        datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name] if api_key_name else None
+
     return {
         "infoprovider_name": infoprovider_json["name"],
         "datasources": infoprovider_json["datasources"],
@@ -285,6 +443,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
+    new_transform = []
 
     # Testen ob neuer Infoprovider-Name bereits von einem anderen Infoprovider verwendet wird
     count = con.execute("SELECT COUNT(*) FROM infoprovider WHERE infoprovider_name=?",
@@ -318,10 +477,12 @@ def update_infoprovider(infoprovider_id, updated_data):
         "requests": []
     }
 
-    datasources = updated_data["datasources"]
+    datasources = copy.deepcopy(updated_data["datasources"])
 
     for datasource in datasources:
-        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"])
+        api_key_name = f"{updated_data['infoprovider_name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
+
+        header, parameter = generate_request_dicts(datasource["api"]["api_info"], datasource["api"]["method"], api_key_name=api_key_name)
 
         url, params = update_url_pattern(datasource["api"]["api_info"]["url_pattern"])
         parameter.update(params)
@@ -334,12 +495,19 @@ def update_infoprovider(infoprovider_id, updated_data):
             "params": parameter,
             "response_type": datasource["api"]["response_type"]
         }
+        if api_key_name:
+            req_data.update({"api_key_name": api_key_name})
 
         api_step_new["steps_value"].append(datasource["datasource_name"])
         api_step_new["requests"].append(req_data)
 
     # Update Transform-Step vorbereiten
-    new_transform = [_generate_transform(datasource["formulas"], datasource["transform"]) for datasource in updated_data["datasources"]]
+    new_transform = []
+    for datasource in datasources:
+        new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+
+    for datasource in updated_data["datasources"]:
+        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
 
     if new_transform is None:
         return {"err_msg": "could not generate transform-step from formulas"}
@@ -385,11 +553,15 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource obj vorbereiten
+        formulas = copy.deepcopy(datasource["formulas"])
+        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys),
+                                             remove_toplevel_key(datasource["transform"]))
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
-            "transform": _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"])),
-            "storing": _generate_storing(datasource["storing"], datasource_name) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "transform": transform_step,
+            "storing": _generate_storing(datasource["storing"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -397,7 +569,7 @@ def update_infoprovider(infoprovider_id, updated_data):
         with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
             json.dump(datasource_json, f)
 
-        if len(datasource["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
+        if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
             schedule_historisation_id = _insert_historisation_schedule(con, schedule_historisation)
@@ -444,6 +616,21 @@ def delete_infoprovider(infoprovider_id):
     return False
 
 
+def delete_videojob(videojob_id):
+    """
+    Entfernt den Videojob mit der gegebenen ID.
+
+    :param videojob_id: ID des Videojobs.
+    :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
+    """
+    job_list = get_job_list()
+    topic_id = list(filter(lambda x: x["jobId"] == videojob_id, job_list))[0]["topicValues"][0]["topicId"]
+    delete_topic(topic_id)
+    delete_job(videojob_id)
+
+    return True
+
+
 def insert_scene(scene):
     """
     Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
@@ -461,12 +648,14 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
+    scene_items = scene["scene_items"]
 
     scene_json = {
         "scene_name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
-        "images": images
+        "images": images,
+        "scene_items": scene_items
     }
 
     # Prüfen ob scene bereits vorhanden ist
@@ -501,7 +690,7 @@ def insert_scene(scene):
     print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
         print("writing")
-        json.dump(scene, f)
+        json.dump(scene_json, f)
 
     con.commit()
     return None
@@ -568,6 +757,7 @@ def update_scene(scene_id, updated_data):
     used_images = updated_data["used_images"]
     used_infoproviders = updated_data["used_infoproviders"]
     images = updated_data["images"]
+    scene_items = updated_data["scene_items"]
 
     # Altes Json laden
     old_file_path = get_scene_file(scene_id)
@@ -575,10 +765,12 @@ def update_scene(scene_id, updated_data):
     with open_resource(old_file_path, "r") as f:
         scene_json = json.loads(f.read())
 
+    old_name = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()["scene_name"]
+
     # Testen of Name bereits von anderer Szene verwendet wird
     res = con.execute("SELECT * FROM scene WHERE scene_name=?", [scene_name])
     for row in res:
-        if row["scene_id"] != scene_id:
+        if row["scene_id"] != scene_id and scene_name != old_name:
             return {"err_msg": f"There already exists a scene with the name {scene_name}"}
 
     # Neuen Namen setzen
@@ -589,6 +781,7 @@ def update_scene(scene_id, updated_data):
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
+    scene_json.update({"scene_items": scene_items})
 
     # Alte Einträge aus scene_uses_image entfernen
     con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
@@ -664,17 +857,17 @@ def insert_image(image_name):
     Adds an image to the Database.
 
     :param image_name: Name of the image.
-    :param image_type: Type of the image. Supported options ars .png .jpeg and .jpg
     """
     con = db.open_con_f()
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=?", [image_name]).fetchone()["COUNT(*)"]
+    name = image_name.rsplit(".", 1)[0]
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
     if count > 0:
-        return False
+        return None
 
-    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    image_id = con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name]).lastrowid
     con.commit()
-    return True
+    return image_id
 
 
 def get_scene_image_file(image_id):
@@ -697,15 +890,8 @@ def get_image_list():
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image")
     con.commit()
-    images = []
+    """images = []
     for row in res:
-        """with open(get_scene_image_path(row["image_name"]), "rb") as f:
-            image_file = f.read()
-        images.append({
-            "image_id": row["image_id"],
-            "image_name": row["image_name"],
-            "image_file": image_file
-        })"""
         with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
             byte_arr = f.tobytes()
             encoded_img = encodebytes(byte_arr).decode('ascii')
@@ -714,8 +900,8 @@ def get_image_list():
                 "image_name": row["image_name"],
                 "image_file": encoded_img
             })
-    return images
-    # return [{"image_id": row["image_id"], "image_name": row["image_name"], "image_file": open(get_scene_image_path(row["image_name"]), "rb")} for row in res]
+    return images"""
+    return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
 
 def delete_scene_image(image_id):
@@ -753,7 +939,7 @@ def get_topic_file(topic_id):
     con = db.open_con_f()
     res = con.execute("SELECT json_file_name FROM steps WHERE steps_id = ?", [topic_id]).fetchone()
 
-    return _get_steps_path(res["json_file_name"]) if res is not None else None
+    return _get_steps_path(res["json_file_name"].replace(".json", "")) if res is not None else None
 
 
 def delete_topic(topic_id):
@@ -764,6 +950,14 @@ def delete_topic(topic_id):
 
     if (res.rowcount > 0):
         os.remove(file_path)
+
+
+def add_topic_get_id(name, file_name):
+    con = db.open_con_f()
+    topic_id = con.execute("INSERT INTO steps (steps_name,json_file_name)VALUES (?, ?)",
+                [name, file_name]).lastrowid
+    con.commit()
+    return topic_id
 
 
 def add_topic(name, file_name):
@@ -792,8 +986,8 @@ def get_job_list():
         delete_options.type AS d_type, days, hours, k_count, fix_names_count,
         GROUP_CONCAT(DISTINCT weekday) AS weekdays,
         COUNT(DISTINCT position_id) AS topic_count,
-        GROUP_CONCAT(DISTINCT steps.steps_id || ":" || steps_name || ":" || json_file_name || ":" || position) AS topic_positions,
-        GROUP_CONCAT(DISTINCT position || ":" || key || ":" || value || ":" || job_config.type) AS param_values
+        GROUP_CONCAT(DISTINCT steps.steps_id || "::" || steps_name || "::" || json_file_name || "::" || position) AS topic_positions,
+        GROUP_CONCAT(DISTINCT position || "::" || key || "::" || value || "::" || job_config.type) AS param_values
         FROM job 
         INNER JOIN schedule USING (schedule_id)
         LEFT JOIN schedule_weekday USING (schedule_id)
@@ -806,7 +1000,7 @@ def get_job_list():
     return [_row_to_job(row) for row in res]
 
 
-def insert_job(job):
+def insert_job(job, config=True):
     con = db.open_con_f()
     job_name = job["jobName"]
     schedule = job["schedule"]
@@ -821,7 +1015,7 @@ def insert_job(job):
         "VALUES(?, ?, ?)",
         [job_name, schedule_id, delete_options_id]).lastrowid
 
-    _insert_param_values(con, job_id, topic_values)
+    _insert_param_values(con, job_id, topic_values, config=config)
     con.commit()
 
 
@@ -836,7 +1030,7 @@ def delete_job(job_id):
     con.commit()
 
 
-def update_job(job_id, updated_data):
+def update_job(job_id, updated_data, config=True):
     con = db.open_con_f()
     for key, value in updated_data.items():
         if key == "jobName":
@@ -860,7 +1054,7 @@ def update_job(job_id, updated_data):
             pos_ids = [(row["position_id"],) for row in pos_id_rows]
             con.execute("DELETE FROM job_topic_position WHERE job_id=?", [job_id])
             con.executemany("DELETE FROM job_config WHERE position_id=?", pos_ids)
-            _insert_param_values(con, job_id, value)
+            _insert_param_values(con, job_id, value, config=config)
     con.commit()
 
 
@@ -939,49 +1133,76 @@ def remove_toplevel_key(obj):
     return obj
 
 
-def _extend_keys(obj, datasource_name):
+def _extend_keys(obj, datasource_name, formula_keys):
     if type(obj) == list:
         for x in range(len(obj)):
-            obj[x] = _extend_keys(obj[x], datasource_name)
+            obj[x] = _extend_keys(obj[x], datasource_name, formula_keys)
     elif type(obj) == dict:
         for key in list(obj.keys()):
-            obj[key] = _extend_keys(obj[key], datasource_name)
+            obj[key] = _extend_keys(obj[key], datasource_name, formula_keys)
     elif type(obj) == str:
-        obj = "_req|" + datasource_name + "|" + obj
+        if obj not in formula_keys:
+            obj = "_req|" + datasource_name + "|" + obj
+        else:
+            obj = datasource_name + "|" + obj
     return obj
 
 
-def _insert_param_values(con, job_id, topic_values):
+def _extend_formula_keys(obj, datasource_name, formula_keys):
+    if type(obj) == list:
+        for x in range(len(obj)):
+            obj[x] = _extend_formula_keys(obj[x], datasource_name, formula_keys)
+    elif type(obj) == dict:
+        if "formelString" in obj:
+            obj["formelString"] = _extend_formula_keys(obj["formelString"], datasource_name, formula_keys)
+    elif type(obj) == str:
+        parts = re.split('[\*/\() \+-]', obj)
+        transformed_keys = []
+        for part in parts:
+            try:
+                float(part)
+            except Exception:
+                if part != "" and part not in formula_keys and part not in transformed_keys:
+                    remove_toplevel_key(part)
+                    transformed_keys.append(part)
+                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part)
+    return obj
+
+
+def _insert_param_values(con, job_id, topic_values, config=True):
+    #print("topic_value in _insert_param_values:", topic_values)
     for pos, t in enumerate(topic_values):
         position_id = con.execute("INSERT INTO job_topic_position(job_id, steps_id, position) VALUES (?, ?, ?)",
                                   [job_id, t["topicId"], pos]).lastrowid
-        jtkvt = [(position_id,
-                  k,
-                  _to_untyped_value(v["value"], humps.decamelize(v["type"])),
-                  humps.decamelize(v["type"]))
-                 for k, v in t["values"].items()]
-        con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
+        if config:
+            jtkvt = [(position_id,
+                      k,
+                      _to_untyped_value(v["value"], humps.decamelize(v["type"])),
+                      humps.decamelize(v["type"]))
+                     for k, v in t["values"].items()]
+            con.executemany("INSERT INTO job_config(position_id, key, value, type) VALUES(?, ?, ?, ?)", jtkvt)
 
 
 def _generate_transform(formulas, old_transform):
     transform = []
+    counter = 0
     for method in old_transform:
         transform.append(method)
     for formula in formulas:
-        transform_part = generate_step_transform(formula["formelString"], formula["formelName"], copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
+        transform_part, counter = generate_step_transform(formula["formelString"], formula["formelName"], counter, copy=formula.get("copy_key", None), array_key=formula.get("array_key", None), loop_key=formula.get("loop_key", ""), decimal=formula.get("decimal", 2))
         if transform_part is None:
             return None
         transform += transform_part
     return transform
 
 
-def _generate_storing(historized_data, datasource_name):
+def _generate_storing(historized_data, datasource_name, formula_keys):
     storing = []
-    historized_data = remove_toplevel_key(_extend_keys(historized_data, datasource_name))
+    historized_data = remove_toplevel_key(historized_data)
     for key in historized_data:
         storing.append({
-            "name": key,
-            "key": key
+            "name": key.replace("|", "_"),
+            "key": "_req|" + datasource_name + "|" + key if key not in formula_keys else key
         })
     return storing
 
@@ -1087,7 +1308,7 @@ def _row_to_job(row):
 
     topic_values = [{}] * (int(row["topic_count"]))
     for tp_s in row["topic_positions"].split(","):
-        tp = tp_s.split(":")
+        tp = tp_s.split("::")
         topic_id = tp[0]
         topic_name = tp[1]
         json_file_name = tp[2]
@@ -1102,7 +1323,7 @@ def _row_to_job(row):
         }
     if param_values is not None:
         for vals_s in param_values.split(","):
-            vals = vals_s.split(":")
+            vals = vals_s.split("::")
             position = int(vals[0])
             name = vals[1]
             u_val = vals[2]
@@ -1124,6 +1345,10 @@ def _row_to_job(row):
 
 def _get_infoprovider_path(infoprovider_name: str):
     return os.path.join(INFOPROVIDER_LOCATION, infoprovider_name) + ".json"
+
+
+def _get_videojob_path(video_name: str):
+    return os.path.join(VIDEOJOB_LOCATION, video_name) + ".json"
 
 
 def _get_datasource_path(datasource_name: str):
@@ -1163,7 +1388,7 @@ def _get_topic_info(json_file_name: str):
 
 
 def _get_topic_steps(json_file_name: str):
-    path_to_json = _get_steps_path(json_file_name)
+    path_to_json = _get_steps_path(json_file_name.replace(".json", ""))
     with open(path_to_json, encoding="utf-8") as fh:
         return json.loads(fh.read())
 
