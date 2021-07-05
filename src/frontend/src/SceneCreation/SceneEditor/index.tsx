@@ -9,7 +9,7 @@ import {
     MenuItem,
     Checkbox,
     FormControlLabel,
-    Typography, ListItemIcon, ListItemSecondaryAction, ListItemText,
+    Typography, ListItemIcon, ListItemSecondaryAction, ListItemText, Collapse,
 
 } from "@material-ui/core";
 import {useStyles} from "./style";
@@ -38,6 +38,7 @@ import {
     DataImage,
     BaseImg
 } from "./types"
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -113,6 +114,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
+    //true if the images section is shown (used for collapse)
+    const [showImages, setShowImages] = React.useState(false);
 
     // setup for error notification
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
@@ -2000,22 +2003,41 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 HINTERGRUNDBILD WÄHLEN
                             </Button>
                         </Grid><br/>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
-                            <Typography variant={"h4"} align={"center"}>
-                                BILDER
-                            </Typography><br/>
-                        </Grid>
-                        <Grid item container xs={12} justify="space-around">
-                            <Grid item>
-                                <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
-                                    Bild hochladen
-                                    <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
-                                </Button>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    BILDER
+                                </Typography><br/>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showImages &&
+                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowImages(!showImages)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showImages &&
+                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showImages)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
                             </Grid>
                         </Grid>
-                        <Grid item container xs={12} className={classes.elementLargeMargin}>
-                            {props.imageList.map((image, index) => renderImageEntry(image, index))}
-                        </Grid><br/>
+                        <Grid item container xs={12}>
+                            <Collapse in={showImages}>
+                                <Grid item container xs={12} justify="space-around">
+                                    <Grid item>
+                                        <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
+                                            Bild hochladen
+                                            <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container xs={12} className={classes.elementLargeMargin}>
+                                    {props.imageList.map((image, index) => renderImageEntry(image, index))}
+                                </Grid>
+                            </Collapse>
+                        </Grid>
+                       <br/>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>
                         </Grid>
