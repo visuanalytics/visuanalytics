@@ -164,8 +164,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }, [exportJSON]);
 
     React.useEffect(() => {
-        //createBackgroundImage();
-        //createPreviewImage();
+        createBackgroundImage();
+        createPreviewImage();
 
     }, [items, sceneName]);
 
@@ -431,7 +431,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const postImage = (imageToUpload: FormData) => {
         console.log("post image called");
-        let url = "visuanalytics/image/add";
+        let url = "visuanalytics/image/pictures";
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -440,8 +440,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {
-            },
+            headers: {},
             body: imageToUpload,
             signal: abort.signal
         }).then((res: Response) => {
@@ -1743,8 +1742,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         if (pos.x < 0) {
                                                             pos.x = 0
                                                         }
-                                                        if (pos.y > 540 - this.height()) {
-                                                            pos.y = 540 - this.height()
+                                                        if (pos.y > 540 - item.height) {
+                                                            pos.y = 540 - item.height
                                                         }
                                                         if (pos.y < 0) {
                                                             pos.y = 0

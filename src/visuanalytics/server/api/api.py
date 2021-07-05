@@ -763,7 +763,7 @@ def add_scene_image(folder):
         return err, 400
 
 
-@api.route("/image/<folder>", methods=["GET"])
+@api.route("/image/all/<folder>", methods=["GET"])
 def get_all_scene_images(folder):
     """
         Endpunkt '/image/<folder>'.

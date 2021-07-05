@@ -1017,6 +1017,7 @@ def get_scene_image_file(image_id):
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
+    print(res["image_name"],res["folder"])
     image_data = res["image_name"].rsplit(".", 1)
     return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
 

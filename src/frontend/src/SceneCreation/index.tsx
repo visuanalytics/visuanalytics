@@ -319,7 +319,7 @@ export const SceneCreation = () => {
     /**
      * Method that fetches a list of all available images from the backend.
      */
-    const fetchImageList = useCallFetch("/visuanalytics/image/all",
+    const fetchImageList = useCallFetch("/visuanalytics/image/all/pictures",
         {
             method: "GET",
             headers: {
