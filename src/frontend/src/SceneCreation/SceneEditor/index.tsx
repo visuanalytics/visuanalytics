@@ -378,13 +378,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setPreviewPosted(true);
     }
 
+    const handleImageSuccess = (jsonData: any) => {
+        let img = imageToUpload.get('image');
+        let imageid = 0;
+        let response = JSON.stringify(jsonData);
+        if (response.includes("\"image_id\"")){
+            let responseSplit = response.split(":");
+            let split = responseSplit[1].split("}");
+            imageid = parseInt(split[0]);
+            console.log(imageid);
+        }
+        if (img !== null && img instanceof File) {
+            console.log(img.name);
+            renderImageEntry(img.name, imageid);
+        }
+        setImageToUpload(new FormData());
+    }
+
     const handleSceneSuccess = (jsonData : any) => {
-        console.log(jsonData)
+        console.log(jsonData);
+
     }
 
 
     const handleError = (err : Error) => {
-        console.log(err)
+        console.log(err);
     }
 
     /**
@@ -434,6 +452,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             body: previewImage
         },
         jsonData => handlePreviewSuccess(jsonData),(err => handleError(err))
+    );
+
+    /**
+     * Method to POST an Image
+     */
+    const postImage = useCallFetch("visuanalytics/image/add", {
+            method: "POST",
+            headers: {},
+            body: imageToUpload
+        }, jsonData => {handleImageSuccess(jsonData)},err => {handleError(err)}
     );
 
     /**
@@ -875,7 +903,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             setRecentlyRemovedItems(lastElem);
             setItemSelected(false);
-            setItemCounter(itemCounter - 1)
+            setItemCounter(itemCounter - 1);
+            setDeleteText("Letztes Elem. entf.");
         }
     }
 
@@ -1306,12 +1335,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
-    const postImage = useCallFetch("visuanalytics/image/add", {
-            method: "POST",
-            headers: {},
-            body: imageToUpload
-        }
-    );
+
 
     const handleFileUploadClick = () => {
         if (inputReference.current !== null){
