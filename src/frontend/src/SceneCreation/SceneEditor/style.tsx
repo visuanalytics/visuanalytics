@@ -275,6 +275,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         rightImage: {
             borderRight: "3px solid black",
             borderBottom: "3px solid black"
+        },
+        fullWidthCollapse: {
+            width: "100%"
         }
     })
 );
