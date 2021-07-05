@@ -3,6 +3,8 @@
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
  */
+import {Diagram} from "../CreateInfoProvider/types";
+
 export type jsonRef = {
     infoprovider_id: number;
     infoprovider_name: string;
@@ -43,3 +45,10 @@ export type PreviewImage = {
     id: number;
 }
 
+export type FullScene = {
+    name: string;
+    used_images: Array<number>;
+    used_infoproviders: Array<number>;
+    images: Array<Diagram>;
+    scene_items: string;
+}

@@ -5,9 +5,10 @@ import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} fro
 import {useStyles} from "../../style";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import {FetchAllScenesAnswer, BackendScene, PreviewImage} from "../../types";
+import {FetchAllScenesAnswer, BackendScene, PreviewImage, FullScene} from "../../types";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 import {SceneList} from "./SceneList";
+import {useCallFetch} from "../../../Hooks/useCallFetch";
 
 interface SceneOverviewProps {
     scenes: Array<BackendScene>;
@@ -42,6 +43,27 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
         message: "",
         severity: "error",
     });
+
+    const reportError = (message: string) => {
+        dispatchMessage({ type: "reportError", message: message });
+    };
+
+    const handleFetchSceneSuccess = (jsonData: any) => {
+        const data = jsonData as FullScene;
+        //TODO: change component with the fetched Scene in props...
+    };
+
+    const handleErrorFetchSceneError = (err: Error) => {
+        reportError("Ein Fehler ist aufgetreten!" + err);
+    }
+
+    const fetchSceneById = useCallFetch("visuanalytics/scene/" + currentScene.scene_id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            }
+        }, handleFetchSceneSuccess, handleErrorFetchSceneError
+    );
 
 
     /**
@@ -117,7 +139,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" color={"primary"} onClick={() => setDetailDialogOpen(false)}>
+                            <Button variant="contained" color={"primary"} onClick={() => fetchSceneById()}>
                                 zurück
                             </Button>
                         </Grid>
