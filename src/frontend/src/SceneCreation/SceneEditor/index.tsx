@@ -57,7 +57,8 @@ interface SceneEditorProps {
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     let timeOut = 0;
     const imageIDArray = React.useRef<Array<number>>([])
-    const inputReference = React.useRef<HTMLInputElement>(null)
+    const uploadReference = React.useRef<HTMLInputElement>(null);
+    const backgroundUploadReference = React.useRef<HTMLInputElement>(null);
     //const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
 
     const classes = useStyles();
@@ -65,7 +66,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
-    const [backgroundImage/*, setBackgroundImage*/] = React.useState<HTMLImageElement>(new window.Image());
+    const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image());
+    const [backgroundToUpload, setBackgroundToUpload] = React.useState<FormData>(new FormData())
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
 
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
@@ -142,6 +144,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
     }, [])*/
+    React.useEffect(() => {
+        if (backgroundToUpload.has('image')){
+            postBackgroundImage();
+        }
+    }, [backgroundToUpload]);
 
     /*React.useEffect(() => {
         if (imageToUpload.has('image')){
@@ -525,6 +532,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     }
 
+    const handleBackgroundUploadSuccess = (jsonData : any) => {
+        console.log(jsonData)
+    }
+
 
     const handleError = (err : Error) => {
         console.log(err);
@@ -558,9 +569,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     );
 
     /**
+     * Method to POST a background images
+     */
+    const postBackgroundImage = useCallFetch("visuanalytics/image/backgrounds",{
+            method: "POST",
+            headers: {},
+            body: backgroundToUpload,
+        },
+        jsonData => {handleBackgroundUploadSuccess(jsonData)}, err => {handleError(err)}
+    );
+
+    /**
      * Method to POST the scene background
      */
-    const postBackground = useCallFetch("visuanalytics/image/add", {
+    const postBackground = useCallFetch("visuanalytics/image/scene", {
             method: "POST",
             headers: {},
             body: baseImage
@@ -571,7 +593,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to POST the scene preview
      */
-    const postPreview = useCallFetch("visuanalytics/image/add", {
+    const postPreview = useCallFetch("visuanalytics/image/scene", {
             method: "POST",
             headers: {},
             body: previewImage
@@ -1226,7 +1248,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to switch between a backgroundimage and a backgroundcolor
      */
-    const switchBackground = () => {
+    const switchBackgroundType = () => {
         if (backGroundType === "COLOR") {
             //setBackGroundNext("COLOR");
             setBackGroundType("IMAGE");
@@ -1455,13 +1477,29 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
-
-
     const handleFileUploadClick = () => {
-        if (inputReference.current !== null){
-            inputReference.current.click();
+        if (uploadReference.current !== null){
+            uploadReference.current.click();
         }
+    }
 
+    const handleBackgroundUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files !== null) {
+            console.log(event.target.files[0])
+            let formData = new FormData();
+            let name = event.target.files[0].name.split('.');
+            console.log(name[0])
+
+            formData.append('image', event.target.files[0]);
+            formData.append('name', name[0]);
+            setBackgroundToUpload(formData);
+        }
+    }
+
+    const handleBackgroundUploadClick = () => {
+        if (backgroundUploadReference.current !== null){
+            backgroundUploadReference.current.click();
+        }
     }
 
     return (
@@ -1998,9 +2036,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
                                 value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
                             /><br/>
-                            <Button className={classes.button} onClick={switchBackground} disabled={true}
+                            <Button className={classes.button} onClick={handleBackgroundUploadClick} disabled={false}
                                     style={{width: "80%"}}>
-                                HINTERGRUNDBILD WÄHLEN
+                                HINTERGRUNDBILD HOCHLADEN
+                                <input ref={backgroundUploadReference} id={"backgroundUpload"} type={"file"} accept={".png, .jpg, .jpeg"} hidden onChange={(e) => handleBackgroundUploadChange(e)}/>
                             </Button>
                         </Grid><br/>
                         <Grid item container xs={12}>
@@ -2023,12 +2062,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Grid>
                         </Grid>
                         <Grid item container xs={12}>
-                            <Collapse in={showImages}>
+                            <Collapse in={showImages} className={classes.fullWidthCollapse}>
                                 <Grid item container xs={12} justify="space-around">
                                     <Grid item>
                                         <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
                                             Bild hochladen
-                                            <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
+                                            <input ref={uploadReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
                                         </Button>
                                     </Grid>
                                 </Grid>
