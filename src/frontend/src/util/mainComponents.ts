@@ -13,7 +13,7 @@ import { CreateInfoProvider } from "../CreateInfoProvider"
 import {Dashboard} from "../Dashboard";
 import {EditInfoProvider} from "../EditInfoProvider";
 import EditIcon from "@material-ui/icons/Edit";
-import {SceneCreation} from "../SceneCreation";
+import {VideoCreation} from "../VideoCreation";
 
 export type MainComponent = {
   component: FC;
@@ -66,14 +66,14 @@ export const mainComponents: MainComponents = {
     icon: EditIcon,
     navName: "editInfoProvider"
   },
-  sceneCreation: {
-    component: SceneCreation,
-    icon: HomeIcon,
-    navName: "sceneCreation"
+  videoCreator: {
+    component: VideoCreation,
+    icon: EditIcon,
+    navName: "videoCreator"
   }
 };
 
 /**
  * Type für alle Keys von mainComponents
  */
-export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "editInfoProvider" | "sceneCreation";
+export type ComponentKey = "home" | "jobPage" | "jobLogs" | "addTopic" | "createInfoProvider" | "dashboard" | "editInfoProvider" | "videoCreator";

@@ -23,12 +23,13 @@ def get_transformations(tree, k, key_name, counter):
         "SUB": "subtract",
         "MUL": "multiply",
         "DIV": "divide",
+        "MOD": "modulo"
     }
 
     calc_template = {
         "type": "calculate",
         "action": "",
-        "decimal": 0
+        "decimal": 2
     }
 
     new_key_template = "_new_key_"
@@ -63,13 +64,16 @@ def get_transformations(tree, k, key_name, counter):
         calculation = calc_template.copy()
         calculation["action"] = operations[current_calc["operator"]]
         calculation["decimal"] = current_calc["decimal"]
+
         if type(current_calc["lop"]) == str:
             calculation.update({"keys": [current_calc["lop"].replace(splitString, "|")]})
         else:
+            if type(current_calc["rop"]) == str:
+                calculation.update({"keys": [current_calc["rop"].replace(splitString, "|")]})
             calculation.update({"value_left": current_calc["lop"]})
-        if type(current_calc["rop"]) == str:
+        if type(current_calc["rop"]) == str and type(current_calc["lop"]) == str:
             calculation.update({"keys_right": [current_calc["rop"].replace(splitString, "|")]})
-        else:
+        elif type(current_calc["rop"]) != str:
             calculation.update({"value_right": current_calc["rop"]})
         calculation.update({"new_keys": [new_key]})
 

@@ -6,22 +6,21 @@ import Paper from "@material-ui/core/Paper"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 
-interface StepFrameProps {
+interface Props {
     heading: string;
     hintContent: any;
-    large?: undefined|"lg"|"xl";
+    large?: boolean;
 }
 
-
-export const StepFrame: React.FC<StepFrameProps> = ({
-  heading,
-  hintContent,
-  large,
-  children,
+export const StepFrame: React.FC<Props> = ({
+   heading,
+   hintContent,
+   large,
+   children,
 }) => {
     const classes = useStyles();
     return (
-        <Container maxWidth={ large===undefined ? "md" : large } className={classes.margin}>
+        <Container maxWidth={ large===undefined ? "md" : "lg"} className={classes.margin}>
             <Paper variant="outlined" className={classes.paper}>
                 <Grid container spacing={1}>
                     <Grid item container sm={5} xs={10}>

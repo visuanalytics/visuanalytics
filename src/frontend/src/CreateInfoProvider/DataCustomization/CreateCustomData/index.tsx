@@ -1,17 +1,24 @@
 import React from "react";
 import {CustomDataGUI} from "./CustomDataGUI/customDataGUI";
 import {StrArg} from "./CustomDataGUI/formelObjects/StrArg";
-import {useStyles} from "../style";
-import {hintContents} from "../../util/hintContents";
-import {StepFrame} from "../StepFrame";
+import {useStyles} from "../../style";
+import {hintContents} from "../../../util/hintContents";
+import {StepFrame} from "../../StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import {FormelObj} from "./CustomDataGUI/formelObjects/FormelObj";
-import {useCallFetch} from "../../Hooks/useCallFetch";
-import {customDataBackendAnswer, Diagram, ListItemRepresentation, SelectedDataItem} from "../types";
-import {checkFindOnlyNumbers, getListItemsNames} from "../helpermethods";
+import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {
+    ArrayProcessingData,
+    customDataBackendAnswer,
+    Diagram,
+    ListItemRepresentation,
+    SelectedDataItem, StringReplacementData
+} from "../../types";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import {checkFindOnlyNumbers, getListItemsNames} from "../../helpermethods";
+
 
 interface CreateCustomDataProps {
     continueHandler: () => void;
@@ -20,6 +27,8 @@ interface CreateCustomDataProps {
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     customData: Array<FormelObj>;
     setCustomData: (array: Array<FormelObj>) => void;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
     reportError: (message: string) => void;
     listItems: Array<ListItemRepresentation>;
     historizedData: Array<string>;
@@ -386,7 +395,20 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 return;
             }
         }
-
+        //check for duplicates in array processings names
+        for (let i: number = 0; i < props.arrayProcessingsList.length; i++) {
+            if (props.arrayProcessingsList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer Array-Verarbeitung genutzt.")
+                return;
+            }
+        }
+        //check for duplicates in string replacement names
+        for (let i: number = 0; i < props.stringReplacementList.length; i++) {
+            if (props.stringReplacementList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer String-Verarbeitung genutzt.")
+                return;
+            }
+        }
         //funktioniert nur, wenn das backend läuft:
         sendTestData();
 
@@ -458,6 +480,7 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                     <CustomDataGUI
                         selectedData={props.selectedData}
                         customData={props.customData}
+                        arrayProcessingsList={props.arrayProcessingsList}
                         input={input}
                         name={name}
                         setName={(name: string) => setName(name)}

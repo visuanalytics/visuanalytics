@@ -29,140 +29,6 @@ def close_db_con(exception):
     db.close_con_f()
 
 
-@api.route("/infprovtestdatensatz", methods=["GET"])
-def infprovtestdatensatz():
-    # Muss noch angepasst werden
-    last_id = queries.get_last_infoprovider_id()
-    infoprovider = {
-        "infoprovider_name": "Test" + str(last_id),
-        "datasources": [
-            {
-                "datasource_name": "wetter_api",
-                "api": {
-                    "api_info": {
-                        "type": "request",
-                        "api_key_name": "appid||e2fda2d8f176a37636832ca955377714",
-                        "url_pattern": "http://api.openweathermap.org/data/2.5/weather?q=berlin"
-                    },
-                    "method": "KeyInQuery",
-                    "response_type": "json"
-                },
-                "transform": [
-                    {
-                        "type": "select",
-                        "relevant_keys": [
-                            "_req|wetter_api|main|temp",
-                            "_req|wetter_api|main|feels_like",
-                            "_req|wetter_api|main|temp_min",
-                            "_req|wetter_api|main|temp_max"
-                        ]
-                    },
-                    {
-                        "type": "transform_dict",
-                        "dict_key": "_req|wetter_api|main",
-                        "transform": [
-                            {
-                                "type": "append",
-                                "keys": [
-                                    "_loop"
-                                ],
-                                "new_keys": [
-                                    "test"
-                                ],
-                                "append_type": "list"
-                            }
-                        ]
-                    }
-                ],
-                "storing": [
-                    {
-                        "name": "test",
-                        "key": "test"
-                    }
-                ],
-                "formulas": [
-                    {
-                        "formelName": "A",
-                        "formelString": "( _req|wetter_api|main|temp * 24 ) / 7"
-                    }
-                ],
-                "schedule": {
-                    "type": "daily",
-                    "time": "15:24"
-                }
-            },
-            {
-                "datasource_name": "joke_api",
-                "api": {
-                    "api_info": {
-                        "type": "request",
-                        "api_key_name": "",
-                        "url_pattern": "https://official-joke-api.appspot.com/jokes/ten"
-                    },
-                    "method": "noAuth",
-                    "response_type": "json"
-                },
-                "transform": [
-                    {
-                        "type": "select",
-                        "relevant_keys": [
-                            "_req|joke_api"
-                        ]
-                    }
-                ],
-                "storing": [
-                    {
-                        "name": "jokes",
-                        "key": "_req|joke_api"
-                    }
-                ],
-                "schedule": {
-                    "type": "weekly",
-                    "time": "10:09",
-                    "weekdays": [0, 5]
-                },
-                "formulas": []
-            }
-        ],
-        "diagrams": {
-            "test": {
-                "type": "diagram_custom",
-                "diagram_config": {
-                    "type": "custom",
-                    "name": "Jokes",
-                    "infoprovider": "jokes_test",
-                    "source_type": "Array",
-                    "plots": [
-                        {
-                            "custom_labels": False,
-                            "primitive": False,
-                            "plot": {
-                                "type": "line",
-                                "y": "{_req|api}",
-                                "numeric_attribute": "id",
-                                "string_attribute": "punchline"
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        "diagrams_original": {},
-        "arrays_used_in_diagrams": []
-    }
-    queries.insert_infoprovider(infoprovider)
-    last_id = queries.get_last_infoprovider_id()
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    last_id += 1
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    last_id += 1
-    infoprovider["infoprovider_name"] = "Test" + str(last_id)
-    queries.insert_infoprovider(infoprovider)
-    return "", 200
-
-
 @api.route("/testdiagram", methods=["POST"])
 def test_diagram():
     """
@@ -278,8 +144,20 @@ def add_infoprovider():
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
@@ -287,7 +165,7 @@ def add_infoprovider():
                 return err, 400
 
             if "schedule" not in datasource:
-                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                err = flask.jsonify({f"err_msg": f"Missing schedule for datasource {datasource['name']}"})
                 return err, 400
 
         if not queries.insert_infoprovider(infoprovider):
@@ -430,8 +308,20 @@ def update_infoprovider(infoprovider_id):
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
                 return err, 400
 
+            if "calculates" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'calculates' for datasource {datasource['name']}"})
+                return err, 400
+
+            if "replacements" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field 'replacements' for datasource {datasource['name']}"})
+                return err, 400
+
             if "storing" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field 'api' in datasource {datasource['name']}"})
+                return err, 400
+
+            if "historized_data" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
                 return err, 400
 
             if "formulas" not in datasource:
@@ -539,7 +429,7 @@ def get_videojob(videojob_id):
             return err, 400
 
         return flask.jsonify(videojob_json)
-        #return videojob_json
+        # return videojob_json
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a Videojob"})
@@ -564,6 +454,23 @@ def delete_infoprovider(infoprovider_id):
         return err, 400
 
 
+@api.route("/infoprovider/<infoprovider_id>/logs", methods=["GET"])
+def get_infoprovider_logs(infoprovider_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_infoprovider_logs(infoprovider_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>", methods=["DELETE"])
 def delete_videojob(videojob_id):
     """
@@ -582,6 +489,42 @@ def delete_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>/preview", methods=["GET"])
+def get_videojob_preview(videojob_id):
+    """
+    Endpunkt '/videojob/<id>/preview (GET).
+
+    Route über die das Preview-Bild eines Videos abgefragt werden kann.
+    :param videojob_id: ID des Videos, dessen Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_videojob_preview(videojob_id)
+        err = flask.jsonify({"err_msg": f"Video preview could not be loaded for a videojob with the ID {videojob_id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify(
+            {"err_msg": f"An error occurred while loading the preview-image of a videojob with the ID {videojob_id}"})
+        return err, 400
+
+
+@api.route("/videojob/<videojob_id>/logs", methods=["GET"])
+def get_videojob_logs(videojob_id):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param videojob_id: ID des Infoproviders.
+    """
+    try:
+        return flask.jsonify(queries.get_videojob_logs(videojob_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojo_id}"})
+        return err, 400
+
+
 @api.route("/testformula", methods=["POST"])
 def testformula():
     """
@@ -596,7 +539,7 @@ def testformula():
             err = flask.jsonify({"err_msg": "Missing field 'formula'"})
             return err, 400
 
-        str2json(formula["formula"])
+        str2json(queries.remove_toplevel_key(formula["formula"]).replace("|", "uzjhnjtdryfguljkm"))
         return flask.jsonify({"accepted": True})
 
     except SyntaxError:
@@ -631,6 +574,10 @@ def add_scene():
 
         if "images" not in scene:
             err = flask.jsonify({"err_msg": "Missing field 'images'"})
+            return err, 400
+
+        if "diagrams_original" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams_original'"})
             return err, 400
 
         if "scene_items" not in scene:
@@ -743,15 +690,39 @@ def delete_scene(id):
         return err, 400
 
 
-@api.route("/image/add", methods=["POST"])
-def add_scene_image():
+@api.route("/scene/<id>/preview", methods=["GET"])
+def get_scene_preview(id):
     """
-    Endpunkt '/image/add'.
+    Endpunkt '/scene/<id>/preview (GET).
+
+    Route über die das Preview-Bild einer Szene abgefragt werden kann.
+    :param id: ID der Szene, deren Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_scene_preview(id)
+        err = flask.jsonify({"err_msg": f"Scene preview could not be loaded for the scene with the ID {id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading the preview-image of the scene with the ID {id}"})
+        return err, 400
+
+
+@api.route("/image/<folder>", methods=["POST"])
+def add_scene_image(folder):
+    """
+    Endpunkt '/image/<folder>'.
 
     Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
     Request-Form muss den key name und das Bild selbst enthalten.
+    :param folder: Gibt den Ordner an in den das Bild gespeichert werden soll. Optionen sind hier "backgrounds",
+                   "pictures" oder "scene".
     """
     try:
+        if folder != "backgrounds" and folder != "pictures" and folder != "scene":
+            err = flask.jsonify({"err_msg": "Invalid image-folder"})
+            return err, 400
+
         if "image" not in request.files:
             err = flask.jsonify({"err_msg": "Missing Image"})
             return err, 400
@@ -771,13 +742,14 @@ def add_scene_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        file_path = queries.get_scene_image_path(name + "." + file_extension)
+        # file_path = queries.get_scene_image_path(name, folder, file_extension)
+        file_path = queries.get_image_path(name, folder, file_extension)
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
-        image_id = queries.insert_image(name + "." + file_extension)
+        image_id = queries.insert_image(name + "." + file_extension, folder)
         if not image_id:
             err = flask.jsonify({"err_msg": "Image could not be added to the database"})
             return err, 400
@@ -791,21 +763,26 @@ def add_scene_image():
         return err, 400
 
 
-@api.route("/image/all", methods=["GET"])
-def get_all_scene_images():
+@api.route("/image/<folder>", methods=["GET"])
+def get_all_scene_images(folder):
     """
-    Endpunkt '/image/all'.
+        Endpunkt '/image/<folder>'.
 
-    Route über die Informationen über alle Szene-Bilder erhalten werden können.
-    Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
-    """
+        Route über die Informationen über alle Bilder eines bestimmten Ordners erhalten werden können.
+        Zulässige Ordner sind hier "backgrounds", "pictures" und "scene".
+        Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
+        """
     try:
-        images = queries.get_image_list()
+        if folder != "backgrounds" and folder != "pictures" and folder != "scene":
+            err = flask.jsonify({"err_msg": "Invalid image-folder"})
+            return err, 400
+
+        images = queries.get_image_list(folder)
 
         return flask.jsonify(images)
     except Exception:
         logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
+        err = flask.jsonify({"err_msg": f"An error occurred while loading information about all images of the folder {folder}"})
         return err, 400
 
 
@@ -847,9 +824,32 @@ def delete_scene_image(id):
 
 @api.route("/thumbnailpreview", methods=["POST"])
 def set_preview():
-    try:
+    """
+    Endpunkt `/thumbnailpreview`.
 
-        return "Not Implemented", 400
+    Ermöglicht dass eine Szene als preview eines Videos gesetzt werden kann.
+    Request muss ein Json des folgenden Formats enthalten:
+    Format: {
+        videojob_id: ####,
+        scene_id: ####,
+    }
+    """
+    data = request.json
+    try:
+        if "videojob_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'videojob_id'"})
+            return err, 400
+
+        if "scene_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'scene_id'"})
+            return err, 400
+
+        msg = queries.set_videojob_preview(data["videojob_id"], data["scene_id"])
+        if msg:
+            err = flask.jsonify(msg)
+            return err, 400
+
+        return "", 200
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
@@ -948,7 +948,7 @@ def add_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        file_path = queries._get_image_path(name, folder, file_extension)
+        file_path = queries.get_image_path(name, folder, file_extension)
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})

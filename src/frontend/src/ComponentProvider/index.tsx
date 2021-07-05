@@ -61,8 +61,12 @@ export const ComponentProvider: React.FC<Props> = ({ children }) => {
         keyName = "editInfoProvider";
         break;
       }
-      case "sceneCreation": {
-        keyName = "sceneCreation";
+      case "sceneEditor": {
+          keyName = "sceneEditor";
+          break;
+      }
+      case "videoCreator": {
+        keyName = "videoCreator";
         break;
       }
     }

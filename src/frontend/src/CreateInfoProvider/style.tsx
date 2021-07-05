@@ -22,6 +22,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginTop: "20px",
             marginBottom: "10px"
         },
+        mediumListFrame: {
+            width: "100%",
+            height: 250,
+            overflow: 'auto',
+            overflowX: "hidden",
+            marginTop: "5px",
+            marginBottom: "0px"
+        },
         smallListFrame: {
             width: "100%",
             height: 170,
@@ -86,6 +94,9 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        redDeleteIcon: {
+            color: theme.palette.error.main
+        },
         header: {
             color: theme.palette.primary.main
         },
@@ -108,6 +119,19 @@ export const useStyles = makeStyles((theme: Theme) =>
         historizedOverviewContainer: {
             marginTop: "10px",
             height: "100%"
+        },
+        typographyLineBreak: {
+            overflowWrap: "break-word"
+        },
+        processingListingText: {
+            overflowWrap: "break-word",
+            paddingLeft: "0.8rem",
+            paddingTop: "0.6rem"
+        },
+        radioButtonListWrapText: {
+            overflowWrap: "break-word",
+            marginTop: "0.5rem",
+            paddingRight: "0.1rem"
         }
-    }),
+    })
 );
