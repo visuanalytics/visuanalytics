@@ -52,7 +52,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     const setCurrent = (data: BackendScene) => {
         //TODO: implement method to find the right preview-image for the given SceneId
         setCurrentScene(data);
-        //setCurrentImg(props.previewImgList[data.scene_id - 1].URL);
+        setCurrentImg(props.previewImgList[data.scene_id].URL);
     }
 
     return (
@@ -68,9 +68,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                     <Typography variant={"h5"}>
                         Angelegte Szenen:
                     </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                    <Button>Nicht mehr gebraucht</Button>
                 </Grid>
                 <Grid item container xs={4} justify={"flex-end"}>
                     <Grid item>
