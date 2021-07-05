@@ -489,6 +489,25 @@ def delete_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/<videojob_id>/preview", methods=["GET"])
+def get_videojob_preview(videojob_id):
+    """
+    Endpunkt '/videojob/<id>/preview (GET).
+
+    Route über die das Preview-Bild eines Videos abgefragt werden kann.
+    :param videojob_id: ID des Videos, dessen Preview geladen werden soll.
+    """
+    try:
+        file_path = queries.get_videojob_preview(videojob_id)
+        err = flask.jsonify({"err_msg": f"Video preview could not be loaded for a videojob with the ID {videojob_id}"})
+        return send_file(file_path, "application/json", True) if file_path else (err, 400)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify(
+            {"err_msg": f"An error occurred while loading the preview-image of a videojob with the ID {videojob_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>/logs", methods=["GET"])
 def get_videojob_logs(videojob_id):
     """
@@ -496,7 +515,7 @@ def get_videojob_logs(videojob_id):
 
     Route um alle Logs der Datenquellen eines Infoproviders zu laden.
 
-    :param infoprovider_id: ID des Infoproviders.
+    :param videojob_id: ID des Infoproviders.
     """
     try:
         return flask.jsonify(queries.get_videojob_logs(videojob_id))
@@ -685,15 +704,21 @@ def get_scene_preview(id):
         return err, 400
 
 
-@api.route("/image/add", methods=["POST"])
-def add_scene_image():
+@api.route("/image/<folder>", methods=["POST"])
+def add_scene_image(folder):
     """
-    Endpunkt '/image/add'.
+    Endpunkt '/image/<folder>'.
 
     Route über die ein neues Bild für eine Szene hinzugefügt werden kann.
     Request-Form muss den key name und das Bild selbst enthalten.
+    :param folder: Gibt den Ordner an in den das Bild gespeichert werden soll. Optionen sind hier "backgrounds",
+                   "pictures" oder "scene".
     """
     try:
+        if folder != "backgrounds" and folder != "pictures" and folder != "scene":
+            err = flask.jsonify({"err_msg": "Invalid image-folder"})
+            return err, 400
+
         if "image" not in request.files:
             err = flask.jsonify({"err_msg": "Missing Image"})
             return err, 400
@@ -714,13 +739,14 @@ def add_scene_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        file_path = queries.get_scene_image_path(name + "." + file_extension)
+        # file_path = queries.get_scene_image_path(name, folder, file_extension)
+        file_path = queries.get_image_path(name, folder, file_extension)
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})
             return err, 400
 
-        image_id = queries.insert_image(name + "." + file_extension)
+        image_id = queries.insert_image(name + "." + file_extension, folder)
         if not image_id:
             err = flask.jsonify({"err_msg": "Image could not be added to the database"})
             return err, 400
@@ -734,21 +760,26 @@ def add_scene_image():
         return err, 400
 
 
-@api.route("/image/all", methods=["GET"])
-def get_all_scene_images():
+@api.route("/image/<folder>", methods=["GET"])
+def get_all_scene_images(folder):
     """
-    Endpunkt '/image/all'.
+        Endpunkt '/image/<folder>'.
 
-    Route über die Informationen über alle Szene-Bilder erhalten werden können.
-    Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
-    """
+        Route über die Informationen über alle Bilder eines bestimmten Ordners erhalten werden können.
+        Zulässige Ordner sind hier "backgrounds", "pictures" und "scene".
+        Response enthält eine Liste von Bild-Elementen. Jedes Bild-Element enthält die ID, den Namen und das Bild selbst.
+        """
     try:
-        images = queries.get_image_list()
+        if folder != "backgrounds" and folder != "pictures" and folder != "scene":
+            err = flask.jsonify({"err_msg": "Invalid image-folder"})
+            return err, 400
+
+        images = queries.get_image_list(folder)
 
         return flask.jsonify(images)
     except Exception:
         logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": "An error occurred while loading information about all images"})
+        err = flask.jsonify({"err_msg": f"An error occurred while loading information about all images of the folder {folder}"})
         return err, 400
 
 
@@ -790,9 +821,32 @@ def delete_scene_image(id):
 
 @api.route("/thumbnailpreview", methods=["POST"])
 def set_preview():
-    try:
+    """
+    Endpunkt `/thumbnailpreview`.
 
-        return "Not Implemented", 400
+    Ermöglicht dass eine Szene als preview eines Videos gesetzt werden kann.
+    Request muss ein Json des folgenden Formats enthalten:
+    Format: {
+        videojob_id: ####,
+        scene_id: ####,
+    }
+    """
+    data = request.json
+    try:
+        if "videojob_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'videojob_id'"})
+            return err, 400
+
+        if "scene_id" not in data:
+            err = flask.jsonify({"err_msg": "Missing field 'scene_id'"})
+            return err, 400
+
+        msg = queries.set_videojob_preview(data["videojob_id"], data["scene_id"])
+        if msg:
+            err = flask.jsonify(msg)
+            return err, 400
+
+        return "", 200
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while setting an image as the preview of a scene"})
@@ -890,7 +944,7 @@ def add_image():
             return err, 400
 
         file_extension = secure_filename(image.filename).rsplit(".", 1)[1]
-        file_path = queries._get_image_path(name, folder, file_extension)
+        file_path = queries.get_image_path(name, folder, file_extension)
 
         if path.exists(file_path):
             err = flask.jsonify({"err_msg": "Invalid Image Name (Image maybe exists already)"})

@@ -272,7 +272,7 @@ def insert_video_job(video, update=False, job_id=None):
     scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
     # print("scenes", scenes)
     for k, v in images.items():
-        images[k] = list(filter(lambda x: x["scene_name"] == v["key"], scenes))[0]["images"]
+        images[k] = list(filter(lambda x: x["name"] == v["key"], scenes))[0]["images"]
     # print("images", json.dumps(images, indent=4))
 
     video["images"] = images
@@ -717,6 +717,21 @@ def delete_videojob(videojob_id):
     return True
 
 
+def get_videojob_preview(videojob_id):
+    """
+    Generiert den Pfad zu dem Preview-Bild eines Videojobs.
+
+    :param videojob_id: ID des Videojobs.
+    :return: Dateipfad zu dem Preview-Bild.
+    """
+    con = db.open_con_f()
+
+    scene = con.execute("SELECT * FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()
+
+    return get_scene_preview(scene["scene_id"]) if scene else None
+
+
 def insert_scene(scene):
     """
     Fügt eine Szene zu der Datenbank hinzu und legt eine entsprechende Json-Datei an.
@@ -737,7 +752,7 @@ def insert_scene(scene):
     scene_items = scene["scene_items"]
 
     scene_json = {
-        "scene_name": scene_name,
+        "name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
         "images": images,
@@ -863,7 +878,7 @@ def update_scene(scene_id, updated_data):
     con.execute("UPDATE scene SET scene_name=? WHERE scene_id=?", [scene_name, scene_id])
 
     # Neue Daten in Json-Datei eintragen
-    scene_json.update({"scene_name": scene_name})
+    scene_json.update({"name": scene_name})
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
@@ -951,6 +966,11 @@ def get_scene_preview(scene_id):
     """
     con = db.open_con_f()
 
+    # Testen ob Scene existiert
+    count = con.execute("SELECT COUNT(*) FROM scene WHERE scene_id=?", [scene_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        return None
+
     # Szenen-Json laden um verwendetet Bilder auslesen zu können
     with open_resource(get_scene_file(scene_id)) as f:
         scene_json = json.loads(f.read())
@@ -959,25 +979,27 @@ def get_scene_preview(scene_id):
     for image_id in scene_json["used_images"]:
         image_name = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()["image_name"]
         if "preview" in image_name:
-            return get_scene_image_path(image_name)
+            image_data = image_name.rsplit(".", 1)
+            return get_image_path(image_data[0], "scene", image_data[1])
     return None
 
 
-def insert_image(image_name):
+def insert_image(image_name, folder):
     """
     Fügt ein Bild zu der Datenbank hinzu.
 
     :param image_name: Name des Bildes.
+    :param folder: Ordner unter dem das Bild gespeichert werden soll.
     """
     con = db.open_con_f()
     name = image_name.rsplit(".", 1)[0]
 
     # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=? AND folder=?", [name + ".jpg", name + ".jpeg", name + ".png", folder]).fetchone()["COUNT(*)"]
     if count > 0:
         return None
 
-    image_id = con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name]).lastrowid
+    image_id = con.execute("INSERT INTO image (image_name, folder) VALUES (?, ?)", [image_name, folder]).lastrowid
     con.commit()
     return image_id
 
@@ -989,19 +1011,20 @@ def get_scene_image_file(image_id):
     :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
+    res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
-    return get_scene_image_path(res["image_name"]) if res is not None else None
+    image_data = res["image_name"].rsplit(".", 1)
+    return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
 
 
-def get_image_list():
+def get_image_list(folder):
     """
     Läd Informationen über alle in der Datenbank enthaltenen Bilder.
 
     :return: Enthölt eine Liste an Objekten welche je die ID und den Namen des Bildes enthalten.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT * FROM image")
+    res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
     con.commit()
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
@@ -1028,6 +1051,38 @@ def delete_scene_image(image_id):
     con.commit()
 
     return "Successful"
+
+
+def set_videojob_preview(videojob_id, scene_id):
+    """
+    Setzt eine gegebene Szene als das Previewbild eines Videos.
+
+    :param videojob_id: ID eines Videojobs.
+    :param scene_id: ID einer Szene.
+    :return: Eine Fehlermeldung im Json-Format falls vorhanden.
+    """
+    con = db.open_con_f()
+
+    # Testen ob Videojob und Szene existieren
+    scene = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+    videojob = con.execute("SELECT * FROM job WHERE job_id=?", [videojob_id]).fetchone()
+    if videojob is None:
+        return {"err_msg": f"Videojob with ID {videojob_id} does not exist"}
+    if scene is None:
+        return {"err_msg": f"Scene with ID {scene_id} does not exist"}
+
+    # Testen ob bereits eine Szene als preview gesetzt ist
+    count = con.execute("SELECT COUNT(*) FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        con.execute("INSERT INTO job_uses_scene (job_id, scene_id, scene_is_preview) VALUES (?, ?, ?)",
+                    [videojob_id, scene_id, True])
+    else:
+        con.execute("UPDATE job_uses_scene SET scene_id=? WHERE job_id=? AND scene_is_preview=TRUE",
+                    [scene_id, videojob_id])
+
+    con.commit()
+    return None
 
 
 def get_topic_names():
@@ -1486,16 +1541,11 @@ def _get_scene_path(scene_name: str):
     return os.path.join(SCENE_LOCATION, scene_name) + ".json"
 
 
-def get_scene_image_path(image_file_name: str):
-    image_info = image_file_name.rsplit(".", 1)
-    return _get_image_path(image_info[0], "scene", image_info[1])
-
-
 def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def _get_image_path(json_file_name: str, folder: str, image_type: str):
+def get_image_path(json_file_name: str, folder: str, image_type: str):
     if folder != '':
         os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
         return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
