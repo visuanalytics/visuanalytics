@@ -29,14 +29,14 @@ interface InfoProviderSelectionProps {
     fetchImageList: () => void;
     step0ContinueDisabled: boolean;
     setStep0ContinueDisabled: (disabled: boolean) => void;
+    selectedId: number;
+    setSelectedId: (id: number) => void;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
 
     const classes = useStyles();
 
-    //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
-    const [selectedId, setSelectedId] = React.useState(0);
 
     /**
      * Method that processes the answer of the backend by extracting the lists of selectedData, customData,
@@ -186,7 +186,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         props.reportError("Fehler: Senden der Daten an das Backend fehlgeschlagen! (" + err.message + ")");;
     }
 
-    const fetchInfoProviderById = useCallFetch("visuanalytics/infoprovider/" + selectedId, {
+    const fetchInfoProviderById = useCallFetch("visuanalytics/infoprovider/" + props.selectedId, {
         method: "GET",
         headers: {
             "Content-Type": "application/json\n"
@@ -221,8 +221,8 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <Box borderColor="primary.main" border={4} borderRadius={5} className={classes.choiceListFrame}>
                         <FormControl>
-                            <RadioGroup value={selectedId}
-                                        onChange={(e) => setSelectedId(Number(e.target.value))}>
+                            <RadioGroup value={props.selectedId}
+                                        onChange={(e) => props.setSelectedId(Number(e.target.value))}>
                                 {props.infoProviderList.map((infoProvider) => renderListItem(infoProvider))}
                             </RadioGroup>
                         </FormControl>
@@ -239,7 +239,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                         </Button>
                     </Grid>
                     <Grid item className={classes.blockableButtonPrimary}>
-                        <Button disabled={ props.step0ContinueDisabled || selectedId === 0 } variant="contained"
+                        <Button disabled={ props.step0ContinueDisabled || props.selectedId === 0 } variant="contained"
                                 size="large"
                                 color={"primary"}
                                 onClick={() => {
