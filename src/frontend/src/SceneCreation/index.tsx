@@ -41,7 +41,7 @@ export const SceneCreation = () => {
     const [selectedId, setSelectedId] = React.useState(0);
 
     React.useEffect(() => {
-        //step - disabled since it makes debugging more annoying TODO: restore when finished!!
+        //step
         setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
         //infoProviderList
         setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
@@ -55,35 +55,48 @@ export const SceneCreation = () => {
         setSelectedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
         //selectedDataList
         setSelectedDataList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
+        //imageList
+        setImageList(sessionStorage.getItem("imageList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("imageList-" + uniqueId)!))
+        //selectedId
+        setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
     }, [])
+
     //store step in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("sceneEditorStep-" + uniqueId, sceneEditorStep.toString());
     }, [sceneEditorStep])
-
+    //store infoProviderList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
     }, [infoProviderList])
-
+    //store infoProvider in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("infoProvider-" + uniqueId, JSON.stringify(infoProvider));
     }, [infoProvider])
-
+    //store selectedDataList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("selectedDataList-" + uniqueId, JSON.stringify(selectedDataList));
     }, [selectedDataList])
-
+    //store customDataList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("customDataList-" + uniqueId, JSON.stringify(customDataList));
     }, [customDataList])
-
+    //store historizedDataList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("historizedDataList-" + uniqueId, JSON.stringify(historizedDataList));
     }, [historizedDataList])
-
+    //store diagramList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("diagramList-" + uniqueId, JSON.stringify(diagramList));
     }, [diagramList])
+    //store imageList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("imageList-" + uniqueId, JSON.stringify(imageList));
+    }, [imageList])
+    //store selectedId in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
+    }, [selectedId])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -96,6 +109,8 @@ export const SceneCreation = () => {
         sessionStorage.removeItem("customDataList-" + uniqueId);
         sessionStorage.removeItem("historizedDataList-" + uniqueId);
         sessionStorage.removeItem("diagramList-" + uniqueId);
+        sessionStorage.removeItem("imageList-" + uniqueId);
+        sessionStorage.removeItem("selectedId-" + uniqueId);
     }
 
     // contains the names of the steps to be displayed in the stepper
