@@ -822,6 +822,10 @@ def delete_scene_image(id):
 @api.route("/thumbnailpreview", methods=["POST"])
 def set_preview():
     """
+    Endpunkt `/thumbnailpreview`.
+
+    Ermöglicht dass eine Szene als preview eines Videos gesetzt werden kann.
+    Request muss ein Json des folgenden Formats enthalten:
     Format: {
         videojob_id: ####,
         scene_id: ####,
