@@ -114,8 +114,8 @@ def insert_infoprovider(infoprovider):
     for datasource in datasources:
         transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(datasource["transform"]))
         transform_step += remove_toplevel_key(datasource["replacements"])
 
     datasources_copy = deepcopy(infoprovider["datasources"])
@@ -179,14 +179,14 @@ def insert_infoprovider(infoprovider):
         # Datasource obj vorbereiten
         transform_step = datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys), remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys), remove_toplevel_key(datasource["transform"]))
         transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -580,15 +580,15 @@ def update_infoprovider(infoprovider_id, updated_data):
         # Datasource obj vorbereiten
         transform_step = datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys),
-                                             remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
+                                              remove_toplevel_key(datasource["transform"]))
         transform_step += datasource["replacements"]
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -749,6 +749,7 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
+    diagrams_original = scene["diagrams_original"]
     scene_items = scene["scene_items"]
 
     scene_json = {
@@ -756,6 +757,7 @@ def insert_scene(scene):
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
         "images": images,
+        "diagrams_original": diagrams_original,
         "scene_items": scene_items
     }
 
@@ -1274,6 +1276,29 @@ def generate_request_dicts(api_info, method, api_key_name=None):
             parameter.update({api_key_for_query: "{_api_key}" if api_key_name else api_key})
 
     return header, parameter
+
+
+def extract_custom_keys(calculates, formulas, replacements):
+    keys = []
+    keys += _extract_transform_keys(calculates, keys)
+    keys += [formula["formelName"] for formula in formulas]
+    keys += _extract_transform_keys(replacements, keys)
+    return keys
+
+
+def _extract_transform_keys(transform, keys):
+    if type(transform) == list:
+        for x in range(len(transform)):
+            keys = _extract_transform_keys(transform[x], keys)
+    elif type(transform) == dict:
+        for key in list(transform.keys()):
+            if key == "new_keys":
+                for custom_key in transform[key]:
+                    if "_loop|" in custom_key:
+                        keys.append(custom_key.split("_loop|")[1])
+                    else:
+                        keys.append(custom_key)
+    return keys
 
 
 def remove_toplevel_key(obj):
