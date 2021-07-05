@@ -107,7 +107,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
-    const [imageToUpload, setImageToUpload] = React.useState<FormData>(new FormData());
+    //const [imageToUpload, setImageToUpload] = React.useState<FormData>(new FormData());
     //const [itemJson, setItemJson] = React.useState("");
     const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
@@ -140,11 +140,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     }, [])*/
 
-    React.useEffect(() => {
+    /*React.useEffect(() => {
         if (imageToUpload.has('image')){
+            console.log(imageToUpload);
             postImage();
         }
-    }, [imageToUpload]);
+    }, [imageToUpload]);*/
 
     React.useEffect(() => {
         if (exportJSON !== null){
@@ -153,8 +154,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }, [exportJSON]);
 
     React.useEffect(() => {
-        createBackgroundImage();
-        createPreviewImage();
+        //createBackgroundImage();
+        //createPreviewImage();
 
     }, [items, sceneName]);
 
@@ -393,19 +394,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param jsonData The JSON object returned by the backend, containing the ID of the new image.
      */
     const postImageSuccessHandler = (jsonData: any) => {
+        console.log("image post success handler");
         //get the object of the uploaded image from the FormData
-        const img = imageToUpload.get('image');
+        //const img = imageToUpload.get('image');
         const data = jsonData as imagePostBackendAnswer;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
+        console.log(imageId);
         // check if the image is valid
-        if (img !== null && img instanceof File) {
-            console.log("new image: " + img.name);
-            //start fetching the new image from the backend
-            fetchImageById(imageId);
-        }
+        //start fetching the new image from the backend
+        fetchImageById(imageId);
         // reset the state containing the image to be uploaded
-        setImageToUpload(new FormData());
+        //setImageToUpload(new FormData());
     }
 
     /**
@@ -419,14 +419,35 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to POST an Image uploaded by the user to the backend.
      */
-    const postImage = useCallFetch("visuanalytics/image/add", {
+    const postImage = (imageToUpload: FormData) => {
+        console.log("post image called");
+        let url = "visuanalytics/image/add";
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json\n"
             },
-            body: imageToUpload
-        }, postImageSuccessHandler, postImageErrorHandler
-    )
+            body: imageToUpload,
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) postImageSuccessHandler(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) postImageErrorHandler(err)
+        }).finally(() => clearTimeout(timer));
+    }
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
@@ -457,6 +478,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * as additional argument (storing in state is no alternative because there wont be re-render).
      */
     const fetchImageById = (id: number) => {
+        console.log("fetching image by id!");
         let url = "/visuanalytics/image/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -1417,15 +1439,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
+        //console.log("calling the upload handler");
         if (event.target.files !== null){
-            console.log(event.target.files[0])
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
-            console.log(name[0])
+            //console.log("uploading image: " + name[0])
 
             formData.append('image', event.target.files[0]);
+            //console.log(event.target.files[0]);
             formData.append('name', name[0]);
-            setImageToUpload(formData);
+            postImage(formData);
         }
     }
 
