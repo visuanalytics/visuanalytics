@@ -364,8 +364,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         type: "string",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
-                        size_x: element.width, //Breite optional
-                        size_y: element.height, //Höhe optional
+                        size_x: element.width * element.scaleX, //Breite optional
+                        size_y: element.height * element.scaleY, //Höhe optional
                         color: "RGBA",
                         path: "string" //Diagrammname "image_name" : "" eventuell
                     }
@@ -428,9 +428,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const postImage = useCallFetch("visuanalytics/image/add", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json\n"
-            },
+            headers: {},
             body: imageToUpload
         }, postImageSuccessHandler, postImageErrorHandler
     )
@@ -836,7 +834,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     const addImageElement = (image : HTMLImageElement) => {
-        items.push({
+        let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
             y: 0,
@@ -848,8 +846,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             baseHeight: image.height,
             scaleX: 1,
             scaleY: 1,
-
-        } as CustomImage)
+            color: "#000000"
+        }
+        while (obj.width * obj.scaleX > 960) {
+            obj.scaleX *= 0.5;
+        }
+        while (obj.height * obj.scaleY > 540){
+            obj.scaleY *= 0.5;
+        }
+        items.push(obj)
         incrementCounterResetType();
     }
 
@@ -1298,7 +1303,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 baseHeight: 20,
             } as CustomText);
             setCurrentTextWidth(200);
-            setCurrentTextContent(item);
             setTextEditContent(item);
             setItemCounter(itemCounter + 1);
         } else {
@@ -1751,6 +1755,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                         }
                                                         if (pos.y < 0) {
                                                             pos.y = 0
+                                                        }
+                                                        if (item.width * item.scaleX > 960) {
+                                                            item.scaleX *= 0.5;
+                                                        }
+                                                        if (item.height * item.scaleY > 540){
+                                                            item.scaleY *= 0.5;
                                                         }
                                                         return pos;
                                                     }}
