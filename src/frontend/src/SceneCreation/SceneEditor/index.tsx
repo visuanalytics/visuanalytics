@@ -1328,8 +1328,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderImageEntry = (image: string, index: number) => {
         //TODO: when images are available, check how the size should look like
         return (
-            <Grid item xs={4}>
-                <img src={image} width="50px" height="30px" alt={"Can not be displayed!"} onClick={() => handleImageClick(image, index)}/>
+            <Grid item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
+                <Grid item xs={10}>
+                    <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
+                </Grid>
             </Grid>
         )
     }
@@ -1979,10 +1981,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <Typography variant={"h4"} align={"center"}>
                                 BILDER
                             </Typography><br/>
-                            <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
-                                BILD HOCHLADEN
-                                <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
-                            </Button>
+                        </Grid>
+                        <Grid item container xs={12} justify="space-around">
+                            <Grid item>
+                                <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
+                                    Bild hochladen
+                                    <input ref={inputReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
+                                </Button>
+                            </Grid>
                         </Grid>
                         <Grid item container xs={12} className={classes.elementLargeMargin}>
                             {props.imageList.map((image, index) => renderImageEntry(image, index))}

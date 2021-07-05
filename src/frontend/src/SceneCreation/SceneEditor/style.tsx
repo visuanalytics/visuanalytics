@@ -258,6 +258,23 @@ export const useStyles = makeStyles((theme: Theme) =>
             margin: "auto",
             marginTop: "10px",
             marginLeft: "10px"
+        },
+        firstImage: {
+            border: "3px solid black"
+        },
+        secondImage: {
+            borderTop: "3px solid black",
+            borderRight: "3px solid black",
+            borderBottom: "3px solid black",
+        },
+        leftImage: {
+            borderLeft: "3px solid black",
+            borderRight: "3px solid black",
+            borderBottom: "3px solid black",
+        },
+        rightImage: {
+            borderRight: "3px solid black",
+            borderBottom: "3px solid black"
         }
     })
 );

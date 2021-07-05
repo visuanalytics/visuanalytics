@@ -93,6 +93,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         intervalChoiceRightLabel: {
             paddingTop: "1.75em", marginRight: "5px"
         },
+
         
     })
 );
