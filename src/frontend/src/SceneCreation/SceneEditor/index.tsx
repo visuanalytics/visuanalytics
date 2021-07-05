@@ -44,6 +44,7 @@ interface SceneEditorProps {
     continueHandler: () => void;
     backHandler: () => void;
     infoProvider: FrontendInfoProvider;
+    infoProviderId: number;
     selectedDataList: Array<string>;
     customDataList: Array<string>;
     historizedDataList: Array<HistorizedDataInfo>;

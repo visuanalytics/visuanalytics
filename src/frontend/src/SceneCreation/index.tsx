@@ -37,6 +37,8 @@ export const SceneCreation = () => {
     const [imageList, setImageList] = React.useState<Array<string>>([]);
     //true when the continue of step 0 is disabled - used for blocking the button until all fetches are done
     const [step0ContinueDisabled, setStep0ContinueDisabled] = React.useState(false);
+    //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
+    const [selectedId, setSelectedId] = React.useState(0);
 
     React.useEffect(() => {
         //step - disabled since it makes debugging more annoying TODO: restore when finished!!
@@ -373,6 +375,8 @@ export const SceneCreation = () => {
                         fetchImageList={() => fetchImageList()}
                         step0ContinueDisabled={step0ContinueDisabled}
                         setStep0ContinueDisabled={(disabled: boolean) => setStep0ContinueDisabled(disabled)}
+                        selectedId={selectedId}
+                        setSelectedId={(id: number) => setSelectedId(id)}
                     />
                 )
             case 1:
@@ -381,6 +385,7 @@ export const SceneCreation = () => {
                         continueHandler={() => handleContinue()}
                         backHandler={() => handleBack()}
                         infoProvider={infoProvider}
+                        infoProviderId={selectedId}
                         selectedDataList={selectedDataList}
                         customDataList={customDataList}
                         historizedDataList={historizedDataList}
