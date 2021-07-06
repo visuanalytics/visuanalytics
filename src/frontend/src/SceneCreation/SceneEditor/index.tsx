@@ -9,7 +9,14 @@ import {
     MenuItem,
     Checkbox,
     FormControlLabel,
-    Typography, ListItemIcon, ListItemSecondaryAction, ListItemText, Collapse,
+    Typography,
+    ListItemIcon,
+    ListItemSecondaryAction,
+    ListItemText,
+    Collapse,
+    DialogTitle,
+    DialogContent,
+    DialogActions, Dialog,
 
 } from "@material-ui/core";
 import {useStyles} from "./style";
@@ -39,6 +46,7 @@ import {
     BaseImg
 } from "./types"
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -119,6 +127,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //true if the images section is shown (used for collapse)
     const [showImages, setShowImages] = React.useState(false);
 
+    // Used to remember the clicked historized element
+    const [selectedHistorizedElement, setSelectedHistorizedElement] = React.useState("");
+
+    // Used to remember the interval of the selected historized element
+    const [selectedInterval, setSelectedInterval] = React.useState("");
+
+    // Used for selecting a specific value for a historized element
+    const [intervalToUse, setIntervalToUse] = React.useState<number | undefined>(0);
+    // Used to handle the opening of the dialog for historized data
+    const [showHistorizedDialog, setShowHistorizedDialog] = React.useState(false);
     // setup for error notification
     const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
         open: false,
@@ -1345,13 +1363,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to handle the selection of data from the list of available api data.
      * @param item The item selected by the user
      */
-    const handleItemSelect = (item: string) => {
+    const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
         if (!itemSelected){
             items.push({
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
-                textContent: '{' + item + '}',
+                textContent: (handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}',
                 width: 200,
                 scaleX: 1,
                 scaleY: 1,
@@ -1376,7 +1394,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const index = items.indexOf(selectedObject);
                 const objectCopy = {
                     ...selectedObject,
-                    textContent: (selectedObject as CustomText).textContent + ' {' + item + '}'
+                    textContent: (selectedObject as CustomText).textContent + ((handlingHistorizedItem && intervalToUse !== undefined) ? '{' + item + '{' + intervalToUse.toString() + '}}' : '{' + item + '}')
                 };
                 localItems[index] = objectCopy;
                 setItems(localItems);
@@ -1395,7 +1413,41 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderListItem = (item: string) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect(item)}>
+                <Button onClick={() => handleItemSelect(item, false)}>
+                    {item}
+                </Button>
+            </ListItem>
+        )
+    }
+
+    /**
+     * Prepares the states for showing the clicked historized element
+     * After preparation a dialog opens in which the user will be able to finish the adding of a historized element
+     * @param item
+     * @param interval
+     */
+    const handleClickOnHistorized = (item: string, interval: string) => {
+        setSelectedHistorizedElement(item);
+        setSelectedInterval(interval);
+        setShowHistorizedDialog(true);
+    }
+
+    const cancelHistorizedAdding = () => {
+        setSelectedInterval("");
+        setSelectedHistorizedElement("");
+        setShowHistorizedDialog(false);
+    }
+
+    /**
+     * Renders the list entry of one historized element
+     * Used to insert historized data into the scene
+     * @param item The name of the item
+     * @param interval The interval set for the element
+     */
+    const renderHistorizedItem = (item: string, interval: string) => {
+        return (
+            <ListItem key={item}>
+                <Button onClick={() => handleClickOnHistorized(item, interval)}>
                     {item}
                 </Button>
             </ListItem>
@@ -2064,6 +2116,20 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 </List>
                             </Box>
                         </Grid>
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <Typography variant={"h4"} align={"center"}>
+                                Historisierte Daten
+                            </Typography>
+                            <br/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box borderColor="primary.main" border={4} borderRadius={5}
+                                 className={classes.choiceListFrame}>
+                                <List disablePadding={true}>
+                                    {props.historizedDataList.map((item: HistorizedDataInfo) => renderHistorizedItem(item.name, item.interval))}
+                                </List>
+                            </Box>
+                        </Grid>
                         <br/>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography variant={"h4"} align={"center"}>
@@ -2151,6 +2217,48 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 position: "absolute",
                 top: "-9999px",
             }}/>
+            <Dialog aria-labelledby="AddHistorizedDialog-Title" open={showHistorizedDialog}>
+                <DialogTitle id="AddHistorizedDialog-Title">
+                    Intervallauswahl für {selectedHistorizedElement}
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <Typography variant="body1">
+                                Legen Sie bitte das Intervall fest, welches für das einzufügende Element verwendet werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte, usw.
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h5">
+                                Informationen zu Historisierungszeitpunkten des gewählten Elements:
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {selectedInterval}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField error={intervalToUse === undefined || intervalToUse < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={intervalToUse} onChange={event => setIntervalToUse(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions className={classes.elementLargeMargin}>
+                    <Grid container justify="space-between">
+                        <Grid item xs={12}>
+                            <Button variant="contained" color="primary" onClick={() => cancelHistorizedAdding()}>
+                                Abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} className={classes.blockableButtonSecondary}>
+                            <Button variant="contained" color="secondary" disabled={intervalToUse === undefined || intervalToUse < 0} onClick={() => {
+                                handleItemSelect(selectedHistorizedElement, true);
+                                setShowHistorizedDialog(false);
+                            }}>
+                                Speichern
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </StepFrame>
 
     );
