@@ -278,6 +278,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         fullWidthCollapse: {
             width: "100%"
+        },
+        imageInList: {
+            height: "120px",
+            width: "100%"
         }
     })
 );

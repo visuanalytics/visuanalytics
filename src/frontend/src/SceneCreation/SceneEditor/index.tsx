@@ -7,13 +7,10 @@ import {
     Box,
     TextField,
     MenuItem,
-    Checkbox,
-    FormControlLabel,
     Typography,
     ListItemIcon,
     ListItemSecondaryAction,
     ListItemText,
-    Collapse,
     DialogTitle,
     DialogContent,
     DialogActions, Dialog,
@@ -45,8 +42,7 @@ import {
     DataImage,
     BaseImg
 } from "./types"
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
-import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
+import {ImageLists} from "./ImageLists";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -63,6 +59,8 @@ interface SceneEditorProps {
     setBackgroundImageList: (backgrounds: Array<string>) => void;
     editMode: boolean;
     reportError: (message: string) => void;
+    fetchImageById: (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => void;
+    fetchBackgroundImageById: (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => void;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -147,10 +145,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
-    // true if the background image section is shown (used for collapse)
-    const [showBackgroundImages, setShowBackgroundImages] = React.useState(false);
-    // true if the images section is shown (used for collapse)
-    const [showImages, setShowImages] = React.useState(false);
+
 
     // Used to remember the clicked historized element
     const [selectedHistorizedElement, setSelectedHistorizedElement] = React.useState("");
@@ -483,7 +478,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
-        fetchBackgroundImageById(imageId);
+        props.fetchBackgroundImageById(imageId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         // reset the state containing the image to be uploaded
         //setImageToUpload(new FormData());
     }
@@ -534,6 +529,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param jsonData  The image as blob sent by the backend.
      */
     const handleBackgroundImageByIdSuccess = (jsonData: any) => {
+        console.log("success while fetching");
         //create a URL for the blob image and update the list of images with it
         const arCopy = props.backgroundImageList.slice();
         arCopy.push(URL.createObjectURL(jsonData));
@@ -548,40 +544,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         props.reportError("Fehler beim Abrufen eines Hintergrundbildes: " + err);
     }
 
-    /**
-     * Method to fetch a single background image by id from the backend.
-     * The standard hook "useCallFetch" is not used here since we want to pass an id
-     * as additional argument (storing in state is no alternative because there wont be re-render).
-     */
-    const fetchBackgroundImageById = (id: number) => {
-        console.log("fetching background image by id!");
-        let url = "/visuanalytics/image/" + id;
-        //if this variable is set, add it to the url
-        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
-        //setup a timer to stop the request after 5 seconds
-        const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), 5000);
-        //starts fetching the contents from the backend
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json\n"
-            },
-            signal: abort.signal
-        }).then((res: Response) => {
-            //handles the response and gets the data object from it
-            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.blob();
-        }).then((data) => {
-            //success case - the data is passed to the handler
-            //only called when the component is still mounted
-            if (isMounted.current) handleBackgroundImageByIdSuccess(data)
-        }).catch((err) => {
-            //error case - the error code ist passed to the error handler
-            //only called when the component is still mounted
-            if (isMounted.current) handleBackgroundImageByIdError(err)
-        }).finally(() => clearTimeout(timer));
-    }
 
 
     /**
@@ -600,7 +562,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
-        fetchImageById(imageId);
+        props.fetchImageById(imageId, handleImageByIdSuccess, handleImageByIdError);
         // reset the state containing the image to be uploaded
         //setImageToUpload(new FormData());
     }
@@ -649,6 +611,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = React.useRef(true);
 
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
+
     /**
      * Method that handles successful fetches of images from the backend
      * @param jsonData  The image as blob sent by the backend.
@@ -668,49 +640,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         props.reportError("Fehler beim Abrufen eines Bildes: " + err);
     }
 
-    /**
-     * Method to fetch a single image by id from the backend.
-     * The standard hook "useCallFetch" is not used here since we want to pass an id
-     * as additional argument (storing in state is no alternative because there wont be re-render).
-     */
-    const fetchImageById = (id: number) => {
-        console.log("fetching image by id!");
-        let url = "/visuanalytics/image/" + id;
-        //if this variable is set, add it to the url
-        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
-        //setup a timer to stop the request after 5 seconds
-        const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), 5000);
-        //starts fetching the contents from the backend
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json\n"
-            },
-            signal: abort.signal
-        }).then((res: Response) => {
-            //handles the response and gets the data object from it
-            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.blob();
-        }).then((data) => {
-            //success case - the data is passed to the handler
-            //only called when the component is still mounted
-            if (isMounted.current) handleImageByIdSuccess(data)
-        }).catch((err) => {
-            //error case - the error code ist passed to the error handler
-            //only called when the component is still mounted
-            if (isMounted.current) handleImageByIdError(err)
-        }).finally(() => clearTimeout(timer));
-    }
-
-
-    //defines a cleanup method that sets isMounted to false when unmounting
-    //will signal the fetchMethod to not work with the results anymore
-    React.useEffect(() => {
-        return () => {
-            isMounted.current = false;
-        };
-    }, []);
 
     /**
      * Method to handle a successful scene upload
@@ -1636,31 +1565,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         addImageElement(image);
     }
 
-    /**
-     * Method that renders a single entry in the list of all available images
-     * @param image The URL of the image to be displayed.
-     * @param index The index of the image (used to make keys unique)
-     */
-    const renderImageEntry = (image: string, index: number, type: "image"|"background") => {
-        if(type==="image") {
-            return (
-                <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
-                    <Grid item xs={10}>
-                        <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
-                    </Grid>
-                </Grid>
-            )
-        } else {
-            //TODO: add behaviour for background images
-            return (
-                <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
-                    <Grid item xs={10}>
-                        <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
-                    </Grid>
-                </Grid>
-            )
-        }
-    }
 
     /**
      * Method to handle if a user unchecks the backgroundcolor checkbox
@@ -2329,90 +2233,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Box>
                         </Grid>
                         <br/>
-                        <Grid item container xs={12}>
-                            <Grid item xs={10} className={classes.elementLargeMargin}>
-                                <Typography variant={"h4"} align={"center"}>
-                                    HINTERGRUND
-                                </Typography><br/>
-                            </Grid>
-                            <Grid item xs={2}>
-                                {!showBackgroundImages &&
-                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
-                                    <ExpandMore/>
-                                </IconButton>
-                                }
-                                {showBackgroundImages &&
-                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showBackgroundImages)}>
-                                    <ExpandLess/>
-                                </IconButton>
-                                }
-                            </Grid>
-                        </Grid>
-                        <Grid item container xs={12} justify="space-around">
-                            <Collapse in={showBackgroundImages} className={classes.fullWidthCollapse}>
-                                <Grid item xs={12}>
-                                    <FormControlLabel className={classes.checkBox}
-                                                      control={<Checkbox name="checkedB" color="primary"
-                                                                         checked={backGroundColorEnabled}
-                                                                         onChange={handleBackground}/>}
-                                                      label="Hintergrundfarbe verwenden"
-                                    /><br/>
-                                    <label className={classes.labels}> Hintergrundfarbe: </label>
-                                    <input
-                                        className={classes.buttonColor}
-                                        id="backgroundColor"
-                                        type="color"
-                                        onChange={switchBGColor}
-                                        disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
-                                        value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
-                                    /><br/>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Button className={classes.button} onClick={handleBackgroundUploadClick} disabled={false}
-                                            style={{width: "80%"}}>
-                                        HINTERGRUNDBILD HOCHLADEN
-                                        <input ref={backgroundUploadReference} id={"backgroundUpload"} type={"file"} accept={".png, .jpg, .jpeg"} hidden onChange={(e) => handleBackgroundUploadChange(e)}/>
-                                    </Button>
-                                </Grid><br/>
-                                <Grid item container xs={12} className={classes.elementLargeMargin}>
-                                    {props.backgroundImageList.map((image, index) => renderImageEntry(image, index, "background"))}
-                                </Grid>
-                            </Collapse>
-                        </Grid>
-                        <Grid item container xs={12}>
-                            <Grid item xs={10} className={classes.elementLargeMargin}>
-                                <Typography variant={"h4"} align={"center"}>
-                                    BILDER
-                                </Typography><br/>
-                            </Grid>
-                            <Grid item xs={2}>
-                                {!showImages &&
-                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowImages(!showImages)}>
-                                    <ExpandMore/>
-                                </IconButton>
-                                }
-                                {showImages &&
-                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showImages)}>
-                                    <ExpandLess/>
-                                </IconButton>
-                                }
-                            </Grid>
-                        </Grid>
-                        <Grid item container xs={12}>
-                            <Collapse in={showImages} className={classes.fullWidthCollapse}>
-                                <Grid item container xs={12} justify="space-around">
-                                    <Grid item>
-                                        <Button className={classes.uploadButton} onClick={handleFileUploadClick}>
-                                            Bild hochladen
-                                            <input ref={uploadReference} id={"fileUpload"} type={"file"} accept={".png, .jpg"} hidden onChange={(e) => handleFileUploadChange(e)}/>
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid item container xs={12} className={classes.elementLargeMargin}>
-                                    {props.imageList.map((image, index) => renderImageEntry(image, index, "image"))}
-                                </Grid>
-                            </Collapse>
-                        </Grid>
+                       <ImageLists
+                           imageList={props.imageList}
+                           backgroundImageList={props.backgroundImageList}
+                           postImage={postImage}
+                           postBackgroundImage={postBackgroundImage}
+                           handleImageClick={handleImageClick}
+                           backGroundType={backGroundType}
+                           backGroundColorEnabled={backGroundColorEnabled}
+                           handleBackground={handleBackground}
+                           currentBGColor={currentBGColor}
+                           switchBGColor={switchBGColor}
+                           uploadReference={uploadReference}
+                           handleFileUploadClick={handleFileUploadClick}
+                           handleFileUploadChange={handleFileUploadChange}
+                           backgroundUploadReference={backgroundUploadReference}
+                           handleBackgroundUploadClick={handleBackgroundUploadClick}
+                           handleBackgroundUploadChange={handleBackgroundUploadChange}
+                       />
                        <br/>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>

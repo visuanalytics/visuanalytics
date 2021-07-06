@@ -257,7 +257,7 @@ export const SceneCreation = () => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
-            fetchBackgroundImageById(nextId);
+            fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         }
     }
 
@@ -287,7 +287,7 @@ export const SceneCreation = () => {
      * The standard hook "useCallFetch" is not used here since we want to pass an id
      * as additional argument (storing in state is no alternative because there wont be re-render).
      */
-    const fetchBackgroundImageById = (id: number) => {
+    const fetchBackgroundImageById = (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => {
         let url = "/visuanalytics/image/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -308,11 +308,11 @@ export const SceneCreation = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted.current) handleBackgroundImageByIdSuccess(data)
+            if (isMounted.current) successHandler(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if (isMounted.current) handleBackgroundImageByIdError(err)
+            if (isMounted.current) errorHandler(err)
         }).finally(() => clearTimeout(timer));
     }
 
@@ -378,7 +378,7 @@ export const SceneCreation = () => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
-            fetchImageById(nextId);
+            fetchImageById(nextId, handleImageByIdSuccess, handleImageByIdError);
         }
     }
 
@@ -409,7 +409,7 @@ export const SceneCreation = () => {
      * The standard hook "useCallFetch" is not used here since we want to pass an id
      * as additional argument (storing in state is no alternative because there wont be re-render).
      */
-    const fetchImageById = (id: number) => {
+    const fetchImageById =(id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => {
         let url = "/visuanalytics/image/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -430,11 +430,11 @@ export const SceneCreation = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted.current) handleImageByIdSuccess(data)
+            if (isMounted.current) successHandler(data)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
-            if (isMounted.current) handleImageByIdError(err)
+            if (isMounted.current) errorHandler(err)
         }).finally(() => clearTimeout(timer));
     }
 
@@ -535,6 +535,8 @@ export const SceneCreation = () => {
                         setBackgroundImageList={(backgrounds: Array<string>) => setBackgroundImageList(backgrounds)}
                         editMode={false}
                         reportError={(message: string) => reportError(message)}
+                        fetchImageById={fetchImageById}
+                        fetchBackgroundImageById={fetchBackgroundImageById}
                     />
                 )
         }
