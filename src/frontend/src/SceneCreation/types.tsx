@@ -3,9 +3,13 @@ export type HistorizedDataInfo = {
     interval: string;
 }
 
+/**
+ * Represents the necessary information about a diagram in the sceneEditor.
+ */
 export type DiagramInfo = {
     name: string;
     type: string;
+    url: string;
 }
 
 /**
@@ -31,4 +35,3 @@ export type InfoProviderData = {
 export type imagePostBackendAnswer = {
     image_id: number;
 }
-

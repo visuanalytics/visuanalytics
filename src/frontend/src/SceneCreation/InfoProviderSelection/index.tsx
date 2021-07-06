@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import {useStyles} from "../style";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
 import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
-import {DiagramInfo, HistorizedDataInfo, InfoProviderData} from "../types";
+import {DiagramInfo, HistorizedDataInfo, ImageBackendData, InfoProviderData} from "../types";
 
 
 interface InfoProviderSelectionProps {
@@ -31,6 +31,7 @@ interface InfoProviderSelectionProps {
     setStep0ContinueDisabled: (disabled: boolean) => void;
     selectedId: number;
     setSelectedId: (id: number) => void;
+    diagramsToFetch: React.MutableRefObject<Array<DiagramInfo>>;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
@@ -99,14 +100,17 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             }
             diagramList.push({
                 name: diagram.name,
-                type: typeString
+                type: typeString,
+                url: ""
             })
         })
         //set the states with the new lists
         props.setSelectedDataList(selectedDataList);
         props.setCustomDataList(customDataList);
         props.setHistorizedDataList(historizedDataList);
-        props.setDiagramList(diagramList);
+        // set the list of diagrams to still be fetched
+        props.diagramsToFetch.current = diagramList;
+        return true;
     }
 
 
@@ -173,8 +177,9 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         //console.log(jsonData);
         const data = jsonData as InfoProviderFromBackend;
         //transform the infoProvider to frontend format
-        processBackendAnswer(transformBackendInfoProvider(data));
-        props.continueHandler();
+        processBackendAnswer(transformBackendInfoProvider(data))
+
+        //props.continueHandler();
     }
 
     /**
@@ -192,6 +197,10 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             "Content-Type": "application/json\n"
         }
     }, handleFetchInfoProviderSuccess, handleFetchInfoProviderError);
+
+
+
+
 
 
     /**

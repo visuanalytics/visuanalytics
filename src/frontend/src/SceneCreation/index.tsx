@@ -55,8 +55,8 @@ export const SceneCreation = () => {
         setSelectedDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
         //selectedDataList
         setSelectedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
-        //selectedDataList
-        setSelectedDataList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
+        //diagramList
+        setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
         //imageList
         setImageList(sessionStorage.getItem("imageList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("imageList-" + uniqueId)!))
         //selectedId
@@ -237,7 +237,7 @@ export const SceneCreation = () => {
      * Method that serves to recursively fetch all background images from the backend.
      * Checks if allBackgroundImageList still contains entries to be fetched. If there is an entry,
      * the fetch method is called for its ID and the method is removed.
-     * If there are no background images left, the results are written to the state and continue handler is called.
+     * If there are no background images left, the results are written to the state and fetching background images is started.
      */
     const fetchNextBackgroundImage = () => {
         //check if all images are fetched
@@ -245,10 +245,8 @@ export const SceneCreation = () => {
             //set the state to the fetched list
             setBackgroundImageList(backgroundImageFetchResults.current);
             console.log(backgroundImageFetchResults.current);
-            //enable the continue button again
-            setStep0ContinueDisabled(false);
-            //continue since this is called from finishing step 1
-            handleContinue();
+            //start fetching all diagram previews
+            fetchNextDiagram();
         } else {
             //get the id of the next image to be fetched
             const nextId = allBackgroundImageList.current[0].image_id;
@@ -360,7 +358,7 @@ export const SceneCreation = () => {
      * Method that serves to recursively fetch all images from the backend.
      * Checks if allImageList still contains entries to be fetched. If there is an entry,
      * the fetch method is called for its ID and the method is removed.
-     * If there are no images left, the results are written to the state and continue handler is called.
+     * If there are no images left, the results are written to the state and fetching diagrams is started.
      */
     const fetchNextImage = () => {
         //check if all images are fetched
@@ -454,7 +452,8 @@ export const SceneCreation = () => {
      * @param err The error returned from the backend.
      */
     const handleImageListError = (err: Error) => {
-        reportError("Fehler beim Laden der Liste aller Bilder: " + err)
+        reportError("Fehler beim Laden der Liste aller Bilder: " + err);
+        setStep0ContinueDisabled(false);
     }
 
     /**
@@ -468,6 +467,101 @@ export const SceneCreation = () => {
             },
         }, handleImageListSuccess, handleImageListError
     )
+
+
+
+    /**
+     * Method block for fetching previews of diagrams
+     */
+
+    //mutable value to store the list of all diagrams - not in state because it needs to be changed without renders
+    const diagramsToFetch = React.useRef<Array<DiagramInfo>>([]);
+    //mutable list of of all diagram with previews received from the backend as blob - also not in state to change without renders
+    const diagramFetchResults = React.useRef<Array<DiagramInfo>>([]);
+
+    /**
+     * Method that serves to recursively fetch all images from the backend.
+     * Checks if allImageList still contains entries to be fetched. If there is an entry,
+     * the fetch method is called for its ID and the method is removed.
+     * If there are no images left, the results are written to the state and continue handler is called.
+     */
+    const fetchNextDiagram = () => {
+        //check if all images are fetched
+        if(diagramsToFetch.current.length === 0) {
+            //set the state to the fetched list
+            setDiagramList(diagramFetchResults.current);
+            //enable the continue button again
+            setStep0ContinueDisabled(false);
+            //continue to the next step
+            handleContinue();
+        } else {
+            //get the id of the next image to be fetched
+            const currentDiagram = diagramsToFetch.current[0];
+            //delete the image with this id from the images that still need to be fetched
+            diagramsToFetch.current  = diagramsToFetch.current.filter((diagram) => {
+                return diagram.name !== currentDiagram.name
+            })
+            //fetch the image with the id from the backend
+            fetchDiagramPreview(currentDiagram);
+        }
+    }
+
+    /**
+     * Method that handles successful calls for fetching a diagram preview from the backend.
+     * @param jsonData The image returned from the backend as blob.
+     * @param diagram The diagram object currently operated on.
+     */
+    const diagramPreviewSuccessHandler = (jsonData: any, diagram: DiagramInfo) => {
+        // push a new object with the fetched image to the list of diagrams
+        diagramFetchResults.current.push({
+            ...diagram,
+            url: URL.createObjectURL(jsonData)
+        })
+        //go over to fetch the next diagram
+        fetchNextDiagram();
+    }
+
+    /**
+     * Handler method for errors while fetching a diagram preview from the backend.
+     * @param err
+     */
+    const diagramPreviewErrorHandler = (err: Error) => {
+        reportError("Fehler beim Abrufen des Preview eines Diagramms: " + err);
+        setStep0ContinueDisabled(false);
+    }
+
+    /**
+     * Method to fetch the preview image for a single diagram from the backend by its name.
+     * @param diagram The object of the diagram whose preview should be fetched.
+     */
+    const fetchDiagramPreview = (diagram: DiagramInfo) => {
+        //("fetcher called");
+        let url = "/infoprovider/" + selectedId + "/" + diagram.name;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {},
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) diagramPreviewSuccessHandler(data, diagram)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) diagramPreviewErrorHandler(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
 
 
     React.useEffect(() => {
@@ -516,6 +610,7 @@ export const SceneCreation = () => {
                         setStep0ContinueDisabled={(disabled: boolean) => setStep0ContinueDisabled(disabled)}
                         selectedId={selectedId}
                         setSelectedId={(id: number) => setSelectedId(id)}
+                        diagramsToFetch={diagramsToFetch}
                     />
                 )
             case 1:

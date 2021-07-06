@@ -43,6 +43,7 @@ import {
     BaseImg
 } from "./types"
 import {ImageLists} from "./ImageLists";
+import {DiagramList} from "./DiagramList";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -2252,14 +2253,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                            handleBackgroundUploadChange={handleBackgroundUploadChange}
                        />
                        <br/>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
-                            <Typography variant={"h4"} align={"center"}> DIAGRAMME </Typography><br/>
-                        </Grid>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
-                            <List>
-                                {props.diagramList.map((diagram) => renderDiagramListEntry(diagram))}
-                            </List>
-                        </Grid>
+                        <DiagramList
+                            diagramList={props.diagramList}
+                            handleDiagramClick={() => {return;}}
+                        />
                     </Grid>
                 </Grid>
             </Grid>
