@@ -133,6 +133,9 @@ export type DataText = {
     pattern: string // "Datum: {_req|api_key}"
 }
 
+/**
+ * Type for the respone from uploading an image
+ */
 export type ResponseData = {
     image_id: number
 }

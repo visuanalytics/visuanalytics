@@ -25,3 +25,10 @@ export type InfoProviderData = {
     infoprovider_name: string;
 }
 
+/**
+ * Type of the backend answer when posting a new image.
+ */
+export type imagePostBackendAnswer = {
+    image_id: number;
+}
+

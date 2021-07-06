@@ -19,7 +19,7 @@ import Konva from 'konva';
 import {Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star} from 'react-konva';
 import {TransformerComponent} from './TransformerComponent'
 import {FrontendInfoProvider} from "../../CreateInfoProvider/types";
-import {DiagramInfo, HistorizedDataInfo} from "../types";
+import {DiagramInfo, HistorizedDataInfo, imagePostBackendAnswer} from "../types";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
@@ -56,15 +56,19 @@ interface SceneEditorProps {
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
+    //timeOut variable used for asynchronous color changes
     let timeOut = 0;
+    //Array used for the export of the final scene
     const imageIDArray = React.useRef<Array<number>>([])
+    //References used to access HTML elements
     const uploadReference = React.useRef<HTMLInputElement>(null);
     const backgroundUploadReference = React.useRef<HTMLInputElement>(null);
+    const mainRef = React.useRef<HTMLDivElement>(null);
     //const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
 
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
-    //const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
+    const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
     const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image());
@@ -78,19 +82,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentItemHeight, setCurrentItemHeight] = React.useState(100);
     const [currentTextWidth, setCurrentTextWidth] = React.useState(200);
     const [currentTextContent, setCurrentTextContent] = React.useState("Test");
-    const [currentCursor, setCurrentCursor] = React.useState("crosshair");
     const [currentItemColor, setCurrentItemColor] = React.useState("#000000")
     const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
-    //const [usedImagesArray, setUsedImagesArray] = React.useState<Array<number>>([])
 
     const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
     const [itemSelected, setItemSelected] = React.useState(false);
     const [itemCounter, setItemCounter] = React.useState(0);
-    //const [imageSource, setImageSource] = React.useState<HTMLImageElement>(new window.Image());
 
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
 
@@ -111,8 +112,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
-    //const [imageToUpload, setImageToUpload] = React.useState<FormData>(new FormData());
-    //const [itemJson, setItemJson] = React.useState("");
     const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
@@ -150,13 +149,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             postBackgroundImage();
         }
     }, [backgroundToUpload]);
-
-    /*React.useEffect(() => {
-        if (imageToUpload.has('image')){
-            console.log(imageToUpload);
-            postImage();
-        }
-    }, [imageToUpload]);*/
 
     React.useEffect(() => {
         if (exportJSON !== null){
@@ -196,17 +188,28 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
     }*/
+    /**
+     * Method to create a duplicate of the current stage to create the base image for the rendered scene
+     * @param itemArray the itemlist used to create the duplicate stage
+     */
     const dupeStage = (itemArray : Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>) => {
+        //creation of a new stage with the same properties as the old stage
         let duplicateStage = new Konva.Stage({container: "backgroundStage", visible: true, width: 960, height: 540});
+        //creation of a new Layer for that stage
         let duplicateLayer = new Konva.Layer();
         duplicateStage.destroyChildren();
+        //depending on the current backgroundtype, set the lowest element on the layer
         if (backGroundType === "COLOR"){
             duplicateLayer.add(new Konva.Rect({
                 fill: currentBGColor,
                 width: 960,
                 height: 540
             }))
+        } else if (backGroundType === "IMAGE") {
+            //TODO Implement when background images are available
+            console.log("HINTERGRUNDART: ", backGroundType)
         }
+        //check all elements in the array, depending on the type, create a new element and add it to the layer
         for (let i = 0; i < itemArray.length; i++) {
             let duplicateItem : any;
             if (!itemArray[i].id.startsWith("image") && !itemArray[i].id.startsWith("text")){
@@ -268,11 +271,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
 
         }
+        //finally add the layer to the stage and return the new stage
         duplicateStage.add(duplicateLayer);
         return duplicateStage;
     }
     /**
-     * Handler to save the scene as png file
+     * Method to save a stage as png file
      */
     const saveHandler = (currentStage : Konva.Stage) => {
         let stageJson = currentStage?.toDataURL();
@@ -282,6 +286,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         return stageJson;
     }
 
+    /**
+     * Method to create a FormData containing the background for the scene
+     */
     const createBackgroundImage = async () => {
         const copyOfItems = items.slice();
         const duplicateOfStage = dupeStage(copyOfItems);
@@ -300,19 +307,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
+    /**
+     * Method to create a FormData containing the preview of the scene
+     */
     const createPreviewImage = async () => {
+        console.log(stage);
         if (stage !== undefined){
+            console.log(1)
             const originalStage = saveHandler(stage);
-
+            console.log(2)
             if (originalStage !== "Empty Stage"){
+                console.log(3)
                 let localBlob = await fetch(originalStage).then(res => res.blob());
-
+                console.log(4)
                 let file = new File([localBlob], 'preview.png');
                 let formData = new FormData();
-
+                console.log(file)
                 formData.append('image', file);
                 formData.append('name', sceneName + '_preview');
-
+                console.log(6)
+                console.log(formData);
                 setPreviewImage(formData);
             }
         }
@@ -320,30 +334,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     /**
      * Method to create the export for the backend
+     * @returns a JsonExport element
      */
     const createJSONExport = () => {
-        let copyOfItems = items.slice();
-        let onlyTextAndImages = [];
-        let localTextImage : Array<DataText|DataImage> = [];
-        for (let index = 0; index < copyOfItems.length; index++) {
-            if (copyOfItems[index].id.startsWith('text')) {
-                onlyTextAndImages.push(copyOfItems[index] as CustomText);
-            } else if (copyOfItems[index].id.startsWith('image')) {
-                onlyTextAndImages.push(copyOfItems[index] as CustomImage);
+        //empty array for all text and image elements (except background)
+        let onlyTextAndImages : Array<CustomText|CustomImage> = [];
+        //array for all datatext and dataimage elements, used for export
+        let dataTextAndImages : Array<DataText|DataImage> = [];
+        for (let index = 0; index < items.length; index++) {
+            if (items[index].id.startsWith('text')) {
+                onlyTextAndImages.push(items[index] as CustomText);
+            } else if (items[index].id.startsWith('image')) {
+                onlyTextAndImages.push(items[index] as CustomImage);
             }
         }
-
         const base: BaseImg = {
             type: "pillow",
             path: sceneName + "_background.png",
-            overlay: localTextImage
+            overlay: dataTextAndImages
         }
         const returnValue: JsonExport = {
             scene_name: sceneName,
             used_images: imageIDArray.current,
             used_infoproviders: [],
             images:  base,
-            scene_items: JSON.stringify(copyOfItems),
+            scene_items: JSON.stringify(items),
         }
         onlyTextAndImages.forEach(element => {
             if (element.id.startsWith('text')) {
@@ -359,7 +374,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         font: "fonts/" + element.fontFamily + ".tff", // "fonts/{item.font}.ttf"
                         pattern: element.textContent // "Datum: {_req|api_key}"
                     }
-                    localTextImage.push(itemToPush);
+                    dataTextAndImages.push(itemToPush);
                 }
                 console.log('text', element.id);
             } else if (element.id.startsWith('image')) {
@@ -374,28 +389,29 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         color: "RGBA",
                         path: "string" //Diagrammname "image_name" : "" eventuell
                     }
-                    localTextImage.push(itemToPush);
+                    dataTextAndImages.push(itemToPush);
                 }
             }
         });
         return returnValue;
     }
 
+    /**
+     * Method to handle the successful upload of the scene background
+     * @param jsonData response data
+     */
     const handleBackgroundSuccess = (jsonData : any) => {
         imageIDArray.current.push((jsonData as ResponseData).image_id);
         setBackgroundPosted(true);
     }
 
+    /**
+     * Method to handle the successful upload of the scene preview
+     * @param jsonData response data
+     */
     const handlePreviewSuccess = (jsonData : any) => {
         imageIDArray.current.push((jsonData as ResponseData).image_id);
         setPreviewPosted(true);
-    }
-
-    /**
-     * Type of the backend answer when posting a new image.
-     */
-    type imagePostBackendAnswer = {
-        image_id: number;
     }
 
     /**
@@ -526,17 +542,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         };
     }, []);
 
-
+    /**
+     * Method to handle a successful scene upload
+     * @param jsonData backend response data
+     */
     const handleSceneSuccess = (jsonData : any) => {
         console.log(jsonData);
-
     }
 
+    /**
+     * Method to handle a successful background upload
+     * @param jsonData backend response data
+     */
     const handleBackgroundUploadSuccess = (jsonData : any) => {
         console.log(jsonData)
     }
 
-
+    /**
+     * Method to handle a general error response
+     * @param err the error
+     */
     const handleError = (err : Error) => {
         console.log(err);
     }
@@ -544,15 +569,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Handler for the button to save the scene and go back to the overview
      */
-    const saveButtonHandler = (step : number) => {
+    const saveButtonHandler = () => {
         if (itemCounter === 0) {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
-        if (step === 0){
-            postBackground();
-            postPreview();
-        }
+        postBackground();
+        postPreview();
+
     }
 
     /**
@@ -602,13 +626,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     );
 
 
-
     /**
      * Method to change the cursor
      * Gets called when an element drag is started.
      */
     const handleDragStart = () => {
-        setCurrentCursor("grabbing");
+        if (mainRef.current !== null){
+            mainRef.current.style.cursor = "grabbing";
+        }
     };
 
     /**
@@ -617,7 +642,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param e drag event
      */
     const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-        setCurrentCursor("grab");
+        if (mainRef.current !== null){
+            mainRef.current.style.cursor = "grab";
+        }
+
         const localItems = items.slice();
         const index = localItems.indexOf(selectedObject);
         if (e.target.getStage() !== null) {
@@ -978,7 +1006,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to clear the canvas but keep removed elements
      */
     const clearCanvas = () => {
-        setCurrentCursor("crosshair");
+        if (mainRef.current !== null){
+            mainRef.current.style.cursor = "crosshair";
+        }
         setCurrentXCoordinate(0);
         setCurrentYCoordinate(0);
         setCurrentItemColor("#000000");
@@ -1021,7 +1051,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to select the type of element, that will get added next
      */
     const selectType = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setCurrentCursor("crosshair");
+        if (mainRef.current !== null){
+            mainRef.current.style.cursor = "crosshair";
+        }
         setSelectedType(event.target.value);
     }
 
@@ -1257,11 +1289,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const switchBackgroundType = () => {
         if (backGroundType === "COLOR") {
-            //setBackGroundNext("COLOR");
+            setBackGroundNext("COLOR");
             setBackGroundType("IMAGE");
             setCurrentBGColor("#FFFFFF");
         } else if (backGroundType === "IMAGE") {
-            //setBackGroundNext("IMAGE");
+            setBackGroundNext("IMAGE");
             setBackGroundType("COLOR");
             setCurrentBGColor(backGroundColor);
         }
@@ -1272,7 +1304,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const mouseOver = () => {
         if (itemSelected) {
-            setCurrentCursor("grab");
+            if (mainRef.current !== null){
+                mainRef.current.style.cursor = "grab";
+            }
         }
     }
 
@@ -1280,7 +1314,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to change cursor back to default when the user doesn't hover an element anymore
      */
     const mouseLeave = () => {
-        setCurrentCursor("crosshair");
+        if (mainRef.current !== null){
+            mainRef.current.style.cursor = "crosshair";
+        }
     }
 
     /**
@@ -1470,14 +1506,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        //console.log("calling the upload handler");
         if (event.target.files !== null){
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
-            //console.log("uploading image: " + name[0])
-
             formData.append('image', event.target.files[0]);
-            //console.log(event.target.files[0]);
             formData.append('name', name[0]);
             postImage(formData);
         }
@@ -1489,25 +1521,33 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
+    /**
+     * Method to handle the change event of the background input element
+     * Creates a new FormData element to be uploaded
+     * @param event ChangeEvent
+     */
     const handleBackgroundUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files !== null) {
-            console.log(event.target.files[0])
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
-            console.log(name[0])
-
             formData.append('image', event.target.files[0]);
             formData.append('name', name[0]);
             setBackgroundToUpload(formData);
         }
     }
 
+    /**
+     * Method to click the input element through a button
+     */
     const handleBackgroundUploadClick = () => {
         if (backgroundUploadReference.current !== null){
             backgroundUploadReference.current.click();
         }
     }
 
+    /**
+     * Method to render the scene editor
+     */
     return (
         <StepFrame
             heading={"Szenen-Editor"}
@@ -1532,13 +1572,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button size={"large"} variant={"contained"} className={classes.topButtons}
-                                    onClick={() => saveButtonHandler(0)} disabled={sceneName === ""}>
+                                    onClick={() => saveButtonHandler()} disabled={sceneName === ""}>
                                 Speichern
                             </Button>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                        <div className={classes.editorMain} id="main" style={{cursor: currentCursor}}>
+                        <div ref={mainRef} className={classes.editorMain} id="main">
                             <Stage
                                 width={960}
                                 height={540}
