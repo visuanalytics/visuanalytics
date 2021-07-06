@@ -59,6 +59,8 @@ interface SceneEditorProps {
     diagramList: Array<DiagramInfo>;
     imageList: Array<string>;
     setImageList: (images: Array<string>) => void;
+    backgroundImageList: Array<string>;
+    setBackgroundImageList: (backgrounds: Array<string>) => void;
     editMode: boolean;
     reportError: (message: string) => void;
 }
@@ -145,6 +147,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
+    // true if the background image section is shown (used for collapse)
+    const [showBackgroundImages, setShowBackgroundImages] = React.useState(false);
     // true if the images section is shown (used for collapse)
     const [showImages, setShowImages] = React.useState(false);
 
@@ -461,6 +465,125 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setPreviewPosted(true);
     }
 
+
+
+    /**
+     * Handler method for successful backend calls for posting new background images to the backend.
+     * Takes the id of the created background image delivered by the backend and starts fetching the image
+     * for this id to have it displayed in the list of background images.
+     * @param jsonData The JSON object returned by the backend, containing the ID of the new image.
+     */
+    const postBackgroundImageSuccessHandler = (jsonData: any) => {
+        console.log("background image post success handler");
+        //get the object of the uploaded image from the FormData
+        //const img = imageToUpload.get('image');
+        const data = jsonData as imagePostBackendAnswer;
+        //extract the backend id of the newly created image from the backend
+        const imageId = data.image_id;
+        console.log(imageId);
+        // check if the image is valid
+        //start fetching the new image from the backend
+        fetchBackgroundImageById(imageId);
+        // reset the state containing the image to be uploaded
+        //setImageToUpload(new FormData());
+    }
+
+    /**
+     * Method that handles errors for posting a background image to the backend.
+     * @param err The error sent by the backend.
+     */
+    const postBackgroundImageErrorHandler = (err: Error) => {
+        props.reportError("Fehler beim Senden eines Hintergrundbildes: " + err);
+    }
+
+    /**
+     * Method to POST a background image uploaded by the user to the backend.
+     */
+    const postBackgroundImage = (imageToUpload: FormData) => {
+        console.log("post background image called");
+        let url = "visuanalytics/image/backgrounds";
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {},
+            body: imageToUpload,
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) postBackgroundImageSuccessHandler(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) postBackgroundImageErrorHandler(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+
+    /**
+     * Method that handles successful fetches of images from the backend
+     * @param jsonData  The image as blob sent by the backend.
+     */
+    const handleBackgroundImageByIdSuccess = (jsonData: any) => {
+        //create a URL for the blob image and update the list of images with it
+        const arCopy = props.backgroundImageList.slice();
+        arCopy.push(URL.createObjectURL(jsonData));
+        props.setBackgroundImageList(arCopy);
+    }
+
+    /**
+     * Method that handles errors for fetching an image from the backend.
+     * @param err The error sent by the backend.
+     */
+    const handleBackgroundImageByIdError = (err: Error) => {
+        props.reportError("Fehler beim Abrufen eines Hintergrundbildes: " + err);
+    }
+
+    /**
+     * Method to fetch a single background image by id from the backend.
+     * The standard hook "useCallFetch" is not used here since we want to pass an id
+     * as additional argument (storing in state is no alternative because there wont be re-render).
+     */
+    const fetchBackgroundImageById = (id: number) => {
+        console.log("fetching background image by id!");
+        let url = "/visuanalytics/image/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleBackgroundImageByIdSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleBackgroundImageByIdError(err)
+        }).finally(() => clearTimeout(timer));
+    }
+
+
     /**
      * Handler method for successful backend calls for posting new images to the backend.
      * Takes the id of the created image delivered by the backend and starts fetching the image
@@ -487,7 +610,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param err The error sent by the backend.
      */
     const postImageErrorHandler = (err: Error) => {
-        props.reportError("Fehler beim Abrufen eines Bildes: " + err);
+        props.reportError("Fehler beim Senden eines Bildes: " + err);
     }
 
     /**
@@ -640,16 +763,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         jsonData => handleSceneSuccess(jsonData), (err => handleError(err))
     );
 
-    /**
-     * Method to POST a background images
-     */
-    const postBackgroundImage = useCallFetch("visuanalytics/image/backgrounds",{
-            method: "POST",
-            headers: {},
-            body: backgroundToUpload,
-        },
-        jsonData => {handleBackgroundUploadSuccess(jsonData)}, err => {handleError(err)}
-    );
 
     /**
      * Method to POST the scene background
@@ -1528,15 +1641,25 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param image The URL of the image to be displayed.
      * @param index The index of the image (used to make keys unique)
      */
-    const renderImageEntry = (image: string, index: number) => {
-        //TODO: when images are available, check how the size should look like
-        return (
-            <Grid item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
-                <Grid item xs={10}>
-                    <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
+    const renderImageEntry = (image: string, index: number, type: "image"|"background") => {
+        if(type==="image") {
+            return (
+                <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
+                    <Grid item xs={10}>
+                        <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
+                    </Grid>
                 </Grid>
-            </Grid>
-        )
+            )
+        } else {
+            //TODO: add behaviour for background images
+            return (
+                <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
+                    <Grid item xs={10}>
+                        <img src={image} height="120px" width="100%" alt={"Image Nr." +  index} onClick={() => handleImageClick(image, index)}/>
+                    </Grid>
+                </Grid>
+            )
+        }
     }
 
     /**
@@ -1653,7 +1776,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             let name = event.target.files[0].name.split('.');
             formData.append('image', event.target.files[0]);
             formData.append('name', name[0]);
-            setBackgroundToUpload(formData);
+            postBackgroundImage(formData);
         }
     }
 
@@ -2206,35 +2329,56 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             </Box>
                         </Grid>
                         <br/>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
-                            <Typography variant={"h4"} align={"center"}>
-                                HINTERGRUND
-                            </Typography>
-                            <br/>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    HINTERGRUND
+                                </Typography><br/>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showBackgroundImages &&
+                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showBackgroundImages &&
+                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showBackgroundImages)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
                         </Grid>
-
-                        <Grid item xs={12}>
-                            <FormControlLabel className={classes.checkBox}
-                                              control={<Checkbox name="checkedB" color="primary"
-                                                                 checked={backGroundColorEnabled}
-                                                                 onChange={handleBackground}/>}
-                                              label="Hintergrundfarbe verwenden"
-                            /><br/>
-                            <label className={classes.labels}> Hintergrundfarbe: </label>
-                            <input
-                                className={classes.buttonColor}
-                                id="backgroundColor"
-                                type="color"
-                                onChange={switchBGColor}
-                                disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
-                                value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
-                            /><br/>
-                            <Button className={classes.button} onClick={handleBackgroundUploadClick} disabled={false}
-                                    style={{width: "80%"}}>
-                                HINTERGRUNDBILD HOCHLADEN
-                                <input ref={backgroundUploadReference} id={"backgroundUpload"} type={"file"} accept={".png, .jpg, .jpeg"} hidden onChange={(e) => handleBackgroundUploadChange(e)}/>
-                            </Button>
-                        </Grid><br/>
+                        <Grid item container xs={12} justify="space-around">
+                            <Collapse in={showBackgroundImages} className={classes.fullWidthCollapse}>
+                                <Grid item xs={12}>
+                                    <FormControlLabel className={classes.checkBox}
+                                                      control={<Checkbox name="checkedB" color="primary"
+                                                                         checked={backGroundColorEnabled}
+                                                                         onChange={handleBackground}/>}
+                                                      label="Hintergrundfarbe verwenden"
+                                    /><br/>
+                                    <label className={classes.labels}> Hintergrundfarbe: </label>
+                                    <input
+                                        className={classes.buttonColor}
+                                        id="backgroundColor"
+                                        type="color"
+                                        onChange={switchBGColor}
+                                        disabled={backGroundType !== "COLOR" || !backGroundColorEnabled}
+                                        value={!backGroundColorEnabled ? "#FFFFFF" : currentBGColor}
+                                    /><br/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button className={classes.button} onClick={handleBackgroundUploadClick} disabled={false}
+                                            style={{width: "80%"}}>
+                                        HINTERGRUNDBILD HOCHLADEN
+                                        <input ref={backgroundUploadReference} id={"backgroundUpload"} type={"file"} accept={".png, .jpg, .jpeg"} hidden onChange={(e) => handleBackgroundUploadChange(e)}/>
+                                    </Button>
+                                </Grid><br/>
+                                <Grid item container xs={12} className={classes.elementLargeMargin}>
+                                    {props.backgroundImageList.map((image, index) => renderImageEntry(image, index, "background"))}
+                                </Grid>
+                            </Collapse>
+                        </Grid>
                         <Grid item container xs={12}>
                             <Grid item xs={10} className={classes.elementLargeMargin}>
                                 <Typography variant={"h4"} align={"center"}>
@@ -2265,7 +2409,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item container xs={12} className={classes.elementLargeMargin}>
-                                    {props.imageList.map((image, index) => renderImageEntry(image, index))}
+                                    {props.imageList.map((image, index) => renderImageEntry(image, index, "image"))}
                                 </Grid>
                             </Collapse>
                         </Grid>

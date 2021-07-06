@@ -26,7 +26,7 @@ interface InfoProviderSelectionProps {
     setCustomDataList: (list: Array<string>) => void;
     setHistorizedDataList: (list: Array<HistorizedDataInfo>) => void;
     setDiagramList: (list: Array<DiagramInfo>) => void;
-    fetchImageList: () => void;
+    fetchImages: () => void;
     step0ContinueDisabled: boolean;
     setStep0ContinueDisabled: (disabled: boolean) => void;
     selectedId: number;
@@ -245,7 +245,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                                 onClick={() => {
                                     props.setStep0ContinueDisabled(true);
                                     fetchInfoProviderById();
-                                    props.fetchImageList();
+                                    props.fetchImages();
                                 }}>
                             weiter
                         </Button>
