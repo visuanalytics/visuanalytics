@@ -45,6 +45,8 @@ export const SceneCreation = () => {
     const [step0ContinueDisabled, setStep0ContinueDisabled] = React.useState(false);
     //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
     const [selectedId, setSelectedId] = React.useState(0);
+    //true if the message for loading the data from the backend is displayed
+    const [displayLoadMessage, setDisplayLoadMessage] = React.useState(false);
 
     /* mutable flag that is true when currently images are being fetched because of a reload
     * this is used to block the continueHandler call after successful fetches. This way,
@@ -55,89 +57,6 @@ export const SceneCreation = () => {
     // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconstent with when rerenders are triggered
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
 
-    React.useEffect(() => {
-        //step
-        setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
-        //infoProviderList
-        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
-        //infoProvider
-        setInfoProvider(sessionStorage.getItem("infoProvider-" + uniqueId )=== null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvider-" + uniqueId)!));
-        //selectedDataList
-        setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
-        //selectedDataList
-        setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
-        //selectedDataList
-        setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
-        //diagramList
-        setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
-       //selectedId
-        setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
-
-        // Reload all images, background images and diagram previews when reloading the component
-        //only do this when currently in the editor itself
-        if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0) === 1) {
-            // set the list of diagrams to fetch by getting the data from sessionStorage:
-            diagramsToFetch.current = sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!);
-            // setting this variable will block the continueHandler at the end of the fetching
-            refetchingImages.current = true;
-            // activate the spinner
-            setDisplaySpinner(true);
-            //start fetching all images
-            fetchImageList()
-        }
-    }, [])
-
-    //store step in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("sceneEditorStep-" + uniqueId, sceneEditorStep.toString());
-    }, [sceneEditorStep])
-    //store infoProviderList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
-    }, [infoProviderList])
-    //store infoProvider in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("infoProvider-" + uniqueId, JSON.stringify(infoProvider));
-    }, [infoProvider])
-    //store selectedDataList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("selectedDataList-" + uniqueId, JSON.stringify(selectedDataList));
-    }, [selectedDataList])
-    //store customDataList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("customDataList-" + uniqueId, JSON.stringify(customDataList));
-    }, [customDataList])
-    //store historizedDataList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("historizedDataList-" + uniqueId, JSON.stringify(historizedDataList));
-    }, [historizedDataList])
-    //store diagramList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("diagramList-" + uniqueId, JSON.stringify(diagramList));
-    }, [diagramList])
-    //store imageList in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("imageList-" + uniqueId, JSON.stringify(imageList));
-    }, [imageList])
-    //store selectedId in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
-    }, [selectedId])
-
-    /**
-     * Removes all items of this component from the sessionStorage.
-     */
-    const clearSessionStorage = () => {
-        sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
-        sessionStorage.removeItem("infoProviderList-" + uniqueId);
-        sessionStorage.removeItem("infoProvider-" + uniqueId);
-        sessionStorage.removeItem("selectedDataList-" + uniqueId);
-        sessionStorage.removeItem("customDataList-" + uniqueId);
-        sessionStorage.removeItem("historizedDataList-" + uniqueId);
-        sessionStorage.removeItem("diagramList-" + uniqueId);
-        sessionStorage.removeItem("imageList-" + uniqueId);
-        sessionStorage.removeItem("selectedId-" + uniqueId);
-    }
 
     // contains the names of the steps to be displayed in the stepper
     const steps = [
@@ -305,6 +224,7 @@ export const SceneCreation = () => {
         refetchingImages.current = false;
         // deactivate the spinner
         setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
     }
 
     /**
@@ -362,7 +282,8 @@ export const SceneCreation = () => {
         setStep0ContinueDisabled(false);
         refetchingImages.current = false;
         // deactivate the spinner
-        setDisplaySpinner(false)
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
     }
     /**
      * Method that fetches a list of all available images from the backend.
@@ -375,6 +296,7 @@ export const SceneCreation = () => {
             },
         }, handleBackgroundImageListSuccess, handleBackgroundImageListError
     )
+
 
 
     /**
@@ -433,7 +355,8 @@ export const SceneCreation = () => {
         setStep0ContinueDisabled(false);
         refetchingImages.current = false;
         // deactivate the spinner
-        setDisplaySpinner(false)
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
     }
 
 
@@ -492,7 +415,8 @@ export const SceneCreation = () => {
         setStep0ContinueDisabled(false);
         refetchingImages.current = false;
         // deactivate the spinner
-        setDisplaySpinner(false)
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
     }
 
     /**
@@ -532,11 +456,14 @@ export const SceneCreation = () => {
             //enable the continue button again
             setStep0ContinueDisabled(false);
             //continue to the next step
-            if(!refetchingImages.current) handleContinue();
+            if(!refetchingImages.current) {
+                setDisplayLoadMessage(false);
+                handleContinue();
+            }
             else {
                 refetchingImages.current = false;
                 // deactivate the spinner
-                setDisplaySpinner(false)
+                setDisplaySpinner(false);
             }
         } else {
             //get the id of the next image to be fetched
@@ -575,7 +502,8 @@ export const SceneCreation = () => {
         setStep0ContinueDisabled(false);
         refetchingImages.current = false;
         // deactivate the spinner
-        setDisplaySpinner(false)
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
     }
 
     /**
@@ -611,7 +539,99 @@ export const SceneCreation = () => {
     }
 
 
+    /**
+     * Calls for sessionStorage handling
+     */
+    React.useEffect(() => {
+        //step
+        setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
+        //infoProviderList
+        setInfoProviderList(sessionStorage.getItem("infoProviderList-" + uniqueId) === null ? new Array<InfoProviderData>() : JSON.parse(sessionStorage.getItem("infoProviderList-" + uniqueId)!));
+        //infoProvider
+        setInfoProvider(sessionStorage.getItem("infoProvider-" + uniqueId )=== null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvider-" + uniqueId)!));
+        //selectedDataList
+        setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
+        //selectedDataList
+        setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
+        //selectedDataList
+        setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
+        //diagramList
+        setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
+        //selectedId
+        setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
 
+        // Reload all images, background images and diagram previews when reloading the component
+        // only do this when currently in the editor itself
+        if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0) === 1) {
+            // set the list of diagrams to fetch by getting the data from sessionStorage:
+            diagramsToFetch.current = sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!);
+            // setting this variable will block the continueHandler at the end of the fetching
+            refetchingImages.current = true;
+            // activate the spinner
+            setDisplaySpinner(true);
+            //start fetching all images
+            fetchImageList()
+        } else if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
+            // when step 0 is loaded, reload the list of infoproviders from backend
+            fetchAllInfoprovider();
+        }
+    }, [fetchAllInfoprovider])
+
+    //store step in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("sceneEditorStep-" + uniqueId, sceneEditorStep.toString());
+    }, [sceneEditorStep])
+    //store infoProviderList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProviderList-" + uniqueId, JSON.stringify(infoProviderList));
+    }, [infoProviderList])
+    //store infoProvider in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("infoProvider-" + uniqueId, JSON.stringify(infoProvider));
+    }, [infoProvider])
+    //store selectedDataList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedDataList-" + uniqueId, JSON.stringify(selectedDataList));
+    }, [selectedDataList])
+    //store customDataList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("customDataList-" + uniqueId, JSON.stringify(customDataList));
+    }, [customDataList])
+    //store historizedDataList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("historizedDataList-" + uniqueId, JSON.stringify(historizedDataList));
+    }, [historizedDataList])
+    //store diagramList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("diagramList-" + uniqueId, JSON.stringify(diagramList));
+    }, [diagramList])
+    //store imageList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("imageList-" + uniqueId, JSON.stringify(imageList));
+    }, [imageList])
+    //store selectedId in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
+    }, [selectedId])
+
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
+        sessionStorage.removeItem("infoProviderList-" + uniqueId);
+        sessionStorage.removeItem("infoProvider-" + uniqueId);
+        sessionStorage.removeItem("selectedDataList-" + uniqueId);
+        sessionStorage.removeItem("customDataList-" + uniqueId);
+        sessionStorage.removeItem("historizedDataList-" + uniqueId);
+        sessionStorage.removeItem("diagramList-" + uniqueId);
+        sessionStorage.removeItem("imageList-" + uniqueId);
+        sessionStorage.removeItem("selectedId-" + uniqueId);
+    }
+
+    /**
+     * Sets a warning for reloading in step 1.
+     */
     React.useEffect(() => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
             if(sceneEditorStep === 1) {
@@ -624,15 +644,6 @@ export const SceneCreation = () => {
             window.removeEventListener("beforeunload", leaveAlert);
         }
     }, [])
-
-    /**
-     * The list of infoproviders is generated automatically when the component is shown.
-     */
-    React.useEffect(() => {
-            //console.log("Fetcher hook here")
-            fetchAllInfoprovider();
-        }, [fetchAllInfoprovider]
-    );
 
 
     /**
@@ -659,6 +670,8 @@ export const SceneCreation = () => {
                         selectedId={selectedId}
                         setSelectedId={(id: number) => setSelectedId(id)}
                         diagramsToFetch={diagramsToFetch}
+                        displayLoadMessage={displayLoadMessage}
+                        setDisplayLoadMessage={(display: boolean) => setDisplayLoadMessage(display)}
                     />
                 )
             case 1:

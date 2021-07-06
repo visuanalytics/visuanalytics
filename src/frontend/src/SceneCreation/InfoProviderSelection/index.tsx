@@ -14,6 +14,7 @@ import {useCallFetch} from "../../Hooks/useCallFetch";
 import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
 import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, InfoProviderData} from "../types";
+import {Alert} from "@material-ui/lab";
 
 
 interface InfoProviderSelectionProps {
@@ -32,6 +33,8 @@ interface InfoProviderSelectionProps {
     selectedId: number;
     setSelectedId: (id: number) => void;
     diagramsToFetch: React.MutableRefObject<Array<DiagramInfo>>;
+    displayLoadMessage: boolean;
+    setDisplayLoadMessage: (display: boolean) => void;
 }
 
 export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (props) => {
@@ -237,6 +240,13 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                         </FormControl>
                     </Box>
                 </Grid>
+                <Grid item xs={12} className={classes.fixedWarningContainer}>
+                    { props.displayLoadMessage &&
+                    <Alert severity="info">
+                        Benötigte Daten werden geladen...<br/> Dies kann einen Moment dauern.
+                    </Alert>
+                    }
+                </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
                         <Button variant="contained"
@@ -253,6 +263,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                                 color={"primary"}
                                 onClick={() => {
                                     props.setStep0ContinueDisabled(true);
+                                    props.setDisplayLoadMessage(true);
                                     fetchInfoProviderById();
                                     props.fetchImages();
                                 }}>
