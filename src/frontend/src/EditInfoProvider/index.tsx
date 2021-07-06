@@ -105,7 +105,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         numberFlag: false,
         opFlag: true,
         leftParenFlag: false,
-        rightParenFlag: false
+        rightParenFlag: false,
+        usedFormulaAndApiData: []
     });
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
@@ -965,7 +966,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
-                        formel={formelInformation}
+                        formula={formelInformation}
                         listItems={infoProvDataSources[selectedDataSource].listItems}
                         customData={infoProvDataSources[selectedDataSource].customData}
                         arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
