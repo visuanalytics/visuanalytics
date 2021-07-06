@@ -56,25 +56,33 @@ interface SceneEditorProps {
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
-    //timeOut variable used for asynchronous color changes
+    // timeOut variable used for asynchronous color changes
     let timeOut = 0;
-    //Array used for the export of the final scene
+    // array used for the export of the final scene
     const imageIDArray = React.useRef<Array<number>>([])
-    //References used to access HTML elements
+    // references used to access HTML elements
     const uploadReference = React.useRef<HTMLInputElement>(null);
     const backgroundUploadReference = React.useRef<HTMLInputElement>(null);
     const mainRef = React.useRef<HTMLDivElement>(null);
-    //const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
+    // reference for the background Image
+    const backgroundImage = React.useRef<HTMLImageElement>(new window.Image())
+    // const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
+    const currentItemRotation = React.useRef<number>(0)
+    const currentItemScaleX = React.useRef<number>(1);
+    const currentItemScaleY = React.useRef<number>(1);
+    const currentItemX = React.useRef<number>(0);
+    const currentItemY = React.useRef<number>(0);
 
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
+    // states used to determine the type of background
     const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
-    const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image());
     const [backgroundToUpload, setBackgroundToUpload] = React.useState<FormData>(new FormData())
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
 
+    // states used to adjust HTML elements
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
     const [currentFontFamily, setCurrentFontFamily] = React.useState("Arial");
     const [currentFontSize, setCurrentFontSize] = React.useState(20);
@@ -87,21 +95,33 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
     const [currentXCoordinate, setCurrentXCoordinate] = React.useState(0);
     const [currentYCoordinate, setCurrentYCoordinate] = React.useState(0);
+
+    // state for the delete button text
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
+    // state for items, if an item is selected and a counter for the amount of items
     const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
     const [itemSelected, setItemSelected] = React.useState(false);
     const [itemCounter, setItemCounter] = React.useState(0);
 
+    // state for the items that have been removed, used to restore them if needed
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
 
-    const [sceneName, setSceneName] = React.useState("Leere_Szene");
+    // state for the name of the scene
+    const [sceneName, setSceneName] = React.useState("");
+
+    // states for when an item is selected
+    // name of the item, type of the item and the item itself
     const [selectedItemName, setSelectedItemName] = React.useState("");
     const [selectedType, setSelectedType] = React.useState("Circle");
     const [selectedObject, setSelectedObject] = React.useState<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>({} as CustomCircle);
+
+    // state to check the size by how much an item should be moved either in x or y direction
     const [stepSize, setStepSize] = React.useState(5);
+    // state for the stage of the canvas, used for the export
     const [stage, setStage] = React.useState<Konva.Stage>()
 
+    // state for all textediting related properties
     const [textEditContent, setTextEditContent] = React.useState("");
     const [textEditVisibility, setTextEditVisibility] = React.useState(false);
     const [textEditX, setTextEditX] = React.useState(0);
@@ -111,12 +131,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontFamily, setTextEditFontFamily] = React.useState("");
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
 
+    // states for the export and upload of images or the scene
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
     const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
     const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
     const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
-    //true if the images section is shown (used for collapse)
+    // true if the images section is shown (used for collapse)
     const [showImages, setShowImages] = React.useState(false);
 
     // setup for error notification
@@ -144,24 +165,34 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
     }, [])*/
-    React.useEffect(() => {
+    //TODO backgroundupload like the image upload
+    /*React.useEffect(() => {
         if (backgroundToUpload.has('image')){
-            postBackgroundImage();
+            postSceneBackgroundImage();
         }
-    }, [backgroundToUpload]);
+    }, [backgroundToUpload]);*/
 
+    /**
+     * useEffect to send the scene to the backend once it is created
+     */
     React.useEffect(() => {
         if (exportJSON !== null){
             postScene();
         }
     }, [exportJSON]);
 
+    /**
+     * useEffect to prepare the scene background and preview
+     */
     React.useEffect(() => {
         createBackgroundImage();
         createPreviewImage();
 
-    }, [items, sceneName]);
+    }, [items.length, sceneName]);
 
+    /**
+     * useEffect to create the export of the json
+     */
     React.useEffect(() => {
         if(backgroundPosted && previewPosted){
             let json = createJSONExport();
@@ -277,13 +308,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
     /**
      * Method to save a stage as png file
+     * @returns an stage as a png image
      */
     const saveHandler = (currentStage : Konva.Stage) => {
-        let stageJson = currentStage?.toDataURL();
-        if (stageJson === undefined) {
-            stageJson = "Empty Stage";
+        // create the picture of the stage
+        let stageImage = currentStage?.toDataURL();
+        // if the content of the stage is empty, the stageImage is set to empty stage
+        if (stageImage === undefined) {
+            stageImage = "Empty Stage";
         }
-        return stageJson;
+        return stageImage;
     }
 
     /**
@@ -292,10 +326,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const createBackgroundImage = async () => {
         const copyOfItems = items.slice();
         const duplicateOfStage = dupeStage(copyOfItems);
-        const stageJson = saveHandler(duplicateOfStage);
+        const stageImage = saveHandler(duplicateOfStage);
 
-        if (stageJson !== "Empty Stage") {
-            let localBlob = await fetch(stageJson).then(res => res.blob());
+        if (stageImage !== "Empty Stage") {
+            let localBlob = await fetch(stageImage).then(res => res.blob());
 
             let file = new File([localBlob], 'background.png');
             let formData = new FormData();
@@ -311,22 +345,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to create a FormData containing the preview of the scene
      */
     const createPreviewImage = async () => {
-        console.log(stage);
         if (stage !== undefined){
-            console.log(1)
             const originalStage = saveHandler(stage);
-            console.log(2)
             if (originalStage !== "Empty Stage"){
-                console.log(3)
                 let localBlob = await fetch(originalStage).then(res => res.blob());
-                console.log(4)
                 let file = new File([localBlob], 'preview.png');
                 let formData = new FormData();
-                console.log(file)
                 formData.append('image', file);
                 formData.append('name', sceneName + '_preview');
-                console.log(6)
-                console.log(formData);
                 setPreviewImage(formData);
             }
         }
@@ -341,6 +367,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         let onlyTextAndImages : Array<CustomText|CustomImage> = [];
         //array for all datatext and dataimage elements, used for export
         let dataTextAndImages : Array<DataText|DataImage> = [];
+        // push all images and texts in the onlyTextAndImages array
         for (let index = 0; index < items.length; index++) {
             if (items[index].id.startsWith('text')) {
                 onlyTextAndImages.push(items[index] as CustomText);
@@ -360,6 +387,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             images:  base,
             scene_items: JSON.stringify(items),
         }
+        // create dataText and dataImage elements for each element in
+        // onlyTextAndImages, depending on their type
         onlyTextAndImages.forEach(element => {
             if (element.id.startsWith('text')) {
                 if ('fontSize' in element) {
@@ -567,14 +596,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Handler for the button to save the scene and go back to the overview
+     * Method to handle the button to save the scene and go back to the overview
      */
     const saveButtonHandler = () => {
+        // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
         if (itemCounter === 0) {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
-        postBackground();
+        postSceneBackground();
         postPreview();
 
     }
@@ -606,7 +636,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to POST the scene background
      */
-    const postBackground = useCallFetch("visuanalytics/image/scene", {
+    const postSceneBackground = useCallFetch("visuanalytics/image/scene", {
             method: "POST",
             headers: {},
             body: baseImage
@@ -664,6 +694,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 setItems(localItems);
                 setSelectedObject(objectCopy);
             }, 200);
+            currentItemX.current = localItems[index].x
+            currentItemY.current = localItems[index].y
 
             setCurrentXCoordinate(parseInt(absPos.x.toFixed(0)));
             setCurrentYCoordinate(parseInt(absPos.y.toFixed(0)));
@@ -677,12 +709,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param e click event
      */
     const handleStageMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-
+        // get the name of the element that was clicked on
         const name = e.target.name();
-
+        // if the element was the stage the following is getting executed
         if (e.target === e.target.getStage() || name === "background") {
-            setStage(e.target.getStage()!)
+            // setting the stage state, important for the export
+            setStage(e.target.getStage()!);
+            // remove the selectedItemName
             setSelectedItemName("");
+            // check if the user is currently editing a text
+            // complete the edit
             if (currentlyEditing){
                 const localItems = items.slice();
                 const index = items.indexOf(selectedObject);
@@ -696,32 +732,35 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 setItems(localItems);
                 setTextEditVisibility(false);
                 setCurrentlyEditing(false);
-            } else {
-                setTextEditVisibility(false);
             }
+            // set the item selected to no item selected
             setItemSelected(false);
+            // reset the delete text on the editor
             setDeleteText("Letztes Elem. entf.");
             return;
         }
 
+        // if the user clicked on the transformer, the method will be interrupted
         const clickedOnTransformer =
             e.target.getParent().className === "Transformer";
         if (clickedOnTransformer) {
             return;
         }
 
+        // if the user clicked on an element the following code will be executed
         if (name !== undefined && name !== '') {
-            console.log(name)
+            // set the selected item name to the name of the element
             setSelectedItemName(name);
+            // now an item is selected
             setItemSelected(true);
-
+            // adjust the delete button text to delete the current element
             setDeleteText("AUSGEW. ELEM. ENTF.");
             const id = name;
             const foundItem = items.find((i: any) => i.id === id);
             setSelectedObject(foundItem!);
 
             const index = items.indexOf(foundItem!);
-
+            // depending on the type of element various variables will be adjusted
             if (items[index].id.startsWith("text")) {
                 setCurrentFontColor(items[index].color);
                 setCurrentFontFamily((items[index] as any).fontFamily);
@@ -731,6 +770,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             if (!items[index].id.startsWith("image")) {
                 setCurrentItemColor(items[index].color!);
             }
+            currentItemRotation.current = items[index].rotation
+            currentItemScaleX.current = items[index].scaleX
+            currentItemScaleY.current = items[index].scaleY
+            currentItemX.current = items[index].x
+            currentItemY.current = items[index].y
             setCurrentXCoordinate(items[index].x);
             setCurrentYCoordinate(items[index].y);
             setCurrentItemHeight(items[index].height);
@@ -738,6 +782,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     };
 
+    /**
+     * Helpermethod to increment the counter and reset the type of element
+     */
     const incrementCounterResetType = () => {
         setSelectedType("");
         setItemCounter(itemCounter + 1);
@@ -866,28 +913,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 incrementCounterResetType();
                 return;
             }
-
-            /*case "image": {
-                items.push({
-                    id: 'image-' + itemCounter.toString(),
-                    x: parseInt(localX.toFixed(0)),
-                    y: parseInt(localY.toFixed(0)),
-                    rotation: 0,
-                    image: imageSource,
-                    width: imageSource.width,
-                    height: imageSource.height,
-                    baseWidth: imageSource.width,
-                    baseHeight: imageSource.height,
-                    scaleX: 1,
-                    scaleY: 1,
-
-                } as CustomImage)
-                incrementCounterResetType();
-                return;
-            }*/
         }
     }
 
+    /**
+     * different method to add an image to the canvas
+     * @param image the image to be added
+     */
     const addImageElement = (image : HTMLImageElement) => {
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
@@ -903,6 +935,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: 1,
             color: "#000000"
         }
+        // if its bigger than the width / height of the canvas, adjust the size of the image
         while (obj.width * obj.scaleX > 960) {
             obj.scaleX *= 0.5;
         }
@@ -959,6 +992,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to handle the double click on a text element
      */
     const handleTextDblClick = () => {
+        // create a copy of the text element and replace the original one with adjusted variables
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         let backup: any = items[index];
@@ -968,6 +1002,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             textContent: "",
         } as CustomText;
         localItems[index] = objectCopy;
+        // set the states to place the edit field and make the text invisible
         setSelectedItemName("");
         setSelectedObject(objectCopy);
         setItems(localItems);
@@ -1041,9 +1076,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns the position of the pointer
      */
     const getRelativePointerPosition = (e: any) => {
-        const stage = e.target.getStage();
-        let pos;
-        pos = stage.getPointerPosition();
+        let pos = e.target.getStage().getPointerPosition();
         return (pos);
     }
 
@@ -1062,19 +1095,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Gets called whenever the corresponding button is pressed
      */
     const deleteItem = () => {
+        // create a copy of the recentlyremoveditems array
         const lastElem = [...recentlyRemovedItems];
         if (!itemSelected) {
             if (items.length > 0) {
+                // remove the last element from the items array
                 const poppedItem = items.pop();
+                // push the last element into the recentlyremoveditems array
                 if (poppedItem !== undefined) {
                     lastElem.push(poppedItem);
                 }
             }
             setRecentlyRemovedItems(lastElem);
+            // decrement the counter of element
             setItemCounter(itemCounter - 1);
         } else {
+            // get the index of the selected element
             const index = items.indexOf(selectedObject);
-
+            // push the element into the lastElem array and remove it from the items array
             if (items.length > 0 && selectedObject !== undefined) {
                 lastElem.push(items[index]);
                 items.splice(index, 1);
@@ -1087,7 +1125,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Method do undo the last delete operation
+     * Method to undo the last delete operation
      */
     const undo = () => {
         const lastElem = [...recentlyRemovedItems];
@@ -1113,9 +1151,21 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             localItems.push({
                 ...selectedObject,
                 id: parts[0] + '-' + Math.random() * Math.random(),
+                rotation: currentItemRotation.current,
+                scaleX: currentItemScaleX.current,
+                scaleY: currentItemScaleY.current,
+                x: currentItemX.current,
+                y: currentItemY.current,
             });
             setItems(localItems);
         }
+    }
+
+    /**
+     * Method to handle the start of a transform event
+     */
+    const handleTransformStart = (e : any) => {
+        console.log("Transform Started ", e);
     }
 
     /**
@@ -1123,11 +1173,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param e Transform Event
      */
     const handleTransformEnd = (e: any) => {
+        //get the position, transformation and rotation of the transformed element
         const selectedNode = e.target.getStage().findOne("." + selectedItemName);
         const absPos = selectedNode.getAbsolutePosition();
         const absTrans = selectedNode.getAbsoluteScale();
         const absRot = selectedNode.getAbsoluteRotation();
-
+        // apply the changes
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
         localItems[index] = {
@@ -1138,8 +1189,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: absTrans.y,
             rotation: absRot,
         };
-        console.log(absTrans.x, absTrans.y)
         setItems(localItems);
+        currentItemRotation.current = absRot;
+        currentItemScaleX.current = absTrans.x;
+        currentItemScaleY.current = absTrans.y;
+        currentItemX.current = parseInt((absPos.x).toFixed(0));
+        currentItemY.current = parseInt((absPos.y).toFixed(0));
         setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
         setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
 
@@ -1280,7 +1335,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to change the background color incase the background is set to be a color
      */
     const switchBGColor = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-
         delayedBackgroundColorChange(event.target.value);
     }
 
@@ -1346,6 +1400,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param item The item selected by the user
      */
     const handleItemSelect = (item: string) => {
+        // if no item is selected, creates a new text element and adds it to the canvas
         if (!itemSelected){
             items.push({
                 x: 20,
@@ -1368,6 +1423,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             setCurrentTextWidth(200);
             setTextEditContent(item);
             setItemCounter(itemCounter + 1);
+        // otherwise add the content to a selected text field
         } else {
             console.log(selectedItemName);
             if (selectedItemName.startsWith('text') && !currentlyEditing){
@@ -1402,6 +1458,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
+    /**
+     * Method to handle the click on an image loaded form the backend
+     * @param src the image source of the selected image
+     * @param index index of the image in the backend
+     */
     const handleImageClick = (src : string, index: number) => {
         console.log(index)
         let image = new window.Image();
@@ -1505,6 +1566,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         )
     }
 
+    /**
+     * Method to handle the change of the input element for the image upload
+     * @param event ChangeEvent of the HTMLInputElement
+     */
     const handleFileUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files !== null){
             let formData = new FormData();
@@ -1515,6 +1580,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
+    /**
+     * Method to handle the "Upload image" button
+     */
     const handleFileUploadClick = () => {
         if (uploadReference.current !== null){
             uploadReference.current.click();
@@ -1602,7 +1670,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         width={960}
                                         height={540}
                                         onClick={(e: any) => handleCanvasClick(e)}
-                                        image={backgroundImage}
+                                        image={backgroundImage.current}
                                         onMouseDown={handleStageMouseDown}
                                     />
                                     }
@@ -1621,6 +1689,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     radius={item.radius}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -1655,6 +1724,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     height={item.height}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -1692,6 +1762,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     fill={item.color}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -1729,6 +1800,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     radius={item.radius}
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -1760,6 +1832,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     draggable
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     onDblClick={() => handleTextDblClick()}
                                                     fontSize={item.fontSize}
@@ -1807,6 +1880,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                                     draggable
                                                     onDragStart={handleDragStart}
                                                     onDragEnd={handleDragEnd}
+                                                    onTransformStart={handleTransformStart}
                                                     onTransformEnd={handleTransformEnd}
                                                     rotation={item.rotation}
                                                     onMouseOver={mouseOver}
@@ -1995,7 +2069,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     /><br/><br/>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Button className={classes.button} onClick={dupe}> Klonen </Button><br/><br/>
+                                    <Button className={classes.button} onClick={dupe} disabled={!itemSelected}> Klonen </Button><br/><br/>
                                     <TextField id="stepSizeOptions" onChange={(e) => handleStepSizeChange(e)}
                                                value={stepSize} className={classes.selection} select
                                                label={"Sprunggröße"} disabled={!itemSelected}>

@@ -16,11 +16,11 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   const [currentNode, setCurrentNode] = React.useState<Konva.Node>()
   const selectedShapeName = props.selectedShapeName;
 
-  const checkNode = /*React.useCallback(*/() => {
+  const checkNode = () => {
     if (transformer !== null) {
       setStage(transformer.getStage());
-      if (stage !== undefined) {
-        setCurrentNode(stage!.findOne("." + selectedShapeName));
+      if (stage !== undefined && stage !== null) {
+        setCurrentNode(stage.findOne("." + selectedShapeName));
         if (currentNode !== undefined && currentNode) {
           if (currentNode === transformer.nodes([currentNode])) {
             return;
@@ -34,7 +34,9 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
         } else {
           transformer.detach();
         }
-        transformer.getLayer()!.batchDraw();
+        if (transformer.getLayer() !== null){
+          transformer.getLayer()!.batchDraw();
+        }
       }
     }
   }
@@ -45,8 +47,10 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
 
   return (
     <Transformer
-      ref={node => { 
-          setTransformer(node!); 
+      ref={node => {
+		if (node !== null && node !== undefined){
+          setTransformer(node!);
+        }
       }}
     />
   );
