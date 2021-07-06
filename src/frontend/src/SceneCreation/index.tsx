@@ -10,6 +10,10 @@ import {ComponentContext} from "../ComponentProvider";
 import {DataSource, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, InfoProviderData} from "./types";
 import {useCallFetch} from "../Hooks/useCallFetch";
+import {hintContents} from "../util/hintContents";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {StepFrame} from "../CreateInfoProvider/StepFrame";
 
 
 //TODO: when merged with the new type structure, put this into a global file
@@ -42,6 +46,15 @@ export const SceneCreation = () => {
     //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
     const [selectedId, setSelectedId] = React.useState(0);
 
+    /* mutable flag that is true when currently images are being fetched because of a reload
+    * this is used to block the continueHandler call after successful fetches. This way,
+    * no additional methods are required to fetch the images on reload.
+    * This will also show a loading spinner while fetching.
+    */
+    const refetchingImages = React.useRef(false);
+    // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconstent with when rerenders are triggered
+    const [displaySpinner, setDisplaySpinner] = React.useState(false);
+
     React.useEffect(() => {
         //step
         setSceneEditorStep(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0));
@@ -52,15 +65,26 @@ export const SceneCreation = () => {
         //selectedDataList
         setSelectedDataList(sessionStorage.getItem("selectedDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("selectedDataList-" + uniqueId)!))
         //selectedDataList
-        setSelectedDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
+        setCustomDataList(sessionStorage.getItem("customDataList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("customDataList-" + uniqueId)!))
         //selectedDataList
-        setSelectedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
+        setHistorizedDataList(sessionStorage.getItem("historizedDataList-" + uniqueId )=== null ? new Array<HistorizedDataInfo>() : JSON.parse(sessionStorage.getItem("historizedDataList-" + uniqueId)!))
         //diagramList
         setDiagramList(sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!))
-        //imageList
-        setImageList(sessionStorage.getItem("imageList-" + uniqueId )=== null ? new Array<string>() : JSON.parse(sessionStorage.getItem("imageList-" + uniqueId)!))
-        //selectedId
+       //selectedId
         setSelectedId(Number(sessionStorage.getItem("selectedId-" + uniqueId)||0));
+
+        // Reload all images, background images and diagram previews when reloading the component
+        //only do this when currently in the editor itself
+        if (Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)||0) === 1) {
+            // set the list of diagrams to fetch by getting the data from sessionStorage:
+            diagramsToFetch.current = sessionStorage.getItem("diagramList-" + uniqueId )=== null ? new Array<DiagramInfo>() : JSON.parse(sessionStorage.getItem("diagramList-" + uniqueId)!);
+            // setting this variable will block the continueHandler at the end of the fetching
+            refetchingImages.current = true;
+            // activate the spinner
+            setDisplaySpinner(true);
+            //start fetching all images
+            fetchImageList()
+        }
     }, [])
 
     //store step in sessionStorage
@@ -278,6 +302,9 @@ export const SceneCreation = () => {
         reportError("Fehler beim Abrufen eines Hintergrundbildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false);
     }
 
     /**
@@ -330,7 +357,12 @@ export const SceneCreation = () => {
      * @param err The error returned from the backend.
      */
     const handleBackgroundImageListError = (err: Error) => {
-        reportError("Fehler beim Laden der Liste aller Hintergrundbilder: " + err)
+        reportError("Fehler beim Laden der Liste aller Hintergrundbilder: " + err);
+        //enable the continue button again
+        setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false)
     }
     /**
      * Method that fetches a list of all available images from the backend.
@@ -399,6 +431,9 @@ export const SceneCreation = () => {
        reportError("Fehler beim Abrufen eines Bildes: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false)
     }
 
 
@@ -453,7 +488,11 @@ export const SceneCreation = () => {
      */
     const handleImageListError = (err: Error) => {
         reportError("Fehler beim Laden der Liste aller Bilder: " + err);
+        //activate the continue button again
         setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false)
     }
 
     /**
@@ -493,7 +532,12 @@ export const SceneCreation = () => {
             //enable the continue button again
             setStep0ContinueDisabled(false);
             //continue to the next step
-            handleContinue();
+            if(!refetchingImages.current) handleContinue();
+            else {
+                refetchingImages.current = false;
+                // deactivate the spinner
+                setDisplaySpinner(false)
+            }
         } else {
             //get the id of the next image to be fetched
             const currentDiagram = diagramsToFetch.current[0];
@@ -527,7 +571,11 @@ export const SceneCreation = () => {
      */
     const diagramPreviewErrorHandler = (err: Error) => {
         reportError("Fehler beim Abrufen des Preview eines Diagramms: " + err);
+        // activate the continue button again
         setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false)
     }
 
     /**
@@ -566,7 +614,7 @@ export const SceneCreation = () => {
 
     React.useEffect(() => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
-            if(sceneEditorStep) {
+            if(sceneEditorStep === 1) {
                 e.preventDefault();
                 e.returnValue = "";
             }
@@ -614,26 +662,42 @@ export const SceneCreation = () => {
                     />
                 )
             case 1:
-                return (
-                    <SceneEditor
-                        continueHandler={() => handleContinue()}
-                        backHandler={() => handleBack()}
-                        infoProvider={infoProvider}
-                        infoProviderId={selectedId}
-                        selectedDataList={selectedDataList}
-                        customDataList={customDataList}
-                        historizedDataList={historizedDataList}
-                        diagramList={diagramList}
-                        imageList={imageList}
-                        setImageList={(images: Array<string>) => setImageList(images)}
-                        backgroundImageList={backgroundImageList}
-                        setBackgroundImageList={(backgrounds: Array<string>) => setBackgroundImageList(backgrounds)}
-                        editMode={false}
-                        reportError={(message: string) => reportError(message)}
-                        fetchImageById={fetchImageById}
-                        fetchBackgroundImageById={fetchBackgroundImageById}
-                    />
-                )
+                // if the application is currently refetching images, display a spinner
+                if(displaySpinner) {
+                    return (
+                        <StepFrame
+                            heading={"Szenen-Editor"}
+                            hintContent={hintContents.typeSelection}
+                            large={"xl"}
+                        >
+                            <Typography>
+                                Bilder werden erneut geladen...
+                            </Typography>
+                            <CircularProgress/>
+                        </StepFrame>
+                    )
+                } else {
+                    return (
+                        <SceneEditor
+                            continueHandler={() => handleContinue()}
+                            backHandler={() => handleBack()}
+                            infoProvider={infoProvider}
+                            infoProviderId={selectedId}
+                            selectedDataList={selectedDataList}
+                            customDataList={customDataList}
+                            historizedDataList={historizedDataList}
+                            diagramList={diagramList}
+                            imageList={imageList}
+                            setImageList={(images: Array<string>) => setImageList(images)}
+                            backgroundImageList={backgroundImageList}
+                            setBackgroundImageList={(backgrounds: Array<string>) => setBackgroundImageList(backgrounds)}
+                            editMode={false}
+                            reportError={(message: string) => reportError(message)}
+                            fetchImageById={fetchImageById}
+                            fetchBackgroundImageById={fetchBackgroundImageById}
+                        />
+                    )
+                }
         }
     }
 
