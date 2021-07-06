@@ -74,7 +74,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     /**
      * the current step of the creation process, numbered by 0 to 5
      */
-    const [editStep, setEditStep] = React.useState(0);
+    const [editStep, setEditStep] = React.useState(3);
 
     /**
      * The name of the infoprovider that is being edited
@@ -111,7 +111,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         numberFlag: false,
         opFlag: true,
         leftParenFlag: false,
-        rightParenFlag: false
+        rightParenFlag: false,
+        usedFormulaAndApiData: []
     });
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
@@ -919,7 +920,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
                         selectedDataSource={selectedDataSource}
                         reportError={reportError}
-                        formel={formelInformation}
+                        formula={formelInformation}
                     />
                 )
             case 5:

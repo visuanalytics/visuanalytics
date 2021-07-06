@@ -22,7 +22,7 @@ interface EditSingleFormelProps {
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     reportError: (message: string) => void;
-    formel: formelContext;
+    formula: formelContext;
 }
 
 /**
@@ -40,59 +40,61 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
     /**
      * Input is the created formula as a string. It is build with the Buttons.
      */
-    const [input, setInput] = React.useState<string>(calculationToString(props.formel.formelAsObjects));
+    const [input, setInput] = React.useState<string>(calculationToString(props.formula.formelAsObjects));
 
     /**
      * safes and represents the name-field for a new formel.
      */
-    const [name, setName] = React.useState<string>(props.formel.formelName);
+    const [name, setName] = React.useState<string>(props.formula.formelName);
 
     /**
      * holds the old formelName if the actual name is edited.
      */
-    const [oldFormelName] = React.useState<string>(props.formel.formelName)
+    const [oldFormelName] = React.useState<string>(props.formula.formelName)
 
     /**
      * An Array filled with StrArg-Objects that represents the formula.
      */
-    const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(props.formel.formelAsObjects);
+    const [dataAsObj, setDataAsObj] = React.useState<Array<StrArg>>(props.formula.formelAsObjects);
 
     /**
      * dataFlag represents the status of dataButtons. If it ist true the dataButtons will be disabled.
      */
-    const [dataFlag, setDataFlag] = React.useState<boolean>(props.formel.dataFlag);
+    const [dataFlag, setDataFlag] = React.useState<boolean>(props.formula.dataFlag);
     /**
      * opFlag represents the status of OperatorButtons. If it ist true the OperatorButtons will be disabled.
      */
-    const [opFlag, setOpFlag] = React.useState<boolean>(props.formel.opFlag);
+    const [opFlag, setOpFlag] = React.useState<boolean>(props.formula.opFlag);
     /**
      * numberFlag represents the status of NumberButtons. If it ist true the NumberButtons will be disabled.
      */
-    const [numberFlag, setNumberFlag] = React.useState<boolean>(props.formel.numberFlag);
+    const [numberFlag, setNumberFlag] = React.useState<boolean>(props.formula.numberFlag);
     /**
      * rightParenFlag represents the status of rightParenButton. If it ist true the rightParenButton will be disabled.
      */
-    const [rightParenFlag, setRightParenFlag] = React.useState<boolean>(props.formel.rightParenFlag);
+    const [rightParenFlag, setRightParenFlag] = React.useState<boolean>(props.formula.rightParenFlag);
     /**
      * leftParenFlag represents the status of leftParenButton. If it ist true the leftParenButton will be disabled.
      */
-    const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(props.formel.leftParenFlag);
+    const [leftParenFlag, setLeftParenFlag] = React.useState<boolean>(props.formula.leftParenFlag);
 
     /**
      * Counts how many left parentheses are included in the formula.
      * Is used to check if the number of right and left parens is even.
      */
-    const [leftParenCount, setLeftParenCount] = React.useState<number>(props.formel.parenCount);
+    const [leftParenCount, setLeftParenCount] = React.useState<number>(props.formula.parenCount);
     /**
      * Counts how many right parentheses are included in the formula.
      * Is used to check if the number of right and left parens is even.
      */
-    const [rightParenCount, setRightParenCount] = React.useState<number>(props.formel.parenCount);
+    const [rightParenCount, setRightParenCount] = React.useState<number>(props.formula.parenCount);
 
     /**
      * boolean that is used to open and close the cancel-dialog
      */
     const [cancelDialogOpen, setCancelDialogOpen] = React.useState(false);
+
+    const usedFormulaAndApiData = React.useRef<Array<string>>(props.formula.usedFormulaAndApiData);
 
     /**
      * Handler for operatorButtons.
@@ -124,6 +126,14 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
         dataAsObj.push(new StrArg(data, false, false, false, false));
         setInput(calculationToString(dataAsObj));
+
+        const arrTmp = usedFormulaAndApiData.current;
+        let alreadyContains: boolean = false;
+        for (let i: number = 0; i < arrTmp.length; i++) {
+            if (arrTmp[i] === data) alreadyContains = true;
+        }
+        if (!alreadyContains) arrTmp.push(data);
+        usedFormulaAndApiData.current = arrTmp;
     }
 
     /**
@@ -234,6 +244,14 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             setNumberFlag(false);
             setRightParenFlag(true);
             setLeftParenFlag(false);
+
+            const arrTmp = usedFormulaAndApiData.current;
+            for (let i: number = 0; i < arrTmp.length; i++) {
+                if (arrTmp[i] === dataAsObj[dataAsObj.length - 1].makeStringRep()) {
+                    arrTmp.splice(i,1);
+                }
+            }
+            usedFormulaAndApiData.current = arrTmp;
         }
 
         dataAsObj.pop();
@@ -252,6 +270,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
 
         setDataAsObj(new Array<StrArg>(0));
         setInput('');
+        usedFormulaAndApiData.current = [];
 
         setRightParenCount(0);
         setLeftParenCount(0);
@@ -313,7 +332,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                 }
             }
 
-            arCopy.push(new FormelObj(name, input, []));
+            arCopy.push(new FormelObj(name, input, usedFormulaAndApiData.current));
             const dataSourcesCopy =  props.infoProvDataSources.slice();
             dataSourcesCopy[props.selectedDataSource].customData = arCopy;
             props.setInfoProvDataSources(dataSourcesCopy);

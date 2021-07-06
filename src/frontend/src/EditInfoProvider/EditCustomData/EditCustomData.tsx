@@ -214,7 +214,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             numberFlag: false,
             opFlag: true,
             leftParenFlag: false,
-            rightParenFlag: false
+            rightParenFlag: false,
+            usedFormulaAndApiData: []
         };
 
         finalFormel.formelName = formelName;
@@ -265,6 +266,15 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             //if there wasn't pushed an StrArg-object into formelAsObj until now
             if (notPushed) {
                 formelAsObj.push(new StrArg(item, false, false, false, false));
+
+                const arrTmp = finalFormel.usedFormulaAndApiData;
+                let alreadyContains: boolean = false;
+                for (let i: number = 0; i < arrTmp.length; i++) {
+                    if (arrTmp[i] === item) alreadyContains = true;
+                }
+                if (!alreadyContains) arrTmp.push(item);
+                finalFormel.usedFormulaAndApiData = arrTmp;
+
             }
 
             //for each counted closing-parens push one StrArg with ")" into formelAsObj
@@ -341,7 +351,8 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             numberFlag: false,
             opFlag: true,
             leftParenFlag: false,
-            rightParenFlag: false
+            rightParenFlag: false,
+            usedFormulaAndApiData: []
         });
         props.continueHandler(1)
     }
