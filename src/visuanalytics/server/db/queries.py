@@ -261,16 +261,15 @@ def insert_video_job(video, update=False, job_id=None):
                 video["api"]["requests"] += datasource_config["api"]["requests"]
             else:
                 video["api"] = datasource_config["api"]
-        #print("video with requests:", video)
 
-        transform_config = video.get("transform", None)
-        if transform_config:
-            video["transform"] += infoprovider["transform"]
-        else:
-            video.update({
-                "transform": infoprovider["transform"]
-            })
-        # print("video with transform:", video)
+            transform_config = video.get("transform", None)
+            if transform_config:
+                video["transform"] += datasource_config["transform"]
+            else:
+                video.update({
+                    "transform": datasource_config["transform"]
+                })
+        #print("video with transform:", video)
 
         #video["images"].update(infoprovider["images"])
         diagram_config = video.get("diagrams", None)
