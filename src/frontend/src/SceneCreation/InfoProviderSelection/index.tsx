@@ -26,6 +26,8 @@ interface InfoProviderSelectionProps {
     setSelectedDataList: (list: Array<string>) => void;
     setCustomDataList: (list: Array<string>) => void;
     setHistorizedDataList: (list: Array<HistorizedDataInfo>) => void;
+    setArrayProcessingList: (list: Array<string>) => void;
+    setStringReplacementList: (list: Array<string>) => void;
     setDiagramList: (list: Array<DiagramInfo>) => void;
     fetchImages: () => void;
     step0ContinueDisabled: boolean;
@@ -44,16 +46,18 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
 
     /**
      * Method that processes the answer of the backend by extracting the lists of selectedData, customData,
-     * historizedData and diagrams. Also appends the name of the dataSource to each name if that is necessary.
+     * historizedData, arrayProcessings, stringReplacements and diagrams. Also appends the name of the dataSource to each name if that is necessary.
      * @param infoProvider The object of the Backend, transformed to the frontend representation.
      */
     const processBackendAnswer = (infoProvider: FrontendInfoProvider) => {
         // set the basic variable containing the complete object
         props.setInfoProvider(infoProvider);
-        // extract the list of all selectedData, customData and historizedData
+        // extract the list of all selectedData, customData, historizedData, arrayProcessings and stringReplacements
         const selectedDataList: Array<string> = [];
         const customDataList: Array<string> = [];
         const historizedDataList: Array<HistorizedDataInfo> = [];
+        const arrayProcessingList: Array<string> = [];
+        const stringReplacementList: Array<string> = [];
         infoProvider.dataSources.forEach((dataSource) => {
             //go through all selectedData
             //TODO: possibly extract type information
@@ -64,6 +68,14 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             //TODO: possibly display the complete formula
             dataSource.customData.forEach((customData) => {
                 customDataList.push(dataSource.apiName + "|" + customData.formelName);
+            })
+            // Go through all arrayProcessings
+            dataSource.arrayProcessingsList.forEach((arrayProcessing) => {
+                arrayProcessingList.push(dataSource.apiName + "|" + arrayProcessing.name);
+            })
+            // Go through all stringReplacements
+            dataSource.stringReplacementList.forEach((stringReplacement) => {
+                stringReplacementList.push(dataSource.apiName + "|" + stringReplacement.name);
             })
             //extract the schedule-interval string
             const intervalString = getIntervalDisplay(dataSource.schedule);
@@ -111,6 +123,8 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
         props.setSelectedDataList(selectedDataList);
         props.setCustomDataList(customDataList);
         props.setHistorizedDataList(historizedDataList);
+        props.setArrayProcessingList(arrayProcessingList);
+        props.setStringReplacementList(stringReplacementList);
         // set the list of diagrams to still be fetched
         props.diagramsToFetch.current = diagramList;
         return true;

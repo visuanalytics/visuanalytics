@@ -44,6 +44,7 @@ import {
 } from "./types"
 import {ImageLists} from "./ImageLists";
 import {DiagramList} from "./DiagramList";
+import {ReactComponent} from "*.svg";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -53,6 +54,8 @@ interface SceneEditorProps {
     selectedDataList: Array<string>;
     customDataList: Array<string>;
     historizedDataList: Array<HistorizedDataInfo>;
+    arrayProcessingList: Array<string>;
+    stringReplacementList: Array<string>;
     diagramList: Array<DiagramInfo>;
     imageList: Array<string>;
     setImageList: (images: Array<string>) => void;
@@ -2207,7 +2210,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         <br/>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
                             <Typography variant={"h4"} align={"center"}>
-                                TEXTE
+                                Ausgewählte Daten des Infoproviders
                             </Typography>
                             <br/>
                         </Grid>
@@ -2219,20 +2222,60 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 </List>
                             </Box>
                         </Grid>
-                        <Grid item xs={12} className={classes.elementLargeMargin}>
-                            <Typography variant={"h4"} align={"center"}>
-                                Historisierte Daten
-                            </Typography>
-                            <br/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}
-                                 className={classes.choiceListFrame}>
-                                <List disablePadding={true}>
-                                    {props.historizedDataList.map((item: HistorizedDataInfo) => renderHistorizedItem(item.name, item.interval))}
-                                </List>
-                            </Box>
-                        </Grid>
+                        {props.arrayProcessingList.length > 0 &&
+                            <React.Fragment>
+                                <Grid item xs={12} className={classes.elementLargeMargin}>
+                                    <Typography variant={"h4"} align={"center"}>
+                                        Arrayverarbeitungen
+                                    </Typography>
+                                    <br/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.choiceListFrame}>
+                                        <List disablePadding={true}>
+                                            {props.arrayProcessingList.map((item: string) => renderListItem(item))}
+                                        </List>
+                                    </Box>
+                                </Grid>
+                            </React.Fragment>
+                        }
+                        {props.stringReplacementList.length > 0 &&
+                            <React.Fragment>
+                                <Grid item xs={12} className={classes.elementLargeMargin}>
+                                    <Typography variant={"h4"} align={"center"}>
+                                        Stringersetzungen
+                                    </Typography>
+                                    <br/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.choiceListFrame}>
+                                        <List disablePadding={true}>
+                                            {props.stringReplacementList.map((item: string) => renderListItem(item))}
+                                        </List>
+                                    </Box>
+                                </Grid>
+                            </React.Fragment>
+                        }
+                        {props.historizedDataList.length > 0 &&
+                            <React.Fragment>
+                                <Grid item xs={12} className={classes.elementLargeMargin}>
+                                    <Typography variant={"h4"} align={"center"}>
+                                        Historisierte Daten
+                                    </Typography>
+                                    <br/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.choiceListFrame}>
+                                        <List disablePadding={true}>
+                                            {props.historizedDataList.map((item: HistorizedDataInfo) => renderHistorizedItem(item.name, item.interval))}
+                                        </List>
+                                    </Box>
+                                </Grid>
+                            </React.Fragment>
+                        }
                         <br/>
                        <ImageLists
                            imageList={props.imageList}
