@@ -272,6 +272,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemText
                     primary={keyString}
                     secondary={null}
+                    className={classes.wrappedText}
                 />
             </ListItem>
         )
@@ -296,6 +297,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                 <ListItemText
                     primary={item}
                     secondary={null}
+                    className={classes.wrappedText}
                 />
             </ListItem>
         )
@@ -327,12 +329,14 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
                                             Folgende Arrays des Infoproviders sind kompatibel mit Diagrammen:
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item container xs={12}>
                                         <Box borderColor="primary.main" border={4} borderRadius={5}
                                              className={classes.choiceListFrame}>
-                                            <List disablePadding={true}>
-                                                {props.compatibleArrays.map((item) => renderArrayListItem(item))}
-                                            </List>
+                                            <Grid item xs={12}>
+                                                <List disablePadding={true}>
+                                                    {props.compatibleArrays.map((item) => renderArrayListItem(item))}
+                                                </List>
+                                            </Grid>
                                         </Box>
                                     </Grid>
                                 </Grid>
