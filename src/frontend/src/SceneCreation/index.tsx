@@ -36,6 +36,8 @@ export const SceneCreation = () => {
     const [selectedDataList, setSelectedDataList] = React.useState<Array<string>>([]);
     const [customDataList, setCustomDataList] = React.useState<Array<string>>([]);
     const [historizedDataList, setHistorizedDataList] = React.useState<Array<HistorizedDataInfo>>([]);
+    const [arrayProcessingList, setArrayProcessingList] = React.useState<Array<string>>([]);
+    const [stringReplacementList, setStringReplacementList] = React.useState<Array<string>>([]);
     const [diagramList, setDiagramList] = React.useState<Array<DiagramInfo>>([]);
     //list of paths of the images fetched from the backend
     const [imageList, setImageList] = React.useState<Array<string>>([]);
@@ -663,6 +665,8 @@ export const SceneCreation = () => {
                         setSelectedDataList={(list: Array<string>) => setSelectedDataList(list)}
                         setCustomDataList={(list: Array<string>) => setCustomDataList(list)}
                         setHistorizedDataList={(list: Array<HistorizedDataInfo>) => setHistorizedDataList(list)}
+                        setArrayProcessingList={(list: Array<string>) => setArrayProcessingList(list)}
+                        setStringReplacementList={(list: Array<string>) => setStringReplacementList(list)}
                         setDiagramList={(list: Array<DiagramInfo>) => setDiagramList(list)}
                         fetchImages={() => fetchImageList()}
                         step0ContinueDisabled={step0ContinueDisabled}
@@ -699,6 +703,8 @@ export const SceneCreation = () => {
                             selectedDataList={selectedDataList}
                             customDataList={customDataList}
                             historizedDataList={historizedDataList}
+                            arrayProcessingList={arrayProcessingList}
+                            stringReplacementList={stringReplacementList}
                             diagramList={diagramList}
                             imageList={imageList}
                             setImageList={(images: Array<string>) => setImageList(images)}
