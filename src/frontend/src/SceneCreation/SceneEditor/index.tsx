@@ -74,7 +74,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const backgroundUploadReference = React.useRef<HTMLInputElement>(null);
     const mainRef = React.useRef<HTMLDivElement>(null);
     // reference for the background Image
-    const backgroundImage = React.useRef<HTMLImageElement>(new window.Image())
+    const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image())
     // const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
     const currentItemRotation = React.useRef<number>(0)
     const currentItemScaleX = React.useRef<number>(1);
@@ -91,6 +91,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [backgroundToUpload, setBackgroundToUpload] = React.useState<FormData>(new FormData())
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
 
+
     // states used to adjust HTML elements
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
     const [currentFontFamily, setCurrentFontFamily] = React.useState("Arial");
@@ -98,7 +99,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [currentItemWidth, setCurrentItemWidth] = React.useState(100);
     const [currentItemHeight, setCurrentItemHeight] = React.useState(100);
     const [currentTextWidth, setCurrentTextWidth] = React.useState(200);
-    const [currentTextContent, setCurrentTextContent] = React.useState("Test");
+    const [currentTextContent, setCurrentTextContent] = React.useState("");
     const [currentItemColor, setCurrentItemColor] = React.useState("#000000")
     const [currentBGColor, setCurrentBGColor] = React.useState("#FFFFFF");
     const [currentFontColor, setCurrentFontColor] = React.useState("#000000");
@@ -183,12 +184,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
 
     }, [])*/
-    //TODO backgroundupload like the image upload
-    /*React.useEffect(() => {
-        if (backgroundToUpload.has('image')){
-            postSceneBackgroundImage();
-        }
-    }, [backgroundToUpload]);*/
 
     /**
      * useEffect to send the scene to the backend once it is created
@@ -1400,21 +1395,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }
 
     /**
-     * Method to switch between a backgroundimage and a backgroundcolor
-     */
-    const switchBackgroundType = () => {
-        if (backGroundType === "COLOR") {
-            setBackGroundNext("COLOR");
-            setBackGroundType("IMAGE");
-            setCurrentBGColor("#FFFFFF");
-        } else if (backGroundType === "IMAGE") {
-            setBackGroundNext("IMAGE");
-            setBackGroundType("COLOR");
-            setCurrentBGColor(backGroundColor);
-        }
-    }
-
-    /**
      * Method to change the mouse cursor if the user hovers over a selected element
      */
     const mouseOver = () => {
@@ -1459,6 +1439,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the selection of data from the list of available api data.
      * @param item The item selected by the user
+     * @param handlingHistorizedItem changes behaviour when the element is historized
      */
 
     const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
@@ -1566,6 +1547,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         addImageElement(image);
     }
 
+    const handleBackgroundImageClick = (src : string, index : number) => {
+        let img = new window.Image();
+        img.src = props.backgroundImageList[index];
+        setBackgroundImage(img);
+        setBackGroundType("IMAGE");
+        setBackGroundColorEnabled(false);
+    }
+
 
     /**
      * Method to handle if a user unchecks the backgroundcolor checkbox
@@ -1575,8 +1564,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (backGroundColorEnabled) {
             setCurrentBGColor("#FFFFFF");
             setBackGroundColor(currentBGColor);
+            setBackGroundType("IMAGE");
+            setBackGroundColorEnabled(false);
+            console.log("backgroundcolor should be disabled");
         } else {
+            console.log("backgroundcolor is currently disabled");
             setCurrentBGColor(backGroundColor);
+            setBackGroundType("COLOR");
+            setBackGroundColorEnabled(true);
         }
     }
 
@@ -1751,7 +1746,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         width={960}
                                         height={540}
                                         onClick={(e: any) => handleCanvasClick(e)}
-                                        image={backgroundImage.current}
+                                        image={backgroundImage}
                                         onMouseDown={handleStageMouseDown}
                                     />
                                     }
@@ -2251,6 +2246,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                            backgroundUploadReference={backgroundUploadReference}
                            handleBackgroundUploadClick={handleBackgroundUploadClick}
                            handleBackgroundUploadChange={handleBackgroundUploadChange}
+                           handleBackgroundImageClick={handleBackgroundImageClick}
                        />
                        <br/>
                         <DiagramList

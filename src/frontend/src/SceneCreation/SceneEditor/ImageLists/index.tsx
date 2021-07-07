@@ -11,6 +11,7 @@ interface ImageListsProps {
     postImage: (data: FormData) => void;
     postBackgroundImage: (data: FormData) => void;
     handleImageClick: (src : string, index: number) => void;
+    handleBackgroundImageClick: (src : string, index : number) => void;
     backGroundType: string;
     backGroundColorEnabled: boolean;
     handleBackground: () => void;
@@ -56,7 +57,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
             return (
                 <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
                     <Grid item xs={10}>
-                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleImageClick(image, index)}/>
+                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleBackgroundImageClick(image, index)}/>
                     </Grid>
                 </Grid>
             )
