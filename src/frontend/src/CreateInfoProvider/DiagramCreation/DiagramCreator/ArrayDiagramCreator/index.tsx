@@ -208,7 +208,7 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
      */
     const renderAttributeListItem = (item: ListItemRepresentation) => {
         return (
-            <FormControlLabel value={item.keyName} control={
+            <FormControlLabel className={classes.wrappedLabel} value={item.keyName} control={
                 <Radio
                 />
             } label={item.keyName} key={item.keyName}
