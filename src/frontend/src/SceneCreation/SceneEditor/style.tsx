@@ -113,7 +113,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         editorText: {
             position: "absolute",
             padding: "15px",
-            margin: "0px",
             border: "none",
             overflow: "hidden",
             background: "none",

@@ -88,12 +88,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const classes = useStyles();
     // contains the names of the steps to be displayed in the stepper
     // states used to determine the type of background
-    const [backGroundNext, setBackGroundNext] = React.useState("IMAGE");
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
-    const [backgroundToUpload, setBackgroundToUpload] = React.useState<FormData>(new FormData())
     const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
-
 
     // states used to adjust HTML elements
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
@@ -253,8 +250,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 height: 540
             }))
         } else if (backGroundType === "IMAGE") {
-            //TODO Implement when background images are available
-            console.log("HINTERGRUNDART: ", backGroundType)
+            duplicateLayer.add(new Konva.Image({
+                image: backgroundImage,
+                width: 960,
+                height: 540,
+            }))
         }
         //check all elements in the array, depending on the type, create a new element and add it to the layer
         for (let i = 0; i < itemArray.length; i++) {
@@ -1119,7 +1119,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setCurrentFontSize(20);
         setCurrentTextWidth(200);
         setStepSize(5);
-        //TODO remove in production
         console.clear();
     }
 
@@ -1695,7 +1694,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to render the scene editor
      */
+
     return (
+
         <StepFrame
             heading={"Szenen-Editor"}
             hintContent={hintContents.typeSelection}
@@ -1997,8 +1998,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         <textarea value={textEditContent} className={classes.editorText}
                                   style={{
                                       display: textEditVisibility ? "block" : "none",
-                                      top: textEditY + 380 + "px",
-                                      left: textEditX + 110 + "px",
+                                      top: textEditY + "px",
+                                      left: textEditX + "px",
+                                      marginTop: "20%",
+                                      marginLeft: "6%",
                                       width: textEditWidth + "px",
                                       fontSize: textEditFontSize + "px",
                                       fontFamily: textEditFontFamily,
