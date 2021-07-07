@@ -119,6 +119,15 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         dataSelectionCheckboxItem: {
             width: "20px"
+        },
+        overflowButtonText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "left"
+        },
+        customDataSelectionTitle: {
+            marginTop: "0.5rem",
+            marginLeft: "1.5rem"
         }
     }),
 );
