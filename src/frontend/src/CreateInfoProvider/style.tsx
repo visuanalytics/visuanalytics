@@ -147,6 +147,9 @@ export const useStyles = makeStyles((theme: Theme) =>
         customDataSelectionTitle: {
             marginTop: "0.5rem",
             marginLeft: "1.5rem"
+        },
+        wrappedText: {
+            overflowWrap: "break-word"
         }
     })
 );

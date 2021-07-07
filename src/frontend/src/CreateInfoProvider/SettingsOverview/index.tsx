@@ -179,7 +179,7 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
     const renderListItem = (item: string) => {
         return (
             <ListItem key={item} divider={true}>
-                <ListItemText primary={item} secondary={null}/>
+                <ListItemText className={classes.wrappedText} primary={item} secondary={null}/>
             </ListItem>
         )
     }
@@ -389,15 +389,15 @@ export const SettingsOverview: React.FC<SettingsOverviewProps> = (props) => {
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                     Löschen von "{props.dataSources[selectedDataSource].apiName}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Die Datenquelle "{props.dataSources[selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
                     {diagramsToRemove.length > 0 &&
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle
                         nutzen.<br/><br/><br/>Folgende Diagramme sind
                         betroffen: <strong>{diagramsToRemove.join(", ")}</strong>

@@ -571,10 +571,10 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
                     <Typography gutterBottom>
                         Durch das Abwählen einiger Daten müssen Formeln und Diagramme gelöscht werden, die diese Daten nutzen.
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         {formulasToRemove.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.join(", ") : ""}
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         {diagramsToRemove.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.join(", ") : ""}
                     </Typography>
                 </DialogContent>

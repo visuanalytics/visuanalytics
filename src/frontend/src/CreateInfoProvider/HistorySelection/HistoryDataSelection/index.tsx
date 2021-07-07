@@ -199,7 +199,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                         label={''}
                     />
                 </ListItemIcon>
-                <ListItemText
+                <ListItemText className={classes.wrappedText}
                     primary={item}
                     secondary={null}
                 />

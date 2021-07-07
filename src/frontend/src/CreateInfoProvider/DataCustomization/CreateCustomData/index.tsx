@@ -611,15 +611,15 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
-                    Löschen von {formelToRemove} bestätigen
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
+                    Löschen von "{formelToRemove}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
-                        Wollen sie die Formel: "{formelToRemove}" wirklich löschen?
+                    <Typography gutterBottom className={classes.wrappedText}>
+                        Wollen sie die Formel "{formelToRemove}" wirklich löschen?
                     </Typography>
                     { diagramsToRemove.length !==0 &&
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Das Löschen der Formel wird folgende Diagramme entfernen, da sie die Formel
                         nutzen: {diagramsToRemove.join(", ")}
                     </Typography>
