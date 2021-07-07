@@ -6,15 +6,16 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import {FormelObj} from "./formelObjects/FormelObj";
 import {
+    Collapse, FormControlLabel,
     IconButton,
     ListItemSecondaryAction
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {ArrayProcessingData, SelectedDataItem} from "../../../types";
+import {ArrayProcessingData, SelectedDataItem, uniqueId} from "../../../types";
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface CustomDataGUIProps {
     selectedData: Array<SelectedDataItem>;
@@ -44,7 +45,13 @@ interface CustomDataGUIProps {
 export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
     const classes = useStyles();
-    
+    //TODO: document this and the new collapse mechanism!!!
+    // boolean values used to indicate if the collapse of the corresponding element ist openend
+    const [showCustomData, setShowCustomData] = React.useState(false);
+    const [showSelectedData, setShowSelectedData] = React.useState(false);
+    const [showArrayProcessings, setShowArrayProcessings] = React.useState(false);
+
+
     /**
      * Renders the Buttons for selected-data. All content from selectedData that has 'Zahl' as type is shown.
      * @param data the name of the data-value
@@ -56,15 +63,10 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
 
             return (
                 <ListItem key={data.key}>
-                    <FormControlLabel
-                        control={
-                            <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                    onClick={() => props.handleDataButtons(data.key)}>
-                                {(data.key + " (" + data.type + ")")}
-                            </Button>
-                        }
-                        label={''}
-                    />
+                    <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                            onClick={() => props.handleDataButtons(data.key)}>
+                        <span className={classes.overflowButtonText}>{(data.key + " (" + data.type + ")")}</span>
+                    </Button>
                 </ListItem>
             );
         }
@@ -78,15 +80,10 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     const renderListItemCustomData = (data: string) => {
         return (
             <ListItem key={data}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(data)}>
-                            {data + " (Formel)"}
-                        </Button>
-                    }
-                    label={''}
-                />
+                <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                        onClick={() => props.handleDataButtons(data)}>
+                    <span className={classes.overflowButtonText}>{data + " (Formel)"}</span>
+                </Button>
                 <ListItemSecondaryAction>
                     <IconButton edge={"end"} disabled={props.input.length > 0} onClick={() => {props.deleteCustomDataCheck(data)}}>
                         <DeleteIcon color={"error"}/>
@@ -300,12 +297,86 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                     <Box borderColor="primary.main"
                          border={4}
                          borderRadius={5}
-                         className={classes.listFrameData}>
-                        <List>
-                            {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
-                            {props.arrayProcessingsList.map((processing) => renderListItemArrayProcessings(processing))}
-                            {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
-                        </List>
+                         className={classes.listFrameData}
+                    >
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    Formeln
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showCustomData &&
+                                <IconButton aria-label="Formeln ausklappen" onClick={() => setShowCustomData(!showCustomData)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showCustomData &&
+                                <IconButton aria-label="Formeln einklappen" onClick={() => setShowCustomData(!showCustomData)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showCustomData}>
+                                    <List>
+                                        {props.customData.slice().sort((a, b) => a.formelName.localeCompare(b.formelName)).map((name) => renderListItemCustomData(name.formelName))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    API-Daten
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showSelectedData &&
+                                <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowSelectedData(!showSelectedData)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showSelectedData &&
+                                <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowSelectedData(!showSelectedData)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showSelectedData}>
+                                    <List>
+                                        {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
+                        <Grid item container xs={12}>
+                            <Grid item xs={10}>
+                                <Typography variant="h6" className={classes.customDataSelectionTitle}>
+                                    Array-Verarbeitungen
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                                {!showArrayProcessings &&
+                                <IconButton aria-label="Array-Verarbeitungen ausklappen" onClick={() => setShowArrayProcessings(!showArrayProcessings)}>
+                                    <ExpandMore/>
+                                </IconButton>
+                                }
+                                {showArrayProcessings &&
+                                <IconButton aria-label="Array-Verarbeitungen einklappen" onClick={() => setShowArrayProcessings(!showArrayProcessings)}>
+                                    <ExpandLess/>
+                                </IconButton>
+                                }
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Collapse in={showArrayProcessings}>
+                                    <List>
+                                        {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
+                                    </List>
+                                </Collapse>
+                            </Grid>
+                        </Grid>
                     </Box>
                 </Grid>
             </Grid>
