@@ -12,7 +12,7 @@ from os import path
 from visuanalytics.server.db import db, queries
 
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
-from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path
+from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path, get_temp_path
 from visuanalytics.util.config_manager import get_private, set_private
 
 from ast2json import str2json
@@ -471,6 +471,26 @@ def get_infoprovider_logs(infoprovider_id):
         return err, 400
 
 
+@api.route("/infoprovider/<infoprovider_id>/<diagram_name>", methods=["GET"])
+def get_infoprovider_test_diagram(infoprovider_id, diagram_name):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/<diagram_name>`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :param <diagram_name>: Name des Testdiagramms.
+    """
+    try:
+        file_path = get_temp_path(queries.get_infoprovider_name(infoprovider_id) + "/" + diagram_name + ".png")
+
+        return send_file(file_path, "application/json", True)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
+        return err, 400
+
+
 @api.route("/videojob/<videojob_id>", methods=["DELETE"])
 def delete_videojob(videojob_id):
     """
@@ -521,7 +541,7 @@ def get_videojob_logs(videojob_id):
         return flask.jsonify(queries.get_videojob_logs(videojob_id))
     except Exception:
         logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojo_id}"})
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojob_id}"})
         return err, 400
 
 

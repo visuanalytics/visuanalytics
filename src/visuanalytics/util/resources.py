@@ -44,6 +44,12 @@ Enthält den Pfad zu den Infoprovidern.
 Dieser Pfad wird bei Start des Servers in `init.py` durch den Pfad in der `config.json` überschrieben.
 """
 
+DATASOURCES_LOCATION = "datasources"
+"""
+Enthält den Pfad zu den Datenquellen.
+Dieser Pfad wird bei Start des Servers in `init.py` durch den Pfad in der `config.json` überschrieben.
+"""
+
 DATE_FORMAT = '%Y-%m-%d_%H-%M.%S'
 """
 Datums- und Zeitformat in welchem die Dateien abgespeichert werden.
@@ -99,6 +105,28 @@ def get_image_path(path: str):
     :return: Absoluter Pfad zur übergebenen Ressource.
     """
     return get_resource_path(os.path.join(IMAGES_LOCATION, path))
+
+
+def get_temp_path(path: str):
+    """Erstellt einen absoluten Pfad zu der übergebenen Temp-Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `TEMP_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/temp`-Ordner.
+    :return: Absoluter Pfad zur übergebenen Ressource.
+    """
+    return get_resource_path(os.path.join(TEMP_LOCATION, path))
+
+
+def get_datasource_path(path: str):
+    """Erstellt einen absoluten Pfad zu der übergebenen Datasource-Ressource.
+
+    Erstellt den Pfad aus `RESOURCES_LOCATION`, `DATASOURCES_LOCATION` und dem übergebenen Pfad.
+
+    :param path: Pfad zur Ressource, relativ zum `resources/datasources`-Ordner.
+    :return: Absoluter Pfad zur übergebenen Ressource.
+    """
+    return get_resource_path(os.path.join(DATASOURCES_LOCATION, path))
 
 
 def get_audio_path(path: str):

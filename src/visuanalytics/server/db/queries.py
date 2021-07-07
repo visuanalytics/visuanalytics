@@ -14,7 +14,7 @@ from PIL import Image
 from visuanalytics.server.db import db
 from visuanalytics.util.config_manager import get_private, set_private
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
-from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
+from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource, get_datasource_path
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
 
@@ -142,10 +142,6 @@ def insert_infoprovider(infoprovider):
     if count > 0:
         return False
 
-    # Infoprovider-Json in den Ordner "/infoproviders" speichern
-    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "wt") as f:
-        json.dump(infoprovider_json, f)
-
     infoprovider_id = con.execute("INSERT INTO infoprovider (infoprovider_name) VALUES (?)",
                                   [infoprovider_name]).lastrowid
 
@@ -192,10 +188,6 @@ def insert_infoprovider(infoprovider):
             "run_config": {}
         }
 
-        # Datasource-Json in den Ordner "/datasources" speichern
-        with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
-            json.dump(datasource_json, f)
-
         if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
@@ -205,9 +197,29 @@ def insert_infoprovider(infoprovider):
             con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
                         " VALUES (?, ?, ?)",
                         [datasource_name, schedule_historisation_id, infoprovider_id])
+            # add request memory, if datasource stores data
+            for storing_config in datasource_json["storing"]:
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
+                datasource_json["api"]["requests"].append({
+                  "type": "request_memory",
+                  "name": dict(storing_config)["name"],
+                  "use_last": 10,
+                  "alternative": {
+                    "type": "input",
+                    "data": 0
+                  }
+                })
         else:
             con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
                         [datasource_name, infoprovider_id])
+
+        # Datasource-Json in den Ordner "/datasources" speichern
+        with open_resource(_get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
+            json.dump(datasource_json, f)
+
+    # Infoprovider-Json in den Ordner "/infoproviders" speichern
+    with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "wt") as f:
+        json.dump(infoprovider_json, f)
 
     con.commit()
 
@@ -237,13 +249,19 @@ def insert_video_job(video, update=False, job_id=None):
             infoprovider = json.load(f)
         # print("loaded infoprovider:", infoprovider)
 
-        api_config = video.get("api", None)
-        if api_config:
-            video["api"]["steps_value"] += infoprovider["api"]["steps_value"]
-            video["api"]["requests"] += infoprovider["api"]["requests"]
-        else:
-            video["api"] = infoprovider["api"]
-        # print("video with requests:", video)
+        datasource_files = [x for x in os.listdir(get_datasource_path("")) if infoprovider_name + "_" in x]
+        print("datasource_files:", datasource_files)
+        for file in datasource_files:
+            with open_resource(_get_datasource_path(file.replace(".json", ""))) as f:
+                datasource_config = json.load(f)
+
+            api_config = video.get("api", None)
+            if api_config:
+                video["api"]["steps_value"] += datasource_config["api"]["steps_value"]
+                video["api"]["requests"] += datasource_config["api"]["requests"]
+            else:
+                video["api"] = datasource_config["api"]
+        #print("video with requests:", video)
 
         transform_config = video.get("transform", None)
         if transform_config:
@@ -418,6 +436,15 @@ def get_datasource_file(datasource_id):
     return _get_datasource_path(infoprovider_name.replace(" ", "-") + "_" + datasource_name.replace(" ", "-")) if datasource_name is not None else None
 
 
+def get_infoprovider_name(infoprovider_id):
+    con = db.open_con_f()
+    # Namen des gegebenen Infoproviders laden
+    res = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id = ?",
+                      [infoprovider_id]).fetchone()
+    con.commit()
+    return res["infoprovider_name"].replace(" ", "-")
+
+
 def get_infoprovider(infoprovider_id):
     """
     Methode für das Laden eines Infoproviders anhand seiner ID.
@@ -541,11 +568,6 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"images": updated_data["diagrams"]})
     infoprovider_json.update({"datasources": datasources_copy})
 
-    # Neues Json abspeichern
-    new_file_path = get_infoprovider_file(infoprovider_id)
-    with open_resource(new_file_path, "w") as f:
-        json.dump(infoprovider_json, f)
-
     shutil.rmtree(os.path.join(TEMP_LOCATION, old_infoprovider_name), ignore_errors=True)
 
     for diagram_name, diagram in updated_data["diagrams"].items():
@@ -594,10 +616,6 @@ def update_infoprovider(infoprovider_id, updated_data):
             "run_config": {}
         }
 
-        # Datasource-Json in den Ordner "/datasources" speichern
-        with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
-            json.dump(datasource_json, f)
-
         if len(datasource_json["storing"]) > 0 and datasource["api"]["api_info"]["type"] != "request_memory":
             # Schedule für Datasource abspeichern
             schedule_historisation = datasource["schedule"]
@@ -607,9 +625,30 @@ def update_infoprovider(infoprovider_id, updated_data):
             con.execute("INSERT INTO datasource (datasource_name, schedule_historisation_id, infoprovider_id)"
                         " VALUES (?, ?, ?)",
                         [datasource_name, schedule_historisation_id, infoprovider_id])
+            # add request memory, if datasource stores data
+            for storing_config in datasource_json["storing"]:
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
+                datasource_json["api"]["requests"].append({
+                  "type": "request_memory",
+                  "name": dict(storing_config)["name"],
+                  "use_last": 10,
+                  "alternative": {
+                    "type": "input",
+                    "data": 0
+                  }
+                })
         else:
             con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
                         [datasource_name, infoprovider_id])
+
+        # Datasource-Json in den Ordner "/datasources" speichern
+        with open_resource(_get_datasource_path(updated_data["infoprovider_name"].replace(" ", "-") + "_" + datasource_name.replace(" ", "-")), "wt") as f:
+            json.dump(datasource_json, f)
+
+    # Neues Json abspeichern
+    new_file_path = get_infoprovider_file(infoprovider_id)
+    with open_resource(new_file_path, "w") as f:
+        json.dump(infoprovider_json, f)
 
     con.commit()
     return None
