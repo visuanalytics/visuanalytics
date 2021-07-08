@@ -118,7 +118,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
 
 
-
     //TODO: add current state variables if needed
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
@@ -775,6 +774,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         return arraysInDiagrams;
     }, [infoProvDiagrams]);
 
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = useRef(true);
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
