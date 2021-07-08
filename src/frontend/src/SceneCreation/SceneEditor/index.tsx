@@ -8,9 +8,6 @@ import {
     TextField,
     MenuItem,
     Typography,
-    ListItemIcon,
-    ListItemSecondaryAction,
-    ListItemText,
     DialogTitle,
     DialogContent,
     DialogActions, Dialog,
@@ -24,9 +21,6 @@ import {Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star} from 'react-
 import {TransformerComponent} from './TransformerComponent'
 import {FrontendInfoProvider} from "../../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, imagePostBackendAnswer} from "../types";
-import IconButton from "@material-ui/core/IconButton";
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import BarChartIcon from '@material-ui/icons/BarChart';
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../util/CenterNotification";
 import {
@@ -44,7 +38,6 @@ import {
 } from "./types"
 import {ImageLists} from "./ImageLists";
 import {DiagramList} from "./DiagramList";
-import {ReactComponent} from "*.svg";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -129,9 +122,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     // state to check the size by how much an item should be moved either in x or y direction
     const [stepSize, setStepSize] = React.useState(5);
     // state for the stage of the canvas, used for the export
-    const [stage, setStage] = React.useState<Konva.Stage>()
+    const [stage, setStage] = React.useState<Konva.Stage>(new Konva.Stage({container: "", width: 960, height: 540}))
 
-    // state for all textediting related properties
+    // states for all textediting related properties
     const [textEditContent, setTextEditContent] = React.useState("");
     const [textEditVisibility, setTextEditVisibility] = React.useState(false);
     const [textEditX, setTextEditX] = React.useState(0);
@@ -192,6 +185,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (exportJSON !== null){
             postScene();
         }
+
     }, [exportJSON]);
 
     /**
@@ -328,9 +322,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const saveHandler = (currentStage : Konva.Stage) => {
         // create the picture of the stage
-        let stageImage = currentStage?.toDataURL();
+        let stageImage = ""
+        if (currentStage !== null && currentStage !== undefined){
+           stageImage = currentStage?.toDataURL();
+        }
         // if the content of the stage is empty, the stageImage is set to empty stage
-        if (stageImage === undefined) {
+        if (stageImage === "") {
             stageImage = "Empty Stage";
         }
         return stageImage;
@@ -648,13 +645,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(jsonData);
     }
 
-    /**
-     * Method to handle a successful background upload
-     * @param jsonData backend response data
-     */
-    const handleBackgroundUploadSuccess = (jsonData : any) => {
-        console.log(jsonData)
-    }
 
     /**
      * Method to handle a general error response
@@ -1614,35 +1604,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     }
 
-    //TODO Fetch Diagramms
-    const addDiagramm = (diagram: DiagramInfo) => {
-        console.log("diagram " + diagram.name + " should be added to the canvas here")
-    }
 
 
-    //TODO: custom icons
-    /**
-     * Method that renders an entry in the list of available diagrams.
-     * @param diagram The information about the entry to be displayed
-     */
-    const renderDiagramListEntry = (diagram: DiagramInfo) => {
-        return (
-            <ListItem key={diagram.name}>
-                <ListItemIcon>
-                    <BarChartIcon/>
-                </ListItemIcon>
-                <ListItemText>
-                    {diagram.name + " (" + diagram.type + ")"}
-                </ListItemText>
-                <ListItemSecondaryAction>
-                    <IconButton
-                        onClick={() => addDiagramm(diagram)}>
-                        <AddCircleOutlineIcon/>
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
-        )
-    }
 
     /**
      * Method to handle the change of the input element for the image upload
