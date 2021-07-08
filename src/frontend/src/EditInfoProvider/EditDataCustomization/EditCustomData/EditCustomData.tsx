@@ -145,7 +145,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         //delete diagrams depending on it if they exist
         if (diagramsToRemove.length > 0) {
             newDiagrams.current = newDiagrams.current.filter((diagram) => {
-<<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditCustomData.tsx
                 return !diagramsToRemove.includes(diagram.name);
             })
         }
@@ -180,42 +179,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                 return !diagramsToRemove.includes(diagram.name);
             })
         }
-=======
-                return !diagramsToRemove.includes(diagram.name);
-            })
-        }
-        if(formulasToRemove.length > 0) {
-            formulasToRemove.forEach((formula) => {
-                deleteFormulaDependents(formula)
-            })
-        }
-        props.setHistorizedData(newHistorizedData.current);
-        props.setInfoProvDiagrams(newDiagrams.current);
-        props.setCustomData(newCustomData.current);
-        newHistorizedData.current = [];
-        newDiagrams.current = [];
-        newCustomData.current = [];
-    }
-
-    /**
-     * Method that searches all diagrams and formulas depending on a formula to delete them.
-     * For each formula found, it will recursively repeat this process.
-     * Also removes from historizedData.
-     * @param formelName The formel to be deleted.
-     */
-    const deleteFormulaDependents = (formelName: string) => {
-        //remove the formula from historized data if it is contained
-        newHistorizedData.current = newHistorizedData.current.filter((data) => {
-            return data !== formelName;
-        })
-        //search all diagrams and delete them
-        const diagramsToRemove = findDependentDiagrams(formelName);
-        if (diagramsToRemove.length > 0) {
-            newDiagrams.current = newDiagrams.current.filter((diagram) => {
-                return !diagramsToRemove.includes(diagram.name);
-            })
-        }
->>>>>>> 5eeb798f1ab6ec77c085e7cf625c1aaf8a25540e:src/frontend/src/EditInfoProvider/EditCustomData/EditCustomData.tsx
         //find all formulas depending on the formula
         const dependentFormulas: Array<string> = [];
         newCustomData.current.forEach((formula) => {
@@ -444,7 +407,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                     }, 200);
                 }} aria-labelledby="deleteDialog-title"
                         open={deleteDialogOpen}>
-<<<<<<< HEAD:src/frontend/src/EditInfoProvider/EditDataCustomization/EditCustomData/EditCustomData.tsx
                     <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                         Löschen von {formelToRemove} bestätigen
                     </DialogTitle>
@@ -460,23 +422,6 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         }
                         { formulasToRemove.length !==0 &&
                         <Typography gutterBottom className={classes.wrappedText}>
-=======
-                    <DialogTitle id="deleteDialog-title">
-                        Löschen von {formelToRemove} bestätigen
-                    </DialogTitle>
-                    <DialogContent dividers>
-                        <Typography gutterBottom>
-                            Wollen sie die Formel: "{formelToRemove}" wirklich löschen?
-                        </Typography>
-                        { diagramsToRemove.length !==0 &&
-                        <Typography gutterBottom>
-                            Das Löschen der Formel wird folgende Diagramme entfernen, da sie die Formel
-                            nutzen: {diagramsToRemove.join(", ")}
-                        </Typography>
-                        }
-                        { formulasToRemove.length !==0 &&
-                        <Typography gutterBottom>
->>>>>>> 5eeb798f1ab6ec77c085e7cf625c1aaf8a25540e:src/frontend/src/EditInfoProvider/EditCustomData/EditCustomData.tsx
                             Das Löschen der Formel wird folgende Formeln entfernen, da sie die Formel
                             nutzen: {formulasToRemove.join(", ")}<br/> Durch das Löschen der Formeln können Diagramme und Formeln gelöscht werden, die diese nutzen (kaskadierende Löschung).
                         </Typography>

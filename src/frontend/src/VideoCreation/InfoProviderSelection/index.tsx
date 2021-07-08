@@ -213,7 +213,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                         onChange={() => checkBoxHandler(infoProvider)}
                     />
                 </ListItemIcon>
-                <ListItemText>
+                <ListItemText className={classes.wrappedText}>
                     {infoProvider.infoprovider_name}
                 </ListItemText>
             </ListItem>

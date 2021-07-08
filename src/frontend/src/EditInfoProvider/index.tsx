@@ -778,10 +778,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
-    //this static value will be true as long as the component is still mounted
-    //used to check if handling of a fetch request should still take place or if the component is not used anymore
-    const isMounted = useRef(true);
-
     /**
      * Method to send a diagram to the backend for testing.
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.

@@ -90,14 +90,14 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
      * There is the known issue that the Material UI slider causes a violation in the Dev Console since.
      * According to the GitHub issue regarding this, it is okay to leave it: https://github.com/mui-org/material-ui/issues/26456
      */
-
+    //TODO: currently, names are displayed fully which will cause different card sizes for big names - possibly change this to hide overflow
     return (
         <React.Fragment>
-            <Card variant="outlined" color="primary" style={{width: "300px"}}>
+            <Card variant="outlined" color="primary" className={classes.sceneCard}>
                 <CardContent>
                     <Grid item container>
                         <Grid item xs={10}>
-                            <Typography>
+                            <Typography className={classes.wrappedText}>
                                 {props.sceneName}
                             </Typography>
                         </Grid>
