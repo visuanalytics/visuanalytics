@@ -100,5 +100,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             paddingLeft: "0.8rem",
             paddingTop: "0.6rem"
         },
+        wrappedText: {
+            overflowWrap: "break-word",
+        },
     }),
 );

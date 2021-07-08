@@ -94,23 +94,19 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
     };
 
     /**
-     * Renders the Buttons for array processings. All content from customData is shown with delete-option
-     * @param processing the object of the array processing
+     * Method that renders a array-processing as a button in the list of data
+     * to add to a formula.
+     * @param processing The name of the processing
      */
-    const renderListItemArrayProcessings = (processing: ArrayProcessingData) => {
+    const renderArrayProcessing = (processing: string) => {
         return (
-            <ListItem key={processing.name}>
-                <FormControlLabel
-                    control={
-                        <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
-                                onClick={() => props.handleDataButtons(processing.name)}>
-                            {processing.name + " (Array-Verarbeitung)"}
-                        </Button>
-                    }
-                    label={''}
-                />
+            <ListItem key={processing}>
+                <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
+                        onClick={() => props.handleDataButtons(processing)}>
+                    <span className={classes.overflowButtonText}>{processing}</span>
+                </Button>
             </ListItem>
-        );
+        )
     }
 
     /**
@@ -372,7 +368,7 @@ export const CustomDataGUI: React.FC<CustomDataGUIProps> = (props) => {
                             <Grid item xs={12}>
                                 <Collapse in={showArrayProcessings}>
                                     <List>
-                                        {props.selectedData.slice().sort((a, b) => a.key.localeCompare(b.key)).map((item) => renderListItemSelectedData(item))}
+                                        {props.arrayProcessingsList.map((item) => renderArrayProcessing(item.name))}
                                     </List>
                                 </Collapse>
                             </Grid>

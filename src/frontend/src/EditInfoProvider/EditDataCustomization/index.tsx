@@ -81,6 +81,8 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                         infoProvName={props.infoProvName}
                         infoProvDiagrams={props.infoProvDiagrams}
                         setInfoProvDiagrams={props.setInfoProvDiagrams}
+                        setHistorizedData={props.setHistorizedData}
+                        setCustomData={props.setCustomData}
                     />
                 )
             }

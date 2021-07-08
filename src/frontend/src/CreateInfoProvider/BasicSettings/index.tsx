@@ -16,8 +16,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
 import {transformJSON} from "../helpermethods";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface BasicSettingsProps {
     continueHandler: () => void;

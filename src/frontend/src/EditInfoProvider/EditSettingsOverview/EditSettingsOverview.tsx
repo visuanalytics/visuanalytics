@@ -132,7 +132,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     const renderListItem = (item: string) => {
         return (
             <ListItem key={item} divider={true}>
-                <ListItemText primary={item} secondary={null}/>
+                <ListItemText className={classes.wrappedText} primary={item} secondary={null}/>
             </ListItem>
         )
     }
@@ -164,7 +164,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
             heading={'Bearbeiten eines Infoproviders:'}
             hintContent={"Überblick"}>
             <Grid container justify={"space-evenly"}>
-                <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
+                <Grid container justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item xs={12}>
                         <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                    label={"Info-Provider Name"}
@@ -173,9 +173,6 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         </TextField>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <Typography variant="body1">
-                            Übersicht über ausgewählte Daten
-                        </Typography>
                         <Grid item className={classes.elementLargeMargin}>
                             <Button disabled={props.infoProvDataSources.length <= 1} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
                                 Datenquelle Löschen
@@ -190,7 +187,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
+                    <Grid item container xs={12} md={6} className={classes.elementLargeMargin}>
                         <Grid item xs={12}>
                             <Typography variant="h5">
                                 Daten und Formeln

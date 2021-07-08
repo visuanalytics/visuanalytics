@@ -642,15 +642,19 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
+                    calculates: createCalculates(dataSource.arrayProcessingsList),
+                    replacements: createReplacements(dataSource.stringReplacementList),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
                         date: "",
-                        time_interval: dataSource.schedule.interval,
+                        timeInterval: dataSource.schedule.interval,
                         weekdays: dataSource.schedule.weekdays
                     },
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
+                    arrayProcessingsList: dataSource.arrayProcessingsList,
+                    stringReplacementList: dataSource.stringReplacementList
                 })
             }
         });
