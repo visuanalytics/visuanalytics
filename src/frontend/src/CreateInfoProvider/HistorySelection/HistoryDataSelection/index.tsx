@@ -286,7 +286,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                     <Typography gutterBottom>
                         Durch das Abwählen einiger Daten müssen Diagramme gelöscht werden, die diese Daten nutzen.
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom >
                         {diagramsToRemove.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.join(", ") : ""}
                     </Typography>
                 </DialogContent>

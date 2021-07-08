@@ -94,7 +94,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             paddingTop: "1.75em", marginRight: "5px"
         },
         wrappedText: {
-            overflowWrap: "break-word"
+            overflowWrap: "break-word",
         },
         wrappedLabel: {
             "& .MuiFormControlLabel-label": {
