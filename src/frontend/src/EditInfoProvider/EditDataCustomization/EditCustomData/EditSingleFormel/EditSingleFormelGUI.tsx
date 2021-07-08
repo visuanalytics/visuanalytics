@@ -52,7 +52,7 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                         control={
                             <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                     onClick={() => props.handleDataButtons(data.key)}>
-                                <span className={classes.wrappedText}>{data.key}</span>
+                                <span className={classes.overflowButtonText}>{data.key}</span>
                             </Button>
                         }
                         label={''}
@@ -76,7 +76,7 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                         control={
                             <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                     onClick={() => props.handleDataButtons(data)}>
-                                <span className={classes.wrappedText}>{data}</span>
+                                <span className={classes.overflowButtonText}>{data}</span>
                             </Button>
                         }
                         label={''}

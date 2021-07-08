@@ -109,5 +109,10 @@ export const useStyles = makeStyles((theme: Theme) =>
         wrappedText: {
             overflowWrap: "break-word",
         },
+        overflowButtonText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "left"
+        },
     }),
 );

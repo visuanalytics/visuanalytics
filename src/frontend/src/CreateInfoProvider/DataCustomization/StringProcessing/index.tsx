@@ -243,13 +243,13 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
     return (
         <StepFrame
-            heading="Array-Verarbeitung"
+            heading="String-Ersetzungen"
             hintContent={null}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>
                     <Typography variant="body1">
-                        Eine String-Verarbeitung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen:
+                        Eine String-Ersetzung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen:
                     </Typography>
                 </Grid>
                 <Grid item container xs={12} md={8} justify="space-between" style={{height: "100%"}}>

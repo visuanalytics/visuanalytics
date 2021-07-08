@@ -475,7 +475,6 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 return;
             }
         }
-<<<<<<< HEAD:src/frontend/src/CreateInfoProvider/DataCustomization/CreateCustomData/index.tsx
         //check for duplicates in array processings names
         for (let i: number = 0; i < props.arrayProcessingsList.length; i++) {
             if (props.arrayProcessingsList[i].name === formel) {
@@ -490,8 +489,6 @@ export const CreateCustomData: React.FC<CreateCustomDataProps> = (props) => {
                 return;
             }
         }
-=======
->>>>>>> 5eeb798f1ab6ec77c085e7cf625c1aaf8a25540e:src/frontend/src/CreateInfoProvider/CreateCustomData/index.tsx
         //funktioniert nur, wenn das backend läuft:
         sendTestData();
 

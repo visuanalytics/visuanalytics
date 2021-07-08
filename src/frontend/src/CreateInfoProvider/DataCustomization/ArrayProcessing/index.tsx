@@ -435,17 +435,17 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={removeDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                     Löschen von "{currentRemoveIndex >= 0 ? props.arrayProcessingsList[currentRemoveIndex].name : ""}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Durch das Löschen von "{currentRemoveIndex >= 0 ? props.arrayProcessingsList[currentRemoveIndex].name : ""}" müssen Formeln und/oder Diagramme gelöscht werden, die dieses nutzen.
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         {formulasToRemove.current.length > 0 ? "Folgende Formeln sind betroffen: " + formulasToRemove.current.join(", ") : ""}
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         {diagramsToRemove.current.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.current.join(", ") : ""}
                     </Typography>
                 </DialogContent>
