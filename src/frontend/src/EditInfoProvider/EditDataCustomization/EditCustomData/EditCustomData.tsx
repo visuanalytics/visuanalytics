@@ -407,21 +407,21 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                     }, 200);
                 }} aria-labelledby="deleteDialog-title"
                         open={deleteDialogOpen}>
-                    <DialogTitle id="deleteDialog-title">
+                    <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                         Löschen von {formelToRemove} bestätigen
                     </DialogTitle>
                     <DialogContent dividers>
-                        <Typography gutterBottom>
+                        <Typography gutterBottom className={classes.wrappedText}>
                             Wollen sie die Formel: "{formelToRemove}" wirklich löschen?
                         </Typography>
                         { diagramsToRemove.length !==0 &&
-                        <Typography gutterBottom>
+                        <Typography gutterBottom className={classes.wrappedText}>
                             Das Löschen der Formel wird folgende Diagramme entfernen, da sie die Formel
                             nutzen: {diagramsToRemove.join(", ")}
                         </Typography>
                         }
                         { formulasToRemove.length !==0 &&
-                        <Typography gutterBottom>
+                        <Typography gutterBottom className={classes.wrappedText}>
                             Das Löschen der Formel wird folgende Formeln entfernen, da sie die Formel
                             nutzen: {formulasToRemove.join(", ")}<br/> Durch das Löschen der Formeln können Diagramme und Formeln gelöscht werden, die diese nutzen (kaskadierende Löschung).
                         </Typography>
@@ -467,7 +467,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                     }, 200);
                 }} aria-labelledby="editDialog-title"
                         open={editDialogOpen}>
-                    <DialogTitle id="deleteDialog-title">
+                    <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                         Wollen Sie die Formel "{currentEditFormel.formelName}" bearbeiten?
                     </DialogTitle>
                     <DialogActions>

@@ -95,6 +95,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        blockableButtonDelete: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.error.main,
+                opacity: "60%"
+            }
+        },
         processingListingText: {
             overflowWrap: "break-word",
             paddingLeft: "0.8rem",

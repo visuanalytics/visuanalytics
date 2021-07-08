@@ -172,8 +172,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                    onChange={event => (props.setInfoProvName(event.target.value.replace(' ', '_')))}>
                         </TextField>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Grid item className={classes.elementLargeMargin}>
+                    <Grid item xs={12} md={6} className={classes.elementLargeMargin}>
+                        <Grid item className={classes.blockableButtonDelete}>
                             <Button disabled={props.infoProvDataSources.length <= 1} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
                                 Datenquelle Löschen
                             </Button>
@@ -308,15 +308,15 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                     Löschen von "{props.infoProvDataSources[props.selectedDataSource].apiName}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Die Datenquelle "{props.infoProvDataSources[props.selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
                     { diagramsToRemove.length > 0 &&
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
                     </Typography>
                     }

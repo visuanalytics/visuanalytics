@@ -67,7 +67,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     const arrayObject: ArrayDiagramProperties = diagram.arrayObjects[innerIndex];
                     //checking is only necessary if the arrayObject is from this api
                     if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
-                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the listems
+                        //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the lisItems
                         if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName)) return false;
                     }
                 }
@@ -239,6 +239,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                 </StepFrame>
             )
         } else {
+            //TODO: remove the debugging thing by removing the possibility of "test janek"
             return (
                 <DataSelection
                     continueHandler={() => props.continueHandler(1)}

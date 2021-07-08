@@ -52,7 +52,7 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                         control={
                             <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                     onClick={() => props.handleDataButtons(data.key)}>
-                                {data.key}
+                                <span className={classes.wrappedText}>{data.key}</span>
                             </Button>
                         }
                         label={''}
@@ -76,7 +76,7 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
                         control={
                             <Button variant={"contained"} size={"medium"} disabled={props.dataFlag}
                                     onClick={() => props.handleDataButtons(data)}>
-                                {data}
+                                <span className={classes.wrappedText}>{data}</span>
                             </Button>
                         }
                         label={''}
@@ -245,6 +245,8 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
         )
     }
 
+    //TODO: add new look to this component as in creation
+    //TODO: make arrayprocessings available
     return (
         <React.Fragment>
             <Grid container>
@@ -283,4 +285,4 @@ export const EditSingleFormelGUI: React.FC<EditSingleFormelGUIProps> = (props) =
             </Grid>
         </React.Fragment>
     );
-};
+}
