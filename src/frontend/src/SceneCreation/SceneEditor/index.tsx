@@ -2238,6 +2238,24 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 </Grid>
                             </React.Fragment>
                         }
+                        {props.customDataList.length > 0 &&
+                        <React.Fragment>
+                            <Grid item xs={12} className={classes.elementLargeMargin}>
+                                <Typography variant={"h4"} align={"center"}>
+                                    Formeln
+                                </Typography>
+                                <br/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box borderColor="primary.main" border={4} borderRadius={5}
+                                     className={classes.choiceListFrame}>
+                                    <List disablePadding={true}>
+                                        {props.customDataList.map((item: string) => renderListItem(item))}
+                                    </List>
+                                </Box>
+                            </Grid>
+                        </React.Fragment>
+                        }
                         {props.stringReplacementList.length > 0 &&
                             <React.Fragment>
                                 <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -2295,10 +2313,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                            handleBackgroundImageClick={handleBackgroundImageClick}
                        />
                        <br/>
+                        {props.diagramList.length > 0 &&
                         <DiagramList
                             diagramList={props.diagramList}
                             handleDiagramClick={() => {return;}}
                         />
+                        }
                     </Grid>
                 </Grid>
             </Grid>
@@ -2313,7 +2333,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 position: "absolute",
                 top: "-9999px",
             }}/>
-            <Dialog aria-labelledby="AddHistorizedDialog-Title" open={showHistorizedDialog}>
+            <Dialog aria-labelledby="AddHistorizedDialog-Title" open={showHistorizedDialog} onClose={() => cancelHistorizedAdding()}>
                 <DialogTitle id="AddHistorizedDialog-Title">
                     Intervallauswahl für {selectedHistorizedElement}
                 </DialogTitle>
