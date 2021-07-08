@@ -905,6 +905,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         selectedDataSource={selectedDataSource}
                         infoProvDiagrams={infoProvDiagrams}
                         setInfoProvDiagrams={(array: Array<Diagram>) => setInfoProvDiagrams(array)}
+                        listItems={infoProvDataSources[selectedDataSource].listItems}
+                        customData={infoProvDataSources[selectedDataSource].customData}
+                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
+                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
@@ -912,30 +916,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                         finishEditing={finishEditing}
                         checkForHistorizedData={checkForHistorizedData}
+                        formel={formelInformation}
                         setFormelInformation={(formelInformation: FormelContext) => setFormelInformation(formelInformation)}
                     />
                 );
             case 4:
                 return (
-                    <EditSingleFormel
-                        continueHandler={(index: number) => handleContinue(index)}
-                        backHandler={(index: number) => handleBack(index)}
-                        editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSources}
-                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
-                        selectedDataSource={selectedDataSource}
-                        reportError={reportError}
-                        formel={formelInformation}
-                        listItems={infoProvDataSources[selectedDataSource].listItems}
-                        customData={infoProvDataSources[selectedDataSource].customData}
-                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
-                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
-                    />
-                )
-            case 5:
-                return (
                     <HistorySelection
-                        continueHandler={() => setEditStep(6)}
+                        continueHandler={() => setEditStep(0)}
                         backHandler={() => setEditStep(2)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
@@ -953,7 +941,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         newDataSourceInEditMode={false}
                     />
                 )
-            case 6:
+            case 5:
                 return (
                     <Grid>
                         <DiagramCreation
