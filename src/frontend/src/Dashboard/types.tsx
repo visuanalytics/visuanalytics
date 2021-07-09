@@ -20,12 +20,12 @@ export type answer = {
     err_msg: string;
 }
 
-export type StatusMessage = "error" | "warning" | "success";
-
 export type LogEntry = {
-    logID: number;
-    status: StatusMessage;
-    logDate: string;
-    logTime: string;
-    message: string;
+    jobID: string;
+    jobName: string;
+    state: string;
+    errorMsg: string;
+    errorTraceback: string;
+    duration: string;
+    startTime: string;
 }
