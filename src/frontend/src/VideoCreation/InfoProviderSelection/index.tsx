@@ -84,7 +84,9 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     weekdays: dataSource.schedule.weekdays,
                     time: dataSource.schedule.time,
                     interval: dataSource.schedule.timeInterval,
-                }
+                },
+                arrayProcessingList: dataSource.arrayProcessingsList,
+                stringReplacementList: dataSource.stringReplacementList,
             })
         })
         return minimalInfoProvider;

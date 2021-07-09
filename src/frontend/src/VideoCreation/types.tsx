@@ -1,6 +1,7 @@
 import {
+    ArrayProcessingData,
     Schedule,
-    SelectedDataItem
+    SelectedDataItem, StringReplacementData
 } from "../CreateInfoProvider/types";
 import {FormelObj} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
@@ -52,6 +53,8 @@ export type MinimalDataSource = {
     customData: FormelObj[];
     historizedData: string[];
     schedule: Schedule;
+    arrayProcessingList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
 
 /**
