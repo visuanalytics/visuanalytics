@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, Tab
+    DialogTitle, Tab, TableHead
 } from "@material-ui/core";
 import {LogEntry, StatusMessage} from "../../../types";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -16,7 +16,6 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import {log} from "util";
 
 interface LogDialogProps {
     infoproviderID: number;
@@ -39,7 +38,7 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
         status: "error",
         logDate: "30.06.2021",
         logTime: "12:03",
-        message: "Generieren der historisierten Daten ist fehlgeschlagen."
+        message: "Generieren der historisierten Daten ist fehlgeschlagenaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa."
     }]);
 
     const getReadableStatus = (status: StatusMessage) => {
@@ -57,31 +56,40 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
     const renderTableRow = (entry: LogEntry) => {
         return (
             <TableRow key={entry.logID}>
-                <TableCell>{entry.logID}</TableCell>
-                <TableCell>{entry.logDate}</TableCell>
-                <TableCell>{entry.logTime}</TableCell>
-                <TableCell>{getReadableStatus(entry.status)}</TableCell>
-                <TableCell>{entry.message}</TableCell>
+                <TableCell className={classes.logTableCell}>{entry.logID}</TableCell>
+                <TableCell className={classes.logTableCell}>{entry.logDate}</TableCell>
+                <TableCell className={classes.logTableCell}>{entry.logTime}</TableCell>
+                <TableCell className={classes.logTableCell}>{getReadableStatus(entry.status)}</TableCell>
+                <TableCell className={classes.logMessageTableCell}>{entry.message}</TableCell>
             </TableRow>
         );
     }
 
 
     return (
-        <Dialog aria-labelledby="LogDialog-Title" open={props.showLogDialog} onClose={() => props.setShowLogDialog(false)}>
-            <DialogTitle id="LogDialog-Title">
+        <Dialog maxWidth={"md"} aria-labelledby="LogDialog-Title" open={props.showLogDialog} onClose={() => props.setShowLogDialog(false)}>
+            <DialogTitle id="LogDialog-Title" className={classes.wrappedText}>
                 Logs für {props.infoproviderName}
             </DialogTitle>
             <DialogContent dividers>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Typography variant="body1">
-                            Hier können Sie die Log-Daten für den Infoprovider {props.infoproviderName} einsehen.
+                        <Typography variant="body1" className={classes.wrappedText}>
+                            Hier können Sie die Log-Daten für den Infoprovider "{props.infoproviderName}" einsehen.
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className={classes.elementLargeMargin}>
                         <TableContainer component={Paper}>
                             <Table aria-label="Log-Einträge">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Nr.</TableCell>
+                                        <TableCell>Datum</TableCell>
+                                        <TableCell>Uhrzeit</TableCell>
+                                        <TableCell>Status</TableCell>
+                                        <TableCell>Nachricht</TableCell>
+                                    </TableRow>
+                                </TableHead>
                                 <TableBody>
                                     {logMessages.map((logEntry: LogEntry) => renderTableRow(logEntry))}
                                 </TableBody>

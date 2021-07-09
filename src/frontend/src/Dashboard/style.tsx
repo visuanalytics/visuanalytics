@@ -68,6 +68,18 @@ export const useStyles = makeStyles((theme: Theme) =>
             '&:hover': {
                 backgroundColor: theme.palette.error.dark,
             },
+        },
+        wrappedText: {
+            overflowWrap: "break-word"
+        },
+        logTableCell: {
+            width: "2em",
+            overflowWrap: "break-word"
+        },
+        //TODO: document that this maxWidth is probably "abusing" some kind of CSS things happening
+        logMessageTableCell: {
+            maxWidth: '1em',
+            overflowWrap: "break-word"
         }
     }),
 );

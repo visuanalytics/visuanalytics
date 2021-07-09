@@ -33,10 +33,10 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
     const [selectedInfoproviderName, setSelectedInfoproviderName] = React.useState("");
 
     const openLogDialog = (infoproviderID: number, infoproviderName: string) => {
-    setSelectedInfoproviderID(infoproviderID);
-    setSelectedInfoproviderName(infoproviderName);
-    setShowLogDialog(true);
-}
+        setSelectedInfoproviderID(infoproviderID);
+        setSelectedInfoproviderName(infoproviderName);
+        setShowLogDialog(true);
+    }
 
     /**
      * The method renders one list-element and will be called for every single infoprovider in the infoprovider-array
