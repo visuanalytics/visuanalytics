@@ -437,7 +437,7 @@ def get_infoprovider(infoprovider_id):
         api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
         private_config = get_private()
         if api_key_name:
-            datasource["api"]["api_info"]["api_key_name"] = private_config["api_keys"][api_key_name]
+            datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name]
 
     return {
         "infoprovider_name": infoprovider_json["name"],
