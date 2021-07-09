@@ -19,7 +19,7 @@ import {AudioElement, MinimalDataSource, MinimalInfoProvider} from "../../types"
 import DeleteIcon from "@material-ui/icons/Delete";
 import {extractKeysFromSelection} from "../../../CreateInfoProvider/helpermethods"
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
-import { Schedule } from "../../../CreateInfoProvider/types";
+import {ArrayProcessingData, Schedule, StringReplacementData} from "../../../CreateInfoProvider/types";
 import {ScheduleTypeTable} from "../../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import Box from "@material-ui/core/Box";
 import {FormelObj} from "../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
@@ -280,6 +280,26 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
                         {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                    </List>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="body1" className={classes.categoryText}>
+                        Array-Verarbeitungen
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
+                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
+                    </List>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="body1" className={classes.categoryText}>
+                        String-Ersetzungen
+                    </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
+                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name))}
                     </List>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
