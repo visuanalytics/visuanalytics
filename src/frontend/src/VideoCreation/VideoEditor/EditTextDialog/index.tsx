@@ -254,7 +254,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * This method renders clickable buttons for inserting selected and custom data from an infoprovider into a textfield.
      * @param item The name of the item that should be rendered
      */
-    const renderSelectedDataAndCustomData = (item: string) => {
+    const renderData = (item: string) => {
         return (
             <ListItem key={item}>
                 <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData(item)}>
@@ -279,7 +279,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
+                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item))}
                     </List>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -289,7 +289,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                        {dataSource.customData.map((item: FormelObj) => renderSelectedDataAndCustomData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName))}
+                        {dataSource.customData.map((item: FormelObj) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
