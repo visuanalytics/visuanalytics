@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, Tab, TableHead
+    DialogTitle, TableHead
 } from "@material-ui/core";
 import {LogEntry, StatusMessage} from "../../../types";
 import TableContainer from "@material-ui/core/TableContainer";
