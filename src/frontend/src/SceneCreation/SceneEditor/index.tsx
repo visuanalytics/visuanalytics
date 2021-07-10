@@ -79,7 +79,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const mainRef = React.useRef<HTMLDivElement>(null);
     // reference for the background Image
     const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image())
-    // const uniqueId = "h7687d2ik8-j3f7-m39i4- hj49-o4jig5o4n53";
     const currentItemRotation = React.useRef<number>(0)
     const currentItemScaleX = React.useRef<number>(1);
     const currentItemScaleY = React.useRef<number>(1);
@@ -196,14 +195,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         setBackgroundImage(newImg)
         //backGroundType
         setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
-        //backGroundColor
-        setBackGroundColor(sessionStorage.getItem("backGroundColor-" + uniqueId) || "FFFFFF");
+        //currentBGColor
+        setCurrentBGColor(sessionStorage.getItem("currentBGColor-" + uniqueId) || "FFFFFF");
         //backgroundColorEnabled
         setBackGroundColorEnabled(sessionStorage.getItem("backGroundColorEnabled-" + uniqueId) === "true" || false);
         //deleteText
         setDeleteText(sessionStorage.getItem("deleteText-" + uniqueId) || "Letztes Elem. entf.");
         //items
-        setItems(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!))
+        let restoredItems: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage> = [];
+        restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
+        console.log(props.imageList);
+        //find all images and set the new url by their id
+        for (let index = 0; index < restoredItems.length; index++) {
+            if(restoredItems[index].hasOwnProperty("image")) {
+                let castedItem = restoredItems[index] as CustomImage;
+                castedItem.image = new window.Image();
+                castedItem.image.src = props.imageList[castedItem.imageId];
+                restoredItems[index] = castedItem;
+            }
+        }
+        setItems(restoredItems);
         //console.log(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
         //itemCounter
         setItemCounter(Number(sessionStorage.getItem("itemCounter-" + uniqueId) || 0));
@@ -217,7 +228,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     }, [])
 
 
-
     //store backgroundImage in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("backgroundImage-" + uniqueId, backgroundImage.src);
@@ -226,11 +236,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("backGroundType-" + uniqueId, backGroundType);
     }, [backGroundType])
-    //store backGroundColor in sessionStorage
+    //store currentBGColor in sessionStorage
     React.useEffect(() => {
-        console.log(backGroundColor)
-        sessionStorage.setItem("backGroundColor-" + uniqueId, backGroundColor);
-    }, [backGroundColor])
+        sessionStorage.setItem("currentBGColor-" + uniqueId, currentBGColor);
+    }, [currentBGColor])
     //store backGroundColorEnabled in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("backGroundColorEnabled-" + uniqueId, backGroundColorEnabled ? "true" : "false");
@@ -266,7 +275,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const clearSessionStorage = () => {
         sessionStorage.removeItem("backgroundImage-" + uniqueId);
         sessionStorage.removeItem("backGroundType-" + uniqueId);
-        sessionStorage.removeItem("backGroundColor-" + uniqueId);
+        sessionStorage.removeItem("currentBGColor-" + uniqueId);
         sessionStorage.removeItem("backGroundColorEnabled-" + uniqueId);
         sessionStorage.removeItem("deleteText-" + uniqueId);
         sessionStorage.removeItem("items-" + uniqueId);
@@ -1059,13 +1068,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * different method to add an image to the canvas
      * @param image the image to be added
      */
-    const addImageElement = (image : HTMLImageElement) => {
+    const addImageElement = (image : HTMLImageElement, id: number) => {
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
             y: 0,
             rotation: 0,
             image: image,
+            imageId: id,
             width: image.width,
             height: image.height,
             baseWidth: image.width,
@@ -1632,7 +1642,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log(index)
         let image = new window.Image();
         image.src = src;
-        addImageElement(image);
+        addImageElement(image, index);
     }
 
     const handleBackgroundImageClick = (src : string, index : number) => {

@@ -85,6 +85,7 @@ export type CustomImage = {
     id: string;
     rotation: number;
     image: HTMLImageElement;
+    imageId: number;
     width: number;
     height: number;
     color: string;
