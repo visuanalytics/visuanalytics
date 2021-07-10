@@ -540,6 +540,18 @@ export const SceneCreation = () => {
         }).finally(() => clearTimeout(timer));
     }
 
+    /**
+     * backgroundImage
+     backgroundType
+     backgroundColor
+     backgroundColorEnabled
+     deleteText
+     items
+     itemCounter
+     recentlyRemovedItems
+     sceneName
+     stage
+     */
 
     /**
      * Calls for sessionStorage handling

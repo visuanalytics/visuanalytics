@@ -19,7 +19,15 @@ import {hintContents} from "../../util/hintContents";
 import Konva from 'konva';
 import {Stage, Layer, Circle, Group, Text, Image, Rect, Line, Star} from 'react-konva';
 import {TransformerComponent} from './TransformerComponent'
-import {FrontendInfoProvider} from "../../CreateInfoProvider/types";
+import {
+    ArrayProcessingData,
+    DataSource,
+    Diagram,
+    FrontendInfoProvider,
+    ListItemRepresentation,
+    SelectedDataItem, StringReplacementData,
+    uniqueId
+} from "../../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, imagePostBackendAnswer} from "../types";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../util/CenterNotification";
@@ -122,7 +130,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     // state to check the size by how much an item should be moved either in x or y direction
     const [stepSize, setStepSize] = React.useState(5);
     // state for the stage of the canvas, used for the export
-    const [stage, setStage] = React.useState<Konva.Stage>(new Konva.Stage({container: "", width: 960, height: 540}))
+    const [stage, setStage] = React.useState<Konva.Stage>()
 
     // states for all textediting related properties
     const [textEditContent, setTextEditContent] = React.useState("");
@@ -159,24 +167,114 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         severity: "error",
     });
 
-    //TODO useEffects to fix reloading
+    /**
+     * Defines event listener for finishing th page loading.
+     * Sets the default Konva stage - this is necessary since the id of the container for it will
+     * only contain after the page is loaded.
+     * Also removes the handler when unmounting the component.
+     */
+    React.useEffect(() => {
+        const setStageAfterLoad = (event: Event) => {
+            setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
+        }
+        window.addEventListener("load", setStageAfterLoad);
+        return () => {
+            window.removeEventListener("load", setStageAfterLoad);
+        }
+    }, [])
 
-    /*React.useEffect(() => {
-        console.log(JSON.stringify(items))
+
+    /*
+    * Code for saving to and restoring from sessionStorage
+    * recreates the same state of the sceneEditor on reload
+     */
+
+    React.useEffect(() => {
+        //backgroundImage - stores the src of the object to recreate it
+        const newImg = new window.Image();
+        newImg.src = sessionStorage.getItem("backgroundImage-" + uniqueId) || "";
+        setBackgroundImage(newImg)
+        //backGroundType
+        setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
+        //backGroundColor
+        setBackGroundColor(sessionStorage.getItem("backGroundColor-" + uniqueId) || "FFFFFF");
+        //backgroundColorEnabled
+        setBackGroundColorEnabled(sessionStorage.getItem("backGroundColorEnabled-" + uniqueId) === "true" || false);
+        //deleteText
+        setDeleteText(sessionStorage.getItem("deleteText-" + uniqueId) || "Letztes Elem. entf.");
+        //items
+        setItems(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!))
+        //console.log(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
+        //itemCounter
+        setItemCounter(Number(sessionStorage.getItem("itemCounter-" + uniqueId) || 0));
+        //recentlyRemovedItems
+        setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!))
+        //sceneName
+        setSceneName(sessionStorage.getItem("sceneName-" + uniqueId) || "");
+        //TODO: this is possibly wrong - no default value exists for this stage so I dont know what i need here
+        //stage
+        //setStage(sessionStorage.getItem("stage-" + uniqueId) === null ? new Konva.Stage({container: "", width: 960, height: 540}) : JSON.parse(sessionStorage.getItem("stage-" + uniqueId)!));
+    }, [])
+
+
+
+    //store backgroundImage in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("backgroundImage-" + uniqueId, backgroundImage.src);
+    }, [backgroundImage])
+    //store backGroundType in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("backGroundType-" + uniqueId, backGroundType);
+    }, [backGroundType])
+    //store backGroundColor in sessionStorage
+    React.useEffect(() => {
+        console.log(backGroundColor)
+        sessionStorage.setItem("backGroundColor-" + uniqueId, backGroundColor);
+    }, [backGroundColor])
+    //store backGroundColorEnabled in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("backGroundColorEnabled-" + uniqueId, backGroundColorEnabled ? "true" : "false");
+    }, [backGroundColorEnabled])
+    //store deleteText in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("deleteText-" + uniqueId, deleteText);
+    }, [deleteText])
+    //store items in sessionStorage
+    React.useEffect(() => {
         sessionStorage.setItem("items-" + uniqueId, JSON.stringify(items));
     }, [items])
+    //store itemCounter in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("itemCounter-" + uniqueId, itemCounter.toString());
+    }, [itemCounter])
+    //store recentlyRemovedItems in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("recentlyRemovedItems-" + uniqueId, JSON.stringify(recentlyRemovedItems));
     }, [recentlyRemovedItems])
+    //store sceneName in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("selectedObject-" + uniqueId, JSON.stringify(selectedObject));
-    }, [selectedObject])
+        sessionStorage.setItem("sceneName-" + uniqueId, sceneName);
+    }, [sceneName])
+    //store stage in sessionStorage
     React.useEffect(() => {
-        setItems(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
-        setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!));
-        setSelectedObject(sessionStorage.getItem("selectedObject-" + uniqueId) === null ? {} as CustomCircle : JSON.parse(sessionStorage.getItem("selectedObject-" + uniqueId)!));
+        sessionStorage.setItem("stage-" + uniqueId, JSON.stringify(stage));
+    }, [stage])
 
-    }, [])*/
+    /**
+     * Removes all items of this component from the sessionStorage.
+     */
+    const clearSessionStorage = () => {
+        sessionStorage.removeItem("backgroundImage-" + uniqueId);
+        sessionStorage.removeItem("backGroundType-" + uniqueId);
+        sessionStorage.removeItem("backGroundColor-" + uniqueId);
+        sessionStorage.removeItem("backGroundColorEnabled-" + uniqueId);
+        sessionStorage.removeItem("deleteText-" + uniqueId);
+        sessionStorage.removeItem("items-" + uniqueId);
+        sessionStorage.removeItem("itemCounter-" + uniqueId);
+        sessionStorage.removeItem("recentlyRemovedItems-" + uniqueId);
+        sessionStorage.removeItem("sceneName-" + uniqueId);
+        sessionStorage.removeItem("stage-" + uniqueId);
+    }
 
     /**
      * useEffect to send the scene to the backend once it is created
@@ -207,25 +305,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }, [previewPosted]);
 
-    /**
-     * Removes all items of this component from the sessionStorage.
-     */
-    /*const clearSessionStorage = () => {
-        sessionStorage.removeItem("step-" + uniqueId);
-        sessionStorage.removeItem("apiName-" + uniqueId);
-        sessionStorage.removeItem("query-" + uniqueId);
-        sessionStorage.removeItem("noKey-" + uniqueId);
-        sessionStorage.removeItem("method-" + uniqueId);
-        sessionStorage.removeItem("selectedData-" + uniqueId);
-        sessionStorage.removeItem("customData-" + uniqueId);
-        sessionStorage.removeItem("historizedData-" + uniqueId);
-        sessionStorage.removeItem("listItems-" + uniqueId);
-        sessionStorage.removeItem("diagrams-" + uniqueId);
-        sessionStorage.removeItem("dataSources-" + uniqueId);
-        sessionStorage.removeItem("listItems-" + uniqueId);
-        sessionStorage.removeItem("historySelectionStep-" + uniqueId);
-        sessionStorage.removeItem("schedule-" + uniqueId);
-    }*/
     /**
      * Method to create a duplicate of the current stage to create the base image for the rendered scene
      * @param itemArray the itemlist used to create the duplicate stage
@@ -741,6 +820,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
             setTimeout(() => {
                 setItems(localItems);
+                console.log(JSON.stringify(localItems))
                 setSelectedObject(objectCopy);
             }, 200);
             currentItemX.current = localItems[index].x
@@ -857,6 +937,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 return;
             case "Circle": {
                 let nextColor = Konva.Util.getRandomColor();
+                const arCopy = items.slice();
                 const item: CustomCircle = {
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
@@ -872,14 +953,16 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleY: 1,
 
                 }
-                items.push(item);
+                arCopy.push(item);
+                setItems(arCopy);
                 setCurrentItemColor(nextColor);
                 incrementCounterResetType();
                 return;
             }
             case "Rectangle": {
                 let nextColor = Konva.Util.getRandomColor();
-                items.push({
+                const arCopy = items.slice();
+                arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     width: 100,
@@ -893,13 +976,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleY: 1,
 
                 } as CustomRectangle);
+                setItems(arCopy);
                 setCurrentItemColor(nextColor);
                 incrementCounterResetType();
                 return;
             }
 
             case "Line": {
-                items.push({
+                const arCopy = items.slice();
+                arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     id: 'line-' + itemCounter.toString(),
@@ -914,13 +999,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleY: 1,
 
                 } as CustomLine);
+                setItems(arCopy);
                 incrementCounterResetType();
                 return;
             }
 
             case "Star": {
                 let nextColor = Konva.Util.getRandomColor();
-                items.push({
+                const arCopy = items.slice();
+                arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     numPoints: 5,
@@ -935,12 +1022,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleY: 1,
 
                 } as CustomStar);
+                setItems(arCopy);
                 setCurrentItemColor(nextColor);
                 incrementCounterResetType();
                 return;
             }
             case "Text": {
-                items.push({
+                const arCopy = items.slice();
+                arCopy.push({
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     id: 'text-' + itemCounter.toString(),
@@ -958,6 +1047,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     scaleX: 1,
                     scaleY: 1,
                 } as CustomText);
+                setItems(arCopy);
                 setCurrentTextWidth(200);
                 incrementCounterResetType();
                 return;
@@ -991,7 +1081,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         while (obj.height * obj.scaleY > 540){
             obj.scaleY *= 0.5;
         }
-        items.push(obj)
+        const arCopy = items.slice();
+        arCopy.push(obj)
+        setItems(arCopy);
         incrementCounterResetType();
     }
 
@@ -1180,7 +1272,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         if (recentlyRemovedItems.length > 0) {
             const poppedItem = lastElem.pop();
             if (poppedItem !== undefined) {
-                items.push(poppedItem);
+                const arCopy = items.slice();
+                arCopy.push(poppedItem);
+                setItems(arCopy);
             }
         }
         setRecentlyRemovedItems(lastElem);
@@ -1437,7 +1531,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handleItemSelect = (item: string, handlingHistorizedItem: boolean) => {
         // if no item is selected, creates a new text element and adds it to the canvas
         if (!itemSelected){
-            items.push({
+            const arCopy = items.slice();
+            arCopy.push({
                 x: 20,
                 y: 20,
                 id: 'text-' + itemCounter.toString(),
@@ -1455,6 +1550,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 baseWidth: 200,
                 baseHeight: 20,
             } as CustomText);
+            setItems(arCopy);
             setCurrentTextWidth(200);
             setTextEditContent(item);
             setItemCounter(itemCounter + 1);
