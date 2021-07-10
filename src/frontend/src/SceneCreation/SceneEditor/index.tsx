@@ -133,7 +133,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [textEditFontSize, setTextEditFontSize] = React.useState(20);
     const [textEditFontFamily, setTextEditFontFamily] = React.useState("");
     const [textEditFontColor, setTextEditFontColor] = React.useState("#000000");
-
+    //Test
     // states for the export and upload of images or the scene
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
     const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
