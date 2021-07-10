@@ -198,12 +198,13 @@ def insert_infoprovider(infoprovider):
                         " VALUES (?, ?, ?)",
                         [datasource_name, schedule_historisation_id, infoprovider_id])
             # add request memory, if datasource stores data
+            use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
                 datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
                 datasource_json["api"]["requests"].append({
                   "type": "request_memory",
                   "name": dict(storing_config)["name"],
-                  "use_last": 10,
+                  "use_last": use_last,
                   "alternative": {
                     "type": "input",
                     "data": 0
@@ -625,12 +626,13 @@ def update_infoprovider(infoprovider_id, updated_data):
                         " VALUES (?, ?, ?)",
                         [datasource_name, schedule_historisation_id, infoprovider_id])
             # add request memory, if datasource stores data
+            use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
                 datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
                 datasource_json["api"]["requests"].append({
                   "type": "request_memory",
                   "name": dict(storing_config)["name"],
-                  "use_last": 10,
+                  "use_last": use_last,
                   "alternative": {
                     "type": "input",
                     "data": 0
@@ -651,6 +653,31 @@ def update_infoprovider(infoprovider_id, updated_data):
 
     con.commit()
     return None
+
+
+def get_max_use_last(diagrams=None):
+    """
+    Ermittelt die maximal benötigte Anzahl an historisierten Werten für eine Datenquelle.
+    Dabei werden alle potentiellen Konfigurationen durchsucht, die auf historisierte Daten zugreifen.
+
+    :param diagrams: Liste von Diagrammen.
+    :type diagrams: list.
+
+    :return: Index, des am weitesten zurückliegenden historisierten Wertes.
+    """
+    max_use_last = 0
+    if diagrams:
+        for k, v in diagrams.items():
+            temp_max = 0
+            if v["diagram_config"]["sourceType"] == "Historized":
+                for plot in v["diagram_config"]["plots"]:
+                    max_x = max(plot["plot"]["x"])
+                    if max_x > temp_max:
+                        temp_max = max_x
+            if temp_max > max_use_last:
+                max_use_last = temp_max
+
+    return max_use_last
 
 
 def delete_infoprovider(infoprovider_id):
