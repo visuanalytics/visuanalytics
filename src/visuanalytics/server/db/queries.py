@@ -12,7 +12,7 @@ from copy import deepcopy
 from PIL import Image
 
 from visuanalytics.server.db import db
-from visuanalytics.util.config_manager import get_private, set_private
+from visuanalytics.util.config_manager import get_private, set_private, assert_private_exists
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
@@ -73,6 +73,7 @@ def insert_infoprovider(infoprovider):
     :return: Gibt an, ob das Hinzufügen erfolgreich war.
     """
     con = db.open_con_f()
+    assert_private_exists()
     infoprovider_name = infoprovider["infoprovider_name"]
     datasources = copy.deepcopy(infoprovider["datasources"])
     diagrams = infoprovider["diagrams"]
@@ -427,8 +428,6 @@ def get_infoprovider(infoprovider_id):
 
     :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
     """
-    infoprovider_json = {}
-
     # Laden der Json-Datei des Infoproviders
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
         infoprovider_json = json.loads(f.read())
@@ -460,6 +459,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
+    assert_private_exists()
     new_transform = []
 
     # Testen ob neuer Infoprovider-Name bereits von einem anderen Infoprovider verwendet wird
@@ -996,12 +996,6 @@ def insert_image(image_name, folder):
     :param folder: Ordner unter dem das Bild gespeichert werden soll.
     """
     con = db.open_con_f()
-    name = image_name.rsplit(".", 1)[0]
-
-    # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=? AND folder=?", [name + ".jpg", name + ".jpeg", name + ".png", folder]).fetchone()["COUNT(*)"]
-    if count > 0:
-        return None
 
     image_id = con.execute("INSERT INTO image (image_name, folder) VALUES (?, ?)", [image_name, folder]).lastrowid
     con.commit()
@@ -1031,6 +1025,7 @@ def get_image_list(folder):
     res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
     con.commit()
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
+    # return [{"image_id": row["image_id"], "image_name": row["image_name"].rsplit("_-_", 1)[1]} for row in res]
 
 
 def delete_scene_image(image_id):
@@ -1398,14 +1393,14 @@ def _generate_storing(historized_data, datasource_name, formula_keys, old_storin
 
 
 def _remove_unused_memory(datasource_names, infoprovider_name):
-    print("datasource_names:", datasource_names)
+    # print("datasource_names:", datasource_names)
     pre = infoprovider_name + "_"
     dirs = [f.path for f in os.scandir(MEMORY_LOCATION) if f.is_dir()]
-    print("dirs:", dirs)
+    # print("dirs:", dirs)
     dirs = list(filter(lambda x: re.search(pre + ".*", x), dirs))
-    print("dirs:", dirs)
+    # print("dirs:", dirs)
     datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
-    print("datasource_memory_dirs:", datasource_memory_dirs)
+    # print("datasource_memory_dirs:", datasource_memory_dirs)
     for index, dir in enumerate(dirs):
         print(dir, datasource_memory_dirs[index] in datasource_names)
         if not datasource_memory_dirs[index] in datasource_names:
