@@ -233,7 +233,20 @@ def insert_video_job(video, update=False, job_id=None):
     """
     con = db.open_con_f()
     video_name = video["name"]
-    for infoprovider_name in video["infoprovider_names"]:
+    tts_infoprovider_ids = video["tts_ids"]
+    tts_names = []
+    # Namen aller Infoprovider die in TTS genutzt werden laden
+    for tts_id in tts_infoprovider_ids:
+        tts_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
+                               [tts_id]).fetchone()["infoprovider_name"]
+        if tts_name not in video["infoprovider_names"]:
+            tts_names.append(tts_name)
+    infoprovider_names = video["infoprovider_names"] + tts_names
+
+    print("unupdated names", video["infoprovider_names"])
+    print("all names", infoprovider_names)
+    # Daten aller verwendeten Infoprovider sammeln und kombinieren
+    for infoprovider_name in infoprovider_names:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
             infoprovider = json.load(f)
         # print("loaded infoprovider:", infoprovider)
@@ -265,6 +278,7 @@ def insert_video_job(video, update=False, job_id=None):
             })
         # print("video with diagrams:", video)
 
+    # Restliche Daten sammeln und kombinieren
     images = video.get("images", None)
     scene_names = list(map(lambda x: images[x]["key"], list(images.keys())))
     scenes = get_scene_list()
@@ -291,9 +305,12 @@ def insert_video_job(video, update=False, job_id=None):
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
     # print("complete video configuration:", video)
+
+    # Neue Json-Datei speichern
     with open_resource(_get_videojob_path(video_name.replace(" ", "-")), "wt") as f:
         json.dump(video, f)
 
+    # Neuen Job erstellen / updaten
     if not update:
         topic_id = add_topic_get_id(video_name, video_name.replace(" ", "-"))
         job = {
