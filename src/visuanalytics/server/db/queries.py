@@ -249,7 +249,7 @@ def insert_video_job(video, update=False, job_id=None):
             infoprovider = json.load(f)
         # print("loaded infoprovider:", infoprovider)
 
-        datasource_files = [x for x in os.listdir(get_datasource_path("")) if infoprovider_name + "_" in x]
+        datasource_files = [x for x in os.listdir(get_datasource_path("")) if x.startswith(infoprovider_name + "_")]
         print("datasource_files:", datasource_files)
         for file in datasource_files:
             with open_resource(_get_datasource_path(file.replace(".json", ""))) as f:
