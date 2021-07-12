@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, List, ListItemSecondaryAction, Typography} from "@material-ui/core";
+import {Box, Grid, List, ListItemSecondaryAction, Typography} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../../style";
@@ -33,10 +33,10 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
     const [selectedInfoproviderName, setSelectedInfoproviderName] = React.useState("");
 
     const openLogDialog = (infoproviderID: number, infoproviderName: string) => {
-    setSelectedInfoproviderID(infoproviderID);
-    setSelectedInfoproviderName(infoproviderName);
-    setShowLogDialog(true);
-}
+        setSelectedInfoproviderID(infoproviderID);
+        setSelectedInfoproviderName(infoproviderName);
+        setShowLogDialog(true);
+    }
 
     /**
      * The method renders one list-element and will be called for every single infoprovider in the infoprovider-array
@@ -44,33 +44,46 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
      */
     const renderListItem = (data: jsonRef) => {
         return (
-            <ListItem key={data.infoprovider_name}>
-                <Box border={5} borderRadius={10}
-                     className={classes.infoProvBorder}>
-                    <Typography variant={"h5"}>
-                        {data.infoprovider_name}
-                    </Typography>
-                </Box>
-                <ListItemSecondaryAction>
-                    <Button variant={"contained"} size={"small"} className={classes.settings}
-                            startIcon={<SettingsRounded fontSize="small"/>}
-                            onClick={() => props.handleEditButton(data)}
-                    >
-                        bearbeiten
-                    </Button>
-                    <Button variant={"contained"} size={"small"} className={classes.delete}
-                            startIcon={<DeleteIcon fontSize="small"/>}
-                            onClick={() => props.handleDeleteButton(data)}
-                    >
-                        löschen
-                    </Button>
-                    <Button variant={"contained"} size={"small"} className={classes.settings}
-                            startIcon={<MessageRounded fontSize="small"/>}
-                            onClick={() => openLogDialog(data.infoprovider_id, data.infoprovider_name)}
-                    >
-                        Logs einsehen
-                    </Button>
-                </ListItemSecondaryAction>
+            <ListItem key={data.infoprovider_name}>                <Grid container justify="space-between">
+                    <Grid item xs={7}>
+                        <Box border={5} borderRadius={10}
+                             className={classes.infoProvBorder}>
+                            <Typography variant={"h5"} style={{ width: "100%", padding: "10px", textAlign: "center"}} className={classes.wrappedText}>
+                                {data.infoprovider_name}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item container xs={5} justify="space-between" className={classes.infoProvIconContainer}>
+                        <Grid item container xs={6}>
+                            <Grid item xs={12}>
+                                <Button variant={"contained"} size={"small"} className={classes.settings}
+                                        startIcon={<SettingsRounded fontSize="small"/>}
+                                        onClick={() => props.handleEditButton(data)}
+                                >
+                                    bearbeiten
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button variant={"contained"} size={"small"} className={classes.logs}
+                                        startIcon={<MessageRounded fontSize="small"/>}
+                                        onClick={() => openLogDialog(data.infoprovider_id, data.infoprovider_name)}
+                                >
+                                    Logs einsehen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Grid item xs={12}>
+                                <Button variant={"contained"} size={"small"} className={classes.delete}
+                                        startIcon={<DeleteIcon fontSize="small"/>}
+                                        onClick={() => props.handleDeleteButton(data)}
+                                >
+                                    löschen
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </ListItem>
         );
     };
