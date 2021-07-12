@@ -784,7 +784,7 @@ def add_scene_image(folder):
 
         image.save(file_path)
         msg = flask.jsonify({"image_id": image_id,
-                             "image_url": file_path})
+                             "path": file_path})
         return msg, 200
     except Exception:
         logger.exception("An error occurred: ")

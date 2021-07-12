@@ -1036,7 +1036,7 @@ def get_image_list(folder):
     con.commit()
     return [{"image_id": row["image_id"],
              "image_name": row["image_name"],
-             "image_url": get_image_path(row["image_name"].rsplit(".", 1)[0], folder, row["image_name"].rsplit(".", 1)[1])} for row in res]
+             "path": get_image_path(row["image_name"].rsplit(".", 1)[0], folder, row["image_name"].rsplit(".", 1)[1])} for row in res]
 
 
 def delete_scene_image(image_id):
