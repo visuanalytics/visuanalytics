@@ -1,6 +1,6 @@
 import React from "react";
 import {BackendScene, PreviewImage} from "../../types";
-import {Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography} from "@material-ui/core";
+import {Box, Card, CardActionArea, CardContent, Grid, Typography} from "@material-ui/core";
 import {useStyles} from "../../style";
 
 

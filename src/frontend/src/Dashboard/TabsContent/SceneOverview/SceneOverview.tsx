@@ -76,9 +76,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
             hintContent={hintContents.sceneOverview}
         >
             <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
-                <Grid item container xs={12}>
-                    Scene-Overview
-                </Grid>
                 <Grid item xs={4}>
                     <Typography variant={"h5"}>
                         Angelegte Szenen:

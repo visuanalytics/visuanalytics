@@ -6,9 +6,10 @@ import {useStyles} from "../../style";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {ComponentContext} from "../../../ComponentProvider";
+import {BackendVideoList} from "../../types";
 
 interface VideoOverviewProps {
-    test: string;
+    videos: BackendVideoList;
 }
 
 export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {

@@ -10,12 +10,17 @@ export type jsonRef = {
     infoprovider_name: string;
 }
 
-
 /**
  * This type is needed because the answer of the backend consists of a list of jsonRef's.
  */
 export type fetchAllBackendAnswer = Array<jsonRef>
 
+export type BackendVideo = {
+    video_name: string;
+    video_id: number;
+}
+
+export type BackendVideoList = Array<BackendVideo>;
 
 //bisher nur zum testen verwendet.
 export type answer = {

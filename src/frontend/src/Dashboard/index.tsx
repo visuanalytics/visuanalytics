@@ -1,15 +1,11 @@
 import React, {useEffect, useRef} from "react";
-import {
-    AppBar, Grid, Tab, Tabs
-} from "@material-ui/core";
+import {AppBar, Grid, Tab, Tabs} from "@material-ui/core";
 import {useStyles} from "./style";
-import {
-    AirplayRounded, CropOriginalRounded, OndemandVideoRounded
-} from "@material-ui/icons";
+import {AirplayRounded, CropOriginalRounded, OndemandVideoRounded} from "@material-ui/icons";
 import {InfoProviderOverview} from "./TabsContent/InfoProviderOverview/InfoProviderOverview";
 import {SceneOverview} from "./TabsContent/SceneOverview/SceneOverview"
 import {VideoOverview} from "./TabsContent/VideoOverview/VideoOverview"
-import {FetchAllScenesAnswer, BackendScene, PreviewImage} from "./types";
+import {BackendScene, BackendVideoList, FetchAllScenesAnswer, PreviewImage} from "./types";
 import {centerNotifcationReducer, CenterNotification} from "../util/CenterNotification";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -50,8 +46,12 @@ export const DashboardTabs = () =>  {
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         if (newValue === 1) {
             fetchAllScenes();
-        } else
+        } else if (newValue === 2) {
+            console.log("Videos!!!")
+            setValue(2);
+        } else {
             setValue(newValue);
+        }
     };
 
     //true if the spinner animation is displayed - used for waiting while the scenes are fetched
@@ -64,6 +64,8 @@ export const DashboardTabs = () =>  {
     const previewImgList = React.useRef<Array<PreviewImage>>([]);
     //id of the currently fetched image
     const currentFetchId = React.useRef<number>(-1);
+
+    const allVideos = React.useRef<BackendVideoList>([]);
 
 
     //this static value will be true as long as the component is still mounted
@@ -109,12 +111,21 @@ export const DashboardTabs = () =>  {
         fetchPreviewImages();
     }
 
+    const handleErrorFetchAllVideos = (err: Error) => {
+        reportError("Fehler: " + err);
+    }
+
+    const handleSuccessFetchAllVideos = (jsonData: any) => {
+        allVideos.current = jsonData as BackendVideoList;
+        setValue(2);
+    }
+
     /**
      * Method to fetch all scenes from the backend.
      * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
      * with useCallback in order to be used in useEffect.
      */
-    const fetchAllScenes = React.useCallback(() => {
+    const fetchAllScenes = () => {
         let url = "/visuanalytics/scene/all"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -143,7 +154,43 @@ export const DashboardTabs = () =>  {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }
+
+    /**
+     * Method to fetch all videos from the backend.
+     * The standard hook "useCallFetch" is not used here since the fetch function has to be memorized
+     * with useCallback in order to be used in useEffect.
+     */
+    const fetchAllVideos =() => {
+        let url = "/visuanalytics/video/all"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) {
+                handleSuccessFetchAllVideos(data)
+            }
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleErrorFetchAllVideos(err)
+        }).finally(() => clearTimeout(timer));
+    }
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -286,7 +333,9 @@ export const DashboardTabs = () =>  {
                 </Grid>
                 <Grid item xs={12}>
                     <TabContent value={value} index={2}>
-                        <VideoOverview test={'Videos'}/>
+                        <VideoOverview
+                            videos={allVideos.current}
+                        />
                     </TabContent>
                 </Grid>
             </React.Fragment>
