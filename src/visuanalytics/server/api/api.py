@@ -436,6 +436,27 @@ def get_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/all", methods=["GET"])
+def get_videojob():
+    """
+    Endpunkt `/videojob/all`.
+
+    Response enthält ein Array mit allen Namen und IDs aller Videojobs.
+    """
+    try:
+        videojobs = queries.get_all_videojobs()
+
+        if not videojobs:
+            err = flask.jsonify({"err_msg": "Error while loading all Videojobs"})
+            return err, 400
+
+        return flask.jsonify(videojobs)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading all Videojobs"})
+        return err, 400
+
+
 @api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
 def delete_infoprovider(infoprovider_id):
     """

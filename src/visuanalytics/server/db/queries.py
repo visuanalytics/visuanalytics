@@ -766,6 +766,24 @@ def get_videojob_logs(videojob_id):
     } for log in logs]
 
 
+def get_all_videojobs():
+    """
+    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+
+    :param videojob_id: ID eines Infoproviders.
+    :return: Liste aller gefundenen Logs.
+    """
+    try:
+        con = db.open_con_f()
+        jobs = con.execute("SELECT job_id, job_name from job WHERE pipeline_type='JOB'").fetchall()
+        return [{
+            "videojob_id": jobs["job_id"],
+            "videojob_name": jobs["job_name"]
+        } for job in jobs]
+    except:
+        return None
+
+
 def delete_videojob(videojob_id):
     """
     Entfernt den Videojob mit der gegebenen ID.
