@@ -213,6 +213,14 @@ def add_videojob():
             err = flask.jsonify({"err_msg": "Missing Schedule"})
             return err, 400
 
+        if "sceneList" not in video:
+            err = flask.jsonify({"err_msg": "Missing field 'sceneList'"})
+            return err, 400
+
+        if "selectedInfoProvider" not in video:
+            err = flask.jsonify({"err_msg": "Missing field 'selectedInfoProvider'"})
+            return err, 400
+
         if not queries.insert_video_job(video):
             err = flask.jsonify({"err_msg": f"There already exists a video with the name "
                                             f"{video['video_name']}"})
@@ -576,7 +584,27 @@ def add_scene():
             err = flask.jsonify({"err_msg": "Missing field 'images'"})
             return err, 400
 
-        #if "diagrams_original" not in scene:
+        if "backgroundImage" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'backgroundImage'"})
+            return err, 400
+
+        if "backgroundType" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'backgroundType'"})
+            return err, 400
+
+        if "backgroundColor" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'backgroundColor'"})
+            return err, 400
+
+        if "backgroundColorEnabled" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'backgroundColorEnabled'"})
+            return err, 400
+
+        if "itemCounter" not in scene:
+            err = flask.jsonify({"err_msg": "Missing field 'itemCounter'"})
+            return err, 400
+
+        # if "diagrams_original" not in scene:
         #    err = flask.jsonify({"err_msg": "Missing field 'diagrams_original'"})
         #    return err, 400
 
@@ -755,7 +783,8 @@ def add_scene_image(folder):
             return err, 400
 
         image.save(file_path)
-        msg = flask.jsonify({"image_id": image_id})
+        msg = flask.jsonify({"image_id": image_id,
+                             "image_url": file_path})
         return msg, 200
     except Exception:
         logger.exception("An error occurred: ")
