@@ -47,8 +47,7 @@ export const DashboardTabs = () =>  {
         if (newValue === 1) {
             fetchAllScenes();
         } else if (newValue === 2) {
-            console.log("Videos!!!")
-            setValue(2);
+            fetchAllVideos();
         } else {
             setValue(newValue);
         }
@@ -113,6 +112,10 @@ export const DashboardTabs = () =>  {
 
     const handleErrorFetchAllVideos = (err: Error) => {
         reportError("Fehler: " + err);
+
+        //-----------------------------------------------------TEST-----------------------------------------------------
+        allVideos.current = [{videojob_name: "Video1", videojob_id: 0}, {videojob_name: "Video2", videojob_id: 1}, {videojob_name: "Video3", videojob_id: 2}];
+        setValue(2);
     }
 
     const handleSuccessFetchAllVideos = (jsonData: any) => {
@@ -162,7 +165,7 @@ export const DashboardTabs = () =>  {
      * with useCallback in order to be used in useEffect.
      */
     const fetchAllVideos =() => {
-        let url = "/visuanalytics/video/all"
+        let url = "/visuanalytics/videojob/all"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds

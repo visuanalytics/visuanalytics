@@ -16,8 +16,8 @@ export type jsonRef = {
 export type fetchAllBackendAnswer = Array<jsonRef>
 
 export type BackendVideo = {
-    video_name: string;
-    video_id: number;
+    videojob_id: number;
+    videojob_name: string;
 }
 
 export type BackendVideoList = Array<BackendVideo>;

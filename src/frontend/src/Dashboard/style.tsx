@@ -9,13 +9,6 @@ export const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
             backgroundColor: theme.palette.background.paper,
         },
-        listFrameScenes: {
-            width: "100%",
-            height: 400,
-            marginTop: "20px",
-            marginBottom: "10px",
-            overflow: 'auto'
-        },
         listFrame: {
             width: "100%",
             height: 350,
@@ -26,11 +19,25 @@ export const useStyles = makeStyles((theme: Theme) =>
             color: theme.palette.primary.main
         },
         infoProvBorder: {
-            width: "60%",
-            height: 50,
+            width: "90%",
+            minHeight: "60px",
             borderColor: theme.palette.primary.dark,
             backgroundColor: theme.palette.secondary.main,
             color: "#000000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+        },
+        infoProvIconContainer: {
+            height: "70px",
+            marginTop: "2px"
+        },
+        videoBorder: {
+            width: "90%",
+            minHeight: "60px",
+            borderColor: theme.palette.error.dark,
+            backgroundColor: theme.palette.primary.main,
+            color: "#FFFFFF",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
@@ -49,9 +56,20 @@ export const useStyles = makeStyles((theme: Theme) =>
             }
         },
         tabs: {
-           height: 75
+            height: 75
         },
         settings: {
+            width: "100%",
+            justifyContent: "flex-start",
+            backgroundColor: theme.palette.secondary.main,
+            color: "#000000",
+            '&:hover': {
+                backgroundColor: theme.palette.secondary.dark,
+            }
+        },
+        logs: {
+            width: "100%",
+            justifyContent: "flex-start",
             backgroundColor: theme.palette.secondary.main,
             color: "#000000",
             '&:hover': {
@@ -66,6 +84,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        showVideo: {
+            backgroundColor: theme.palette.primary.main,
+            color: "#FFFFFF",
+            width: "100%",
+            justifyContent: "center"
+        },
         infoProvName: {
             margin: "auto"
         },
@@ -76,8 +100,24 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             },
         },
-        media: {
-            heigth: 140,
-        }
+        wrappedText: {
+            overflowWrap: "break-word"
+        },
+        logTableCell: {
+            width: "2em",
+            overflowWrap: "break-word"
+        },
+        //TODO: document that this maxWidth is probably "abusing" some kind of CSS things happening
+        logMessageTableCell: {
+            maxWidth: '1em',
+            overflowWrap: "break-word"
+        },
+        listFrameScenes: {
+            width: "100%",
+            height: 400,
+            marginTop: "20px",
+            marginBottom: "10px",
+            overflow: 'auto'
+        },
     }),
 );
