@@ -80,12 +80,13 @@ export type CustomText = {
 };
 
 export type CustomImage = {
-    x: number;
+    x: number
     y: number;
     id: string;
     rotation: number;
     image: HTMLImageElement;
     imageId: number;
+    imagePath: string;
     width: number;
     height: number;
     color: string;
@@ -98,17 +99,17 @@ export type CustomImage = {
  * Types for the export of the final scene
  */
 export type JsonExport = {
-    scene_name: string
-    used_images: number[]
-    used_infoproviders: number[]
-    images: BaseImg
-    scene_items: string
+    scene_name: string;
+    used_images: number[];
+    used_infoproviders: number[];
+    images: BaseImg;
+    scene_items: string;
 }
 
 export type BaseImg = {
-    type: string,
-    path: string,
-    overlay: Array<DataImage | DataText>
+    type: string;
+    path: string;
+    overlay: Array<DataImage | DataText>;
 }
 
 export type DataImage = {
@@ -138,5 +139,6 @@ export type DataText = {
  * Type for the respone from uploading an image
  */
 export type ResponseData = {
-    image_id: number
+    image_id: number,
+    image_path: string
 }

@@ -227,7 +227,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //setStage(sessionStorage.getItem("stage-" + uniqueId) === null ? new Konva.Stage({container: "", width: 960, height: 540}) : JSON.parse(sessionStorage.getItem("stage-" + uniqueId)!));
     }, [])
 
-
     //store backgroundImage in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("backgroundImage-" + uniqueId, backgroundImage.src);
@@ -510,8 +509,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             } else if (element.id.startsWith('image')) {
                 if ('image' in element) {
                     const itemToPush: DataImage = {
-                        description: "string",
-                        type: "string",
+                        description: "",
+                        type: "pillow",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
                         size_x: element.width * element.scaleX, //Breite optional
@@ -1067,8 +1066,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * different method to add an image to the canvas
      * @param image the image to be added
+     * @param id the ID of the image to be added
+     * @param path the path to the image located in the backend
      */
-    const addImageElement = (image : HTMLImageElement, id: number) => {
+    const addImageElement = (image : HTMLImageElement, id: number, path: string) => {
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
@@ -1076,6 +1077,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             rotation: 0,
             image: image,
             imageId: id,
+            imagePath: path,
             width: image.width,
             height: image.height,
             baseWidth: image.width,
@@ -1639,10 +1641,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param index index of the image in the backend
      */
     const handleImageClick = (src : string, index: number) => {
-        console.log(index)
+        //TODO add path after fetching from backend
+        let path = "";
         let image = new window.Image();
         image.src = src;
-        addImageElement(image, index);
+        addImageElement(image, index, path);
     }
 
     const handleBackgroundImageClick = (src : string, index : number) => {
