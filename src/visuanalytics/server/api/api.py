@@ -437,7 +437,7 @@ def get_videojob(videojob_id):
 
 
 @api.route("/videojob/all", methods=["GET"])
-def get_videojob():
+def get_all_videojobs():
     """
     Endpunkt `/videojob/all`.
 

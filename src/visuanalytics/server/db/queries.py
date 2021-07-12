@@ -775,12 +775,13 @@ def get_all_videojobs():
     """
     try:
         con = db.open_con_f()
-        jobs = con.execute("SELECT job_id, job_name from job WHERE pipeline_type='JOB'").fetchall()
+        jobs = con.execute("SELECT job_id, job_name from job").fetchall()
         return [{
-            "videojob_id": jobs["job_id"],
-            "videojob_name": jobs["job_name"]
+            "videojob_id": job["job_id"],
+            "videojob_name": job["job_name"]
         } for job in jobs]
-    except:
+    except Exception as e:
+        print(str(e))
         return None
 
 
