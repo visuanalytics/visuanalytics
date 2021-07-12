@@ -222,6 +222,11 @@ export const useStyles = makeStyles((theme: Theme) =>
                 color: "#000000",
             }
         },
+        saveButton: {
+            marginTop: "21px",
+            transitionDuration: "0.4s",
+            height: "50px",
+        },
 
         selection: {
             backgroundColor: "#FFFFFF",

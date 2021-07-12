@@ -170,6 +170,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         severity: "error",
     });
 
+    //true when the dialog for going back is opened
+    const [backDialogOpen, setBackDialogOpen] = React.useState(false);
+
+
     /**
      * Defines event listener for finishing th page loading.
      * Sets the default Konva stage - this is necessary since the id of the container for it will
@@ -195,14 +199,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     React.useEffect(() => {
         //backgroundImage - stores the index in the list of background images to recreate it
         const newImg = new window.Image();
-        const index = Number(sessionStorage.getItem("backgroundImage-" + uniqueId) || 0);
+        const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
         newImg.src = props.backgroundImageList[index];
         setBackgroundImageIndex(index);
         setBackgroundImage(newImg);
         //backGroundType
         setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
         //currentBGColor
-        setCurrentBGColor(sessionStorage.getItem("currentBGColor-" + uniqueId) || "FFFFFF");
+        setCurrentBGColor(sessionStorage.getItem("currentBGColor-" + uniqueId) || "#FFFFFF");
         //backgroundColorEnabled
         setBackGroundColorEnabled(sessionStorage.getItem("backGroundColorEnabled-" + uniqueId) === "true" || false);
         //deleteText
@@ -235,7 +239,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     //store backgroundImageIndex in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("setBackgroundImageIndex-" + uniqueId, backgroundImageIndex.toString());
+        sessionStorage.setItem("backgroundImageIndex-" + uniqueId, backgroundImageIndex.toString());
     }, [backgroundImageIndex])
     //store backGroundType in sessionStorage
     React.useEffect(() => {
@@ -288,6 +292,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("recentlyRemovedItems-" + uniqueId);
         sessionStorage.removeItem("sceneName-" + uniqueId);
         sessionStorage.removeItem("stage-" + uniqueId);
+        sessionStorage.removeItem("infoProvider-" + uniqueId);
+        sessionStorage.removeItem("selectedDataList-" + uniqueId);
+        sessionStorage.removeItem("customDataList-" + uniqueId);
+        sessionStorage.removeItem("historizedDataList-" + uniqueId);
+        sessionStorage.removeItem("diagramList-" + uniqueId);
+        sessionStorage.removeItem("imageList-" + uniqueId);
     }
 
 
@@ -1942,12 +1952,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button size={"large"} variant={"contained"} className={classes.topButtons}
-                                    onClick={props.backHandler}>
+                                    onClick={() => setBackDialogOpen(true)}>
                                 Zurück
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button size={"large"} variant={"contained"} className={classes.topButtons}
+                        <Grid item className={classes.blockableButtonSecondary}>
+                            <Button size={"large"} color="secondary" variant={"contained"} className={classes.saveButton}
                                     onClick={() => saveButtonHandler()} disabled={sceneName === ""}>
                                 Speichern
                             </Button>
@@ -2598,6 +2608,45 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 setShowHistorizedDialog(false);
                             }}>
                                 Speichern
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
+            <Dialog onClose={() => {
+                setBackDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={backDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Verwerfen der Szene
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Wirklich zurückgehen?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setBackDialogOpen(false);
+                                    }}>
+                                abbrechen
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        setBackDialogOpen(false);
+                                        clearSessionStorage();
+                                        props.backHandler();
+                                    }}
+                                    className={classes.redDeleteButton}>
+                                zurück
                             </Button>
                         </Grid>
                     </Grid>
