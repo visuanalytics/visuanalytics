@@ -1,17 +1,24 @@
 import React from "react";
-import {StrArg} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-import {useStyles} from "../../style";
-import {hintContents} from "../../../util/hintContents";
-import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
+import {StrArg} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
+import {useStyles} from "../../../style";
+import {hintContents} from "../../../../util/hintContents";
+import {StepFrame} from "../../../../CreateInfoProvider/StepFrame";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import {FormelObj} from "../../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {EditSingleFormelGUI} from "./EditSingleFormelGUI";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
-import {calculationToString} from "../../helpermethods";
-import {formelContext} from "../../types";
-import {DataSource} from "../../../CreateInfoProvider/types";
-import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {calculationToString, checkFindOnlyNumbers} from "../../../helpermethods";
+import {
+    ArrayProcessingData,
+    DataSource,
+    ListItemRepresentation,
+    StringReplacementData
+} from "../../../../CreateInfoProvider/types";
+import {FormelContext} from "../../../types";
+import {useCallFetch} from "../../../../Hooks/useCallFetch";
+import {getListItemsNames} from "../../../../CreateInfoProvider/helpermethods";
+
 
 interface EditSingleFormelProps {
     continueHandler: (index: number) => void;
@@ -21,7 +28,11 @@ interface EditSingleFormelProps {
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
     selectedDataSource: number;
     reportError: (message: string) => void;
-    formel: formelContext;
+    formel: FormelContext;
+    listItems: Array<ListItemRepresentation>;
+    customData: Array<FormelObj>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
 }
 
 /**
@@ -271,6 +282,40 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
         if ((formel.length <= 0) || (input.length <= 0)) {
             props.reportError('Entweder ist kein Name oder keine Formel angegeben!');
             return
+        }
+        if (checkFindOnlyNumbers(formel)) {
+            props.reportError("Fehler: Der Name darf nicht nur aus Nummern bestehen.")
+            return;
+        }
+        if (formel.includes('(') || formel.includes(')')) {
+            props.reportError("Fehler: Der Name darf keine Klammern enthalten.")
+            return;
+        }
+        //check for duplicates in api names
+        if (getListItemsNames(props.listItems).includes(formel)) {
+            props.reportError("Fehler: Name wird bereits von einem API-Datum genutzt.")
+            return;
+        }
+        //check for duplicates in formula names
+        for (let i: number = 0; i <= props.customData.length - 1; i++) {
+            if (props.customData[i].formelName === formel) {
+                props.reportError('Fehler: Name is schon an eine andere Formel vergeben!');
+                return;
+            }
+        }
+        //check for duplicates in array processings names
+        for (let i: number = 0; i < props.arrayProcessingsList.length; i++) {
+            if (props.arrayProcessingsList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer Array-Verarbeitung genutzt.")
+                return;
+            }
+        }
+        //check for duplicates in string replacement names
+        for (let i: number = 0; i < props.stringReplacementList.length; i++) {
+            if (props.stringReplacementList[i].name === formel) {
+                props.reportError("Fehler: Name wird bereits von einer String-Verarbeitung genutzt.")
+                return;
+            }
         }
 
 

@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
-import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
+import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem} from "../../CreateInfoProvider/types";
 import {BasicSettings} from "../../CreateInfoProvider/BasicSettings";
+import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface EditBasicSettingsProps {
     continueHandler: (index: number) => void;
@@ -35,6 +35,8 @@ interface EditBasicSettingsProps {
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
+    diagrams: Array<Diagram>
+    setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
 }
 
@@ -109,14 +111,16 @@ export const EditBasicSettings: React.FC<EditBasicSettingsProps> = (props) => {
                 setNoKey={props.setNoKey}
                 method={props.method}
                 setMethod={props.setMethod}
-                name={props.apiName}
-                setName={props.setApiName}
+                apiName={props.apiName}
+                setApiName={props.setApiName}
                 reportError={props.reportError}
                 setSelectedData={props.setSelectedData}
                 setCustomData={props.setCustomData}
                 setHistorizedData={props.setHistorizedData}
                 setSchedule={props.setSchedule}
                 setHistorySelectionStep={props.setHistorySelectionStep}
+                diagrams={props.diagrams}
+                setDiagrams={props.setDiagrams}
                 setListItems={props.setListItems}
                 isInEditMode={true}
             />

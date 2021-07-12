@@ -14,9 +14,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
+import {Diagram, ListItemRepresentation, Schedule, SelectedDataItem, testDataBackendAnswer, uniqueId} from "../types";
 import {transformJSON} from "../helpermethods";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 
 interface BasicSettingsProps {
     continueHandler: () => void;
@@ -33,14 +33,16 @@ interface BasicSettingsProps {
     setNoKey: (noKey: boolean) => void;
     method: string;
     setMethod: (method: string) => void;
-    name: string;
-    setName: (name: string) => void;
+    apiName: string;
+    setApiName: (name: string) => void;
     reportError: (message: string) => void;
     setSelectedData: (selectedData: SelectedDataItem[]) => void;
     setCustomData: (customData: FormelObj[]) => void;
     setHistorizedData: (historizedData: string[]) => void;
     setSchedule: (schedule: Schedule) => void;
     setHistorySelectionStep: (historySelectionStep: number) => void;
+    diagrams: Array<Diagram>
+    setDiagrams: (diagrams: Array<Diagram>) => void;
     setListItems: (array: Array<ListItemRepresentation>) => void;
     isInEditMode: boolean;
 }
@@ -57,6 +59,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
     //state variable that manages toggling between input and loading spinner
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //the values when the component is initially mounted - used for change detection
+    const [oldApiName] = React.useState(props.apiName);
     const [oldQuery] = React.useState(props.query);
     const [oldMethod] = React.useState(props.method);
     const [oldApiKeyInput1] = React.useState(props.apiKeyInput1);
@@ -73,6 +76,46 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
         if(props.isInEditMode) {
             props.continueHandler();
             return;
+        }
+        //check if the name was changed, rename diagrams if this is the case
+        //checking for empty string secures that we are not in BasicSettings for the first time
+        if(oldApiName !== "" && oldApiName !== props.apiName) {
+            //search trough all diagrams for objects that use data of this datasource
+            const diagramsCopy = props.diagrams.slice();
+            diagramsCopy.forEach((diagram) => {
+                if(diagram.sourceType === "Array" && diagram.arrayObjects !== undefined) {
+                    //diagram containing arrays - the listItem.parentKeyName would contain the dataSource name here
+                    for (let index = 0; index < diagram.arrayObjects.length; index++) {
+                        //check if the apiName at the beginning of the parentKeyName is the old one of this dataSource
+                        if(diagram.arrayObjects[index].listItem.parentKeyName.split("|")[0] === oldApiName) {
+                            //overwrite the name for this array
+                            const parentKeyName = diagram.arrayObjects[index].listItem.parentKeyName
+                            diagram.arrayObjects[index] = {
+                                ...diagram.arrayObjects[index],
+                                listItem: {
+                                    ...diagram.arrayObjects[index].listItem,
+                                    parentKeyName: props.apiName +  diagram.arrayObjects[index].listItem.parentKeyName.substring(parentKeyName.split("|")[0].length, parentKeyName.length)
+                                }
+                            }
+                        }
+                    }
+                } else if(diagram.sourceType === "Historized" && diagram.historizedObjects !== undefined) {
+                    //diagram containing historized data - the name would contain the dataSource nam here
+                    for (let index = 0; index < diagram.historizedObjects.length; index++) {
+                        //check if the apiName at the beginning of the name is the old name of this dataSource
+                        if(diagram.historizedObjects[index].name.split("|")[0] === oldApiName) {
+                            //overwrite the name for this historized data element
+                            const name = diagram.historizedObjects[index].name;
+                            diagram.historizedObjects[index] = {
+                                ...diagram.historizedObjects[index],
+                                name: props.apiName + name.substring(name.split("|")[0].length, name.length)
+                            }
+                        }
+                    }
+                }
+            })
+            //overwrite the state with the changed diagram
+            props.setDiagrams(diagramsCopy);
         }
         //check if the settings differ from the old settings
         const wasChanged = (
@@ -225,9 +268,9 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                             <Grid item xs={12}>
                                 <APIInputField
                                     defaultValue="Name der API-Datenquelle"
-                                    value={props.name}
+                                    value={props.apiName}
                                     changeHandler={(s) => {
-                                        props.setName(s)
+                                        props.setApiName(s.replace(' ', '_'))
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
                                     checkNameDuplicate={props.checkNameDuplicate}
@@ -344,7 +387,7 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                 </Grid>*/}
                                 <Grid item className={classes.blockableButtonPrimary}>
                                     <Button
-                                        disabled={!(props.name !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.name))}
+                                        disabled={!(props.apiName !== "" && props.query !== "" && (props.noKey || (props.apiKeyInput1 !== "" && props.apiKeyInput2 !== "" && props.method !== "")) && !props.checkNameDuplicate(props.apiName))}
                                         variant="contained" size="large" color="primary" onClick={handleProceed}>
                                         weiter
                                     </Button>

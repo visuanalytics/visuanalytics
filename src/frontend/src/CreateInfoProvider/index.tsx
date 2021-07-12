@@ -5,13 +5,12 @@ import {useCallFetch} from "../Hooks/useCallFetch";
 import {TypeSelection} from "./TypeSelection";
 import {HistorySelection} from "./HistorySelection";
 import {DataSelection} from "./DataSelection";
-import {CreateCustomData} from "./CreateCustomData";
 import Container from "@material-ui/core/Container";
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import {SettingsOverview} from "./SettingsOverview";
-import {FormelObj} from "./CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
+import {FormelObj} from "./DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj"
 import {
     DataSource,
     DataSourceKey,
@@ -19,12 +18,18 @@ import {
     Schedule,
     SelectedDataItem,
     authDataDialogElement,
-    uniqueId, Diagram, Plots, BackendDataSource
+    uniqueId,
+    Diagram,
+    Plots,
+    BackendDataSource,
+    ArrayProcessingData,
+    StringReplacementData,
 } from "./types";
-import {extractKeysFromSelection} from "./helpermethods";
+import {createCalculates, createReplacements, extractKeysFromSelection} from "./helpermethods";
 import {AuthDataDialog} from "./AuthDataDialog";
 import {ComponentContext} from "../ComponentProvider";
 import {DiagramCreation} from "./DiagramCreation";
+import {DataCustomization} from "./DataCustomization";
 
 
 /* TODO: list of bugfixes to be made by Janek
@@ -74,7 +79,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
-        "Formeln",
+        "Datenverarbeitungen",
         "Historisierung",
         "Gesamtübersicht",
         "Diagrammerstellung"
@@ -82,7 +87,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         "Datenquellen-Typ",
         "API-Einstellungen",
         "Datenauswahl",
-        "Formeln",
+        "Datenverarbeitungen",
         "Historisierung",
     ];
 
@@ -119,12 +124,19 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const [diagrams, setDiagrams] = React.useState<Array<Diagram>>([]);
     //represents the current historySelectionStep: 1 is data selection, 2 is time selection
     const [historySelectionStep, setHistorySelectionStep] = React.useState(1);
+    //represents the current step in data customization: 0 is array processing, 1 is formula and 2 is string processing
+    const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
     // Holds an array of all data sources for the Infoprovider
     const [dataSources, setDataSources] = React.useState<Array<DataSource>>([]);
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
     const [dataSourcesKeys, setDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(new Map());
     //flag for opening the dialog that restores authentication data on reload
     const [authDataDialogOpen, setAuthDataDialogOpen] = React.useState(false);
+    //list of all array processings defined
+    const [arrayProcessingsList, setArrayProcessingsList] = React.useState<Array<ArrayProcessingData>>([]);
+    //list of all string replacement processings defined
+    const [stringReplacementList, setStringReplacementList] = React.useState<Array<StringReplacementData>>([]);
+
 
     /**
      * Method to check if there is api auth data to be lost when the user refreshes the page.
@@ -168,7 +180,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     const buildDataSourceSelection = () => {
         const dataSourceSelection: Array<authDataDialogElement> = [];
         //check the current data source and add it as an option
-        if(!noKey&&method!=="") {
+        if (!noKey && method !== "") {
             dataSourceSelection.push({
                 name: "current--" + uniqueId,
                 method: method
@@ -246,10 +258,16 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         } : JSON.parse(sessionStorage.getItem("schedule-" + uniqueId)!))
         //historySelectionStep
         setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 1));
+        //dataCustomizationStep
+        setDataCustomizationStep(Number(sessionStorage.getItem("dataCustomizationStep-" + uniqueId) || 0));
         // Already created data sources
         setDataSources(sessionStorage.getItem("dataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("dataSources-" + uniqueId)!));
         //listItems
         setListItems(sessionStorage.getItem("listItems-" + uniqueId) === null ? new Array<ListItemRepresentation>() : JSON.parse(sessionStorage.getItem("listItems-" + uniqueId)!));
+        //arrayProcessingsList
+        setArrayProcessingsList(sessionStorage.getItem("arrayProcessingsList-" + uniqueId) === null ? new Array<ArrayProcessingData>() : JSON.parse(sessionStorage.getItem("arrayProcessingsList-" + uniqueId)!));
+        //stringReplacementList
+        setStringReplacementList(sessionStorage.getItem("stringReplacementList-" + uniqueId) === null ? new Array<StringReplacementData>() : JSON.parse(sessionStorage.getItem("stringReplacementList-" + uniqueId)!));
 
         //open the dialog for reentering authentication data
         if (authDialogNeeded()) {
@@ -319,6 +337,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("historySelectionStep-" + uniqueId, historySelectionStep.toString());
     }, [historySelectionStep])
+    //store dataCustomizationStep in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
+    }, [dataCustomizationStep])
     // Store data sources in session storage by using JSON-stringify on it
     React.useEffect(() => {
         sessionStorage.setItem("dataSources-" + uniqueId, JSON.stringify(dataSources));
@@ -327,6 +349,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     React.useEffect(() => {
         sessionStorage.setItem("listItems-" + uniqueId, JSON.stringify(listItems));
     }, [listItems])
+    // Store arrayProcessingsList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("arrayProcessingsList-" + uniqueId, JSON.stringify(arrayProcessingsList));
+    }, [arrayProcessingsList])
+    // Store stringReplacementList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("stringReplacementList-" + uniqueId, JSON.stringify(stringReplacementList));
+    }, [stringReplacementList])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -346,7 +376,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         sessionStorage.removeItem("dataSources-" + uniqueId);
         sessionStorage.removeItem("listItems-" + uniqueId);
         sessionStorage.removeItem("historySelectionStep-" + uniqueId);
+        sessionStorage.removeItem("dataCustomizationStep-" + uniqueId);
         sessionStorage.removeItem("schedule-" + uniqueId);
+        sessionStorage.removeItem("arrayProcessingsList-" + uniqueId);
+        sessionStorage.removeItem("stringReplacementList-" + uniqueId);
     }
 
 
@@ -379,20 +412,22 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
     }
 
 
-
-
     //TODO: find out why this method is called too often
+    /**
+     * Method that creates the array of dataSources in the backend format for
+     * the existing data sources.
+     */
     const createDataSources = () => {
         const backendDataSources: Array<BackendDataSource> = [];
         dataSources.forEach((dataSource) => {
             //this check should be prevented, but there is some bug behaviour where this method is called too often and errors happen
-            if(dataSourcesKeys.get(dataSource.apiName)!==undefined) {
+            if (dataSourcesKeys.get(dataSource.apiName) !== undefined) {
                 backendDataSources.push({
                     datasource_name: dataSource.apiName,
                     api: {
                         api_info: {
                             type: "request",
-                            api_key_name: dataSource.method==="BearerToken"?dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1:dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
+                            api_key_name: dataSource.method === "BearerToken" ? dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 : dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput1 + "||" + dataSourcesKeys.get(dataSource.apiName)!.apiKeyInput2,
                             url_pattern: dataSource.query,
                         },
                         method: dataSource.noKey ? "noAuth" : dataSource.method,
@@ -401,32 +436,29 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
+                    calculates: createCalculates(dataSource.arrayProcessingsList),
+                    replacements: createReplacements(dataSource.stringReplacementList),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
                         date: "",
-                        time_interval: dataSource.schedule.interval,
+                        timeInterval: dataSource.schedule.interval,
                         weekdays: dataSource.schedule.weekdays
                     },
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
+                    arrayProcessingsList: dataSource.arrayProcessingsList,
+                    stringReplacementList: dataSource.stringReplacementList
                 })
             }
         });
         return backendDataSources;
     }
 
-    /*type BackendDiagram = {
-        type: string;
-        diagram_config: {
-            type: string;
-            name: string;
-            infoprovider: string;
-            sourceType: string;
-            plots: Array<Plots>;
-        }
-    }*/
-
+    /**
+     * Method that creates an array of diagrams in the backend format
+     * for the existing diagrams.
+     */
     const createBackendDiagrams = () => {
         //TODO: possibly find smarter solution without any type
         const diagramsObject: any = {};
@@ -578,8 +610,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      * Increments the step.
      */
     const handleContinue = () => {
-        if (createStep === 5) postInfoProvider();
-        else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
+        if (createStep === 5) {
+            if (name.length <= 0) {
+                reportError("Bitte geben Sie dem Infoprovider einen Namen!");
+            } else {
+                postInfoProvider();
+            }
+        } else if (createStep === 4 && props.finishDataSourceInEdit !== undefined) {
+
             props.finishDataSourceInEdit({
                 apiName: apiName,
                 query: query,
@@ -589,7 +627,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 customData: customData,
                 historizedData: historizedData,
                 schedule: schedule,
-                listItems: listItems
+                listItems: listItems,
+                arrayProcessingsList: arrayProcessingsList,
+                stringReplacementList: stringReplacementList
             }, apiKeyInput1, apiKeyInput2);
             clearSessionStorage();
         } else {
@@ -609,6 +649,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
         }
     }
 
+    //TODO: also set the array processings and string replacements when switching current data source as soon as the functionality is available in this branch
     /**
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.
@@ -631,12 +672,14 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
      */
         //TODO: add this to the documentation
     const addToDataSources = () => {
+
             //store keys in dataSourcesKeys
             const mapCopy = new Map(dataSourcesKeys);
             setDataSourcesKeys(mapCopy.set(apiName, {
                 apiKeyInput1: apiKeyInput1,
                 apiKeyInput2: apiKeyInput2
             }))
+
             const dataSource: DataSource = {
                 apiName: apiName,
                 query: query,
@@ -646,7 +689,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 customData: customData,
                 historizedData: historizedData,
                 schedule: schedule,
-                listItems: listItems
+                listItems: listItems,
+                arrayProcessingsList: arrayProcessingsList,
+                stringReplacementList: stringReplacementList
             };
             for (let i = 0; i < dataSources.length; i++) {
                 if (dataSources[i].apiName === apiName) {
@@ -691,14 +736,16 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setNoKey={(noKey: boolean) => setNoKey(noKey)}
                         method={method}
                         setMethod={(method: string) => setMethod(method)}
-                        name={apiName}
-                        setName={(name: string) => setApiName(name)}
+                        apiName={apiName}
+                        setApiName={(name: string) => setApiName(name)}
                         reportError={reportError}
                         setSelectedData={setSelectedData}
                         setCustomData={setCustomData}
                         setHistorizedData={setHistorizedData}
                         setSchedule={setSchedule}
                         setHistorySelectionStep={setHistorySelectionStep}
+                        diagrams={diagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setDiagrams(diagrams)}
                         setListItems={(array: Array<ListItemRepresentation>) => setListItems(array)}
                         isInEditMode={false}
                     />
@@ -716,7 +763,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         historizedData={historizedData}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         customData={customData}
-                        setCustomData={(array:Array<FormelObj>) => setCustomData(array)}
+                        setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
@@ -724,9 +771,11 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                 );
             case 3:
                 return (
-                    <CreateCustomData
+                    <DataCustomization
                         continueHandler={handleContinue}
                         backHandler={handleBack}
+                        dataCustomizationStep={dataCustomizationStep}
+                        setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                         selectedData={selectedData}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         customData={customData}
@@ -738,6 +787,10 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         diagrams={diagrams}
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         apiName={apiName}
+                        arrayProcessingsList={arrayProcessingsList}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        stringReplacementList={stringReplacementList}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                     />
                 )
             case 4:
@@ -747,6 +800,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         backHandler={handleBack}
                         selectedData={extractKeysFromSelection(selectedData)}
                         customData={customData}
+                        arrayProcessingsList={arrayProcessingsList}
+                        stringReplacementList={stringReplacementList}
                         historizedData={historizedData}
                         setHistorizedData={(set: Array<string>) => setHistorizedData(set)}
                         schedule={schedule}
@@ -788,6 +843,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         setDiagrams={(array: Array<Diagram>) => setDiagrams(array)}
                         dataSourcesKeys={dataSourcesKeys}
                         setDataSourcesKeys={(map: Map<string, DataSourceKey>) => setDataSourcesKeys(map)}
+                        setArrayProcessingsList={(processings: Array<ArrayProcessingData>) => setArrayProcessingsList(processings)}
+                        setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                     />
                 )
             case 6:

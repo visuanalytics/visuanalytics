@@ -3,14 +3,16 @@ import {HistoryDataSelection} from "./HistoryDataSelection";
 import {HistoryScheduleSelection} from "./HistoryScheduleSelection";
 import {hintContents} from "../../util/hintContents";
 import {StepFrame} from "../StepFrame";
-import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
-import {Diagram, Schedule} from "../types";
+import {FormelObj} from "../DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {ArrayProcessingData, Diagram, Schedule, StringReplacementData} from "../types";
 
 interface HistorySelectionProps {
     continueHandler: () => void;
     backHandler: () => void;
     selectedData: Array<string>;
     customData: Array<FormelObj>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
     historizedData: Array<string>;
     setHistorizedData: (array: Array<string>) => void;
     schedule: Schedule;
@@ -70,6 +72,8 @@ export const HistorySelection: React.FC<HistorySelectionProps> = (props) => {
                         handleBack={props.backHandler}
                         selectedData={props.selectedData}
                         customData={props.customData}
+                        arrayProcessingsList={props.arrayProcessingsList}
+                        stringReplacementList={props.stringReplacementList}
                         historizedData={props.historizedData}
                         setHistorizedData={props.setHistorizedData}
                         selectSchedule={props.selectSchedule}

@@ -29,8 +29,11 @@ class DbScheduler(Scheduler):
     @ignore_errors
     def __check(self, row, now, is_job):
         # check if type is "interval" and job has to be run
+        #print("__check()")
+        #print("row:", dict(row))
+        #print("is_job:", is_job)
         if row["s_type"] == "interval":
-            if self._check_interval(now, get_interval(row), row["job_id" if is_job else "datasource_id"], True):
+            if self._check_interval(now, get_interval(row), row["job_id" if is_job else "datasource_id"], True, is_job=is_job):
                 self.__run_jobs(row["job_id" if is_job else "datasource_id"], is_job)
             return
 

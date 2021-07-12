@@ -14,7 +14,7 @@ import Button from "@material-ui/core/Button";
 import {useStyles} from "../style";
 import Box from "@material-ui/core/Box";
 import List from "@material-ui/core/List";
-import {FormelObj} from "../../CreateInfoProvider/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
+import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/FormelObj";
 import {ScheduleTypeTable} from "../../CreateInfoProvider/SettingsOverview/ScheduleTypeTable";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -167,7 +167,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                    label={"Info-Provider Name"}
                                    value={props.infoProvName}
-                                   onChange={event => (props.setInfoProvName(event.target.value))}>
+                                   onChange={event => (props.setInfoProvName(event.target.value.replace(' ', '_')))}>
                         </TextField>
                     </Grid>
                     <Grid item xs={12} md={6}>

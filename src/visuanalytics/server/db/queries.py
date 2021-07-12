@@ -3,6 +3,7 @@ import os
 import shutil
 import io
 import re
+import time
 
 import humps
 import copy
@@ -12,6 +13,7 @@ from PIL import Image
 
 from visuanalytics.server.db import db
 from visuanalytics.util.config_manager import get_private, set_private
+from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
 from visuanalytics.util.infoprovider_utils import generate_step_transform
@@ -19,20 +21,12 @@ from visuanalytics.util.infoprovider_utils import generate_step_transform
 INFOPROVIDER_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/infoprovider"))
 VIDEOJOB_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 DATASOURCE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/datasources"))
+TEMP_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/temp"))
 SCENE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/scenes"))
 STEPS_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources/steps"))
 IMAGE_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", IL))
 AUDIO_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", AL))
 MEMORY_LOCATION = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../resources", ML))
-
-
-def get_last_infoprovider_id():
-    con = db.open_con_f()
-    last_id = 0
-    count = con.execute("SELECT COUNT(*) FROM infoprovider").fetchone()["COUNT(*)"]
-    if count != 0:
-        last_id = con.execute("SELECT seq FROM sqlite_sequence WHERE name='infoprovider'").fetchone()["seq"]
-    return last_id
 
 
 def get_infoprovider_list():
@@ -118,12 +112,18 @@ def insert_infoprovider(infoprovider):
     # Transform obj vorbereiten
     transform_step = []
     for datasource in datasources:
+        transform_step += datasource["transform"]
+        transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], formula_keys), remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(transform_step))
+        transform_step += remove_toplevel_key(datasource["replacements"])
 
-    for datasource in infoprovider["datasources"]:
-        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
+    datasources_copy = deepcopy(infoprovider["datasources"])
+    for datasource in datasources_copy:
+        api_key_name_temp = datasource["api"]["api_info"].get("api_key_name", None)
+        if api_key_name_temp:
+            datasource["api"]["api_info"]["api_key_name"] = api_key_name_temp.split("||")[0] + "||"
 
     # Json für das Speicher vorbereiten
     infoprovider_json = {
@@ -132,7 +132,7 @@ def insert_infoprovider(infoprovider):
         "transform": transform_step,
         "images": diagrams,
         "run_config": {},
-        "datasources": infoprovider["datasources"],
+        "datasources": datasources_copy,
         "diagrams_original": diagrams_original,
         "arrays_used_in_diagrams": arrays_used_in_diagrams
     }
@@ -178,14 +178,17 @@ def insert_infoprovider(infoprovider):
         }
 
         # Datasource obj vorbereiten
+        transform_step = datasource["transform"]
+        transform_step += datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys), remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys), remove_toplevel_key(transform_step))
+        transform_step += remove_toplevel_key(datasource["replacements"])
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["historized_data"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys, datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -208,6 +211,9 @@ def insert_infoprovider(infoprovider):
 
     con.commit()
 
+    for diagram_name, diagram in diagrams.items():
+        generate_test_diagram(diagram, infoprovider_name=infoprovider_name, diagram_name=diagram_name)
+
     return True
 
 
@@ -224,6 +230,7 @@ def insert_video_job(video, update=False, job_id=None):
     :type job_id: int
     :return: Gibt einen boolschen Wert zurück (Status), oder eine Fehlermeldung (bei Aktualisierungen).
     """
+    con = db.open_con_f()
     video_name = video["name"]
     for infoprovider_name in video["infoprovider_names"]:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
@@ -263,10 +270,11 @@ def insert_video_job(video, update=False, job_id=None):
     scenes = list(filter(lambda x: x["scene_name"] in scene_names, scenes))
     # print("scenes", scenes)
     # print("scene_names", scene_names)
+    scene_ids = list(map(lambda x: x["scene_id"], scenes))
     scenes = list(map(lambda x: get_scene(x["scene_id"]), scenes))
     # print("scenes", scenes)
     for k, v in images.items():
-        images[k] = list(filter(lambda x: x["scene_name"] == v["key"], scenes))[0]["images"]
+        images[k] = list(filter(lambda x: x["name"] == v["key"], scenes))[0]["images"]
     # print("images", json.dumps(images, indent=4))
 
     video["images"] = images
@@ -311,6 +319,14 @@ def insert_video_job(video, update=False, job_id=None):
             ]
         }
         update_job(job_id, job, config=False)
+
+    # Einträge in Tabelle job_uses_scene updaten
+    job_id = con.execute("SELECT job_id FROM job WHERE job_name=?", [video_name]).fetchone()["job_id"]
+    con.execute("DELETE FROM job_uses_scene WHERE job_id=?", [job_id])
+    for scene_id in scene_ids:
+        con.execute("INSERT INTO job_uses_scene (job_id, scene_id, scene_is_preview) VALUES (?, ?, ?)", [job_id, scene_id, False])
+    con.commit()
+
     return True if not update else None
 
 
@@ -324,9 +340,9 @@ def get_videojob(job_id):
     :return: JSON für das Frontend.
     """
     job_list = get_job_list()
-    print("job_list", job_list)
+    #print("job_list", job_list)
     videojob = list(filter(lambda x: x["jobId"] == job_id, job_list))[0]
-    print("videojob", videojob)
+    #print("videojob", videojob)
 
     with open(_get_videojob_path(videojob["jobName"].replace(" ", "-")), "r") as f:
         video_json = json.load(f)
@@ -420,7 +436,8 @@ def get_infoprovider(infoprovider_id):
     for datasource in infoprovider_json["datasources"]:
         api_key_name = f"{infoprovider_json['name']}_{datasource['datasource_name']}_APIKEY" if datasource["api"]["method"] != "noAuth" and datasource["api"]["method"] != "BasicAuth" else None
         private_config = get_private()
-        datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name] if api_key_name else None
+        if api_key_name:
+            datasource["api"]["api_info"]["api_key_name"] += private_config["api_keys"][api_key_name]
 
     return {
         "infoprovider_name": infoprovider_json["name"],
@@ -451,7 +468,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     old_infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                                         [infoprovider_id]).fetchone()["infoprovider_name"]
     con.commit()
-    _remove_datasources(con, infoprovider_id)
+    _remove_datasources(con, infoprovider_id, datasource_names=[x["datasource_name"] for x in updated_data["datasources"]])
 
     if count > 0 and old_infoprovider_name != updated_data["infoprovider_name"]:
         return {"err_msg": f"There already exists an infoprovider with the name {updated_data['infoprovider_name']}"}
@@ -504,10 +521,15 @@ def update_infoprovider(infoprovider_id, updated_data):
     # Update Transform-Step vorbereiten
     new_transform = []
     for datasource in datasources:
+        new_transform += datasource["calculates"]
         new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+        new_transform += datasource["replacements"]
 
-    for datasource in updated_data["datasources"]:
-        datasource["api"]["api_info"]["api_key_name"] = datasource["api"]["api_info"]["api_key_name"].split("||")[0] + "||"
+    datasources_copy = deepcopy(updated_data["datasources"])
+    for datasource in datasources_copy:
+        api_key_name_temp = datasource["api"]["api_info"].get("api_key_name", None)
+        if api_key_name_temp:
+            datasource["api"]["api_info"]["api_key_name"] = api_key_name_temp.split("||")[0] + "||"
 
     if new_transform is None:
         return {"err_msg": "could not generate transform-step from formulas"}
@@ -517,12 +539,17 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
     infoprovider_json.update({"images": updated_data["diagrams"]})
-    infoprovider_json.update({"datasources": updated_data["datasources"]})
+    infoprovider_json.update({"datasources": datasources_copy})
 
     # Neues Json abspeichern
     new_file_path = get_infoprovider_file(infoprovider_id)
     with open_resource(new_file_path, "w") as f:
         json.dump(infoprovider_json, f)
+
+    shutil.rmtree(os.path.join(TEMP_LOCATION, old_infoprovider_name), ignore_errors=True)
+
+    for diagram_name, diagram in updated_data["diagrams"].items():
+        generate_test_diagram(diagram, infoprovider_name=updated_data["infoprovider_name"], diagram_name=diagram_name)
 
     for datasource in updated_data["datasources"]:
         datasource_name = datasource["datasource_name"]
@@ -553,15 +580,17 @@ def update_infoprovider(infoprovider_id, updated_data):
         }
 
         # Datasource obj vorbereiten
+        transform_step = datasource["calculates"]
         formulas = copy.deepcopy(datasource["formulas"])
-        formula_keys = [formula["formelName"] for formula in datasource["formulas"]]
-        transform_step = _generate_transform(_extend_formula_keys(formulas, datasource_name, formula_keys),
-                                             remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        transform_step += _generate_transform(_extend_formula_keys(formulas, datasource_name, custom_keys),
+                                              remove_toplevel_key(datasource["transform"]))
+        transform_step += datasource["replacements"]
         datasource_json = {
             "name": datasource_name,
             "api": datasource_api_step,
             "transform": transform_step,
-            "storing": _generate_storing(datasource["storing"], datasource_name, formula_keys) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
+            "storing": _generate_storing(datasource["historized_data"], datasource_name, custom_keys, datasource["storing"]) if datasource["api"]["api_info"]["type"] != "request_memory" else [],
             "run_config": {}
         }
 
@@ -605,8 +634,14 @@ def delete_infoprovider(infoprovider_id):
 
         # Json-Datei von Infoprovider und zugehörige Ordner löschen
         file_path = get_infoprovider_file(infoprovider_id)
+        shutil.rmtree(os.path.join(TEMP_LOCATION, res["infoprovider_name"]), ignore_errors=True)
         shutil.rmtree(os.path.join(IMAGE_LOCATION, res["infoprovider_name"]), ignore_errors=True)
         os.remove(file_path)
+
+        # Scenen und Videos die Infoprovider verwenden löschen
+        scenes = con.execute("SELECT * FROM scene_uses_infoprovider WHERE infoprovider_id=?", [infoprovider_id])
+        for scene in scenes:
+            delete_scene(scene["scene_id"])
 
         # Infoprovider aus Datenbank löschen
         con.execute("DELETE FROM infoprovider WHERE infoprovider_id = ?", [infoprovider_id])
@@ -616,6 +651,56 @@ def delete_infoprovider(infoprovider_id):
     return False
 
 
+def get_infoprovider_logs(infoprovider_id):
+    """
+    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+
+    :param infoprovider_id: ID eines Infoproviders.
+    :return: Liste aller gefundenen Logs.
+    """
+    con = db.open_con_f()
+    datasource_ids = con.execute("SELECT datasource_id FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
+    logs = []
+    for datasource_id in datasource_ids:
+        datasource_logs = con.execute("SELECT job_id, datasource_name, state, error_msg, error_traceback, duration, start_time "
+                                      "from job_logs INNER JOIN datasource ON job_logs.job_id=datasource.datasource_id "
+                                      "WHERE pipeline_type='DATASOURCE' AND datasource.datasource_id=?"
+                                      "ORDER BY job_logs_id DESC", [datasource_id["datasource_id"]]).fetchall()
+        [logs.append({
+            "datasource_id": datasource_log["job_id"],
+            "datasource_name": datasource_log["datasource_name"],
+            "state": datasource_log["state"],
+            "errorMsg": datasource_log["error_msg"],
+            "errorTraceback": datasource_log["error_traceback"],
+            "duration": datasource_log["duration"],
+            "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(datasource_log["start_time"]))
+        }) for datasource_log in datasource_logs]
+    return logs
+
+
+def get_videojob_logs(videojob_id):
+    """
+    Läd die Logs aller Datenquellen die einem bestimmten Infoprovider angehören.
+
+    :param videojob_id: ID eines Infoproviders.
+    :return: Liste aller gefundenen Logs.
+    """
+    con = db.open_con_f()
+    logs = con.execute("SELECT job_id, job_name, state, error_msg, error_traceback, duration, start_time "
+                                  "from job_logs INNER JOIN job USING (job_id) "
+                                  "WHERE pipeline_type='JOB' AND job_id=?"
+                                  "ORDER BY job_logs_id DESC", [videojob_id]).fetchall()
+    return [{
+        "videojob_id": log["job_id"],
+        "videojob_name": log["job_name"],
+        "state": log["state"],
+        "errorMsg": log["error_msg"],
+        "errorTraceback": log["error_traceback"],
+        "duration": log["duration"],
+        "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(log["start_time"]))
+    } for log in logs]
+
+
 def delete_videojob(videojob_id):
     """
     Entfernt den Videojob mit der gegebenen ID.
@@ -623,12 +708,30 @@ def delete_videojob(videojob_id):
     :param videojob_id: ID des Videojobs.
     :return: Boolschen Wert welcher angibt ob das Löschen erfolgreich war.
     """
+    con = db.open_con_f()
     job_list = get_job_list()
     topic_id = list(filter(lambda x: x["jobId"] == videojob_id, job_list))[0]["topicValues"][0]["topicId"]
     delete_topic(topic_id)
     delete_job(videojob_id)
+    con.execute("DELETE FROM job_uses_scene WHERE job_id=?", [videojob_id])
+    con.commit()
 
     return True
+
+
+def get_videojob_preview(videojob_id):
+    """
+    Generiert den Pfad zu dem Preview-Bild eines Videojobs.
+
+    :param videojob_id: ID des Videojobs.
+    :return: Dateipfad zu dem Preview-Bild.
+    """
+    con = db.open_con_f()
+
+    scene = con.execute("SELECT * FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()
+
+    return get_scene_preview(scene["scene_id"]) if scene else None
 
 
 def insert_scene(scene):
@@ -648,12 +751,16 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
+    diagrams_original = scene["diagrams_original"]
+    scene_items = scene["scene_items"]
 
     scene_json = {
-        "scene_name": scene_name,
+        "name": scene_name,
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
-        "images": images
+        "images": images,
+        "diagrams_original": diagrams_original,
+        "scene_items": scene_items
     }
 
     # Prüfen ob scene bereits vorhanden ist
@@ -685,10 +792,10 @@ def insert_scene(scene):
 
     # save <scene-name>.json
     file_path = _get_scene_path(scene_name.replace(" ", "-"))
-    print("file_path", file_path)
+    #print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
-        print("writing")
-        json.dump(scene, f)
+        #print("writing")
+        json.dump(scene_json, f)
 
     con.commit()
     return None
@@ -755,6 +862,7 @@ def update_scene(scene_id, updated_data):
     used_images = updated_data["used_images"]
     used_infoproviders = updated_data["used_infoproviders"]
     images = updated_data["images"]
+    scene_items = updated_data["scene_items"]
 
     # Altes Json laden
     old_file_path = get_scene_file(scene_id)
@@ -762,20 +870,23 @@ def update_scene(scene_id, updated_data):
     with open_resource(old_file_path, "r") as f:
         scene_json = json.loads(f.read())
 
+    old_name = con.execute("SELECT scene_name FROM scene WHERE scene_id=?", [scene_id]).fetchone()["scene_name"]
+
     # Testen of Name bereits von anderer Szene verwendet wird
     res = con.execute("SELECT * FROM scene WHERE scene_name=?", [scene_name])
     for row in res:
-        if row["scene_id"] != scene_id:
+        if row["scene_id"] != scene_id and scene_name != old_name:
             return {"err_msg": f"There already exists a scene with the name {scene_name}"}
 
     # Neuen Namen setzen
     con.execute("UPDATE scene SET scene_name=? WHERE scene_id=?", [scene_name, scene_id])
 
     # Neue Daten in Json-Datei eintragen
-    scene_json.update({"scene_name": scene_name})
+    scene_json.update({"name": scene_name})
     scene_json.update({"used_images": used_images})
     scene_json.update({"used_infoproviders": used_infoproviders})
     scene_json.update({"images": images})
+    scene_json.update({"scene_items": scene_items})
 
     # Alte Einträge aus scene_uses_image entfernen
     con.execute("DELETE FROM scene_uses_image WHERE scene_id=?", [scene_id])
@@ -836,6 +947,11 @@ def delete_scene(scene_id):
         # Eintrag aus scene_uses_infoprovider entfernen
         con.execute("DELETE FROM scene_uses_infoprovider WHERE scene_id=?", [scene_id])
 
+        # Lösche Video-jobs die diese Szene verwenden
+        jobs = con.execute("SELECT * FROM job_uses_scene WHERE scene_id=?", [scene_id])
+        for job in jobs:
+            delete_videojob(job["job_id"])
+
         # Json-Datei löschen
         rowcount = con.execute("DELETE FROM scene WHERE scene_id=?", [scene_id]).rowcount
         if rowcount > 0:
@@ -846,80 +962,131 @@ def delete_scene(scene_id):
     return False
 
 
-def insert_image(image_name):
+def get_scene_preview(scene_id):
     """
-    Adds an image to the Database.
+    Läd das Preview-Bild einer Szene
 
-    :param image_name: Name of the image.
+    :param scene_id: ID der Szene.
+    """
+    con = db.open_con_f()
+
+    # Testen ob Scene existiert
+    count = con.execute("SELECT COUNT(*) FROM scene WHERE scene_id=?", [scene_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        return None
+
+    # Szenen-Json laden um verwendetet Bilder auslesen zu können
+    with open_resource(get_scene_file(scene_id)) as f:
+        scene_json = json.loads(f.read())
+
+    # Nach Preview-Bild suchen
+    for image_id in scene_json["used_images"]:
+        image_name = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()["image_name"]
+        if "preview" in image_name:
+            image_data = image_name.rsplit(".", 1)
+            return get_image_path(image_data[0], "scene", image_data[1])
+    return None
+
+
+def insert_image(image_name, folder):
+    """
+    Fügt ein Bild zu der Datenbank hinzu.
+
+    :param image_name: Name des Bildes.
+    :param folder: Ordner unter dem das Bild gespeichert werden soll.
     """
     con = db.open_con_f()
     name = image_name.rsplit(".", 1)[0]
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=?", [name + ".jpg", name + ".jpeg", name + ".png"]).fetchone()["COUNT(*)"]
 
+    # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
+    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=? AND folder=?", [name + ".jpg", name + ".jpeg", name + ".png", folder]).fetchone()["COUNT(*)"]
     if count > 0:
-        return False
+        return None
 
-    con.execute("INSERT INTO image (image_name)VALUES (?)", [image_name])
+    image_id = con.execute("INSERT INTO image (image_name, folder) VALUES (?, ?)", [image_name, folder]).lastrowid
     con.commit()
-    return True
+    return image_id
 
 
 def get_scene_image_file(image_id):
     """
-    Generated the file-path of an image by its given ID.
+    Generiert den Dateipfad zu einem Bild anhand seiner ID.
 
-    :param image_id: ID of the image.
+    :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
-    res = con.execute("SELECT image_name FROM image WHERE image_id=?", [image_id]).fetchone()
-    return get_scene_image_path(res["image_name"]) if res is not None else None
-
-
-def get_image_list():
-    """
-    Loads information about all images stored in the database.
-
-    :return: Contains ID, name and image-file for each image contained in the database.
-    """
-    con = db.open_con_f()
-    res = con.execute("SELECT * FROM image")
+    res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
-    """images = []
-    for row in res:
-        with Image.open(get_scene_image_path(row["image_name"]), mode='r') as f:
-            byte_arr = f.tobytes()
-            encoded_img = encodebytes(byte_arr).decode('ascii')
-            images.append({
-                "image_id": row["image_id"],
-                "image_name": row["image_name"],
-                "image_file": encoded_img
-            })
-    return images"""
+    image_data = res["image_name"].rsplit(".", 1)
+    return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
+
+
+def get_image_list(folder):
+    """
+    Läd Informationen über alle in der Datenbank enthaltenen Bilder.
+
+    :return: Enthölt eine Liste an Objekten welche je die ID und den Namen des Bildes enthalten.
+    """
+    con = db.open_con_f()
+    res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
+    con.commit()
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
 
 
 def delete_scene_image(image_id):
     """
-    Removes an image from the database by a given ID.
+    Entfernt ein Bild aus der Datenbank.
 
-    :param image_id: ID of an image.
+    :param image_id: ID des Bildes.
     """
     con = db.open_con_f()
 
     file_path = get_scene_image_file(image_id)
 
-    # check if image is being used
-    count = con.execute("SELECT COUNT(*) FROM scene_uses_image WHERE image_id=?", [image_id]).fetchone()["COUNT(*)"]
-    if count > 0:
-        return "Error"
+    # Entferne Szenen und Videos die dieses Bild verwenden
+    res = con.execute("SELECT * FROM scene_uses_image WHERE image_id=?", [image_id])
+    for scene in res:
+        delete_scene(scene["scene_id"])
 
-    # remove image-file and entry in image-table
+    # Entfernen Datei aus Ordnerstruktur und Eintrag aus Tabelle 'image'
     res = con.execute("DELETE FROM image WHERE image_id=?", [image_id])
     if res.rowcount > 0:
         os.remove(file_path)
     con.commit()
 
     return "Successful"
+
+
+def set_videojob_preview(videojob_id, scene_id):
+    """
+    Setzt eine gegebene Szene als das Previewbild eines Videos.
+
+    :param videojob_id: ID eines Videojobs.
+    :param scene_id: ID einer Szene.
+    :return: Eine Fehlermeldung im Json-Format falls vorhanden.
+    """
+    con = db.open_con_f()
+
+    # Testen ob Videojob und Szene existieren
+    scene = con.execute("SELECT * FROM scene WHERE scene_id=?", [scene_id]).fetchone()
+    videojob = con.execute("SELECT * FROM job WHERE job_id=?", [videojob_id]).fetchone()
+    if videojob is None:
+        return {"err_msg": f"Videojob with ID {videojob_id} does not exist"}
+    if scene is None:
+        return {"err_msg": f"Scene with ID {scene_id} does not exist"}
+
+    # Testen ob bereits eine Szene als preview gesetzt ist
+    count = con.execute("SELECT COUNT(*) FROM job_uses_scene WHERE job_id=? AND scene_is_preview=TRUE",
+                        [videojob_id]).fetchone()["COUNT(*)"]
+    if count == 0:
+        con.execute("INSERT INTO job_uses_scene (job_id, scene_id, scene_is_preview) VALUES (?, ?, ?)",
+                    [videojob_id, scene_id, True])
+    else:
+        con.execute("UPDATE job_uses_scene SET scene_id=? WHERE job_id=? AND scene_is_preview=TRUE",
+                    [scene_id, videojob_id])
+
+    con.commit()
+    return None
 
 
 def get_topic_names():
@@ -1113,6 +1280,29 @@ def generate_request_dicts(api_info, method, api_key_name=None):
     return header, parameter
 
 
+def extract_custom_keys(calculates, formulas, replacements):
+    keys = []
+    keys += _extract_transform_keys(calculates, keys)
+    keys += [formula["formelName"] for formula in formulas]
+    keys += _extract_transform_keys(replacements, keys)
+    return keys
+
+
+def _extract_transform_keys(transform, keys):
+    if type(transform) == list:
+        for x in range(len(transform)):
+            keys = _extract_transform_keys(transform[x], keys)
+    elif type(transform) == dict:
+        for key in list(transform.keys()):
+            if key == "new_keys":
+                for custom_key in transform[key]:
+                    if "_loop|" in custom_key:
+                        keys.append(custom_key.split("_loop|")[1])
+                    else:
+                        keys.append(custom_key)
+    return keys
+
+
 def remove_toplevel_key(obj):
     if type(obj) == list:
         for x in range(len(obj)):
@@ -1122,8 +1312,10 @@ def remove_toplevel_key(obj):
             obj[key] = remove_toplevel_key(obj[key])
     elif type(obj) == str:
         obj = obj.replace("$toplevel_array$", "").replace("||", "|").replace("| ", " ")
-        if obj[-1] == "|":
+        if len(obj) > 0 and obj[-1] == "|":
             obj = obj[:-1]
+        if len(obj) > 0 and obj[0] == "|":
+            obj = obj[1:]
     return obj
 
 
@@ -1150,16 +1342,17 @@ def _extend_formula_keys(obj, datasource_name, formula_keys):
         if "formelString" in obj:
             obj["formelString"] = _extend_formula_keys(obj["formelString"], datasource_name, formula_keys)
     elif type(obj) == str:
-        parts = re.split('[\*/\() \+-]', obj)
+        parts = re.split('[\*/\() %\+-]', obj)
         transformed_keys = []
         for part in parts:
             try:
                 float(part)
             except Exception:
                 if part != "" and part not in formula_keys and part not in transformed_keys:
-                    remove_toplevel_key(part)
                     transformed_keys.append(part)
-                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part)
+                    part_temp = remove_toplevel_key(part)
+                    obj = obj.replace(part, "_req|" + datasource_name + "|" + part_temp)
+    #print("obj", obj)
     return obj
 
 
@@ -1190,20 +1383,42 @@ def _generate_transform(formulas, old_transform):
     return transform
 
 
-def _generate_storing(historized_data, datasource_name, formula_keys):
-    storing = []
+def _generate_storing(historized_data, datasource_name, formula_keys, old_storing):
+    storing = old_storing
     historized_data = remove_toplevel_key(historized_data)
     for key in historized_data:
+        key_string = "_req|" + datasource_name + "|" + key if key not in formula_keys else key
+        if key_string[-1] == "|":
+            key_string = key_string[:-1]
         storing.append({
             "name": key.replace("|", "_"),
-            "key": "_req|" + datasource_name + "|" + key if key not in formula_keys else key
+            "key": key_string
         })
     return storing
 
 
-def _remove_datasources(con, infoprovider_id, remove_historised=False):
+def _remove_unused_memory(datasource_names, infoprovider_name):
+    print("datasource_names:", datasource_names)
+    pre = infoprovider_name + "_"
+    dirs = [f.path for f in os.scandir(MEMORY_LOCATION) if f.is_dir()]
+    print("dirs:", dirs)
+    dirs = list(filter(lambda x: re.search(pre + ".*", x), dirs))
+    print("dirs:", dirs)
+    datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
+    print("datasource_memory_dirs:", datasource_memory_dirs)
+    for index, dir in enumerate(dirs):
+        print(dir, datasource_memory_dirs[index] in datasource_names)
+        if not datasource_memory_dirs[index] in datasource_names:
+            shutil.rmtree(dir, ignore_errors=True)
+
+
+def _remove_datasources(con, infoprovider_id, remove_historised=False, datasource_names=None):
     res = con.execute("SELECT * FROM datasource WHERE infoprovider_id=?", [infoprovider_id])
     infoprovider_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?", [infoprovider_id]).fetchone()["infoprovider_name"]
+
+    if datasource_names:
+        _remove_unused_memory(datasource_names, infoprovider_name)
+
     for row in res:
         file_path = get_datasource_file(row["datasource_id"])
         os.remove(file_path)
@@ -1353,16 +1568,11 @@ def _get_scene_path(scene_name: str):
     return os.path.join(SCENE_LOCATION, scene_name) + ".json"
 
 
-def get_scene_image_path(json_file_name: str):
-    image_info = json_file_name.rsplit(".", 1)
-    return _get_image_path(image_info[0], "scene", image_info[1])
-
-
 def _get_steps_path(json_file_name: str):
     return os.path.join(STEPS_LOCATION, json_file_name) + ".json"
 
 
-def _get_image_path(json_file_name: str, folder: str, image_type: str):
+def get_image_path(json_file_name: str, folder: str, image_type: str):
     if folder != '':
         os.makedirs(os.path.join(IMAGE_LOCATION, folder), exist_ok=True)
         return os.path.join(IMAGE_LOCATION, folder, json_file_name) + "." + image_type
@@ -1425,7 +1635,12 @@ def _unpack_schedule(schedule):
     type = humps.decamelize(schedule["type"])
     time = schedule["time"] if type != "interval" else None
     date = schedule["date"] if type == "on_date" else None
-    time_interval = schedule["timeInterval"] if type == "interval" else None
+    if type == "interval":
+        time_interval = schedule.get("timeInterval", None)
+        if not time_interval:
+            time_interval = schedule["time_interval"]
+    else:
+        time_interval = None
     weekdays = schedule["weekdays"] if type == "weekly" else None
     return type, time, date, weekdays, time_interval
 
