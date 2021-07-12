@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, Tab, TableHead
+    DialogTitle, TableHead
 } from "@material-ui/core";
 import {LogEntry} from "../../../types";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -109,7 +109,7 @@ Hier können Sie die Log-Daten für den Infoprovider "{props.infoproviderName}" 
         </Table>
     </TableContainer>
     }
-    {logMessages.length == 0 &&
+    {logMessages.length === 0 &&
         <Typography variant="body1">
             Es liegen keine Logs für diesen Infoprovider vor.
         </Typography>

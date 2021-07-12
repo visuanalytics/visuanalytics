@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Grid, List, ListItemSecondaryAction, Typography} from "@material-ui/core";
+import {Box, Grid, List, Typography} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import {useStyles} from "../../style";
