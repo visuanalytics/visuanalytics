@@ -87,6 +87,7 @@ export type CustomImage = {
     image: HTMLImageElement;
     imageId: number;
     imagePath: string;
+    index: number;
     width: number;
     height: number;
     color: string;
@@ -140,5 +141,5 @@ export type DataText = {
  */
 export type ResponseData = {
     image_id: number,
-    image_path: string
+    path: string
 }

@@ -3,14 +3,15 @@ import {useStyles} from "../style";
 import {Button, Checkbox, Collapse, FormControlLabel, Grid, Typography} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {ImageFrontendData} from "../../types";
 
 
 interface ImageListsProps {
-    imageList: Array<string>
+    imageList: Array<ImageFrontendData>
     backgroundImageList: Array<string>
     postImage: (data: FormData) => void;
     postBackgroundImage: (data: FormData) => void;
-    handleImageClick: (src : string, index: number) => void;
+    handleImageClick: (src : string, id: number, path: string, index: number) => void;
     handleBackgroundImageClick: (src : string, index : number) => void;
     backGroundType: string;
     backGroundColorEnabled: boolean;
@@ -39,21 +40,22 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
 
     /**
      * Method that renders a single entry in the list of all available images
-     * @param image The URL of the image to be displayed.
+     * @param image The blob URL of the image to be displayed.
+     * @param id The ID in the backend of the image to be displayed.
+     * @param path The URL/path in the backend of the image to be displayed.
      * @param index The index of the image (used to make keys unique)
      * @param type Indicates if the image is a normal image or a background image.
      */
-    const renderImageEntry = (image: string, index: number, type: "image"|"background") => {
+    const renderImageEntry = (image: string, id: number, path: string, index: number, type: "image"|"background") => {
         if(type==="image") {
             return (
                 <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
                     <Grid item xs={10}>
-                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleImageClick(image, index)}/>
+                        <img src={image} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => props.handleImageClick(image, id, path, index)}/>
                     </Grid>
                 </Grid>
             )
         } else {
-            //TODO: add behaviour for background images
             return (
                 <Grid key={image} item container xs={6} justify="space-around" className={index === 0 ? classes.firstImage : index === 1 ? classes.secondImage : index % 2 === 0 ? classes.leftImage : classes.rightImage}>
                     <Grid item xs={10}>
@@ -64,7 +66,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
         }
     }
 
-
+    //TODO: do we need the path and id also for the background image? i dont think so!
 
     return (
         <React.Fragment>
@@ -119,7 +121,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                         </Grid>
                     </Grid>
                     <Grid item container xs={12} className={classes.elementLargeMargin}>
-                        {props.backgroundImageList.map((image, index) => renderImageEntry(image, index, "background"))}
+                        {props.backgroundImageList.map((image, index) => renderImageEntry(image, 0, "", index, "background"))}
                     </Grid>
                 </Collapse>
             </Grid>
@@ -155,7 +157,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                         </Grid>
                     </Grid>
                     <Grid item container xs={12} className={classes.elementLargeMargin}>
-                        {props.imageList.map((image, index) => renderImageEntry(image, index, "image"))}
+                        {props.imageList.map((image, index) => renderImageEntry(image.image_blob_url, image.image_id, image.image_backend_path, index, "image"))}
                     </Grid>
                 </Collapse>
             </Grid>

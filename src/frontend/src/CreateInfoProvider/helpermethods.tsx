@@ -367,7 +367,6 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
         dataSourcesKeys: dataSourcesKeys,
         diagrams: diagrams
     });
-
     return {
         infoproviderName: infoProviderName,
         dataSources: dataSources,

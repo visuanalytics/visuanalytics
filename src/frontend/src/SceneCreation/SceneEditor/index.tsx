@@ -28,7 +28,7 @@ import {
     SelectedDataItem, StringReplacementData,
     uniqueId
 } from "../../CreateInfoProvider/types";
-import {DiagramInfo, HistorizedDataInfo, imagePostBackendAnswer} from "../types";
+import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, ImagePostBackendAnswer} from "../types";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {centerNotifcationReducer, CenterNotification} from "../../util/CenterNotification";
 import {
@@ -59,13 +59,13 @@ interface SceneEditorProps {
     arrayProcessingList: Array<string>;
     stringReplacementList: Array<string>;
     diagramList: Array<DiagramInfo>;
-    imageList: Array<string>;
-    setImageList: (images: Array<string>) => void;
+    imageList: Array<ImageFrontendData>;
+    setImageList: (images: Array<ImageFrontendData>) => void;
     backgroundImageList: Array<string>;
     setBackgroundImageList: (backgrounds: Array<string>) => void;
     editMode: boolean;
     reportError: (message: string) => void;
-    fetchImageById: (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => void;
+    fetchImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
     fetchBackgroundImageById: (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => void;
 }
 
@@ -85,6 +85,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const mainRef = React.useRef<HTMLDivElement>(null);
     // reference for the background Image
     const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image())
+    // index of the background image selected in the list of background images
+    const [backgroundImageIndex, setBackgroundImageIndex] = React.useState(0);
     const currentItemRotation = React.useRef<number>(0)
     const currentItemScaleX = React.useRef<number>(1);
     const currentItemScaleY = React.useRef<number>(1);
@@ -191,10 +193,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
 
     React.useEffect(() => {
-        //backgroundImage - stores the src of the object to recreate it
+        //backgroundImage - stores the index in the list of background images to recreate it
         const newImg = new window.Image();
-        newImg.src = sessionStorage.getItem("backgroundImage-" + uniqueId) || "";
-        setBackgroundImage(newImg)
+        const index = Number(sessionStorage.getItem("backgroundImage-" + uniqueId) || 0);
+        newImg.src = props.backgroundImageList[index];
+        setBackgroundImageIndex(index);
+        setBackgroundImage(newImg);
         //backGroundType
         setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
         //currentBGColor
@@ -212,7 +216,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             if(restoredItems[index].hasOwnProperty("image")) {
                 let castedItem = restoredItems[index] as CustomImage;
                 castedItem.image = new window.Image();
-                castedItem.image.src = props.imageList[castedItem.imageId];
+                castedItem.image.src = props.imageList[castedItem.index].image_blob_url;
                 restoredItems[index] = castedItem;
             }
         }
@@ -229,10 +233,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //setStage(sessionStorage.getItem("stage-" + uniqueId) === null ? new Konva.Stage({container: "", width: 960, height: 540}) : JSON.parse(sessionStorage.getItem("stage-" + uniqueId)!));
     }, [])
 
-    //store backgroundImage in sessionStorage
+    //store backgroundImageIndex in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("backgroundImage-" + uniqueId, backgroundImage.src);
-    }, [backgroundImage])
+        sessionStorage.setItem("setBackgroundImageIndex-" + uniqueId, backgroundImageIndex.toString());
+    }, [backgroundImageIndex])
     //store backGroundType in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("backGroundType-" + uniqueId, backGroundType);
@@ -274,7 +278,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Removes all items of this component from the sessionStorage.
      */
     const clearSessionStorage = () => {
-        sessionStorage.removeItem("backgroundImage-" + uniqueId);
+        sessionStorage.removeItem("backgroundImageIndex-" + uniqueId);
         sessionStorage.removeItem("backGroundType-" + uniqueId);
         sessionStorage.removeItem("currentBGColor-" + uniqueId);
         sessionStorage.removeItem("backGroundColorEnabled-" + uniqueId);
@@ -401,10 +405,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     /**
      * Method to handle the button to save the scene and go back to the overview.
-     * Starts by calling the methods that create the FormData of the background and the preview
-     * by fetching from Konva.
-     * Afterwards, it calls the posting of the background to start the chain of backend communication
-     * used for posting the complete scene.
+     * Starts by calling the method that creates the background image by fetching
+     * the Konva stage. This method will continue to control the chain of
+     * postings to the backend.
      */
     const saveButtonHandler = () => {
         // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
@@ -412,11 +415,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
-        //create the FormData for the background and preview image
-        createBackgroundImage();
-        createPreviewImage();
         //start the chain of fetching to communicate with the backend
-        postSceneBackground();
+        createBackgroundImage();
     }
 
 
@@ -426,54 +426,50 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const backgroundID = React.useRef(-1);
     //stores the id the preview was stored with by the backend
     const scenePreviewID = React.useRef(-1);
-    //stores the FormData prepared for sending to the backend containing the preview image
-    const previewImageData = React.useRef<FormData>();
-    //stores the FormData prepared for sending to the backend containing the background image
-    const backgroundImageData = React.useRef<FormData>();
 
 
     /**
-     * Method to create a FormData containing the preview of the scene.
-     * Sets the mutable variable "previewImageData" to contain the result fetched from the Konva stage.
+     * Method to create a FormData containing the preview for the scene.
+     * After fetching the pewview image successfully from the Konva stage, it starts the method for posting
+     * it to the backend.
      */
     const createPreviewImage = async () => {
         console.log("creating the preview image");
         if (stage !== undefined){
             const originalStage = saveHandler(stage);
             if (originalStage !== "Empty Stage"){
-                let localBlob = await fetch(originalStage).then(res => res.blob());
-                let file = new File([localBlob], 'preview.png');
+                const blobVar = await fetch(originalStage).then(res => res.blob());
+                let file = new File([blobVar], 'preview.png');
                 let formData = new FormData();
                 formData.append('image', file);
                 formData.append('name', sceneName + '_preview');
-                previewImageData.current = formData;
-                console.log(previewImageData.current);
+                console.log("before posting preview");
+                postScenePreview(formData);
+                //console.log(previewImageData.current);
             }
         }
     }
 
 
     /**
-     * Method to create a FormData containing the background for the scene
-     * Sets the mutable variable "backgroundImageData" to contain the result fetched from the Konva stage.
+     * Method to create a FormData containing the background for the scene.
+     * After fetching the background image successfully from the Konva stage, it starts the method for posting
+     * it to the backend.
      */
     const createBackgroundImage = async () => {
-        console.log("creating the background image");
+        //console.log("creating the background image");
         const copyOfItems = items.slice();
         const duplicateOfStage = dupeStage(copyOfItems);
         const stageImage = saveHandler(duplicateOfStage);
-
         if (stageImage !== "Empty Stage") {
-            let localBlob = await fetch(stageImage).then(res => res.blob());
-
-            let file = new File([localBlob], 'background.png');
+            //get the promise with the blob from the Konva Stage
+            const blobVar = await fetch(stageImage).then(res => res.blob());
+            //Create a file to send to the backend.
+            let file = new File([blobVar], 'background.png');
             let formData = new FormData();
-
             formData.append('image', file);
             formData.append('name', sceneName + '_background');
-
-            backgroundImageData.current = formData;
-            console.log(backgroundImageData.current)
+            postSceneBackground(formData);
         }
     }
 
@@ -482,14 +478,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the results of posting the background image of a scene.
      * After getting the ID returned by the backend, it will continue by calling
-     * the method to post the preview image.
+     * the method to create and post the preview image.
      * @param data The JSON returned by the backend.
      */
     const handlePostSceneBGSuccess = React.useCallback((jsonData: any) => {
         const data = jsonData as ResponseData;
         backgroundID.current = data.image_id;
-        console.log("successful background post: " + backgroundID.current)
-        postScenePreview();
+        console.log("successful background post: " + backgroundID.current);
+        createPreviewImage();
     }, []);
 
     /**
@@ -504,7 +500,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to post the backgroundImage FormData of the stage to the backend.
      * Used to store it separately. The backend should answer with the ID it used to store the image.
      */
-    const postSceneBackground = React.useCallback(() => {
+    const postSceneBackground = React.useCallback((formData: FormData) => {
         //console.log("fetcher called");
         let url = "visuanalytics/image/scene"
         //if this variable is set, add it to the url
@@ -516,9 +512,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         fetch(url, {
             method: "POST",
             headers: {
-                "Content-Type": "multipart/form-data\n"
             },
-            body: backgroundImageData.current,
+            body: formData,
             signal: abort.signal
         }).then((res: Response) => {
             //handles the response and gets the data object from it
@@ -561,7 +556,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to post the previewImage FormData of the stage to the backend.
      * Used to store it separately. The backend should answer with the ID it used to store the preview.
      */
-    const postScenePreview = React.useCallback(() => {
+    const postScenePreview = React.useCallback((formData: FormData) => {
         //console.log("fetcher called");
         let url = "visuanalytics/image/scene"
         //if this variable is set, add it to the url
@@ -575,7 +570,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             headers: {
                 "Content-Type": "multipart/form-data\n"
             },
-            body: previewImageData.current,
+            body: formData,
             signal: abort.signal
         }).then((res: Response) => {
             //handles the response and gets the data object from it
@@ -750,7 +745,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log("background image post success handler");
         //get the object of the uploaded image from the FormData
         //const img = imageToUpload.get('image');
-        const data = jsonData as imagePostBackendAnswer;
+        const data = jsonData as ImageBackendData;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
         console.log(imageId);
@@ -834,13 +829,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         console.log("image post success handler");
         //get the object of the uploaded image from the FormData
         //const img = imageToUpload.get('image');
-        const data = jsonData as imagePostBackendAnswer;
+        const data = jsonData as ImageBackendData;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
+        const imageURL = data.path;
         console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
-        props.fetchImageById(imageId, handleImageByIdSuccess, handleImageByIdError);
+        props.fetchImageById(imageId, imageURL, handleImageByIdSuccess, handleImageByIdError);
         // reset the state containing the image to be uploaded
         //setImageToUpload(new FormData());
     }
@@ -890,10 +886,14 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method that handles successful fetches of images from the backend
      * @param jsonData  The image as blob sent by the backend.
      */
-    const handleImageByIdSuccess = (jsonData: any) => {
+    const handleImageByIdSuccess = (jsonData: any, id: number, url: string) => {
         //create a URL for the blob image and update the list of images with it
         const arCopy = props.imageList.slice();
-        arCopy.push(URL.createObjectURL(jsonData));
+        arCopy.push({
+            image_id: id,
+            image_backend_path: url,
+            image_blob_url: URL.createObjectURL(jsonData)
+        });
         props.setImageList(arCopy);
     }
 
@@ -959,7 +959,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
             setTimeout(() => {
                 setItems(localItems);
-                console.log(JSON.stringify(localItems))
                 setSelectedObject(objectCopy);
             }, 200);
             currentItemX.current = localItems[index].x
@@ -1197,10 +1196,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * different method to add an image to the canvas
      * @param image the image to be added
-     * @param id the ID of the image to be added
+     * @param id the backend ID of the image to be added
      * @param path the path to the image located in the backend
+     * @param index the index of the image in the frontend list of images
      */
-    const addImageElement = (image : HTMLImageElement, id: number, path: string) => {
+    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number) => {
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
@@ -1209,6 +1209,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             image: image,
             imageId: id,
             imagePath: path,
+            index: index,
             width: image.width,
             height: image.height,
             baseWidth: image.width,
@@ -1787,23 +1788,25 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     /**
      * Method to handle the click on an image loaded form the backend
-     * @param src the image source of the selected image
-     * @param index index of the image in the backend
+     * @param src the image URL (blob) of the selected image
+     * @param id the backend ID of the selected image
+     * @param path the path/URL of the selected image in the backend
+     * @param index index of the image in the frontend list of all images
      */
-    const handleImageClick = (src : string, index: number) => {
-        //TODO add path after fetching from backend
-        let path = "";
+    const handleImageClick = (src : string, id: number, path: string, index: number) => {
+        //create the image object for the image to be displayed
         let image = new window.Image();
         image.src = src;
-        //TODO: hand over the real ID
-        imageIDArray.current.push(0);
-        addImageElement(image, index, path);
+        //push the id to the array of used images
+        imageIDArray.current.push(id);
+        addImageElement(image, id, path, index);
     }
 
     const handleBackgroundImageClick = (src : string, index : number) => {
         let img = new window.Image();
         img.src = props.backgroundImageList[index];
         setBackgroundImage(img);
+        setBackgroundImageIndex(index);
         setBackGroundType("IMAGE");
         setBackGroundColorEnabled(false);
     }
@@ -1897,10 +1900,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param event ChangeEvent
      */
     const handleBackgroundUploadChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files !== null) {
+        if (event.target.files !== null && event.target.files !== undefined) {
             let formData = new FormData();
             let name = event.target.files[0].name.split('.');
             formData.append('image', event.target.files[0]);
+            console.log(formData.get("image"));
             formData.append('name', name[0]);
             postBackgroundImage(formData);
         }

@@ -8,7 +8,7 @@ import {InfoProviderSelection} from "./InfoProviderSelection";
 import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
 import {DataSource, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
-import {DiagramInfo, HistorizedDataInfo, ImageBackendData, InfoProviderData} from "./types";
+import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, InfoProviderData} from "./types";
 import {useCallFetch} from "../Hooks/useCallFetch";
 import {hintContents} from "../util/hintContents";
 import Typography from "@material-ui/core/Typography";
@@ -41,7 +41,7 @@ export const SceneCreation = () => {
     const [stringReplacementList, setStringReplacementList] = React.useState<Array<string>>([]);
     const [diagramList, setDiagramList] = React.useState<Array<DiagramInfo>>([]);
     //list of paths of the images fetched from the backend
-    const [imageList, setImageList] = React.useState<Array<string>>([]);
+    const [imageList, setImageList] = React.useState<Array<ImageFrontendData>>([]);
     //list of paths of the background images fetched from the backend
     const [backgroundImageList, setBackgroundImageList] = React.useState<Array<string>>([]);
     //true when the continue of step 0 is disabled - used for blocking the button until all fetches are done
@@ -190,7 +190,7 @@ export const SceneCreation = () => {
         if(allBackgroundImageList.current.length === 0) {
             //set the state to the fetched list
             setBackgroundImageList(backgroundImageFetchResults.current);
-            console.log(backgroundImageFetchResults.current);
+            //console.log(backgroundImageFetchResults.current);
             //start fetching all diagram previews
             fetchNextDiagram();
         } else {
@@ -309,7 +309,7 @@ export const SceneCreation = () => {
     //mutable value to store the list of all images - not in state because it needs to be changed without renders
     const allImageList = React.useRef<Array<ImageBackendData>>([]);
     //mutable list of the paths of all images received from the backend as blob - also not in state to change without renders
-    const imageFetchResults = React.useRef<Array<string>>([]);
+    const imageFetchResults = React.useRef<Array<ImageFrontendData>>([]);
 
     /**
      * Method that serves to recursively fetch all images from the backend.
@@ -328,22 +328,32 @@ export const SceneCreation = () => {
         } else {
             //get the id of the next image to be fetched
             const nextId = allImageList.current[0].image_id;
+            const nextURL = allImageList.current[0].path;
             //delete the image with this id from the images that still need to be fetched
             allImageList.current  = allImageList.current.filter((image) => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
-            fetchImageById(nextId, handleImageByIdSuccess, handleImageByIdError);
+            fetchImageById(nextId, nextURL, handleImageByIdSuccess, handleImageByIdError);
         }
     }
-
     /**
-     * Method that handles successful fetches of images from the backend
-     * @param jsonData  The image as blob sent by the backend.
+     *
+     * @param jsonData
      */
-    const handleImageByIdSuccess = (jsonData: any) => {
+    /**
+     * Method that handles successful fetches of images from the backend.
+     * @param jsonData The image as blob sent by the backend.
+     * @param id The id of the image that was requested.
+     * @param url The backend URL/path of the image requested
+     */
+    const handleImageByIdSuccess = (jsonData: any, id: number, url: string) => {
         //create a URL for the blob image and store it in the list of images
-        imageFetchResults.current.push(URL.createObjectURL(jsonData));
+        imageFetchResults.current.push({
+            image_id: id,
+            image_backend_path: url,
+            image_blob_url: URL.createObjectURL(jsonData)
+        });
         //fetch the next image afterwards
         fetchNextImage();
     }
@@ -368,7 +378,7 @@ export const SceneCreation = () => {
      * The standard hook "useCallFetch" is not used here since we want to pass an id
      * as additional argument (storing in state is no alternative because there wont be re-render).
      */
-    const fetchImageById =(id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => {
+    const fetchImageById = (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => {
         let url = "/visuanalytics/image/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -389,7 +399,7 @@ export const SceneCreation = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted.current) successHandler(data)
+            if (isMounted.current) successHandler(data, id, image_url)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
@@ -708,7 +718,7 @@ export const SceneCreation = () => {
                             stringReplacementList={stringReplacementList}
                             diagramList={diagramList}
                             imageList={imageList}
-                            setImageList={(images: Array<string>) => setImageList(images)}
+                            setImageList={(images: Array<ImageFrontendData>) => setImageList(images)}
                             backgroundImageList={backgroundImageList}
                             setBackgroundImageList={(backgrounds: Array<string>) => setBackgroundImageList(backgrounds)}
                             editMode={false}

@@ -18,8 +18,18 @@ export type DiagramInfo = {
  */
 export type ImageBackendData = {
     image_id: number,
-    image_name: string
+    path: string
 }
+
+/**
+ * Data type for the information stored of an image in the frontend.
+ */
+export type ImageFrontendData = {
+    image_id: number,
+    image_backend_path: string,      //backend path/url
+    image_blob_url: string          //blob url
+}
+
 
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
@@ -32,6 +42,6 @@ export type InfoProviderData = {
 /**
  * Type of the backend answer when posting a new image.
  */
-export type imagePostBackendAnswer = {
+export type ImagePostBackendAnswer = {
     image_id: number;
 }
