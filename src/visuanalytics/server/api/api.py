@@ -8,6 +8,7 @@ import logging
 from flask import (Blueprint, request, send_file, send_from_directory)
 from werkzeug.utils import secure_filename
 from os import path
+from datetime import datetime
 
 from visuanalytics.server.db import db, queries
 
@@ -732,7 +733,7 @@ def add_scene_image(folder):
             return err, 400
 
         image = request.files["image"]
-        name = request.form["name"]
+        name = f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}_-_{request.form['name']}"
 
         if image.filename == '':
             err = flask.jsonify({"err_msg": "Missing Image Filename"})
@@ -764,7 +765,7 @@ def add_scene_image(folder):
         return err, 400
 
 
-@api.route("/image/<folder>", methods=["GET"])
+@api.route("/image/all/<folder>", methods=["GET"])
 def get_all_scene_images(folder):
     """
         Endpunkt '/image/<folder>'.

@@ -12,7 +12,7 @@ from copy import deepcopy
 from PIL import Image
 
 from visuanalytics.server.db import db
-from visuanalytics.util.config_manager import get_private, set_private
+from visuanalytics.util.config_manager import get_private, set_private, assert_private_exists
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
 from visuanalytics.util.resources import IMAGES_LOCATION as IL, AUDIO_LOCATION as AL, MEMORY_LOCATION as ML, open_resource
 
@@ -73,6 +73,7 @@ def insert_infoprovider(infoprovider):
     :return: Gibt an, ob das Hinzufügen erfolgreich war.
     """
     con = db.open_con_f()
+    assert_private_exists()
     infoprovider_name = infoprovider["infoprovider_name"]
     datasources = copy.deepcopy(infoprovider["datasources"])
     diagrams = infoprovider["diagrams"]
@@ -232,7 +233,20 @@ def insert_video_job(video, update=False, job_id=None):
     """
     con = db.open_con_f()
     video_name = video["name"]
-    for infoprovider_name in video["infoprovider_names"]:
+    tts_infoprovider_ids = video["tts_ids"]
+    tts_names = []
+    # Namen aller Infoprovider die in TTS genutzt werden laden
+    for tts_id in tts_infoprovider_ids:
+        tts_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
+                               [tts_id]).fetchone()["infoprovider_name"]
+        if tts_name not in video["infoprovider_names"]:
+            tts_names.append(tts_name)
+    infoprovider_names = video["infoprovider_names"] + tts_names
+
+    print("unupdated names", video["infoprovider_names"])
+    print("all names", infoprovider_names)
+    # Daten aller verwendeten Infoprovider sammeln und kombinieren
+    for infoprovider_name in infoprovider_names:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
             infoprovider = json.load(f)
         # print("loaded infoprovider:", infoprovider)
@@ -264,6 +278,7 @@ def insert_video_job(video, update=False, job_id=None):
             })
         # print("video with diagrams:", video)
 
+    # Restliche Daten sammeln und kombinieren
     images = video.get("images", None)
     scene_names = list(map(lambda x: images[x]["key"], list(images.keys())))
     scenes = get_scene_list()
@@ -290,9 +305,12 @@ def insert_video_job(video, update=False, job_id=None):
     if not schedule:
         return False if not update else {"err_msg": "could not read schedule from JSON"}
     # print("complete video configuration:", video)
+
+    # Neue Json-Datei speichern
     with open_resource(_get_videojob_path(video_name.replace(" ", "-")), "wt") as f:
         json.dump(video, f)
 
+    # Neuen Job erstellen / updaten
     if not update:
         topic_id = add_topic_get_id(video_name, video_name.replace(" ", "-"))
         job = {
@@ -427,8 +445,6 @@ def get_infoprovider(infoprovider_id):
 
     :return: Dictionary welches den Namen, den Ihnalt der Json-Datei sowie den Schedule des Infoproivders enthält.
     """
-    infoprovider_json = {}
-
     # Laden der Json-Datei des Infoproviders
     with open_resource(get_infoprovider_file(infoprovider_id), "r") as f:
         infoprovider_json = json.loads(f.read())
@@ -460,6 +476,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     :return: Enthält im Fehlerfall Informationen über den aufgetretenen Fehler.
     """
     con = db.open_con_f()
+    assert_private_exists()
     new_transform = []
 
     # Testen ob neuer Infoprovider-Name bereits von einem anderen Infoprovider verwendet wird
@@ -996,12 +1013,6 @@ def insert_image(image_name, folder):
     :param folder: Ordner unter dem das Bild gespeichert werden soll.
     """
     con = db.open_con_f()
-    name = image_name.rsplit(".", 1)[0]
-
-    # Prüfen ob Bild mit gleichem Namen bereits existiert (unabhängig von Bild-Typ)
-    count = con.execute("SELECT COUNT(*) FROM image WHERE image_name=? OR image_name=? OR image_name=? AND folder=?", [name + ".jpg", name + ".jpeg", name + ".png", folder]).fetchone()["COUNT(*)"]
-    if count > 0:
-        return None
 
     image_id = con.execute("INSERT INTO image (image_name, folder) VALUES (?, ?)", [image_name, folder]).lastrowid
     con.commit()
@@ -1031,6 +1042,7 @@ def get_image_list(folder):
     res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
     con.commit()
     return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
+    # return [{"image_id": row["image_id"], "image_name": row["image_name"].rsplit("_-_", 1)[1]} for row in res]
 
 
 def delete_scene_image(image_id):
@@ -1398,14 +1410,14 @@ def _generate_storing(historized_data, datasource_name, formula_keys, old_storin
 
 
 def _remove_unused_memory(datasource_names, infoprovider_name):
-    print("datasource_names:", datasource_names)
+    # print("datasource_names:", datasource_names)
     pre = infoprovider_name + "_"
     dirs = [f.path for f in os.scandir(MEMORY_LOCATION) if f.is_dir()]
-    print("dirs:", dirs)
+    # print("dirs:", dirs)
     dirs = list(filter(lambda x: re.search(pre + ".*", x), dirs))
-    print("dirs:", dirs)
+    # print("dirs:", dirs)
     datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
-    print("datasource_memory_dirs:", datasource_memory_dirs)
+    # print("datasource_memory_dirs:", datasource_memory_dirs)
     for index, dir in enumerate(dirs):
         print(dir, datasource_memory_dirs[index] in datasource_names)
         if not datasource_memory_dirs[index] in datasource_names:
