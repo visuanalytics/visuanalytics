@@ -136,7 +136,7 @@ export type DataText = {
 }
 
 /**
- * Type for the respone from uploading an image
+ * Type for the response from uploading an image
  */
 export type ResponseData = {
     image_id: number,

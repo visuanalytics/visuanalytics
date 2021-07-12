@@ -519,7 +519,7 @@ def get_videojob_preview(videojob_id):
 @api.route("/videojob/<videojob_id>/logs", methods=["GET"])
 def get_videojob_logs(videojob_id):
     """
-    Endpunkt `/infoprovider/<infoprovider_id>/logs`.
+    Endpunkt `/infoprovider//logs`.
 
     Route um alle Logs der Datenquellen eines Infoproviders zu laden.
 

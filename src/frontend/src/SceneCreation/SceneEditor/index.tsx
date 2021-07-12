@@ -46,6 +46,7 @@ import {
 } from "./types"
 import {ImageLists} from "./ImageLists";
 import {DiagramList} from "./DiagramList";
+import {ComponentContext} from "../../ComponentProvider";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -69,6 +70,11 @@ interface SceneEditorProps {
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
+
+    const classes = useStyles();
+    const components = React.useContext(ComponentContext);
+
+
     // timeOut variable used for asynchronous color changes
     let timeOut = 0;
     // array used for the export of the final scene
@@ -85,8 +91,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const currentItemX = React.useRef<number>(0);
     const currentItemY = React.useRef<number>(0);
 
-    const classes = useStyles();
-    // contains the names of the steps to be displayed in the stepper
     // states used to determine the type of background
     const [backGroundType, setBackGroundType] = React.useState("COLOR");
     const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
@@ -144,8 +148,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     // states for the export and upload of images or the scene
     const [baseImage, setBaseImage] = React.useState<FormData>(new FormData());
     const [exportJSON, setExportJSON] = React.useState<JsonExport|null>(null);
-    const [previewImage, setPreviewImage] = React.useState<FormData>(new FormData());
-    const [backgroundPosted, setBackgroundPosted] = React.useState<boolean>(false);
     const [previewPosted, setPreviewPosted] = React.useState<boolean>(false);
 
 
@@ -284,34 +286,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("stage-" + uniqueId);
     }
 
-    /**
-     * useEffect to send the scene to the backend once it is created
-     */
-    React.useEffect(() => {
-        if (exportJSON !== null){
-            postScene();
-        }
 
-    }, [exportJSON]);
 
-    /**
-     * useEffect to prepare the scene background and preview
-     */
-    React.useEffect(() => {
-        createBackgroundImage();
-        createPreviewImage();
-
-    }, [items.length, sceneName]);
-
-    /**
-     * useEffect to create the export of the json
-     */
-    React.useEffect(() => {
-        if(backgroundPosted && previewPosted){
-            let json = createJSONExport();
-            setExportJSON(json);
-        }
-    }, [previewPosted]);
 
     /**
      * Method to create a duplicate of the current stage to create the base image for the rendered scene
@@ -403,27 +379,86 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         duplicateStage.add(duplicateLayer);
         return duplicateStage;
     }
+
+
+    //this static value will be true as long as the component is still mounted
+    //used to check if handling of a fetch request should still take place or if the component is not used anymore
+    const isMounted = React.useRef(true);
+
+
+    //defines a cleanup method that sets isMounted to false when unmounting
+    //will signal the fetchMethod to not work with the results anymore
+    React.useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     /**
-     * Method to save a stage as png file
-     * @returns an stage as a png image
+     * Method block for sending the scene to the backend
      */
-    const saveHandler = (currentStage : Konva.Stage) => {
-        // create the picture of the stage
-        let stageImage = ""
-        if (currentStage !== null && currentStage !== undefined){
-           stageImage = currentStage?.toDataURL();
+
+
+    /**
+     * Method to handle the button to save the scene and go back to the overview.
+     * Starts by calling the methods that create the FormData of the background and the preview
+     * by fetching from Konva.
+     * Afterwards, it calls the posting of the background to start the chain of backend communication
+     * used for posting the complete scene.
+     */
+    const saveButtonHandler = () => {
+        // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
+        if (itemCounter === 0) {
+            dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
+            return;
         }
-        // if the content of the stage is empty, the stageImage is set to empty stage
-        if (stageImage === "") {
-            stageImage = "Empty Stage";
-        }
-        return stageImage;
+        //create the FormData for the background and preview image
+        createBackgroundImage();
+        createPreviewImage();
+        //start the chain of fetching to communicate with the backend
+        postSceneBackground();
     }
+
+
+
+    //variables used for storing values while preparing and doing the posting of a finished scene
+    //stores the id the background was stored with by the backend
+    const backgroundID = React.useRef(-1);
+    //stores the id the preview was stored with by the backend
+    const scenePreviewID = React.useRef(-1);
+    //stores the FormData prepared for sending to the backend containing the preview image
+    const previewImageData = React.useRef<FormData>();
+    //stores the FormData prepared for sending to the backend containing the background image
+    const backgroundImageData = React.useRef<FormData>();
+
+
+    /**
+     * Method to create a FormData containing the preview of the scene.
+     * Sets the mutable variable "previewImageData" to contain the result fetched from the Konva stage.
+     */
+    const createPreviewImage = async () => {
+        console.log("creating the preview image");
+        if (stage !== undefined){
+            const originalStage = saveHandler(stage);
+            if (originalStage !== "Empty Stage"){
+                let localBlob = await fetch(originalStage).then(res => res.blob());
+                let file = new File([localBlob], 'preview.png');
+                let formData = new FormData();
+                formData.append('image', file);
+                formData.append('name', sceneName + '_preview');
+                previewImageData.current = formData;
+                console.log(previewImageData.current);
+            }
+        }
+    }
+
 
     /**
      * Method to create a FormData containing the background for the scene
+     * Sets the mutable variable "backgroundImageData" to contain the result fetched from the Konva stage.
      */
     const createBackgroundImage = async () => {
+        console.log("creating the background image");
         const copyOfItems = items.slice();
         const duplicateOfStage = dupeStage(copyOfItems);
         const stageImage = saveHandler(duplicateOfStage);
@@ -437,32 +472,133 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             formData.append('image', file);
             formData.append('name', sceneName + '_background');
 
-            setBaseImage(formData);
+            backgroundImageData.current = formData;
+            console.log(backgroundImageData.current)
         }
     }
 
+
+
     /**
-     * Method to create a FormData containing the preview of the scene
+     * Method to handle the results of posting the background image of a scene.
+     * After getting the ID returned by the backend, it will continue by calling
+     * the method to post the preview image.
+     * @param data The JSON returned by the backend.
      */
-    const createPreviewImage = async () => {
-        if (stage !== undefined){
-            const originalStage = saveHandler(stage);
-            if (originalStage !== "Empty Stage"){
-                let localBlob = await fetch(originalStage).then(res => res.blob());
-                let file = new File([localBlob], 'preview.png');
-                let formData = new FormData();
-                formData.append('image', file);
-                formData.append('name', sceneName + '_preview');
-                setPreviewImage(formData);
-            }
-        }
-    }
+    const handlePostSceneBGSuccess = React.useCallback((jsonData: any) => {
+        const data = jsonData as ResponseData;
+        backgroundID.current = data.image_id;
+        console.log("successful background post: " + backgroundID.current)
+        postScenePreview();
+    }, []);
 
     /**
-     * Method to create the export for the backend
+     * Method for displaying an error message for errors happening while posting the
+     * background of the scene to the backend - this will also stop the communication chain.
+     */
+    const handlePostSceneBGError = React.useCallback((err: Error) => {
+        props.reportError("Fehler beim Senden des Hintergrunds: " + err);
+    }, []);
+
+    /**
+     * Method to post the backgroundImage FormData of the stage to the backend.
+     * Used to store it separately. The backend should answer with the ID it used to store the image.
+     */
+    const postSceneBackground = React.useCallback(() => {
+        //console.log("fetcher called");
+        let url = "visuanalytics/image/scene"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "multipart/form-data\n"
+            },
+            body: backgroundImageData.current,
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handlePostSceneBGSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handlePostSceneBGError(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+
+    /**
+     * Method to handle the results of posting the preview image of a scene.
+     * After getting the ID returned by the backend, it will continue by calling
+     * the method to post the exported scene data in JSON format.
+     * @param data The JSON returned by the backend.
+     */
+    const handlePostScenePreviewSuccess = React.useCallback((jsonData: any) => {
+        const data = jsonData as ResponseData;
+        scenePreviewID.current = data.image_id;
+        console.log("successful preview post: " + scenePreviewID.current)
+        postSceneExport();
+    }, []);
+
+    /**
+     * Method for displaying an error message for errors happening while posting the
+     * preview of the scene to the backend - this will also stop the communication chain.
+     */
+    const handlePostScenePreviewError= React.useCallback((err: Error) => {
+        props.reportError("Fehler beim Senden des Szenen-Preview: " + err);
+    }, []);
+
+    /**
+     * Method to post the previewImage FormData of the stage to the backend.
+     * Used to store it separately. The backend should answer with the ID it used to store the preview.
+     */
+    const postScenePreview = React.useCallback(() => {
+        //console.log("fetcher called");
+        let url = "visuanalytics/image/scene"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "multipart/form-data\n"
+            },
+            body: previewImageData.current,
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handlePostScenePreviewSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handlePostScenePreviewError(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+
+    /**
+     * Method that takes all necessary data of the scene creation and
+     * forms a JSON object as specified by the backend to post the scene to the backend.
      * @returns a JsonExport element
      */
-    const createJSONExport = () => {
+    const createJSONExport = React.useCallback(() => {
         //empty array for all text and image elements (except background)
         let onlyTextAndImages : Array<CustomText|CustomImage> = [];
         //array for all datatext and dataimage elements, used for export
@@ -482,8 +618,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         const returnValue: JsonExport = {
             scene_name: sceneName,
-            used_images: imageIDArray.current,
-            used_infoproviders: [],
+            used_images: imageIDArray.current, //TODO: manage to update this array with the id of all posted images
+            used_infoproviders: [props.infoProviderId],
             images:  base,
             scene_items: JSON.stringify(items),
         }
@@ -516,34 +652,93 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         size_x: element.width * element.scaleX, //Breite optional
                         size_y: element.height * element.scaleY, //Höhe optional
                         color: "RGBA",
-                        path: "string" //Diagrammname "image_name" : "" eventuell
+                        path: "string" //Diagrammname "image_name" : "" eventuell //TODO: include the path the backend specified here
                     }
                     dataTextAndImages.push(itemToPush);
                 }
             }
         });
         return returnValue;
-    }
+    }, []);
 
     /**
-     * Method to handle the successful upload of the scene background
-     * @param jsonData response data
+     * Method to handle the results of posting the exported scene to the backend.
+     * When this handler is called, the process of posting everything necessary is finished.
+     * Cleans up the sessionStorage and returns to the dashboard.
+     * @param data The JSON returned by the backend.
      */
-    const handleBackgroundSuccess = (jsonData : any) => {
-        imageIDArray.current.push((jsonData as ResponseData).image_id);
-        setBackgroundPosted(true);
-    }
+    const handleExportSceneSuccess = React.useCallback((jsonData: any) => {
+        console.log("successful export post");
+        clearSessionStorage();
+        components?.setCurrent("dashboard")
+    }, []);
+
 
     /**
-     * Method to handle the successful upload of the scene preview
-     * @param jsonData response data
+     * Method for displaying an error message for errors happening while posting the
+     * export of the scene to the backend.
      */
-    const handlePreviewSuccess = (jsonData : any) => {
-        imageIDArray.current.push((jsonData as ResponseData).image_id);
-        setPreviewPosted(true);
+    const handleExportSceneError= React.useCallback((err: Error) => {
+        props.reportError("Fehler beim Senden des Exports der Szene: " + err);
+    }, []);
+
+
+    /**
+     * Method to post all settings for the Info-Provider made by the user to the backend.
+     * The backend will use this data to create the desired Info-Provider.
+     */
+    const postSceneExport = React.useCallback(() => {
+        //console.log("fetcher called");
+        let url = "visuanalytics/scene"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            body: JSON.stringify(createJSONExport()),
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleExportSceneSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleExportSceneError(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
+
+    /**
+     * Method to save a stage as png file.
+     * @returns an stage as a png image
+     */
+    const saveHandler = (currentStage : Konva.Stage) => {
+        // create the picture of the stage
+        let stageImage = ""
+        if (currentStage !== null && currentStage !== undefined){
+           stageImage = currentStage?.toDataURL();
+        }
+        // if the content of the stage is empty, the stageImage is set to empty stage
+        if (stageImage === "") {
+            stageImage = "Empty Stage";
+        }
+        return stageImage;
     }
 
 
+    /**
+     * Methods for posting images and background images to the backend by uploading them.
+     */
 
     /**
      * Handler method for successful backend calls for posting new background images to the backend.
@@ -690,19 +885,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }).finally(() => clearTimeout(timer));
     }
 
-    //this static value will be true as long as the component is still mounted
-    //used to check if handling of a fetch request should still take place or if the component is not used anymore
-    const isMounted = React.useRef(true);
-
-
-    //defines a cleanup method that sets isMounted to false when unmounting
-    //will signal the fetchMethod to not work with the results anymore
-    React.useEffect(() => {
-        return () => {
-            isMounted.current = false;
-        };
-    }, []);
-
 
     /**
      * Method that handles successful fetches of images from the backend
@@ -740,57 +922,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handleError = (err : Error) => {
         console.log(err);
     }
-
-    /**
-     * Method to handle the button to save the scene and go back to the overview
-     */
-    const saveButtonHandler = () => {
-        // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
-        if (itemCounter === 0) {
-            dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
-            return;
-        }
-        postSceneBackground();
-        postPreview();
-
-    }
-
-    /**
-     * Method to POST the text and images to the backend
-     */
-    const postScene = useCallFetch("visuanalytics/scene", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(exportJSON)
-        },
-        jsonData => handleSceneSuccess(jsonData), (err => handleError(err))
-    );
-
-
-    /**
-     * Method to POST the scene background
-     */
-    const postSceneBackground = useCallFetch("visuanalytics/image/scene", {
-            method: "POST",
-            headers: {},
-            body: baseImage
-        },
-        jsonData => handleBackgroundSuccess(jsonData),(err => handleError(err))
-    );
-
-    /**
-     * Method to POST the scene preview
-     */
-    const postPreview = useCallFetch("visuanalytics/image/scene", {
-            method: "POST",
-            headers: {},
-            body: previewImage
-        },
-        jsonData => handlePreviewSuccess(jsonData),(err => handleError(err))
-    );
-
 
     /**
      * Method to change the cursor
@@ -1250,6 +1381,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         // create a copy of the recentlyremoveditems array
         const lastElem = [...recentlyRemovedItems];
         if (!itemSelected) {
+            //delete the image from the list of used IDs
+            if(items[items.length-1].id.startsWith("image")) {
+                const castedImage = items[items.length-1] as CustomImage;
+                imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                    return imageID != castedImage.imageId;
+                })
+            }
             if (items.length > 0) {
                 // remove the last element from the items array
                 const poppedItem = items.pop();
@@ -1264,6 +1402,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         } else {
             // get the index of the selected element
             const index = items.indexOf(selectedObject);
+            //delete the image from the list of used IDs
+            if(items[index].id.startsWith("image")) {
+                const castedImage = items[index] as CustomImage;
+                imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                    return imageID != castedImage.imageId;
+                })
+            }
             // push the element into the lastElem array and remove it from the items array
             if (items.length > 0 && selectedObject !== undefined) {
                 lastElem.push(items[index]);
@@ -1287,6 +1432,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const arCopy = items.slice();
                 arCopy.push(poppedItem);
                 setItems(arCopy);
+                // if it is an image, add it to the list of used image ids again
+                if(poppedItem.id.startsWith("image")) {
+                    const castedImage = poppedItem as CustomImage;
+                    imageIDArray.current.push(castedImage.imageId);
+                }
             }
         }
         setRecentlyRemovedItems(lastElem);
@@ -1645,6 +1795,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         let path = "";
         let image = new window.Image();
         image.src = src;
+        //TODO: hand over the real ID
+        imageIDArray.current.push(0);
         addImageElement(image, index, path);
     }
 

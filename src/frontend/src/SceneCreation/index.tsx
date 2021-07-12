@@ -17,6 +17,7 @@ import {StepFrame} from "../CreateInfoProvider/StepFrame";
 
 
 //TODO: when merged with the new type structure, put this into a global file
+//TODO: wird die diagrammliste überhaupt gesetzt?
 
 /**
  * Wrapper component for the scene creation.
@@ -540,18 +541,6 @@ export const SceneCreation = () => {
         }).finally(() => clearTimeout(timer));
     }
 
-    /**
-     * backgroundImage
-     backgroundType
-     backgroundColor
-     backgroundColorEnabled
-     deleteText
-     items
-     itemCounter
-     recentlyRemovedItems
-     sceneName
-     stage
-     */
 
     /**
      * Calls for sessionStorage handling
