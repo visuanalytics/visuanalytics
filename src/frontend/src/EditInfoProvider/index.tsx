@@ -784,7 +784,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      */
     const postInfoProvider = React.useCallback(() => {
         //("fetcher called");
-        let url = "visuanalytics/infoprovider"
+        let url = "visuanalytics/infoprovider/" + props.infoProvId
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -792,7 +792,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
         fetch(url, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -937,8 +937,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             case 3:
                 return (
                     <EditDataCustomization
-                        continueHandler={() => handleContinue(1)}
-                        backHandler={() => handleBack(-1)}
+                        continueHandler={(index: number) => handleContinue(index)}
+                        backHandler={(index: number) => handleBack(index)}
                         dataCustomizationStep={dataCustomizationStep}
                         setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                         reportError={reportError}
@@ -979,7 +979,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 return (
                     <HistorySelection
                         continueHandler={() => setEditStep(6)}
-                        backHandler={() => setEditStep(2)}
+                        backHandler={() => setEditStep(3)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
                         arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}

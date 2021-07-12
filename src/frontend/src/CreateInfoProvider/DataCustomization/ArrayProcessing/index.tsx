@@ -18,7 +18,7 @@ import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelO
 
 interface ArrayProcessingProps {
     continueHandler: () => void;
-    backHandler: () => void;
+    backHandler: (index: number) => void;
     reportError: (message: string) => void;
     arrayProcessingsList: Array<ArrayProcessingData>;
     setArrayProcessingsList: (processings: Array<ArrayProcessingData>) => void;
@@ -415,7 +415,7 @@ export const ArrayProcessing: React.FC<ArrayProcessingProps> = (props) => {
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item>
-                        <Button variant="contained" size="large" color="primary" onClick={props.backHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.backHandler(1)}>
                             zurück
                         </Button>
                     </Grid>

@@ -316,12 +316,15 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             return;
         }
         //check for duplicates in formula names
+        //not needed here. the check happens in handle success.
+        /*
         for (let i: number = 0; i <= props.customData.length - 1; i++) {
             if (props.customData[i].formelName === formel) {
                 props.reportError('Fehler: Name is schon an eine andere Formel vergeben!');
                 return;
             }
         }
+        */
         //check for duplicates in array processings names
         for (let i: number = 0; i < props.arrayProcessingsList.length; i++) {
             if (props.arrayProcessingsList[i].name === formel) {
@@ -372,6 +375,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             const dataSourcesCopy =  props.infoProvDataSources.slice();
             dataSourcesCopy[props.selectedDataSource].customData = arCopy;
             props.setInfoProvDataSources(dataSourcesCopy);
+            console.log(usedFormulaAndApiData.current)
             fullDelete();
             setName('');
             props.backHandler(1);

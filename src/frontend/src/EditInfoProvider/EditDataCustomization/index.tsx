@@ -14,8 +14,8 @@ import {EditCustomData} from "./EditCustomData/EditCustomData";
 
 
 interface EditDataCustomizationProps {
-    continueHandler: () => void;
-    backHandler: () => void;
+    continueHandler: (index: number) => void;
+    backHandler: (index: number) => void;
     dataCustomizationStep: number;
     setDataCustomizationStep: (step: number) => void;
     reportError: (message: string) => void;
@@ -51,7 +51,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                 return (
                     <ArrayProcessing
                         continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
-                        backHandler={props.backHandler}
+                        backHandler={(index: number) => props.backHandler(index)}
                         reportError={props.reportError}
                         arrayProcessingsList={props.infoProvDataSources[props.selectedDataSource].arrayProcessingsList}
                         setArrayProcessingsList={props.setArrayProcessingsList}
@@ -72,6 +72,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                     <EditCustomData
                         continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
+                        stepToEditSingleFormel={(index) => props.continueHandler(index)}
                         editInfoProvider={props.finishEditing}
                         infoProvDataSources={props.infoProvDataSources}
                         setInfoProvDataSources={props.setInfoProvDataSources}
@@ -89,7 +90,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
             case 2: {
                 return (
                     <StringProcessing
-                        continueHandler={props.continueHandler}
+                        continueHandler={(index) => props.continueHandler(index)}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
                         reportError={props.reportError}
                         stringReplacementList={props.infoProvDataSources[props.selectedDataSource].stringReplacementList}

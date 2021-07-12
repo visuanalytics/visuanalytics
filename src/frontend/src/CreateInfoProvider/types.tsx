@@ -240,3 +240,7 @@ export type StringReplacementData = {
     replace: string;
     with: string;
 }
+
+export type BackenFormula = {
+
+}

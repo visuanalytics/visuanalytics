@@ -12,6 +12,9 @@ export class FormelObj {
      */
     formelString: string;
 
+    /**
+     * Array with all used CustomData for the given formula
+     */
     usedFormulaAndApiData: Array<string>;
 
     constructor(formelName: string, formelString: string, usedFormulasAndApiData: Array<string>) {

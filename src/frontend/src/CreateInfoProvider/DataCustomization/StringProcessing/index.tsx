@@ -18,7 +18,7 @@ import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelO
 
 
 interface StringProcessingProps {
-    continueHandler: () => void;
+    continueHandler: (index: number) => void;
     backHandler: () => void;
     reportError: (message: string) => void;
     stringReplacementList: Array<StringReplacementData>;
@@ -323,7 +323,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item >
-                        <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(2)}>
                             weiter
                         </Button>
                     </Grid>
