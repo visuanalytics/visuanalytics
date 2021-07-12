@@ -1,11 +1,11 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import {StepFrame} from "../../../CreateInfoProvider/StepFrame";
 import {hintContents} from "../../../util/hintContents";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography} from "@material-ui/core";
 import {useStyles} from "../../style";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import {FetchAllScenesAnswer, BackendScene, PreviewImage, FullScene} from "../../types";
+import {BackendScene, FullScene, PreviewImage} from "../../types";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 import {SceneList} from "./SceneList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
@@ -20,20 +20,12 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     const classes = useStyles();
 
     //TODO: add sessionStorage support
-    //List of all available scenes, fetched from the backend.
-    const [scenes, setScenes] = React.useState<Array<BackendScene>>(props.scenes);
-    //List of the URLs of the preview images for the scenes
-    const [previewImgList, setPreviewImgList] = React.useState<Array<PreviewImage>>(props.previewImgList);
 
     const [detailDialogOpen, setDetailDialogOpen] = React.useState(false);
 
     const [currentImg, setCurrentImg] = React.useState("");
 
     const [currentScene, setCurrentScene] = React.useState<BackendScene>({scene_id: -1, scene_name: ""})
-
-    //this static value will be true as long as the component is still mounted
-    //used to check if handling of a fetch request should still take place or if the component is not used anymore
-    const isMounted = useRef(true);
 
     /**
      * setup for error notification
@@ -50,6 +42,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const handleFetchSceneSuccess = (jsonData: any) => {
         const data = jsonData as FullScene;
+        console.log(data);
         //TODO: change component with the fetched Scene in props...
     };
 
