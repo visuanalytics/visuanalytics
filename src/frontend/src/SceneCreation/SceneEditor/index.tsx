@@ -169,7 +169,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Also removes the handler when unmounting the component.
      */
     React.useEffect(() => {
-        const setStageAfterLoad = (event: Event) => {
+        const setStageAfterLoad = () => {
             setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
         }
         window.addEventListener("load", setStageAfterLoad);
@@ -411,10 +411,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const saveButtonHandler = () => {
         // throws an error when the amount of items on the stage is 0, and empty stage can not be exported
-        if (itemCounter === 0) {
+        if (itemCounter === 0 && backGroundType === "COLOR" ) {
             dispatchMessage({type: "reportError", message: "Die Szene ist leer!"});
             return;
         }
+        setSelectedItemName("");
         //start the chain of fetching to communicate with the backend
         createBackgroundImage();
     }
@@ -1373,30 +1374,30 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const lastElem = [...recentlyRemovedItems];
         if (!itemSelected) {
             //delete the image from the list of used IDs
-            if(items[items.length-1].id.startsWith("image")) {
-                const castedImage = items[items.length-1] as CustomImage;
-                //if the image was only used with this item, remove it from the list of used arrays
-                let onlyUsage = true;
-                for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
-                    //skip if this is the index of the removed item
-                    if(innerIndex === items.length-1) continue;
-                    const item = items[innerIndex]
-                    if(item.id.startsWith("image")) {
-                        const itemCasted = item as CustomImage;
-                        if(itemCasted.imageId === castedImage.imageId) {
-                            onlyUsage = false;
-                            break;
+            if (items.length > 0) {
+                if(items[items.length-1].id.startsWith("image")) {
+                    const castedImage = items[items.length-1] as CustomImage;
+                    //if the image was only used with this item, remove it from the list of used arrays
+                    let onlyUsage = true;
+                    for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
+                        //skip if this is the index of the removed item
+                        if(innerIndex === items.length-1) continue;
+                        const item = items[innerIndex]
+                        if(item.id.startsWith("image")) {
+                            const itemCasted = item as CustomImage;
+                            if(itemCasted.imageId === castedImage.imageId) {
+                                onlyUsage = false;
+                                break;
+                            }
                         }
                     }
+                    console.log(onlyUsage);
+                    if(onlyUsage) {
+                        imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                            return imageID !== castedImage.imageId;
+                        })
+                    }
                 }
-                console.log(onlyUsage);
-                if(onlyUsage) {
-                    imageIDArray.current = imageIDArray.current.filter((imageID) => {
-                        return imageID !== castedImage.imageId;
-                    })
-                }
-            }
-            if (items.length > 0) {
                 // remove the last element from the items array
                 const poppedItem = items.pop();
                 // push the last element into the recentlyremoveditems array
@@ -2313,7 +2314,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={3}>
-                                    <Button className={classes.button} id="del"
+                                    <Button className={classes.button} id="del" disabled={items.length <= 0}
                                             onClick={deleteItem}>{deleteText}</Button><br/><br/>
                                     <TextField
                                         className={classes.buttonNumber}
