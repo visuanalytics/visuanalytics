@@ -207,8 +207,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //deleteText
         setDeleteText(sessionStorage.getItem("deleteText-" + uniqueId) || "Letztes Elem. entf.");
         //items
-        let restoredItems: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage> = [];
-        restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
+        const restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
         //find all images and set the new url by their id
         for (let index = 0; index < restoredItems.length; index++) {
             if(restoredItems[index].hasOwnProperty("image")) {
@@ -483,7 +482,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         const returnValue: JsonExport = {
             scene_name: sceneName,
-            used_images: imageIDArray.current, //TODO: manage to update this array with the id of all posted images
+            used_images: imageIDArray.current,
             used_infoproviders: [infoProviderId],
             images:  base,
             scene_items: JSON.stringify(items),
@@ -517,7 +516,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         size_x: element.width * element.scaleX, //Breite optional
                         size_y: element.height * element.scaleY, //Höhe optional
                         color: "RGBA",
-                        path: "string" //Diagrammname "image_name" : "" eventuell //TODO: include the path the backend specified here
+                        path: element.imagePath //Diagrammname "image_name" : "" eventuell
                     }
                     dataTextAndImages.push(itemToPush);
                 }
@@ -889,13 +888,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method that handles successful fetches of images from the backend
      * @param jsonData  The image as blob sent by the backend.
+     * @param id  The id of the image that was fetched for.
+     * @param path  The path of the image in the backend.
      */
-    const handleImageByIdSuccess = (jsonData: any, id: number, url: string) => {
+    const handleImageByIdSuccess = (jsonData: any, id: number, path: string) => {
         //create a URL for the blob image and update the list of images with it
         const arCopy = props.imageList.slice();
         arCopy.push({
             image_id: id,
-            image_backend_path: url,
+            image_backend_path: path,
             image_blob_url: URL.createObjectURL(jsonData)
         });
         props.setImageList(arCopy);
@@ -1188,6 +1189,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param index the index of the image in the frontend list of images
      */
     const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number) => {
+        console.log(image)
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
             x: 0,
@@ -1205,6 +1207,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: 1,
             color: "#000000"
         }
+        console.log(obj);
         // if its bigger than the width / height of the canvas, adjust the size of the image
         while (obj.width * obj.scaleX > 960) {
             obj.scaleX *= 0.5;
@@ -1372,9 +1375,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //delete the image from the list of used IDs
             if(items[items.length-1].id.startsWith("image")) {
                 const castedImage = items[items.length-1] as CustomImage;
-                imageIDArray.current = imageIDArray.current.filter((imageID) => {
-                    return imageID !== castedImage.imageId;
-                })
+                //if the image was only used with this item, remove it from the list of used arrays
+                let onlyUsage = true;
+                for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
+                    //skip if this is the index of the removed item
+                    if(innerIndex === items.length-1) continue;
+                    const item = items[innerIndex]
+                    if(item.id.startsWith("image")) {
+                        const itemCasted = item as CustomImage;
+                        if(itemCasted.imageId === castedImage.imageId) {
+                            onlyUsage = false;
+                            break;
+                        }
+                    }
+                }
+                console.log(onlyUsage);
+                if(onlyUsage) {
+                    imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                        return imageID !== castedImage.imageId;
+                    })
+                }
             }
             if (items.length > 0) {
                 // remove the last element from the items array
@@ -1393,9 +1413,26 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //delete the image from the list of used IDs
             if(items[index].id.startsWith("image")) {
                 const castedImage = items[index] as CustomImage;
-                imageIDArray.current = imageIDArray.current.filter((imageID) => {
-                    return imageID !== castedImage.imageId;
-                })
+                //if the image was only used with this item, remove it from the list of used arrays
+                let onlyUsage = true;
+                for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
+                    //skip if this is the index of the removed item
+                    if(innerIndex === index) continue;
+                    const item = items[innerIndex]
+                    if(item.id.startsWith("image")) {
+                        const itemCasted = item as CustomImage;
+                        if(itemCasted.imageId === castedImage.imageId) {
+                            onlyUsage = false;
+                            break;
+                        }
+                    }
+                }
+                console.log(onlyUsage);
+                if(onlyUsage) {
+                    imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                        return imageID !== castedImage.imageId;
+                    })
+                }
             }
             // push the element into the lastElem array and remove it from the items array
             if (items.length > 0 && selectedObject !== undefined) {
@@ -1409,6 +1446,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
+    console.log(imageIDArray.current);
+
     /**
      * Method to undo the last delete operation
      */
@@ -1420,10 +1459,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 const arCopy = items.slice();
                 arCopy.push(poppedItem);
                 setItems(arCopy);
-                // if it is an image, add it to the list of used image ids again
+                // if it is an image, add it to the list of used image ids again if it is not already included
                 if(poppedItem.id.startsWith("image")) {
                     const castedImage = poppedItem as CustomImage;
-                    imageIDArray.current.push(castedImage.imageId);
+                    if(!imageIDArray.current.includes(castedImage.imageId)) imageIDArray.current.push(castedImage.imageId);
                 }
             }
         }
@@ -1782,10 +1821,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleImageClick = (src : string, id: number, path: string, index: number) => {
         //create the image object for the image to be displayed
+        console.log(src)
         let image = new window.Image();
         image.src = src;
-        //push the id to the array of used images
-        imageIDArray.current.push(id);
+        console.log(image)
+        //push the id to the array of used images if it is not already used
+        if(!imageIDArray.current.includes(id)) imageIDArray.current.push(id);
         addImageElement(image, id, path, index);
     }
 
@@ -2559,32 +2600,34 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                 Legen Sie bitte das Intervall fest, welches für das einzufügende Element verwendet werden soll. Die Zahl 0 meint dabei das aktuellste Intervall, die Zahl 1 das Vorletzte, usw.
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h5">
-                                Informationen zu Historisierungszeitpunkten des gewählten Elements:
+                        <Grid item xs={12} className={classes.elementLargeMargin}>
+                            <Typography variant="body1">
+                                <strong>Historisierungsintervall des gewählten Elements:</strong>
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            {selectedInterval}
+                            <Typography variant="body1">
+                                {selectedInterval}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField error={intervalToUse === undefined || intervalToUse < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={intervalToUse} onChange={event => setIntervalToUse(event.target.value === "" ? undefined : Number(event.target.value))}/>
+                        <Grid item xs={12}  className={classes.elementLargeMargin}>
+                            <TextField style={{width: "25em"}} error={intervalToUse === undefined || intervalToUse < 0} label="Wahl des Intervalls für das einzufügende Element" type="number" value={intervalToUse} onChange={event => setIntervalToUse(event.target.value === "" ? undefined : Number(event.target.value))}/>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions className={classes.elementLargeMargin}>
                     <Grid container justify="space-between">
-                        <Grid item xs={12}>
+                        <Grid item>
                             <Button variant="contained" color="primary" onClick={() => cancelHistorizedAdding()}>
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item xs={12} className={classes.blockableButtonSecondary}>
+                        <Grid item className={classes.blockableButtonSecondary}>
                             <Button variant="contained" color="secondary" disabled={intervalToUse === undefined || intervalToUse < 0} onClick={() => {
                                 handleItemSelect(selectedHistorizedElement, true);
                                 setShowHistorizedDialog(false);
                             }}>
-                                Speichern
+                                Hinzufügen
                             </Button>
                         </Grid>
                     </Grid>
