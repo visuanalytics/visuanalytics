@@ -461,6 +461,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                         leftParenCount={leftParenCount}
                         rightParenCount={rightParenCount}
                         oldFormelName={oldFormelName}
+                        arrayProcessingsList={props.arrayProcessingsList}
                     />
                 </Grid>
                 <Grid item container xs={12} justify="space-between" className={classes.elementLargeMargin}>

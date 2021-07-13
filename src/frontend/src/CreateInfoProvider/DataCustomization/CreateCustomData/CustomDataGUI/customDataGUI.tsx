@@ -9,12 +9,12 @@ import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import {FormelObj} from "./formelObjects/FormelObj";
 import {
-    Collapse, FormControlLabel,
+    Collapse,
     IconButton,
     ListItemSecondaryAction
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {ArrayProcessingData, SelectedDataItem, uniqueId} from "../../../types";
+import {ArrayProcessingData, SelectedDataItem} from "../../../types";
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 
 interface CustomDataGUIProps {
