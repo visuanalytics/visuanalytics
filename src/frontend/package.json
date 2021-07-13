@@ -15,9 +15,10 @@
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "canvas": "^2.8.0",
     "date-fns": "^2.19.0",
+    "konva": "^8.1.1",
     "react": "^17.0.2",
-    "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^17.0.2",
     "react-konva": "^17.0.2-4",
     "react-scripts": "^4.0.3",
@@ -30,7 +31,7 @@
     "start:all": "concurrently -k \"npm run start\" \"npm run start:server\"",
     "start:all-env": "concurrently \"npm run start\" \"npm run start:server-env\"",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!ui-core)/\\\" --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --max-warnings=0 \"src/**\"",
     "lint:fix": "eslint --fix \"src/**\""
@@ -52,7 +53,6 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "@types/react-dnd-scrollzone": "^5.0.0",
     "concurrently": "^6.0.0"
   }
 }
