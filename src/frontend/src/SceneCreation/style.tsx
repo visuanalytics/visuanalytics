@@ -96,5 +96,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         fixedWarningContainer: {
             height: "65px"
         },
+        wrappedLabel: {
+            "& .MuiFormControlLabel-label": {
+                overflowWrap: "break-word",
+                width: "40em",
+            }
+        }
     })
 );

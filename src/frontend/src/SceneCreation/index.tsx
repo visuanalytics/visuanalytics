@@ -9,15 +9,11 @@ import {SceneEditor} from "./SceneEditor";
 import {ComponentContext} from "../ComponentProvider";
 import {DataSource, FrontendInfoProvider, uniqueId} from "../CreateInfoProvider/types";
 import {DiagramInfo, HistorizedDataInfo, ImageBackendData, ImageFrontendData, InfoProviderData} from "./types";
-import {useCallFetch} from "../Hooks/useCallFetch";
 import {hintContents} from "../util/hintContents";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
-
-
-//TODO: when merged with the new type structure, put this into a global file
-//TODO: wird die diagrammliste überhaupt gesetzt?
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
 
 /**
  * Wrapper component for the scene creation.
@@ -59,7 +55,8 @@ export const SceneCreation = () => {
     const refetchingImages = React.useRef(false);
     // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconstent with when rerenders are triggered
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
-
+    //true when the dialog for refetching images is opened
+    const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(false);
 
     // contains the names of the steps to be displayed in the stepper
     const steps = [
@@ -83,9 +80,9 @@ export const SceneCreation = () => {
      * Handler for back button that is passed to all sub-components as props.
      * Decrements the step or returns to the dashboard if the step was 0.
      */
-    const handleContinue = () => {
+    const handleContinue = React.useCallback(() => {
         setSceneEditorStep(sceneEditorStep + 1);
-    }
+    }, [sceneEditorStep])
 
     /**
      * Handler for back button that is passed to all sub-components as props.
@@ -99,14 +96,6 @@ export const SceneCreation = () => {
         setSceneEditorStep(sceneEditorStep-1)
     }
 
-    /**
-     * Handles the error-message if an error appears.
-     * @param err the shown error
-     */
-    const handleErrorFetchAll = (err: Error) => {
-        //console.log('error');
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
-    }
 
     /**
      * This type is needed because the answer of the backend consists of a list of infProviders.
@@ -118,10 +107,20 @@ export const SceneCreation = () => {
      * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
      * @param jsonData the answer from the backend
      */
-    const handleSuccessFetchAll = (jsonData: any) => {
+    const handleSuccessFetchAll = React.useCallback((jsonData: any) => {
         const data = jsonData as fetchAllBackendAnswer;
         setInfoProviderList(data);
-    }
+    }, []);
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorFetchAll = React.useCallback((err: Error) => {
+        //console.log('error');
+        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+    }, [])
+
 
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
@@ -159,7 +158,7 @@ export const SceneCreation = () => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }, [handleSuccessFetchAll, handleErrorFetchAll])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -204,6 +203,8 @@ export const SceneCreation = () => {
             fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         }
     }
+
+
 
     /**
      * Method that handles successful fetches of images from the backend
@@ -264,6 +265,28 @@ export const SceneCreation = () => {
         }).finally(() => clearTimeout(timer));
     }
 
+    /*const fetchAllBackgroundImages = React.useCallback(() => {
+        while(allBackgroundImageList.current.length !== 0) {
+            while(requestRunning.current);
+            const nextId = allBackgroundImageList.current[0].image_id;
+            //delete the image with this id from the images that still need to be fetched
+            allBackgroundImageList.current  = allBackgroundImageList.current.filter((image) => {
+                return image.image_id !== nextId;
+            })
+            requestRunning.current = true;
+            //fetch the image with the id from the backend
+            fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
+        }
+        //set the state to the fetched list
+        setBackgroundImageList(backgroundImageFetchResults.current);
+        console.log(backgroundImageFetchResults.current);
+        //start fetching all diagram previews
+        //fetchNextDiagram();
+        setDisplayLoadMessage(false);
+        handleContinue();
+    }, [fetchBackgroundImageById, handleBackgroundImageByIdError, handleContinue])*/
+
+
     /**
      * Method that handles successful calls to the backend for fetching a list of all images.
      * Starts the fetching of all images id by id.
@@ -272,14 +295,15 @@ export const SceneCreation = () => {
     const handleBackgroundImageListSuccess = (jsonData: any) => {
         allBackgroundImageList.current = jsonData as Array<ImageBackendData>;
         backgroundImageFetchResults.current = [];
-        fetchNextBackgroundImage();
+        //fetchNextBackgroundImage();
+        fetchNextBackgroundImage()
     }
 
     /**
      * Method that handles errors for fetching a list of all images.
      * @param err The error returned from the backend.
      */
-    const handleBackgroundImageListError = (err: Error) => {
+    const handleBackgroundImageListError = React.useCallback((err: Error) => {
         reportError("Fehler beim Laden der Liste aller Hintergrundbilder: " + err);
         //enable the continue button again
         setStep0ContinueDisabled(false);
@@ -287,19 +311,40 @@ export const SceneCreation = () => {
         // deactivate the spinner
         setDisplaySpinner(false);
         setDisplayLoadMessage(false);
-    }
+    }, [])
+
+
     /**
      * Method that fetches a list of all available images from the backend.
      */
-    const fetchBackgroundImageList = useCallFetch("/visuanalytics/image/all/backgrounds",
-        {
+    const fetchBackgroundImageList = () => {
+        let url = "/visuanalytics/image/all/backgrounds"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json\n"
             },
-        }, handleBackgroundImageListSuccess, handleBackgroundImageListError
-    )
-
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleBackgroundImageListSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleBackgroundImageListError(err)
+        }).finally(() => clearTimeout(timer));
+    }
 
 
     /**
@@ -310,6 +355,79 @@ export const SceneCreation = () => {
     const allImageList = React.useRef<Array<ImageBackendData>>([]);
     //mutable list of the paths of all images received from the backend as blob - also not in state to change without renders
     const imageFetchResults = React.useRef<Array<ImageFrontendData>>([]);
+
+    /**
+     * Method that handles successful fetches of images from the backend.
+     * @param jsonData The image as blob sent by the backend.
+     * @param id The id of the image that was requested.
+     * @param url The backend URL/path of the image requested
+     */
+    const handleImageByIdSuccess = (jsonData: any, id: number, url: string) => {
+        //create a URL for the blob image and store it in the list of images
+        imageFetchResults.current.push({
+            image_id: id,
+            image_backend_path: url,
+            image_blob_url: URL.createObjectURL(jsonData)
+        });
+        //fetch the next image afterwards
+        fetchNextImage();
+        console.log("success fetching the image with id " + id)
+    }
+
+    /**
+     * Method that handles errors for fetching am image from the backend.
+     * @param err The error sent by the backend.
+     */
+    const handleImageByIdError = React.useCallback((err: Error) => {
+        reportError("Fehler beim Abrufen eines Bildes: " + err);
+        //enable the continue button again
+        setStep0ContinueDisabled(false);
+        refetchingImages.current = false;
+        // deactivate the spinner
+        setDisplaySpinner(false);
+        setDisplayLoadMessage(false);
+    }, [])
+
+
+
+
+
+
+
+
+    /**
+     * Method to fetch a single image by id from the backend.
+     * The standard hook "useCallFetch" is not used here since we want to pass an id
+     * as additional argument (storing in state is no alternative because there wont be re-render).
+     */
+    const fetchImageById = React.useCallback((id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => {
+        let url = "/visuanalytics/image/" + id;
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json\n"
+            },
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.blob();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) successHandler(data, id, image_url)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) errorHandler(err)
+        }).finally(() => clearTimeout(timer));
+    }, [])
 
     /**
      * Method that serves to recursively fetch all images from the backend.
@@ -337,75 +455,30 @@ export const SceneCreation = () => {
             fetchImageById(nextId, nextURL, handleImageByIdSuccess, handleImageByIdError);
         }
     }
-    /**
-     *
-     * @param jsonData
-     */
-    /**
-     * Method that handles successful fetches of images from the backend.
-     * @param jsonData The image as blob sent by the backend.
-     * @param id The id of the image that was requested.
-     * @param url The backend URL/path of the image requested
-     */
-    const handleImageByIdSuccess = (jsonData: any, id: number, url: string) => {
-        //create a URL for the blob image and store it in the list of images
-        imageFetchResults.current.push({
-            image_id: id,
-            image_backend_path: url,
-            image_blob_url: URL.createObjectURL(jsonData)
-        });
-        //fetch the next image afterwards
-        fetchNextImage();
-    }
 
-    /**
-     * Method that handles errors for fetching am image from the backend.
-     * @param err The error sent by the backend.
-     */
-    const handleImageByIdError = (err: Error) => {
-       reportError("Fehler beim Abrufen eines Bildes: " + err);
-        //enable the continue button again
-        setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
-        setDisplayLoadMessage(false);
-    }
-
-
-    /**
-     * Method to fetch a single image by id from the backend.
-     * The standard hook "useCallFetch" is not used here since we want to pass an id
-     * as additional argument (storing in state is no alternative because there wont be re-render).
-     */
-    const fetchImageById = (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => {
-        let url = "/visuanalytics/image/" + id;
-        //if this variable is set, add it to the url
-        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
-        //setup a timer to stop the request after 5 seconds
-        const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), 5000);
-        //starts fetching the contents from the backend
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json\n"
-            },
-            signal: abort.signal
-        }).then((res: Response) => {
-            //handles the response and gets the data object from it
-            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.blob();
-        }).then((data) => {
-            //success case - the data is passed to the handler
-            //only called when the component is still mounted
-            if (isMounted.current) successHandler(data, id, image_url)
-        }).catch((err) => {
-            //error case - the error code ist passed to the error handler
-            //only called when the component is still mounted
-            if (isMounted.current) errorHandler(err)
-        }).finally(() => clearTimeout(timer));
-    }
+    /*const fetchAllImages = React.useCallback(() => {
+        while(allBackgroundImageList.current.length !== 0) {
+            //busy waiting until the last request has finished
+            while(requestRunning.current);
+            //get the id of the next image to be fetched
+            const nextId = allImageList.current[0].image_id;
+            const nextURL = allImageList.current[0].path;
+            //delete the image with this id from the images that still need to be fetched
+            allImageList.current  = allImageList.current.filter((image) => {
+                return image.image_id !== nextId;
+            })
+            //set the blocking variable
+            requestRunning.current = true;
+            //fetch the image with the id from the backend
+            console.log("starting to fetch for: " + nextId)
+            fetchImageById(nextId, nextURL, handleImageByIdSuccess, handleImageByIdError);
+        }
+        //set the state to the fetched list
+        setImageList(imageFetchResults.current);
+        console.log(imageFetchResults.current);
+        //start the fetching of all background images
+        fetchBackgroundImageList();
+    }, [fetchBackgroundImageList, fetchImageById, handleImageByIdSuccess, handleImageByIdError])*/
 
     /**
      * Method that handles successful calls to the backend for fetching a list of all images.
@@ -423,28 +496,48 @@ export const SceneCreation = () => {
      * @param err The error returned from the backend.
      */
     const handleImageListError = (err: Error) => {
-        reportError("Fehler beim Laden der Liste aller Bilder: " + err);
-        //activate the continue button again
-        setStep0ContinueDisabled(false);
-        refetchingImages.current = false;
-        // deactivate the spinner
-        setDisplaySpinner(false);
-        setDisplayLoadMessage(false);
-    }
+            reportError("Fehler beim Laden der Liste aller Bilder: " + err);
+            //activate the continue button again
+            setStep0ContinueDisabled(false);
+            refetchingImages.current = false;
+            // deactivate the spinner
+            setDisplaySpinner(false);
+            setDisplayLoadMessage(false);
+        }
+
+
 
     /**
-     * Method that fetches a list of all available images from the backend.
+     * Method to fetch all images from the backend.
      */
-    const fetchImageList = useCallFetch("/visuanalytics/image/all/pictures",
-        {
+    const fetchImageList = () => {
+        let url = "/visuanalytics/image/all/pictures"
+        //if this variable is set, add it to the url
+        if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
+        //setup a timer to stop the request after 5 seconds
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), 5000);
+        //starts fetching the contents from the backend
+        fetch(url, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json\n"
             },
-        }, handleImageListSuccess, handleImageListError
-    )
-
-
+            signal: abort.signal
+        }).then((res: Response) => {
+            //handles the response and gets the data object from it
+            if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
+            return res.status === 204 ? {} : res.json();
+        }).then((data) => {
+            //success case - the data is passed to the handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleImageListSuccess(data)
+        }).catch((err) => {
+            //error case - the error code ist passed to the error handler
+            //only called when the component is still mounted
+            if (isMounted.current) handleImageListError(err)
+        }).finally(() => clearTimeout(timer));
+    }
 
     /**
      * Method block for fetching previews of diagrams
@@ -582,8 +675,9 @@ export const SceneCreation = () => {
             refetchingImages.current = true;
             // activate the spinner
             setDisplaySpinner(true);
-            //start fetching all images
-            fetchImageList()
+            //open the dialog with the button to fetch the images
+            //fetchImageList()
+            setFetchImageDialogOpen(true);
         } else if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId)) === 0) {
             // when step 0 is loaded, reload the list of infoproviders from backend
             fetchAllInfoprovider();
@@ -647,7 +741,9 @@ export const SceneCreation = () => {
      */
     React.useEffect(() => {
         const leaveAlert = (e: BeforeUnloadEvent) => {
-            if(sceneEditorStep === 1) {
+            //uses sessionStorage to avoid dependency to step since it would not safely trigger this handler
+            //dirty workaround but should be okay
+            if(Number(sessionStorage.getItem("sceneEditorStep-" + uniqueId) || 0) === 1) {
                 e.preventDefault();
                 e.returnValue = "";
             }
@@ -698,10 +794,14 @@ export const SceneCreation = () => {
                             hintContent={hintContents.typeSelection}
                             large={"xl"}
                         >
-                            <Typography>
-                                Bilder werden erneut geladen...
-                            </Typography>
-                            <CircularProgress/>
+                            {!fetchImageDialogOpen &&
+                                <React.Fragment>
+                                    <Typography>
+                                        Bilder, Hintergrundbilder und Diagramme werden erneut geladen...
+                                    </Typography>
+                                    <CircularProgress/>
+                                </React.Fragment>
+                            }
                         </StepFrame>
                     )
                 } else {
@@ -749,6 +849,34 @@ export const SceneCreation = () => {
                 message={message.message}
                 severity={message.severity}
             />
+            <Dialog onClose={() => {
+                setFetchImageDialogOpen(false);
+            }} aria-labelledby="backDialog-title"
+                    open={fetchImageDialogOpen}>
+                <DialogTitle id="backDialog-title">
+                    Bilder erneut laden
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        Durch das Neuladen der Seite müssen alle Bilder, Hintergrundbilder und Diagramme erneut geladen werden.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Grid container justify="space-around">
+                        <Grid item>
+                            <Button variant="contained"
+                                    color="secondary"
+                                    onClick={() => {
+                                        setFetchImageDialogOpen(false);
+                                        fetchImageList();
+                                    }}
+                                    >
+                                Laden starten
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </DialogActions>
+            </Dialog>
         </React.Fragment>
     );
 }

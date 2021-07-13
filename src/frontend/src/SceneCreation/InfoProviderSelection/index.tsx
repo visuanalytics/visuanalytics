@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import {useStyles} from "../style";
 import Radio from "@material-ui/core/Radio";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import {useCallFetch} from "../../Hooks/useCallFetch";
 import {FrontendInfoProvider, InfoProviderFromBackend, Schedule} from "../../CreateInfoProvider/types";
 import {getWeekdayString, transformBackendInfoProvider} from "../../CreateInfoProvider/helpermethods";
-import {DiagramInfo, HistorizedDataInfo, ImageBackendData, InfoProviderData} from "../types";
+import {DiagramInfo, HistorizedDataInfo, InfoProviderData} from "../types";
 import {Alert} from "@material-ui/lab";
 
 
@@ -226,7 +226,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
      */
     const renderListItem = (infoProvider: InfoProviderData) => {
         return (
-            <FormControlLabel value={infoProvider.infoprovider_id} control={
+            <FormControlLabel className={classes.wrappedLabel} value={infoProvider.infoprovider_id} control={
                 <Radio
                 />
             } label={infoProvider.infoprovider_name} key={infoProvider.infoprovider_id}
