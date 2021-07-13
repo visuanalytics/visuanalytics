@@ -445,10 +445,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //get the promise with the blob from the Konva Stage
             const blobVar = await fetch(stageImage).then(res => res.blob());
             //Create a file to send to the backend.
-            let file = new File([blobVar], 'background.png');
+            let file = new File([blobVar], 'background.png', {
+                type: "image/png"
+            });
             let formData = new FormData();
             formData.append('image', file);
             formData.append('name', sceneName + '_background');
+            console.log(formData.get("image"));
             postSceneBackground(formData);
         }
     }
@@ -482,10 +485,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
         const returnValue: JsonExport = {
             scene_name: sceneName,
-            used_images: imageIDArray.current,
+            used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
             used_infoproviders: [infoProviderId],
             images:  base,
-            scene_items: JSON.stringify(items),
+            backgroundImage: 0, //TODO: real ID
+            backgroundType: backGroundType,
+            backgroundColor: backGroundColor,
+            backgroundColorEnabled: backGroundColorEnabled,
+            itemCounter: itemCounter,
+            scene_items: items,
         }
         // create dataText and dataImage elements for each element in
         // onlyTextAndImages, depending on their type
@@ -523,7 +531,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         });
         return returnValue;
-    }, [items, infoProviderId, sceneName]);
+    }, [items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter]);
 
     /**
      * Method to handle the results of posting the exported scene to the backend.
@@ -534,6 +542,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handleExportSceneSuccess = React.useCallback((jsonData: any) => {
         console.log("successful export post");
         clearSessionStorage();
+        sessionStorage.removeItem("sceneEditorStep-" + uniqueId);
+        sessionStorage.removeItem("infoProviderList-" + uniqueId);
+        sessionStorage.removeItem("selectedId-" + uniqueId);
         components?.setCurrent("dashboard")
     }, [components]);
 
@@ -618,15 +629,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
-            headers: {
-                "Content-Type": "multipart/form-data\n"
-            },
+            headers: {},
             body: formData,
             signal: abort.signal
         }).then((res: Response) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.blob();
+            return res.status === 204 ? {} : res.json();
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
@@ -650,11 +659,13 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             const originalStage = saveHandler(stage);
             if (originalStage !== "Empty Stage"){
                 const blobVar = await fetch(originalStage).then(res => res.blob());
-                let file = new File([blobVar], 'preview.png');
+                let file = new File([blobVar], 'preview.png', {
+                    type: "image/png"
+                });
                 let formData = new FormData();
                 formData.append('image', file);
                 formData.append('name', sceneName + '_preview');
-                console.log("before posting preview");
+                console.log(formData.get("image"));
                 postScenePreview(formData);
                 //console.log(previewImageData.current);
             }
@@ -668,6 +679,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param data The JSON returned by the backend.
      */
     const handlePostSceneBGSuccess = React.useCallback((jsonData: any) => {
+        console.log(jsonData);
         const data = jsonData as ResponseData;
         backgroundID.current = data.image_id;
         console.log("successful background post: " + backgroundID.current);
@@ -704,7 +716,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }).then((res: Response) => {
             //handles the response and gets the data object from it
             if (!res.ok) throw new Error(`Network response was not ok, status: ${res.status}`);
-            return res.status === 204 ? {} : res.blob();
+            return res.status === 204 ? {} : res.json();
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
@@ -771,6 +783,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to POST a background image uploaded by the user to the backend.
      */
     const postBackgroundImage = (imageToUpload: FormData) => {
+        //console.log(imageToUpload.get("image"));
+
         console.log("post background image called");
         let url = "visuanalytics/image/backgrounds";
         //if this variable is set, add it to the url
@@ -1446,7 +1460,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }
 
-    console.log(imageIDArray.current);
 
     /**
      * Method to undo the last delete operation

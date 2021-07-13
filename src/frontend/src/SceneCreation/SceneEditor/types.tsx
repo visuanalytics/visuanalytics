@@ -104,7 +104,12 @@ export type JsonExport = {
     used_images: number[];
     used_infoproviders: number[];
     images: BaseImg;
-    scene_items: string;
+    backgroundImage: number; //ID of the background image
+    backgroundType: string;
+    backgroundColor: string;
+    backgroundColorEnabled: boolean;
+    itemCounter: number;
+    scene_items: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>;
 }
 
 export type BaseImg = {
