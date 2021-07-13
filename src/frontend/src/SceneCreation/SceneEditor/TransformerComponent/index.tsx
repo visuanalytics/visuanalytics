@@ -17,6 +17,7 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   const selectedShapeName = props.selectedShapeName;
 
   const checkNode = () => {
+
     if (transformer !== null) {
       setStage(transformer.getStage());
       if (stage !== undefined && stage !== null) {
@@ -37,6 +38,9 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
         if (transformer.getLayer() !== null){
           transformer.getLayer()!.batchDraw();
         }
+      }
+      if (selectedShapeName === ""){
+        transformer.detach();
       }
     }
   }
