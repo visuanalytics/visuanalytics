@@ -8,11 +8,12 @@ import logging
 from flask import (Blueprint, request, send_file, send_from_directory)
 from werkzeug.utils import secure_filename
 from os import path
+from datetime import datetime
 
 from visuanalytics.server.db import db, queries
 
 from visuanalytics.analytics.processing.image.matplotlib.diagram import generate_test_diagram
-from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path
+from visuanalytics.util.resources import TEMP_LOCATION, get_resource_path, get_temp_path
 from visuanalytics.util.config_manager import get_private, set_private
 
 from ast2json import str2json
@@ -444,6 +445,27 @@ def get_videojob(videojob_id):
         return err, 400
 
 
+@api.route("/videojob/all", methods=["GET"])
+def get_all_videojobs():
+    """
+    Endpunkt `/videojob/all`.
+
+    Response enthält ein Array mit allen Namen und IDs aller Videojobs.
+    """
+    try:
+        videojobs = queries.get_all_videojobs()
+
+        if not videojobs:
+            err = flask.jsonify({"err_msg": "Error while loading all Videojobs"})
+            return err, 400
+
+        return flask.jsonify(videojobs)
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": "An error occurred while loading all Videojobs"})
+        return err, 400
+
+
 @api.route("/infoprovider/<infoprovider_id>", methods=["DELETE"])
 def delete_infoprovider(infoprovider_id):
     """
@@ -473,6 +495,26 @@ def get_infoprovider_logs(infoprovider_id):
     """
     try:
         return flask.jsonify(queries.get_infoprovider_logs(infoprovider_id))
+    except Exception:
+        logger.exception("An error occurred: ")
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
+        return err, 400
+
+
+@api.route("/infoprovider/<infoprovider_id>/<diagram_name>", methods=["GET"])
+def get_infoprovider_test_diagram(infoprovider_id, diagram_name):
+    """
+    Endpunkt `/infoprovider/<infoprovider_id>/<diagram_name>`.
+
+    Route um alle Logs der Datenquellen eines Infoproviders zu laden.
+
+    :param infoprovider_id: ID des Infoproviders.
+    :param <diagram_name>: Name des Testdiagramms.
+    """
+    try:
+        file_path = get_temp_path(queries.get_infoprovider_name(infoprovider_id) + "/" + diagram_name + ".png")
+
+        return send_file(file_path, "application/json", True)
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": f"An error occurred while loading logs of an infoprovider with the ID {infoprovider_id}"})
@@ -529,7 +571,7 @@ def get_videojob_logs(videojob_id):
         return flask.jsonify(queries.get_videojob_logs(videojob_id))
     except Exception:
         logger.exception("An error occurred: ")
-        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojo_id}"})
+        err = flask.jsonify({"err_msg": f"An error occurred while loading logs of a videojob with the ID {videojob_id}"})
         return err, 400
 
 
@@ -759,7 +801,7 @@ def add_scene_image(folder):
             err = flask.jsonify({"err_msg": "Missing Image Name"})
             return err, 400
         image = request.files["image"]
-        name = request.form["name"]
+        name = f"{datetime.now().strftime('%Y-%m-%d_%H-%M.%S.%f')}_-_{request.form['name']}"
 
         if image.filename == '':
             err = flask.jsonify({"err_msg": "Missing Image Filename"})
