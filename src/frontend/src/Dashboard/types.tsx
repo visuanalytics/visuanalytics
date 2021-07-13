@@ -51,9 +51,14 @@ export type PreviewImage = {
 }
 
 export type FullScene = {
-    name: string;
+    scene_name: string;
     used_images: Array<number>;
     used_infoproviders: Array<number>;
     images: Array<Diagram>;
+    backgroundImage: number;
+    backgroundType: string;
+    backgroundColor: string;
+    backgroundColorEnabled: boolean;
+    itemCounter: number;
     scene_items: string;
 }
