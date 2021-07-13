@@ -564,7 +564,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param diagram the diagram to be transformed
      */
     const createPlots = React.useCallback((diagram: Diagram) => {
-        console.log(diagram.arrayObjects);
+        //console.log(diagram.arrayObjects);
         const plotArray: Array<Plots> = [];
         let type: string;
         //transform the type to the string the backend needs
@@ -619,7 +619,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         dateLabels: item.dateLabels,
                         plot: {
                             type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
+                            x: item.intervalSizes,
                             y: item.name,
                             color: item.color,
                             dateFormat: item.dateFormat,
