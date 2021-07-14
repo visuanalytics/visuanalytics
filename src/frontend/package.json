@@ -31,7 +31,7 @@
     "start:all": "concurrently -k \"npm run start\" \"npm run start:server\"",
     "start:all-env": "concurrently \"npm run start\" \"npm run start:server-env\"",
     "build": "react-scripts build",
-    "test": "react-scripts test --transformIgnorePatterns \\\"node_modules/(?!ui-core)/\\\" --env=jsdom",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!ui-core)/' --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --max-warnings=0 \"src/**\"",
     "lint:fix": "eslint --fix \"src/**\""
