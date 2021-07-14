@@ -38,4 +38,4 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build --if-present
-      - run: npm test
+      - run: react-scripts test --transformIgnorePatterns \"node_modules/(?!ui-core)/\" --env=jsdom
