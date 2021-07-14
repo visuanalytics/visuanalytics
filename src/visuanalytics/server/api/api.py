@@ -868,7 +868,9 @@ def get_image(id):
     try:
         file_path = queries.get_scene_image_file(id)
 
-        return send_file(file_path, "application/json", True)
+        #return send_file(file_path, "application/json", True)
+        images = ["Ort_3day3", "Ort_2day2", "DE3Tage2", "DE1TAg"]
+        return send_file(queries._get_image_path(images[int(id)], "weather", "png"), "application/json", True)
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a scene-image"})
