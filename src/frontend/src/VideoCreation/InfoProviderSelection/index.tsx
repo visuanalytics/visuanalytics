@@ -22,6 +22,8 @@ interface InfoProviderSelectionProps {
     setMinimalInfoProvObjects: (objects: Array<MinimalInfoProvider>) => void;
     reportError: (message: string) => void;
     fetchAllScenes: () => void;
+    infoproviderIDs: Array<number>;
+    setInfoproviderIDs: (infoproviderIDs: Array<number>) => void;
 }
 
 /**
@@ -84,7 +86,9 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
                     weekdays: dataSource.schedule.weekdays,
                     time: dataSource.schedule.time,
                     interval: dataSource.schedule.timeInterval,
-                }
+                },
+                arrayProcessingList: dataSource.arrayProcessingsList,
+                stringReplacementList: dataSource.stringReplacementList,
             })
         })
         return minimalInfoProvider;
@@ -183,6 +187,7 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
     /**
      * Handler for clicking a checkbox of one of the info providers in the list.
      * Adds the infoProvider to the selection if it is not selected, removes it if it is already selected
+     * The ID of the infoprovider is also added / removed to the used IDs for the tts
      * @param infoProvider The infoProvider the checkbox was clicked for
      */
     const checkBoxHandler = (infoProvider: InfoProviderData) => {
@@ -191,12 +196,20 @@ export const InfoProviderSelection: React.FC<InfoProviderSelectionProps> = (prop
             //remove the infoProvider from the selection
             props.setSelectedInfoProvider(props.selectedInfoProvider.filter((selectedInfoProvider) => {
                 return selectedInfoProvider.infoprovider_id !== infoProvider.infoprovider_id
+            }));
+            // Remove the infoprovider also from the array with the IDs of all selected infoproviders
+            props.setInfoproviderIDs(props.infoproviderIDs.filter((selectedInfoProviderID) => {
+                return selectedInfoProviderID !== infoProvider.infoprovider_id
             }))
         } else {
             //add the infoProvider to the selection
             const arCopy = props.selectedInfoProvider.slice();
             arCopy.push(infoProvider);
             props.setSelectedInfoProvider(arCopy);
+            // Add the ID of the infoprovider to the array with IDs of all selected infoproviders
+            const idsCopy = props.infoproviderIDs.slice();
+            idsCopy.push(infoProvider.infoprovider_id);
+            props.setInfoproviderIDs(idsCopy);
         }
     }
 
