@@ -86,7 +86,9 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                 <Grid item container xs={4} justify={"flex-end"}>
                     <Grid item>
                         <Button variant={"contained"} size={"large"} color={"secondary"}
-                                startIcon={<AddCircleIcon fontSize="small"/>}>
+                                startIcon={<AddCircleIcon fontSize="small"/>}
+                                onClick={() => components?.setCurrent("sceneEditor")}
+                        >
                             Neue Szene erstellen
                         </Button>
                     </Grid>
@@ -98,20 +100,6 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                         setDetailDialogOpen={(flag: boolean) => setDetailDialogOpen(flag)}
                         setCurrent={(data: BackendScene) => setCurrent(data)}
                     />
-                </Grid>
-                <Grid item xs={6}>
-                    <Typography variant={"h5"}>
-                        Angelegte Szenen:
-                    </Typography>
-                </Grid>
-                <Grid item container xs={6} justify={"flex-end"}>
-                    <Grid item>
-                        <Button variant={"contained"} size={"large"} color={"secondary"}
-                                startIcon={<AddCircleIcon fontSize="small"/>}
-                                onClick={() => components?.setCurrent("sceneEditor")}>
-                            Neue Szene erstellen
-                        </Button>
-                    </Grid>
                 </Grid>
             </Grid>
             <Dialog

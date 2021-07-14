@@ -314,7 +314,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
                         </Grid>
                         <Grid item>
                             <Button variant="contained" size="large" color="primary"
-                                    onClick={() => props.continueHandler(2)}>
+                                    onClick={() => props.continueHandler(1)}>
                                 weiter
                             </Button>
                         </Grid>
