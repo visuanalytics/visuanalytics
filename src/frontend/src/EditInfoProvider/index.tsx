@@ -9,8 +9,6 @@ import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview"
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
 import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-import {EditSingleFormel} from "./EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel";
-
 import {FormelContext/*, InfoProviderObj*/} from "./types";
 import {
     authDataDialogElement,
