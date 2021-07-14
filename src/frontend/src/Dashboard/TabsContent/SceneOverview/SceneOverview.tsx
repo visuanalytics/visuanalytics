@@ -9,6 +9,7 @@ import {BackendScene, FullScene, PreviewImage} from "../../types";
 import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 import {SceneList} from "./SceneList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
+import {ComponentContext} from "../../../ComponentProvider";
 
 interface SceneOverviewProps {
     scenes: Array<BackendScene>;
