@@ -852,7 +852,7 @@ def insert_scene(scene):
     used_images = scene["used_images"]
     used_infoproviders = scene["used_infoproviders"]
     images = scene["images"]
-    diagrams_original = scene["diagrams_original"]
+    # diagrams_original = scene["diagrams_original"]
     scene_items = scene["scene_items"]
 
     scene_json = {
@@ -860,7 +860,12 @@ def insert_scene(scene):
         "used_images": used_images,
         "used_infoproviders": used_infoproviders,
         "images": images,
-        "diagrams_original": diagrams_original,
+        "backgroundImage": scene["backgroundImage"],
+        "backgroundType": scene["backgroundType"],
+        "backgroundColor": scene["backgroundColor"],
+        "backgroundColorEnabled": scene["backgroundColorEnabled"],
+        "itemCounter": scene["itemCounter"],
+        # "diagrams_original": diagrams_original,
         "scene_items": scene_items
     }
 
@@ -893,9 +898,7 @@ def insert_scene(scene):
 
     # save <scene-name>.json
     file_path = _get_scene_path(scene_name.replace(" ", "-"))
-    #print("file_path", file_path)
     with open_resource(file_path, "wt") as f:
-        #print("writing")
         json.dump(scene_json, f)
 
     con.commit()
@@ -1112,6 +1115,7 @@ def get_scene_image_file(image_id):
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
+    print(res["image_name"], res["folder"])
     image_data = res["image_name"].rsplit(".", 1)
     return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
 
@@ -1125,8 +1129,9 @@ def get_image_list(folder):
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image WHERE folder=?", [folder])
     con.commit()
-    return [{"image_id": row["image_id"], "image_name": row["image_name"]} for row in res]
-    # return [{"image_id": row["image_id"], "image_name": row["image_name"].rsplit("_-_", 1)[1]} for row in res]
+    return [{"image_id": row["image_id"],
+             "image_name": row["image_name"],
+             "path": get_image_path(row["image_name"].rsplit(".", 1)[0], folder, row["image_name"].rsplit(".", 1)[1])} for row in res]
 
 
 def delete_scene_image(image_id):
