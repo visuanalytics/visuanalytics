@@ -367,11 +367,35 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
         dataSourcesKeys: dataSourcesKeys,
         diagrams: diagrams
     });
-
     return {
         infoproviderName: infoProviderName,
         dataSources: dataSources,
         dataSourcesKeys: dataSourcesKeys,
         diagrams: diagrams
+    }
+}
+
+
+/* HistorizedDiagramCreator */
+/**
+ * Returns the string representation of a weekday.
+ * @param weekdayNumber The numeric representation of a weekday. (Should range from 0 to 6)
+ */
+export const getWeekdayString = (weekdayNumber: number) => {
+    switch (weekdayNumber) {
+        case 0:
+            return "Mo";
+        case 1:
+            return "Di";
+        case 2:
+            return "Mi";
+        case 3:
+            return "Do"
+        case 4:
+            return "Fr";
+        case 5:
+            return "Sa";
+        case 6:
+            return "So";
     }
 }

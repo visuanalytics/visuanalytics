@@ -274,8 +274,16 @@ export const BasicSettings: React.FC<BasicSettingsProps> = (props) => {
                                     }}
                                     errorText="Dieser Name wird bereits für eine andere API verwendet!"
                                     checkNameDuplicate={props.checkNameDuplicate}
+                                    disabled={props.isInEditMode}
                                 />
                             </Grid>
+                            {props.isInEditMode &&
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Während der Bearbeitung von Infoprovidern ist die Änderung des Namens der Datenquelle aus technischen Gründen nicht möglich.
+                                </Typography>
+                            </Grid>
+                            }
                             <Grid item xs={12} className={classes.elementSmallMargin}>
                                 <Typography variant="body1">
                                     Bitte geben sie die Query an, die der Info-Provider nutzen soll:

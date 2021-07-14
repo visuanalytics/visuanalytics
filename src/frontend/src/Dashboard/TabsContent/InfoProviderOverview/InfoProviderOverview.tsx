@@ -291,44 +291,45 @@ export const InfoProviderOverview: React.FC = () => {
             hintContent={hintContents.infoProviderOverview}
         >
             <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
-                <Grid item container xs={12}>
-                    <Grid item xs={6}>
-                        <Typography variant={"h5"}>
-                            Angelegte Info-Provider:
-                        </Typography>
+
+                <Grid item xs={4}>
+                    <Typography variant={"h5"}>
+                        Angelegte Info-Provider:
+                    </Typography>
+                </Grid>
+                <Grid item container xs={4} justify={"flex-end"}>
+                    <Grid item>
+                        <Button variant={"contained"} size={"large"} color={"secondary"}
+                                startIcon={<AddCircleIcon fontSize="small"/>}
+                                onClick={() => components?.setCurrent("createInfoProvider")}
+                        >
+                            Neuer Info-Provider erstellen
+                        </Button>
                     </Grid>
-                    <Grid item container xs={6} justify={"flex-end"}>
-                        <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"secondary"}
-                                    startIcon={<AddCircleIcon fontSize="small"/>}
-                                    onClick={() => components?.setCurrent("createInfoProvider")}>
-                                Neuer Info-Provider
-                            </Button>
-                        </Grid>
+                </Grid>
+                <Grid item container xs={12} justify={"center"}>
+                    <Box borderColor="primary.main" border={6} borderRadius={5}
+                         className={classes.listFrame}>
+                        <InfoProviderList
+                            infoprovider={infoprovider}
+                            handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
+                            handleEditButton={(data: jsonRef) => handleEditButton(data)}
+                        />
+                    </Box>
+                </Grid>
+                <Grid item container xs={12} justify={"space-evenly"}>
+                    <Grid item>
+                        <Button variant={"contained"} size={"large"} color={"primary"}>
+                            Historisierungs-Datenbank
+                        </Button>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Box borderColor="primary.main" border={6} borderRadius={5}
-                             className={classes.listFrame}>
-                            <InfoProviderList
-                                infoprovider={infoprovider}
-                                handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
-                                handleEditButton={(data: jsonRef) => handleEditButton(data)}
-                            />
-                        </Box>
-                    </Grid>
-                    <Grid item container xs={12} justify={"space-evenly"}>
-                        <Grid item>
-                            <Button variant={"contained"} size={"large"} color={"primary"}>
-                                Historisierungs-Datenbank
-                            </Button>
-                        </Grid>
-                        {/*<Grid item>
+                    {/*<Grid item>
                             <Button variant={"contained"} size={"large"} color={"primary"}
                                     onClick={() => testInfo()}>
                                 Test-InfoProvider
                             </Button>
                         </Grid>*/}
-                    </Grid>
+
                 </Grid>
                 <Dialog onClose={() => {
                     setRemoveDialogOpen(false);
