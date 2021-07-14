@@ -524,7 +524,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         dateLabels: item.dateLabels,
                         plot: {
                             type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
+                            x: item.intervalSizes,
                             y: item.name,
                             color: item.color,
                             dateFormat: item.dateFormat,

@@ -35,6 +35,8 @@ interface EditDataSelectionProps {
     cleanDataSource: (newListItems: Array<ListItemRepresentation>) => void;
     infoProvDataSources: Array<DataSource>;
     selectedDataSource: number;
+    dataCustomizationStep: number;
+    setDataCustomizationStep: (step: number) => void;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -180,6 +182,10 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         fetchTestData();
     }, [fetchTestData])
 
+    const handleStepForward = () => {
+        props.setDataCustomizationStep(0);
+        props.continueHandler(1);
+    }
 
     /**
      * Generates the components content based on the current state. If the spinner has to be shown, it is displayed.
@@ -242,7 +248,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             //TODO: remove the debugging thing by removing the possibility of "test janek"
             return (
                 <DataSelection
-                    continueHandler={() => props.continueHandler(1)}
+                    continueHandler={() => handleStepForward()}
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}

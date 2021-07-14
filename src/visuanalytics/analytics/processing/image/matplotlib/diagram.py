@@ -144,10 +144,19 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
-    file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
+    #file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
+    file = resources.new_temp_resource_path(f"{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}", "png")
     # file = resources.get_image_path(values["diagram_config"]["infoproviderName"] + "/" + values["diagram_config"]["name"] + ".png")
     with resources.open_resource(file, "wt") as f:
         pass
+
+    print("#####")
+    print("#####")
+    print("#####")
+    step_data.print_data()
+    print("#####")
+    print("#####")
+    print("#####")
 
     plot_wrapper(values["diagram_config"], file, step_data)
 
@@ -391,7 +400,7 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
 
 
 def create_plot_custom(values, step_data, fig=None, ax=None):
-    array_source = values["source_type"] == "Array"
+    array_source = values["sourceType"] == "Array"
     for plot in values["plots"]:
         fig, ax = create_plot(plot, step_data, array_source=array_source, fig=fig, ax=ax)
     return fig, ax

@@ -44,7 +44,7 @@ task 22: add hintContents
 
 
 
-	interface DiagramCreationProps {
+interface DiagramCreationProps {
     continueHandler: () => void;
     backHandler: () => void;
     dataSources: Array<DataSource>

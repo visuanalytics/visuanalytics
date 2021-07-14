@@ -21,8 +21,7 @@ import {getListItemsNames} from "../../../../CreateInfoProvider/helpermethods";
 
 
 interface EditSingleFormelProps {
-    continueHandler: (index: number) => void;
-    backHandler: (index: number) => void;
+    backHandler: () => void;
     editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
@@ -378,7 +377,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
             console.log(usedFormulaAndApiData.current)
             fullDelete();
             setName('');
-            props.backHandler(1);
+            props.backHandler();
         } else {
             props.reportError('Fehler: In der Formel liegt ein Fehler vor!');
         }
@@ -501,7 +500,7 @@ export const EditSingleFormel: React.FC<EditSingleFormelProps> = (props) => {
                             </Grid>
                             <Grid item>
                                 <Button variant="contained"
-                                        onClick={() => props.backHandler(1)}
+                                        onClick={() => props.backHandler()}
                                         className={classes.delete}>
                                     abbrechen
                                 </Button>

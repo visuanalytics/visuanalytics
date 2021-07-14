@@ -296,5 +296,5 @@ class StepData(object):
         self.__data.pop("_key", None)
         self.__data.pop("_idx", None)
 
-    def __print_data(self):
+    def print_data(self):
         print("data:", self.__data)

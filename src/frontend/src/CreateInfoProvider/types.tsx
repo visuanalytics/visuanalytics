@@ -9,7 +9,7 @@ export type SelectedDataItem = {
     arrayValueType?: string;
 }
 
-// data type to save information about the selected schedule for historisation
+// data type to save information about the selected schedule for historization
 export type Schedule = {
     type: string;
     weekdays: number[];

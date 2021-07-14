@@ -65,6 +65,8 @@ export const VideoCreation = () => {
         {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
         {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
     ]);
+    // A list with all infoprovider-IDs which are selected for the tts. This is needed for the backend format
+    const [infoproviderIDs, setInfoproviderIDs] = React.useState<Array<number>>([]);
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -404,6 +406,9 @@ export const VideoCreation = () => {
             },
             body: JSON.stringify({
                 videojob_name: videoJobName,
+                sceneList: sceneList,
+                selectedInfoprovider: selectedInfoProvider,
+                tts_ids: infoproviderIDs,
                 images: createImagesObject(),
                 audio: {
                     audios: createAudiosObject()
@@ -452,6 +457,8 @@ export const VideoCreation = () => {
                         setMinimalInfoProvObjects={(objects: Array<MinimalInfoProvider>) => setMinimalInfoProvObjects(objects)}
                         reportError={(message: string) => reportError(message)}
                         fetchAllScenes={() => fetchAllScenes()}
+                        infoproviderIDs={infoproviderIDs}
+                        setInfoproviderIDs={setInfoproviderIDs}
                     />
                 )
             }
@@ -489,7 +496,7 @@ export const VideoCreation = () => {
         <StepFrame
             heading={"Video-Editor"}
             hintContent={null}
-            large={true}
+            large={"lg"}
         >
             {selectContent()}
             <CenterNotification

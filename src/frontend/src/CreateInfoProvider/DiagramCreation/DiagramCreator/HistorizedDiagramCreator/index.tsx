@@ -15,6 +15,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {getWeekdayString} from "../../../helpermethods";
 
 
 interface HistorizedDiagramCreatorProps {
@@ -206,28 +207,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
     }
 
 
-    /**
-     * Returns the string representation of a weekday.
-     * @param weekdayNumber The numeric representation of a weekday. (Should range from 0 to 6)
-     */
-    const getWeekdayString = (weekdayNumber: number) => {
-        switch (weekdayNumber) {
-            case 0:
-                return "Mo";
-            case 1:
-                return "Di";
-            case 2:
-                return "Mi";
-            case 3:
-                return "Do"
-            case 4:
-                return "Fr";
-            case 5:
-                return "Sa";
-            case 6:
-                return "So";
-        }
-    }
+
 
     /**
      * Uses the schedule object passed as property to check what interval was selected for the corresponding values and returns a displaying string.
@@ -291,6 +271,7 @@ export const HistorizedDiagramCreator: React.FC<HistorizedDiagramCreatorProps> =
                 }
             }
         }
+        //TODO: ??? what should happen here?
         return "TO BE DONE"
     }
 

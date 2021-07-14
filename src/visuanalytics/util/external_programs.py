@@ -1,7 +1,6 @@
 import sys
 from shutil import which
 
-
 def all_installed(programs: list):
     """Testet, ob alle Programme von der Liste installiert sind.
 

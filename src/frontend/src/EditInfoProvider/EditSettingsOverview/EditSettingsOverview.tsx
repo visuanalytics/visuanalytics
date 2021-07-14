@@ -266,7 +266,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                         </Grid>
                         <Grid item>
                             <Button variant="contained" color={"secondary"}
-                                    onClick={() => props.continueHandler(6)}>
+                                    onClick={() => props.continueHandler(5)}>
                                 Diagramme
                             </Button>
                         </Grid>

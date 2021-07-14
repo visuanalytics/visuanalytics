@@ -2,7 +2,7 @@ import React from "react";
 import {ArrayProcessing} from "../../CreateInfoProvider/DataCustomization/ArrayProcessing";
 import {
     ArrayProcessingData, DataSource,
-    Diagram,
+    Diagram, ListItemRepresentation,
     SelectedDataItem,
     StringReplacementData
 } from "../../CreateInfoProvider/types";
@@ -10,6 +10,7 @@ import {FormelObj} from "../../CreateInfoProvider/DataCustomization/CreateCustom
 import {StringProcessing} from "../../CreateInfoProvider/DataCustomization/StringProcessing";
 import {FormelContext} from "../types";
 import {EditCustomData} from "./EditCustomData/EditCustomData";
+import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleFormel";
 
 
 
@@ -25,6 +26,10 @@ interface EditDataCustomizationProps {
     selectedDataSource: number;
     infoProvDiagrams: Array<Diagram>;
     setInfoProvDiagrams: (array: Array<Diagram>) => void;
+    listItems: Array<ListItemRepresentation>
+    customData: Array<FormelObj>;
+    arrayProcessingsList: Array<ArrayProcessingData>;
+    stringReplacementList: Array<StringReplacementData>;
     setHistorizedData: (array: Array<string>) => void;
     setSelectedData: (array: Array<SelectedDataItem>) => void;
     setCustomData: (array: Array<FormelObj>) => void;
@@ -32,6 +37,7 @@ interface EditDataCustomizationProps {
     setStringReplacementList: (replacements: Array<StringReplacementData>) => void;
     finishEditing: () => void;
     checkForHistorizedData: () => void;
+    formel: FormelContext;
     setFormelInformation: (formelInformation: FormelContext) => void;
 }
 
@@ -70,7 +76,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
             case 1: {
                 return (
                     <EditCustomData
-                        continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
+                        continueHandler={(index) => props.setDataCustomizationStep(props.dataCustomizationStep + index)}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
                         stepToEditSingleFormel={(index) => props.continueHandler(index)}
                         editInfoProvider={props.finishEditing}
@@ -89,9 +95,26 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
             }
             case 2: {
                 return (
-                    <StringProcessing
-                        continueHandler={(index) => props.continueHandler(index)}
+                    <EditSingleFormel
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
+                        editInfoProvider={props.finishEditing}
+                        infoProvDataSources={props.infoProvDataSources}
+                        setInfoProvDataSources={(dataSources: Array<DataSource>) => props.setInfoProvDataSources(dataSources)}
+                        selectedDataSource={props.selectedDataSource}
+                        reportError={props.reportError}
+                        formel={props.formel}
+                        listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
+                        customData={props.infoProvDataSources[props.selectedDataSource].customData}
+                        arrayProcessingsList={props.infoProvDataSources[props.selectedDataSource].arrayProcessingsList}
+                        stringReplacementList={props.infoProvDataSources[props.selectedDataSource].stringReplacementList}
+                    />
+                )
+            }
+            case 3: {
+                return (
+                    <StringProcessing
+                        continueHandler={props.continueHandler}
+                        backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 2)}
                         reportError={props.reportError}
                         stringReplacementList={props.infoProvDataSources[props.selectedDataSource].stringReplacementList}
                         setStringReplacementList={props.setStringReplacementList}

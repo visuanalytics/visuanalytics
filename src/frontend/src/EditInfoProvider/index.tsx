@@ -9,8 +9,6 @@ import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview"
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
 import {StrArg} from "../CreateInfoProvider/DataCustomization/CreateCustomData/CustomDataGUI/formelObjects/StrArg";
-import {EditSingleFormel} from "./EditDataCustomization/EditCustomData/EditSingleFormel/EditSingleFormel";
-
 import {FormelContext/*, InfoProviderObj*/} from "./types";
 import {
     authDataDialogElement,
@@ -83,13 +81,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
     //holds the dataSources of the edited infoProvider
     //always gets the value from the sessionStorage, but if it is not defined (first entering), the data is fetched from the props
-    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ?  props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
+    const [infoProvDataSources, setInfoProvDataSources] = React.useState<Array<DataSource>>(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!));
     //Holds the values of apiKeyInput1 and apiKeyInput2 of each dataSource - map where dataSource name is the key
     const [infoProvDataSourcesKeys, setInfoProvDataSourcesKeys] = React.useState<Map<string, DataSourceKey>>(props.infoProvider !== undefined ? props.infoProvider.dataSourcesKeys : new Map<string, DataSourceKey>());
     /**
      * The array with diagrams from the Infoprovider that is being edited.
      */
-    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider!==undefined ? props.infoProvider.diagrams : new Array<Diagram>());
+    const [infoProvDiagrams, setInfoProvDiagrams] = React.useState(props.infoProvider !== undefined ? props.infoProvider.diagrams : new Array<Diagram>());
     /**
      * The index to select the right DataSource that is wanted to edit
      */
@@ -164,7 +162,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * Needs to run based on sessionStorage since it is called in the first render.
      */
     const authDialogNeeded = () => {
-        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>(): JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
+        const data: Array<DataSource> = sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? new Array<DataSource>() : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!)
         //const noKeyCurrent: boolean = sessionStorage.getItem("noKey-" + uniqueId)==="true";
         //will only trigger if the user has selected a method and noKey - this makes sure he already got to editStep 2 in the current datasource
         //const methodCurrent: string = sessionStorage.getItem("method-" + uniqueId)||"";
@@ -183,7 +181,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
-        if(sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
+        if (sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
             //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
             setInfoProvId(Number(sessionStorage.getItem("infoProvId-" + uniqueId) || 0));
@@ -303,8 +301,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         "Überblick",
         "API-Einstellungen",
         "API-Daten",
-        "Formeln",
-        "Einzelne Formel bearbeiten",
+        "Datenverarbeitung",
         "Historisierung",
         "Diagramme"
     ];
@@ -339,8 +336,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param name The name of the data source which should be checked for duplicate
      */
     const checkNameDuplicate = (name: string) => {
-        for(let i = 0; i < infoProvDataSources.length; i++) {
-            if(infoProvDataSources[i].apiName === name && i !== selectedDataSource) return true;
+        for (let i = 0; i < infoProvDataSources.length; i++) {
+            if (infoProvDataSources[i].apiName === name && i !== selectedDataSource) return true;
         }
         return false;
     }
@@ -719,7 +716,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         dateLabels: item.dateLabels,
                         plot: {
                             type: type,
-                            x: Array.from(Array(diagram.amount).keys()),
+                            x: item.intervalSizes,
                             y: item.name,
                             color: item.color,
                             dateFormat: item.dateFormat,
@@ -889,29 +886,31 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                 return (
                     <EditBasicSettings
                         continueHandler={(index: number) => handleContinue(index)}
-                       backHandler={(index: number) => handleBack(index)}
-                       checkNameDuplicate={checkNameDuplicate}
-                       query={infoProvDataSources[selectedDataSource].query}
-                       setQuery={setQuery}
-                       apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
-                       setApiKeyInput1={setApiKeyInput1}
-                       apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
-                       setApiKeyInput2={setApiKeyInput2}
-                       noKey={infoProvDataSources[selectedDataSource].noKey}
-                       setNoKey={setNoKey}
-                       method={infoProvDataSources[selectedDataSource].method}
-                       setMethod={setMethod}
-                       apiName={infoProvDataSources[selectedDataSource].apiName}
-                       setApiName={setApiName}
-                       reportError={reportError}
-                       setSelectedData={setSelectedData}
-                       setCustomData={setCustomData}
-                       setHistorizedData={setHistorizedData}
-                       setSchedule={setSchedule}
-                       setHistorySelectionStep={setHistorySelectionStep}
-                       diagrams={infoProvDiagrams}
-                       setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
-                       setListItems={(listItems: Array<ListItemRepresentation>) => {return}}
+                        backHandler={(index: number) => handleBack(index)}
+                        checkNameDuplicate={checkNameDuplicate}
+                        query={infoProvDataSources[selectedDataSource].query}
+                        setQuery={setQuery}
+                        apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
+                        setApiKeyInput1={setApiKeyInput1}
+                        apiKeyInput2={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput2}
+                        setApiKeyInput2={setApiKeyInput2}
+                        noKey={infoProvDataSources[selectedDataSource].noKey}
+                        setNoKey={setNoKey}
+                        method={infoProvDataSources[selectedDataSource].method}
+                        setMethod={setMethod}
+                        apiName={infoProvDataSources[selectedDataSource].apiName}
+                        setApiName={setApiName}
+                        reportError={reportError}
+                        setSelectedData={setSelectedData}
+                        setCustomData={setCustomData}
+                        setHistorizedData={setHistorizedData}
+                        setSchedule={setSchedule}
+                        setHistorySelectionStep={setHistorySelectionStep}
+                        diagrams={infoProvDiagrams}
+                        setDiagrams={(diagrams: Array<Diagram>) => setInfoProvDiagrams(diagrams)}
+                        setListItems={(listItems: Array<ListItemRepresentation>) => {
+                            return
+                        }}
                     />
                 )
             case 2:
@@ -932,13 +931,16 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         cleanDataSource={(newListItems: Array<ListItemRepresentation>) => cleanDataSource(newListItems)}
                         infoProvDataSources={infoProvDataSources}
                         selectedDataSource={selectedDataSource}
+                        dataCustomizationStep={dataCustomizationStep}
+                        setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                     />
                 );
             case 3:
                 return (
                     <EditDataCustomization
-                        continueHandler={(index: number) => handleContinue(index)}
-                        backHandler={(index: number) => handleBack(index)}
+
+                        continueHandler={() => handleContinue(1)}
+                        backHandler={() => handleBack(1)}
                         dataCustomizationStep={dataCustomizationStep}
                         setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
                         reportError={reportError}
@@ -948,6 +950,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         selectedDataSource={selectedDataSource}
                         infoProvDiagrams={infoProvDiagrams}
                         setInfoProvDiagrams={(array: Array<Diagram>) => setInfoProvDiagrams(array)}
+                        listItems={infoProvDataSources[selectedDataSource].listItems}
+                        customData={infoProvDataSources[selectedDataSource].customData}
+                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
+                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
                         setHistorizedData={(array: Array<string>) => setHistorizedData(array)}
                         setSelectedData={(array: Array<SelectedDataItem>) => setSelectedData(array)}
                         setCustomData={(array: Array<FormelObj>) => setCustomData(array)}
@@ -955,30 +961,15 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         setStringReplacementList={(replacements: Array<StringReplacementData>) => setStringReplacementList(replacements)}
                         finishEditing={finishEditing}
                         checkForHistorizedData={checkForHistorizedData}
+                        formel={formelInformation}
                         setFormelInformation={(formelInformation: FormelContext) => setFormelInformation(formelInformation)}
                     />
                 );
             case 4:
                 return (
-                    <EditSingleFormel
-                        continueHandler={(index: number) => handleContinue(index)}
-                        backHandler={(index: number) => handleBack(index)}
-                        editInfoProvider={finishEditing}
-                        infoProvDataSources={infoProvDataSources}
-                        setInfoProvDataSources={(dataSources: Array<DataSource>) => setInfoProvDataSources(dataSources)}
-                        selectedDataSource={selectedDataSource}
-                        reportError={reportError}
-                        formula={formelInformation}
-                        listItems={infoProvDataSources[selectedDataSource].listItems}
-                        customData={infoProvDataSources[selectedDataSource].customData}
-                        arrayProcessingsList={infoProvDataSources[selectedDataSource].arrayProcessingsList}
-                        stringReplacementList={infoProvDataSources[selectedDataSource].stringReplacementList}
-                    />
-                )
-            case 5:
-                return (
+
                     <HistorySelection
-                        continueHandler={() => setEditStep(6)}
+                        continueHandler={() => setEditStep(0)}
                         backHandler={() => setEditStep(3)}
                         selectedData={extractKeysFromSelection(infoProvDataSources[selectedDataSource].selectedData)}
                         customData={infoProvDataSources[selectedDataSource].customData}
@@ -996,7 +987,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         newDataSourceInEditMode={false}
                     />
                 )
-            case 6:
+            case 5:
                 return (
                     <Grid>
                         <DiagramCreation
