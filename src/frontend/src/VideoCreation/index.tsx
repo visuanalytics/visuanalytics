@@ -55,16 +55,9 @@ export const VideoCreation = () => {
     // list of all infoProvider objects selected by the user - reduced to the necessary minimum of information for the video creation
     const [minimalInfoProvObjects, setMinimalInfoProvObjects] = React.useState<Array<MinimalInfoProvider>>([]);
     // list of the names of all scenes available - holds the data fetched from the backend
-    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>(["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"]);
+    const [availableScenes, setAvailableScenes] = React.useState<Array<string>>([]);
     // sorted list of all scenes that are selected for the video
-    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([
-        {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
-        {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
-    ]);
+    const [sceneList, setSceneList] = React.useState<Array<SceneCardData>>([]);
 
     /**
      * Restores all data of the current session when the page is loaded. Used to not loose data on reloading the page.
@@ -89,16 +82,9 @@ export const VideoCreation = () => {
         //minimalInfoProvObjects
         setMinimalInfoProvObjects(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId) === null ? new Array<MinimalInfoProvider>() : JSON.parse(sessionStorage.getItem("minimalInfoProvObjects-" + uniqueId)!));
         //availableScenes
-        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? ["Szene_1", "Szene_2", "Szene_3", "Szene_4", "Szene_5", "Szene_6"] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
+        setAvailableScenes(sessionStorage.getItem("availableScenes-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("availableScenes-" + uniqueId)!));
         //sceneList
-        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [
-            {entryId: "Szene_1||0", sceneName: "Szene_1", exceedDisplayDuration: 1, spokenText: [{type: "text", text: "hallo"}, {type: "pause", duration: 5}, {type: "text", text: "Janek"}], visible: true},
-            {entryId: "Szene_2||0", sceneName: "Szene_2", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_3||0", sceneName: "Szene_3", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_4||0", sceneName: "Szene_4", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_5||0", sceneName: "Szene_5", exceedDisplayDuration: 1, spokenText: [], visible: true},
-            {entryId: "Szene_6||0", sceneName: "Szene_6", exceedDisplayDuration: 1, spokenText: [], visible: true},
-        ] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
+        setSceneList(sessionStorage.getItem("sceneList-" + uniqueId) === null ? [] : JSON.parse(sessionStorage.getItem("sceneList-" + uniqueId)!));
     }, [])
 
     //store videoCreationStep in sessionStorage
@@ -277,7 +263,7 @@ export const VideoCreation = () => {
         const data = jsonData as FetchAllScenesAnswer;
         const availableScenes: Array<string> = [];
         data.forEach((scene) => availableScenes.push(scene.scene_name));
-        //setAvailableScenes(availableScenes); //TODO: comment in once testing is done
+        setAvailableScenes(availableScenes);
         continueHandler();
     }
 
