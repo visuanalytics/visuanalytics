@@ -195,7 +195,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //backgroundImage - stores the index in the list of background images to recreate it
         const newImg = new window.Image();
         const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
-        newImg.src = backgroundImageList[index];
+        newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index]:"";
         setBackgroundImageIndex(index);
         setBackgroundImage(newImg);
         //backGroundType
