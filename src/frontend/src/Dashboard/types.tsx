@@ -21,8 +21,8 @@ export type answer = {
 }
 
 export type LogEntry = {
-    jobID: string;
-    jobName: string;
+    datasource_id: string;
+    datasource_name: string;
     state: string;
     errorMsg: string;
     errorTraceback: string;

@@ -69,9 +69,32 @@ export const InfoProviderOverview: React.FC = () => {
         severity: "error",
     });
 
+    const reportError = React.useCallback((message: string) => {
+        dispatchMessage({ type: "reportError", message: message });
+    }, []);
+
     //this static value will be true as long as the component is still mounted
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
+
+    /**
+     * Handles the error-message if an error appears.
+     * @param err the shown error
+     */
+    const handleErrorFetchAll = React.useCallback((err: Error) => {
+        //console.log('error');
+        reportError("Fehler beim Abrufen aller Infoprovider: " + err);
+    }, [reportError]);
+
+    /**
+     * Handles the success of the fetchAllInfoprovider()-method.
+     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
+     * @param jsonData the answer from the backend
+     */
+    const handleSuccessFetchAll = React.useCallback((jsonData: any) => {
+        const data = jsonData as fetchAllBackendAnswer;
+        setInfoProvider(data);
+    }, []);
 
     /**
      * Method to fetch all infoproviders from the backend.
@@ -107,7 +130,7 @@ export const InfoProviderOverview: React.FC = () => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorFetchAll(err)
         }).finally(() => clearTimeout(timer));
-    }, [])
+    }, [handleSuccessFetchAll, handleErrorFetchAll])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore
@@ -126,24 +149,6 @@ export const InfoProviderOverview: React.FC = () => {
         }, [fetchAllInfoprovider]
     );
 
-    /**
-     * Handles the error-message if an error appears.
-     * @param err the shown error
-     */
-    const handleErrorFetchAll = (err: Error) => {
-        //console.log('error');
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
-    }
-
-    /**
-     * Handles the success of the fetchAllInfoprovider()-method.
-     * The json from the response will be transformed to an array of jsonRefs and saved in infoprovider.
-     * @param jsonData the answer from the backend
-     */
-    const handleSuccessFetchAll = (jsonData: any) => {
-        const data = jsonData as fetchAllBackendAnswer;
-        setInfoProvider(data);
-    }
 
 
     //Requests all infoproviders from the backend that are saved in the database.
@@ -193,8 +198,7 @@ export const InfoProviderOverview: React.FC = () => {
      * @param err the shown error
      */
     const handleErrorDelete = (err: Error) => {
-        //console.log('error');
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+        reportError("Fehler beim Löschen eines Infoproviders: " + err);
     }
 
     /**
@@ -266,7 +270,7 @@ export const InfoProviderOverview: React.FC = () => {
      */
     const handleErrorEdit = (err: Error) => {
         //console.log('error');
-        dispatchMessage({type: "reportError", message: 'Fehler: ' + err});
+        reportError("Fehler beim Laden eines Infoproviders zur Editierung: " + err);
     }
 
     const editInfoProvider = useCallFetch("/visuanalytics/infoprovider/" + currentEditId, {
@@ -313,6 +317,7 @@ export const InfoProviderOverview: React.FC = () => {
                                 infoprovider={infoprovider}
                                 handleDeleteButton={(data: jsonRef) => handleDeleteButton(data)}
                                 handleEditButton={(data: jsonRef) => handleEditButton(data)}
+                                reportError={(message: string) => reportError(message)}
                             />
                         </Box>
                     </Grid>

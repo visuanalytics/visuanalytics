@@ -12,6 +12,7 @@ interface InfoProviderListProps {
     infoprovider: Array<jsonRef>;
     handleDeleteButton: (data: jsonRef) => void;
     handleEditButton: (data: jsonRef) => void;
+    reportError: (message: string) => void;
 }
 
 
@@ -95,10 +96,13 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
             </List>
             {showLogDialog &&
                 <LogDialog
-                    infoproviderID={selectedInfoproviderID}
-                    infoproviderName={selectedInfoproviderName}
+                    objectId={selectedInfoproviderID}
+                    objectName={selectedInfoproviderName}
+                    objectType={"infoprovider"}
                     showLogDialog={showLogDialog}
-                    setShowLogDialog={setShowLogDialog}/>
+                    setShowLogDialog={setShowLogDialog}
+                    reportError={props.reportError}
+                />
             }
         </React.Fragment>
     );
