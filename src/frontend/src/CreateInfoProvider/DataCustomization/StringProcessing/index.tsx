@@ -18,7 +18,7 @@ import {FormelObj} from "../CreateCustomData/CustomDataGUI/formelObjects/FormelO
 
 
 interface StringProcessingProps {
-    continueHandler: () => void;
+    continueHandler: (index: number) => void;
     backHandler: () => void;
     reportError: (message: string) => void;
     stringReplacementList: Array<StringReplacementData>;
@@ -243,13 +243,13 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
     return (
         <StepFrame
-            heading="String-Verarbeitung"
+            heading="String-Ersetzungen"
             hintContent={null}
         >
             <Grid container justify="space-between">
                 <Grid item xs={12}>
                     <Typography variant="body1">
-                        Eine String-Verarbeitung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen:
+                        Eine String-Ersetzung kann erstellt werden, indem man einen String aus der Liste auswählt und festlegt, welche Zeichenketten auf welche Art und Weise ersetzt werden sollen:
                     </Typography>
                 </Grid>
                 <Grid item container xs={12} md={8} justify="space-between" style={{height: "100%"}}>
@@ -323,7 +323,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                         </Button>
                     </Grid>
                     <Grid item >
-                        <Button variant="contained" size="large" color="primary" onClick={props.continueHandler}>
+                        <Button variant="contained" size="large" color="primary" onClick={() => props.continueHandler(2)}>
                             weiter
                         </Button>
                     </Grid>

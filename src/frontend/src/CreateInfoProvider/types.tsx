@@ -155,7 +155,7 @@ export type testDataBackendAnswer = {
  */
 export type ListItemRepresentation = {
     keyName: string;
-    value: any;
+    value: string|Array<ListItemRepresentation>;
     parentKeyName: string;
     arrayRep: boolean;
     arrayLength: number;
@@ -239,4 +239,8 @@ export type StringReplacementData = {
     string: string;
     replace: string;
     with: string;
+}
+
+export type BackenFormula = {
+
 }

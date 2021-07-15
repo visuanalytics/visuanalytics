@@ -12,6 +12,7 @@ export type FormelContext = {
     opFlag: boolean;
     leftParenFlag: boolean;
     rightParenFlag: boolean;
+    usedFormulaAndApiData: Array<string>;
 }
 
 export type Schedule = {

@@ -38,11 +38,12 @@ interface EditSettingsOverviewProps {
     setInfoProvDiagrams: (diagrams: Array<Diagram>) => void;
     infoProvDataSourcesKeys: Map<string, DataSourceKey>
     setInfoProvDataSourcesKeys: (keys: Map<string, DataSourceKey>) => void;
+    submitInfoProviderDisabled: boolean;
 }
 
 export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props) => {
 
-    console.log(props.infoProvDataSources);
+    //console.log(props.infoProvDataSources);
 
     const classes = useStyles();
 
@@ -55,6 +56,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
     //holds the name of all diagrams that need to be removed when deleting the current selection
     const [diagramsToRemove, setDiagramsToRemove] = React.useState<Array<string>>([]);
+
     /**
      * Handler method for clicking the delete data source button.
      * Gets the currently selected datasource by the selectedDataSource state and checks if deleting it
@@ -130,7 +132,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
     const renderListItem = (item: string) => {
         return (
             <ListItem key={item} divider={true}>
-                <ListItemText primary={item} secondary={null}/>
+                <ListItemText className={classes.wrappedText} primary={item} secondary={null}/>
             </ListItem>
         )
     }
@@ -162,7 +164,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
             heading={'Bearbeiten eines Infoproviders:'}
             hintContent={"Überblick"}>
             <Grid container justify={"space-evenly"}>
-                <Grid container justify="space-evenly" className={classes.elementLargeMargin}>
+                <Grid container justify="space-between" className={classes.elementLargeMargin}>
                     <Grid item xs={12}>
                         <TextField fullWidth margin={"normal"} variant={"outlined"} color={"primary"}
                                    label={"Info-Provider Name"}
@@ -170,11 +172,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                    onChange={event => (props.setInfoProvName(event.target.value.replace(' ', '_')))}>
                         </TextField>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Typography variant="body1">
-                            Übersicht über ausgewählte Daten
-                        </Typography>
-                        <Grid item className={classes.elementLargeMargin}>
+                    <Grid item xs={12} md={6} className={classes.elementLargeMargin}>
+                        <Grid item className={classes.blockableButtonDelete}>
                             <Button disabled={props.infoProvDataSources.length <= 1} variant="contained" size="large" className={classes.redDeleteButton} onClick={deleteDataSourceHandler}>
                                 Datenquelle Löschen
                             </Button>
@@ -188,7 +187,7 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item container xs={12} md={5} className={classes.elementLargeMargin}>
+                    <Grid item container xs={12} md={6} className={classes.elementLargeMargin}>
                         <Grid item xs={12}>
                             <Typography variant="h5">
                                 Daten und Formeln
@@ -246,8 +245,8 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                 Abbrechen
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button variant="contained" color={"secondary"}
+                        <Grid item className={classes.blockableButtonSecondary}>
+                            <Button disabled={props.submitInfoProviderDisabled} variant="contained" color={"secondary"}
                                     onClick={() => props.editInfoProvider()}>
                                 Speichern
                             </Button>
@@ -309,15 +308,15 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                 }, 200);
             }} aria-labelledby="deleteDialog-title"
                     open={deleteDialogOpen}>
-                <DialogTitle id="deleteDialog-title">
+                <DialogTitle id="deleteDialog-title" className={classes.wrappedText}>
                     Löschen von "{props.infoProvDataSources[props.selectedDataSource].apiName}" bestätigen
                 </DialogTitle>
                 <DialogContent dividers>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Die Datenquelle "{props.infoProvDataSources[props.selectedDataSource].apiName}" wird unwiderruflich gelöscht.
                     </Typography>
                     { diagramsToRemove.length > 0 &&
-                    <Typography gutterBottom>
+                    <Typography gutterBottom className={classes.wrappedText}>
                         Das Löschen der Datenquelle wird außerdem alle Diagramme löschen, die diese Datenquelle nutzen.<br/><br/><br/>Folgende Diagramme sind betroffen: <strong>{diagramsToRemove.join(", ")}</strong>
                     </Typography>
                     }

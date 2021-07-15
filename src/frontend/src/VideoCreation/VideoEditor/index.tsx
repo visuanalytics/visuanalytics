@@ -63,7 +63,7 @@ export const VideoEditor: React.FC<VideoEditorProps> = (props) => {
         return (
             <ListItem key={name}>
                 <ListItemText>
-                    <Typography variant="body1">
+                    <Typography variant="body1" className={classes.wrappedText}>
                         {name}
                     </Typography>
                 </ListItemText>

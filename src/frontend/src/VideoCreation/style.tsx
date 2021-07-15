@@ -98,6 +98,12 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         infoProvNameTitle: {
             marginTop: "0.5rem"
+        },
+        wrappedText: {
+            overflowWrap: "break-word",
+        },
+        sceneCard: {
+            width: "300px"
         }
     }),
 );

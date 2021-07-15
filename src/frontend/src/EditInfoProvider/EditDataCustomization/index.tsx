@@ -15,8 +15,8 @@ import {EditSingleFormel} from "./EditCustomData/EditSingleFormel/EditSingleForm
 
 
 interface EditDataCustomizationProps {
-    continueHandler: () => void;
-    backHandler: () => void;
+    continueHandler: (index: number) => void;
+    backHandler: (index: number) => void;
     dataCustomizationStep: number;
     setDataCustomizationStep: (step: number) => void;
     reportError: (message: string) => void;
@@ -57,7 +57,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                 return (
                     <ArrayProcessing
                         continueHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep + 1)}
-                        backHandler={props.backHandler}
+                        backHandler={(index: number) => props.backHandler(index)}
                         reportError={props.reportError}
                         arrayProcessingsList={props.infoProvDataSources[props.selectedDataSource].arrayProcessingsList}
                         setArrayProcessingsList={props.setArrayProcessingsList}
@@ -78,6 +78,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                     <EditCustomData
                         continueHandler={(index) => props.setDataCustomizationStep(props.dataCustomizationStep + index)}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
+                        stepToEditSingleFormel={(index) => props.continueHandler(index)}
                         editInfoProvider={props.finishEditing}
                         infoProvDataSources={props.infoProvDataSources}
                         setInfoProvDataSources={props.setInfoProvDataSources}
@@ -87,6 +88,8 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                         infoProvName={props.infoProvName}
                         infoProvDiagrams={props.infoProvDiagrams}
                         setInfoProvDiagrams={props.setInfoProvDiagrams}
+                        setHistorizedData={props.setHistorizedData}
+                        setCustomData={props.setCustomData}
                     />
                 )
             }
@@ -99,7 +102,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                         setInfoProvDataSources={(dataSources: Array<DataSource>) => props.setInfoProvDataSources(dataSources)}
                         selectedDataSource={props.selectedDataSource}
                         reportError={props.reportError}
-                        formel={props.formel}
+                        formula={props.formel}
                         listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
                         customData={props.infoProvDataSources[props.selectedDataSource].customData}
                         arrayProcessingsList={props.infoProvDataSources[props.selectedDataSource].arrayProcessingsList}

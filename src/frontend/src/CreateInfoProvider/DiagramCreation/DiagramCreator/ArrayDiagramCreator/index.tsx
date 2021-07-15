@@ -202,13 +202,13 @@ export const ArrayDiagramCreator: React.FC<ArrayDiagramCreatorProps> = (props) =
     };
 
     /**
-     * Renders an item to be displayed in the list of numeric attributes.
+     * Renders an item to be displayed in the lists of numeric attributes and string attributes.
      * @param item The item to be displayed
      * Will not display the full path since the names are unique within one object.
      */
     const renderAttributeListItem = (item: ListItemRepresentation) => {
         return (
-            <FormControlLabel value={item.keyName} control={
+            <FormControlLabel className={classes.wrappedLabel} value={item.keyName} control={
                 <Radio
                 />
             } label={item.keyName} key={item.keyName}

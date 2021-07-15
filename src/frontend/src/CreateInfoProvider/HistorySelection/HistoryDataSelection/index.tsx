@@ -181,7 +181,6 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
             console.log("new: " + props.historizedData.includes(data));
         }
         //console.log(props.selectedData.values().next())
-        props.selectSchedule({type: "", interval: "", time: "", weekdays: []});
     };
 
 
@@ -200,7 +199,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                         label={''}
                     />
                 </ListItemIcon>
-                <ListItemText
+                <ListItemText className={classes.wrappedText}
                     primary={item}
                     secondary={null}
                 />
@@ -291,7 +290,7 @@ export const HistoryDataSelection: React.FC<HistoryDataSelectionProps> = (props)
                     <Typography gutterBottom>
                         Durch das Abwählen einiger Daten müssen Diagramme gelöscht werden, die diese Daten nutzen.
                     </Typography>
-                    <Typography gutterBottom>
+                    <Typography gutterBottom >
                         {diagramsToRemove.length > 0 ? "Folgende Diagramme sind betroffen: " + diagramsToRemove.join(", ") : ""}
                     </Typography>
                 </DialogContent>

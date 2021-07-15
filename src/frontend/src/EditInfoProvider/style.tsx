@@ -95,5 +95,28 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        blockableButtonDelete: {
+            '& .Mui-disabled': {
+                backgroundColor: theme.palette.error.main,
+                opacity: "60%"
+            }
+        },
+        processingListingText: {
+            overflowWrap: "break-word",
+            paddingLeft: "0.8rem",
+            paddingTop: "0.6rem"
+        },
+        wrappedText: {
+            overflowWrap: "break-word",
+        },
+        overflowButtonText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "left"
+        },
+        customDataSelectionTitle: {
+            marginTop: "0.5rem",
+            marginLeft: "1.5rem"
+        },
     }),
 );
