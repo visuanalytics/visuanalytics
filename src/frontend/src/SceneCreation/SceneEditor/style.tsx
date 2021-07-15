@@ -286,6 +286,11 @@ export const useStyles = makeStyles((theme: Theme) =>
         imageInList: {
             height: "120px",
             width: "100%"
-        }
+        },
+        overflowButtonText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            textAlign: "left"
+        },
     })
 );

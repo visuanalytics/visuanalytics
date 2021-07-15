@@ -1785,8 +1785,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const renderListItem = (item: string) => {
         return (
             <ListItem key={item}>
-                <Button onClick={() => handleItemSelect(item, false)}>
-                    {item}
+                <Button onClick={() => handleItemSelect(item, false)} >
+                    <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
         )
@@ -1820,7 +1820,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         return (
             <ListItem key={item}>
                 <Button onClick={() => handleClickOnHistorized(item, interval)}>
-                    {item}
+                    <span className={classes.overflowButtonText}>{item}</span>
                 </Button>
             </ListItem>
         )
@@ -2494,7 +2494,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <React.Fragment>
                                 <Grid item xs={12} className={classes.elementLargeMargin}>
                                     <Typography variant={"h4"} align={"center"}>
-                                        Arrayverarbeitungen
+                                        Array-Verarbeitungen
                                     </Typography>
                                     <br/>
                                 </Grid>
@@ -2530,7 +2530,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                             <React.Fragment>
                                 <Grid item xs={12} className={classes.elementLargeMargin}>
                                     <Typography variant={"h4"} align={"center"}>
-                                        Stringersetzungen
+                                        String-Ersetzungen
                                     </Typography>
                                     <br/>
                                 </Grid>
