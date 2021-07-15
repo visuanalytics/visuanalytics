@@ -243,7 +243,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
 
     return (
         <StepFrame
-            heading="Array-Verarbeitung"
+            heading="String-Verarbeitung"
             hintContent={null}
         >
             <Grid container justify="space-between">

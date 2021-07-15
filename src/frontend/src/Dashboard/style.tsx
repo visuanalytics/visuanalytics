@@ -32,6 +32,16 @@ export const useStyles = makeStyles((theme: Theme) =>
             height: "70px",
             marginTop: "2px"
         },
+        videoBorder: {
+            width: "90%",
+            minHeight: "60px",
+            borderColor: theme.palette.error.dark,
+            backgroundColor: theme.palette.primary.main,
+            color: "#FFFFFF",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+        },
         tab: {
             width: "80%",
             backgroundColor: theme.palette.primary.light,
@@ -46,7 +56,7 @@ export const useStyles = makeStyles((theme: Theme) =>
             }
         },
         tabs: {
-           height: 75
+            height: 75
         },
         settings: {
             width: "100%",
@@ -74,6 +84,12 @@ export const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: theme.palette.error.dark,
             }
         },
+        showVideo: {
+            backgroundColor: theme.palette.primary.main,
+            color: "#FFFFFF",
+            width: "100%",
+            justifyContent: "center"
+        },
         infoProvName: {
             margin: "auto"
         },
@@ -95,6 +111,13 @@ export const useStyles = makeStyles((theme: Theme) =>
         logMessageTableCell: {
             maxWidth: '1em',
             overflowWrap: "break-word"
-        }
+        },
+        listFrameScenes: {
+            width: "100%",
+            height: 400,
+            marginTop: "20px",
+            marginBottom: "10px",
+            overflow: 'auto'
+        },
     }),
 );
