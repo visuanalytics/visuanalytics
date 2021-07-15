@@ -77,18 +77,22 @@ export const useStyles = makeStyles((theme: Theme) =>
             }
         },
         delete: {
+            width: "100%",
             backgroundColor: theme.palette.error.main,
+            justifyContent: "flex-start",
             color: "#FFFFFF",
-            marginLeft: 20,
             '&:hover': {
                 backgroundColor: theme.palette.error.dark,
             }
         },
         showVideo: {
+            width: "100%",
             backgroundColor: theme.palette.primary.main,
             color: "#FFFFFF",
-            width: "100%",
-            justifyContent: "center"
+            justifyContent: "flex-start",
+            '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+            }
         },
         infoProvName: {
             margin: "auto"
@@ -119,5 +123,14 @@ export const useStyles = makeStyles((theme: Theme) =>
             marginBottom: "10px",
             overflow: 'auto'
         },
+        wrappedItemText: {
+            overflowWrap: "break-word",
+            width: "100%",
+            padding: "10px",
+            textAlign: "center"
+        },
+        logIconTopMargin: {
+            marginTop: "0.28em"
+        }
     }),
 );

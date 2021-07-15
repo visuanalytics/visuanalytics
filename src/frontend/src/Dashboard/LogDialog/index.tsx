@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {useStyles} from "../../../style";
+import {useStyles} from "../style";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -9,7 +9,7 @@ import {
     DialogContent,
     DialogTitle, TableHead
 } from "@material-ui/core";
-import {LogEntry} from "../../../types";
+import {LogEntry} from "../types";
 import TableContainer from "@material-ui/core/TableContainer";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -171,7 +171,7 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
                     <Grid container>
                         <Grid item xs={12}>
                             <Typography variant="body1" className={classes.wrappedText}>
-                                Hier können Sie die Log-Daten für den Infoprovider "{props.objectName}" einsehen.
+                                Hier können Sie die Log-Daten für den {props.objectType==="infoprovider"?"Infoprovider":"Videojob"} "{props.objectName}" einsehen.
                             </Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -181,7 +181,7 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Nr.</TableCell>
-                                            <TableCell>Datenquelle</TableCell>
+                                            <TableCell>{props.objectType==="infoprovider"?"Datenquelle":"Videojob"}</TableCell>
                                             <TableCell>Status</TableCell>
                                             <TableCell>Nachricht</TableCell>
                                             <TableCell>Dauer</TableCell>
