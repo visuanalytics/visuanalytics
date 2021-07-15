@@ -102,7 +102,7 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                         setInfoProvDataSources={(dataSources: Array<DataSource>) => props.setInfoProvDataSources(dataSources)}
                         selectedDataSource={props.selectedDataSource}
                         reportError={props.reportError}
-                        formel={props.formel}
+                        formula={props.formel}
                         listItems={props.infoProvDataSources[props.selectedDataSource].listItems}
                         customData={props.infoProvDataSources[props.selectedDataSource].customData}
                         arrayProcessingsList={props.infoProvDataSources[props.selectedDataSource].arrayProcessingsList}
