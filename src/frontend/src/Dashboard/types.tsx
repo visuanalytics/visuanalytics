@@ -27,6 +27,17 @@ export type answer = {
     err_msg: string;
 }
 
+
+export type LogEntry = {
+    datasource_id: string;
+    datasource_name: string;
+    state: string;
+    errorMsg: string;
+    errorTraceback: string;
+    duration: string;
+    startTime: string;
+}
+
 /**
  * Data type representing a scene as it was sent from the backend.
  */
