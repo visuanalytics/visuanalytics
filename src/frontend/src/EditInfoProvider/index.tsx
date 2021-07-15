@@ -615,7 +615,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const handleErrorPostInfoProvider = React.useCallback((err: Error) => {
         setSubmitInfoProviderDisabled(false);
         reportError("Fehler: Senden des Info-Providers an das Backend fehlgeschlagen! (" + err.message + ")");
-    }, []);
+    }, [reportError]);
 
 
     //TODO: find out why this method is called too often
@@ -775,13 +775,14 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     //used to check if handling of a fetch request should still take place or if the component is not used anymore
     const isMounted = useRef(true);
 
+
     /**
      * Method to send a diagram to the backend for testing.
      * The standard hook "useCallFetch" is not used here since it seemingly caused method calls on each render.
      */
     const postInfoProvider = React.useCallback(() => {
         //("fetcher called");
-        let url = "visuanalytics/infoprovider/" + props.infoProvId
+        let url = "visuanalytics/infoprovider/" + infoProvId
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -814,7 +815,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleErrorPostInfoProvider(err)
         }).finally(() => clearTimeout(timer));
-    }, [createBackendDiagrams, createDataSources, infoProvDiagrams, getArraysUsedByDiagrams, handleErrorPostInfoProvider, handleSuccessPostInfoProvider, infoProvName])
+    }, [infoProvId, createBackendDiagrams, createDataSources, infoProvDiagrams, getArraysUsedByDiagrams, handleErrorPostInfoProvider, handleSuccessPostInfoProvider, infoProvName])
 
     //defines a cleanup method that sets isMounted to false when unmounting
     //will signal the fetchMethod to not work with the results anymore

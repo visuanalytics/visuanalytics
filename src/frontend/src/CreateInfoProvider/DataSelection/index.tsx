@@ -35,8 +35,6 @@ interface DataSelectionProps {
 export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
     const classes = useStyles();
 
-    //a local variable is used since it will be reset to zero when re-rendering, this behavior is wanted
-    let indexCounter = 0
     //save the value selectedData on loading to compare if any deletions were made
     const [oldSelectedData] = React.useState(props.selectedData);
     //save the formulas that need to be removed
@@ -357,7 +355,6 @@ export const DataSelection: React.FC<DataSelectionProps>  = (props) => {
      * Currently doesnt display a checkbox for parents, option to be added
      */
     const renderListItem = (data: ListItemRepresentation, level = 0) => {
-        indexCounter++;
         const xsSize = level>0?11:12;
         if(Array.isArray(data.value)) {
             //object or array with same_type===true

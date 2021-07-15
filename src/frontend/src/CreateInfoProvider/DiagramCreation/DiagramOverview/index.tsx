@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import {Diagram, diagramType, Plots} from "../../types";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Box from "@material-ui/core/Box";
 import {Dialog, DialogActions, DialogContent, DialogTitle, ListItemSecondaryAction} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
