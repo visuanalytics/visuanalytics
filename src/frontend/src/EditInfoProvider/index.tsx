@@ -603,9 +603,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * @param jsonData The JSON-object delivered by the backend
      */
     const handleSuccessPostInfoProvider = React.useCallback((jsonData: any) => {
-        clearSessionStorage();
         setSubmitInfoProviderDisabled(false);
-        components?.setCurrent("dashboard")
+        components?.setCurrent("dashboard");
+        clearSessionStorage();
     }, [components]);
 
     /**
