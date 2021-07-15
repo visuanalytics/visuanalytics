@@ -54,12 +54,12 @@ export const DiagramList: React.FC<DiagramListProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showDiagrams &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
+                    <IconButton aria-label="Diagramm-Liste ausklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showDiagrams &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
+                    <IconButton aria-label="Diagramm-Liste einklappen" onClick={() => setShowDiagrams(!showDiagrams)}>
                         <ExpandLess/>
                     </IconButton>
                     }

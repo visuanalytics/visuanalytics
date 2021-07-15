@@ -78,13 +78,13 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showBackgroundImages &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen"
+                    <IconButton aria-label="Hintergrundbilder-Liste ausklappen"
                                 onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showBackgroundImages &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen"
+                    <IconButton aria-label="Hintergrundbilder-Liste einklappen"
                                 onClick={() => setShowBackgroundImages(!showBackgroundImages)}>
                         <ExpandLess/>
                     </IconButton>
@@ -133,12 +133,12 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                 </Grid>
                 <Grid item xs={2}>
                     {!showImages &&
-                    <IconButton aria-label="Infoprovider-Daten ausklappen" onClick={() => setShowImages(!showImages)}>
+                    <IconButton aria-label="Bilder-Liste ausklappen" onClick={() => setShowImages(!showImages)}>
                         <ExpandMore/>
                     </IconButton>
                     }
                     {showImages &&
-                    <IconButton aria-label="Infoprovider-Daten einklappen" onClick={() => setShowImages(!showImages)}>
+                    <IconButton aria-label="Bilder-Liste einklappen" onClick={() => setShowImages(!showImages)}>
                         <ExpandLess/>
                     </IconButton>
                     }
