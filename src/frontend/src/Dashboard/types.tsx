@@ -36,6 +36,7 @@ export type LogEntry = {
     errorTraceback: string;
     duration: string;
     startTime: string;
+}
 
 /**
  * Data type representing a scene as it was sent from the backend.
