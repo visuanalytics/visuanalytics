@@ -208,32 +208,43 @@ export const EditSettingsOverview: React.FC<EditSettingsOverviewProps> = (props)
                                 Zu historisierende Daten
                             </Typography>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}
-                                 className={classes.smallListFrame}>
-                                <List disablePadding={true}>
-                                    {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
-                                </List>
-                            </Box>
-                        </Grid>
-                        {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
-                        <Grid item xs={12}>
-                            <Typography variant="h6">
-                                Historisierungszeiten
-                            </Typography>
-                        </Grid>
-                        }
-                        <Grid item xs={12}>
-                            <Box borderColor="primary.main" border={4} borderRadius={5}
-                                 className={classes.smallListFrame}>
+                        { props.infoProvDataSources[props.selectedDataSource].historizedData.length > 0 &&
+                            <React.Fragment>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.smallListFrame}>
+                                        <List disablePadding={true}>
+                                            {props.infoProvDataSources[props.selectedDataSource].historizedData.map((item: string) => renderListItem(item))}
+                                        </List>
+                                    </Box>
+                                </Grid>
                                 {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
                                 <Grid item xs={12}>
-                                    <ScheduleTypeTable
-                                        schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
+                                    <Typography variant="h6">
+                                        Historisierungszeiten
+                                    </Typography>
                                 </Grid>
                                 }
-                            </Box>
-                        </Grid>
+                                <Grid item xs={12}>
+                                    <Box borderColor="primary.main" border={4} borderRadius={5}
+                                         className={classes.smallListFrame}>
+                                        {props.infoProvDataSources[props.selectedDataSource].schedule.type !== "" &&
+                                        <Grid item xs={12}>
+                                            <ScheduleTypeTable
+                                                schedule={props.infoProvDataSources[props.selectedDataSource].schedule}/>
+                                        </Grid>
+                                        }
+                                    </Box>
+                                </Grid>
+                            </React.Fragment>
+                        }
+                        {  props.infoProvDataSources[props.selectedDataSource].historizedData.length === 0 &&
+                            <Grid item xs={12}>
+                                <Typography variant="body1">
+                                    Es wurden für diese Datenquelle keine Daten zur Historisierung ausgewählt.
+                                </Typography>
+                            </Grid>
+                        }
                     </Grid>
 
 
