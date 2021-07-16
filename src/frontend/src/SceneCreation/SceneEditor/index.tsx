@@ -1129,7 +1129,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     x: parseInt(localX.toFixed(0)),
                     y: parseInt(localY.toFixed(0)),
                     id: 'line-' + itemCounter.toString(),
-                    color: "black",
+                    color: "#000000",
                     strokeWidth: 10,
                     rotation: 0,
                     width: 100,
@@ -1526,19 +1526,27 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         // apply the changes
         const localItems = items.slice();
         const index = items.indexOf(selectedObject);
+        let scaleX = absTrans.x;
+        let scaleY = absTrans.y;
+        if (absTrans.x > 960 / selectedObject.width){
+            scaleX = (960 - selectedObject.x) / selectedObject.width;
+        }
+        if (absTrans.y > 540 / selectedObject.height){
+            scaleY = (540 - selectedObject.y) / selectedObject.height
+        }
         localItems[index] = {
             ...selectedObject,
             x: parseInt((absPos.x).toFixed(0)),
             y: parseInt((absPos.y).toFixed(0)),
-            scaleX: absTrans.x,
-            scaleY: absTrans.y,
+            scaleX: scaleX,
+            scaleY: scaleY,
             rotation: absRot,
         };
         setSelectedObject(localItems[index]);
         setItems(localItems);
         currentItemRotation.current = absRot;
-        currentItemScaleX.current = absTrans.x;
-        currentItemScaleY.current = absTrans.y;
+        currentItemScaleX.current = scaleX;
+        currentItemScaleY.current = scaleY;
         currentItemX.current = parseInt((absPos.x).toFixed(0));
         currentItemY.current = parseInt((absPos.y).toFixed(0));
         setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
