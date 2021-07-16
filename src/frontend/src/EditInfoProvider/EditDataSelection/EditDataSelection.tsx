@@ -70,7 +70,8 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     //checking is only necessary if the arrayObject is from this api
                     if(arrayObject.listItem.parentKeyName.split("|")[0]===props.dataSource.apiName) {
                         //construct the keyName without the dataSource and the pipe at the beginning and check if it is contained in the lisItems
-                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName)) return false;
+                        //also appends "|0" since it will be contained in the list of names fetched from the dataSource
+                        if(!listItemsNames.includes(arrayObject.listItem.parentKeyName.substring(props.dataSource.apiName.length + 1) + arrayObject.listItem.keyName + "|0")) return false;
                     }
                 }
             }
