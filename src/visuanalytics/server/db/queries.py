@@ -118,6 +118,7 @@ def insert_infoprovider(infoprovider):
         formulas = copy.deepcopy(datasource["formulas"])
         custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
         transform_step = _generate_transform(_extend_formula_keys(formulas, datasource["datasource_name"], custom_keys), remove_toplevel_key(transform_step))
+        print("transform", transform_step)
         transform_step += remove_toplevel_key(datasource["replacements"])
 
     datasources_copy = deepcopy(infoprovider["datasources"])
@@ -256,8 +257,6 @@ def insert_video_job(video, update=False, job_id=None):
             tts_names.append(tts_name)
     infoprovider_names = video["infoprovider_names"] + tts_names
 
-    print("unupdated names", video["infoprovider_names"])
-    print("all names", infoprovider_names)
     # Daten aller verwendeten Infoprovider sammeln und kombinieren
     for infoprovider_name in infoprovider_names:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:
@@ -265,7 +264,6 @@ def insert_video_job(video, update=False, job_id=None):
         # print("loaded infoprovider:", infoprovider)
 
         datasource_files = [x for x in os.listdir(get_datasource_path("")) if x.startswith(infoprovider_name + "_")]
-        print("datasource_files:", datasource_files)
         for file in datasource_files:
             with open_resource(_get_datasource_path(file.replace(".json", ""))) as f:
                 datasource_config = json.load(f)
@@ -566,7 +564,8 @@ def update_infoprovider(infoprovider_id, updated_data):
     new_transform = []
     for datasource in datasources:
         new_transform += datasource["calculates"]
-        new_transform += _generate_transform(remove_toplevel_key(datasource["formulas"]), remove_toplevel_key(datasource["transform"]))
+        custom_keys = extract_custom_keys(datasource["calculates"], datasource["formulas"], datasource["replacements"])
+        new_transform = _generate_transform(_extend_formula_keys(datasource["formulas"], datasource["datasource_name"], custom_keys), remove_toplevel_key(new_transform))
         new_transform += datasource["replacements"]
 
     datasources_copy = deepcopy(updated_data["datasources"])
@@ -582,7 +581,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"name": updated_data["infoprovider_name"]})
     infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
-    infoprovider_json.update({"images": updated_data["diagrams"]})
+    infoprovider_json.update({"images": deepcopy(updated_data["diagrams"])})
     infoprovider_json.update({"datasources": datasources_copy})
 
     shutil.rmtree(os.path.join(TEMP_LOCATION, old_infoprovider_name), ignore_errors=True)
@@ -798,7 +797,7 @@ def get_all_videojobs():
             "videojob_name": job["job_name"]
         } for job in jobs]
     except Exception as e:
-        print(str(e))
+        # (str(e))
         return None
 
 
@@ -1115,9 +1114,7 @@ def get_scene_image_file(image_id):
     con = db.open_con_f()
     res = con.execute("SELECT * FROM image WHERE image_id=?", [image_id]).fetchone()
     con.commit()
-    print(res["image_name"], res["folder"])
-    image_data = res["image_name"].rsplit(".", 1)
-    return get_image_path(image_data[0], res["folder"], image_data[1]) if res is not None else None
+    return get_image_path(res["image_name"].rsplit(".", 1)[0], res["folder"], res["image_name"].rsplit(".", 1)[1]) if res is not None else None
 
 
 def get_image_list(folder):
@@ -1508,7 +1505,7 @@ def _remove_unused_memory(datasource_names, infoprovider_name):
     datasource_memory_dirs = list(map(lambda x: x.split("\\")[-1].replace(pre, ""), dirs))
     # print("datasource_memory_dirs:", datasource_memory_dirs)
     for index, dir in enumerate(dirs):
-        print(dir, datasource_memory_dirs[index] in datasource_names)
+        # print(dir, datasource_memory_dirs[index] in datasource_names)
         if not datasource_memory_dirs[index] in datasource_names:
             shutil.rmtree(dir, ignore_errors=True)
 

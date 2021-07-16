@@ -25,7 +25,7 @@ def storing(values: dict, data: StepData):
         for value in values["storing"]:
             new_data = _remove_keys(value, data, data.get_data(value["key"], values))
             name = data.format(value["name"])
-            if value.get("safe_only_on_change", True):
+            if value.get("safe_only_on_change", False):
                 try:
                     with resources.open_specific_memory_resource(data.get_config("job_name"),
                                                                  name, False) as fp:
