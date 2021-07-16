@@ -9,7 +9,6 @@ interface TransformerProps {
   selectedShapeName: string,
 }
 
-
 export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   const [transformer, setTransformer] = React.useState(new Konva.Transformer())
   const [stage, setStage] = React.useState(transformer.getStage())
@@ -17,7 +16,6 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   const selectedShapeName = props.selectedShapeName;
 
   const checkNode = () => {
-
     if (transformer !== null) {
       setStage(transformer.getStage());
       if (stage !== undefined && stage !== null) {
@@ -52,9 +50,9 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
   return (
     <Transformer
       ref={node => {
-		if (node !== null && node !== undefined){
-          setTransformer(node!);
-        }
+		      if (node !== null && node !== undefined){
+            setTransformer(node!);
+          }
       }}
     />
   );
