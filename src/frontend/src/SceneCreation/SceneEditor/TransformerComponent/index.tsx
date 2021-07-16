@@ -25,7 +25,7 @@ export const TransformerComponent: React.FC<TransformerProps> = (props) => {
             return;
           }
           setTransformer(transformer.nodes([currentNode]));
-          if (currentNode.getClassName() === "Text" || currentNode.getClassName() === "Rect"){
+          if (currentNode.getClassName() === "Text"){
             transformer.resizeEnabled(false);
           } else {
             transformer.resizeEnabled(true);
