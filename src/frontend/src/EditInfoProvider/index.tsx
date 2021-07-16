@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import {Grid, Typography} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {EditSettingsOverview} from "./EditSettingsOverview/EditSettingsOverview";
 import {EditDataSelection} from "./EditDataSelection/EditDataSelection";
 import {ComponentContext} from "../ComponentProvider";
@@ -114,6 +114,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     const [dataCustomizationStep, setDataCustomizationStep] = React.useState(0);
     //true when the button for submitting the infoprovider is blocked because a request is running
     const [submitInfoProviderDisabled, setSubmitInfoProviderDisabled] = React.useState(false);
+    //TODO: document this!!
+    //array that contains a boolean for each dataSource indicating if refetching of api-data for checkup has already been done on them
+    const [refetchDoneList, setRefetchDoneList] = React.useState<Array<boolean>>(new Array(sessionStorage.getItem("infoProvDataSources-" + uniqueId) === null ? props.infoProvider!.dataSources.length : JSON.parse(sessionStorage.getItem("infoProvDataSources-" + uniqueId)!).length).fill(false))
+    console.log(refetchDoneList)
 
 
     //TODO: add current state variables if needed
@@ -211,6 +215,8 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             setHistorySelectionStep(Number(sessionStorage.getItem("historySelectionStep-" + uniqueId) || 0));
             //dataCustomizationStep
             setDataCustomizationStep(Number(sessionStorage.getItem("dataCustomizationStep-" + uniqueId) || 0));
+            //refetchDoneList
+            setRefetchDoneList(sessionStorage.getItem("refetchDoneList-" + uniqueId) === null ? new Array<boolean>() : JSON.parse(sessionStorage.getItem("refetchDoneList-" + uniqueId)!));
 
             //create default values in the key map for all dataSources
             //necessary to not run into undefined values
@@ -274,6 +280,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
     }, [dataCustomizationStep])
+    //store refetchDoneList in sessionStorage
+    React.useEffect(() => {
+        sessionStorage.setItem("refetchDoneList-" + uniqueId, JSON.stringify(refetchDoneList));
+    }, [refetchDoneList.toString()]) //TODO: find out why this behaviour needs toString to get triggered
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -295,6 +305,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("arrayObjects-" + uniqueId);
         sessionStorage.removeItem("diagramName-" + uniqueId);
         sessionStorage.removeItem("diagramStep-" + uniqueId);
+        sessionStorage.removeItem("refetchDoneList-" + uniqueId);
     }
 
     const steps = [
@@ -825,6 +836,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         };
     }, []);
 
+    //TODO: documentation is missing!!!! @Daniel
     const finishNewDataSource = (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => {
         setInfoProvDataSources(infoProvDataSources.concat(dataSource));
         const mapCopy = new Map(infoProvDataSourcesKeys)
@@ -833,6 +845,10 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
             apiKeyInput2: apiKeyInput2
         }));
         setNewDataSourceMode(false);
+        //add an entry for the new dataSource to the refetchDoneList - true as value since it was just fetched while creating
+        const arCopy = refetchDoneList;
+        arCopy.push(true);
+        setRefetchDoneList(arCopy);
     }
 
     const cancelDataSourceCreation = () => {
@@ -847,13 +863,6 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         if (newDataSourceMode) {
             return (
                 <React.Fragment>
-                    <Grid container>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="body1">
-                                Infoproviderbearbeitung
-                            </Typography>
-                        </Grid>
-                    </Grid>
                     <CreateInfoProvider
                         finishDataSourceInEdit={finishNewDataSource}
                         cancelNewDataSourceInEdit={cancelDataSourceCreation}
@@ -934,12 +943,13 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         selectedDataSource={selectedDataSource}
                         dataCustomizationStep={dataCustomizationStep}
                         setDataCustomizationStep={(step: number) => setDataCustomizationStep(step)}
+                        refetchDoneList={refetchDoneList}
+                        setRefetchDoneList={(list: Array<boolean>) => setRefetchDoneList(list)}
                     />
                 );
             case 3:
                 return (
                     <EditDataCustomization
-
                         continueHandler={() => handleContinue(1)}
                         backHandler={() => handleBack(1)}
                         dataCustomizationStep={dataCustomizationStep}

@@ -37,6 +37,8 @@ interface EditDataSelectionProps {
     selectedDataSource: number;
     dataCustomizationStep: number;
     setDataCustomizationStep: (step: number) => void;
+    refetchDoneList: Array<boolean>;
+    setRefetchDoneList: (list: Array<boolean>) => void;
 }
 
 export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
@@ -82,6 +84,11 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     //extract reportError from props to use in useEffect/dependencies
     const reportError = props.reportError;
 
+    //extract refetchDoneList, setRefetchDoneList and selectedDataSource from state to use it in dependency
+    const refetchDoneList = props.refetchDoneList;
+    const selectedDataSource = props.selectedDataSource;
+    const setRefetchDoneList = props.setRefetchDoneList;
+
     /**
      * Handler for the return of a successful call to the backend (getting test data)
      * @param jsonData The JSON-object delivered by the backend
@@ -99,11 +106,15 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
             setNewListItems(listItems);
             if(dataContained(listItems)) {
                 setDisplaySpinner(false);
+                //change the entry in the refetchDoneList
+                const arCopy = refetchDoneList.slice();
+                arCopy[selectedDataSource] = true;
+                setRefetchDoneList(arCopy);
             } else {
                 setErrorDialogOpen(true);
             }
         }
-    }, [dataContained, reportError]);
+    }, [dataContained, reportError, refetchDoneList, selectedDataSource, setRefetchDoneList]);
 
     //extract backHandler from props to use in dependency
     const backHandler = props.backHandler;
@@ -184,10 +195,16 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
     }, []);
 
 
+
     //on the first load, fetch the data from the backend again
     React.useEffect(() => {
-        fetchTestData();
-    }, [fetchTestData])
+        //only fetch if it has not been done before
+        if(!refetchDoneList[selectedDataSource]) {
+            fetchTestData();
+        } else {
+            setDisplaySpinner(false);
+        }
+    }, [fetchTestData, refetchDoneList, selectedDataSource])
 
     const handleStepForward = () => {
         props.setDataCustomizationStep(0);
@@ -219,7 +236,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                                 Einige der ausgewählten oder in Diagrammen verwendeten Daten dieser Datenquelle sind nicht in der Antwort der API-Abfrage vorhanden.
                             </Typography>
                             <Typography gutterBottom>
-                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen enthäöt.
+                                Dies ist vermutlich darauf zurückzuführen, dass die API ihr Datenformat geändert hat oder in ihrer Antwort Fehler-Informationen enthält.
                             </Typography>
                             <Typography gutterBottom>
                                 Sie können die Datenquelle nicht weiter bearbeiten und die alten Einstellungen behalten (sofern sich die Datenquelle tatsächlich geändert hat werden API-Abfragen vermutlich Fehler erzeugen).
