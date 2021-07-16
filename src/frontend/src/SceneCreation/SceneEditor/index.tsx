@@ -123,7 +123,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     // states for when an item is selected
     // name of the item, type of the item and the item itself
     const [selectedItemName, setSelectedItemName] = React.useState("");
-    const [selectedType, setSelectedType] = React.useState("Circle");
+    const [selectedType, setSelectedType] = React.useState("");
     const [selectedObject, setSelectedObject] = React.useState<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>({} as CustomCircle);
 
     // state to check the size by how much an item should be moved either in x or y direction
