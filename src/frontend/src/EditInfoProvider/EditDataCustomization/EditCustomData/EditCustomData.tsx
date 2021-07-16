@@ -14,7 +14,6 @@ import {DataSource, Diagram} from "../../../CreateInfoProvider/types";
 interface EditCustomDataProps {
     continueHandler: (index: number) => void;
     backHandler: (index: number) => void;
-    stepToEditSingleFormel: (index: number) => void;
     editInfoProvider: () => void;
     infoProvDataSources: Array<DataSource>;
     setInfoProvDataSources: (dataSources: Array<DataSource>) => void;
@@ -336,7 +335,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
         props.setFormelInformation(makeFormelContext(currentEditFormel.formelName, currentEditFormel.formelString));
         setEditDialogOpen(false);
         setCurrentEditFormel(new FormelObj("", "",[]));
-        props.stepToEditSingleFormel(1);
+        props.continueHandler(1);
     }
 
     /**
@@ -355,7 +354,7 @@ export const EditCustomData: React.FC<EditCustomDataProps> = (props) => {
             rightParenFlag: false,
             usedFormulaAndApiData: []
         });
-        props.stepToEditSingleFormel(1)
+        props.continueHandler(1)
     }
 
     return (

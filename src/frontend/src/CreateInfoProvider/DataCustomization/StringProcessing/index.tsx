@@ -255,7 +255,7 @@ export const StringProcessing: React.FC<StringProcessingProps> = (props) => {
                 <Grid item container xs={12} md={8} justify="space-between" style={{height: "100%"}}>
                     <Grid item xs={12}>
                         <TextField fullWidth margin="normal" variant="filled" color="primary"
-                                   label={"Name der Array-Verarbeitung"} value={name}
+                                   label={"Name der String-Ersetzung"} value={name}
                                    onChange={(e) =>
                                        setName(e.target.value.replace(" ", "_"))
                                    }/>
