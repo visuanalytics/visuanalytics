@@ -1534,6 +1534,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             scaleY: absTrans.y,
             rotation: absRot,
         };
+        setSelectedObject(localItems[index]);
         setItems(localItems);
         currentItemRotation.current = absRot;
         currentItemScaleX.current = absTrans.x;
@@ -1542,6 +1543,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         currentItemY.current = parseInt((absPos.y).toFixed(0));
         setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
         setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
+
 
     }
 
