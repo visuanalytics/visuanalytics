@@ -105,14 +105,18 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         }
     }, [dataContained, reportError]);
 
+    //extract backHandler from props to use in dependency
+    const backHandler = props.backHandler;
 
     /**
-     * Handler for unsuccessful call to the backend (getting test data)
+     * Handler for unsuccessful call to the backend (getting test data).
+     * Returns to the previous step so the user can edit his settings again.
      * @param err The error returned by the backend
      */
     const handleTestDataError = React.useCallback((err: Error) => {
         reportError("Fehler: API-Abfrage über das Backend fehlgeschlagen! (" + err.message + ")");
-    }, [reportError]);
+        backHandler(1);
+    }, [reportError, backHandler]);
 
 
     //this static value will be true as long as the component is still mounted
@@ -137,7 +141,9 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
         const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), 5000);
+        const timer = setTimeout(() => {
+            abort.abort()
+        }, 5000);
         //starts fetching the contents from the backend
         fetch(url, {
             method: "POST",
@@ -253,7 +259,7 @@ export const EditDataSelection: React.FC<EditDataSelectionProps> = (props) => {
                     backHandler={() => props.backHandler(1)}
                     selectedData={props.dataSource.selectedData}
                     setSelectedData={props.setSelectedData}
-                    listItems={newListItems}
+                    listItems={newListItems} //TODO: exchange for "props.infoProvDataSources[props.selectedDataSource].listItems" when listItems are in backend data format
                     setListItems={() => console.log("THIS IS ONLY FOR DEBUGGING AND NOT ALLOWED IN EDIT MODE!")}
                     historizedData={props.dataSource.historizedData}
                     setHistorizedData={props.setHistorizedData}

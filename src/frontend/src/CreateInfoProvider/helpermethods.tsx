@@ -312,7 +312,7 @@ export const checkFindOnlyNumbers = (arg: string): boolean => {
     return onlyNumbers;
 }
 
-//TODO: add the string replacement and array processings here
+//TODO: ask extracting listItems for each datasource when they are included in the dataformat
 /**
  * Method that transforms an infoProvider from the backend data format to a frontend data format representation
  * @param data
