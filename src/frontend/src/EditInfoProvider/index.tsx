@@ -280,10 +280,11 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("dataCustomizationStep-" + uniqueId, dataCustomizationStep.toString());
     }, [dataCustomizationStep])
+    const refetchDoneListChange = refetchDoneList.toString();
     //store refetchDoneList in sessionStorage
     React.useEffect(() => {
         sessionStorage.setItem("refetchDoneList-" + uniqueId, JSON.stringify(refetchDoneList));
-    }, [refetchDoneList.toString()]) //TODO: find out why this behaviour needs toString to get triggered
+    }, [refetchDoneListChange, refetchDoneList]) //TODO: find out why this behaviour needs toString to get triggered
 
     /**
      * Removes all items of this component from the sessionStorage.
