@@ -152,9 +152,11 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
                 <TableCell className={classes.logTableCell}>{entry.duration}</TableCell>
                 <TableCell className={classes.logTableCell}>{entry.startTime}</TableCell>
                 <TableCell className={classes.logTableCell}>
-                    <Button onClick={() => handleTracebackClick(entry.errorTraceback)}>
-                        Traceback anzeigen
-                    </Button>
+                    {entry.state !== 1 &&
+                        <Button onClick={() => handleTracebackClick(entry.errorTraceback)}>
+                            Traceback anzeigen
+                        </Button>
+                    }
                 </TableCell>
             </TableRow>
         );

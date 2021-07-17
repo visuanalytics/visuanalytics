@@ -31,7 +31,7 @@ export type answer = {
 export type LogEntry = {
     object_id: string;
     object_name: string;
-    state: string;
+    state: number;
     errorMsg: string;
     errorTraceback: string;
     duration: string;
