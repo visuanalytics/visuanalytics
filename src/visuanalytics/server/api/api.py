@@ -190,12 +190,8 @@ def add_videojob():
     """
     video = request.json
     try:
-        if "name" not in video:
-            err = flask.jsonify({"err_msg": "Missing Name"})
-            return err, 400
-
-        if "infoprovider_names" not in video:
-            err = flask.jsonify({"err_msg": "Missing Infoprovider-Names"})
+        if "videojob_name" not in video:
+            err = flask.jsonify({"err_msg": "Missing Videojob-name"})
             return err, 400
 
         if "images" not in video:
@@ -218,7 +214,7 @@ def add_videojob():
             err = flask.jsonify({"err_msg": "Missing field 'sceneList'"})
             return err, 400
 
-        if "selectedInfoProvider" not in video:
+        if "selectedInfoprovider" not in video:
             err = flask.jsonify({"err_msg": "Missing field 'selectedInfoProvider'"})
             return err, 400
 
@@ -453,13 +449,7 @@ def get_all_videojobs():
     Response enthält ein Array mit allen Namen und IDs aller Videojobs.
     """
     try:
-        videojobs = queries.get_all_videojobs()
-
-        if not videojobs:
-            err = flask.jsonify({"err_msg": "Error while loading all Videojobs"})
-            return err, 400
-
-        return flask.jsonify(videojobs)
+        return flask.jsonify(queries.get_all_videojobs())
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading all Videojobs"})
@@ -561,7 +551,7 @@ def get_videojob_preview(videojob_id):
 @api.route("/videojob/<videojob_id>/logs", methods=["GET"])
 def get_videojob_logs(videojob_id):
     """
-    Endpunkt `/infoprovider//logs`.
+    Endpunkt `/infoprovider/logs`.
 
     Route um alle Logs der Datenquellen eines Infoproviders zu laden.
 
@@ -868,9 +858,7 @@ def get_image(id):
     try:
         file_path = queries.get_scene_image_file(id)
 
-        #return send_file(file_path, "application/json", True)
-        images = ["Ort_3day3", "Ort_2day2", "DE3Tage2", "DE1TAg"]
-        return send_file(queries._get_image_path(images[int(id)], "weather", "png"), "application/json", True)
+        return send_file(file_path, "application/json", True)
     except Exception:
         logger.exception("An error occurred: ")
         err = flask.jsonify({"err_msg": "An error occurred while loading a scene-image"})
