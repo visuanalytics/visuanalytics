@@ -8,6 +8,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import {ComponentContext} from "../../../ComponentProvider";
 import {BackendVideoList} from "../../types";
 import {VideoList} from "./VideoList";
+import {centerNotifcationReducer, CenterNotification} from "../../../util/CenterNotification";
 
 interface VideoOverviewProps {
     videos: BackendVideoList;
@@ -17,6 +18,20 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
 
     const classes = useStyles();
     const components = React.useContext(ComponentContext);
+
+    //TODO: possibly place in higher level component
+    /**
+     * setup for error notification
+     */
+    const [message, dispatchMessage] = React.useReducer(centerNotifcationReducer, {
+        open: false,
+        message: "",
+        severity: "error",
+    });
+
+    const reportError = React.useCallback((message: string) => {
+        dispatchMessage({ type: "reportError", message: message });
+    }, []);
 
     return(
         <StepFrame
@@ -42,9 +57,16 @@ export const VideoOverview: React.FC<VideoOverviewProps> = (props) => {
                 <Grid item container xs={12} justify={"center"}>
                     <VideoList
                         videos={props.videos}
+                        reportError={(message: string) => reportError(message)}
                     />
                 </Grid>
             </Grid>
+            <CenterNotification
+                handleClose={() => dispatchMessage({type: "close"})}
+                open={message.open}
+                message={message.message}
+                severity={message.severity}
+            />
         </StepFrame>
     );
 

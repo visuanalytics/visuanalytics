@@ -6,7 +6,7 @@ import {useStyles} from "../../style";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {MessageRounded, SettingsRounded} from "@material-ui/icons";
 import {jsonRef} from "../../types";
-import {LogDialog} from "./LogDialog";
+import {LogDialog} from "../../LogDialog";
 
 interface InfoProviderListProps {
     infoprovider: Array<jsonRef>;
@@ -49,7 +49,7 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
                     <Grid item xs={7}>
                         <Box border={5} borderRadius={10}
                              className={classes.infoProvBorder}>
-                            <Typography variant={"h5"} style={{ width: "100%", padding: "10px", textAlign: "center"}} className={classes.wrappedText}>
+                            <Typography variant={"h5"} className={classes.wrappedItemText}>
                                 {data.infoprovider_name}
                             </Typography>
                         </Box>
@@ -73,7 +73,7 @@ export const InfoProviderList: React.FC<InfoProviderListProps> = (props) => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={5}>
                             <Grid item xs={12}>
                                 <Button variant={"contained"} size={"small"} className={classes.delete}
                                         startIcon={<DeleteIcon fontSize="small"/>}
