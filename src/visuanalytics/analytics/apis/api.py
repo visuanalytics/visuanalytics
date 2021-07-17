@@ -83,16 +83,17 @@ def request_memory(values: dict, data: StepData, name: str, save_key, ignore_tes
     :param ignore_testing: Ob der Request durchgeführt werden soll, obwohl testing `true` ist.
     """
     try:
+        folder = values.get("memory_folder", data.get_config("job_name"))
         if values.get("timedelta", None) is None:
             skip = values.get("skip_today", False)
             use_last = values.get("use_last", 1)
             hist_data = []
             for offset in range(1, use_last + 1):
-                with resources.open_specific_memory_resource(data.get_config("job_name"), values["name"], skip, offset) as fp:
+                with resources.open_specific_memory_resource(folder, values["name"], skip, offset) as fp:
                     hist_data.append(json.loads(fp.read()))
             data.insert_data(save_key, hist_data, values)
         else:
-            with resources.open_memory_resource(data.get_config("job_name"),
+            with resources.open_memory_resource(folder,
                                                 values["name"], values["timedelta"]) as fp:
                 data.insert_data(save_key, json.loads(fp.read()), values)
     except (FileNotFoundError, IndexError):

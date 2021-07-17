@@ -204,13 +204,14 @@ def insert_infoprovider(infoprovider):
             for storing_config in datasource_json["storing"]:
                 datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['name']}_HISTORY")
                 datasource_json["api"]["requests"].append({
-                  "type": "request_memory",
-                  "name": dict(storing_config)["name"],
-                  "use_last": use_last,
-                  "alternative": {
-                    "type": "input",
-                    "data": [-1 for _ in range(use_last)]
-                  }
+                    "type": "request_memory",
+                    "name": dict(storing_config)["name"],
+                    "memory_folder": infoprovider_name + "_" + datasource_name,
+                    "use_last": use_last,
+                    "alternative": {
+                        "type": "input",
+                        "data": [-1 for _ in range(use_last)]
+                    }
                 })
         else:
             con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
@@ -649,13 +650,14 @@ def update_infoprovider(infoprovider_id, updated_data):
             for storing_config in datasource_json["storing"]:
                 datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['name']}_HISTORY")
                 datasource_json["api"]["requests"].append({
-                  "type": "request_memory",
-                  "name": dict(storing_config)["name"],
-                  "use_last": use_last,
-                  "alternative": {
-                    "type": "input",
-                    "data": [-1 for _ in range(use_last)]
-                  }
+                    "type": "request_memory",
+                    "name": dict(storing_config)["name"],
+                    "memory_folder": updated_data["infoprovider_name"] + "_" + datasource_name,
+                    "use_last": use_last,
+                    "alternative": {
+                        "type": "input",
+                        "data": [-1 for _ in range(use_last)]
+                    }
                 })
         else:
             con.execute("INSERT INTO datasource (datasource_name, infoprovider_id) VALUES (?, ?)",
