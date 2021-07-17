@@ -1,9 +1,11 @@
-/* InfoProviderOverview
-
-/**
- * This type is used to correctly handle each single infoprovider from the response from the backend.
- */
-import {DataImage, DataText} from "../SceneCreation/SceneEditor/types";
+import {
+    CustomCircle, CustomImage,
+    CustomLine,
+    CustomRectangle,
+    CustomStar, CustomText,
+    DataImage,
+    DataText
+} from "../SceneCreation/SceneEditor/types";
 
 export type jsonRef = {
     infoprovider_id: number;
@@ -74,7 +76,7 @@ export type FullScene = {
     backgroundColor: string;
     backgroundColorEnabled: boolean;
     itemCounter: number;
-    scene_items: string;
+    scene_items: Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>;
 }
 
 export type ImagesBackend = {

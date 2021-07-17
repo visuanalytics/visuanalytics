@@ -14,17 +14,23 @@ import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {StepFrame} from "../CreateInfoProvider/StepFrame";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
+import {FullScene} from "../Dashboard/types";
+
+interface SceneCreationProps {
+    sceneFromBackend?: FullScene;
+}
 
 /**
  * Wrapper component for the scene creation.
  */
-export const SceneCreation = () => {
+export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
 
+    console.log(props.sceneFromBackend);
     //const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
     //the current step of the creation process, numbered by 0 to 1
-    const [sceneEditorStep, setSceneEditorStep] = React.useState(0);
+    const [sceneEditorStep, setSceneEditorStep] = React.useState(props.sceneFromBackend !== undefined ? 1 :0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     //object of the infoprovider to be used in the scene creation, selected in first step
@@ -834,6 +840,8 @@ export const SceneCreation = () => {
                             reportError={(message: string) => reportError(message)}
                             fetchImageById={fetchImageById}
                             fetchBackgroundImageById={fetchBackgroundImageById}
+                            items={props.sceneFromBackend}
+                            sessionStorageFullClear={clearSessionStorage}
                         />
                     )
                 }

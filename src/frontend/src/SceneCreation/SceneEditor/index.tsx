@@ -40,6 +40,7 @@ import {
 import {ImageLists} from "./ImageLists";
 import {DiagramList} from "./DiagramList";
 import {ComponentContext} from "../../ComponentProvider";
+import {FullScene} from "../../Dashboard/types";
 
 interface SceneEditorProps {
     continueHandler: () => void;
@@ -60,6 +61,8 @@ interface SceneEditorProps {
     reportError: (message: string) => void;
     fetchImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
     fetchBackgroundImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
+    items?: FullScene;
+    sessionStorageFullClear: () => void;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -87,9 +90,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const currentItemY = React.useRef<number>(0);
 
     // states used to determine the type of background
-    const [backGroundType, setBackGroundType] = React.useState("COLOR");
-    const [backGroundColor, setBackGroundColor] = React.useState("#FFFFFF");
-    const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(false);
+    const [backGroundType, setBackGroundType] = React.useState(props.items !== undefined ? props.items.backgroundType : "COLOR");
+    const [backGroundColor, setBackGroundColor] = React.useState(props.items !== undefined ? props.items.backgroundColor :"#FFFFFF");
+    const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props.items !== undefined ? props.items.backgroundColorEnabled : false);
 
     // states used to adjust HTML elements
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
@@ -109,15 +112,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
     // state for items, if an item is selected and a counter for the amount of items
-    const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
+    const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>(props.items !== undefined ? props.items.scene_items : []);
     const [itemSelected, setItemSelected] = React.useState(false);
-    const [itemCounter, setItemCounter] = React.useState(0);
+    const [itemCounter, setItemCounter] = React.useState(props.items !== undefined ? props.items.itemCounter : 0);
 
     // state for the items that have been removed, used to restore them if needed
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
 
     // state for the name of the scene
-    const [sceneName, setSceneName] = React.useState("");
+    const [sceneName, setSceneName] = React.useState(props.items !== undefined ? props.items.scene_name : "");
 
     // states for when an item is selected
     // name of the item, type of the item and the item itself
@@ -177,6 +180,36 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         }
     }, [])
 
+    //extract imageList and backgroundImageList from props to use in dependencies
+    const imageList = props.imageList;
+    const backgroundImageList = props.backgroundImageList;
+
+    //extract items from props to use in dependencies.
+    const propsItems = props.items;
+
+    //TODO: find bug in loading the right background-image
+
+    /**
+     * Goes through list of background-images and finds the right background to show.
+     */
+    const findRightBackgroundImage = React.useCallback(() => {
+        if (propsItems !== undefined) {
+            for (let i = 0; i < backgroundImageList.length; i++) {
+                if (backgroundImageList[i].image_id === propsItems.backgroundImage) {
+                    setBackgroundImageIndex(i);
+                    const img = new window.Image();
+                    img.src = backgroundImageList[i].image_blob_url;
+                    setBackgroundImage(img);
+                }
+            }
+        }
+    }, [backgroundImageList, propsItems])
+
+    React.useEffect(() => {
+        if (propsItems !== undefined) {
+            findRightBackgroundImage();
+        }
+    }, [findRightBackgroundImage, propsItems])
 
     /*
     * Code for saving to and restoring from sessionStorage
@@ -185,10 +218,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     //extract reportError from props to use in dependencies
     const reportError = props.reportError;
-
-    //extract imageList and backgroundImageList from props to use in dependencies
-    const imageList = props.imageList;
-    const backgroundImageList = props.backgroundImageList;
 
     React.useEffect(() => {
         //backgroundImage - stores the index in the list of background images to recreate it
@@ -2693,7 +2722,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     onClick={() => {
                                         setBackDialogOpen(false);
                                         clearSessionStorage();
-                                        props.backHandler();
+                                        if (props.items !== undefined) {
+                                            props.sessionStorageFullClear();
+                                            components?.setCurrent("dashboard");
+                                        } else {
+                                            props.backHandler();
+                                        }
                                     }}
                                     className={classes.redDeleteButton}>
                                 zurück
