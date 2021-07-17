@@ -29,13 +29,13 @@ export const DiagramList: React.FC<DiagramListProps> = (props) => {
                     <img src={diagram.url} className={classes.imageInList} alt={"Image Nr." +  index} onClick={() => /*props.handleDiagramClick()*/ console.log("DIAGRAM CLICK EVENT YET TO BE IMPLEMENTED!!!")}/>
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant="body1">
-                        diagram.name
+                    <Typography variant="body1" className={classes.wrappedText}>
+                        <strong>Name:</strong> {diagram.name}
                     </Typography>
                 </Grid>
                 <Grid item xs={10}>
-                    <Typography variant="body1">
-                        diagram.type
+                    <Typography variant="body1" className={classes.wrappedText}>
+                        <strong>Typ:</strong> {diagram.type}
                     </Typography>
                 </Grid>
             </Grid>
