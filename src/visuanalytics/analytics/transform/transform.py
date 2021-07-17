@@ -31,7 +31,6 @@ def transform(values: dict, data: StepData):
     :param data: Daten aus der API
     :return:
     """
-    data.print_data()
     for transformation in values["transform"]:
         transformation["_loop_states"] = values.get("_loop_states", {})
 

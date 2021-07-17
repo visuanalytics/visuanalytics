@@ -202,14 +202,14 @@ def insert_infoprovider(infoprovider):
             # add request memory, if datasource stores data
             use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
-                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['name']}_HISTORY")
                 datasource_json["api"]["requests"].append({
                   "type": "request_memory",
                   "name": dict(storing_config)["name"],
                   "use_last": use_last,
                   "alternative": {
                     "type": "input",
-                    "data": 0
+                    "data": [-1 for _ in range(use_last)]
                   }
                 })
         else:
@@ -246,16 +246,17 @@ def insert_video_job(video, update=False, job_id=None):
     :return: Gibt einen boolschen Wert zurück (Status), oder eine Fehlermeldung (bei Aktualisierungen).
     """
     con = db.open_con_f()
-    video_name = video["name"]
+    video_name = video["videojob_name"]
     tts_infoprovider_ids = video["tts_ids"]
     tts_names = []
+    infoprovider_names = [infoprovider["infoprovider_name"] for infoprovider in video["selectedInfoprovider"]]
     # Namen aller Infoprovider die in TTS genutzt werden laden
     for tts_id in tts_infoprovider_ids:
         tts_name = con.execute("SELECT infoprovider_name FROM infoprovider WHERE infoprovider_id=?",
                                [tts_id]).fetchone()["infoprovider_name"]
-        if tts_name not in video["infoprovider_names"]:
+        if tts_name not in infoprovider_names:
             tts_names.append(tts_name)
-    infoprovider_names = video["infoprovider_names"] + tts_names
+    infoprovider_names += tts_names
 
     # Daten aller verwendeten Infoprovider sammeln und kombinieren
     for infoprovider_name in infoprovider_names:
@@ -313,6 +314,7 @@ def insert_video_job(video, update=False, job_id=None):
     video["run_config"] = {}
     video["presets"] = {}
     video["info"] = ""
+    video["name"] = video_name
     schedule = video.get("schedule", None)
     delete_schedule = video.get("deleteSchedule", {
         "type": "keepCount",
@@ -644,14 +646,14 @@ def update_infoprovider(infoprovider_id, updated_data):
             # add request memory, if datasource stores data
             use_last = get_max_use_last(infoprovider_json["images"])
             for storing_config in datasource_json["storing"]:
-                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_-_HISTORY")
+                datasource_json["api"]["steps_value"].append(f"{datasource_json['name']}_{storing_config['name']}_HISTORY")
                 datasource_json["api"]["requests"].append({
                   "type": "request_memory",
                   "name": dict(storing_config)["name"],
                   "use_last": use_last,
                   "alternative": {
                     "type": "input",
-                    "data": 0
+                    "data": [-1 for _ in range(use_last)]
                   }
                 })
         else:
@@ -789,16 +791,12 @@ def get_all_videojobs():
     :param videojob_id: ID eines Infoproviders.
     :return: Liste aller gefundenen Logs.
     """
-    try:
-        con = db.open_con_f()
-        jobs = con.execute("SELECT job_id, job_name from job").fetchall()
-        return [{
-            "videojob_id": job["job_id"],
-            "videojob_name": job["job_name"]
-        } for job in jobs]
-    except Exception as e:
-        # (str(e))
-        return None
+    con = db.open_con_f()
+    jobs = con.execute("SELECT job_id, job_name FROM job").fetchall()
+    return [{
+        "videojob_id": job["job_id"],
+        "videojob_name": job["job_name"]
+    } for job in jobs] if jobs else []
 
 
 def delete_videojob(videojob_id):
