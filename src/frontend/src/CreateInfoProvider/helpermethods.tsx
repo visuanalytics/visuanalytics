@@ -341,9 +341,9 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 time: backendDataSource.schedule.time,
                 interval: backendDataSource.schedule.timeInterval,
             },
-            listItems: new Array<ListItemRepresentation>(),
             arrayProcessingsList: backendDataSource.arrayProcessingsList,
-            stringReplacementList: backendDataSource.stringReplacementList
+            stringReplacementList: backendDataSource.stringReplacementList,
+            listItems:backendDataSource.listItems
         });
         //set the api keys in the map
         let apiKeyInput1: string;

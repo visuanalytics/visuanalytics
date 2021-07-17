@@ -662,7 +662,9 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
-                    stringReplacementList: dataSource.stringReplacementList
+                    stringReplacementList: dataSource.stringReplacementList,
+                    //TODO: ADD THIS TO DOCUMENTATION!!!
+                    listItems: dataSource.listItems
                 })
             }
         });
