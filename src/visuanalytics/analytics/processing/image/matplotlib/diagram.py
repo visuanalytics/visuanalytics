@@ -144,9 +144,8 @@ def generate_diagram(values: dict, step_data: StepData, prev_paths):
 
 
 def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
-    #file = resources.new_temp_resource_path(step_data.data["_pipe_id"], "png")
-    file = resources.new_temp_resource_path(f"{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}", "png")
-    # file = resources.get_image_path(values["diagram_config"]["infoproviderName"] + "/" + values["diagram_config"]["name"] + ".png")
+    # file = resources.new_temp_resource_path(f"{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}", "png")
+    file = resources.get_image_path(f"diagrams/{values['diagram_config']['infoprovider']}_{values['diagram_config']['name']}.png")
     with resources.open_resource(file, "wt") as f:
         pass
 
@@ -316,8 +315,8 @@ def get_x_y(values, step_data, array_source, custom_labels=False, primitive=True
                 values.update({"x_ticks": x_ticks})
     else:
         y_vals = step_data.format(values["y"])
-        print("y_vals", y_vals)
-        step_data.print_data()
+        # print("y_vals", y_vals)
+        # step_data.print_data()
         y_vals = list(map(float, y_vals[1: -1].split(", ")))
         y_vals = list(map(y_vals.__getitem__, [i - 1 for i in values.get("x", np.arange(len(y_vals)))]))
 
