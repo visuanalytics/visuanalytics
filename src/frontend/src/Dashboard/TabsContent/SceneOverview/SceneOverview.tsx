@@ -136,7 +136,9 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" color={"primary"} onClick={() => fetchSceneById()}>
+                            <Button variant="contained" color={"primary"} onClick={() => {
+                                setDetailDialogOpen(false);
+                            }}>
                                 zurück
                             </Button>
                         </Grid>

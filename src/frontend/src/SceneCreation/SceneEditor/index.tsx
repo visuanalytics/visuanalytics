@@ -61,7 +61,7 @@ interface SceneEditorProps {
     reportError: (message: string) => void;
     fetchImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
     fetchBackgroundImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
-    items?: FullScene;
+    sceneFromBackend?: FullScene;
     sessionStorageFullClear: () => void;
 }
 
@@ -90,9 +90,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const currentItemY = React.useRef<number>(0);
 
     // states used to determine the type of background
-    const [backGroundType, setBackGroundType] = React.useState(props.items !== undefined ? props.items.backgroundType : "COLOR");
-    const [backGroundColor, setBackGroundColor] = React.useState(props.items !== undefined ? props.items.backgroundColor :"#FFFFFF");
-    const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props.items !== undefined ? props.items.backgroundColorEnabled : false);
+    const [backGroundType, setBackGroundType] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundType : "COLOR");
+    const [backGroundColor, setBackGroundColor] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColor :"#FFFFFF");
+    const [backGroundColorEnabled, setBackGroundColorEnabled] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.backgroundColorEnabled : false);
 
     // states used to adjust HTML elements
     const [currentlyEditing, setCurrentlyEditing] = React.useState(false)
@@ -112,15 +112,15 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const [deleteText, setDeleteText] = React.useState("Letztes Elem. entf.");
 
     // state for items, if an item is selected and a counter for the amount of items
-    const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>(props.items !== undefined ? props.items.scene_items : []);
+    const [items, setItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>(props.sceneFromBackend !== undefined ? props.sceneFromBackend.scene_items : []);
     const [itemSelected, setItemSelected] = React.useState(false);
-    const [itemCounter, setItemCounter] = React.useState(props.items !== undefined ? props.items.itemCounter : 0);
+    const [itemCounter, setItemCounter] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.itemCounter : 0);
 
     // state for the items that have been removed, used to restore them if needed
     const [recentlyRemovedItems, setRecentlyRemovedItems] = React.useState<Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>>([]);
 
     // state for the name of the scene
-    const [sceneName, setSceneName] = React.useState(props.items !== undefined ? props.items.scene_name : "");
+    const [sceneName, setSceneName] = React.useState(props.sceneFromBackend !== undefined ? props.sceneFromBackend.name : "");
 
     // states for when an item is selected
     // name of the item, type of the item and the item itself
@@ -185,31 +185,37 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const backgroundImageList = props.backgroundImageList;
 
     //extract items from props to use in dependencies.
-    const propsItems = props.items;
-
-    //TODO: find bug in loading the right background-image
+    const propsSceneFromBackend = props.sceneFromBackend;
 
     /**
      * Goes through list of background-images and finds the right background to show.
+     * Only used for editing mode to restore the image by its backend id.
      */
     const findRightBackgroundImage = React.useCallback(() => {
-        if (propsItems !== undefined) {
+        //console.log("searching bg-image");
+        //console.log(backgroundImageList)
+        if (propsSceneFromBackend !== undefined) {
             for (let i = 0; i < backgroundImageList.length; i++) {
-                if (backgroundImageList[i].image_id === propsItems.backgroundImage) {
+                //console.log(backgroundImageList[i].image_id +" : " + backgroundImageList[i].image_backend_path);
+                //console.log(propsSceneFromBackend.backgroundImage);
+                if (backgroundImageList[i].image_id === propsSceneFromBackend.backgroundImage) {
+                    //console.log("matched index: " + i)
                     setBackgroundImageIndex(i);
                     const img = new window.Image();
                     img.src = backgroundImageList[i].image_blob_url;
                     setBackgroundImage(img);
+                    //console.log(img);
+                    break;
                 }
             }
         }
-    }, [backgroundImageList, propsItems])
+    }, [backgroundImageList, propsSceneFromBackend])
 
     React.useEffect(() => {
-        if (propsItems !== undefined) {
+        if (propsSceneFromBackend !== undefined) {
             findRightBackgroundImage();
         }
-    }, [findRightBackgroundImage, propsItems])
+    }, [findRightBackgroundImage, propsSceneFromBackend])
 
     /*
     * Code for saving to and restoring from sessionStorage
@@ -220,39 +226,46 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const reportError = props.reportError;
 
     React.useEffect(() => {
-        //backgroundImage - stores the index in the list of background images to recreate it
-        const newImg = new window.Image();
-        const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
-        newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index].image_blob_url:"";
-        setBackgroundImageIndex(index);
-        setBackgroundImage(newImg);
-        //backGroundType
-        setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
-        //currentBGColor
-        setCurrentBGColor(sessionStorage.getItem("currentBGColor-" + uniqueId) || "#FFFFFF");
-        //backgroundColorEnabled
-        setBackGroundColorEnabled(sessionStorage.getItem("backGroundColorEnabled-" + uniqueId) === "true" || false);
+        //check if this is not the first entering - marked by a value in sessionStorage set at first rendering
+        if (sessionStorage.getItem("firstSceneEditorEntering-" + uniqueId) !== null) {
+            //backgroundImage - stores the index in the list of background images to recreate it
+            const newImg = new window.Image();
+            const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
+            newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index].image_blob_url:"";
+            setBackgroundImageIndex(index);
+            setBackgroundImage(newImg);
+            //sceneName
+            setSceneName(sessionStorage.getItem("sceneName-" + uniqueId) || "");
+            //items
+            const restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
+            //find all images and set the new url by their id
+            for (let index = 0; index < restoredItems.length; index++) {
+                if(restoredItems[index].hasOwnProperty("image")) {
+                    let castedItem = restoredItems[index] as CustomImage;
+                    castedItem.image = new window.Image();
+                    castedItem.image.src = imageList[castedItem.index].image_blob_url;
+                    restoredItems[index] = castedItem;
+                }
+            }
+            setItems(restoredItems);
+            //backGroundType
+            setBackGroundType(sessionStorage.getItem("backGroundType-" + uniqueId) || "COLOR");
+            //currentBGColor
+            setCurrentBGColor(sessionStorage.getItem("currentBGColor-" + uniqueId) || "#FFFFFF");
+            //backgroundColorEnabled
+            setBackGroundColorEnabled(sessionStorage.getItem("backGroundColorEnabled-" + uniqueId) === "true" || false);
+            //itemCounter
+            setItemCounter(Number(sessionStorage.getItem("itemCounter-" + uniqueId) || 0));
+        } else {
+            //leave a marker in the sessionStorage to identify if this is the first entering
+            //necessary to not overwrite the image on the first entering
+            sessionStorage.setItem("firstSceneEditorEntering-" + uniqueId, "false");
+        }
         //deleteText
         setDeleteText(sessionStorage.getItem("deleteText-" + uniqueId) || "Letztes Elem. entf.");
-        //items
-        const restoredItems = sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!);
-        //find all images and set the new url by their id
-        for (let index = 0; index < restoredItems.length; index++) {
-            if(restoredItems[index].hasOwnProperty("image")) {
-                let castedItem = restoredItems[index] as CustomImage;
-                castedItem.image = new window.Image();
-                castedItem.image.src = imageList[castedItem.index].image_blob_url;
-                restoredItems[index] = castedItem;
-            }
-        }
-        setItems(restoredItems);
         //console.log(sessionStorage.getItem("items-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("items-" + uniqueId)!));
-        //itemCounter
-        setItemCounter(Number(sessionStorage.getItem("itemCounter-" + uniqueId) || 0));
         //recentlyRemovedItems
         setRecentlyRemovedItems(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId) === null ? new Array<CustomCircle | CustomRectangle | CustomLine | CustomStar | CustomText | CustomImage>() : JSON.parse(sessionStorage.getItem("recentlyRemovedItems-" + uniqueId)!))
-        //sceneName
-        setSceneName(sessionStorage.getItem("sceneName-" + uniqueId) || "");
     }, [imageList, backgroundImageList])
 
     //store backgroundImageIndex in sessionStorage
@@ -316,6 +329,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         sessionStorage.removeItem("historizedDataList-" + uniqueId);
         sessionStorage.removeItem("diagramList-" + uniqueId);
         sessionStorage.removeItem("imageList-" + uniqueId);
+        sessionStorage.removeItem("firstSceneEditorEntering-" + uniqueId);
+
     }
 
 
@@ -484,7 +499,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             postSceneBackground(formData);
         }
     }
-
 
     //extract infoProviderId from props to use in dependencies
     const infoProviderId = props.infoProviderId;
@@ -2722,7 +2736,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     onClick={() => {
                                         setBackDialogOpen(false);
                                         clearSessionStorage();
-                                        if (props.items !== undefined) {
+                                        if (props.sceneFromBackend !== undefined) {
                                             props.sessionStorageFullClear();
                                             components?.setCurrent("dashboard");
                                         } else {

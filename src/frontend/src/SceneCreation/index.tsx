@@ -25,12 +25,13 @@ interface SceneCreationProps {
  */
 export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
 
-    console.log(props.sceneFromBackend);
     //const classes = useStyles();
     const components = React.useContext(ComponentContext);
 
     //the current step of the creation process, numbered by 0 to 1
-    const [sceneEditorStep, setSceneEditorStep] = React.useState(props.sceneFromBackend !== undefined ? 1 :0);
+    //setting one in editing is not necessary since the dialog will be displayed directly
+    //TODO: document this behaviour!!!
+    const [sceneEditorStep, setSceneEditorStep] = React.useState(0);
     //the list of all infoproviders fetched from the backend
     const [infoProviderList, setInfoProviderList] = React.useState<Array<InfoProviderData>>([]);
     //object of the infoprovider to be used in the scene creation, selected in first step
@@ -62,8 +63,9 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     // true when a spinner has to be displayed because of refetching - seperate variable because it might be inconstent with when rerenders are triggered
     const [displaySpinner, setDisplaySpinner] = React.useState(false);
     //true when the dialog for refetching images is opened
-    const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(false);
-
+    //is also opened when starting editing mode first to fetch the images before entering the SceneEditor component - this will make them available from the start on
+    //TODO: Document this!!
+    const [fetchImageDialogOpen, setFetchImageDialogOpen] = React.useState(props.sceneFromBackend !== undefined);
     // contains the names of the steps to be displayed in the stepper
     const steps = [
         "Infoprovider-Auswahl",
@@ -576,8 +578,8 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
             setStep0ContinueDisabled(false);
             //continue to the next step
             if(!refetchingImages.current) {
-                setDisplayLoadMessage(false);
                 handleContinue();
+                setDisplayLoadMessage(false);
             }
             else {
                 refetchingImages.current = false;
@@ -734,7 +736,6 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
         sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
     }, [selectedId])
 
-    console.log(backgroundImageList)
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -777,7 +778,9 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
     const selectContent = (step: number) => {
         switch (step) {
             case 0:
-                return (
+                return props.sceneFromBackend !==undefined ? (
+                    <React.Fragment></React.Fragment>
+                ) : (
                     <InfoProviderSelection
                         continueHandler={() => setSceneEditorStep(step+1)}
                         backHandler={() => handleBack()}
@@ -840,7 +843,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             reportError={(message: string) => reportError(message)}
                             fetchImageById={fetchImageById}
                             fetchBackgroundImageById={fetchBackgroundImageById}
-                            items={props.sceneFromBackend}
+                            sceneFromBackend={props.sceneFromBackend}
                             sessionStorageFullClear={clearSessionStorage}
                         />
                     )
@@ -859,41 +862,51 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                     ))}
                 </Stepper>
             </Container>
-            {selectContent(sceneEditorStep)}
+            { !fetchImageDialogOpen &&
+                selectContent(sceneEditorStep)
+            }
             <CenterNotification
                 handleClose={() => dispatchMessage({ type: "close" })}
                 open={message.open}
                 message={message.message}
                 severity={message.severity}
             />
-            <Dialog onClose={() => {
-                setFetchImageDialogOpen(false);
-            }} aria-labelledby="backDialog-title"
-                    open={fetchImageDialogOpen}>
-                <DialogTitle id="backDialog-title">
-                    Bilder erneut laden
-                </DialogTitle>
-                <DialogContent dividers>
-                    <Typography gutterBottom>
-                        Durch das Neuladen der Seite müssen alle Bilder, Hintergrundbilder und Diagramme erneut geladen werden.
-                    </Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Grid container justify="space-around">
-                        <Grid item>
-                            <Button variant="contained"
-                                    color="secondary"
-                                    onClick={() => {
-                                        setFetchImageDialogOpen(false);
-                                        fetchImageList();
-                                    }}
+            { fetchImageDialogOpen &&
+                <StepFrame
+                    heading={"Szenen-Editor"}
+                    hintContent={hintContents.typeSelection}
+                    large={"xl"}
+                >
+                    <Dialog onClose={() => {
+                        setFetchImageDialogOpen(false);
+                    }} aria-labelledby="backDialog-title"
+                            open={fetchImageDialogOpen}>
+                        <DialogTitle id="backDialog-title">
+                            Bilder erneut laden
+                        </DialogTitle>
+                        <DialogContent dividers>
+                            <Typography gutterBottom>
+                                Durch das Neuladen der Seite müssen alle Bilder, Hintergrundbilder und Diagramme erneut geladen werden.
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Grid container justify="space-around">
+                                <Grid item>
+                                    <Button variant="contained"
+                                            color="secondary"
+                                            onClick={() => {
+                                                setFetchImageDialogOpen(false);
+                                                fetchImageList();
+                                            }}
                                     >
-                                Laden starten
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </DialogActions>
-            </Dialog>
+                                        Laden starten
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </DialogActions>
+                    </Dialog>
+                </StepFrame>
+            }
         </React.Fragment>
     );
 }

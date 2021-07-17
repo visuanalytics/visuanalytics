@@ -67,7 +67,7 @@ export type PreviewImage = {
  * Represents all information of one single scene fetched from the backend.
  */
 export type FullScene = {
-    scene_name: string;
+    name: string;
     used_images: Array<number>;
     used_infoproviders: Array<number>;
     images: ImagesBackend;

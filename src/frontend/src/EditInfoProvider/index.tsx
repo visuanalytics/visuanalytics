@@ -185,6 +185,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      * The sets need to be converted back from Arrays that were parsed with JSON.stringify.
      */
     React.useEffect(() => {
+        //TODO: document firstentering
         if (sessionStorage.getItem("firstEntering-" + uniqueId) !== null) {
             //infoProvId
             //TODO: check if the 0 case can be problematic - it should not since this if-block is only rendered AFTER the first render and so the id is set in the sessionStorage
