@@ -2711,14 +2711,31 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }} aria-labelledby="backDialog-title"
                     open={backDialogOpen}>
                 <DialogTitle id="backDialog-title">
-                    Verwerfen der Szene
+
+                    { props.sceneFromBackend === undefined &&
+                        "Verwerfen der Szene"
+                    }
+                    { props.sceneFromBackend !== undefined &&
+                        "Abbrechen der Bearbeitung"
+                    }
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
-                        Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird.
+                        { props.sceneFromBackend === undefined &&
+                            "Das Zurückgehen zum vorherigen Schritt erfordert, dass die erstellte Szene verworfen wird."
+                        }
+                        { props.sceneFromBackend !== undefined &&
+                            "Wenn sie die Bearbeitung abbrechen, gehen sämtliche an der Szene vorgenommenen Änderungen verloren."
+                        }
                     </Typography>
                     <Typography gutterBottom>
-                        Wirklich zurückgehen?
+
+                        { props.sceneFromBackend === undefined &&
+                            "Wirklich zurückgehen?"
+                        }
+                        { props.sceneFromBackend !== undefined &&
+                            "Bearbeitung wirklich abbrechen?"
+                        }
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -2728,7 +2745,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                     onClick={() => {
                                         setBackDialogOpen(false);
                                     }}>
-                                abbrechen
+                                { props.sceneFromBackend === undefined &&
+                                    "abbrechen"
+                                }
+                                { props.sceneFromBackend !== undefined &&
+                                    "zurück zur Bearbeitung"
+                                }
                             </Button>
                         </Grid>
                         <Grid item>
@@ -2744,7 +2766,12 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         }
                                     }}
                                     className={classes.redDeleteButton}>
-                                zurück
+                                { props.sceneFromBackend === undefined &&
+                                    "zurück"
+                                }
+                                { props.sceneFromBackend !== undefined &&
+                                    "Bearbeitung abbrechen"
+                                }
                             </Button>
                         </Grid>
                     </Grid>

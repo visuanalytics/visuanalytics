@@ -25,7 +25,7 @@ export const SceneList: React.FC<SceneListProps> = (props) => {
 
         imgId.current = imgId.current + 1;
 
-        console.log("renderSceneCard" + imgId.current);
+        //console.log("renderSceneCard" + imgId.current);
 
         return (
             <Grid

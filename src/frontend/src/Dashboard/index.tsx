@@ -214,7 +214,7 @@ export const DashboardTabs = () =>  {
         //"id - 1" is used here because the scene-id starts by 1 and the images-id ist starting by 0.
         //in the end the scene-id and the images-id will match
         //the right route has to be implemented in the backend
-        console.log(id + " in fetchPreviewImgById");
+        //console.log(id + " in fetchPreviewImgById");
         let url = "/visuanalytics/scene/" + (id) + "/preview"
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url

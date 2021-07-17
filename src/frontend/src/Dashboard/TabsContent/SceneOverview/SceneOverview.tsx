@@ -10,7 +10,6 @@ import {centerNotifcationReducer, CenterNotification} from "../../../util/Center
 import {SceneList} from "./SceneList";
 import {useCallFetch} from "../../../Hooks/useCallFetch";
 import {ComponentContext} from "../../../ComponentProvider";
-import {Fullscreen} from "@material-ui/icons";
 
 interface SceneOverviewProps {
     scenes: Array<BackendScene>;
@@ -45,7 +44,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
 
     const handleFetchSceneSuccess = (jsonData: any) => {
         const data = jsonData as FullScene;
-        console.log(data);
+        //console.log(data);
         components?.setCurrent("sceneEditor", {sceneFromBackend: data})
         //TODO: change component with the fetched Scene in props...
     };
@@ -70,7 +69,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
      */
     const setCurrent = (data: BackendScene) => {
         //TODO: implement method to find the right preview-image for the given SceneId
-        console.log(data.scene_id)
+        //console.log(data.scene_id)
         setCurrentScene(data);
         setCurrentImg(props.previewImgList[data.scene_id - 1].URL);
     }
