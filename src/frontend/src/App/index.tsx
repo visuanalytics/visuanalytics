@@ -114,11 +114,16 @@ const newDarkBlueTheme = createMuiTheme({
 */
 
 const App = () => {
+
+    const legacyFrontend = React.useRef<boolean>(false);
+
     return (
         <div>
             <MuiThemeProvider theme={newDarkBlueTheme}>
                 <ComponentProvider>
-                    <Header/>
+                    <Header
+                        legacyFrontend={legacyFrontend.current}
+                    />
                     <Main/>
                 </ComponentProvider>
             </MuiThemeProvider>
