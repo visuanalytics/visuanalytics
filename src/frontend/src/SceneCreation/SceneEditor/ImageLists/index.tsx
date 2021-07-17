@@ -8,7 +8,7 @@ import {ImageFrontendData} from "../../types";
 
 interface ImageListsProps {
     imageList: Array<ImageFrontendData>
-    backgroundImageList: Array<string>
+    backgroundImageList: Array<ImageFrontendData>
     postImage: (data: FormData) => void;
     postBackgroundImage: (data: FormData) => void;
     handleImageClick: (src : string, id: number, path: string, index: number) => void;
@@ -121,7 +121,7 @@ export const ImageLists: React.FC<ImageListsProps> = (props) => {
                         </Grid>
                     </Grid>
                     <Grid item container xs={12} className={classes.elementLargeMargin}>
-                        {props.backgroundImageList.map((image, index) => renderImageEntry(image, 0, "", index, "background"))}
+                        {props.backgroundImageList.map((image, index) => renderImageEntry(image.image_blob_url, 0, "", index, "background"))}
                     </Grid>
                 </Collapse>
             </Grid>

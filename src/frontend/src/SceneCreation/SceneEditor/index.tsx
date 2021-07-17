@@ -11,7 +11,6 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions, Dialog,
-
 } from "@material-ui/core";
 import {useStyles} from "./style";
 import {StepFrame} from "../../CreateInfoProvider/StepFrame";
@@ -55,12 +54,12 @@ interface SceneEditorProps {
     diagramList: Array<DiagramInfo>;
     imageList: Array<ImageFrontendData>;
     setImageList: (images: Array<ImageFrontendData>) => void;
-    backgroundImageList: Array<string>;
-    setBackgroundImageList: (backgrounds: Array<string>) => void;
+    backgroundImageList: Array<ImageFrontendData>;
+    setBackgroundImageList: (backgrounds: Array<ImageFrontendData>) => void;
     editMode: boolean;
     reportError: (message: string) => void;
     fetchImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
-    fetchBackgroundImageById: (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => void;
+    fetchBackgroundImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -195,7 +194,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         //backgroundImage - stores the index in the list of background images to recreate it
         const newImg = new window.Image();
         const index = Number(sessionStorage.getItem("backgroundImageIndex-" + uniqueId) || 0);
-        newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index]:"";
+        newImg.src = backgroundImageList[index]!==undefined?backgroundImageList[index].image_blob_url:"";
         setBackgroundImageIndex(index);
         setBackgroundImage(newImg);
         //backGroundType
@@ -489,7 +488,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
             used_infoproviders: [infoProviderId],
             images:  base,
-            backgroundImage: 0, //TODO: real ID
+            backgroundImage: backgroundImageList[backgroundImageIndex].image_id,
             backgroundType: backGroundType,
             backgroundColor: backGroundColor,
             backgroundColorEnabled: backGroundColorEnabled,
@@ -519,7 +518,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 if ('image' in element) {
                     const itemToPush: DataImage = {
                         description: "",
-                        type: "pillow",
+                        type: "image",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
                         size_x: element.width * element.scaleX, //Breite optional
@@ -532,7 +531,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         });
         return returnValue;
-    }, [items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter]);
+    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter]);
 
     /**
      * Method to handle the results of posting the exported scene to the backend.
@@ -764,10 +763,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const data = jsonData as ImageBackendData;
         //extract the backend id of the newly created image from the backend
         const imageId = data.image_id;
+        const imageURL = data.path;
         console.log(imageId);
         // check if the image is valid
         //start fetching the new image from the backend
-        props.fetchBackgroundImageById(imageId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
+        props.fetchBackgroundImageById(imageId, imageURL, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         // reset the state containing the image to be uploaded
         //setImageToUpload(new FormData());
     }
@@ -818,12 +818,18 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method that handles successful fetches of images from the backend
      * @param jsonData  The image as blob sent by the backend.
+     * @param id Id of the image that was fetched for
+     * @param path Path of the image the backend
      */
-    const handleBackgroundImageByIdSuccess = (jsonData: any) => {
+    const handleBackgroundImageByIdSuccess = (jsonData: any, id: number, path: string) => {
         console.log("success while fetching");
         //create a URL for the blob image and update the list of images with it
         const arCopy = props.backgroundImageList.slice();
-        arCopy.push(URL.createObjectURL(jsonData));
+        arCopy.push({
+            image_id: id,
+            image_backend_path: path,
+            image_blob_url: URL.createObjectURL(jsonData)
+        });
         props.setBackgroundImageList(arCopy);
     }
 
@@ -1856,7 +1862,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     const handleBackgroundImageClick = (src : string, index : number) => {
         let img = new window.Image();
-        img.src = props.backgroundImageList[index];
+        img.src = props.backgroundImageList[index].image_blob_url;
         setBackgroundImage(img);
         setBackgroundImageIndex(index);
         setBackGroundType("IMAGE");
