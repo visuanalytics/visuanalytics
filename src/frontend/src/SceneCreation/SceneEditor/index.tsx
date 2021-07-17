@@ -518,7 +518,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 if ('image' in element) {
                     const itemToPush: DataImage = {
                         description: "",
-                        type: "pillow",
+                        type: "image",
                         pos_x: element.x, //X-Coordinate
                         pos_y: element.y, //Y-Coordinate
                         size_x: element.width * element.scaleX, //Breite optional
