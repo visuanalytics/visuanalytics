@@ -618,7 +618,7 @@ export const SceneCreation = () => {
      */
     const fetchDiagramPreview = (diagram: DiagramInfo) => {
         //("fetcher called");
-        let url = "/infoprovider/" + selectedId + "/" + diagram.name;
+        let url = "/visuanalytics/infoprovider/" + selectedId + "/" + diagram.name;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
