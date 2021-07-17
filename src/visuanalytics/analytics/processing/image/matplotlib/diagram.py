@@ -150,13 +150,13 @@ def generate_diagram_custom(values: dict, step_data: StepData, prev_paths):
     with resources.open_resource(file, "wt") as f:
         pass
 
-    print("#####")
-    print("#####")
-    print("#####")
-    step_data.print_data()
-    print("#####")
-    print("#####")
-    print("#####")
+    #print("#####")
+    #print("#####")
+    #print("#####")
+    #step_data.print_data()
+    #print("#####")
+    #print("#####")
+    #print("#####")
 
     plot_wrapper(values["diagram_config"], file, step_data)
 
@@ -244,34 +244,6 @@ def barh_plot(values, fig=None, ax=None):
     return fig, ax
 
 
-def bar_multiple_plot(values, fig=None, ax=None):
-    x = values.get("x", np.arange(len(values["y_left"])))
-    width = values.get("width", 0.5)
-    color_left = values.get("color_left", default_color)
-    color_right = values.get("color_right", default_color)
-
-    if not fig and not ax:
-        fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-    ax.set_xticks(np.concatenate((np.array([0]), x)))
-    ax.bar(x - width / 2, values["y_left"], width=width, color=color_left)
-    ax.bar(x + width / 2, values["y_right"], width=width, color=color_right)
-    return fig, ax
-
-
-def barh_multiple_plot(values, fig=None, ax=None):
-    y = values.get("y", np.arange(len(values["x_up"])))
-    height = values.get("height", 0.5)
-    color_up = values.get("color_up", default_color)
-    color_down = values.get("color_down", default_color)
-
-    if not fig and not ax:
-        fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-    ax.set_xticks(np.concatenate((np.array([0]), y)))
-    ax.barh(y=y - height / 2, width=values["x_up"], height=height, color=color_down)
-    ax.barh(y=y + height / 2, width=values["x_down"], height=height, color=color_up)
-    return fig, ax
-
-
 def scatter_plot(values, fig=None, ax=None):
     x = values.get("x", np.arange(len(values["y"])))
     marker = values.get("marker", "o")
@@ -285,25 +257,6 @@ def scatter_plot(values, fig=None, ax=None):
         ax.scatter(x, values["y"], marker=marker, s=area, c=color)
     else:
         ax.scatter(x, values["y"], marker=marker, c=color)
-    return fig, ax
-
-
-def filled_plot(values, fig=None, ax=None):
-    x = values.get("x", np.arange(len(values["y"][0]["y"])))
-
-    if not fig and not ax:
-        fig, ax = get_plot_vars(dpi=values.get("dpi", dpi_default))
-    ax.set_xticks(np.concatenate((np.array([0]), x)))
-    for line in values["y"]:
-        fig, ax = line_plot(values=line, fig=fig, ax=ax, x=x)
-    for area in values["areas"]:
-        sec = area.get("index_2", None)
-        if sec:
-            ax.fill_between(x, values["y"][area["index_1"]]["y"], values["y"][sec]["y"],
-                            color=area.get("color", default_color), alpha=area.get("alpha", 1))
-        else:
-            ax.fill_between(x, values["y"][area["index_1"]]["y"], color=area.get("color", default_color),
-                            alpha=area.get("alpha", 1))
     return fig, ax
 
 
@@ -384,14 +337,8 @@ def create_plot(values, step_data, array_source, get_xy=True, fig=None, ax=None)
         fig, ax = bar_plot(values=values_new, fig=fig, ax=ax)
     elif t == "barh":
         fig, ax = barh_plot(values=values_new, fig=fig, ax=ax)
-    elif t == "bar_multiple":
-        fig, ax = bar_multiple_plot(values=values_new, fig=fig, ax=ax)
-    elif t == "barh_multiple":
-        fig, ax = barh_multiple_plot(values=values_new, fig=fig, ax=ax)
     elif t == "scatter":
         fig, ax = scatter_plot(values=values_new, fig=fig, ax=ax)
-    elif t == "fill":
-        fig, ax = filled_plot(values=values_new, fig=fig, ax=ax)
     elif t == "pie":
         fig, ax = pie_plot(values=values_new, fig=fig, ax=ax)
 
