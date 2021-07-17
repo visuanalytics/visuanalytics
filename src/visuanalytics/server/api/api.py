@@ -169,6 +169,10 @@ def add_infoprovider():
                 err = flask.jsonify({f"err_msg": f"Missing schedule for datasource {datasource['name']}"})
                 return err, 400
 
+            if "listItems" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field listItems for datasource {datasource['name']}"})
+                return err, 400
+
         if not queries.insert_infoprovider(infoprovider):
             err = flask.jsonify({"err_msg": f"There already exists an infoprovider with the name "
                                             f"{infoprovider['infoprovider_name']}"})
@@ -335,6 +339,10 @@ def update_infoprovider(infoprovider_id):
 
             if "schedule" not in datasource:
                 err = flask.jsonify({f"err_msg": f"Missing field schedule for datasource {datasource['name']}"})
+                return err, 400
+
+            if "listItems" not in datasource:
+                err = flask.jsonify({f"err_msg": f"Missing field listItems for datasource {datasource['name']}"})
                 return err, 400
 
         update_info = queries.update_infoprovider(infoprovider_id, updated_data)

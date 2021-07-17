@@ -19,13 +19,14 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
-
+//TODO: document addition of apiName
 /**
  * Method that transforms a list of array processings into a list of calculate
  * objects as they are needed by the backend
  * @param processings The list of array processings to be transformed
+ * @param apiName Name of the api the calculate is created for
  */
-export const createCalculates = (processings: Array<ArrayProcessingData>) => {
+export const createCalculates = (processings: Array<ArrayProcessingData>, apiName: string) => {
     const calculates: Array<BackendCalculate> = [];
     const sumNames: Array<string> = [];
     const sumReplaceNames: Array<string> = [];
@@ -38,23 +39,23 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     processings.forEach((processing) => {
         switch(processing.operation.name) {
             case "sum": {
-                sumNames.push("_loop|" + processing.array);
-                sumReplaceNames.push("_loop|" + processing.name);
+                sumNames.push("_req|" + apiName + "|" + processing.array);
+                sumReplaceNames.push(processing.name);
                 break;
             }
             case "mean": {
-                meanNames.push("_loop|" + processing.array);
-                meanReplaceNames.push("_loop|" + processing.name);
+                meanNames.push("_req|" + apiName + "|" + processing.array);
+                meanReplaceNames.push(processing.name);
                 break;
             }
             case "min": {
-                minNames.push("_loop|" + processing.array);
-                minReplaceNames.push("_loop|" + processing.name);
+                minNames.push("_req|" + apiName + "|" + processing.array);
+                minReplaceNames.push(processing.name);
                 break;
             }
             case "max": {
-                maxNames.push("_loop|" + processing.array);
-                maxReplaceNames.push("_loop|" + processing.name);
+                maxNames.push("_req|" + apiName + "|" + processing.array);
+                maxReplaceNames.push(processing.name);
             }
         }
     })
@@ -101,17 +102,19 @@ export const createCalculates = (processings: Array<ArrayProcessingData>) => {
     return calculates;
 }
 
+//TODO: document addition of apiName
 /**
  * Method that transforms a list of string replacements into a list of replacement
  * objects as they are needed by the backend
  * @param replacements The list of string replacements to be transformed
+ * @param apiName Name of the datasource the replacement is created for
  */
-export const createReplacements = (replacements: Array<StringReplacementData>) => {
+export const createReplacements = (replacements: Array<StringReplacementData>, apiName: string) => {
     const replacementObjects: Array<BackendReplacement> = [];
     replacements.forEach((replacement) => {
         replacementObjects.push({
             type: "replace",
-            keys: [replacement.string],
+            keys: ["_req|" + apiName + "|" + replacement.string],
             new_keys: [replacement.name],
             old_value: replacement.replace,
             new_value: replacement.with,
@@ -340,9 +343,9 @@ export const transformBackendInfoProvider = (data: InfoProviderFromBackend) => {
                 time: backendDataSource.schedule.time,
                 interval: backendDataSource.schedule.timeInterval,
             },
-            listItems: new Array<ListItemRepresentation>(),
             arrayProcessingsList: backendDataSource.arrayProcessingsList,
-            stringReplacementList: backendDataSource.stringReplacementList
+            stringReplacementList: backendDataSource.stringReplacementList,
+            listItems:backendDataSource.listItems
         });
         //set the api keys in the map
         let apiKeyInput1: string;

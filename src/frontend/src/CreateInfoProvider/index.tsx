@@ -446,8 +446,8 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
-                    calculates: createCalculates(dataSource.arrayProcessingsList),
-                    replacements: createReplacements(dataSource.stringReplacementList),
+                    calculates: createCalculates(dataSource.arrayProcessingsList, dataSource.apiName),
+                    replacements: createReplacements(dataSource.stringReplacementList, dataSource.apiName),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,
@@ -458,7 +458,9 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     selected_data: dataSource.selectedData,
                     historized_data: dataSource.historizedData,
                     arrayProcessingsList: dataSource.arrayProcessingsList,
-                    stringReplacementList: dataSource.stringReplacementList
+                    stringReplacementList: dataSource.stringReplacementList,
+                    //TODO: ADD THIS TO DOCUMENTATION!!!
+                    listItems: dataSource.listItems
                 })
             }
         });

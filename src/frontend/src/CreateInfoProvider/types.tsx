@@ -85,6 +85,7 @@ export type BackendDataSource = {
     historized_data: Array<string>;
     arrayProcessingsList: Array<ArrayProcessingData>;
     stringReplacementList: Array<StringReplacementData>;
+    listItems: Array<ListItemRepresentation>;
 }
 
 //type/format of infoproviders returned by the backend
