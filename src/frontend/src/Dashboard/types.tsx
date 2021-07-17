@@ -3,7 +3,7 @@
 /**
  * This type is used to correctly handle each single infoprovider from the response from the backend.
  */
-import {Diagram} from "../CreateInfoProvider/types";
+import {DataImage, DataText} from "../SceneCreation/SceneEditor/types";
 
 export type jsonRef = {
     infoprovider_id: number;
@@ -61,15 +61,24 @@ export type PreviewImage = {
     id: number;
 }
 
+/**
+ * Represents all information of one single scene fetched from the backend.
+ */
 export type FullScene = {
     scene_name: string;
     used_images: Array<number>;
     used_infoproviders: Array<number>;
-    images: Array<Diagram>;
+    images: ImagesBackend;
     backgroundImage: number;
     backgroundType: string;
     backgroundColor: string;
     backgroundColorEnabled: boolean;
     itemCounter: number;
     scene_items: string;
+}
+
+export type ImagesBackend = {
+    type: string;
+    path: string;
+    overlay: Array<DataImage | DataText>
 }
