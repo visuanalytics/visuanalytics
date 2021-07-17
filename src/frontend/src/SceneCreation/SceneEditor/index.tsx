@@ -63,6 +63,7 @@ interface SceneEditorProps {
     fetchBackgroundImageById: (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => void;
     sceneFromBackend?: FullScene;
     sessionStorageFullClear: () => void;
+    editId?: number;
 }
 
 export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
@@ -600,6 +601,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         reportError("Fehler beim Senden des Exports der Szene: " + err);
     }, [reportError]);
 
+    //extract editId from props to use in dependencies
+    const editId = props.editId;
 
     /**
      * Method to post all settings for the Info-Provider made by the user to the backend.
@@ -607,7 +610,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const postSceneExport = React.useCallback(() => {
         //console.log("fetcher called");
-        let url = "visuanalytics/scene"
+        //check if the edit mode is active by looking for the props object - post to different route if editing!
+        let url = (propsSceneFromBackend !== undefined && editId !== undefined) ? "visuanalytics/scene/" + editId : "visuanalytics/scene";
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
         //setup a timer to stop the request after 5 seconds
@@ -615,7 +619,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const timer = setTimeout(() => abort.abort(), 5000);
         //starts fetching the contents from the backend
         fetch(url, {
-            method: "POST",
+            //check if the edit mode is active by looking for the props object - use PUT if edit mode is active!
+            method: propsSceneFromBackend !== undefined ? "PUT" : "POST",
             headers: {
                 "Content-Type": "application/json\n"
             },
@@ -634,7 +639,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             //only called when the component is still mounted
             if (isMounted.current) handleExportSceneError(err)
         }).finally(() => clearTimeout(timer));
-    }, [createJSONExport, handleExportSceneSuccess, handleExportSceneError])
+    }, [editId, createJSONExport, handleExportSceneSuccess, handleExportSceneError])
 
     /**
      * Method to handle the results of posting the preview image of a scene.
@@ -2036,6 +2041,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     <Grid item container xs={12} justify={"space-evenly"}>
                         <Grid item>
                             <TextField className={classes.title} margin={"normal"} variant={"outlined"}
+                                       disabled={props.sceneFromBackend !== undefined}
                                        color={"primary"} label={"Szenen-Titel"}
                                        value={sceneName}
                                        onChange={event => (setSceneName(event.target.value.replace(' ', '_')))}>

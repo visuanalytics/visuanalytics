@@ -45,7 +45,7 @@ export const SceneOverview: React.FC<SceneOverviewProps> = (props) => {
     const handleFetchSceneSuccess = (jsonData: any) => {
         const data = jsonData as FullScene;
         //console.log(data);
-        components?.setCurrent("sceneEditor", {sceneFromBackend: data})
+        components?.setCurrent("sceneEditor", {sceneFromBackend: data, editId: currentScene.scene_id})
         //TODO: change component with the fetched Scene in props...
     };
 

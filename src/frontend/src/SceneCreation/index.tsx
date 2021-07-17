@@ -18,6 +18,7 @@ import {FullScene} from "../Dashboard/types";
 
 interface SceneCreationProps {
     sceneFromBackend?: FullScene;
+    editId?: number;
 }
 
 /**
@@ -845,6 +846,7 @@ export const SceneCreation: React.FC<SceneCreationProps> = (props) => {
                             fetchBackgroundImageById={fetchBackgroundImageById}
                             sceneFromBackend={props.sceneFromBackend}
                             sessionStorageFullClear={clearSessionStorage}
+                            editId={props.editId}
                         />
                     )
                 }
