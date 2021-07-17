@@ -584,6 +584,7 @@ def update_infoprovider(infoprovider_id, updated_data):
     infoprovider_json.update({"api": api_step_new})
     infoprovider_json.update({"transform": new_transform})
     infoprovider_json.update({"images": deepcopy(updated_data["diagrams"])})
+    infoprovider_json.update({"diagrams_original": updated_data["diagrams_original"]})
     infoprovider_json.update({"datasources": datasources_copy})
 
     shutil.rmtree(os.path.join(TEMP_LOCATION, old_infoprovider_name), ignore_errors=True)

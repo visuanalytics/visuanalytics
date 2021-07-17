@@ -304,6 +304,10 @@ def update_infoprovider(infoprovider_id):
             err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
             return err, 400
 
+        if "diagrams_original" not in updated_data:
+            err = flask.jsonify({"err_msg": "Missing field 'diagrams'"})
+            return err, 400
+
         for datasource in updated_data["datasources"]:
             if "datasource_name" not in datasource:
                 err = flask.jsonify({"err_msg": "Missing field 'name' in a datasource"})
