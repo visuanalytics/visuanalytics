@@ -651,7 +651,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     storing: [],
                     formulas: dataSource.customData,
                     calculates: createCalculates(dataSource.arrayProcessingsList, dataSource.apiName),
-                    replacements: createReplacements(dataSource.stringReplacementList),
+                    replacements: createReplacements(dataSource.stringReplacementList, dataSource.apiName),
                     schedule: {
                         type: dataSource.schedule.type,
                         time: dataSource.schedule.time,

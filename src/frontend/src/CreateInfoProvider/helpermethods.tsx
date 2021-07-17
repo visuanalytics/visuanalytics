@@ -19,7 +19,7 @@ export const extractKeysFromSelection = (selectedData: Array<SelectedDataItem>) 
     return keyArray;
 }
 
-
+//TODO: document addition of apiName
 /**
  * Method that transforms a list of array processings into a list of calculate
  * objects as they are needed by the backend
@@ -102,17 +102,19 @@ export const createCalculates = (processings: Array<ArrayProcessingData>, apiNam
     return calculates;
 }
 
+//TODO: document addition of apiName
 /**
  * Method that transforms a list of string replacements into a list of replacement
  * objects as they are needed by the backend
  * @param replacements The list of string replacements to be transformed
+ * @param apiName Name of the datasource the replacement is created for
  */
-export const createReplacements = (replacements: Array<StringReplacementData>) => {
+export const createReplacements = (replacements: Array<StringReplacementData>, apiName: string) => {
     const replacementObjects: Array<BackendReplacement> = [];
     replacements.forEach((replacement) => {
         replacementObjects.push({
             type: "replace",
-            keys: [replacement.string],
+            keys: ["_req|" + apiName + "|" + replacement.string],
             new_keys: [replacement.name],
             old_value: replacement.replace,
             new_value: replacement.with,
