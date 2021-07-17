@@ -551,7 +551,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                         pos_y: element.y, //item.y
                         color: element.color, //item.color
                         font_size: element.fontSize, //item.fontSize
-                        font: "fonts/" + element.fontFamily + ".tff", // "fonts/{item.font}.ttf"
+                        font: "fonts/" + element.fontFamily + ".ttf", // "fonts/{item.font}.ttf"
                         pattern: element.textContent // "Datum: {_req|api_key}"
                     }
                     dataTextAndImages.push(itemToPush);
