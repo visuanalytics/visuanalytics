@@ -39,7 +39,7 @@ export const SceneCreation = () => {
     //list of paths of the images fetched from the backend
     const [imageList, setImageList] = React.useState<Array<ImageFrontendData>>([]);
     //list of paths of the background images fetched from the backend
-    const [backgroundImageList, setBackgroundImageList] = React.useState<Array<string>>([]);
+    const [backgroundImageList, setBackgroundImageList] = React.useState<Array<ImageFrontendData>>([]);
     //true when the continue of step 0 is disabled - used for blocking the button until all fetches are done
     const [step0ContinueDisabled, setStep0ContinueDisabled] = React.useState(false);
     //stores the id currently selected infoprovider - 0 is forbidden by the backend so it can be used as a default value
@@ -176,7 +176,7 @@ export const SceneCreation = () => {
     //mutable value to store the list of all background images - not in state because it needs to be changed without renders
     const allBackgroundImageList = React.useRef<Array<ImageBackendData>>([]);
     //mutable list of the paths of all background images received from the backend as blob - also not in state to change without renders
-    const backgroundImageFetchResults = React.useRef<Array<string>>([]);
+    const backgroundImageFetchResults = React.useRef<Array<ImageFrontendData>>([]);
 
     /**
      * Method that serves to recursively fetch all background images from the backend.
@@ -195,12 +195,13 @@ export const SceneCreation = () => {
         } else {
             //get the id of the next image to be fetched
             const nextId = allBackgroundImageList.current[0].image_id;
+            const nextURL = allBackgroundImageList.current[0].path;
             //delete the image with this id from the images that still need to be fetched
             allBackgroundImageList.current  = allBackgroundImageList.current.filter((image) => {
                 return image.image_id !== nextId;
             })
             //fetch the image with the id from the backend
-            fetchBackgroundImageById(nextId, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
+            fetchBackgroundImageById(nextId, nextURL, handleBackgroundImageByIdSuccess, handleBackgroundImageByIdError);
         }
     }
 
@@ -209,10 +210,16 @@ export const SceneCreation = () => {
     /**
      * Method that handles successful fetches of images from the backend
      * @param jsonData  The image as blob sent by the backend.
+     * @param id Id of the background image in the backend
+     * @param url Path of the image in the background
      */
-    const handleBackgroundImageByIdSuccess = (jsonData: any) => {
+    const handleBackgroundImageByIdSuccess = (jsonData: any, id: number, url: string) => {
         //create a URL for the blob image and store it in the list of background images
-        backgroundImageFetchResults.current.push(URL.createObjectURL(jsonData));
+        backgroundImageFetchResults.current.push({
+            image_id: id,
+            image_backend_path: url,
+            image_blob_url: URL.createObjectURL(jsonData)
+        });
         //fetch the next background image afterwards
         fetchNextBackgroundImage();
     }
@@ -236,7 +243,7 @@ export const SceneCreation = () => {
      * The standard hook "useCallFetch" is not used here since we want to pass an id
      * as additional argument (storing in state is no alternative because there wont be re-render).
      */
-    const fetchBackgroundImageById = (id: number, successHandler: (jsonData: any) => void, errorHandler: (err: Error) => void) => {
+    const fetchBackgroundImageById = (id: number, image_url: string, successHandler: (jsonData: any, id: number, url: string) => void, errorHandler: (err: Error) => void) => {
         let url = "/visuanalytics/image/" + id;
         //if this variable is set, add it to the url
         if (process.env.REACT_APP_VA_SERVER_URL) url = process.env.REACT_APP_VA_SERVER_URL + url
@@ -257,7 +264,7 @@ export const SceneCreation = () => {
         }).then((data) => {
             //success case - the data is passed to the handler
             //only called when the component is still mounted
-            if (isMounted.current) successHandler(data)
+            if (isMounted.current) successHandler(data, id, image_url)
         }).catch((err) => {
             //error case - the error code ist passed to the error handler
             //only called when the component is still mounted
@@ -721,6 +728,8 @@ export const SceneCreation = () => {
         sessionStorage.setItem("selectedId-" + uniqueId, selectedId.toString());
     }, [selectedId])
 
+    console.log(backgroundImageList)
+
     /**
      * Removes all items of this component from the sessionStorage.
      */
@@ -820,7 +829,7 @@ export const SceneCreation = () => {
                             imageList={imageList}
                             setImageList={(images: Array<ImageFrontendData>) => setImageList(images)}
                             backgroundImageList={backgroundImageList}
-                            setBackgroundImageList={(backgrounds: Array<string>) => setBackgroundImageList(backgrounds)}
+                            setBackgroundImageList={(backgrounds: Array<ImageFrontendData>) => setBackgroundImageList(backgrounds)}
                             editMode={false}
                             reportError={(message: string) => reportError(message)}
                             fetchImageById={fetchImageById}
