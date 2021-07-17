@@ -753,7 +753,7 @@ def get_infoprovider_logs(infoprovider_id):
             "datasource_id": datasource_log["job_id"],
             "datasource_name": datasource_log["datasource_name"],
             "state": datasource_log["state"],
-            "errorMsg": datasource_log["error_msg"],
+            "errorMsg": datasource_log["error_msg"] if datasource_log["error_msg"] != "" else "successful",
             "errorTraceback": datasource_log["error_traceback"],
             "duration": datasource_log["duration"],
             "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(datasource_log["start_time"]))
@@ -777,7 +777,7 @@ def get_videojob_logs(videojob_id):
         "videojob_id": log["job_id"],
         "videojob_name": log["job_name"],
         "state": log["state"],
-        "errorMsg": log["error_msg"],
+        "errorMsg": log["error_msg"] if log["error_msg"] != "" else "successful",
         "errorTraceback": log["error_traceback"],
         "duration": log["duration"],
         "startTime": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(log["start_time"]))
