@@ -446,7 +446,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                     transform: [],
                     storing: [],
                     formulas: dataSource.customData,
-                    calculates: createCalculates(dataSource.arrayProcessingsList),
+                    calculates: createCalculates(dataSource.arrayProcessingsList, dataSource.apiName),
                     replacements: createReplacements(dataSource.stringReplacementList),
                     schedule: {
                         type: dataSource.schedule.type,
