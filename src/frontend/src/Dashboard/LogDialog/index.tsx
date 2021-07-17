@@ -146,7 +146,7 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
         return (
             <TableRow key={index}>
                 <TableCell className={classes.logTableCell}>{index}</TableCell>
-                <TableCell className={classes.logTableCell}>{entry.datasource_name}</TableCell>
+                <TableCell className={classes.logTableCell}>{entry.object_name}</TableCell>
                 <TableCell className={classes.logTableCell}>{entry.state}</TableCell>
                 <TableCell className={classes.logMessageTableCell}>{entry.errorMsg}</TableCell>
                 <TableCell className={classes.logTableCell}>{entry.duration}</TableCell>

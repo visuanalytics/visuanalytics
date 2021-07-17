@@ -29,8 +29,8 @@ export type answer = {
 
 
 export type LogEntry = {
-    datasource_id: string;
-    datasource_name: string;
+    object_id: string;
+    object_name: string;
     state: string;
     errorMsg: string;
     errorTraceback: string;

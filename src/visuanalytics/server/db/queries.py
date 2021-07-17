@@ -749,8 +749,8 @@ def get_infoprovider_logs(infoprovider_id):
                                       "WHERE pipeline_type='DATASOURCE' AND datasource.datasource_id=?"
                                       "ORDER BY job_logs_id DESC", [datasource_id["datasource_id"]]).fetchall()
         [logs.append({
-            "datasource_id": datasource_log["job_id"],
-            "datasource_name": datasource_log["datasource_name"],
+            "object_id": datasource_log["job_id"],
+            "object_name": datasource_log["datasource_name"],
             "state": datasource_log["state"],
             "errorMsg": datasource_log["error_msg"],
             "errorTraceback": datasource_log["error_traceback"],
@@ -773,8 +773,8 @@ def get_videojob_logs(videojob_id):
                                   "WHERE pipeline_type='JOB' AND job_id=?"
                                   "ORDER BY job_logs_id DESC", [videojob_id]).fetchall()
     return [{
-        "videojob_id": log["job_id"],
-        "videojob_name": log["job_name"],
+        "object_id": log["job_id"],
+        "object_name": log["job_name"],
         "state": log["state"],
         "errorMsg": log["error_msg"],
         "errorTraceback": log["error_traceback"],
