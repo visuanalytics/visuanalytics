@@ -255,7 +255,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
     }, [infoProvName])
     //store newDataSourceMode in sessionStorage
     React.useEffect(() => {
-        sessionStorage.setItem("noKey-" + uniqueId, newDataSourceMode ? "true" : "false");
+        sessionStorage.setItem("noKey-" + uniqueId, newDataSourceMode ? "true" : "false"); //TODO: This seems wrong!!!
     }, [newDataSourceMode])
     // Store infoProvDataSource in session storage
     React.useEffect(() => {
@@ -308,6 +308,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
         sessionStorage.removeItem("diagramName-" + uniqueId);
         sessionStorage.removeItem("diagramStep-" + uniqueId);
         sessionStorage.removeItem("refetchDoneList-" + uniqueId);
+        sessionStorage.removeItem("noKey-" + uniqueId); //when removing the setter above, remove this too!!
     }
 
     const steps = [
