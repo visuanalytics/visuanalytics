@@ -26,6 +26,10 @@ interface LogDialogProps {
     reportError: (message: string) => void;
 }
 
+/**
+ * This component renders the log entries either for the infoproviders or video jobs
+ * @param props
+ */
 export const LogDialog: React.FC<LogDialogProps> = (props) => {
     const classes = useStyles();
 
@@ -152,9 +156,11 @@ export const LogDialog: React.FC<LogDialogProps> = (props) => {
                 <TableCell className={classes.logTableCell}>{entry.duration}</TableCell>
                 <TableCell className={classes.logTableCell}>{entry.startTime}</TableCell>
                 <TableCell className={classes.logTableCell}>
-                    <Button onClick={() => handleTracebackClick(entry.errorTraceback)}>
-                        Traceback anzeigen
-                    </Button>
+                    {entry.state !== "1" &&
+                        <Button onClick={() => handleTracebackClick(entry.errorTraceback)}>
+                            Traceback anzeigen
+                        </Button>
+                    }
                 </TableCell>
             </TableRow>
         );
