@@ -724,7 +724,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         plot: {
                             type: type,
                             x: Array.from(Array(diagram.amount).keys()),
-                            y: item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName,
+                            y: "{_req|" + (item.listItem.parentKeyName === "" ? item.listItem.keyName : item.listItem.parentKeyName + "|" + item.listItem.keyName) + "}",
                             color: item.color,
                             numericAttribute: item.numericAttribute,
                             stringAttribute: item.stringAttribute,
@@ -745,7 +745,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                         plot: {
                             type: type,
                             x: item.intervalSizes,
-                            y: item.name,
+                            y: "{_req|" + item.name + "}",
                             color: item.color,
                             dateFormat: item.dateFormat,
                             x_ticks: {

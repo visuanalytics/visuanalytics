@@ -379,7 +379,7 @@ export const DiagramCreation: React.FC<DiagramCreationProps> = (props) => {
      */
     const checkObjectForNumeric = (object: Array<ListItemRepresentation>) => {
         for (let index = 0; index < object.length; ++index) {
-            if (object[index].value === "Zahl") return true;
+            if (object[index].value === "Zahl" || object[index].value === "Gleitkommazahl") return true;
         }
         return false;
     }

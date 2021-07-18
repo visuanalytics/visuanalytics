@@ -85,7 +85,7 @@ export const DiagramTypeSelect: React.FC<DiagramTypeSelectProps> = (props) => {
         const numericAttributes: Array<ListItemRepresentation> = []
         for (let index = 0; index < object.length; ++index) {
             //console.log("checking: " + object[index].keyName);
-            if (object[index].value === "Zahl") numericAttributes.push(object[index]);
+            if (object[index].value === "Zahl" || object[index].value === "Gleitkommazahl") numericAttributes.push(object[index]);
         }
         return numericAttributes;
     }
