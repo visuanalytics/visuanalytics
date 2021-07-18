@@ -61,6 +61,7 @@ task 16: find problem with data writing on unmounted component in dashboard -> p
 interface CreateInfoproviderProps {
     finishDataSourceInEdit?: (dataSource: DataSource, apiKeyInput1: string, apiKeyInput2: string) => void;
     cancelNewDataSourceInEdit?: () => void;
+    checkDuplicateNameInEdit?: (name: string) => boolean;
 }
 
 /*
@@ -768,7 +769,7 @@ export const CreateInfoProvider: React.FC<CreateInfoproviderProps> = (props) => 
                         continueHandler={handleContinue}
                         backHandler={handleBack}
                         //setApiData={setApiData}
-                        checkNameDuplicate={checkNameDuplicate}
+                        checkNameDuplicate={props.checkDuplicateNameInEdit === undefined ? checkNameDuplicate : props.checkDuplicateNameInEdit}
                         query={query}
                         setQuery={(query: string) => setQuery(query)}
                         apiKeyInput1={apiKeyInput1}

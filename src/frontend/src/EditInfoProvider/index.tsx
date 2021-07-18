@@ -351,7 +351,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
      */
     const checkNameDuplicate = (name: string) => {
         for (let i = 0; i < infoProvDataSources.length; i++) {
-            if (infoProvDataSources[i].apiName === name && i !== selectedDataSource) return true;
+            if (infoProvDataSources[i].apiName === name) return true;
         }
         return false;
     }
@@ -871,6 +871,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     <CreateInfoProvider
                         finishDataSourceInEdit={finishNewDataSource}
                         cancelNewDataSourceInEdit={cancelDataSourceCreation}
+                        checkDuplicateNameInEdit={checkNameDuplicate}
                     />
                 </React.Fragment>
             );
