@@ -78,7 +78,6 @@ export const EditDataCustomization: React.FC<EditDataCustomizationProps> = (prop
                     <EditCustomData
                         continueHandler={(index) => props.setDataCustomizationStep(props.dataCustomizationStep + index)}
                         backHandler={() => props.setDataCustomizationStep(props.dataCustomizationStep - 1)}
-                        stepToEditSingleFormel={(index) => props.continueHandler(index)}
                         editInfoProvider={props.finishEditing}
                         infoProvDataSources={props.infoProvDataSources}
                         setInfoProvDataSources={props.setInfoProvDataSources}
