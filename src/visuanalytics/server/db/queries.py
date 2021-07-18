@@ -259,6 +259,10 @@ def insert_video_job(video, update=False, job_id=None):
             tts_names.append(tts_name)
     infoprovider_names += tts_names
 
+    count = con.execute("SELECT COUNT(*) FROM job WHERE job_name=?", [video_name]).fetchone()["COUNT(*)"]
+    if count > 0 and not update:
+        return False
+
     # Daten aller verwendeten Infoprovider sammeln und kombinieren
     for infoprovider_name in infoprovider_names:
         with open_resource(_get_infoprovider_path(infoprovider_name.replace(" ", "-")), "r") as f:

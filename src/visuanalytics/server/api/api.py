@@ -224,7 +224,7 @@ def add_videojob():
 
         if not queries.insert_video_job(video):
             err = flask.jsonify({"err_msg": f"There already exists a video with the name "
-                                            f"{video['video_name']}"})
+                                            f"{video['videojob_name']}"})
             return err, 400
 
         return "", 204
