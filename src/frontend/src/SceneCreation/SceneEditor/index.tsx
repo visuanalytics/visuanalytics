@@ -1049,6 +1049,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
             // set the item selected to no item selected
             setItemSelected(false);
+            // reset default font properties
+            setCurrentFontSize(20);
+            setCurrentFontColor("#000000");
+            setCurrentFontFamily("Arial");
             // reset the delete text on the editor
             setDeleteText("Letztes Elem. entf.");
             return;
