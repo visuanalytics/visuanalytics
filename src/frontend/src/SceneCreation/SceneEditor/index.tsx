@@ -80,6 +80,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const uploadReference = React.useRef<HTMLInputElement>(null);
     const backgroundUploadReference = React.useRef<HTMLInputElement>(null);
     const mainRef = React.useRef<HTMLDivElement>(null);
+    //stage reference
+    const stageRef = React.useRef<Konva.Stage>(null);
     // reference for the background Image
     const [backgroundImage, setBackgroundImage] = React.useState<HTMLImageElement>(new window.Image())
     // index of the background image selected in the list of background images
@@ -131,8 +133,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     // state to check the size by how much an item should be moved either in x or y direction
     const [stepSize, setStepSize] = React.useState(5);
-    // state for the stage of the canvas, used for the export
-    const [stage, setStage] = React.useState<Konva.Stage>()
 
     // states for all textediting related properties
     const [textEditContent, setTextEditContent] = React.useState("");
@@ -163,24 +163,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     //true when the dialog for going back is opened
     const [backDialogOpen, setBackDialogOpen] = React.useState(false);
-
-
-    /**
-     * Defines event listener for finishing th page loading.
-     * Sets the default Konva stage - this is necessary since the id of the container for it will
-     * only contain after the page is loaded.
-     * Also removes the handler when unmounting the component.
-     */
-    React.useEffect(() => {
-        const setStageAfterLoad = () => {
-            setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
-        }
-        window.addEventListener("load", setStageAfterLoad);
-        //setStage(new Konva.Stage({container: "main", width: 960, height: 540}));
-        return () => {
-            window.removeEventListener("load", setStageAfterLoad);
-        }
-    }, [])
 
 
     //extract imageList, backgroundImageList and diagramList from props to use in dependencies
@@ -313,10 +295,6 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     React.useEffect(() => {
         sessionStorage.setItem("sceneName-" + uniqueId, sceneName);
     }, [sceneName])
-    //store stage in sessionStorage
-    React.useEffect(() => {
-        sessionStorage.setItem("stage-" + uniqueId, JSON.stringify(stage));
-    }, [stage])
 
     /**
      * Removes all items of this component from the sessionStorage.
@@ -540,7 +518,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         const returnValue: JsonExport = {
             scene_name: sceneName,
             used_images: imageIDArray.current.concat([backgroundID.current, scenePreviewID.current]),
-            used_infoproviders: [infoProviderId],
+            used_infoproviders: propsSceneFromBackend !== undefined ? propsSceneFromBackend.used_infoproviders : [infoProviderId],
             images:  base,
             backgroundImage: backgroundImageList[backgroundImageIndex].image_id,
             backgroundType: backGroundType,
@@ -586,7 +564,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             }
         });
         return returnValue;
-    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter]);
+    }, [backgroundImageIndex, backgroundImageList, items, infoProviderId, sceneName, backGroundColor, backGroundColorEnabled, backGroundType, itemCounter, propsSceneFromBackend]);
 
     /**
      * Method to handle the results of posting the exported scene to the backend.
@@ -714,8 +692,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const createPreviewImage = React.useCallback(async () => {
         console.log("creating the preview image");
-        if (stage !== undefined){
-            const originalStage = saveHandler(stage);
+        if (stageRef.current !== null){
+            const originalStage = saveHandler(stageRef.current);
             if (originalStage !== "Empty Stage"){
                 const blobVar = await fetch(originalStage).then(res => res.blob());
                 let file = new File([blobVar], 'preview.png', {
@@ -729,7 +707,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 //console.log(previewImageData.current);
             }
         }
-    }, [postScenePreview, stage, sceneName])
+    }, [postScenePreview, sceneName])
 
     /**
      * Method to handle the results of posting the background image of a scene.
@@ -1014,8 +992,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
         const localItems = items.slice();
         const index = localItems.indexOf(selectedObject);
-        if (e.target.getStage() !== null) {
-            const selectedNode = e.target.getStage()!.findOne("." + selectedObject.id);
+        if (stageRef.current !== null) {
+            const selectedNode = stageRef.current.findOne("." + selectedObject.id);
 
             const absPos = selectedNode.getAbsolutePosition();
 
@@ -1048,9 +1026,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
         // get the name of the element that was clicked on
         const name = e.target.name();
         // if the element was the stage the following is getting executed
-        if (e.target === e.target.getStage() || name === "background") {
-            // setting the stage state, important for the export
-            setStage(e.target.getStage()!);
+        if (e.target === stageRef.current || name === "background") {
             // remove the selectedItemName
             setSelectedItemName("");
             // check if the user is currently editing a text
@@ -1133,7 +1109,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     const handleCanvasClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
 
         const local = getRelativePointerPosition(e);
-        if (local === undefined) {
+        if (local === null || local === undefined) {
             return;
         }
         const localX: number = local.x;
@@ -1433,8 +1409,11 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @returns the position of the pointer
      */
     const getRelativePointerPosition = (e: any) => {
-        let pos = e.target.getStage().getPointerPosition();
-        return (pos);
+        if(stageRef.current !== null) {
+            let pos = stageRef.current.getPointerPosition();
+            return (pos);
+        }
+
     }
 
     /**
@@ -1594,39 +1573,40 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      */
     const handleTransformEnd = (e: any) => {
         //get the position, transformation and rotation of the transformed element
-        const selectedNode = e.target.getStage().findOne("." + selectedItemName);
-        const absPos = selectedNode.getAbsolutePosition();
-        const absTrans = selectedNode.getAbsoluteScale();
-        const absRot = selectedNode.getAbsoluteRotation();
-        // apply the changes
-        const localItems = items.slice();
-        const index = items.indexOf(selectedObject);
-        let scaleX = absTrans.x;
-        let scaleY = absTrans.y;
-        if (absTrans.x > 960 / selectedObject.width){
-            scaleX = (960 - selectedObject.x) / selectedObject.width;
+        if(stageRef.current !== null) {
+            const selectedNode = stageRef.current.findOne("." + selectedItemName);
+            const absPos = selectedNode.getAbsolutePosition();
+            const absTrans = selectedNode.getAbsoluteScale();
+            const absRot = selectedNode.getAbsoluteRotation();
+            // apply the changes
+            const localItems = items.slice();
+            const index = items.indexOf(selectedObject);
+            let scaleX = absTrans.x;
+            let scaleY = absTrans.y;
+            if (absTrans.x > 960 / selectedObject.width) {
+                scaleX = (960 - selectedObject.x) / selectedObject.width;
+            }
+            if (absTrans.y > 540 / selectedObject.height) {
+                scaleY = (540 - selectedObject.y) / selectedObject.height
+            }
+            localItems[index] = {
+                ...selectedObject,
+                x: parseInt((absPos.x).toFixed(0)),
+                y: parseInt((absPos.y).toFixed(0)),
+                scaleX: scaleX,
+                scaleY: scaleY,
+                rotation: absRot,
+            };
+            setSelectedObject(localItems[index]);
+            setItems(localItems);
+            currentItemRotation.current = absRot;
+            currentItemScaleX.current = scaleX;
+            currentItemScaleY.current = scaleY;
+            currentItemX.current = parseInt((absPos.x).toFixed(0));
+            currentItemY.current = parseInt((absPos.y).toFixed(0));
+            setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
+            setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
         }
-        if (absTrans.y > 540 / selectedObject.height){
-            scaleY = (540 - selectedObject.y) / selectedObject.height
-        }
-        localItems[index] = {
-            ...selectedObject,
-            x: parseInt((absPos.x).toFixed(0)),
-            y: parseInt((absPos.y).toFixed(0)),
-            scaleX: scaleX,
-            scaleY: scaleY,
-            rotation: absRot,
-        };
-        setSelectedObject(localItems[index]);
-        setItems(localItems);
-        currentItemRotation.current = absRot;
-        currentItemScaleX.current = scaleX;
-        currentItemScaleY.current = scaleY;
-        currentItemX.current = parseInt((absPos.x).toFixed(0));
-        currentItemY.current = parseInt((absPos.y).toFixed(0));
-        setCurrentXCoordinate(parseInt((absPos.x).toFixed(0)));
-        setCurrentYCoordinate(parseInt((absPos.y).toFixed(0)));
-
 
     }
 
@@ -2085,6 +2065,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                     <Grid item xs={12}>
                         <div ref={mainRef} className={classes.editorMain} id="main">
                             <Stage
+                                ref={stageRef}
                                 width={960}
                                 height={540}
                                 className={classes.editorCanvas}
