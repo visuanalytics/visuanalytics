@@ -983,9 +983,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the end of a drag event
      * Gets called when a drag event comes to an end
-     * @param e drag event
      */
-    const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const handleDragEnd = () => {
         if (mainRef.current !== null){
             mainRef.current.style.cursor = "grab";
         }
@@ -1110,11 +1109,10 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
     /**
      * Method to handle the onClick Event on the canvas
      * Gets called whenever the user clicks on the canvas to add an item.
-     * @param e onClick Event
      */
-    const handleCanvasClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+    const handleCanvasClick = () => {
 
-        const local = getRelativePointerPosition(e);
+        const local = getRelativePointerPosition();
         if (local === null || local === undefined) {
             return;
         }
@@ -1418,7 +1416,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * Method to get the relative position of the pointer to the stage
      * @returns the position of the pointer
      */
-    const getRelativePointerPosition = (e: any) => {
+    const getRelativePointerPosition = () => {
         if(stageRef.current !== null) {
             let pos = stageRef.current.getPointerPosition();
             return (pos);
@@ -1579,9 +1577,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
 
     /**
      * Method to handle the end of a transform event
-     * @param e Transform Event
      */
-    const handleTransformEnd = (e: any) => {
+    const handleTransformEnd = () => {
         //get the position, transformation and rotation of the transformed element
         if(stageRef.current !== null) {
             const selectedNode = stageRef.current.findOne("." + selectedItemName);
@@ -2088,7 +2085,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         fill={currentBGColor}
                                         width={960}
                                         height={540}
-                                        onClick={(e: any) => handleCanvasClick(e)}
+                                        onClick={handleCanvasClick}
                                         onMouseDown={handleStageMouseDown}
                                     />
                                     }
@@ -2097,7 +2094,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                                         name="background"
                                         width={960}
                                         height={540}
-                                        onClick={(e: any) => handleCanvasClick(e)}
+                                        onClick={handleCanvasClick}
                                         image={backgroundImage}
                                         onMouseDown={handleStageMouseDown}
                                     />
