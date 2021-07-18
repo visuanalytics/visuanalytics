@@ -361,6 +361,7 @@ export const VideoCreation = () => {
      * @param jsonData The answer returned by the backend.
      */
     const sendVideoSuccessHandler = (jsonData: any) => {
+        clearSessionStorage();
         components?.setCurrent("dashboard")
     }
 
