@@ -256,11 +256,11 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
      * This method renders clickable buttons for inserting selected and custom data from an infoprovider into a textfield.
      * @param item The name of the item that should be rendered
      */
-    const renderData = (item: string, customData: boolean) => {
+    const renderData = (item: string, infoProvName: string, customData: boolean, withoutDataSourceName?: string) => {
         return (
             <ListItem key={item}>
-                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData((!customData ? "_req|" : "") + item)}>
-                    <span className={classes.overflowButtonText}>{item}</span>
+                <Button variant="contained" size="large" onClick={() => insertSelectedOrCustomData((!customData ? "_req|" : "") + (withoutDataSourceName !== undefined ? withoutDataSourceName : item))}>
+                    <span className={classes.overflowButtonText}>{infoProvName + "|" + item}</span>
                 </Button>
             </ListItem>
         );
@@ -281,7 +281,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item, false))}
+                        {extractKeysFromSelection(dataSource.selectedData).map((item: string) => renderData(dataSource.apiName + "|" + item, infoProviderName, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -291,7 +291,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name, false))}
+                        {dataSource.arrayProcessingList.map((item: ArrayProcessingData) => renderData(dataSource.apiName + "|" + item.name, infoProviderName, false))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>
@@ -301,7 +301,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     <List key={dataSource.apiName + "-SelectedData"} disablePadding={true}>
-                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.name, false))}
+                        {dataSource.stringReplacementList.map((item: StringReplacementData) => renderData(dataSource.apiName + "|" + item.name, infoProviderName,false))}
                     </List>
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
@@ -311,7 +311,7 @@ export const EditTextDialog: React.FC<EditTextDialogProps> = (props) => {
                 </Grid>
                 <Grid item xs={12} className={classes.elementLargeMargin}>
                     <List key={dataSource.apiName + "-CustomData"} disablePadding={true}>
-                        {dataSource.customData.map((item: FormelObj) => renderData(infoProviderName + "|" + dataSource.apiName + "|" + item.formelName, true))}
+                        {dataSource.customData.map((item: FormelObj) => renderData(dataSource.apiName + "|" + item.formelName, infoProviderName, true, item.formelName))}
                     </List>
                 </Grid>
                 <Grid item xs={12}>

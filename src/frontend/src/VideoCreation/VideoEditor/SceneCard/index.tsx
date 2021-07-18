@@ -107,12 +107,12 @@ export const SceneCard: React.FC<SceneCardProps> = (props) => {
                             </IconButton>
                         </Grid>
                         <Grid item container xs={12} className={classes.elementLargeMargin}>
-                            <Grid item xs={3}>
+                            <Grid item xs={12}>
                                 <Typography variant="body1" id={props.sceneName + "-durationExceed-input"}>
                                     Dauer nach TTS-Abschluss:
                                 </Typography>
                             </Grid>
-                            <Grid item xs={9}>
+                            <Grid item xs={12}>
                                 <Slider
                                     value={localExceedDisplayDuration}
                                     getAriaValueText={() => props.exceedDisplayDuration + " Sekunden"}
