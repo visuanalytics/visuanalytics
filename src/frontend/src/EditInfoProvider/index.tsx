@@ -346,12 +346,24 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
 
     /**
      * Checks if a given API name already exists in the data sources
-     * This is needed for changing basic settings
+     * This is needed for adding a new data source in edit mode
      * @param name The name of the data source which should be checked for duplicate
      */
-    const checkNameDuplicate = (name: string) => {
+    const checkNameDuplicateForNewDataSource = (name: string) => {
         for (let i = 0; i < infoProvDataSources.length; i++) {
             if (infoProvDataSources[i].apiName === name) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a given API name already exists in the data sources
+     * This is needed for possibily editing the data source name when editing basic settings
+     * @param name The name of the data source which should be checked for duplicate
+     */
+    const checkDuplicateNameForEditDataSource = (name: string) => {
+        for (let i = 0; i < infoProvDataSources.length; i++) {
+            if (infoProvDataSources[i].apiName === name && i !== selectedDataSource) return true;
         }
         return false;
     }
@@ -871,7 +883,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     <CreateInfoProvider
                         finishDataSourceInEdit={finishNewDataSource}
                         cancelNewDataSourceInEdit={cancelDataSourceCreation}
-                        checkDuplicateNameInEdit={checkNameDuplicate}
+                        checkDuplicateNameInEdit={checkNameDuplicateForNewDataSource}
                     />
                 </React.Fragment>
             );
@@ -903,7 +915,7 @@ export const EditInfoProvider: React.FC<EditInfoProviderProps> = (props) => {
                     <EditBasicSettings
                         continueHandler={(index: number) => handleContinue(index)}
                         backHandler={(index: number) => handleBack(index)}
-                        checkNameDuplicate={checkNameDuplicate}
+                        checkNameDuplicate={checkDuplicateNameForEditDataSource}
                         query={infoProvDataSources[selectedDataSource].query}
                         setQuery={setQuery}
                         apiKeyInput1={infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName) === undefined ? "" : infoProvDataSourcesKeys.get(infoProvDataSources[selectedDataSource].apiName)!.apiKeyInput1}
