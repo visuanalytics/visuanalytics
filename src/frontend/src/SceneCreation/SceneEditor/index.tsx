@@ -1262,8 +1262,9 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param id the backend ID of the image to be added
      * @param path the path to the image located in the backend
      * @param index the index of the image in the frontend list of images
+     * @param diagram Boolean flag indicating if the image is a diagram
      */
-    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number) => {
+    const addImageElement = (image : HTMLImageElement, id: number, path: string, index: number, diagram: boolean) => {
         console.log(image)
         let obj : CustomImage = {
             id: 'image-' + itemCounter.toString(),
@@ -1273,6 +1274,7 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             image: image,
             imageId: id,
             imagePath: path,
+            diagram: diagram,
             index: index,
             width: image.width,
             height: image.height,
@@ -1452,24 +1454,27 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 if(items[items.length-1].id.startsWith("image")) {
                     const castedImage = items[items.length-1] as CustomImage;
                     //if the image was only used with this item, remove it from the list of used arrays
-                    let onlyUsage = true;
-                    for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
-                        //skip if this is the index of the removed item
-                        if(innerIndex === items.length-1) continue;
-                        const item = items[innerIndex]
-                        if(item.id.startsWith("image")) {
-                            const itemCasted = item as CustomImage;
-                            if(itemCasted.imageId === castedImage.imageId) {
-                                onlyUsage = false;
-                                break;
+                    //skip this section if the image is a diagram
+                    if(!castedImage.diagram) {
+                        let onlyUsage = true;
+                        for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
+                            //skip if this is the index of the removed item
+                            if(innerIndex === items.length-1) continue;
+                            const item = items[innerIndex]
+                            if(item.id.startsWith("image")) {
+                                const itemCasted = item as CustomImage;
+                                if(itemCasted.imageId === castedImage.imageId) {
+                                    onlyUsage = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    console.log(onlyUsage);
-                    if(onlyUsage) {
-                        imageIDArray.current = imageIDArray.current.filter((imageID) => {
-                            return imageID !== castedImage.imageId;
-                        })
+                        //console.log(onlyUsage);
+                        if(onlyUsage) {
+                            imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                                return imageID !== castedImage.imageId;
+                            })
+                        }
                     }
                 }
                 // remove the last element from the items array
@@ -1489,24 +1494,27 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
             if(items[index].id.startsWith("image")) {
                 const castedImage = items[index] as CustomImage;
                 //if the image was only used with this item, remove it from the list of used arrays
-                let onlyUsage = true;
-                for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
-                    //skip if this is the index of the removed item
-                    if(innerIndex === index) continue;
-                    const item = items[innerIndex]
-                    if(item.id.startsWith("image")) {
-                        const itemCasted = item as CustomImage;
-                        if(itemCasted.imageId === castedImage.imageId) {
-                            onlyUsage = false;
-                            break;
+                //skip this section if the image is a diagram
+                if(!castedImage.diagram) {
+                    let onlyUsage = true;
+                    for (let innerIndex = 0; innerIndex < items.length; innerIndex++) {
+                        //skip if this is the index of the removed item
+                        if(innerIndex === index) continue;
+                        const item = items[innerIndex]
+                        if(item.id.startsWith("image")) {
+                            const itemCasted = item as CustomImage;
+                            if(itemCasted.imageId === castedImage.imageId) {
+                                onlyUsage = false;
+                                break;
+                            }
                         }
                     }
-                }
-                console.log(onlyUsage);
-                if(onlyUsage) {
-                    imageIDArray.current = imageIDArray.current.filter((imageID) => {
-                        return imageID !== castedImage.imageId;
-                    })
+                    console.log(onlyUsage);
+                    if(onlyUsage) {
+                        imageIDArray.current = imageIDArray.current.filter((imageID) => {
+                            return imageID !== castedImage.imageId;
+                        })
+                    }
                 }
             }
             // push the element into the lastElem array and remove it from the items array
@@ -1536,7 +1544,8 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
                 // if it is an image, add it to the list of used image ids again if it is not already included
                 if(poppedItem.id.startsWith("image")) {
                     const castedImage = poppedItem as CustomImage;
-                    if(!imageIDArray.current.includes(castedImage.imageId)) imageIDArray.current.push(castedImage.imageId);
+                    //also dont try to restore when the item is a diagram
+                    if(!imageIDArray.current.includes(castedImage.imageId) && !castedImage.diagram) imageIDArray.current.push(castedImage.imageId);
                 }
             }
         }
@@ -1902,16 +1911,17 @@ export const SceneEditor: React.FC<SceneEditorProps> = (props) => {
      * @param id the backend ID of the selected image
      * @param path the path/URL of the selected image in the backend
      * @param index index of the image in the frontend list of all images
+     * @param diagram Boolean flag indicating if the image is a diagram
      */
-    const handleImageClick = (src : string, id: number, path: string, index: number) => {
+    const handleImageClick = (src : string, id: number, path: string, index: number, diagram: boolean) => {
         //create the image object for the image to be displayed
         console.log(src)
         let image = new window.Image();
         image.src = src;
         console.log(image)
-        //push the id to the array of used images if it is not already used
-        if(!imageIDArray.current.includes(id)) imageIDArray.current.push(id);
-        addImageElement(image, id, path, index);
+        //push the id to the array of used images if it is not already used - also not pushing for diagrams
+        if(!imageIDArray.current.includes(id) && !diagram) imageIDArray.current.push(id);
+        addImageElement(image, id, path, index, diagram);
     }
 
     const handleBackgroundImageClick = (src : string, index : number) => {
